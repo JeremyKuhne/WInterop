@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WInterop", "Winterop\WInterop.csproj", "{8031257A-B9C2-473F-A4DD-690BD6263FEB}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common.Desktop", "Common.Desktop\Common.Desktop.shproj", "{EF057D5B-9774-41B3-92E0-27069B0DBBFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WInterop.Desktop", "WInterop.Desktop\WInterop.Desktop.csproj", "{AC918478-F510-44DD-92AE-6E0B013546F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{22B2F9E8-E6C2-470B-82A7-8C4E1573E2CA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "Common\Common.shproj", "{E7CAF10F-86B5-486F-9B76-BFC8B9EA41F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WInterop.WindowsRuntime", "Winterop.WindowsRuntime\WInterop.WindowsRuntime.csproj", "{58C13843-52C3-4125-BBC7-30A8B53F2D57}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Common\Common.projitems*{e7caf10f-86b5-486f-9b76-bfc8b9ea41f8}*SharedItemsImports = 13
+		Common.Desktop\Common.Desktop.projitems*{ac918478-f510-44dd-92ae-6e0b013546f5}*SharedItemsImports = 4
+		Common\Common.projitems*{ac918478-f510-44dd-92ae-6e0b013546f5}*SharedItemsImports = 4
+		Common\Common.projitems*{58c13843-52c3-4125-bbc7-30a8b53f2d57}*SharedItemsImports = 4
+		Common.Desktop\Common.Desktop.projitems*{8031257a-b9c2-473f-a4dd-690bd6263feb}*SharedItemsImports = 4
+		Common\Common.projitems*{8031257a-b9c2-473f-a4dd-690bd6263feb}*SharedItemsImports = 4
+		Common.Desktop\Common.Desktop.projitems*{ef057d5b-9774-41b3-92e0-27069b0dbbfa}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8031257A-B9C2-473F-A4DD-690BD6263FEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8031257A-B9C2-473F-A4DD-690BD6263FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8031257A-B9C2-473F-A4DD-690BD6263FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8031257A-B9C2-473F-A4DD-690BD6263FEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC918478-F510-44DD-92AE-6E0B013546F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC918478-F510-44DD-92AE-6E0B013546F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC918478-F510-44DD-92AE-6E0B013546F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC918478-F510-44DD-92AE-6E0B013546F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58C13843-52C3-4125-BBC7-30A8B53F2D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58C13843-52C3-4125-BBC7-30A8B53F2D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58C13843-52C3-4125-BBC7-30A8B53F2D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58C13843-52C3-4125-BBC7-30A8B53F2D57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8031257A-B9C2-473F-A4DD-690BD6263FEB} = {22B2F9E8-E6C2-470B-82A7-8C4E1573E2CA}
+		{AC918478-F510-44DD-92AE-6E0B013546F5} = {22B2F9E8-E6C2-470B-82A7-8C4E1573E2CA}
+		{58C13843-52C3-4125-BBC7-30A8B53F2D57} = {22B2F9E8-E6C2-470B-82A7-8C4E1573E2CA}
+	EndGlobalSection
+EndGlobal

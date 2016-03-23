@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e7caf10f-86b5-486f-9b76-bfc8b9ea41f8</SharedGUID>
+    <CommonSharedDirectory>$(MSBuildThisFileDirectory)</CommonSharedDirectory>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WInterop</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\Cache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\EmptySafeHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\HeapHandleCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHandleZeroIsInvalid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHeapHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Errors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Heap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Environment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WInteropStrings.Designer.cs">
+      <DependentUpon>WInteropStrings.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>False</AutoGen>
+      <Visible>false</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)WInteropStrings.resx">
+      <LastGenOutput>WInteropStrings.Designer.cs</LastGenOutput>
+      <Generator>
+      </Generator>
+      <Visible>false</Visible>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
