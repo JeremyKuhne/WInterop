@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>2035a6ee-3425-4eba-8067-919adab2599e</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Tests.Common</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\CacheTests.cs" />
+  </ItemGroup>
+</Project>

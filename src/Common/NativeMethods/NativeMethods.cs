@@ -163,12 +163,12 @@ namespace WInterop
 
         public static class Libraries
         {
-            internal const string Kernel32 = "kernel32.dll";
-            internal const string Advapi32 = "advapi32.dll";
-            internal const string User32 = "user32.dll";
-            internal const string Ntdll = "ntdll.dll";
-            internal const string Crypt32 = "crypt32.dll";
-            internal const string Netapi32 = "netapi32.dll";
+            public const string Kernel32 = "kernel32.dll";
+            public const string Advapi32 = "advapi32.dll";
+            public const string User32 = "user32.dll";
+            public const string Ntdll = "ntdll.dll";
+            public const string Crypt32 = "crypt32.dll";
+            public const string Netapi32 = "netapi32.dll";
         }
 
          /// <summary>
