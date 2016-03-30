@@ -35,8 +35,6 @@ namespace WInterop.Buffers
 
         public override void Release(StringBuffer item)
         {
-            // Free the underlying buffer (which is implicitly cached)
-            item.Free();
             base.Release(item);
         }
 

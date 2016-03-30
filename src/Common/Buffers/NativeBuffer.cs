@@ -11,6 +11,7 @@ namespace WInterop.Buffers
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using Handles;
+    using System.Threading;
 
     /// <summary>
     /// Wrapper for access to the native heap. Dispose to free the memory. Try to use with using statements.
@@ -24,20 +25,26 @@ namespace WInterop.Buffers
     /// Using SafeHandle will ensure that the buffer will not get collected during a P/Invoke but introduces very slight
     /// overhead. (Notably AddRef and ReleaseRef will be called by the interop layer.)
     /// 
-    /// This class is not threadsafe, changing the capacity or disposing on multiple threads risks duplicate heap
-    /// handles or worse.
+    /// The actual buffer handle / memory location can change when resizing.
     /// </remarks>
     public class NativeBuffer : IDisposable
     {
         private SafeHeapHandle _handle;
-        private ulong _byteCapacity;
+
+        // By using a platform specific data type we can be assured of atomic reads/writes.
+        // Anything more than a uint isn't addressable on 32bit as well.
+        private unsafe void* _byteCapacity;
+
+        protected ReaderWriterLockSlim _handleLock = new ReaderWriterLockSlim();
 
         /// <summary>
         /// Create a buffer with at least the specified initial capacity in bytes.
         /// </summary>
-        public NativeBuffer(ulong initialMinCapacity = 0)
+        /// <exception cref="OverflowException">Thrown if trying to allocate more than a uint on 32bit.</exception>
+        public unsafe NativeBuffer(ulong initialMinCapacity = 0)
         {
-            EnsureByteCapacity(initialMinCapacity);
+            _handle = HeapHandleCache.Instance.Acquire(initialMinCapacity);
+            _byteCapacity = (void*)(initialMinCapacity);
         }
 
         protected unsafe void* VoidPointer
@@ -45,7 +52,7 @@ namespace WInterop.Buffers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return InternalDangerousGetHandle().ToPointer();
+                return DangerousGetHandle().ToPointer();
             }
         }
 
@@ -58,94 +65,112 @@ namespace WInterop.Buffers
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private IntPtr InternalDangerousGetHandle()
-        {
-            SafeHandle handle = _handle;
-            return handle == null ? IntPtr.Zero : handle.DangerousGetHandle();
-        }
-
+        /// <summary>
+        /// Get the handle to the buffer. Prefer using SafeHandle instead of IntPtr for interop (there is an implicit converter).
+        /// </summary>
         public IntPtr DangerousGetHandle()
         {
-            return InternalDangerousGetHandle();
+            return _handle?.DangerousGetHandle() ?? IntPtr.Zero;
         }
 
         public static implicit operator SafeHandle(NativeBuffer buffer)
         {
             // Marshalling code will throw on null for SafeHandle
-            return buffer._handle ?? EmptySafeHandle.Instance;
+            return buffer?._handle ?? EmptySafeHandle.Instance;
         }
 
         /// <summary>
         /// The capacity of the buffer in bytes.
         /// </summary>
-        public ulong ByteCapacity
+        public unsafe ulong ByteCapacity
         {
-            get { return _byteCapacity; }
+            // Capacity will never decrease, except after disposal. In addition, using the void* allows reads/writes
+            // to capacity to be atomic. As such we shouldn't have to worry about returning a size that is too small.
+            get { return (ulong)_byteCapacity; }
         }
 
         /// <summary>
         /// Ensure capacity in bytes is at least the given minimum.
         /// </summary>
         /// <exception cref="OutOfMemoryException">Thrown if unable to allocate memory when setting.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if attempting to set <paramref name="nameof(minCapacity)"/> to a value that is larger than the maximum addressable memory.</exception>
-        public void EnsureByteCapacity(ulong minCapacity)
+        /// <exception cref="OverflowException">Thrown if trying to allocate more than a uint on 32bit.</exception>
+        public unsafe void EnsureByteCapacity(ulong minCapacity)
         {
-            if (_byteCapacity < minCapacity)
+            // Don't bother trying to get the lock if we're already big enough
+            if (ByteCapacity < minCapacity)
             {
-                Resize(minCapacity);
-                _byteCapacity = minCapacity;
-            }
-        }
-
-        public unsafe byte this[ulong index]
-        {
-            get
-            {
-                if (index >= _byteCapacity) throw new ArgumentOutOfRangeException();
-                return BytePointer[index];
-            }
-            set
-            {
-                if (index >= _byteCapacity) throw new ArgumentOutOfRangeException();
-                BytePointer[index] = value;
-            }
-        }
-
-        private unsafe void Resize(ulong byteLength)
-        {
-            if (byteLength == 0)
-            {
-                ReleaseHandle();
-                return;
-            }
-
-            if (_handle == null)
-            {
-                _handle = HeapHandleCache.Instance.Acquire(byteLength);
-            }
-            else
-            {
-                _handle.Resize(byteLength);
-            }
-        }
-
-        private void ReleaseHandle()
-        {
-            if (_handle != null)
-            {
-                HeapHandleCache.Instance.Release(_handle);
-                _handle = null;
-                _byteCapacity = 0;
+                _handleLock.EnterWriteLock();
+                try
+                {
+                    if (ByteCapacity < minCapacity)
+                    {
+                        if (_handle.ByteLength < minCapacity) _handle.Resize(minCapacity);
+                        _byteCapacity = (void*)minCapacity;
+                    }
+                }
+                finally
+                {
+                    _handleLock.ExitWriteLock();
+                }
             }
         }
 
         /// <summary>
-        /// Free the space used by the buffer. Sets capacity to 0.
+        /// Get the byte at the specified byte index.
         /// </summary>
-        public virtual void Free()
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if attempting to get or set a value that is over the capacity of the buffer.</exception>
+        public unsafe byte this[ulong index]
         {
-            ReleaseHandle();
+            // We only need a read lock here to avoid accessing old memory after a resize (as the block may move). The actual read/write is atomic.
+            get
+            {
+                if (index >= ByteCapacity) throw new ArgumentOutOfRangeException(nameof(index));
+
+                _handleLock.EnterReadLock();
+                try
+                {
+                    return BytePointer[index];
+                }
+                finally
+                {
+                    _handleLock.ExitReadLock();
+                }
+            }
+            set
+            {
+                if (index >= ByteCapacity) throw new ArgumentOutOfRangeException(nameof(index));
+
+                _handleLock.EnterReadLock();
+                try
+                {
+                    BytePointer[index] = value;
+                }
+                finally
+                {
+                    _handleLock.ExitReadLock();
+                }
+            }
+        }
+
+        private unsafe void ReleaseHandle()
+        {
+            SafeHeapHandle handle;
+            _handleLock.EnterWriteLock();
+            try
+            {
+                handle = _handle;
+                _byteCapacity = null;
+                _handle = null;
+            }
+            finally
+            {
+                _handleLock.ExitWriteLock();
+            }
+
+            if (handle != null)
+            {
+                HeapHandleCache.Instance.Release(handle);
+            }
         }
 
         public void Dispose()
@@ -156,7 +181,7 @@ namespace WInterop.Buffers
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-                Free();
+                ReleaseHandle();
         }
     }
 }

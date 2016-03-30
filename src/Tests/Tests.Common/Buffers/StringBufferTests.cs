@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace XTask.Tests.Interop
+namespace WInterop.Tests.Buffers
 {
     using FluentAssertions;
     using System;
@@ -112,15 +112,21 @@ namespace XTask.Tests.Interop
             }
         }
 
-        [Fact]
-        public void CharCapacityHasUintMax()
+        [Theory
+            InlineData(0) // 4294967295
+            InlineData(1) // 4294967296
+            ]
+        public void CharCapacityHasUintMax(uint plusValue)
         {
-            using (var buffer = new StringBuffer())
+            if (Utility.Environment.Is64BitProcess)
             {
-                var length = typeof(NativeBuffer).GetField("_byteCapacity", BindingFlags.NonPublic | BindingFlags.Instance);
-                for (uint i = 0; i < 4; i++)
+                using (var buffer = new StringBuffer())
                 {
-                    length.SetValue(buffer, (ulong)uint.MaxValue * 2 + i);
+                    var length = typeof(NativeBuffer).GetField("_byteCapacity", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                    ulong setValue = (ulong)uint.MaxValue * 2 + plusValue;
+                    length.SetValue(buffer, setValue);
+
                     buffer.CharCapacity.Should().Be(uint.MaxValue);
                 }
             }

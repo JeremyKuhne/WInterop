@@ -524,10 +524,9 @@ namespace WInterop.Buffers
             return new string(value: CharPointer + startIndex, startIndex: 0, length: checked((int)realCount));
         }
 
-        public override void Free()
+        protected override void Dispose(bool disposing)
         {
             _length = 0;
-            base.Free();
         }
     }
 }
