@@ -10,14 +10,21 @@
     <Import_RootNamespace>WInterop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\Privileges.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PrivilegeSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PrivilegeState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\StreamBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\Cache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\EmptySafeHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HeapHandleCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeCloseHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHandleZeroIsInvalid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHeapHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Authorization.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Errors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />
