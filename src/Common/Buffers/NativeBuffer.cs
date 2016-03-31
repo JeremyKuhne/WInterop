@@ -35,7 +35,7 @@ namespace WInterop.Buffers
         // Anything more than a uint isn't addressable on 32bit as well.
         private unsafe void* _byteCapacity;
 
-        protected ReaderWriterLockSlim _handleLock = new ReaderWriterLockSlim();
+        protected ReaderWriterLockSlim _handleLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
         /// <summary>
         /// Create a buffer with at least the specified initial capacity in bytes.
@@ -94,7 +94,7 @@ namespace WInterop.Buffers
         /// </summary>
         /// <exception cref="OutOfMemoryException">Thrown if unable to allocate memory when setting.</exception>
         /// <exception cref="OverflowException">Thrown if trying to allocate more than a uint on 32bit.</exception>
-        public unsafe void EnsureByteCapacity(ulong minCapacity)
+        public void EnsureByteCapacity(ulong minCapacity)
         {
             // Don't bother trying to get the lock if we're already big enough
             if (ByteCapacity < minCapacity)
@@ -102,16 +102,21 @@ namespace WInterop.Buffers
                 _handleLock.EnterWriteLock();
                 try
                 {
-                    if (ByteCapacity < minCapacity)
-                    {
-                        if (_handle.ByteLength < minCapacity) _handle.Resize(minCapacity);
-                        _byteCapacity = (void*)minCapacity;
-                    }
+                    UnlockedEnsureByteCapacity(minCapacity);
                 }
                 finally
                 {
                     _handleLock.ExitWriteLock();
                 }
+            }
+        }
+
+        protected unsafe void UnlockedEnsureByteCapacity(ulong minCapacity)
+        {
+            if (ByteCapacity < minCapacity)
+            {
+                if (_handle.ByteLength < minCapacity) _handle.Resize(minCapacity);
+                _byteCapacity = (void*)minCapacity;
             }
         }
 

@@ -76,15 +76,32 @@ namespace WInterop.Buffers
         /// <exception cref="ArgumentOutOfRangeException">Thrown if attempting to index outside of the buffer length.</exception>
         public unsafe char this[uint index]
         {
+            // We only need a read lock here to avoid accessing old memory after a resize (as the block may move). The actual read/write is atomic.
             get
             {
-                if (index >= _length) throw new ArgumentOutOfRangeException(nameof(index));
-                return CharPointer[index];
+                _handleLock.EnterReadLock();
+                try
+                {
+                    if (index >= _length) throw new ArgumentOutOfRangeException(nameof(index));
+                    return CharPointer[index];
+                }
+                finally
+                {
+                    _handleLock.ExitReadLock();
+                }
             }
             set
             {
-                if (index >= _length) throw new ArgumentOutOfRangeException(nameof(index));
-                CharPointer[index] = value;
+                _handleLock.EnterReadLock();
+                try
+                {
+                    if (index >= _length) throw new ArgumentOutOfRangeException(nameof(index));
+                    CharPointer[index] = value;
+                }
+                finally
+                {
+                    _handleLock.ExitReadLock();
+                }
             }
         }
 
@@ -104,10 +121,15 @@ namespace WInterop.Buffers
         /// <summary>
         /// Ensure capacity in characters is at least the given minimum.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if attempting to set <paramref name="nameof(Capacity)"/> to a value that is larger than the maximum addressable memory.</exception>
+        /// <exception cref="OverflowException">Thrown if trying to allocate more than a int on 32bit.</exception>
         public void EnsureCharCapacity(uint minCapacity)
         {
             EnsureByteCapacity((ulong)minCapacity * sizeof(char));
+        }
+
+        protected void UnlockedEnsureCharCapacity(uint minCapacity)
+        {
+            UnlockedEnsureByteCapacity((ulong)minCapacity * sizeof(char));
         }
 
         /// <summary>
@@ -119,12 +141,25 @@ namespace WInterop.Buffers
             get { return _length; }
             set
             {
-                // Null terminate
-                EnsureCharCapacity(value + 1);
-                CharPointer[value] = '\0';
-
-                _length = value;
+                _handleLock.EnterWriteLock();
+                try
+                {
+                    UnlockedSetLength(value);
+                }
+                finally
+                {
+                    _handleLock.ExitWriteLock();
+                }
             }
+        }
+
+        protected unsafe void UnlockedSetLength(uint length)
+        {
+            UnlockedEnsureCharCapacity(length + 1);
+
+            // Null terminate
+            _length = length;
+            CharPointer[length] = '\0';
         }
 
         /// <summary>
@@ -133,15 +168,23 @@ namespace WInterop.Buffers
         /// </summary>
         public unsafe void SetLengthToFirstNull()
         {
-            char* buffer = CharPointer;
-            uint capacity = CharCapacity;
-            for (uint i = 0; i < capacity; i++)
+            _handleLock.EnterWriteLock();
+            try
             {
-                if (buffer[i] == '\0')
+                char* buffer = CharPointer;
+                uint capacity = CharCapacity;
+                for (uint i = 0; i < capacity; i++)
                 {
-                    _length = i;
-                    break;
+                    if (buffer[i] == '\0')
+                    {
+                        _length = i;
+                        break;
+                    }
                 }
+            }
+            finally
+            {
+                _handleLock.ExitWriteLock();
             }
         }
 
@@ -163,15 +206,24 @@ namespace WInterop.Buffers
         /// <returns>True if the given character was found.</returns>
         public unsafe bool IndexOf(char value, out uint index, uint skip = 0)
         {
-            for (index = skip; index < _length; index++)
+            _handleLock.EnterReadLock();
+            try
             {
-                if (CharPointer[index] == value)
+                for (index = skip; index < _length; index++)
                 {
-                    return true;
+                    if (CharPointer[index] == value)
+                    {
+                        return true;
+                    }
                 }
+
+                index = _length + 1;
+            }
+            finally
+            {
+                _handleLock.ExitReadLock();
             }
 
-            index = _length + 1;
             return false;
         }
 
@@ -199,21 +251,30 @@ namespace WInterop.Buffers
         {
             if (value == null) return false;
             if (count < -1) throw new ArgumentOutOfRangeException(nameof(count));
-            uint realCount = count == -1 ? _length - startIndex : (uint)count;
-            if (startIndex + realCount > _length) throw new ArgumentOutOfRangeException(nameof(count));
 
-            int length = value.Length;
-
-            // Check the substring length against the input length
-            if (realCount != (uint)length) return false;
-
-            fixed (char* valueStart = value)
+            _handleLock.EnterReadLock();
+            try
             {
-                char* bufferStart = CharPointer + startIndex;
-                for (int i = 0; i < length; i++)
+                uint realCount = count == -1 ? _length - startIndex : (uint)count;
+                if (startIndex + realCount > _length) throw new ArgumentOutOfRangeException(nameof(count));
+
+                int length = value.Length;
+
+                // Check the substring length against the input length
+                if (realCount != (uint)length) return false;
+
+                fixed (char* valueStart = value)
                 {
-                    if (*bufferStart++ != valueStart[i]) return false;
+                    char* bufferStart = CharPointer + startIndex;
+                    for (int i = 0; i < length; i++)
+                    {
+                        if (*bufferStart++ != valueStart[i]) return false;
+                    }
                 }
+            }
+            finally
+            {
+                _handleLock.ExitReadLock();
             }
 
             return true;
@@ -225,9 +286,28 @@ namespace WInterop.Buffers
         /// <exception cref="ArgumentOutOfRangeException">Thrown if you try to append more characters than the StringBuffer can hold.</exception>
         public unsafe void Append(char value)
         {
-            if (_length == uint.MaxValue) throw new ArgumentOutOfRangeException(nameof(value));
-            uint oldLength = Length++;
-            CharPointer[oldLength] = value;
+            _handleLock.EnterUpgradeableReadLock();
+            try
+            {
+                // Length can't be changed while were in read lock
+                uint oldLength = _length;
+                if (oldLength == uint.MaxValue) throw new ArgumentOutOfRangeException(nameof(value));
+
+                _handleLock.EnterWriteLock();
+                try
+                {
+                    UnlockedSetLength(oldLength + 1);
+                    CharPointer[oldLength] = value;
+                }
+                finally
+                {
+                    _handleLock.ExitWriteLock();
+                }
+            }
+            finally
+            {
+                _handleLock.ExitUpgradeableReadLock();
+            }
         }
 
         /// <summary>
@@ -236,33 +316,50 @@ namespace WInterop.Buffers
         /// <exception cref="ArgumentOutOfRangeException">Thrown if you try to append more characters than the StringBuffer can hold.</exception>
         public unsafe void Append(char value, uint count)
         {
-            if (count >= uint.MaxValue - _length) throw new ArgumentOutOfRangeException(nameof(count));
+            _handleLock.EnterUpgradeableReadLock();
 
-            uint oldLength = _length;
-            Length += count;
-            char* current = CharPointer + oldLength;
-
-            while (((uint)current & 3) != 0 && count > 0)
+            try
             {
-                *current++ = value;
-                count--;
-            }
+                uint oldLength = _length;
+                if (count >= uint.MaxValue - oldLength) throw new ArgumentOutOfRangeException(nameof(count));
 
-            if (count > 1)
-            {
-                uint twoChars = (uint)((value << 16 | value));
-
-                while (count > 1)
+                _handleLock.EnterWriteLock();
+                try
                 {
-                    *((uint*)current) = twoChars;
-                    current += 2;
-                    count -= 2;
+                    UnlockedSetLength(oldLength + count);
+                    char* current = CharPointer + oldLength;
+
+                    while (((uint)current & 3) != 0 && count > 0)
+                    {
+                        *current++ = value;
+                        count--;
+                    }
+
+                    if (count > 1)
+                    {
+                        uint twoChars = (uint)((value << 16 | value));
+
+                        while (count > 1)
+                        {
+                            *((uint*)current) = twoChars;
+                            current += 2;
+                            count -= 2;
+                        }
+                    }
+
+                    if (count == 1)
+                    {
+                        *current = value;
+                    }
+                }
+                finally
+                {
+                    _handleLock.ExitWriteLock();
                 }
             }
-
-            if (count == 1)
+            finally
             {
-                *current = value;
+                _handleLock.ExitUpgradeableReadLock();
             }
         }
 
@@ -279,11 +376,20 @@ namespace WInterop.Buffers
         /// </exception>
         public unsafe void Append(string value, int startIndex = 0, int count = -1)
         {
-            CopyFrom(
-                bufferIndex: _length,
-                source: value,
-                sourceIndex: startIndex,
-                count: count);
+            _handleLock.EnterUpgradeableReadLock();
+
+            try
+            {
+                CopyFrom(
+                    bufferIndex: _length,
+                    source: value,
+                    sourceIndex: startIndex,
+                    count: count);
+            }
+            finally
+            {
+                _handleLock.ExitUpgradeableReadLock();
+            }
         }
 
         /// <summary>
@@ -298,7 +404,17 @@ namespace WInterop.Buffers
         public unsafe void Append(StringBuffer value, uint startIndex = 0)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            Append(value, startIndex, value.Length - startIndex);
+
+            // We don't want the length of the source to change so we need to read lock
+            value._handleLock.EnterReadLock();
+            try
+            {
+                Append(value, startIndex, value.Length - startIndex);
+            }
+            finally
+            {
+                value._handleLock.ExitReadLock();
+            }
         }
 
         /// <summary>
@@ -317,11 +433,21 @@ namespace WInterop.Buffers
             if (value == null) throw new ArgumentNullException(nameof(value));
             if (count == 0) return;
 
-            value.CopyTo(
-                bufferIndex: startIndex,
-                destination: this,
-                destinationIndex: _length,
-                count: count);
+            _handleLock.EnterUpgradeableReadLock();
+
+            try
+            {
+                // Our lock will be upgraded to a write lock in CopyTo
+                value.CopyTo(
+                    bufferIndex: startIndex,
+                    destination: this,
+                    destinationIndex: _length,
+                    count: count);
+            }
+            finally
+            {
+                _handleLock.ExitUpgradeableReadLock();
+            }
         }
 
         /// <summary>
@@ -331,18 +457,35 @@ namespace WInterop.Buffers
         public unsafe void CopyTo(uint bufferIndex, StringBuffer destination, uint destinationIndex, uint count)
         {
             if (destination == null) throw new ArgumentNullException(nameof(destination));
-            if (destinationIndex > destination._length) throw new ArgumentOutOfRangeException(nameof(destinationIndex));
-            if (_length < bufferIndex + count) throw new ArgumentOutOfRangeException(nameof(count));
 
-            if (count == 0) return;
-            uint lastIndex = destinationIndex + count;
-            if (destination.Length < lastIndex) destination.Length = lastIndex;
+            _handleLock.EnterReadLock();
+            try
+            {
+                destination._handleLock.EnterWriteLock();
+                try
+                {
+                    if (destinationIndex > destination._length) throw new ArgumentOutOfRangeException(nameof(destinationIndex));
+                    if (_length < bufferIndex + count) throw new ArgumentOutOfRangeException(nameof(count));
 
-            Buffer.MemoryCopy(
-                source: CharPointer + bufferIndex,
-                destination: destination.CharPointer + destinationIndex,
-                destinationSizeInBytes: checked((long)(destination.ByteCapacity + destinationIndex * sizeof(char))),
-                sourceBytesToCopy: checked((long)count * sizeof(char)));
+                    if (count == 0) return;
+                    uint lastIndex = destinationIndex + count;
+                    if (destination.Length < lastIndex) destination.UnlockedSetLength(lastIndex);
+
+                    Buffer.MemoryCopy(
+                        source: CharPointer + bufferIndex,
+                        destination: destination.CharPointer + destinationIndex,
+                        destinationSizeInBytes: checked((long)(destination.ByteCapacity + destinationIndex * sizeof(char))),
+                        sourceBytesToCopy: checked((long)count * sizeof(char)));
+                }
+                finally
+                {
+                    destination._handleLock.ExitWriteLock();
+                }
+            }
+            finally
+            {
+                _handleLock.ExitReadLock();
+            }
         }
 
         /// <summary>
@@ -352,22 +495,33 @@ namespace WInterop.Buffers
         public unsafe void CopyFrom(uint bufferIndex, string source, int sourceIndex = 0, int count = -1)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            if (bufferIndex > _length) throw new ArgumentOutOfRangeException(nameof(bufferIndex));
             if (sourceIndex < 0 || sourceIndex > source.Length) throw new ArgumentOutOfRangeException(nameof(sourceIndex));
             if (count < 0) count = source.Length - sourceIndex;
+            if (count == 0) return;
+
             if (source.Length < sourceIndex + count) throw new ArgumentOutOfRangeException(nameof(count));
 
-            if (count == 0) return;
-            uint lastIndex = bufferIndex + (uint)count;
-            if (_length < lastIndex) Length = lastIndex;
+            _handleLock.EnterWriteLock();
 
-            fixed (char* content = source)
+            try
             {
-                Buffer.MemoryCopy(
-                    source: content + sourceIndex,
-                    destination: CharPointer + bufferIndex,
-                    destinationSizeInBytes: checked((long)(ByteCapacity + bufferIndex * sizeof(char))),
-                    sourceBytesToCopy: count * sizeof(char));
+                if (bufferIndex > _length) throw new ArgumentOutOfRangeException(nameof(bufferIndex));
+
+                uint lastIndex = bufferIndex + (uint)count;
+                if (_length < lastIndex) UnlockedSetLength(lastIndex);
+
+                fixed (char* content = source)
+                {
+                    Buffer.MemoryCopy(
+                        source: content + sourceIndex,
+                        destination: CharPointer + bufferIndex,
+                        destinationSizeInBytes: checked((long)(ByteCapacity + bufferIndex * sizeof(char))),
+                        sourceBytesToCopy: count * sizeof(char));
+                }
+            }
+            finally
+            {
+                _handleLock.ExitWriteLock();
             }
         }
 
@@ -378,24 +532,33 @@ namespace WInterop.Buffers
         unsafe public IEnumerable<string> Split(char splitCharacter)
         {
             var strings = new List<string>();
-            char* start = CharPointer;
-            char* current = start;
 
-            uint length = _length;
-
-            for (uint i = 0; i < length; i++)
+            _handleLock.EnterReadLock();
+            try
             {
-                if (splitCharacter == *current)
+                char* start = CharPointer;
+                char* current = start;
+
+                uint length = _length;
+
+                for (uint i = 0; i < length; i++)
                 {
-                    // Split
-                    strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
-                    start = current + 1;
+                    if (splitCharacter == *current)
+                    {
+                        // Split
+                        strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
+                        start = current + 1;
+                    }
+
+                    current++;
                 }
 
-                current++;
+                strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
             }
-
-            strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
+            finally
+            {
+                _handleLock.ExitReadLock();
+            }
 
             return strings;
         }
@@ -410,25 +573,34 @@ namespace WInterop.Buffers
             bool splitWhite = splitCharacters == null || splitCharacters.Length == 0;
 
             var strings = new List<string>();
-            char* start = CharPointer;
-            char* current = start;
 
-            uint length = _length;
-
-            for (uint i = 0; i < length; i++)
+            _handleLock.EnterReadLock();
+            try
             {
-                if ((splitWhite && char.IsWhiteSpace(*current))
-                 || (!splitWhite && ContainsChar(splitCharacters, *current)))
+                char* start = CharPointer;
+                char* current = start;
+
+                uint length = _length;
+
+                for (uint i = 0; i < length; i++)
                 {
-                    // Split
-                    strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
-                    start = current + 1;
+                    if ((splitWhite && char.IsWhiteSpace(*current))
+                     || (!splitWhite && ContainsChar(splitCharacters, *current)))
+                    {
+                        // Split
+                        strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
+                        start = current + 1;
+                    }
+
+                    current++;
                 }
 
-                current++;
+                strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
             }
-
-            strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
+            finally
+            {
+                _handleLock.ExitReadLock();
+            }
 
             return strings;
         }
@@ -438,12 +610,20 @@ namespace WInterop.Buffers
         /// </summary>
         public unsafe bool Contains(char value)
         {
-            char* start = CharPointer;
-            uint length = _length;
-
-            for (uint i = 0; i < length; i++)
+            _handleLock.EnterReadLock();
+            try
             {
-                if (*start++ == value) return true;
+                char* start = CharPointer;
+                uint length = _length;
+
+                for (uint i = 0; i < length; i++)
+                {
+                    if (*start++ == value) return true;
+                }
+            }
+            finally
+            {
+                _handleLock.ExitReadLock();
             }
 
             return false;
@@ -456,13 +636,21 @@ namespace WInterop.Buffers
         {
             if (values == null || values.Length == 0) return false;
 
-            char* start = CharPointer;
-            uint length = _length;
-
-            for (uint i = 0; i < length; i++)
+            _handleLock.EnterReadLock();
+            try
             {
-                if (ContainsChar(values, *start)) return true;
-                start++;
+                char* start = CharPointer;
+                uint length = _length;
+
+                for (uint i = 0; i < length; i++)
+                {
+                    if (ContainsChar(values, *start)) return true;
+                    start++;
+                }
+            }
+            finally
+            {
+                _handleLock.ExitReadLock();
             }
 
             return false;
@@ -475,12 +663,22 @@ namespace WInterop.Buffers
         {
             if (values == null || values.Length == 0 || _length == 0) return;
 
-            char* end = CharPointer + _length - 1;
-
-            while (_length > 0 && ContainsChar(values, *end))
+            _handleLock.EnterWriteLock();
+            try
             {
-                Length = _length - 1;
-                end--;
+                char* end = CharPointer + _length - 1;
+
+                while (_length > 0 && ContainsChar(values, *end))
+                {
+                    _length--;
+                    end--;
+                }
+
+                CharPointer[_length] = '\0';
+            }
+            finally
+            {
+                _handleLock.ExitWriteLock();
             }
         }
 
@@ -501,7 +699,16 @@ namespace WInterop.Buffers
         public unsafe override string ToString()
         {
             if (_length == 0) return string.Empty;
-            return new string(CharPointer, startIndex: 0, length: checked((int)_length));
+
+            _handleLock.EnterReadLock();
+            try
+            {
+                return new string(CharPointer, startIndex: 0, length: checked((int)_length));
+            }
+            finally
+            {
+                _handleLock.ExitReadLock();
+            }
         }
 
         /// <summary>
@@ -514,14 +721,22 @@ namespace WInterop.Buffers
         /// </exception>
         public unsafe string SubString(uint startIndex, int count = -1)
         {
-            if (startIndex > (_length == 0 ? 0 : _length - 1)) throw new ArgumentOutOfRangeException(nameof(startIndex));
-            if (count < -1) throw new ArgumentOutOfRangeException(nameof(count));
+            _handleLock.EnterReadLock();
+            try
+            {
+                if (startIndex > (_length == 0 ? 0 : _length - 1)) throw new ArgumentOutOfRangeException(nameof(startIndex));
+                if (count < -1) throw new ArgumentOutOfRangeException(nameof(count));
 
-            uint realCount = count == -1 ? _length - startIndex : (uint)count;
-            if (realCount > int.MaxValue || startIndex + realCount > _length) throw new ArgumentOutOfRangeException(nameof(count));
-            if (realCount == 0) return string.Empty;
+                uint realCount = count == -1 ? _length - startIndex : (uint)count;
+                if (realCount > int.MaxValue || startIndex + realCount > _length) throw new ArgumentOutOfRangeException(nameof(count));
+                if (realCount == 0) return string.Empty;
 
-            return new string(value: CharPointer + startIndex, startIndex: 0, length: checked((int)realCount));
+                return new string(value: CharPointer + startIndex, startIndex: 0, length: checked((int)realCount));
+            }
+            finally
+            {
+                _handleLock.ExitReadLock();
+            }
         }
 
         protected override void Dispose(bool disposing)

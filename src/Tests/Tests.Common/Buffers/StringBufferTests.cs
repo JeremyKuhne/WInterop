@@ -9,7 +9,12 @@ namespace WInterop.Tests.Buffers
 {
     using FluentAssertions;
     using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using WInterop.Buffers;
     using Xunit;
 
@@ -162,6 +167,43 @@ namespace WInterop.Tests.Buffers
         }
 
         [Theory
+            InlineData(0)
+            InlineData(1)
+            ]
+        public void EnsureCharCapacityOver32Bit(uint initialBufferSize)
+        {
+            if (!Utility.Environment.Is64BitProcess)
+            {
+                using (var buffer = new StringBuffer(initialBufferSize))
+                {
+                    Action action = () => buffer.EnsureCharCapacity(int.MaxValue + 1u);
+                    action.ShouldThrow<OverflowException>();
+                }
+            }
+        }
+
+        [Fact]
+        public void MultithreadedSetLengthCapacityIsMax()
+        {
+            using (var buffer = new StringBuffer(0))
+            {
+                uint[] bufferLength = new uint[100];
+                for (uint i = 0; i < 100; i++)
+                {
+                    bufferLength[i] = i + 1;
+                }
+
+                Parallel.ForEach(bufferLength, length =>
+                {
+                    buffer.Length = length;
+                });
+
+                // Length will be random, but the capacity should be one extra for the null
+                buffer.ByteCapacity.Should().Be(202);
+            }
+        }
+
+        [Theory
             InlineData(@"Foo", @"Foo", true)
             InlineData(@"Foo", @"foo", false)
             InlineData(@"Foobar", @"Foo", true)
@@ -304,6 +346,38 @@ namespace WInterop.Tests.Buffers
                 else
                     buffer.Append(valueBuffer, (uint)startIndex, (uint)count);
                 buffer.ToString().Should().Be(expected);
+            }
+        }
+
+        [Fact]
+        public void AppendStringMultithreaded()
+        {
+            using (var buffer = new StringBuffer(0))
+            {
+                Parallel.For(0, 26, alpha =>
+                {
+                    buffer.Append(new string((char)('A' + alpha), count: 3));
+                });
+
+                AppendMultithreadedValidator(buffer);
+            }
+        }
+
+        [Fact]
+        public void AppendStringBufferMultithreaded()
+        {
+            using (var buffer = new StringBuffer(0))
+            {
+                Parallel.For(0, 26, alpha =>
+                {
+                    using (var sourceBuffer = new StringBuffer(4))
+                    {
+                        sourceBuffer.Append((char)('A' + alpha), count: 3);
+                        buffer.Append(sourceBuffer);
+                    }
+                });
+
+                AppendMultithreadedValidator(buffer);
             }
         }
 
@@ -544,6 +618,46 @@ namespace WInterop.Tests.Buffers
             }
         }
 
+        [Fact]
+        public void SplitWhileWriting()
+        {
+            using (var buffer = new StringBuffer())
+            {
+                var splitStrings = new ConcurrentBag<IEnumerable<string>>();
+
+                Task writeTask = new Task(() =>
+                {
+                    Parallel.For(1, 1000, i =>
+                    {
+                        buffer.Length = 0;
+                        Parallel.For(10, 100, j => buffer.Append($"{j} "));
+                    });
+                });
+
+                Task splitTask = new Task(() =>
+                {
+                    Parallel.For(0, 25, i =>
+                    {
+                        // Sleep breifly to allow the content to change
+                        Task.Delay(2).Wait();
+                        splitStrings.Add(buffer.Split());
+                    });
+                });
+
+                writeTask.Start();
+                splitTask.Start();
+                Task.WaitAll(writeTask, splitTask);
+
+                foreach (var split in splitStrings)
+                {
+                    // Should have nothing but valid numbers under 99 and the last should be an empty string
+                    int count = split.Count();
+                    split.Take(count - 1).Select(s => int.Parse(s)).All(i => i < 100).Should().Be(true);
+                    split.Last().Should().Be(string.Empty);
+                }
+            }
+        }
+
         [Theory
             InlineData("foo", new char[] { }, "foo")
             InlineData("foo", null, "foo")
@@ -658,7 +772,7 @@ namespace WInterop.Tests.Buffers
         {
             using (var buffer = new StringBuffer())
             {
-                Action action = () => { buffer.CopyFrom(1, ""); };
+                Action action = () => { buffer.CopyFrom(2, "a"); };
                 action.ShouldThrow<ArgumentOutOfRangeException>();
             }
         }
@@ -794,6 +908,40 @@ namespace WInterop.Tests.Buffers
             {
                 buffer.Append(value, count);
                 buffer.ToString().Should().Be(expected);
+            }
+        }
+
+        private void AppendMultithreadedValidator(StringBuffer buffer)
+        {
+            buffer.Length.Should().Be(26 * 3);
+
+            List<string> substrings = new List<string>(26);
+            for (uint i = 0; i < 26; i++)
+            {
+                substrings.Add(buffer.SubString(0 + i * 3, 3));
+            }
+
+            buffer.Length = 0;
+            substrings.Sort();
+            foreach (var s in substrings)
+            {
+                buffer.Append(s);
+            }
+
+            buffer.ToString().Should().Be("AAABBBCCCDDDEEEFFFGGGHHHIIIJJJKKKLLLMMMNNNOOOPPPQQQRRRSSSTTTUUUVVVWWWXXXYYYZZZ");
+        }
+
+        [Fact]
+        public void AppendCharCountMultithreaded()
+        {
+            using (var buffer = new StringBuffer(0))
+            {
+                Parallel.For(0, 26, alpha =>
+                {
+                    buffer.Append((char)('A' + alpha), count: 3);
+                });
+
+                AppendMultithreadedValidator(buffer);
             }
         }
 
