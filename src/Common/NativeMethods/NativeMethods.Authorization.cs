@@ -24,17 +24,22 @@ namespace WInterop
     {
         public static class Authorization
         {
-            // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
+            /// <summary>
+            /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+            /// </summary>
+            /// <remarks>
+            /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
+            /// </remarks>
 #if DESKTOP
             [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
 #endif
-            private static class Private
+            public static class Direct
             {
 #if DESKTOP
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool AdjustTokenPrivileges(
+                public static extern bool AdjustTokenPrivileges(
                     IntPtr TokenHandle,
                     [MarshalAs(UnmanagedType.Bool)] bool DisableAllPrivileges,
                     ref TOKEN_PRIVILEGES NewState,
@@ -45,7 +50,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool GetTokenInformation(
+                public static extern bool GetTokenInformation(
                     IntPtr TokenHandle,
                     TOKEN_INFORMATION_CLASS TokenInformationClass,
                     SafeHandle TokenInformation,
@@ -55,7 +60,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379176.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool LookupPrivilegeNameW(
+                public static extern bool LookupPrivilegeNameW(
                     IntPtr lpSystemName,
                     ref LUID lpLuid,
                     SafeHandle lpName,
@@ -64,7 +69,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/aa379180.aspx
                 [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool LookupPrivilegeValueW(
+                public static extern bool LookupPrivilegeValueW(
                     string lpSystemName,
                     string lpName,
                     ref LUID lpLuid);
@@ -72,7 +77,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/aa379304.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool PrivilegeCheck(
+                public static extern bool PrivilegeCheck(
                     SafeCloseHandle ClientToken,
                     ref PRIVILEGE_SET RequiredPrivileges,
                     [MarshalAs(UnmanagedType.Bool)] out bool pfResult);
@@ -80,19 +85,19 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379590.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool SetThreadToken(
+                public static extern bool SetThreadToken(
                     IntPtr Thread,
                     SafeCloseHandle Token);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool RevertToSelf();
+                public static extern bool RevertToSelf();
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool DuplicateTokenEx(
+                public static extern bool DuplicateTokenEx(
                     SafeCloseHandle hExistingToken,
                     TokenAccessLevels dwDesiredAccess,
                     IntPtr lpTokenAttributes,
@@ -103,7 +108,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379295.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool OpenProcessToken(
+                public static extern bool OpenProcessToken(
                     IntPtr ProcessHandle,
                     TokenAccessLevels DesiredAccesss,
                     out SafeCloseHandle TokenHandle);
@@ -111,7 +116,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
                 [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool OpenThreadToken(
+                public static extern bool OpenThreadToken(
                     IntPtr ThreadHandle,
                     TokenAccessLevels DesiredAccess,
                     [MarshalAs(UnmanagedType.Bool)] bool OpenAsSelf,
@@ -127,55 +132,6 @@ namespace WInterop
 
             // In winnt.h
             private const uint PRIVILEGE_SET_ALL_NECESSARY = 1;
-            internal const uint SE_PRIVILEGE_ENABLED_BY_DEFAULT = 0x00000001;
-            internal const uint SE_PRIVILEGE_ENABLED = 0x00000002;
-            internal const uint SE_PRIVILEGE_REMOVED = 0x00000004;
-            internal const uint SE_PRIVILEGE_USED_FOR_ACCESS = 0x80000000;
-
-            private enum TOKEN_INFORMATION_CLASS
-            {
-                TokenUser = 1,
-                TokenGroups,
-                TokenPrivileges,
-                TokenOwner,
-                TokenPrimaryGroup,
-                TokenDefaultDacl,
-                TokenSource,
-                TokenType,
-                TokenImpersonationLevel,
-                TokenStatistics,
-                TokenRestrictedSids,
-                TokenSessionId,
-                TokenGroupsAndPrivileges,
-                TokenSessionReference,
-                TokenSandBoxInert,
-                TokenAuditPolicy,
-                TokenOrigin,
-                TokenElevationType,
-                TokenLinkedToken,
-                TokenElevation,
-                TokenHasRestrictions,
-                TokenAccessInformation,
-                TokenVirtualizationAllowed,
-                TokenVirtualizationEnabled,
-                TokenIntegrityLevel,
-                TokenUIAccess,
-                TokenMandatoryPolicy,
-                TokenLogonSid,
-                TokenIsAppContainer,
-                TokenCapabilities,
-                TokenAppContainerSid,
-                TokenAppContainerNumber,
-                TokenUserClaimAttributes,
-                TokenDeviceClaimAttributes,
-                TokenRestrictedUserClaimAttributes,
-                TokenRestrictedDeviceClaimAttributes,
-                TokenDeviceGroups,
-                TokenRestrictedDeviceGroups,
-                TokenSecurityAttributes,
-                TokenIsRestricted,
-                MaxTokenInfoClass
-            }
 
             // From winnt.h:
             //
@@ -209,66 +165,12 @@ namespace WInterop
             // 
             // https://msdn.microsoft.com/en-us/library/system.security.principal.securityidentifier.aspx
 
-            // https://msdn.microsoft.com/en-us/library/aa379261.aspx
-            [StructLayout(LayoutKind.Sequential)]
-            internal struct LUID
-            {
-                public uint LowPart;
-                public uint HighPart;
-            }
-
-            // https://msdn.microsoft.com/en-us/library/aa379263.aspx
-            [StructLayout(LayoutKind.Sequential)]
-            internal struct LUID_AND_ATTRIBUTES
-            {
-                public LUID Luid;
-                public uint Attributes;
-            }
-
-            // https://msdn.microsoft.com/en-us/library/aa379307.aspx
-            [StructLayout(LayoutKind.Sequential)]
-            private struct PRIVILEGE_SET
-            {
-                public uint PrivilegeCount;
-                public uint Control;
-
-                [MarshalAs(UnmanagedType.ByValArray)]
-                public LUID_AND_ATTRIBUTES[] Privilege;
-            }
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379630.aspx
-            [StructLayout(LayoutKind.Sequential)]
-            private struct TOKEN_PRIVILEGES
-            {
-                public uint PrivilegeCount;
-
-                [MarshalAs(UnmanagedType.ByValArray)]
-                public LUID_AND_ATTRIBUTES[] Privileges;
-            }
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379572.aspx
-            private enum SECURITY_IMPERSONATION_LEVEL
-            {
-                SecurityAnonymous = 0,
-                SecurityIdentification = 1,
-                SecurityImpersonation = 2,
-                SecurityDelegation = 3
-            }
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379633.aspx
-            private enum TOKEN_TYPE
-            {
-                TokenPrimary = 1,
-                TokenImpersonation
-            }
-
-
 #if DESKTOP
             public static IEnumerable<PrivilegeSetting> GetTokenPrivileges(SafeCloseHandle token)
             {
                 // Get the buffer size we need
                 uint bytesNeeded;
-                if (!Private.GetTokenInformation(
+                if (!Direct.GetTokenInformation(
                     token.DangerousGetHandle(),
                     TOKEN_INFORMATION_CLASS.TokenPrivileges,
                     EmptySafeHandle.Instance,
@@ -287,7 +189,7 @@ namespace WInterop
 
                 // Initialize the buffer and get the data
                 var streamBuffer = new StreamBuffer(bytesNeeded);
-                if (!Private.GetTokenInformation(
+                if (!Direct.GetTokenInformation(
                     token.DangerousGetHandle(),
                     TOKEN_INFORMATION_CLASS.TokenPrivileges,
                     streamBuffer,
@@ -315,7 +217,7 @@ namespace WInterop
 
                     uint length = nameBuffer.CharCapacity;
 
-                    if (!Private.LookupPrivilegeNameW(IntPtr.Zero, ref luid, nameBuffer, ref length))
+                    if (!Direct.LookupPrivilegeNameW(IntPtr.Zero, ref luid, nameBuffer, ref length))
                     {
                         uint error = (uint)Marshal.GetLastWin32Error();
                         throw Errors.GetIoExceptionForError(error);
@@ -323,8 +225,8 @@ namespace WInterop
 
                     nameBuffer.Length = length;
 
-                    PrivilegeState state = (PrivilegeState)reader.ReadUInt32();
-                    privileges.Add(new PrivilegeSetting(nameBuffer.ToString(), state));
+                    PrivilegeAttributes attributes = (PrivilegeAttributes)reader.ReadUInt32();
+                    privileges.Add(new PrivilegeSetting(nameBuffer.ToString(), attributes));
                     nameBuffer.Length = 0;
                 }
 
@@ -343,7 +245,7 @@ namespace WInterop
             private static LUID LookupPrivilegeValue(string name)
             {
                 LUID luid = new LUID();
-                if (!Private.LookupPrivilegeValueW(null, name, ref luid))
+                if (!Direct.LookupPrivilegeValueW(null, name, ref luid))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
                     throw Errors.GetIoExceptionForError(error, name);
@@ -363,7 +265,7 @@ namespace WInterop
                 var luidAttributes = new LUID_AND_ATTRIBUTES
                 {
                     Luid = luid,
-                    Attributes = SE_PRIVILEGE_ENABLED
+                    Attributes = (uint)PrivilegeAttributes.SE_PRIVILEGE_ENABLED
                 };
 
                 var set = new PRIVILEGE_SET
@@ -375,7 +277,7 @@ namespace WInterop
 
 
                 bool result;
-                if (!Private.PrivilegeCheck(token, ref set, out result))
+                if (!Direct.PrivilegeCheck(token, ref set, out result))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
                     throw Errors.GetIoExceptionForError(error, privilege.ToString());
@@ -387,7 +289,7 @@ namespace WInterop
             public static SafeCloseHandle OpenProcessToken(TokenAccessLevels desiredAccess)
             {
                 SafeCloseHandle processToken;
-                if (!Private.OpenProcessToken(Process.GetCurrentProcess().Handle, desiredAccess, out processToken))
+                if (!Direct.OpenProcessToken(Process.GetCurrentProcess().Handle, desiredAccess, out processToken))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
                     throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
@@ -399,14 +301,14 @@ namespace WInterop
             public static SafeCloseHandle OpenThreadToken(TokenAccessLevels desiredAccess, bool openAsSelf)
             {
                 SafeCloseHandle threadToken;
-                if (!Private.OpenThreadToken(NativeMethods.Private.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
+                if (!Direct.OpenThreadToken(NativeMethods.Private.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
                     if (error != Errors.WinError.ERROR_NO_TOKEN)
                         throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
 
                     SafeCloseHandle processToken = OpenProcessToken(TokenAccessLevels.Duplicate);
-                    if (!Private.DuplicateTokenEx(
+                    if (!Direct.DuplicateTokenEx(
                         processToken,
                         TokenAccessLevels.Impersonate | TokenAccessLevels.Query | TokenAccessLevels.AdjustPrivileges,
                         IntPtr.Zero,

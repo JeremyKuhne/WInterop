@@ -10,10 +10,10 @@ namespace WInterop.Authorization
     using System;
     using System.Diagnostics;
 
-    [DebuggerDisplay("{Privilege} : {State}")]
+    [DebuggerDisplay("{Privilege} : {Attributes}")]
     public struct PrivilegeSetting
     {
-        internal PrivilegeSetting(string privilege, PrivilegeState state)
+        internal PrivilegeSetting(string privilege, PrivilegeAttributes attributes)
         {
             Privileges p;
             if (!Enum.TryParse(privilege, out p))
@@ -21,10 +21,10 @@ namespace WInterop.Authorization
                 p = Privileges.UnknownPrivilege;
             }
             Privilege = p;
-            State = state;
+            Attributes = attributes;
         }
 
         public Privileges Privilege;
-        public PrivilegeState State;
+        public PrivilegeAttributes Attributes;
     }
 }

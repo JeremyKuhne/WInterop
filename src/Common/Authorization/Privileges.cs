@@ -7,7 +7,9 @@
 
 namespace WInterop.Authorization
 {
-    // https://msdn.microsoft.com/en-us/library/bb530716.aspx
+    /// <summary>
+    /// <a href="https://msdn.microsoft.com/en-us/library/bb530716.aspx">Privilege constants</a>.
+    /// </summary>
     public enum Privileges
     {
         /// <summary>
