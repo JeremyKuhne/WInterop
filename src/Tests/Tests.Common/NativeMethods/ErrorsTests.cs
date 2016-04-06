@@ -20,10 +20,10 @@ namespace WInterop.Tests.NativeMethodTests
             InlineData(NativeMethods.Errors.WinError.ERROR_ACCESS_DENIED, typeof(UnauthorizedAccessException))
             InlineData(NativeMethods.Errors.WinError.ERROR_NETWORK_ACCESS_DENIED, typeof(UnauthorizedAccessException))
             InlineData(NativeMethods.Errors.WinError.ERROR_FILENAME_EXCED_RANGE, typeof(PathTooLongException))
-#if DESKTOP
-            InlineData(NativeMethods.Errors.WinError.ERROR_INVALID_DRIVE, typeof(DriveNotFoundException))
-#else
+#if PORTABLE
             InlineData(NativeMethods.Errors.WinError.ERROR_INVALID_DRIVE, typeof(IOException))
+#else
+            InlineData(NativeMethods.Errors.WinError.ERROR_INVALID_DRIVE, typeof(DriveNotFoundException))
 #endif
             InlineData(NativeMethods.Errors.WinError.ERROR_OPERATION_ABORTED, typeof(OperationCanceledException))
             InlineData(NativeMethods.Errors.WinError.ERROR_ALREADY_EXISTS, typeof(IOException))

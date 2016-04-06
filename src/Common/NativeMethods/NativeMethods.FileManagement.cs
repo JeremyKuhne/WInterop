@@ -8,21 +8,13 @@
 namespace WInterop
 {
     using Authorization;
-    using Backup;
-    using Buffers;
     using FileManagement;
     using Handles;
     using Microsoft.Win32.SafeHandles;
     using Synchronization;
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Security;
-    using System.Security.Principal;
-    using System.Text;
-    using System.Threading;
 
     public static partial class NativeMethods
     {

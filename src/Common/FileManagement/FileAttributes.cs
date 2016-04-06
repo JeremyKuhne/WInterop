@@ -64,5 +64,5 @@ namespace WInterop.FileManagement
         /// Be careful with this, check for invalid <i>before</i> checking other flags.
         /// </summary>
         INVALID_FILE_ATTRIBUTES = unchecked((uint)(-1))
-}
+    }
 }

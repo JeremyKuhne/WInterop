@@ -9,10 +9,24 @@
     <Import_RootNamespace>WInterop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\LUID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\LUID_AND_ATTRIBUTES.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PrivilegeAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\Privileges.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PrivilegeSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PRIVILEGE_SET.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\SID_NAME_USE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_INFORMATION_CLASS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_PRIVILEGES.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DynamicLinkLibrary\LoadLibraryFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeLibraryHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeNetApiBufferHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DynamicLinkLibrary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.NetworkManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.SecurityManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Strings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\MemberInfo.cs" />
   </ItemGroup>
 </Project>

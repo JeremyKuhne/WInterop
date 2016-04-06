@@ -11,16 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\GenericAccessRights.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\LUID.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\LUID_AND_ATTRIBUTES.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\Privileges.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PrivilegeSetting.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PrivilegeAttributes.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PRIVILEGE_SET.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\SECURITY_IMPERSONATION_LEVEL.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_INFORMATION_CLASS.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_PRIVILEGES.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_TYPE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupStreamType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\StreamAttributes.cs" />
@@ -70,6 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Heap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\SID_NAME_USE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\OVERLAPPED.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Environment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WInteropStrings.Designer.cs">

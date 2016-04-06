@@ -15,5 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CacheTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\CryptographyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\ErrorsTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NetworkManagementTests.cs" />
   </ItemGroup>
 </Project>

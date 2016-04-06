@@ -8,8 +8,6 @@
 namespace WInterop
 {
     using System;
-    using System.Globalization;
-    using System.IO;
     using System.Runtime.InteropServices;
     using System.Security;
 
@@ -17,11 +15,16 @@ namespace WInterop
     {
         public static class Heap
         {
-            // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
+            /// <summary>
+            /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+            /// </summary>
+            /// <remarks>
+            /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
+            /// </remarks>
 #if DESKTOP
             [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
 #endif
-            private static class Private
+            public static class Direct
             {
                 // Heap Functions
                 // --------------
@@ -42,15 +45,15 @@ namespace WInterop
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366597.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = false, ExactSpelling = true)]
-                internal static extern IntPtr HeapAlloc(IntPtr hHeap, uint dwFlags, UIntPtr dwBytes);
+                public static extern IntPtr HeapAlloc(IntPtr hHeap, uint dwFlags, UIntPtr dwBytes);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366704.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = false, ExactSpelling = true)]
-                internal static extern IntPtr HeapReAlloc(IntPtr hHeap, uint dwFlags, IntPtr lpMem, UIntPtr dwBytes);
+                public static extern IntPtr HeapReAlloc(IntPtr hHeap, uint dwFlags, IntPtr lpMem, UIntPtr dwBytes);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366701.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-                internal static extern bool HeapFree(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
+                public static extern bool HeapFree(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366706.aspx
                 //[DllImport(Interop.NativeMethods.Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -67,13 +70,13 @@ namespace WInterop
                 // This is safe to cache as it will never change for a process once started
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-                internal static extern IntPtr GetProcessHeap();
+                public static extern IntPtr GetProcessHeap();
             }
 
             /// <summary>
             /// The handle for the process heap.
             /// </summary>
-            public static IntPtr ProcessHeap = Private.GetProcessHeap();
+            public static IntPtr ProcessHeap = Direct.GetProcessHeap();
 
             /// <summary>
             /// Allocate memory on the process heap.
@@ -91,9 +94,9 @@ namespace WInterop
             /// <exception cref="OverflowException">Thrown if running in 32 bit and byteLength is greater than uint.MaxValue.</exception>
             public static IntPtr HeapAllocate(ulong byteLength, bool zeroMemory, IntPtr heap)
             {
-                return Private.HeapAlloc(
+                return Direct.HeapAlloc(
                     hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
-                    dwFlags: zeroMemory ? Private.HEAP_ZERO_MEMORY : 0,
+                    dwFlags: zeroMemory ? Direct.HEAP_ZERO_MEMORY : 0,
                     dwBytes: (UIntPtr)byteLength);
             }
 
@@ -113,9 +116,9 @@ namespace WInterop
             /// <exception cref="OverflowException">Thrown if running in 32 bit and byteLength is greater than uint.MaxValue.</exception>
             public static IntPtr HeapReallocate(IntPtr memory, ulong byteLength, bool zeroMemory, IntPtr heap)
             {
-                return Private.HeapReAlloc(
+                return Direct.HeapReAlloc(
                     hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
-                    dwFlags: zeroMemory ? Private.HEAP_ZERO_MEMORY : 0,
+                    dwFlags: zeroMemory ? Direct.HEAP_ZERO_MEMORY : 0,
                     lpMem: memory,
                     dwBytes: (UIntPtr)byteLength);
             }
@@ -134,7 +137,7 @@ namespace WInterop
             /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
             public static bool HeapFree(IntPtr memory, IntPtr heap) 
             {
-                return Private.HeapFree(
+                return Direct.HeapFree(
                     hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
                     dwFlags: 0,
                     lpMem: memory);
