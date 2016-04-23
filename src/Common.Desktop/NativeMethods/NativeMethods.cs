@@ -7,13 +7,6 @@
 
 namespace WInterop
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using Handles;
-    using Buffers;
-
     public static partial class NativeMethods
     {
         // Design Guidelines and Notes
@@ -132,43 +125,5 @@ namespace WInterop
         //  LARGE_INTEGER   __int64         long
         //  LONGLONG        __int64         long
         //  UCHAR           unsigned char   byte
-
-        // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
-#if DESKTOP
-        [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
-#endif
-        private static partial class Private
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683188.aspx
-            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            internal static extern uint GetEnvironmentVariableW(
-                string lpName,
-                SafeHandle lpBuffer,
-                uint nSize);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms686206.aspx
-            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool SetEnvironmentVariableW(
-                string lpName,
-                string lpValue);
-        }
-
-        public static void SetEnvironmentVariable(string name, string value)
-        {
-            if (!Private.SetEnvironmentVariableW(name, value))
-            {
-                uint error = (uint)Marshal.GetLastWin32Error();
-                throw Errors.GetIoExceptionForError(error, name);
-            }
-        }
-
-        public static string GetEnvironmentVariable(string name)
-        {
-            return BufferInvoke(
-                buffer => Private.GetEnvironmentVariableW(name, buffer, buffer.CharCapacity),
-                name,
-                error => error != Errors.WinError.ERROR_ENVVAR_NOT_FOUND);
-        }
     }
 }

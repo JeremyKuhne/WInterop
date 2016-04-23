@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Backup\StreamAttributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\StreamInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\WIN32_STREAM_ID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\BufferHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StreamBuffer.cs" />

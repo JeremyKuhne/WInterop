@@ -20,11 +20,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_PRIVILEGES.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_TYPE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicLinkLibrary\LoadLibraryFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeEnvironmentStringsHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeLibraryHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeNetApiBufferHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DynamicLinkLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.NetworkManagement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ProcessAndThreads.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.SecurityManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Strings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\MemberInfo.cs" />
