@@ -65,10 +65,7 @@ namespace WInterop
             public static void Beep(uint frequency, uint duration)
             {
                 if (!Direct.Beep(frequency, duration))
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw GetIoExceptionForError(error);
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError();
             }
 
             /// <summary>
@@ -77,10 +74,7 @@ namespace WInterop
             public static void MessageBeep(MessageBeepType type)
             {
                 if (!Direct.MessageBeep(type))
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw GetIoExceptionForError(error);
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError();
             }
 
             /// <summary>
@@ -107,10 +101,8 @@ namespace WInterop
             {
                 ErrorMode oldMode;
                 if (!Direct.SetThreadErrorMode(mode, out oldMode))
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw GetIoExceptionForError(error);
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError();
+
                 return oldMode;
             }
         }

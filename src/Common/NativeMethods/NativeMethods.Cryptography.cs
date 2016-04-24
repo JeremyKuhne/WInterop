@@ -8,6 +8,7 @@
 namespace WInterop
 {
     using Cryptography;
+    using ErrorHandling;
     using Handles;
     using Microsoft.Win32;
     using Microsoft.Win32.SafeHandles;
@@ -167,9 +168,7 @@ namespace WInterop
             public static void CloseStore(SafeCertificateStoreHandle handle)
             {
                 if (!Direct.CertCloseStore(handle.DangerousGetHandle(), dwFlags: 0))
-                {
-                    throw ErrorHandling.GetIoExceptionForError((uint)Marshal.GetLastWin32Error());
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError();
             }
 
             unsafe private static SafeCertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)

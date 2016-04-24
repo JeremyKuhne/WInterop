@@ -8,6 +8,7 @@
 namespace WInterop
 {
     using DynamicLinkLibrary;
+    using ErrorHandling;
     using Handles;
     using System;
     using System.Runtime.InteropServices;
@@ -64,10 +65,8 @@ namespace WInterop
             {
                 SafeLibraryHandle handle = Direct.LoadLibraryExW(path, IntPtr.Zero, flags);
                 if (handle.IsInvalid)
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw ErrorHandling.GetIoExceptionForError(error, path);
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError(path);
+
                 return handle;
             }
 
@@ -88,10 +87,7 @@ namespace WInterop
             {
                 IntPtr method = Direct.GetProcAddress(library, methodName);
                 if (method == IntPtr.Zero)
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw ErrorHandling.GetIoExceptionForError(error, methodName);
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError(methodName);
 
                 return Marshal.GetDelegateForFunctionPointer<DelegateType>(method);
             }

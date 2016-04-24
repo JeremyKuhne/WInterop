@@ -224,67 +224,29 @@ namespace WInterop
             private const int STATUS_SEVERITY_WARNING = 0x2;
             private const int STATUS_SEVERITY_ERROR = 0x3;
 
-            internal static bool NT_SUCCESS(int NTSTATUS)
+            public static bool NT_SUCCESS(int NTSTATUS)
             {
                 return NTSTATUS >= 0;
             }
 
-            internal static bool NT_INFORMATION(int NTSTATUS)
+            public static bool NT_INFORMATION(int NTSTATUS)
             {
                 return (uint)NTSTATUS >> 30 == STATUS_SEVERITY_INFORMATIONAL;
             }
 
-            internal static bool NT_WARNING(int NTSTATUS)
+            public static bool NT_WARNING(int NTSTATUS)
             {
                 return (uint)NTSTATUS >> 30 == STATUS_SEVERITY_WARNING;
             }
 
-            internal static bool NT_ERROR(int NTSTATUS)
+            public static bool NT_ERROR(int NTSTATUS)
             {
                 return (uint)NTSTATUS >> 30 == STATUS_SEVERITY_ERROR;
             }
 
-            internal static uint NtStatusToWinError(int status)
+            public static uint NtStatusToWinError(int status)
             {
                 return Direct.LsaNtStatusToWinError(status);
-            }
-
-            public static Exception GetIoExceptionForError(uint error, string path = null)
-            {
-                // http://referencesource.microsoft.com/#mscorlib/system/io/__error.cs,142
-
-                string errorText = $"{LastErrorToString(error)} : '{path ?? WInteropStrings.NoValue}'";
-
-                switch (error)
-                {
-                    case WinErrors.ERROR_FILE_NOT_FOUND:
-                        return new FileNotFoundException(errorText, path);
-                    case WinErrors.ERROR_PATH_NOT_FOUND:
-                        return new DirectoryNotFoundException(errorText);
-                    case WinErrors.ERROR_ACCESS_DENIED:
-                    // Network access doesn't throw UnauthorizedAccess in .NET
-                    case WinErrors.ERROR_NETWORK_ACCESS_DENIED:
-                        return new UnauthorizedAccessException(errorText);
-                    case WinErrors.ERROR_FILENAME_EXCED_RANGE:
-                        return new PathTooLongException(errorText);
-                    case WinErrors.ERROR_INVALID_DRIVE:
-#if DESKTOP
-                        return new DriveNotFoundException(errorText);
-#else
-                        goto default;
-#endif
-                    case WinErrors.ERROR_OPERATION_ABORTED:
-                        return new OperationCanceledException(errorText);
-                    case WinErrors.ERROR_NOT_READY:
-                        return new DriveNotReadyException(errorText);
-                    case WinErrors.FVE_E_LOCKED_VOLUME:
-                        return new DriveLockedException(errorText);
-                    case WinErrors.ERROR_ALREADY_EXISTS:
-                    case WinErrors.ERROR_SHARING_VIOLATION:
-                    case WinErrors.ERROR_FILE_EXISTS:
-                    default:
-                        return new IOException(errorText, (int)GetHResultForWindowsError(error));
-                }
             }
         }
     }

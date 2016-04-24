@@ -66,10 +66,7 @@ namespace WInterop
                 if (name == null) throw new ArgumentNullException(nameof(name));
 
                 if (!Direct.SetEnvironmentVariableW(name, value))
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw ErrorHandling.GetIoExceptionForError(error, name);
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError(name);
             }
 
             /// <summary>

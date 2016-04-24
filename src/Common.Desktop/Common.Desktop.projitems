@@ -23,11 +23,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\MessageBeepType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\TemporaryErrorMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyProgressRoutine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeEnvironmentStringsHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeFindVolumeHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeLibraryHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeNetApiBufferHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DynamicLinkLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ErrorHandling.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.NetworkManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ProcessAndThreads.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.SecurityManagement.cs" />

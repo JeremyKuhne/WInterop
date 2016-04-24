@@ -13,6 +13,7 @@ namespace WInterop
     using System.Security;
     using Handles;
     using Buffers;
+    using ErrorHandling;
 
     public static partial class NativeMethods
     {
@@ -133,34 +134,6 @@ namespace WInterop
         //  LONGLONG        __int64         long
         //  UCHAR           unsigned char   byte
 
-        // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
-#if DESKTOP
-        [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
-#endif
-        private static partial class Private
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683182.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            internal static extern IntPtr GetCurrentThread();
-        }
-
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380518.aspx
-        [StructLayout(LayoutKind.Sequential)]
-        unsafe internal struct UNICODE_STRING
-        {
-            /// <summary>
-            /// Length, in bytes, not including the the null, if any.
-            /// </summary>
-            public ushort Length;
-
-            /// <summary>
-            /// Max size of the buffer in bytes
-            /// </summary>
-            public ushort MaximumLength;
-
-            public char* Buffer;
-        }
-
         public static class Libraries
         {
             public const string Kernel32 = "kernel32.dll";
@@ -169,9 +142,52 @@ namespace WInterop
             public const string Ntdll = "ntdll.dll";
             public const string Crypt32 = "crypt32.dll";
             public const string Netapi32 = "netapi32.dll";
+
+            // Windows 8 API sets, from https://msdn.microsoft.com/en-us/library/windows/desktop/dn505783.aspx
+            public const string api_ms_win_core_com_l1_1_0 = "api-ms-win-core-com-l1-1-0.dll";
+            public const string api_ms_win_core_comm_l1_1_0 = "api-ms-win-core-comm-l1-1-0.dll";
+            public const string api_ms_win_core_console_l1_1_0 = "api-ms-win-core-console-l1-1-0.dll";
+            public const string api_ms_win_core_console_l2_1_0 = "api-ms-win-core-console-l2-1-0.dll";
+            public const string api_ms_win_core_datetime_l1_1_1 = "api-ms-win-core-datetime-l1-1-1.dll";
+            public const string api_ms_win_core_debug_l1_1_1 = "api-ms-win-core-debug-l1-1-1.dll";
+            public const string api_ms_win_core_errorhandling_l1_1_1 = "api-ms-win-core-errorhandling-l1-1-1.dll";
+            public const string api_ms_win_core_fibers_l1_1_1 = "api-ms-win-core-fibers-l1-1-1.dll";
+            public const string api_ms_win_core_file_l1_2_0 = "api-ms-win-core-file-l1-2-0.dll";
+            public const string api_ms_win_core_file_l2_1_0 = "api-ms-win-core-file-l2-1-0.dll";
+            public const string api_ms_win_core_firmware_l1_1_0 = "api-ms-win-core-firmware-l1-1-0.dll";
+            public const string api_ms_win_core_handle_l1_1_0 = "api-ms-win-core-handle-l1-1-0.dll";
+            public const string api_ms_win_core_heap_l1_2_0 = "api-ms-win-core-heap-l1-2-0.dll";
+            public const string api_ms_win_core_interlocked_l1_2_0 = "api-ms-win-core-interlocked-l1-2-0.dll";
+            public const string api_ms_win_core_io_l1_1_1 = "api-ms-win-core-io-l1-1-1.dll";
+            public const string api_ms_win_core_job_l1_1_0 = "api-ms-win-core-job-l1-1-0.dll";
+            public const string api_ms_win_core_libraryloader_l1_1_1 = "api-ms-win-core-libraryloader-l1-1-1.dll";
+            public const string api_ms_win_core_localization_l1_2_0 = "api-ms-win-core-localization-l1-2-0.dll";
+            public const string api_ms_win_core_memory_l1_1_1 = "api-ms-win-core-memory-l1-1-1.dll";
+            public const string api_ms_win_core_namedpipe_l1_2_0 = "api-ms-win-core-namedpipe-l1-2-0.dll";
+            public const string api_ms_win_core_namespace_l1_1_0 = "api-ms-win-core-namespace-l1-1-0.dll";
+            public const string api_ms_win_core_path_l1_1_0 = "api-ms-win-core-path-l1-1-0.dll";
+            public const string api_ms_win_core_processenvironment_l1_2_0 = "api-ms-win-core-processenvironment-l1-2-0.dll";
+            public const string api_ms_win_core_processthreads_l1_1_1 = "api-ms-win-core-processthreads-l1-1-1.dll";
+            public const string api_ms_win_core_processtopology_l1_1_0 = "api-ms-win-core-processtopology-l1-1-0.dll";
+            public const string api_ms_win_core_profile_l1_1_0 = "api-ms-win-core-profile-l1-1-0.dll";
+            public const string api_ms_win_core_psapi_l1_1_0 = "api-ms-win-core-psapi-l1-1-0.dll";
+            public const string api_ms_win_core_realtime_l1_1_0 = "api-ms-win-core-realtime-l1-1-0.dll";
+            public const string api_ms_win_core_registry_l1_1_0 = "api-ms-win-core-registry-l1-1-0.dll";
+            public const string api_ms_win_core_rtlsupport_l1_2_0 = "api-ms-win-core-rtlsupport-l1-2-0.dll";
+            public const string api_ms_win_core_shutdown_l1_1_0 = "api-ms-win-core-shutdown-l1-1-0.dll";
+            public const string api_ms_win_core_string_l1_1_0 = "api-ms-win-core-string-l1-1-0.dll";
+            public const string api_ms_win_core_string_l2_1_0 = "api-ms-win-core-string-l2-1-0.dll";
+            public const string api_ms_win_core_synch_l1_2_0 = "api-ms-win-core-synch-l1-2-0.dll";
+            public const string api_ms_win_core_sysinfo_l1_2_0 = "api-ms-win-core-sysinfo-l1-2-0.dll";
+            public const string api_ms_win_core_systemtopology_l1_1_0 = "api-ms-win-core-systemtopology-l1-1-0.dll";
+            public const string api_ms_win_core_threadpool_l1_2_0 = "api-ms-win-core-threadpool-l1-2-0.dll";
+            public const string api_ms_win_core_timezone_l1_1_0 = "api-ms-win-core-timezone-l1-1-0.dll";
+            public const string api_ms_win_core_util_l1_1_0 = "api-ms-win-core-util-l1-1-0.dll";
+            public const string api_ms_win_core_version_l1_1_0 = "api-ms-win-core-version-l1-1-0.dll";
+            public const string api_ms_win_core_xstate_l1_1_1 = "api-ms-win-core-xstate-l1-1-1.dll";
         }
 
-         /// <summary>
+        /// <summary>
         /// Uses the stringbuilder cache and increases the buffer size if needed.
         /// </summary>
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
@@ -196,22 +212,12 @@ namespace WInterop
                     {
                         return null;
                     }
-                    throw ErrorHandling.GetIoExceptionForError(error, value);
+                    throw ErrorHelper.GetIoExceptionForError(error, value);
                 }
 
                 buffer.Length = returnValue;
                 return buffer.ToString();
             });
-        }
-
-        public static ulong HighLowToLong(uint high, uint low)
-        {
-            return ((ulong)high) << 32 | ((ulong)low & 0xFFFFFFFFL);
-        }
-
-        public static DateTime GetDateTime(System.Runtime.InteropServices.ComTypes.FILETIME fileTime)
-        {
-            return DateTime.FromFileTime((((long)fileTime.dwHighDateTime) << 32) + (uint)fileTime.dwLowDateTime);
         }
     }
 }

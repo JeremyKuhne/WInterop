@@ -8,11 +8,10 @@
 namespace WInterop.FileManagement
 {
     using System;
-    using WInterop.Authorization;
 
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117.aspx">File attribute constants</a>. This is a superset of what is defined
-    /// in System.IO.
+    /// in System.IO. Combined with SecurityQosFlags and FileFlags for CreateFile.
     /// </summary>
     [Flags]
     public enum FileAttributes : uint
@@ -40,25 +39,6 @@ namespace WInterop.FileManagement
         FILE_ATTRIBUTE_VIRTUAL = 0x00010000,
         FILE_ATTRIBUTE_NO_SCRUB_DATA = 0x00020000,
         FILE_ATTRIBUTE_EA = 0x00040000,
-        FILE_FLAG_FIRST_PIPE_INSTANCE = 0x00080000,
-        FILE_FLAG_OPEN_NO_RECALL = 0x00100000,
-        FILE_FLAG_OPEN_REPARSE_POINT = 0x00200000,
-        FILE_FLAG_SESSION_AWARE = 0x00800000,
-        FILE_FLAG_POSIX_SEMANTICS = 0x01000000,
-        FILE_FLAG_BACKUP_SEMANTICS = 0x02000000,
-        FILE_FLAG_DELETE_ON_CLOSE = 0x04000000,
-        FILE_FLAG_SEQUENTIAL_SCAN = 0x08000000,
-        FILE_FLAG_RANDOM_ACCESS = 0x10000000,
-        FILE_FLAG_NO_BUFFERING = 0x20000000,
-        FILE_FLAG_OVERLAPPED = 0x40000000,
-        FILE_FLAG_WRITE_THROUGH = 0x80000000,
-        SECURITY_SQOS_PRESENT = 0x00100000,
-        SECURITY_ANONYMOUS = (SECURITY_IMPERSONATION_LEVEL.SecurityAnonymous << 16),
-        SECURITY_IDENTIFICATION = (SECURITY_IMPERSONATION_LEVEL.SecurityIdentification << 16),
-        SECURITY_IMPERSONATION = (SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation << 16),
-        SECURITY_DELEGATION = (SECURITY_IMPERSONATION_LEVEL.SecurityDelegation << 16),
-        SECURITY_CONTEXT_TRACKING = 0x00040000,
-        SECURITY_EFFECTIVE_ONLY = 0x00080000,
 
         /// <summary>
         /// Be careful with this, check for invalid <i>before</i> checking other flags.

@@ -28,11 +28,16 @@ namespace WInterop
             // Managing Kernel Objects
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff554383.aspx
 
-            // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
+            /// <summary>
+            /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+            /// </summary>
+            /// <remarks>
+            /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
+            /// </remarks>
 #if DESKTOP
             [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
 #endif
-            private static class Private
+            public static class Direct
             {
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724211.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -240,16 +245,13 @@ namespace WInterop
                 //  } OBJECT_TYPES_INFORMATION, *POBJECT_TYPES_INFORMATION;
             }
 
-            internal static void CloseHandle(IntPtr handle)
+            public static void CloseHandle(IntPtr handle)
             {
-                if (!Private.CloseHandle(handle))
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw ErrorHandling.GetIoExceptionForError(error);
-                }
+                if (!Direct.CloseHandle(handle))
+                    throw ErrorHelper.GetIoExceptionForLastError();
             }
 
-            unsafe internal static string GetObjectName(IntPtr windowsObject)
+            unsafe public static string GetObjectName(IntPtr windowsObject)
             {
                 // IoQueryFileDosDeviceName wraps this for file handles, but requires calling ExFreePool to free the allocated memory
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff548474.aspx
@@ -273,9 +275,9 @@ namespace WInterop
                     {
                         nb.EnsureByteCapacity(returnLength);
 
-                        status = Private.NtQueryObject(
+                        status = Direct.NtQueryObject(
                             Handle: windowsObject,
-                            ObjectInformationClass: Private.OBJECT_INFORMATION_CLASS.ObjectNameInformation,
+                            ObjectInformationClass: Direct.OBJECT_INFORMATION_CLASS.ObjectNameInformation,
                             ObjectInformation: nb.DangerousGetHandle(),
                             ObjectInformationLength: checked((uint)nb.ByteCapacity),
                             ReturnLength: out returnLength);
@@ -283,7 +285,7 @@ namespace WInterop
 
                     if (!ErrorHandling.NT_SUCCESS(status))
                     {
-                        throw ErrorHandling.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
+                        throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
                     }
 
                     var info = Marshal.PtrToStructure<UNICODE_STRING>(nb.DangerousGetHandle());
@@ -293,22 +295,22 @@ namespace WInterop
                 }
             }
 
-            unsafe internal static string GetObjectTypeName(IntPtr windowsObject)
+            unsafe public static string GetObjectTypeName(IntPtr windowsObject)
             {
                 using (NativeBuffer nb = new NativeBuffer())
                 {
                     int status = NtStatus.STATUS_BUFFER_OVERFLOW;
 
                     // We'll initially give room for 50 characters for the type name
-                    uint returnLength = Private.ObjectTypeInformationSize + 50 * sizeof(char);
+                    uint returnLength = Direct.ObjectTypeInformationSize + 50 * sizeof(char);
 
                     while (status == NtStatus.STATUS_BUFFER_OVERFLOW || status == NtStatus.STATUS_BUFFER_TOO_SMALL || status == NtStatus.STATUS_INFO_LENGTH_MISMATCH)
                     {
                         nb.EnsureByteCapacity(returnLength);
 
-                        status = Private.NtQueryObject(
+                        status = Direct.NtQueryObject(
                             Handle: windowsObject,
-                            ObjectInformationClass: Private.OBJECT_INFORMATION_CLASS.ObjectTypeInformation,
+                            ObjectInformationClass: Direct.OBJECT_INFORMATION_CLASS.ObjectTypeInformation,
                             ObjectInformation: nb.DangerousGetHandle(),
                             ObjectInformationLength: checked((uint)nb.ByteCapacity),
                             ReturnLength: out returnLength);
@@ -316,10 +318,10 @@ namespace WInterop
 
                     if (!ErrorHandling.NT_SUCCESS(status))
                     {
-                        throw ErrorHandling.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
+                        throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
                     }
 
-                    var info = Marshal.PtrToStructure<Private.OBJECT_TYPE_INFORMATION>(nb.DangerousGetHandle());
+                    var info = Marshal.PtrToStructure<Direct.OBJECT_TYPE_INFORMATION>(nb.DangerousGetHandle());
 
                     // The string isn't null terminated so we have to explicitly pass the size
                     return new string(info.TypeName.Buffer, 0, info.TypeName.Length / sizeof(char));

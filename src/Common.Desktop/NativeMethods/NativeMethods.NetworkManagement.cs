@@ -121,9 +121,7 @@ namespace WInterop
             {
                 uint result = Direct.NetApiBufferFree(buffer);
                 if (result != WinErrors.NERR_Success)
-                {
-                    throw ErrorHandling.GetIoExceptionForError(result);
-                }
+                    throw ErrorHelper.GetIoExceptionForError(result);
             }
 
             public unsafe static void AddLocalGroup(string groupName, string comment = null, string server = null)
@@ -144,9 +142,7 @@ namespace WInterop
                             parm_err: out parameter);
 
                         if (result != WinErrors.NERR_Success)
-                        {
-                            throw ErrorHandling.GetIoExceptionForError(result, groupName);
-                        }
+                            throw ErrorHelper.GetIoExceptionForError(result, groupName);
                     }
                 }
             }
@@ -169,9 +165,7 @@ namespace WInterop
                     resumehandle: IntPtr.Zero);
 
                 if (result != WinErrors.NERR_Success)
-                {
-                    throw ErrorHandling.GetIoExceptionForError(result, server);
-                }
+                    throw ErrorHelper.GetIoExceptionForError(result, server);
 
                 foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
                 {
@@ -200,9 +194,7 @@ namespace WInterop
                     resumehandle: IntPtr.Zero);
 
                 if (result != WinErrors.NERR_Success)
-                {
-                    throw ErrorHandling.GetIoExceptionForError(result, server);
-                }
+                    throw ErrorHelper.GetIoExceptionForError(result, server);
 
                 foreach (Direct.LOCALGROUP_MEMBERS_INFO_1 info in ReadStructsFromBuffer<Direct.LOCALGROUP_MEMBERS_INFO_1>(buffer, entriesRead))
                 {

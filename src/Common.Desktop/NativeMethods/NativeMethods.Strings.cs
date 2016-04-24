@@ -7,6 +7,7 @@
 
 namespace WInterop
 {
+    using ErrorHandling;
     using Handles;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -39,10 +40,7 @@ namespace WInterop
                 char* buffer;
                 int result = Private.LoadStringW(library, identifier, out buffer, 0);
                 if (result <= 0)
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw ErrorHandling.GetIoExceptionForError(error, identifier.ToString());
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError(identifier.ToString());
 
                 // Null is not included in the result
                 return new string(buffer, 0, result);

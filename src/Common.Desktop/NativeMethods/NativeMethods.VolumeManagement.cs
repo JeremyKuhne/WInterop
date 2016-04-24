@@ -17,7 +17,7 @@ namespace WInterop
     using System.Linq;
     using Utility;
     using VolumeManagement;
-
+    using Handles;
     public static partial class NativeMethods
     {
         public static class VolumeManagement
@@ -87,6 +87,12 @@ namespace WInterop
                 [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 public static extern DriveType GetDriveTypeW(
                     string lpRootPathName);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364433.aspx
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                public static extern bool FindVolumeClose(
+                    SafeFindVolumeHandle hFindVolume);
             }
 
             /// <summary>

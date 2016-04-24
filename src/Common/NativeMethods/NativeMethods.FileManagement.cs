@@ -8,6 +8,7 @@
 namespace WInterop
 {
     using Authorization;
+    using ErrorHandling;
     using FileManagement;
     using Handles;
     using Microsoft.Win32.SafeHandles;
@@ -18,7 +19,7 @@ namespace WInterop
 
     public static partial class NativeMethods
     {
-        public static class FileManagement
+        public static partial class FileManagement
         {
             /// <summary>
             /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -29,12 +30,24 @@ namespace WInterop
 #if DESKTOP
             [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
 #endif
-            public static class Direct
+            public static partial class Direct
             {
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364944.aspx
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449422.aspx
                 [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-                public static extern FileAttributes GetFileAttributesW(
-                    string lpFileName);
+                public static extern SafeFileHandle CreateFile2(
+                    string lpFileName,
+                    uint dwDesiredAccess,
+                    [MarshalAs(UnmanagedType.U4)] System.IO.FileShare dwShareMode,
+                    [MarshalAs(UnmanagedType.U4)] System.IO.FileMode dwCreationDisposition,
+                    CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364946.aspx
+                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                public static extern bool GetFileAttributesEx(
+                    string lpFileName,
+                    GET_FILEEX_INFO_LEVELS fInfoLevelId,
+                    out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365535.aspx
                 [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -73,17 +86,6 @@ namespace WInterop
                     uint cchFilePath,
                     GetFinalPathNameByHandleFlags dwFlags);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
-                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-                public static extern SafeFileHandle CreateFileW(
-                    string lpFileName,
-                    uint dwDesiredAccess,
-                    [MarshalAs(UnmanagedType.U4)] System.IO.FileShare dwShareMode,
-                    IntPtr lpSecurityAttributes,
-                    [MarshalAs(UnmanagedType.U4)] System.IO.FileMode dwCreationDisposition,
-                    FileAttributes dwFlagsAndAttributes,
-                    IntPtr hTemplateFile);
-
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 public static extern SafeFindHandle FindFirstFileExW(
@@ -110,9 +112,11 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                public static extern bool GetFileInformationByHandle(
+                public static extern bool GetFileInformationByHandleEx(
                     SafeFileHandle hFile,
-                    out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+                    FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+                    IntPtr lpFileInformation,
+                    uint dwBufferSize);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -130,26 +134,6 @@ namespace WInterop
                     out uint lpNumberOfBytesRead,
                     ref OVERLAPPED lpOverlapped);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363852.aspx
-                // CopyFile calls CopyFileEx with COPY_FILE_FAIL_IF_EXISTS if fail if exists is set
-                [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-                [return: MarshalAs(UnmanagedType.Bool)]
-                public static extern bool CopyFileExW(
-                    string lpExistingFileName,
-                    string lpNewFileName,
-                    CopyProgressRoutine lpProgressRoutine,
-                    IntPtr lpData,
-                    [MarshalAs(UnmanagedType.Bool)] ref bool pbCancel,
-                    CopyFileExFlags dwCopyFlags);
-
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363866.aspx
-                // Note that CreateSymbolicLinkW returns a BOOLEAN (byte), not a BOOL (int)
-                [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-                public static extern byte CreateSymbolicLinkW(
-                    string lpSymlinkFileName,
-                    string lpTargetFileName,
-                    uint dwFlags);
-
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364960.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
                 public static extern FileType GetFileType(
@@ -160,55 +144,17 @@ namespace WInterop
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool FlushFileBuffers(
                     SafeFileHandle hFile);
-
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364021.aspx
-                [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-                [return: MarshalAs(UnmanagedType.Bool)]
-                public static extern bool EncryptFileW(
-                    string lpFileName);
-
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363903.aspx
-                [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-                [return: MarshalAs(UnmanagedType.Bool)]
-                public static extern bool DecryptFileW(
-                    string lpFileName,
-                    uint dwReserved);
-
-                // Adding Users to an Encrypted File
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363765.aspx
-                //
-                // 1. LookupAccountName() to get SID
-                // 2. CertOpenSystemStore((HCRYPTPROV)NULL,L"TrustedPeople") to get cert store
-                // 3. CertFindCertificateInStore() to find the desired cert (PCCERT_CONTEXT)
-                //
-                //   EFS_CERTIFICATE.cbTotalLength = Marshal.Sizeof(EFS_CERTIFICATE)
-                //   EFS_CERTIFICATE.pUserSid = &SID
-                //   EFS_CERTIFICATE.pCertBlob.dwCertEncodingType = CCERT_CONTEXT.dwCertEncodingType
-                //   EFS_CERTIFICATE.pCertBlob.cbData = CCERT_CONTEXT.cbCertEncoded
-                //   EFS_CERTIFICATE.pCertBlob.pbData = CCERT_CONTEXT.pbCertEncoded
-
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363770.aspx
-                //
-                //  DWORD WINAPI AddUsersToEncryptedFile(
-                //      _In_ LPCWSTR lpFileName,
-                //      _In_ PENCRYPTION_CERTIFICATE_LIST pUsers
-                //  );
-                [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-                internal static extern uint AddUsersToEncryptedFile(
-                    string lpFileName,
-
-                    /// <summary>
-                    /// Pointer to ENCRYPTION_CERTIFICATE_LIST array
-                    /// </summary>
-                    IntPtr pUsers);
             }
 
+#if !DESKTOP
             public static SafeFileHandle CreateFile(
                 string path,
                 System.IO.FileAccess fileAccess,
                 System.IO.FileShare fileShare,
                 System.IO.FileMode creationDisposition,
-                FileAttributes flagsAndAttributes)
+                FileAttributes fileAttributes = FileAttributes.NONE,
+                FileFlags fileFlags = FileFlags.NONE,
+                SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
             {
                 if (creationDisposition == System.IO.FileMode.Append) creationDisposition = System.IO.FileMode.OpenOrCreate;
 
@@ -216,15 +162,27 @@ namespace WInterop
                     ((fileAccess & System.IO.FileAccess.Read) != 0 ? (uint)GenericAccessRights.GENERIC_READ : 0) |
                     ((fileAccess & System.IO.FileAccess.Write) != 0 ? (uint)GenericAccessRights.GENERIC_WRITE : 0);
 
-                SafeFileHandle handle = Direct.CreateFileW(path, dwDesiredAccess, fileShare, IntPtr.Zero, creationDisposition, flagsAndAttributes, IntPtr.Zero);
+                CREATEFILE2_EXTENDED_PARAMETERS extended = new CREATEFILE2_EXTENDED_PARAMETERS();
+                extended.dwSize = (uint)Marshal.SizeOf<CREATEFILE2_EXTENDED_PARAMETERS>();
+                extended.dwFileAttributes = fileAttributes;
+                extended.dwFileFlags = fileFlags;
+                extended.dwSecurityQosFlags = securityQosFlags;
+                extended.lpSecurityAttributes = IntPtr.Zero;
+                extended.hTemplateFile = IntPtr.Zero;
+
+                SafeFileHandle handle = Direct.CreateFile2(
+                    lpFileName: path,
+                    dwDesiredAccess: dwDesiredAccess,
+                    dwShareMode: fileShare,
+                    dwCreationDisposition: creationDisposition,
+                    pCreateExParams: extended);
+
                 if (handle.IsInvalid)
-                {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    throw ErrorHandling.GetIoExceptionForError(error, path);
-                }
+                    throw ErrorHelper.GetIoExceptionForLastError(path);
 
                 return handle;
             }
+#endif
         }
     }
 }
