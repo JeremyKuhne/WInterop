@@ -66,7 +66,7 @@ namespace WInterop
                 if (handle.IsInvalid)
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error, path);
+                    throw ErrorHandling.GetIoExceptionForError(error, path);
                 }
                 return handle;
             }
@@ -90,7 +90,7 @@ namespace WInterop
                 if (method == IntPtr.Zero)
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error, methodName);
+                    throw ErrorHandling.GetIoExceptionForError(error, methodName);
                 }
 
                 return Marshal.GetDelegateForFunctionPointer<DelegateType>(method);

@@ -168,7 +168,7 @@ namespace WInterop
             {
                 if (!Direct.CertCloseStore(handle.DangerousGetHandle(), dwFlags: 0))
                 {
-                    throw Errors.GetIoExceptionForError((uint)Marshal.GetLastWin32Error());
+                    throw ErrorHandling.GetIoExceptionForError((uint)Marshal.GetLastWin32Error());
                 }
             }
 

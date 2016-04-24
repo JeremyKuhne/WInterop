@@ -32,6 +32,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocationId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveLockedException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveNotReadyException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Facility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FormatMessageFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\NtStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WinErrors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BY_HANDLE_FILE_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyFileExFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyProgressCallbackReason.cs" />
@@ -58,13 +64,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Backup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Cryptography.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Errors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ErrorHandling.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Heap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\SID_NAME_USE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\OVERLAPPED.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Environment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Paths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WInteropStrings.Designer.cs">
       <DependentUpon>WInteropStrings.resx</DependentUpon>
       <DesignTime>True</DesignTime>

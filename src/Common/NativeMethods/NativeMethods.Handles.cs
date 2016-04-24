@@ -8,6 +8,7 @@
 namespace WInterop
 {
     using Buffers;
+    using ErrorHandling;
     using System;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -244,7 +245,7 @@ namespace WInterop
                 if (!Private.CloseHandle(handle))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error);
+                    throw ErrorHandling.GetIoExceptionForError(error);
                 }
             }
 
@@ -265,10 +266,10 @@ namespace WInterop
 
                 using (NativeBuffer nb = new NativeBuffer())
                 {
-                    int status = Errors.NtStatus.STATUS_BUFFER_OVERFLOW;
+                    int status = NtStatus.STATUS_BUFFER_OVERFLOW;
                     uint returnLength = 260 * sizeof(char);
 
-                    while (status == Errors.NtStatus.STATUS_BUFFER_OVERFLOW || status == Errors.NtStatus.STATUS_BUFFER_TOO_SMALL)
+                    while (status == NtStatus.STATUS_BUFFER_OVERFLOW || status == NtStatus.STATUS_BUFFER_TOO_SMALL)
                     {
                         nb.EnsureByteCapacity(returnLength);
 
@@ -280,9 +281,9 @@ namespace WInterop
                             ReturnLength: out returnLength);
                     }
 
-                    if (!Errors.NT_SUCCESS(status))
+                    if (!ErrorHandling.NT_SUCCESS(status))
                     {
-                        throw Errors.GetIoExceptionForError(Errors.NtStatusToWinError(status));
+                        throw ErrorHandling.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
                     }
 
                     var info = Marshal.PtrToStructure<UNICODE_STRING>(nb.DangerousGetHandle());
@@ -296,12 +297,12 @@ namespace WInterop
             {
                 using (NativeBuffer nb = new NativeBuffer())
                 {
-                    int status = Errors.NtStatus.STATUS_BUFFER_OVERFLOW;
+                    int status = NtStatus.STATUS_BUFFER_OVERFLOW;
 
                     // We'll initially give room for 50 characters for the type name
                     uint returnLength = Private.ObjectTypeInformationSize + 50 * sizeof(char);
 
-                    while (status == Errors.NtStatus.STATUS_BUFFER_OVERFLOW || status == Errors.NtStatus.STATUS_BUFFER_TOO_SMALL || status == Errors.NtStatus.STATUS_INFO_LENGTH_MISMATCH)
+                    while (status == NtStatus.STATUS_BUFFER_OVERFLOW || status == NtStatus.STATUS_BUFFER_TOO_SMALL || status == NtStatus.STATUS_INFO_LENGTH_MISMATCH)
                     {
                         nb.EnsureByteCapacity(returnLength);
 
@@ -313,9 +314,9 @@ namespace WInterop
                             ReturnLength: out returnLength);
                     }
 
-                    if (!Errors.NT_SUCCESS(status))
+                    if (!ErrorHandling.NT_SUCCESS(status))
                     {
-                        throw Errors.GetIoExceptionForError(Errors.NtStatusToWinError(status));
+                        throw ErrorHandling.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
                     }
 
                     var info = Marshal.PtrToStructure<Private.OBJECT_TYPE_INFORMATION>(nb.DangerousGetHandle());

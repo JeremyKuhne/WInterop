@@ -529,7 +529,7 @@ namespace WInterop.Buffers
         /// Split the contents into strings via the given split characters.
         /// </summary>
         /// <exception cref="OverflowException">Thrown if the substring is too big to fit in a string.</exception>
-        unsafe public IEnumerable<string> Split(char splitCharacter)
+        unsafe public IEnumerable<string> Split(char splitCharacter, bool removeEmptyStrings = false)
         {
             var strings = new List<string>();
 
@@ -540,20 +540,25 @@ namespace WInterop.Buffers
                 char* current = start;
 
                 uint length = _length;
+                int splitLength;
 
                 for (uint i = 0; i < length; i++)
                 {
                     if (splitCharacter == *current)
                     {
                         // Split
-                        strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
+                        splitLength = checked((int)(current - start));
+                        if (!removeEmptyStrings || splitLength > 0)
+                            strings.Add(new string(value: start, startIndex: 0, length: splitLength));
                         start = current + 1;
                     }
 
                     current++;
                 }
 
-                strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
+                splitLength = checked((int)(current - start));
+                if (!removeEmptyStrings || splitLength > 0)
+                    strings.Add(new string(value: start, startIndex: 0, length: splitLength));
             }
             finally
             {

@@ -9,6 +9,7 @@ namespace WInterop
 {
     using Authorization;
     using Buffers;
+    using ErrorHandling;
     using Handles;
     using System;
     using System.Collections.Generic;
@@ -178,8 +179,8 @@ namespace WInterop
                     out bytesNeeded))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    if (error != Errors.WinError.ERROR_INSUFFICIENT_BUFFER)
-                        throw Errors.GetIoExceptionForError(error);
+                    if (error != WinErrors.ERROR_INSUFFICIENT_BUFFER)
+                        throw ErrorHandling.GetIoExceptionForError(error);
                 }
                 else
                 {
@@ -197,7 +198,7 @@ namespace WInterop
                     out bytesNeeded))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error);
+                    throw ErrorHandling.GetIoExceptionForError(error);
                 }
 
                 // Loop through and get our privileges
@@ -220,7 +221,7 @@ namespace WInterop
                     if (!Direct.LookupPrivilegeNameW(IntPtr.Zero, ref luid, nameBuffer, ref length))
                     {
                         uint error = (uint)Marshal.GetLastWin32Error();
-                        throw Errors.GetIoExceptionForError(error);
+                        throw ErrorHandling.GetIoExceptionForError(error);
                     }
 
                     nameBuffer.Length = length;
@@ -248,7 +249,7 @@ namespace WInterop
                 if (!Direct.LookupPrivilegeValueW(null, name, ref luid))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error, name);
+                    throw ErrorHandling.GetIoExceptionForError(error, name);
                 }
 
                 return luid;
@@ -280,7 +281,7 @@ namespace WInterop
                 if (!Direct.PrivilegeCheck(token, ref set, out result))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error, privilege.ToString());
+                    throw ErrorHandling.GetIoExceptionForError(error, privilege.ToString());
                 }
 
                 return result;
@@ -292,7 +293,7 @@ namespace WInterop
                 if (!Direct.OpenProcessToken(Process.GetCurrentProcess().Handle, desiredAccess, out processToken))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
+                    throw ErrorHandling.GetIoExceptionForError(error, desiredAccess.ToString());
                 }
 
                 return processToken;
@@ -304,8 +305,8 @@ namespace WInterop
                 if (!Direct.OpenThreadToken(NativeMethods.Private.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    if (error != Errors.WinError.ERROR_NO_TOKEN)
-                        throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
+                    if (error != WinErrors.ERROR_NO_TOKEN)
+                        throw ErrorHandling.GetIoExceptionForError(error, desiredAccess.ToString());
 
                     SafeCloseHandle processToken = OpenProcessToken(TokenAccessLevels.Duplicate);
                     if (!Direct.DuplicateTokenEx(
@@ -317,7 +318,7 @@ namespace WInterop
                         ref threadToken))
                     {
                         error = (uint)Marshal.GetLastWin32Error();
-                        throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
+                        throw ErrorHandling.GetIoExceptionForError(error, desiredAccess.ToString());
                     }
                 }
 

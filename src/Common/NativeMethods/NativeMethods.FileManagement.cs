@@ -220,7 +220,7 @@ namespace WInterop
                 if (handle.IsInvalid)
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error, path);
+                    throw ErrorHandling.GetIoExceptionForError(error, path);
                 }
 
                 return handle;

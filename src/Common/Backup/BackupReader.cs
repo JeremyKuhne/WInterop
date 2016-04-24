@@ -8,6 +8,7 @@
 namespace WInterop.Backup
 {
     using Buffers;
+    using ErrorHandling;
     using Handles;
     using Microsoft.Win32.SafeHandles;
     using System;
@@ -38,7 +39,7 @@ namespace WInterop.Backup
                 context: ref _context))
             {
                 uint error = (uint)Marshal.GetLastWin32Error();
-                throw NativeMethods.Errors.GetIoExceptionForError(error);
+                throw NativeMethods.ErrorHandling.GetIoExceptionForError(error);
             }
 
             // Exit if at the end
@@ -59,7 +60,7 @@ namespace WInterop.Backup
                     context: ref _context))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw NativeMethods.Errors.GetIoExceptionForError(error);
+                    throw NativeMethods.ErrorHandling.GetIoExceptionForError(error);
                 }
                 name = Marshal.PtrToStringUni(_buffer.DangerousGetHandle(), (int)bytesRead / 2);
             }
@@ -77,9 +78,9 @@ namespace WInterop.Backup
                     context: ref _context))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    if (error != NativeMethods.Errors.WinError.ERROR_SEEK)
+                    if (error != WinErrors.ERROR_SEEK)
                     {
-                        throw NativeMethods.Errors.GetIoExceptionForError(error);
+                        throw NativeMethods.ErrorHandling.GetIoExceptionForError(error);
                     }
                 }
             }
@@ -116,7 +117,7 @@ namespace WInterop.Backup
                     context: ref _context))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw NativeMethods.Errors.GetIoExceptionForError(error);
+                    throw NativeMethods.ErrorHandling.GetIoExceptionForError(error);
                 }
             }
         }

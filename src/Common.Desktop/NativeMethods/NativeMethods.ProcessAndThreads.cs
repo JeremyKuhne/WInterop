@@ -8,6 +8,7 @@
 namespace WInterop
 {
     using Buffers;
+    using ErrorHandling;
     using Handles;
     using System;
     using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace WInterop
                 if (!Direct.SetEnvironmentVariableW(name, value))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error, name);
+                    throw ErrorHandling.GetIoExceptionForError(error, name);
                 }
             }
 
@@ -82,7 +83,7 @@ namespace WInterop
                 return BufferInvoke(
                     buffer => Direct.GetEnvironmentVariableW(name, buffer, buffer.CharCapacity),
                     name,
-                    error => error != Errors.WinError.ERROR_ENVVAR_NOT_FOUND);
+                    error => error != WinErrors.ERROR_ENVVAR_NOT_FOUND);
             }
 
             /// <summary>

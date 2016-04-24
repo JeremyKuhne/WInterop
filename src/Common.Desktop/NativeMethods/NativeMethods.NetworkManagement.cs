@@ -7,6 +7,7 @@
 
 namespace WInterop
 {
+    using ErrorHandling;
     using Handles;
     using NetworkManagement;
     using System;
@@ -119,9 +120,9 @@ namespace WInterop
             public static void NetApiBufferFree(IntPtr buffer)
             {
                 uint result = Direct.NetApiBufferFree(buffer);
-                if (result != Errors.WinError.NERR_Success)
+                if (result != WinErrors.NERR_Success)
                 {
-                    throw Errors.GetIoExceptionForError(result);
+                    throw ErrorHandling.GetIoExceptionForError(result);
                 }
             }
 
@@ -142,9 +143,9 @@ namespace WInterop
                             buf: buffer,
                             parm_err: out parameter);
 
-                        if (result != Errors.WinError.NERR_Success)
+                        if (result != WinErrors.NERR_Success)
                         {
-                            throw Errors.GetIoExceptionForError(result, groupName);
+                            throw ErrorHandling.GetIoExceptionForError(result, groupName);
                         }
                     }
                 }
@@ -167,9 +168,9 @@ namespace WInterop
                     totalentries: out totalEntries,
                     resumehandle: IntPtr.Zero);
 
-                if (result != Errors.WinError.NERR_Success)
+                if (result != WinErrors.NERR_Success)
                 {
-                    throw Errors.GetIoExceptionForError(result, server);
+                    throw ErrorHandling.GetIoExceptionForError(result, server);
                 }
 
                 foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
@@ -198,9 +199,9 @@ namespace WInterop
                     totalentries: out totalEntries,
                     resumehandle: IntPtr.Zero);
 
-                if (result != Errors.WinError.NERR_Success)
+                if (result != WinErrors.NERR_Success)
                 {
-                    throw Errors.GetIoExceptionForError(result, server);
+                    throw ErrorHandling.GetIoExceptionForError(result, server);
                 }
 
                 foreach (Direct.LOCALGROUP_MEMBERS_INFO_1 info in ReadStructsFromBuffer<Direct.LOCALGROUP_MEMBERS_INFO_1>(buffer, entriesRead))

@@ -41,7 +41,7 @@ namespace WInterop
                 if (result <= 0)
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
-                    throw Errors.GetIoExceptionForError(error, identifier.ToString());
+                    throw ErrorHandling.GetIoExceptionForError(error, identifier.ToString());
                 }
 
                 // Null is not included in the result

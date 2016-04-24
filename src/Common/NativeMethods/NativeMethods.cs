@@ -196,7 +196,7 @@ namespace WInterop
                     {
                         return null;
                     }
-                    throw Errors.GetIoExceptionForError(error, value);
+                    throw ErrorHandling.GetIoExceptionForError(error, value);
                 }
 
                 buffer.Length = returnValue;
