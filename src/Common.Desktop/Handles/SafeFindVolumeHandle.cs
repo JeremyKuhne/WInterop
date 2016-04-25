@@ -7,8 +7,8 @@
 
 namespace WInterop.Handles
 {
+    using ErrorHandling;
     using System;
-    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Safe handle for a block of memory returned by GetEnvironmentStrings.
@@ -23,8 +23,7 @@ namespace WInterop.Handles
         {
             if (!NativeMethods.VolumeManagement.Direct.FindVolumeClose(this))
             {
-                uint lastError = (uint)Marshal.GetLastWin32Error();
-                throw ErrorHandling.get
+                throw ErrorHelper.GetIoExceptionForLastError();
             }
 
             handle = IntPtr.Zero;

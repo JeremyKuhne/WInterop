@@ -32,8 +32,8 @@ namespace WInterop
 #endif
             public static partial class Direct
             {
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449422.aspx
-                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449422.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern SafeFileHandle CreateFile2(
                     string lpFileName,
                     uint dwDesiredAccess,
@@ -41,53 +41,45 @@ namespace WInterop
                     [MarshalAs(UnmanagedType.U4)] System.IO.FileMode dwCreationDisposition,
                     CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364946.aspx
-                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364946.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                public static extern bool GetFileAttributesEx(
+                public static extern bool GetFileAttributesExW(
                     string lpFileName,
                     GET_FILEEX_INFO_LEVELS fInfoLevelId,
                     out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365535.aspx
-                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365535.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool SetFileAttributesW(
                     string lpFileName,
                     uint dwFileAttributes);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364980.aspx
-                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364980.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern uint GetLongPathNameW(
                     string lpszShortPath,
                     SafeHandle lpszLongPath,
                     uint cchBuffer);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364989.aspx
-                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364989.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern uint GetShortPathNameW(
                     string lpszLongPath,
                     SafeHandle lpszShortPath,
                     uint cchBuffer);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364963.aspx
-                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364963.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern uint GetFullPathNameW(
                     string lpFileName,
                     uint nBufferLength,
                     SafeHandle lpBuffer,
                     IntPtr lpFilePart);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364962.aspx
-                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-                public static extern uint GetFinalPathNameByHandleW(
-                    SafeFileHandle hFile,
-                    SafeHandle lpszFilePath,
-                    uint cchFilePath,
-                    GetFinalPathNameByHandleFlags dwFlags);
-
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx
-                [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 public static extern SafeFindHandle FindFirstFileExW(
                      string lpFileName,
                      FINDEX_INFO_LEVELS fInfoLevelId,
@@ -96,20 +88,20 @@ namespace WInterop
                      IntPtr lpSearchFilter,                 // Reserved
                      int dwAdditionalFlags);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364428.aspx
-                [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364428.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool FindNextFileW(
                     SafeFindHandle hFindFile,
                     out WIN32_FIND_DATA lpFindFileData);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364413.aspx
-                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364413.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool FindClose(
                     IntPtr hFindFile);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx (kernel32 / api-ms-win-core-file-l2-1-0)
                 [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool GetFileInformationByHandleEx(

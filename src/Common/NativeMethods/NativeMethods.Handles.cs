@@ -7,6 +7,7 @@
 
 namespace WInterop
 {
+    using Authentication;
     using Buffers;
     using ErrorHandling;
     using System;

@@ -35,7 +35,7 @@ namespace WInterop.Tests.NativeMethodTests
             ]
         public void ErrorsMapToExceptions(uint error, Type exceptionType)
         {
-            NativeMethods.ErrorHandling.GetIoExceptionForError(error).Should().BeOfType(exceptionType);
+            ErrorHelper.GetIoExceptionForError(error).Should().BeOfType(exceptionType);
         }
 
 #if DESKTOP

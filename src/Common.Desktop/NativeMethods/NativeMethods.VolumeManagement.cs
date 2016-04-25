@@ -121,7 +121,7 @@ namespace WInterop
                                 buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                                 break;
                             default:
-                                throw ErrorHandling.GetIoExceptionForError(lastError, deviceName);
+                                throw ErrorHelper.GetIoExceptionForError(lastError, deviceName);
                         }
                     }
 
@@ -151,10 +151,7 @@ namespace WInterop
                     }
 
                     if (result == 0)
-                    {
-                        uint lastError = (uint)Marshal.GetLastWin32Error();
-                        throw ErrorHandling.GetIoExceptionForError(lastError);
-                    }
+                        throw ErrorHelper.GetIoExceptionForLastError();
 
                     buffer.Length = result;
                     return buffer.Split('\0', removeEmptyStrings: true);
@@ -179,7 +176,7 @@ namespace WInterop
                                 volumePathName.EnsureCharCapacity(volumePathName.CharCapacity * 2);
                                 break;
                             default:
-                                throw ErrorHandling.GetIoExceptionForError(lastError, path);
+                                throw ErrorHelper.GetIoExceptionForError(lastError, path);
                         }
                     }
 
@@ -209,7 +206,7 @@ namespace WInterop
                                 buffer.EnsureCharCapacity(returnLength);
                                 break;
                             default:
-                                throw ErrorHandling.GetIoExceptionForError(lastError, volumeName);
+                                throw ErrorHelper.GetIoExceptionForError(lastError, volumeName);
                         }
                     }
 
@@ -229,10 +226,7 @@ namespace WInterop
                 return StringBufferCache.CachedBufferInvoke(100, (volumeName) =>
                 {
                     if (!Direct.GetVolumeNameForVolumeMountPointW(volumeMountPoint, volumeName, volumeName.CharCapacity))
-                    {
-                        uint lastError = (uint)Marshal.GetLastWin32Error();
-                        throw ErrorHandling.GetIoExceptionForError(lastError, volumeMountPoint);
-                    }
+                        throw ErrorHelper.GetIoExceptionForLastError(volumeMountPoint);
 
                     volumeName.SetLengthToFirstNull();
                     return volumeName.ToString();
@@ -256,10 +250,7 @@ namespace WInterop
                     uint serialNumber, maxComponentLength;
                     FileSystemFeature flags;
                     if (!Direct.GetVolumeInformationW(rootPath, volumeName, volumeName.CharCapacity, out serialNumber, out maxComponentLength, out flags, fileSystemName, fileSystemName.CharCapacity))
-                    {
-                        uint lastError = (uint)Marshal.GetLastWin32Error();
-                        throw ErrorHandling.GetIoExceptionForError(lastError, rootPath);
-                    }
+                        throw ErrorHelper.GetIoExceptionForLastError(rootPath);
 
                     volumeName.SetLengthToFirstNull();
                     fileSystemName.SetLengthToFirstNull();

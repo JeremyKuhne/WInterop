@@ -24,6 +24,12 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\WInterop.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>TRACE;DEBUG;PORTABLE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DefineConstants>TRACE;PORTABLE</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
     <None Include="..\WInterop.snk" />

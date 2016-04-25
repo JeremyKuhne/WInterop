@@ -7,20 +7,13 @@
 
 namespace WInterop
 {
-    using Authorization;
     using Backup;
-    using Buffers;
-    using Handles;
+    using FileManagement;
     using Microsoft.Win32.SafeHandles;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Security;
-    using System.Security.Principal;
-    using System.Text;
 
     public static partial class NativeMethods
     {
@@ -65,12 +58,13 @@ namespace WInterop
             {
                 List<StreamInformation> streams = new List<StreamInformation>();
                 using (var fileHandle = FileManagement.CreateFile(
-                    path,
+                    path: path,
                     // To look at metadata we don't need read or write access
-                    0,
-                    FileShare.ReadWrite,
-                    FileMode.Open,
-                    WInterop.FileManagement.FileAttributes.FILE_FLAG_BACKUP_SEMANTICS))
+                    fileAccess: 0,
+                    fileShare: System.IO.FileShare.ReadWrite,
+                    creationDisposition: System.IO.FileMode.Open,
+                    fileAttributes: FileAttributes.NONE,
+                    fileFlags: FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     using (BackupReader reader = new BackupReader(fileHandle))
                     {

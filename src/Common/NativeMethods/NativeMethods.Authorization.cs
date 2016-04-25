@@ -289,7 +289,7 @@ namespace WInterop
             public static SafeCloseHandle OpenThreadToken(TokenAccessLevels desiredAccess, bool openAsSelf)
             {
                 SafeCloseHandle threadToken;
-                if (!Direct.OpenThreadToken(NativeMethods.Private.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
+                if (!Direct.OpenThreadToken(ProcessAndThreads.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
                 {
                     uint error = (uint)Marshal.GetLastWin32Error();
                     if (error != WinErrors.ERROR_NO_TOKEN)

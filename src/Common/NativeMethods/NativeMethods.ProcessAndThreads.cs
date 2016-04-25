@@ -13,7 +13,7 @@ namespace WInterop
 
     public static partial class NativeMethods
     {
-        public static class ProcessAndThreads
+        public static partial class ProcessAndThreads
         {
             /// <summary>
             /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -24,7 +24,7 @@ namespace WInterop
 #if DESKTOP
             [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
 #endif
-            public static class Direct
+            public static partial class Direct
             {
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683182.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

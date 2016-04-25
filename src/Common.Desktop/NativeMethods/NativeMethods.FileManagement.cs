@@ -57,6 +57,14 @@ namespace WInterop
                     SafeFileHandle hFile,
                     out BY_HANDLE_FILE_INFORMATION lpFileInformation);
 
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364962.aspx (kernel32)
+                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                public static extern uint GetFinalPathNameByHandleW(
+                    SafeFileHandle hFile,
+                    SafeHandle lpszFilePath,
+                    uint cchFilePath,
+                    GetFinalPathNameByHandleFlags dwFlags);
+
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363852.aspx
                 // CopyFile calls CopyFileEx with COPY_FILE_FAIL_IF_EXISTS if fail if exists is set
                 // (Neither are available in WinRT- use CopyFile2)
@@ -70,12 +78,6 @@ namespace WInterop
                     [MarshalAs(UnmanagedType.Bool)] ref bool pbCancel,
                     CopyFileExFlags dwCopyFlags);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364021.aspx
-                [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-                [return: MarshalAs(UnmanagedType.Bool)]
-                public static extern bool EncryptFileW(
-                    string lpFileName);
-
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363866.aspx
                 // Note that CreateSymbolicLinkW returns a BOOLEAN (byte), not a BOOL (int)
                 [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -83,6 +85,12 @@ namespace WInterop
                     string lpSymlinkFileName,
                     string lpTargetFileName,
                     uint dwFlags);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364021.aspx
+                [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                public static extern bool EncryptFileW(
+                    string lpFileName);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363903.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -120,6 +128,8 @@ namespace WInterop
                     IntPtr pUsers);
             }
 
+#if !PORTABLE
+            // We want to prefer the CreateFile2 version of this for portable as it will work with WinRT
             public static SafeFileHandle CreateFile(
                 string path,
                 System.IO.FileAccess fileAccess,
@@ -143,6 +153,7 @@ namespace WInterop
 
                 return handle;
             }
+#endif
         }
     }
 }
