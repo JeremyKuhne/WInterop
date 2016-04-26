@@ -11,8 +11,6 @@ namespace WInterop
     using ErrorHandling;
     using FileManagement;
     using Handles;
-    using Microsoft.Win32.SafeHandles;
-    using Synchronization;
     using System;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -57,8 +55,22 @@ namespace WInterop
                     SafeFileHandle hFile,
                     out BY_HANDLE_FILE_INFORMATION lpFileInformation);
 
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364980.aspx (kernel32)
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                public static extern uint GetLongPathNameW(
+                    string lpszShortPath,
+                    SafeHandle lpszLongPath,
+                    uint cchBuffer);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364989.aspx (kernel32)
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                public static extern uint GetShortPathNameW(
+                    string lpszLongPath,
+                    SafeHandle lpszShortPath,
+                    uint cchBuffer);
+
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364962.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern uint GetFinalPathNameByHandleW(
                     SafeFileHandle hFile,
                     SafeHandle lpszFilePath,
@@ -126,6 +138,16 @@ namespace WInterop
                     /// Pointer to ENCRYPTION_CERTIFICATE_LIST array
                     /// </summary>
                     IntPtr pUsers);
+            }
+
+            public static string GetLongPathName(string path)
+            {
+                return BufferInvoke((buffer) => Direct.GetLongPathNameW(path, buffer, buffer.CharCapacity));
+            }
+
+            public static string GetShortPathName(string path)
+            {
+                return BufferInvoke((buffer) => Direct.GetShortPathNameW(path, buffer, buffer.CharCapacity));
             }
 
 #if !PORTABLE

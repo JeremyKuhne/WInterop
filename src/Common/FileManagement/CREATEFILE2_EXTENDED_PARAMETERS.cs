@@ -8,9 +8,7 @@
 namespace WInterop.FileManagement
 {
     using System;
-    using System.Collections.Generic;
     using System.Runtime.InteropServices;
-    using System.Text;
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449426.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

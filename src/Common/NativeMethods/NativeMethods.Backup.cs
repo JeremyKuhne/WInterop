@@ -9,7 +9,7 @@ namespace WInterop
 {
     using Backup;
     using FileManagement;
-    using Microsoft.Win32.SafeHandles;
+    using Handles;
     using System;
     using System.Collections.Generic;
     using System.Runtime.InteropServices;

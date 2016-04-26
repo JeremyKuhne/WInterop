@@ -65,6 +65,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HeapHandleCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeCertificateStoreHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeCloseHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeFileHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeFindHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHandleZeroIsInvalid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHeapHandle.cs" />

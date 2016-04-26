@@ -10,7 +10,6 @@ namespace WInterop.Backup
     using Buffers;
     using ErrorHandling;
     using Handles;
-    using Microsoft.Win32.SafeHandles;
     using System;
     using System.Runtime.InteropServices;
 

@@ -142,7 +142,10 @@ namespace WInterop
             public const string Ntdll = "ntdll.dll";
             public const string Crypt32 = "crypt32.dll";
             public const string Netapi32 = "netapi32.dll";
+        }
 
+        public static class ApiSets
+        {
             // Windows 7 and Windows Server 2008 R2 Kernel Changes
             // https://channel9.msdn.com/events/pdc/pdc09/p09-20
 

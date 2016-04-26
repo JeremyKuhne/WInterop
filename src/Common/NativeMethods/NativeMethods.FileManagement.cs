@@ -8,14 +8,15 @@
 namespace WInterop
 {
     using Authorization;
+    using Buffers;
     using ErrorHandling;
     using FileManagement;
     using Handles;
-    using Microsoft.Win32.SafeHandles;
     using Synchronization;
     using System;
     using System.Runtime.InteropServices;
     using System.Security;
+    using Utility;
 
     public static partial class NativeMethods
     {
@@ -33,16 +34,16 @@ namespace WInterop
             public static partial class Direct
             {
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449422.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern SafeFileHandle CreateFile2(
                     string lpFileName,
                     uint dwDesiredAccess,
                     [MarshalAs(UnmanagedType.U4)] System.IO.FileShare dwShareMode,
                     [MarshalAs(UnmanagedType.U4)] System.IO.FileMode dwCreationDisposition,
-                    CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
+                    [In] ref CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364946.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool GetFileAttributesExW(
                     string lpFileName,
@@ -50,28 +51,14 @@ namespace WInterop
                     out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365535.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool SetFileAttributesW(
                     string lpFileName,
                     uint dwFileAttributes);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364980.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-                public static extern uint GetLongPathNameW(
-                    string lpszShortPath,
-                    SafeHandle lpszLongPath,
-                    uint cchBuffer);
-
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364989.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-                public static extern uint GetShortPathNameW(
-                    string lpszLongPath,
-                    SafeHandle lpszShortPath,
-                    uint cchBuffer);
-
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364963.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern uint GetFullPathNameW(
                     string lpFileName,
                     uint nBufferLength,
@@ -79,7 +66,7 @@ namespace WInterop
                     IntPtr lpFilePart);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 public static extern SafeFindHandle FindFirstFileExW(
                      string lpFileName,
                      FINDEX_INFO_LEVELS fInfoLevelId,
@@ -89,14 +76,14 @@ namespace WInterop
                      int dwAdditionalFlags);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364428.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool FindNextFileW(
                     SafeFindHandle hFindFile,
                     out WIN32_FIND_DATA lpFindFileData);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364413.aspx (kernel32)
-                [DllImport(Libraries.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool FindClose(
                     IntPtr hFindFile);
@@ -110,7 +97,7 @@ namespace WInterop
                     IntPtr lpFileInformation,
                     uint dwBufferSize);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915.aspx
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915.aspx (kernel32)
                 [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool DeleteFileW(
@@ -136,6 +123,54 @@ namespace WInterop
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool FlushFileBuffers(
                     SafeFileHandle hFile);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364992.aspx (kernel32)
+                [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, SetLastError = true, ExactSpelling = true)]
+                public static extern uint GetTempPathW(
+                    uint nBufferLength,
+                    SafeHandle lpBuffer);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364991.aspx (kernel32)
+                [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                public static extern uint GetTempFileNameW(
+                    string lpPathName,
+                    string lpPrefixString,
+                    uint uUnique,
+                    SafeHandle lpTempFileName);
+            }
+
+            public static string GetTempPath()
+            {
+                return BufferInvoke((buffer) => Direct.GetTempPathW(buffer.CharCapacity, buffer));
+            }
+
+            public static string GetFullPathName(string path)
+            {
+                return BufferInvoke((buffer) => Direct.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero));
+            }
+
+            public static string GetTempFileName(string path, string prefix)
+            {
+                return StringBufferCache.CachedBufferInvoke((buffer) =>
+                {
+                    buffer.EnsureCharCapacity(Paths.MaxPath);
+                    uint result = Direct.GetTempFileNameW(
+                        lpPathName: path,
+                        lpPrefixString: prefix,
+                        uUnique: 0,
+                        lpTempFileName: buffer);
+
+                    if (result == 0) throw ErrorHelper.GetIoExceptionForLastError(path);
+
+                    buffer.SetLengthToFirstNull();
+                    return buffer.ToString();
+                });
+            }
+
+            public static void DeleteFile(string path)
+            {
+                if (!Direct.DeleteFileW(path))
+                    throw ErrorHelper.GetIoExceptionForLastError(path);
             }
 
 #if !DESKTOP
@@ -167,7 +202,7 @@ namespace WInterop
                     dwDesiredAccess: dwDesiredAccess,
                     dwShareMode: fileShare,
                     dwCreationDisposition: creationDisposition,
-                    pCreateExParams: extended);
+                    pCreateExParams: ref extended);
 
                 if (handle.IsInvalid)
                     throw ErrorHelper.GetIoExceptionForLastError(path);
