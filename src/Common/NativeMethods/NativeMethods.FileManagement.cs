@@ -131,7 +131,7 @@ namespace WInterop
                     SafeHandle lpBuffer);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364991.aspx (kernel32)
-                [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern uint GetTempFileNameW(
                     string lpPathName,
                     string lpPrefixString,
@@ -173,8 +173,36 @@ namespace WInterop
                     throw ErrorHelper.GetIoExceptionForLastError(path);
             }
 
-#if !DESKTOP
+            /// <summary>
+            /// CreateFile wrapper that attempts to use CreateFile2 if running as Windows Store app.
+            /// </summary>
             public static SafeFileHandle CreateFile(
+                string path,
+                System.IO.FileAccess fileAccess,
+                System.IO.FileShare fileShare,
+                System.IO.FileMode creationDisposition,
+                FileAttributes fileAttributes = FileAttributes.NONE,
+                FileFlags fileFlags = FileFlags.NONE,
+                SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
+            {
+                // We could also potentially add logic to use CreateFile2 if we're at Win8 or greater. Version checking can only be done if
+                // we are running as a normal desktop app.
+
+#if !WINRT
+                if (Utility.Environment.IsWindowsStoreApplication())
+#endif
+                {
+                    return CreateFile2(path, fileAccess, fileShare, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
+                }
+#if !WINRT
+                else
+                {
+                    return CreateFileW(path, fileAccess, fileShare, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
+                }
+#endif
+            }
+
+            public static SafeFileHandle CreateFile2(
                 string path,
                 System.IO.FileAccess fileAccess,
                 System.IO.FileShare fileShare,
@@ -209,7 +237,6 @@ namespace WInterop
 
                 return handle;
             }
-#endif
         }
     }
 }

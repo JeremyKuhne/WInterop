@@ -150,9 +150,7 @@ namespace WInterop
                 return BufferInvoke((buffer) => Direct.GetShortPathNameW(path, buffer, buffer.CharCapacity));
             }
 
-#if !PORTABLE
-            // We want to prefer the CreateFile2 version of this for portable as it will work with WinRT
-            public static SafeFileHandle CreateFile(
+            public static SafeFileHandle CreateFileW(
                 string path,
                 System.IO.FileAccess fileAccess,
                 System.IO.FileShare fileShare,
@@ -175,7 +173,6 @@ namespace WInterop
 
                 return handle;
             }
-#endif
         }
     }
 }
