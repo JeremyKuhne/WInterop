@@ -131,6 +131,7 @@ namespace WInterop
         //  DWORD           unsigned long   uint
         //  HANDLE          void*           IntPtr
         //  LARGE_INTEGER   __int64         long
+        //  LONG            long            int
         //  LONGLONG        __int64         long
         //  UCHAR           unsigned char   byte
 

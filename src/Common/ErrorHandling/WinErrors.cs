@@ -50,6 +50,8 @@ namespace WInterop.ErrorHandling
         public const uint NERR_BufTooSmall = NERR_BASE + 23;
         public const uint NERR_InvalidComputer = NERR_BASE + 251;
 
+        public const uint APPMODEL_ERROR_NO_APPLICATION = 15703;
+
         public const uint FVE_E_LOCKED_VOLUME = 0x80310000;
     }
 }

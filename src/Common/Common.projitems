@@ -78,6 +78,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Heap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ProcessAndThreads.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.WindowsStore.Query.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\SID_NAME_USE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\OVERLAPPED.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Conversion.cs" />
