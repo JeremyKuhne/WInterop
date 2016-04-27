@@ -1,0 +1,26 @@
+﻿// ------------------------
+//    WInterop Framework
+// ------------------------
+
+// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+namespace WInterop.FileManagement
+{
+    using System.Runtime.InteropServices;
+
+    /// <summary>
+    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364401.aspx">FILE_STANDARD_INFO</a> structure.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct FILE_STANDARD_INFO
+    {
+        public ulong AllocationSize;
+        public ulong EndOfFile;
+        public uint NumberOfLinks;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool DeletePending;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool Directory;
+    }
+}

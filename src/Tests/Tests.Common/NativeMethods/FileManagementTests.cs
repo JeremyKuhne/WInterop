@@ -26,14 +26,14 @@ namespace WInterop.Tests.NativeMethodTests
         public void GetShortPathBasic()
         {
             string tempPath = NativeMethods.FileManagement.GetTempPath();
-            NativeMethods.FileManagement.GetShortPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+            NativeMethods.FileManagement.Desktop.GetShortPathName(tempPath).Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void GetLongPathBasic()
         {
             string tempPath = NativeMethods.FileManagement.GetTempPath();
-            NativeMethods.FileManagement.GetLongPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+            NativeMethods.FileManagement.Desktop.GetLongPathName(tempPath).Should().NotBeNullOrWhiteSpace();
         }
 #endif
 
@@ -105,6 +105,130 @@ namespace WInterop.Tests.NativeMethodTests
                     file.IsInvalid.Should().BeFalse();
                     File.Exists(tempFileName).Should().BeTrue();
                 }
+            }
+            finally
+            {
+                NativeMethods.FileManagement.DeleteFile(tempFileName);
+            }
+        }
+
+        [Fact]
+        public void GetFileAttributesExBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            var info = NativeMethods.FileManagement.GetFileAttributesEx(tempPath);
+            info.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+        }
+
+        [Fact]
+        public void FlushFileBuffersBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            string tempFileName = Path.Combine(tempPath, Path.GetRandomFileName());
+            try
+            {
+                using (var file = NativeMethods.FileManagement.CreateFile(tempFileName, FileAccess.ReadWrite, FileShare.ReadWrite, FileMode.Create))
+                {
+                    NativeMethods.FileManagement.FlushFileBuffers(file);
+                }
+            }
+            finally
+            {
+                NativeMethods.FileManagement.DeleteFile(tempFileName);
+            }
+        }
+
+        [Fact]
+        public void GetFileNameByHandleBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            string tempFileName = Path.Combine(tempPath, Path.GetRandomFileName());
+            try
+            {
+                using (var file = NativeMethods.FileManagement.CreateFile(tempFileName, FileAccess.ReadWrite, FileShare.ReadWrite, FileMode.Create))
+                {
+                    string fileName = NativeMethods.FileManagement.GetFileNameByHandle(file);
+                    tempFileName.Should().EndWith(fileName);
+                }
+            }
+            finally
+            {
+                NativeMethods.FileManagement.DeleteFile(tempFileName);
+            }
+        }
+
+        [Fact]
+        public void GetStandardInfoByHandleBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            string tempFileName = Path.Combine(tempPath, Path.GetRandomFileName());
+            try
+            {
+                using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, FileAccess.Read, FileShare.ReadWrite, FileMode.Open,
+                    FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                {
+                    var info = NativeMethods.FileManagement.GetFileStandardInfoByHandle(directory);
+                    info.Directory.Should().BeTrue();
+                }
+
+                using (var file = NativeMethods.FileManagement.CreateFile(tempFileName, FileAccess.ReadWrite, FileShare.ReadWrite, FileMode.Create))
+                {
+                    var info = NativeMethods.FileManagement.GetFileStandardInfoByHandle(file);
+                    info.Directory.Should().BeFalse();
+                    info.NumberOfLinks.Should().Be(1);
+                    info.DeletePending.Should().BeFalse();
+                    info.AllocationSize.Should().Be(0);
+                    info.EndOfFile.Should().Be(0);
+                }
+            }
+            finally
+            {
+                NativeMethods.FileManagement.DeleteFile(tempFileName);
+            }
+        }
+
+        [Fact]
+        public void GetBasicInfoByHandleBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            string tempFileName = Path.Combine(tempPath, Path.GetRandomFileName());
+            try
+            {
+                using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, FileAccess.Read, FileShare.ReadWrite, FileMode.Open,
+                    FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                {
+                    var directoryInfo = NativeMethods.FileManagement.GetFileBasicInfoByHandle(directory);
+                    directoryInfo.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+
+                    using (var file = NativeMethods.FileManagement.CreateFile(tempFileName, FileAccess.ReadWrite, FileShare.ReadWrite, FileMode.Create))
+                    {
+                        var fileInfo = NativeMethods.FileManagement.GetFileBasicInfoByHandle(file);
+                        fileInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+                        fileInfo.CreationTime.Should().BeAfter(directoryInfo.CreationTime);
+                    }
+                }
+            }
+            finally
+            {
+                NativeMethods.FileManagement.DeleteFile(tempFileName);
+            }
+        }
+
+        [Fact]
+        public void SetFileAttributesBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            string tempFileName = NativeMethods.FileManagement.GetTempFileName(tempPath, "tfn");
+            try
+            {
+                var originalInfo = NativeMethods.FileManagement.GetFileAttributesEx(tempFileName);
+                originalInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
+                NativeMethods.FileManagement.SetFileAttributes(tempFileName, originalInfo.Attributes | FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
+                var newInfo = NativeMethods.FileManagement.GetFileAttributesEx(tempFileName);
+                newInfo.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
+                NativeMethods.FileManagement.SetFileAttributes(tempFileName, originalInfo.Attributes);
+                newInfo = NativeMethods.FileManagement.GetFileAttributesEx(tempFileName);
+                newInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
             }
             finally
             {

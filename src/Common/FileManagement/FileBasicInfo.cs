@@ -10,21 +10,22 @@ namespace WInterop.FileManagement
     using System;
     using Utility;
 
-    public struct FileInfo
+    public struct FileBasicInfo
     {
         public FileAttributes Attributes;
         public DateTime CreationTime;
         public DateTime LastAccessTime;
         public DateTime LastWriteTime;
-        public ulong Size;
+        public DateTime ChangeTime;
 
-        public FileInfo(WIN32_FILE_ATTRIBUTE_DATA data)
+        public FileBasicInfo(FILE_BASIC_INFO data)
         {
-            Attributes = data.dwFileAttributes;
-            CreationTime = Conversion.FileTimeToDateTime(data.ftCreationTime);
-            LastAccessTime = Conversion.FileTimeToDateTime(data.ftLastAccessTime);
-            LastWriteTime = Conversion.FileTimeToDateTime(data.ftLastWriteTime);
-            Size = Conversion.HighLowToLong(data.nFileSizeHigh, data.nFileSizeLow);
+            Attributes = data.FileAttributes;
+            CreationTime = Conversion.FileTimeToDateTime(data.CreationTime);
+            LastAccessTime = Conversion.FileTimeToDateTime(data.LastAccessTime);
+            LastWriteTime = Conversion.FileTimeToDateTime(data.LastWriteTime);
+            ChangeTime = Conversion.FileTimeToDateTime(data.ChangeTime);
         }
     }
 }
+

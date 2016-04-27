@@ -54,9 +54,9 @@ namespace WInterop
                     ref IntPtr context);
             }
 
-            public static IEnumerable<StreamInformation> GetAlternateStreamInformation(string path)
+            public static IEnumerable<WInterop.Backup.StreamInformation> GetAlternateStreamInformation(string path)
             {
-                List<StreamInformation> streams = new List<StreamInformation>();
+                List<WInterop.Backup.StreamInformation> streams = new List<WInterop.Backup.StreamInformation>();
                 using (var fileHandle = FileManagement.CreateFile(
                     path: path,
                     // To look at metadata we don't need read or write access
@@ -68,12 +68,12 @@ namespace WInterop
                 {
                     using (BackupReader reader = new BackupReader(fileHandle))
                     {
-                        StreamInformation? info;
+                        WInterop.Backup.StreamInformation? info;
                         while ((info = reader.GetNextInfo()).HasValue)
                         {
                             if (info.Value.StreamType == BackupStreamType.BACKUP_ALTERNATE_DATA)
                             {
-                                streams.Add(new StreamInformation { Name = info.Value.Name, Size = info.Value.Size });
+                                streams.Add(new WInterop.Backup.StreamInformation { Name = info.Value.Name, Size = info.Value.Size });
                             }
                         }
                     }

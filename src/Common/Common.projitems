@@ -40,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FormatMessageFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\NtStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WinErrors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\StreamInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BY_HANDLE_FILE_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyFileExFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyProgressCallbackReason.cs" />
@@ -49,11 +50,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\ENCRYPTION_CERTIFICATE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\ENCRYPTION_CERTIFICATE_LIST.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileBasicInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FILE_BASIC_INFO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FILE_INFO_BY_HANDLE_CLASS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FILE_STANDARD_INFO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\GetFinalPathNameByHandleFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FINDEX_INFO_LEVELS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FINDEX_SEARCH_OPS.cs" />

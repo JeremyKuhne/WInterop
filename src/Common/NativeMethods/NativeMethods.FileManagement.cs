@@ -31,7 +31,7 @@ namespace WInterop
 #if DESKTOP
             [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
 #endif
-            public static partial class Direct
+            public static class Direct
             {
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449422.aspx (kernel32)
                 [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -55,7 +55,7 @@ namespace WInterop
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool SetFileAttributesW(
                     string lpFileName,
-                    uint dwFileAttributes);
+                    FileAttributes dwFileAttributes);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364963.aspx (kernel32)
                 [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -88,8 +88,8 @@ namespace WInterop
                 public static extern bool FindClose(
                     IntPtr hFindFile);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx (kernel32 / api-ms-win-core-file-l2-1-0)
-                [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx (kernel32)
+                [DllImport(ApiSets.api_ms_win_core_file_l2_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool GetFileInformationByHandleEx(
                     SafeFileHandle hFile,
@@ -98,7 +98,7 @@ namespace WInterop
                     uint dwBufferSize);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915.aspx (kernel32)
-                [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool DeleteFileW(
                     string lpFilename);
@@ -118,8 +118,8 @@ namespace WInterop
                 public static extern FileType GetFileType(
                     SafeFileHandle hFile);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364439.aspx
-                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364439.aspx (kernel32)
+                [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool FlushFileBuffers(
                     SafeFileHandle hFile);
@@ -197,7 +197,7 @@ namespace WInterop
 #if !WINRT
                 else
                 {
-                    return CreateFileW(path, fileAccess, fileShare, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
+                    return Desktop.CreateFileW(path, fileAccess, fileShare, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
                 }
 #endif
             }
@@ -236,6 +236,88 @@ namespace WInterop
                     throw ErrorHelper.GetIoExceptionForLastError(path);
 
                 return handle;
+            }
+
+            public static FileInfo GetFileAttributesEx(string path)
+            {
+                WIN32_FILE_ATTRIBUTE_DATA data;
+                if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out data))
+                    throw ErrorHelper.GetIoExceptionForLastError(path);
+
+                return new FileInfo(data);
+            }
+
+            public static void SetFileAttributes(string path, FileAttributes attributes)
+            {
+                if (!Direct.SetFileAttributesW(path, attributes))
+                    throw ErrorHelper.GetIoExceptionForLastError(path);
+            }
+
+            public static void FlushFileBuffers(SafeFileHandle fileHandle)
+            {
+                if (!Direct.FlushFileBuffers(fileHandle))
+                    throw ErrorHelper.GetIoExceptionForLastError();
+            }
+
+            /// <summary>
+            /// Gets the file name from the given handle. This uses GetFileInformationByHandleEx, which does not give back the drive
+            /// name for the path- but is available from Windows Store apps.
+            /// </summary>
+            public static string GetFileNameByHandle(SafeFileHandle fileHandle)
+            {
+                return StringBufferCache.CachedBufferInvoke((buffer) =>
+                {
+                    uint error = WinErrors.ERROR_MORE_DATA;
+                    while (error == WinErrors.ERROR_MORE_DATA)
+                    {
+                        if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
+                        {
+                            error = (uint)Marshal.GetLastWin32Error();
+                            if (error != WinErrors.ERROR_MORE_DATA)
+                                throw ErrorHelper.GetIoExceptionForError(error);
+                            buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
+                        }
+                        else
+                        {
+                            error = WinErrors.NO_ERROR;
+                            uint nameLength = (uint)NativeBufferReader.ReadInt(buffer, 0);
+                            buffer.Length = nameLength / 2 + 2; // First two "char" spots are taken up by the FileNameLength
+                        }
+                    }
+
+                    // First two "char" spots are taken up by the FileNameLength
+                    return buffer.SubString(2);
+                });
+            }
+
+            public static FILE_STANDARD_INFO GetFileStandardInfoByHandle(SafeFileHandle fileHandle)
+            {
+                return StringBufferCache.CachedBufferInvoke((buffer) =>
+                {
+                    FILE_STANDARD_INFO info;
+                    buffer.EnsureByteCapacity((ulong)Marshal.SizeOf<FILE_STANDARD_INFO>());
+
+                    if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
+                        throw ErrorHelper.GetIoExceptionForLastError();
+
+                    info = Marshal.PtrToStructure<FILE_STANDARD_INFO>(buffer.DangerousGetHandle());
+                    return info;
+                });
+            }
+
+            public static FileBasicInfo GetFileBasicInfoByHandle(SafeFileHandle fileHandle)
+            {
+                return StringBufferCache.CachedBufferInvoke((buffer) =>
+                {
+                    FILE_BASIC_INFO info;
+                    buffer.EnsureByteCapacity((ulong)Marshal.SizeOf<FILE_BASIC_INFO>());
+
+                    if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
+                        throw ErrorHelper.GetIoExceptionForLastError();
+
+                    info = Marshal.PtrToStructure<FILE_BASIC_INFO>(buffer.DangerousGetHandle());
+                    return new FileBasicInfo(info);
+                });
             }
         }
     }
