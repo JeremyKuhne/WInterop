@@ -6,12 +6,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #if DESKTOP
+using System;
+using Xunit;
+using FluentAssertions;
+
 namespace WInterop.Tests.NativeMethodTests
 {
-    using System;
-    using Xunit;
-    using FluentAssertions;
-
     public class ProcessAndThreadTests
     {
         [Fact]

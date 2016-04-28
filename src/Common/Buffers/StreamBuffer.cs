@@ -5,14 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Runtime.InteropServices;
+
 namespace WInterop.Buffers
 {
-    using System;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using System.Runtime.InteropServices;
-
     /// <summary>
     /// Stream wrapper for access to the native heap that allows for automatic growth when writing.
     /// Also provides implicit conversion to IntPtr for P/Invoke convenience.

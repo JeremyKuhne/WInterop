@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.FileManagement
 {
-    using System;
-
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117.aspx">File attribute constants</a>. This is a superset of what is defined
     /// in System.IO. Combined with SecurityQosFlags and FileFlags for CreateFile.

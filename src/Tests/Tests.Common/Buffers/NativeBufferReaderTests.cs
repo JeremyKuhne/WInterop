@@ -5,14 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using FluentAssertions;
+using System;
+using WInterop.Buffers;
+using Xunit;
+using static WInterop.NativeMethods;
+
 namespace WInterop.Tests.Buffers
 {
-    using FluentAssertions;
-    using System;
-    using WInterop.Buffers;
-    using Xunit;
-    using static WInterop.NativeMethods;
-
     public class NativeBufferReaderTests
     {
         [Fact]

@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Runtime.InteropServices;
+
 namespace WInterop.Authentication
 {
-    using System.Runtime.InteropServices;
-
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380518.aspx
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct UNICODE_STRING

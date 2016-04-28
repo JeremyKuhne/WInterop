@@ -5,15 +5,15 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using FluentAssertions;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using WInterop.Buffers;
+using Xunit;
+
 namespace WInterop.Tests.Buffers
 {
-    using FluentAssertions;
-    using System;
-    using System.IO;
-    using System.Runtime.InteropServices;
-    using WInterop.Buffers;
-    using Xunit;
-
     public class StreamBufferTests
     {
         const string testString = "The quick brown fox jumped over the lazy dog.";

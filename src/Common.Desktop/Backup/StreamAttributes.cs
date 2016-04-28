@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.Backup
 {
-    using System;
-
     /// <summary>
     /// The attributes returned in WIN32_STREAM_ID dwStreamAttributes. Defines taken from winnt.h.
     /// See <a href="https://msdn.microsoft.com/en-us/library/dd305136.aspx">[MS-BKUP]</a> specification.

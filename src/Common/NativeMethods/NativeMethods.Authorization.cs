@@ -5,22 +5,22 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Security.Principal;
+using System.Text;
+using WInterop.Authorization;
+using WInterop.Buffers;
+using WInterop.ErrorHandling;
+using WInterop.Handles;
+
 namespace WInterop
 {
-    using Authorization;
-    using Buffers;
-    using ErrorHandling;
-    using Handles;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using System.Security.Principal;
-    using System.Text;
-
     public static partial class NativeMethods
     {
         public static class Authorization

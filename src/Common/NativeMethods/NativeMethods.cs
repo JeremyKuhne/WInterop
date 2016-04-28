@@ -5,16 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+using WInterop.Buffers;
+using WInterop.ErrorHandling;
+
 namespace WInterop
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using Handles;
-    using Buffers;
-    using ErrorHandling;
-
     public static partial class NativeMethods
     {
         // Design Guidelines and Notes

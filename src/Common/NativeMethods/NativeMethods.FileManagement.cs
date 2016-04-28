@@ -5,21 +5,21 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security;
+using WInterop.Authorization;
+using WInterop.Buffers;
+using WInterop.ErrorHandling;
+using WInterop.FileManagement;
+using WInterop.Handles;
+using WInterop.Synchronization;
+using WInterop.Utility;
+
 namespace WInterop
 {
-    using Authorization;
-    using Buffers;
-    using ErrorHandling;
-    using FileManagement;
-    using Handles;
-    using Synchronization;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using Utility;
-
     public static partial class NativeMethods
     {
         public static partial class FileManagement

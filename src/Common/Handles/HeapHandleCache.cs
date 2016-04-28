@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using WInterop.Collections;
+
 namespace WInterop.Handles
 {
-    using Collections;
-
     /// <summary>
     /// Allows limited reuse of heap buffers to improve memory pressure. This cache does not ensure
     /// that multiple copies of handles are not released back into the cache.

@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.ErrorHandling
 {
-    using System;
-
     /// <summary>
     /// Simple helper class to temporarily enable thread error flag modes if necessary.
     /// </summary>

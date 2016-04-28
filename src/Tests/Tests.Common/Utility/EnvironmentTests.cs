@@ -5,11 +5,11 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using FluentAssertions;
+using Xunit;
+
 namespace WInterop.UtilityTests
 {
-    using FluentAssertions;
-    using Xunit;
-
     public class EnvironmentTests
     {
         [Fact]

@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.Handles
 {
-    using System;
-
     /// <summary>
     /// Wrapper for handles that need closed via CloseHandle.
     /// </summary>

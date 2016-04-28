@@ -10,7 +10,7 @@ namespace WInterop
     public static partial class NativeMethods
     {
         /// <summary>
-        /// Standard library name defines. Using a central helps ensure we keep names consistent.
+        /// Standard library name defines. Using a central define helps ensure we keep names consistent.
         /// Using API library definitions over legacy library names is encouraged for future proofing
         /// and a supposed slight perf benefit in looking up apis.
         /// </summary>

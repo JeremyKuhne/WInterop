@@ -5,18 +5,18 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+using System.Security;
+using WInterop.Buffers;
+using WInterop.ErrorHandling;
+using WInterop.Handles;
+using WInterop.Utility;
+using WInterop.VolumeManagement;
+
 namespace WInterop
 {
-    using Buffers;
-    using ErrorHandling;
-    using Handles;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using Utility;
-    using VolumeManagement;
-
     public static partial class NativeMethods
     {
         public static class VolumeManagement

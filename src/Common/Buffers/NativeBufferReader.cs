@@ -5,11 +5,11 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.IO;
+
 namespace WInterop.Buffers
 {
-    using System;
-    using System.IO;
-
     /// <summary>
     /// Checked helpers for reading data from a NativeBuffer. Use StreamBuffer for more complicated read operations.
     /// </summary>

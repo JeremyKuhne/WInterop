@@ -5,11 +5,11 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using WInterop.Collections;
+
 namespace WInterop.Buffers
 {
-    using System;
-    using Collections;
-
     /// <summary>
     /// Allows caching of StringBuffer objects to ease GC pressure when creating many StringBuffers.
     /// </summary>

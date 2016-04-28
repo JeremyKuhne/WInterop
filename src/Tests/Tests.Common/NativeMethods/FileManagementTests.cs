@@ -5,15 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using FluentAssertions;
+using System.IO;
+using System.Linq;
+using Xunit;
+
 namespace WInterop.Tests.NativeMethodTests
 {
-    using ErrorHandling;
-    using FluentAssertions;
-    using System;
-    using System.IO;
-    using System.Linq;
-    using Xunit;
-
     public class FileManagementTests
     {
         [Fact]

@@ -5,14 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Runtime.InteropServices;
+using WInterop.Buffers;
+using WInterop.ErrorHandling;
+using WInterop.Handles;
+
 namespace WInterop.Backup
 {
-    using Buffers;
-    using ErrorHandling;
-    using Handles;
-    using System;
-    using System.Runtime.InteropServices;
-
     public class BackupReader : IDisposable
     {
         private IntPtr _context = IntPtr.Zero;

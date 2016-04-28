@@ -5,14 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using FluentAssertions;
+using System;
+using Xunit;
+using System.Linq;
+using WInterop.Cryptography;
+
 namespace WInterop.Tests.NativeMethodTests
 {
-    using FluentAssertions;
-    using System;
-    using Xunit;
-    using System.Linq;
-    using Cryptography;
-
     public class CryptographyTests
     {
         [Theory

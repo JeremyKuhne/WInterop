@@ -5,14 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using FluentAssertions;
+using System;
+using System.Threading.Tasks;
+using WInterop.Collections;
+using Xunit;
+
 namespace WInterop.Tests.Collections
 {
-    using FluentAssertions;
-    using System;
-    using System.Threading.Tasks;
-    using WInterop.Collections;
-    using Xunit;
-
     public class CacheTests
     {
         public class TestItem : IDisposable
