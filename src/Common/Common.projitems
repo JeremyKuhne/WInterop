@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FormatMessageFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\NtStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WinErrors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\StreamInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BY_HANDLE_FILE_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyFileExFlags.cs" />
