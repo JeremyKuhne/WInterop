@@ -32,7 +32,7 @@ namespace WInterop
 
                 //internal const uint HEAP_NO_SERIALIZE = 0x00000001;
                 //internal const uint HEAP_GENERATE_EXCEPTIONS = 0x00000004;
-                internal const uint HEAP_ZERO_MEMORY = 0x00000008;
+                public const uint HEAP_ZERO_MEMORY = 0x00000008;
                 //internal const uint HEAP_REALLOC_IN_PLACE_ONLY = 0x00000010;
 
                 // HeapAlloc/Realloc take a SIZE_T for their count of bytes. This is ultimately an
@@ -56,16 +56,16 @@ namespace WInterop
                 public static extern bool HeapFree(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366706.aspx
-                //[DllImport(Interop.NativeMethods.Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-                //internal static extern UIntPtr HeapSize(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                public static extern UIntPtr HeapSize(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366700.aspx
-                //[DllImport(Interop.NativeMethods.Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-                //internal static extern bool HeapDestroy(IntPtr hHeap);
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                public static extern bool HeapDestroy(IntPtr hHeap);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366598.aspx
-                //[DllImport(Interop.NativeMethods.Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-                //internal static extern UIntPtr HeapCompact(IntPtr hHeap, uint dwFlags);
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                public static extern UIntPtr HeapCompact(IntPtr hHeap, uint dwFlags);
 
                 // This is safe to cache as it will never change for a process once started
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569.aspx

@@ -14,7 +14,7 @@ namespace WInterop.Handles
     /// </summary>
     public class SafeEnvironmentStringsHandle : SafeHandleZeroIsInvalid
     {
-        internal SafeEnvironmentStringsHandle() : base(ownsHandle: true)
+        public SafeEnvironmentStringsHandle() : base(ownsHandle: true)
         {
         }
 

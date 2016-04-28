@@ -103,7 +103,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376055.aspx
                 [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool CertEnumPhysicalStore(
+                public static extern bool CertEnumPhysicalStore(
                     IntPtr pvSystemStore,
                     uint dwFlags,
                     IntPtr pvArg,

@@ -188,7 +188,7 @@ namespace WInterop.Buffers
             }
         }
 
-        internal unsafe char* CharPointer
+        public unsafe char* CharPointer
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get

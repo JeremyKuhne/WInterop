@@ -11,7 +11,7 @@ namespace WInterop.Handles
 {
     public class SafeLibraryHandle : SafeHandleZeroIsInvalid
     {
-        internal SafeLibraryHandle() : base(ownsHandle: true)
+        public SafeLibraryHandle() : base(ownsHandle: true)
         {
         }
 

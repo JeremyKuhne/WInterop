@@ -16,7 +16,7 @@ namespace WInterop
 {
     public static partial class NativeMethods
     {
-        internal static class Handles
+        public static class Handles
         {
             // Windows Kernel Architecture Internals
             // http://research.microsoft.com/en-us/um/redmond/events/wincore2010/Dave_Probert_1.pdf
@@ -43,7 +43,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724211.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
-                internal static extern bool CloseHandle(
+                public static extern bool CloseHandle(
                     IntPtr handle);
 
                 // http://forum.sysinternals.com/howto-enumerate-handles_topic18892.html
@@ -52,7 +52,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567062.aspx
                 // The Zw version of this is documented as available to UWP, Nt has no clarifying restrictions and is not included in a header.
                 [DllImport(Libraries.Ntdll, SetLastError = true, ExactSpelling = true)]
-                internal static extern int NtQueryObject(
+                public static extern int NtQueryObject(
                     IntPtr Handle,
                     OBJECT_INFORMATION_CLASS ObjectInformationClass,
                     IntPtr ObjectInformation,
@@ -60,7 +60,7 @@ namespace WInterop
                     out uint ReturnLength);
 
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff550964.aspx
-                internal enum OBJECT_INFORMATION_CLASS
+                public enum OBJECT_INFORMATION_CLASS
                 {
                     ObjectBasicInformation,
 
@@ -91,7 +91,7 @@ namespace WInterop
                 // ACCESS_MASK
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374892.aspx
                 [StructLayout(LayoutKind.Sequential)]
-                internal struct GENERIC_MAPPING
+                public struct GENERIC_MAPPING
                 {
                     uint GenericRead;
                     uint GenericWrite;
@@ -103,7 +103,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff547804.aspx
                 // 
                 [Flags]
-                internal enum ObjectAttributes : uint
+                public enum ObjectAttributes : uint
                 {
                     /// <summary>
                     /// This handle can be inherited by child processes of the current process.
@@ -155,7 +155,7 @@ namespace WInterop
                 //      } PUBLIC_OBJECT_TYPE_INFORMATION, *PPUBLIC_OBJECT_TYPE_INFORMATION;
                 //
                 [StructLayout(LayoutKind.Sequential)]
-                internal struct OBJECT_TYPE_INFORMATION
+                public struct OBJECT_TYPE_INFORMATION
                 {
                     public UNICODE_STRING TypeName;
 
@@ -222,7 +222,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374892.aspx
                 //
                 [StructLayout(LayoutKind.Sequential)]
-                internal struct OBJECT_BASIC_INFORMATION
+                public struct OBJECT_BASIC_INFORMATION
                 {
                     public ObjectAttributes Attributes;
                     public uint GrantedAccess;

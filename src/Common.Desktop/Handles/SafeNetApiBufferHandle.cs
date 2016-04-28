@@ -12,7 +12,7 @@ namespace WInterop.Handles
 {
     public class SafeNetApiBufferHandle : SafeBuffer
     {
-        internal SafeNetApiBufferHandle() : base(ownsHandle: true)
+        public SafeNetApiBufferHandle() : base(ownsHandle: true)
         {
         }
 

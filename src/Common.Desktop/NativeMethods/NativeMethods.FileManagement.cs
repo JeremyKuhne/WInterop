@@ -136,7 +136,7 @@ namespace WInterop
                     //      _In_ PENCRYPTION_CERTIFICATE_LIST pUsers
                     //  );
                     [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-                    internal static extern uint AddUsersToEncryptedFile(
+                    public static extern uint AddUsersToEncryptedFile(
                         string lpFileName,
 
                         /// <summary>

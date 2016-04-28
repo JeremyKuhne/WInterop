@@ -13,7 +13,7 @@ namespace WInterop.Authorization
     [DebuggerDisplay("{Privilege} : {Attributes}")]
     public struct PrivilegeSetting
     {
-        internal PrivilegeSetting(string privilege, PrivilegeAttributes attributes)
+        public PrivilegeSetting(string privilege, PrivilegeAttributes attributes)
         {
             Privileges p;
             if (!Enum.TryParse(privilege, out p))

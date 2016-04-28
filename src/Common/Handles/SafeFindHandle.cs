@@ -9,7 +9,7 @@ namespace WInterop.Handles
 {
     public sealed class SafeFindHandle : SafeHandleZeroIsInvalid
     {
-        internal SafeFindHandle() : base(true) { }
+        public SafeFindHandle() : base(true) { }
 
         override protected bool ReleaseHandle()
         {

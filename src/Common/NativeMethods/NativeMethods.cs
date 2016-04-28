@@ -18,7 +18,7 @@ namespace WInterop
         // Design Guidelines and Notes
         // ===========================
         //
-        // Keep P/Invokes private and provide internal wrappers that do appropriate preparation and error handling.
+        // Keep P/Invokes nested and provide wrappers that do appropriate preparation and error handling.
         //
         // In/Out attributes implicitly applied for parameter & return values:
         //

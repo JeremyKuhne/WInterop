@@ -15,7 +15,7 @@ namespace WInterop.Handles
     /// </summary>
     public class SafeFindVolumeHandle : SafeHandleZeroIsInvalid
     {
-        internal SafeFindVolumeHandle() : base(ownsHandle: true)
+        public SafeFindVolumeHandle() : base(ownsHandle: true)
         {
         }
 
