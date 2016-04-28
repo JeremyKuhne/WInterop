@@ -19,6 +19,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_INFORMATION_CLASS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_PRIVILEGES.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\TOKEN_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupStreamType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Backup\StreamAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Backup\StreamInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Backup\WIN32_STREAM_ID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicLinkLibrary\LoadLibraryFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\MessageBeepType.cs" />
@@ -28,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeFindVolumeHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeLibraryHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeNetApiBufferHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Backup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DynamicLinkLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ErrorHandling.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />

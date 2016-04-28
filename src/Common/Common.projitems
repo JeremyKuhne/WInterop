@@ -13,11 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Authentication\UNICODE_STRING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\GenericAccessRights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\SECURITY_IMPERSONATION_LEVEL.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupStreamType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Backup\StreamAttributes.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Backup\StreamInformation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Backup\WIN32_STREAM_ID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\BufferHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferReader.cs" />
@@ -75,7 +70,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHeapHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ApiSets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Authorization.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Backup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Cryptography.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ErrorHandling.cs" />
