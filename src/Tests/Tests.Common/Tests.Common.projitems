@@ -9,6 +9,7 @@
     <Import_RootNamespace>WInterop.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferReaderTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StreamBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferTests.cs" />

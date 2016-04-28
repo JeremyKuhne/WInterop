@@ -14,6 +14,8 @@ namespace WInterop
     using Handles;
     using Synchronization;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Security;
     using Utility;
@@ -88,7 +90,7 @@ namespace WInterop
                 public static extern bool FindClose(
                     IntPtr hFindFile);
 
-                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx (kernel32)
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364953.aspx (kernel32)
                 [DllImport(ApiSets.api_ms_win_core_file_l2_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool GetFileInformationByHandleEx(
@@ -265,28 +267,18 @@ namespace WInterop
             /// </summary>
             public static string GetFileNameByHandle(SafeFileHandle fileHandle)
             {
-                return StringBufferCache.CachedBufferInvoke((buffer) =>
+                return StringBufferCache.CachedBufferInvoke(Paths.MaxPath, (buffer) =>
                 {
-                    uint error = WinErrors.ERROR_MORE_DATA;
-                    while (error == WinErrors.ERROR_MORE_DATA)
+                    while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
                     {
-                        if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
-                        {
-                            error = (uint)Marshal.GetLastWin32Error();
-                            if (error != WinErrors.ERROR_MORE_DATA)
-                                throw ErrorHelper.GetIoExceptionForError(error);
-                            buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
-                        }
-                        else
-                        {
-                            error = WinErrors.NO_ERROR;
-                            uint nameLength = (uint)NativeBufferReader.ReadInt(buffer, 0);
-                            buffer.Length = nameLength / 2 + 2; // First two "char" spots are taken up by the FileNameLength
-                        }
+                        uint error = (uint)Marshal.GetLastWin32Error();
+                        if (error != WinErrors.ERROR_MORE_DATA)
+                            throw ErrorHelper.GetIoExceptionForError(error);
+                        buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                     }
 
-                    // First two "char" spots are taken up by the FileNameLength
-                    return buffer.SubString(2);
+                    var reader = new NativeBufferReader(buffer);
+                    return reader.ReadString((int)(reader.ReadUint() / 2));
                 });
             }
 
@@ -317,6 +309,59 @@ namespace WInterop
 
                     info = Marshal.PtrToStructure<FILE_BASIC_INFO>(buffer.DangerousGetHandle());
                     return new FileBasicInfo(info);
+                });
+            }
+
+            public static IEnumerable<StreamInformation> GetStreamInformationByHandle(SafeFileHandle fileHandle)
+            {
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364406.aspx
+
+                // typedef struct _FILE_STREAM_INFO
+                // {
+                //     DWORD NextEntryOffset;
+                //     DWORD StreamNameLength;
+                //     LARGE_INTEGER StreamSize;
+                //     LARGE_INTEGER StreamAllocationSize;
+                //     WCHAR StreamName[1];
+                // } FILE_STREAM_INFO, *PFILE_STREAM_INFO;
+
+                // We'll ensure we have at least 100 characters worth in the buffer to start
+                return StringBufferCache.CachedBufferInvoke(100, (buffer) =>
+                {
+                    while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStreamInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
+                    {
+                        uint error = (uint)Marshal.GetLastWin32Error();
+                        switch (error)
+                        {
+                            case WinErrors.ERROR_HANDLE_EOF:
+                                // No streams
+                                return Enumerable.Empty<StreamInformation>();
+                            case WinErrors.ERROR_MORE_DATA:
+                                buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
+                                break;
+                            default:
+                                throw ErrorHelper.GetIoExceptionForError(error);
+                        }
+                    }
+
+                    var infos = new List<StreamInformation>();
+                    var reader = new NativeBufferReader(buffer);
+                    uint offset = 0;
+
+                    do
+                    {
+                        reader.ByteOffset = offset;
+                        offset = reader.ReadUint();
+                        uint nameLength = reader.ReadUint();
+                        infos.Add(new StreamInformation
+                        {
+                            Size = reader.ReadUlong(),
+                            AllocationSize = reader.ReadUlong(),
+                            Name = reader.ReadString((int)(nameLength / 2))
+                        });
+                    } while (offset != 0);
+
+                    return infos;
                 });
             }
         }

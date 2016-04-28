@@ -11,6 +11,7 @@ namespace WInterop.Tests.NativeMethodTests
     using FluentAssertions;
     using System;
     using System.IO;
+    using System.Linq;
     using Xunit;
 
     public class FileManagementTests
@@ -205,6 +206,36 @@ namespace WInterop.Tests.NativeMethodTests
                         var fileInfo = NativeMethods.FileManagement.GetFileBasicInfoByHandle(file);
                         fileInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
                         fileInfo.CreationTime.Should().BeAfter(directoryInfo.CreationTime);
+                    }
+                }
+            }
+            finally
+            {
+                NativeMethods.FileManagement.DeleteFile(tempFileName);
+            }
+        }
+
+        [Fact]
+        public void GetStreamInfoByHandleBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            string tempFileName = Path.Combine(tempPath, Path.GetRandomFileName());
+            try
+            {
+                using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, FileAccess.Read, FileShare.ReadWrite, FileMode.Open,
+                    FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                {
+                    var directoryInfo = NativeMethods.FileManagement.GetStreamInformationByHandle(directory);
+                    directoryInfo.Should().BeEmpty();
+
+                    using (var file = NativeMethods.FileManagement.CreateFile(tempFileName, FileAccess.ReadWrite, FileShare.ReadWrite, FileMode.Create))
+                    {
+                        var fileInfo = NativeMethods.FileManagement.GetStreamInformationByHandle(file);
+                        fileInfo.Should().HaveCount(1);
+                        var info = fileInfo.First();
+                        info.Name.Should().Be(@"::$DATA");
+                        info.Size.Should().Be(0);
+                        info.AllocationSize.Should().Be(0);
                     }
                 }
             }
