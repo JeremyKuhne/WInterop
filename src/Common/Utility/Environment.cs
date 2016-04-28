@@ -52,7 +52,7 @@ namespace WInterop.Utility
                     }
                     catch (Exception e)
                     {
-                        if (e.GetType().FullName.Equals("System.EntryPointNotFoundException", StringComparison.Ordinal))
+                        if (ErrorHelper.IsEntryPointNotFoundException(e))
                             // API doesn't exist, pre Win8
                             s_isWinRT = false;
                         else

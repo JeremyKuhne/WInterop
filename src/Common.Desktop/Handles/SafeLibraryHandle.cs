@@ -17,7 +17,7 @@ namespace WInterop.Handles
 
         protected override bool ReleaseHandle()
         {
-            bool success = NativeMethods.DynamicLinkLibrary.FreeLibrary(this);
+            bool success = NativeMethods.DynamicLinkLibrary.Desktop.FreeLibrary(this);
             handle = IntPtr.Zero;
             return success;
         }

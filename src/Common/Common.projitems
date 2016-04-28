@@ -73,6 +73,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeFindHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHandleZeroIsInvalid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHeapHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ApiSets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Authorization.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Backup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Cryptography.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Heap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Libraries.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ProcessAndThreads.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.WindowsStore.Query.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\SID_NAME_USE.cs" />

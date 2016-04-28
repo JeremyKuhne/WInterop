@@ -19,7 +19,7 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void BasicLogicalDriveStrings()
         {
-            var driveStrings = NativeMethods.VolumeManagement.GetLogicalDriveStrings();
+            var driveStrings = NativeMethods.VolumeManagement.Desktop.GetLogicalDriveStrings();
             driveStrings.Should().NotBeEmpty();
             driveStrings.Should().OnlyContain(t => t.Length == 3 && t[0] >= 'A' && t[0] <= 'Z' && t[1] == ':' && t[2] == '\\');
         }
@@ -27,11 +27,11 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void BasicGetVolumeInformation()
         {
-            foreach (string drive in NativeMethods.VolumeManagement.GetLogicalDriveStrings())
+            foreach (string drive in NativeMethods.VolumeManagement.Desktop.GetLogicalDriveStrings())
             {
                 try
                 {
-                    var info = NativeMethods.VolumeManagement.GetVolumeInformation(drive);
+                    var info = NativeMethods.VolumeManagement.Desktop.GetVolumeInformation(drive);
                     info.RootPathName.Should().Be(drive);
                 }
                 catch (DriveNotReadyException)
@@ -46,9 +46,9 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void BasicGetDriveType()
         {
-            foreach (string drive in NativeMethods.VolumeManagement.GetLogicalDriveStrings())
+            foreach (string drive in NativeMethods.VolumeManagement.Desktop.GetLogicalDriveStrings())
             {
-                var type = NativeMethods.VolumeManagement.GetDriveType(drive);
+                var type = NativeMethods.VolumeManagement.Desktop.GetDriveType(drive);
             }
         }
     }

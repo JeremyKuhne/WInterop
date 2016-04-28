@@ -21,7 +21,7 @@ namespace WInterop.Handles
 
         protected override bool ReleaseHandle()
         {
-            if (!NativeMethods.VolumeManagement.Direct.FindVolumeClose(this))
+            if (!NativeMethods.VolumeManagement.Desktop.Direct.FindVolumeClose(this))
             {
                 throw ErrorHelper.GetIoExceptionForLastError();
             }

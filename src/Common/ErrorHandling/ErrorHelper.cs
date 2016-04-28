@@ -68,5 +68,13 @@ namespace WInterop.ErrorHandling
                     return new IOException(errorText, (int)NativeMethods.ErrorHandling.GetHResultForWindowsError(error));
             }
         }
+
+        /// <summary>
+        /// EntryPointNotFoundException isn't available in portable assemblies. Use this to check the type.
+        /// </summary>
+        public static bool IsEntryPointNotFoundException(Exception e)
+        {
+            return e.GetType().FullName.Equals("System.EntryPointNotFoundException", StringComparison.Ordinal);
+        }
     }
 }

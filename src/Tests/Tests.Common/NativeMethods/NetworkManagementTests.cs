@@ -18,7 +18,7 @@ namespace WInterop.Tests.NativeMethodTests
         public void BasicGetLocalGroupNames()
         {
             string[] knownLocalGroups = { "Administrators", "Guests", "Users" };
-            var localGroups = NativeMethods.NetworkManagement.EnumerateLocalGroups();
+            var localGroups = NativeMethods.NetworkManagement.Desktop.EnumerateLocalGroups();
             localGroups.Should().Contain(knownLocalGroups);
             knownLocalGroups.Should().BeSubsetOf(localGroups);
         }
@@ -27,7 +27,7 @@ namespace WInterop.Tests.NativeMethodTests
         public void BasicGetLocalGroupMembers()
         {
             string[] knownMembers = { "Authenticated Users", "INTERACTIVE" };
-            var members = NativeMethods.NetworkManagement.EnumerateGroupUsers("Users");
+            var members = NativeMethods.NetworkManagement.Desktop.EnumerateGroupUsers("Users");
             members.Select(m => m.Name).Should().Contain(knownMembers);
             knownMembers.Should().BeSubsetOf(members.Select(m => m.Name));
         }
@@ -35,7 +35,7 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact(Skip = "Need to conditionalize this on admin rights.")]
         public void AddLocalGroup()
         {
-            NativeMethods.NetworkManagement.AddLocalGroup("TestGroup", "This group is for testing");
+            NativeMethods.NetworkManagement.Desktop.AddLocalGroup("TestGroup", "This group is for testing");
         }
     }
 }
