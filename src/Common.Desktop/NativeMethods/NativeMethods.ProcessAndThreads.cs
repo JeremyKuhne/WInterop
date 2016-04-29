@@ -59,7 +59,7 @@ namespace WInterop
                     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
                     [return: MarshalAs(UnmanagedType.Bool)]
                     public static extern bool FreeEnvironmentStringsW(
-                        IntPtr lpszEnvironmentBlock);
+                        SafeEnvironmentStringsHandle lpszEnvironmentBlock);
                 }
 
                 /// <summary>

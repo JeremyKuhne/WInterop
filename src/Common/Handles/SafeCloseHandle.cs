@@ -12,7 +12,7 @@ namespace WInterop.Handles
     /// <summary>
     /// Wrapper for handles that need closed via CloseHandle.
     /// </summary>
-    public class SafeCloseHandle : SafeHandleZeroOrMinusOneIsInvalid
+    public abstract class SafeCloseHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
         public SafeCloseHandle() : base(ownsHandle: true) { }
 

@@ -118,7 +118,7 @@ namespace WInterop
                 [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 public static extern bool OpenThreadToken(
-                    IntPtr ThreadHandle,
+                    SafeThreadHandle ThreadHandle,
                     TokenAccessLevels DesiredAccess,
                     [MarshalAs(UnmanagedType.Bool)] bool OpenAsSelf,
                     out SafeCloseHandle TokenHandle);

@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using WInterop.Handles;
 
 namespace WInterop
 {
@@ -27,8 +28,24 @@ namespace WInterop
             public static partial class Direct
             {
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683182.aspx
-                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-                public static extern IntPtr GetCurrentThread();
+                [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+                public static extern SafeThreadHandle GetCurrentThread();
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683179.aspx
+                [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+                public static extern SafeProcessHandle GetCurrentProcess();
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683180.aspx
+                [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+                public static extern uint GetCurrentProcessId();
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683180.aspx
+                [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+                public static extern uint GetCurrentThreadId();
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683156.aspx
+                [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+                public static extern string GetCommandLineW();
             }
         }
     }

@@ -78,6 +78,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHandleZeroIsInvalid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHeapHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeProcessHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeThreadHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ApiSets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Authorization.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Cryptography.cs" />

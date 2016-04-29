@@ -12,6 +12,9 @@ namespace WInterop.Handles
 {
     public abstract class SafeHandleZeroIsInvalid : SafeHandle
     {
+        // Why are HANDLE return values so inconsistent?
+        // https://blogs.msdn.microsoft.com/oldnewthing/20040302-00/?p=40443
+
         protected SafeHandleZeroIsInvalid(bool ownsHandle)
             : base(invalidHandleValue: IntPtr.Zero, ownsHandle: ownsHandle)
         {
