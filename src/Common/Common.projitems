@@ -62,7 +62,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\WIN32_FILE_ATTRIBUTE_DATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\WIN32_FIND_DATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\EmptySafeHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\GENERIC_MAPPING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HeapHandleCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\ObjectAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\OBJECT_BASIC_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\OBJECT_INFORMATION_CLASS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\OBJECT_TYPE_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeCertificateStoreHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeCloseHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeFileHandle.cs" />

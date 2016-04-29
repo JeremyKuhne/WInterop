@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\CryptographyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\FileManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\HandlesTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\ProcessAndThreadTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\VolumeManagementTests.cs" />

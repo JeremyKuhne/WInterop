@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WInterop", "Winterop\WInterop.csproj", "{8031257A-B9C2-473F-A4DD-690BD6263FEB}"
 EndProject
@@ -114,7 +114,8 @@ Global
 		{36072C7A-6B56-46A6-A7A6-233A1B686709}.Release|x64.Build.0 = Release|Any CPU
 		{36072C7A-6B56-46A6-A7A6-233A1B686709}.Release|x86.ActiveCfg = Release|Any CPU
 		{36072C7A-6B56-46A6-A7A6-233A1B686709}.Release|x86.Build.0 = Release|Any CPU
-		{21EF5968-19F9-4F6E-92AE-47E3776478C9}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{21EF5968-19F9-4F6E-92AE-47E3776478C9}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{21EF5968-19F9-4F6E-92AE-47E3776478C9}.Debug|Any CPU.Build.0 = Debug|x64
 		{21EF5968-19F9-4F6E-92AE-47E3776478C9}.Debug|ARM.ActiveCfg = Debug|ARM
 		{21EF5968-19F9-4F6E-92AE-47E3776478C9}.Debug|ARM.Build.0 = Debug|ARM
 		{21EF5968-19F9-4F6E-92AE-47E3776478C9}.Debug|ARM.Deploy.0 = Debug|ARM
