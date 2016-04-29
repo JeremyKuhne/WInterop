@@ -35,6 +35,7 @@ namespace WInterop.Buffers
 
         public override void Release(StringBuffer item)
         {
+            item.Length = 0;
             base.Release(item);
         }
 

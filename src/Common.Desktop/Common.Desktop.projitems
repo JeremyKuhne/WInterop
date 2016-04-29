@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeLibraryHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeNetApiBufferHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Backup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DeviceManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DynamicLinkLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ErrorHandling.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />

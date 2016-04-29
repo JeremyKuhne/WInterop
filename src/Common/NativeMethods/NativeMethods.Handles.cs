@@ -148,7 +148,7 @@ namespace WInterop
 
             public static string GetObjectTypeName(SafeHandle windowsHandle)
             {
-                return GetObjectName(windowsHandle.DangerousGetHandle());
+                return GetObjectTypeName(windowsHandle.DangerousGetHandle());
             }
 
             public static string GetObjectTypeName(IntPtr windowsObject)

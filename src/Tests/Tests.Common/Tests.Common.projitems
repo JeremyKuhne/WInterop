@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferReaderTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StreamBufferTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferCacheTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CacheTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\CryptographyTests.cs" />

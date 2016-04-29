@@ -28,6 +28,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocationId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\ControlCodeAccess.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\ControlCodeDeviceType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\ControlCodeMethod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveLockedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveNotReadyException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHelper.cs" />
@@ -73,11 +76,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeFileHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeFindHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHandleZeroIsInvalid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeHeapHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ApiSets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Authorization.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Cryptography.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DeviceManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ErrorHandling.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />

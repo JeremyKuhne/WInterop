@@ -1,0 +1,89 @@
+﻿// ------------------------
+//    WInterop Framework
+// ------------------------
+
+// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Security;
+using WInterop.Buffers;
+using WInterop.DeviceManagement;
+using WInterop.ErrorHandling;
+
+namespace WInterop
+{
+    public static partial class NativeMethods
+    {
+        public static partial class DeviceManagement
+        {
+            /// <summary>
+            /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
+            /// </summary>
+            public static class Desktop
+            {
+                // Access to the MountPointManager is denied for store apps
+                public static string QueryDosVolumePath(string volume)
+                {
+                    var mountManager = FileManagement.CreateFile(
+                        @"\\?\MountPointManager", 0, FileShare.ReadWrite, FileMode.Open, WInterop.FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL);
+
+                    uint controlCode = CTL_CODE(ControlCodeDeviceType.MOUNTMGRCONTROLTYPE, 12, ControlCodeMethod.METHOD_BUFFERED, ControlCodeAccess.FILE_ANY_ACCESS);
+
+                    // Read ulong then get string
+                    string dosVolumePath = null;
+
+                    StringBufferCache.CachedBufferInvoke((inBuffer) =>
+                    {
+                    // The input is MOUNTMGR_TARGET_NAME which is a short length in bytes followed by the unicode string
+                    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562289.aspx
+
+                    inBuffer.Append((char)(volume.Length * sizeof(char)));
+                        inBuffer.Append(volume);
+
+                        StringBufferCache.CachedBufferInvoke((outBuffer) =>
+                        {
+                            // Give enough for roughly 50 characters for a start
+                            outBuffer.EnsureCharCapacity(50);
+
+                            uint bytesReturned;
+
+                            while (!Direct.DeviceIoControl(
+                                hDevice: mountManager.DangerousGetHandle(),
+                                dwIoControlCode: controlCode,
+                                lpInBuffer: inBuffer.DangerousGetHandle(),
+                                nInBufferSize: checked((uint)inBuffer.ByteCapacity),
+                                lpOutBuffer: outBuffer.DangerousGetHandle(),
+                                nOutBufferSize: checked((uint)outBuffer.ByteCapacity),
+                                lpBytesReturned: out bytesReturned,
+                                lpOverlapped: IntPtr.Zero))
+                            {
+                                uint error = (uint)Marshal.GetLastWin32Error();
+                                switch (error)
+                                {
+                                    case WinErrors.ERROR_MORE_DATA:
+                                        outBuffer.EnsureByteCapacity(checked(outBuffer.ByteCapacity * 2));
+                                        break;
+                                    default:
+                                        throw ErrorHelper.GetIoExceptionForError(error, volume);
+                                }
+                            }
+
+                        // MOUNTMGR_VOLUME_PATHS is a uint length followed by a multi string (double null terminated)
+                        // we only care about the first string in this case (should only be one?) so we can skip beyond
+                        // the 4 bytes and read to null.
+                        unsafe
+                            {
+                                dosVolumePath = new string(outBuffer.CharPointer + 2);
+                            }
+                        });
+                    });
+
+                    return dosVolumePath;
+                }
+            }
+        }
+    }
+}
