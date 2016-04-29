@@ -133,6 +133,52 @@ namespace WInterop
         //  LONGLONG        __int64         long
         //  UCHAR           unsigned char   byte
 
+        // Keeping Managed Objects Alive
+        // =============================
+        //
+        // GC.KeepAlive() will ensure an object stays in scope until the KeepAlive method is hit.
+        //
+        // https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.handleref.aspx
+        // HandleRef allows the marshaller to keep an object alive for the duration of a P/Invoke.
+        // It can be used instead of IntPtr in method signatures.
+        //
+        // https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.gchandle.aspx
+        // GCHandle allows pinning a managed object and getting the native pointer to it. Basic pattern is:
+        //   - var handle = GCHandle.Alloc(obj, GCHandleType.Pinned)
+        //   - GCHandle.ToIntPtr(handle)
+        //   - handle.Free()
+        //
+        // Pinning is not the default. The other major pattern is for passing a reference to a managed
+        // object through native code back to managed code (via a callback, typically). Here is the pattern:
+        //   - var handle = GCHandle.Alloc(obj)
+        //   - SomeNativeEnumerator(callbackDelegate, GCHandle.ToIntPtr(handle))
+        //     { callback }
+        //   - var handle = GCHandle.FromIntPtr(param)
+        //   - object managedObject = handle.Target
+        //
+        // https://blogs.msdn.microsoft.com/clyon/2005/03/18/the-truth-about-gchandles/
+
+        // Blittable Types
+        // ===============
+        //
+        // "Blittable and Non-Blittable Types"
+        // https://msdn.microsoft.com/en-us/library/75dwhxf7.aspx
+        //
+        // "Default Marshalling for Value Types"
+        // https://msdn.microsoft.com/en-us/library/0t2cwe11(v=vs.100).aspx
+        //
+        // Blittable types:
+        //  - byte, sbyte, short, ushort, int, uint, long, ulong, single, double
+        //  - IntPtr, UIntPtr
+        //  - one dimensional arrays of blittable types
+        //  - structs that only have blittable types
+        //
+        // NOT blittable:
+        //  - bool, char, string
+        //
+        // Pointers to structs in definitions must be passed by ref.
+
+
         /// <summary>
         /// Uses the stringbuilder cache and increases the buffer size if needed.
         /// </summary>

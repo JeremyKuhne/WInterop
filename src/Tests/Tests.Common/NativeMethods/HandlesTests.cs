@@ -46,20 +46,90 @@ namespace WInterop.Tests.NativeMethodsTests
         }
 
         [Fact]
-        public void CanCreateHandleToMountPointManager()
+        public void OpenDosDeviceDirectory()
+        {
+            StoreUnauthorizedAccess(() =>
+            {
+                using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\??"))
+                {
+                    directory.IsInvalid.Should().BeFalse();
+                }
+            });
+        }
+
+        [Fact]
+        public void OpenGlobalDosDeviceDirectory()
+        {
+            StoreUnauthorizedAccess(() =>
+            {
+                using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\Global??"))
+                {
+                    directory.IsInvalid.Should().BeFalse();
+                }
+            });
+        }
+
+        [Fact]
+        public void OpenRootDirectory()
+        {
+            StoreUnauthorizedAccess(() =>
+            {
+                using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\"))
+                {
+                    directory.IsInvalid.Should().BeFalse();
+                }
+            });
+        }
+
+        [Fact]
+        public void OpenCDriveSymbolicLink()
+        {
+            StoreUnauthorizedAccess(() =>
+            {
+                using (var link = NativeMethods.Handles.OpenSymbolicLinkObject(@"\??\C:"))
+                {
+                    link.IsInvalid.Should().BeFalse();
+                }
+            });
+        }
+
+        [Fact]
+        public void GetTargetForCDriveSymbolicLink()
+        {
+            StoreUnauthorizedAccess(() =>
+            {
+                using (var link = NativeMethods.Handles.OpenSymbolicLinkObject(@"\??\C:"))
+                {
+                    string target = NativeMethods.Handles.GetSymbolicLinkTarget(link);
+                    target.Should().StartWith(@"\Device\");
+                }
+            });
+        }
+
+        public static void StoreUnauthorizedAccess(Action action)
         {
             try
+            {
+                action();
+                Utility.Environment.IsWindowsStoreApplication().Should().BeFalse();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Utility.Environment.IsWindowsStoreApplication().Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void CanCreateHandleToMountPointManager()
+        {
+            StoreUnauthorizedAccess(() =>
             {
                 using (var mountPointManager = NativeMethods.FileManagement.CreateFile(
                     @"\\.\MountPointManager", 0, FileShare.ReadWrite, FileMode.Open, FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL))
                 {
                     mountPointManager.IsInvalid.Should().BeFalse();
                 }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Utility.Environment.IsWindowsStoreApplication().Should().BeTrue();
-            }
+            });
         }
 
 #if DESKTOP

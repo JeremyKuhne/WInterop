@@ -9,6 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using WInterop.Authentication;
+using WInterop.Authorization;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.Handles;
@@ -52,7 +53,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/bb432383.aspx
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567062.aspx
                 // The Zw version of this is documented as available to UWP, Nt has no clarifying restrictions and is not included in a header.
-                [DllImport(Libraries.Ntdll, SetLastError = true, ExactSpelling = true)]
+                [DllImport(Libraries.Ntdll, ExactSpelling = true)]
                 public static extern int NtQueryObject(
                     IntPtr Handle,
                     OBJECT_INFORMATION_CLASS ObjectInformationClass,
@@ -60,17 +61,29 @@ namespace WInterop
                     uint ObjectInformationLength,
                     out uint ReturnLength);
 
-                // https://msdn.microsoft.com/en-us/library/bb432383(v=vs.85).aspx
-                //
-                //  IoQueryFileDosDeviceName wraps this
-                //  https://msdn.microsoft.com/en-us/library/windows/hardware/ff548474.aspx
-                //      typedef struct _OBJECT_NAME_INFORMATION
-                //      {
-                //          UNICODE_STRING Name;
-                //      } OBJECT_NAME_INFORMATION, *POBJECT_NAME_INFORMATION;
-                //
-                // There isn't any point in wrapping this as it is simply a UNICODE_STRING directly
-                // followed by it's backing buffer.
+                // https://msdn.microsoft.com/en-us/library/bb470234.aspx
+                // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566492.aspx
+                [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+                public static extern int NtOpenDirectoryObject(
+                    out SafeDirectoryObjectHandle DirectoryHandle,
+                    ACCESS_MASK DesiredAccess,
+                    OBJECT_ATTRIBUTES ObjectAttributes);
+
+                // https://msdn.microsoft.com/en-us/library/bb470236.aspx
+                // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567030.aspx
+                [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+                public static extern int NtOpenSymbolicLinkObject(
+                    out SafeSymbolicLinkObjectHandle LinkHandle,
+                    ACCESS_MASK DesiredAccess,
+                    OBJECT_ATTRIBUTES ObjectAttributes);
+
+                // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567068.aspx
+                // https://msdn.microsoft.com/en-us/library/bb470241.aspx
+                [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+                public static extern int NtQuerySymbolicLinkObject(
+                    SafeSymbolicLinkObjectHandle LinkHandle,
+                    ref UNICODE_STRING LinkTarget,
+                    out uint ReturnedLength);
 
                 //  typedef struct _OBJECT_TYPES_INFORMATION
                 //  {
@@ -83,6 +96,90 @@ namespace WInterop
             {
                 if (!Direct.CloseHandle(handle))
                     throw ErrorHelper.GetIoExceptionForLastError();
+            }
+
+            public static SafeDirectoryObjectHandle OpenDirectoryObject(
+                string path,
+                ACCESS_MASK desiredAccess = ACCESS_MASK.DIRECTORY_QUERY)
+            {
+                return (SafeDirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
+                {
+                    SafeDirectoryObjectHandle directory;
+                    int status = Direct.NtOpenDirectoryObject(
+                        DirectoryHandle: out directory,
+                        DesiredAccess: desiredAccess,
+                        ObjectAttributes: attributes);
+
+                    if (status != NtStatus.STATUS_SUCCESS)
+                        throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status), path);
+
+                    return directory;
+                });
+            }
+
+            public static SafeSymbolicLinkObjectHandle OpenSymbolicLinkObject(
+                string path,
+                ACCESS_MASK desiredAccess = ACCESS_MASK.GENERIC_READ)
+            {
+                return (SafeSymbolicLinkObjectHandle)OpenObjectHelper(path, (attributes) =>
+                {
+                    SafeSymbolicLinkObjectHandle link;
+                    int status = Direct.NtOpenSymbolicLinkObject(
+                        LinkHandle: out link,
+                        DesiredAccess: desiredAccess,
+                        ObjectAttributes: attributes);
+
+                    if (status != NtStatus.STATUS_SUCCESS)
+                        throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status), path);
+
+                    return link;
+                });
+            }
+
+            private static SafeHandle OpenObjectHelper(string path, Func<OBJECT_ATTRIBUTES, SafeHandle> invoker)
+            {
+                unsafe
+                {
+                    fixed (char* pathPointer = path)
+                    {
+                        ushort length = checked((ushort)(path.Length * sizeof(char)));
+                        var objectName = new UNICODE_STRING
+                        {
+                            Length = length,
+                            MaximumLength = length,
+                            Buffer = pathPointer
+                        };
+
+                        OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES
+                        {
+                            Length = (uint)Marshal.SizeOf<OBJECT_ATTRIBUTES>(),
+                            RootDirectory = IntPtr.Zero,
+                            ObjectName = (IntPtr)(&objectName),
+                            SecurityDescriptor = IntPtr.Zero,
+                            SecurityQualityOfService = IntPtr.Zero
+                        };
+
+                        return invoker(attributes);
+                    }
+                }
+            }
+
+            public static string GetSymbolicLinkTarget(SafeSymbolicLinkObjectHandle linkHandle)
+            {
+                return StringBufferCache.CachedBufferInvoke((buffer) =>
+                {
+                    UNICODE_STRING target = new UNICODE_STRING(buffer);
+                    uint returnedLength;
+                    int result;
+                    while ((result = Direct.NtQuerySymbolicLinkObject(linkHandle, ref target, out returnedLength)) == NtStatus.STATUS_BUFFER_TOO_SMALL)
+                    {
+                        buffer.EnsureByteCapacity(returnedLength);
+                        target.UpdateFromStringBuffer(buffer);
+                    }
+
+                    buffer.Length = (uint)(target.Length / sizeof(char));
+                    return buffer.ToString();
+                });
             }
 
             public static string GetObjectName(SafeHandle windowsHandle)

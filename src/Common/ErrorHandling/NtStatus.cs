@@ -46,5 +46,39 @@ namespace WInterop.ErrorHandling
         /// </summary>
         public const int STATUS_BUFFER_TOO_SMALL = unchecked((int)0xC0000023);
 
+        /// <summary>
+        /// The object name is invalid.
+        /// </summary>
+        public const int STATUS_OBJECT_NAME_INVALID = unchecked((int)0xC0000033);
+
+        /// <summary>
+        /// The object name is not found.
+        /// </summary>
+        public const int STATUS_OBJECT_NAME_NOT_FOUND = unchecked((int)0xC0000034);
+
+        /// <summary>
+        /// The object name already exists.
+        /// </summary>
+        public const int STATUS_OBJECT_NAME_COLLISION = unchecked((int)0xC0000035);
+
+        /// <summary>
+        /// The object path component was not a directory object.
+        /// </summary>
+        public const int STATUS_OBJECT_PATH_INVALID = unchecked((int)0xC0000039);
+
+        /// <summary>
+        /// {Path Not Found} The path does not exist.
+        /// </summary>
+        public const int STATUS_OBJECT_PATH_NOT_FOUND = unchecked((int)0xC000003A);
+
+        /// <summary>
+        /// The object path component was not a directory object.
+        /// </summary>
+        public const int STATUS_OBJECT_PATH_SYNTAX_BAD = unchecked((int)0xC000003B);
+
+        /// <summary>
+        /// Insufficient system resources exist to complete the API.
+        /// </summary>
+        public const int STATUS_INSUFFICIENT_RESOURCES = unchecked((int)0xC000009A);
     }
 }
