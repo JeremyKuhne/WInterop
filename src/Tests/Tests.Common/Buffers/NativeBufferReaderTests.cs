@@ -36,6 +36,34 @@ namespace WInterop.Tests.Buffers
         }
 
         [Fact]
+        public void ReadShortPastCapacityFails()
+        {
+            using (var buffer = new NativeBuffer(2))
+            {
+                var reader = new NativeBufferReader(buffer);
+
+                Action action = () => reader.ReadShort();
+
+                for (uint i = 1; i < 2; i++)
+                {
+                    reader.ByteOffset = buffer.ByteCapacity - i;
+                    action.ShouldThrow<System.IO.EndOfStreamException>();
+                }
+            }
+        }
+
+        [Fact]
+        public void ReadShortInCapacityPasses()
+        {
+            using (var buffer = new NativeBuffer(2))
+            {
+                var reader = new NativeBufferReader(buffer);
+                reader.ByteOffset = buffer.ByteCapacity - 2;
+                reader.ReadShort();
+            }
+        }
+
+        [Fact]
         public void ReadIntPastCapacityFails()
         {
             using (var buffer = new NativeBuffer(4))
@@ -88,6 +116,42 @@ namespace WInterop.Tests.Buffers
                 var reader = new NativeBufferReader(buffer);
                 reader.ByteOffset = buffer.ByteCapacity - 8;
                 reader.ReadLong();
+            }
+        }
+
+        [Theory
+            InlineData(0, 0x0201)
+            InlineData(1, 0x0302)
+            InlineData(2, 0x0403)
+            ]
+        public void ReadShort(ulong offset, short expected)
+        {
+            using (var buffer = new NativeBuffer(4))
+            {
+                for (ulong i = 0; i < 4; i++)
+                {
+                    buffer[i] = (byte)(i + 1);
+                }
+
+                var reader = new NativeBufferReader(buffer);
+                reader.ByteOffset = offset;
+                reader.ReadShort().Should().Be(expected, $"offset is {offset}");
+            }
+        }
+
+        [Fact]
+        public void ReadTwoShorts()
+        {
+            using (var buffer = new NativeBuffer(4))
+            {
+                for (ulong i = 0; i < 4; i++)
+                {
+                    buffer[i] = (byte)(i + 1);
+                }
+
+                var reader = new NativeBufferReader(buffer);
+                reader.ReadShort().Should().Be(0x0201);
+                reader.ReadShort().Should().Be(0x0403);
             }
         }
 

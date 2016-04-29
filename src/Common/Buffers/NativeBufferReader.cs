@@ -59,15 +59,47 @@ namespace WInterop.Buffers
             if (charCount == 0) return string.Empty;
 
             string value = new string((char*)((byte*)_buffer.DangerousGetHandle() + _byteOffset), startIndex: 0, length: charCount);
-            _byteOffset += (ulong)(charCount * 2);
+            _byteOffset += (ulong)(charCount * sizeof(char));
             return value;
+        }
+
+        /// <summary>
+        /// Read a ushort at the current offset. Advances the reader offset.
+        /// </summary>
+        /// <exception cref="EndOfStreamException">Thrown if reading a ushort would go past the end of the buffer.</exception>
+        public ushort ReadUshort()
+        {
+            return (ushort)ReadShort();
+        }
+
+        /// <summary>
+        /// Read a short at the current offset. Advances the reader offset.
+        /// </summary>
+        /// <exception cref="EndOfStreamException">Thrown if reading a short would go past the end of the buffer.</exception>
+        unsafe public short ReadShort()
+        {
+            if (_buffer.ByteCapacity < sizeof(short) || _byteOffset > _buffer.ByteCapacity - sizeof(short)) throw new EndOfStreamException();
+
+            byte* address = (byte*)_buffer.DangerousGetHandle() + _byteOffset;
+            _byteOffset += sizeof(short);
+
+            if (((short)address & (sizeof(short) - 1)) == 0)
+            {
+                // aligned read
+                return *((short*)address);
+            }
+            else
+            {
+                // unaligned read
+                return (short)(*address | *(address + 1) << 8);
+            }
         }
 
         /// <summary>
         /// Read a uint at the current offset. Advances the reader offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading a uint would go past the end of the buffer.</exception>
-        unsafe public uint ReadUint()
+        public uint ReadUint()
         {
             return (uint)ReadInt();
         }
@@ -99,7 +131,7 @@ namespace WInterop.Buffers
         /// Read a ulong at the current offset. Advances the reader offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading a ulong would go past the end of the buffer.</exception>
-        unsafe public ulong ReadUlong()
+        public ulong ReadUlong()
         {
             return (ulong)ReadLong();
         }
