@@ -47,5 +47,18 @@ namespace WInterop.Authentication
             MaximumLength = checked((ushort)buffer.ByteCapacity);
             Buffer = buffer.CharPointer;
         }
+
+        /// <summary>
+        /// Returns the current buffer as a string.
+        /// </summary>
+        public override string ToString()
+        {
+            if (Length == 0) return string.Empty;
+
+            unsafe
+            {
+                return new string(Buffer, 0, Length / sizeof(char));
+            }
+        }
     }
 }
