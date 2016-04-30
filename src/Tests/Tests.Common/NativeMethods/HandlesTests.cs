@@ -48,6 +48,62 @@ namespace WInterop.Tests.NativeMethodsTests
         }
 
         [Fact]
+        public void GetFileNameBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, FileAccess.Read, FileShare.ReadWrite, FileMode.Open,
+                FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+            {
+                // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
+                string name = NativeMethods.Handles.GetFileName(directory);
+
+                tempPath.Should().EndWith(Paths.AddTrailingSeparator(name));
+            }
+        }
+
+        [Fact]
+        public void GetVolumeNameBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, FileAccess.Read, FileShare.ReadWrite, FileMode.Open,
+                FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+            {
+                // This will give back the NT volume path (\Device\HarddiskVolumen\)
+                string name = NativeMethods.Handles.GetVolumeName(directory);
+
+                name.Should().StartWith(@"\Device\");
+            }
+        }
+
+        [Fact]
+        public void GetShortNameBasic()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, FileAccess.Read, FileShare.ReadWrite, FileMode.Open,
+                FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+            {
+                // This will give back the NT volume path (\Device\HarddiskVolumen\)
+                string directoryName = NativeMethods.Handles.GetShortName(directory);
+                directoryName.Should().Be("Temp");
+
+                string tempFileName = "ExtraLongName" + Path.GetRandomFileName();
+                string tempFilePath = Path.Combine(tempPath, tempFileName);
+                try
+                {
+                    using (var file = NativeMethods.FileManagement.CreateFile(tempFilePath, FileAccess.Read, FileShare.ReadWrite, FileMode.Create))
+                    {
+                        string fileName = NativeMethods.Handles.GetShortName(file);
+                        fileName.Length.Should().BeLessOrEqualTo(12);
+                    }
+                }
+                finally
+                {
+                    NativeMethods.FileManagement.DeleteFile(tempFilePath);
+                }
+            }
+        }
+
+        [Fact]
         public void OpenDosDeviceDirectory()
         {
             StoreUnauthorizedAccess(() =>

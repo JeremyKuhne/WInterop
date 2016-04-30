@@ -93,7 +93,7 @@ namespace WInterop
                         CopyProgressRoutine lpProgressRoutine,
                         IntPtr lpData,
                         [MarshalAs(UnmanagedType.Bool)] ref bool pbCancel,
-                        CopyFileExFlags dwCopyFlags);
+                        CopyFileFlags dwCopyFlags);
 
                     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363866.aspx
                     // Note that CreateSymbolicLinkW returns a BOOLEAN (byte), not a BOOL (int)

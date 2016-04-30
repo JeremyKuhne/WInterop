@@ -147,12 +147,15 @@ namespace WInterop.ErrorHandling
         public const uint ERROR_BAD_ARGUMENTS = 160;
         public const uint ERROR_BAD_PATHNAME = 161;
         public const uint ERROR_ALREADY_EXISTS = 183;
+        public const uint ERROR_INVALID_FLAG_NUMBER = 186;
         public const uint ERROR_ENVVAR_NOT_FOUND = 203;
         public const uint ERROR_FILENAME_EXCED_RANGE = 206;
         public const uint ERROR_MORE_DATA = 234;
         public const uint ERROR_OPERATION_ABORTED = 995;
         public const uint ERROR_NO_TOKEN = 1008;
         public const uint ERROR_NOT_FOUND = 1168;
+        public const uint ERROR_REQUEST_ABORTED = 1235;
+        public const uint ERROR_CONNECTION_ABORTED = 1236;
         public const uint ERROR_PRIVILEGE_NOT_HELD = 1314;
         public const uint ERROR_DISK_CORRUPT = 1393;
 
@@ -160,6 +163,8 @@ namespace WInterop.ErrorHandling
         public const uint NERR_BASE = 2100;
         public const uint NERR_BufTooSmall = NERR_BASE + 23;
         public const uint NERR_InvalidComputer = NERR_BASE + 251;
+
+        public const uint ERROR_REQUEST_PAUSED = 3050;
 
         public const uint APPMODEL_ERROR_NO_APPLICATION = 15703;
 

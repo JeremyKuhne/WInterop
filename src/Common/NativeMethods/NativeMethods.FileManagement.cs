@@ -14,6 +14,7 @@ using WInterop.Authorization;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.FileManagement;
+using WInterop.FileManagement.CopyFile2;
 using WInterop.Handles;
 using WInterop.Synchronization;
 using WInterop.Utility;
@@ -43,6 +44,13 @@ namespace WInterop
                     [MarshalAs(UnmanagedType.U4)] System.IO.FileShare dwShareMode,
                     [MarshalAs(UnmanagedType.U4)] System.IO.FileMode dwCreationDisposition,
                     [In] ref CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449404.aspx (kernel32)
+                [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                public unsafe static extern int CopyFile2(
+                    string pwszExistingFileName,
+                    string pwszNewFileName,
+                    COPYFILE2_EXTENDED_PARAMETERS* pExtendedParameters);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364946.aspx (kernel32)
                 [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -240,6 +248,16 @@ namespace WInterop
                 return handle;
             }
 
+            public static void CopyFile2(string source, string destination)
+            {
+                unsafe
+                {
+                    int hr = Direct.CopyFile2(source, destination, null);
+                    if (ErrorHandling.FAILED(hr))
+                        throw ErrorHelper.GetIoExceptionForHResult(hr, source);
+                }
+            }
+
             public static FileInfo GetFileAttributesEx(string path)
             {
                 WIN32_FILE_ATTRIBUTE_DATA data;
@@ -312,6 +330,9 @@ namespace WInterop
                 });
             }
 
+            /// <summary>
+            /// Get the list of data streams for the given handle.
+            /// </summary>
             public static IEnumerable<StreamInformation> GetStreamInformationByHandle(SafeFileHandle fileHandle)
             {
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364406.aspx

@@ -13,13 +13,13 @@ namespace WInterop.ErrorHandling
     public class DriveNotReadyException : IOException
     {
         public DriveNotReadyException()
-            : base() { HResult = (int)NativeMethods.ErrorHandling.GetHResultForWindowsError(WinErrors.ERROR_NOT_READY); }
+            : base() { HResult = NativeMethods.ErrorHandling.HRESULT_FROM_WIN32(WinErrors.ERROR_NOT_READY); }
 
         public DriveNotReadyException(string message)
-            : base(message) { HResult = (int)NativeMethods.ErrorHandling.GetHResultForWindowsError(WinErrors.ERROR_NOT_READY); }
+            : base(message) { HResult = NativeMethods.ErrorHandling.HRESULT_FROM_WIN32(WinErrors.ERROR_NOT_READY); }
 
         public DriveNotReadyException(string message, Exception innerException)
-            : base(message, innerException) { HResult = (int)NativeMethods.ErrorHandling.GetHResultForWindowsError(WinErrors.ERROR_NOT_READY); }
+            : base(message, innerException) { HResult = NativeMethods.ErrorHandling.HRESULT_FROM_WIN32(WinErrors.ERROR_NOT_READY); }
 
         public DriveNotReadyException(string message, int hresult)
             : base(message, hresult) { }

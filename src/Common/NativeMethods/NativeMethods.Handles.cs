@@ -67,7 +67,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567062.aspx
                 // The Zw version of this is documented as available to UWP, Nt has no clarifying restrictions and is not included in a header.
                 [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-                public static extern int NtQueryObject(
+                public static extern NTSTATUS NtQueryObject(
                     SafeHandle Handle,
                     OBJECT_INFORMATION_CLASS ObjectInformationClass,
                     IntPtr ObjectInformation,
@@ -77,7 +77,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/bb470234.aspx
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566492.aspx
                 [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-                public static extern int NtOpenDirectoryObject(
+                public static extern NTSTATUS NtOpenDirectoryObject(
                     out SafeDirectoryObjectHandle DirectoryHandle,
                     ACCESS_MASK DesiredAccess,
                     OBJECT_ATTRIBUTES ObjectAttributes);
@@ -85,7 +85,7 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/bb470236.aspx
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567030.aspx
                 [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-                public static extern int NtOpenSymbolicLinkObject(
+                public static extern NTSTATUS NtOpenSymbolicLinkObject(
                     out SafeSymbolicLinkObjectHandle LinkHandle,
                     ACCESS_MASK DesiredAccess,
                     OBJECT_ATTRIBUTES ObjectAttributes);
@@ -93,14 +93,14 @@ namespace WInterop
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567068.aspx
                 // https://msdn.microsoft.com/en-us/library/bb470241.aspx
                 [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-                public static extern int NtQuerySymbolicLinkObject(
+                public static extern NTSTATUS NtQuerySymbolicLinkObject(
                     SafeSymbolicLinkObjectHandle LinkHandle,
                     ref UNICODE_STRING LinkTarget,
                     out uint ReturnedLength);
 
                 // https://msdn.microsoft.com/en-us/library/bb470238.aspx
                 [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-                public static extern int NtQueryDirectoryObject(
+                public static extern NTSTATUS NtQueryDirectoryObject(
                     SafeDirectoryObjectHandle DirectoryHandle,
                     SafeHandle Buffer,
                     uint Length,
@@ -108,6 +108,17 @@ namespace WInterop
                     [MarshalAs(UnmanagedType.U1)] bool RestartScan,
                     ref uint Context,
                     out uint ReturnLength);
+
+
+                // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567052.aspx
+                // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
+                [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+                internal static extern NTSTATUS NtQueryInformationFile(
+                    SafeFileHandle FileHandle,
+                    out IO_STATUS_BLOCK IoStatusBlock,
+                    SafeHandle FileInformation,
+                    uint Length,
+                    FILE_INFORMATION_CLASS FileInformationClass);
 
                 //  typedef struct _OBJECT_TYPES_INFORMATION
                 //  {
@@ -132,12 +143,12 @@ namespace WInterop
                 return (SafeDirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
                 {
                     SafeDirectoryObjectHandle directory;
-                    int status = Direct.NtOpenDirectoryObject(
+                    NTSTATUS status = Direct.NtOpenDirectoryObject(
                         DirectoryHandle: out directory,
                         DesiredAccess: desiredAccess,
                         ObjectAttributes: attributes);
 
-                    if (status != NtStatus.STATUS_SUCCESS)
+                    if (status != NTSTATUS.STATUS_SUCCESS)
                         throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status), path);
 
                     return directory;
@@ -154,12 +165,12 @@ namespace WInterop
                 return (SafeSymbolicLinkObjectHandle)OpenObjectHelper(path, (attributes) =>
                 {
                     SafeSymbolicLinkObjectHandle link;
-                    int status = Direct.NtOpenSymbolicLinkObject(
+                    NTSTATUS status = Direct.NtOpenSymbolicLinkObject(
                         LinkHandle: out link,
                         DesiredAccess: desiredAccess,
                         ObjectAttributes: attributes);
 
-                    if (status != NtStatus.STATUS_SUCCESS)
+                    if (status != NTSTATUS.STATUS_SUCCESS)
                         throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status), path);
 
                     return link;
@@ -203,14 +214,14 @@ namespace WInterop
                 {
                     UNICODE_STRING target = new UNICODE_STRING(buffer);
                     uint returnedLength;
-                    int status;
-                    while ((status = Direct.NtQuerySymbolicLinkObject(linkHandle, ref target, out returnedLength)) == NtStatus.STATUS_BUFFER_TOO_SMALL)
+                    NTSTATUS status;
+                    while ((status = Direct.NtQuerySymbolicLinkObject(linkHandle, ref target, out returnedLength)) == NTSTATUS.STATUS_BUFFER_TOO_SMALL)
                     {
                         buffer.EnsureByteCapacity(returnedLength);
                         target.UpdateFromStringBuffer(buffer);
                     }
 
-                    if (status != NtStatus.STATUS_SUCCESS)
+                    if (status != NTSTATUS.STATUS_SUCCESS)
                         throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
 
                     buffer.Length = (uint)(target.Length / sizeof(char));
@@ -228,7 +239,7 @@ namespace WInterop
 
                     uint context = 0;
                     uint returnLength;
-                    int status;
+                    NTSTATUS status;
 
                     do
                     {
@@ -241,7 +252,7 @@ namespace WInterop
                             Context: ref context,
                             ReturnLength: out returnLength);
 
-                        if (status != NtStatus.STATUS_SUCCESS && status != NtStatus.STATUS_MORE_ENTRIES)
+                        if (status != NTSTATUS.STATUS_SUCCESS && status != NTSTATUS.STATUS_MORE_ENTRIES)
                             break;
 
                         NativeBufferReader reader = new NativeBufferReader(buffer);
@@ -259,9 +270,9 @@ namespace WInterop
                             });
                         } while (true);
 
-                    } while (status == NtStatus.STATUS_MORE_ENTRIES);
+                    } while (status == NTSTATUS.STATUS_MORE_ENTRIES);
 
-                    if (status != NtStatus.STATUS_SUCCESS)
+                    if (status != NTSTATUS.STATUS_SUCCESS)
                         throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
                 });
 
@@ -288,10 +299,10 @@ namespace WInterop
 
                 using (NativeBuffer buffer = new NativeBuffer())
                 {
-                    int status = NtStatus.STATUS_BUFFER_OVERFLOW;
+                    NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
                     uint returnLength = 260 * sizeof(char);
 
-                    while (status == NtStatus.STATUS_BUFFER_OVERFLOW || status == NtStatus.STATUS_BUFFER_TOO_SMALL)
+                    while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW || status == NTSTATUS.STATUS_BUFFER_TOO_SMALL)
                     {
                         buffer.EnsureByteCapacity(returnLength);
 
@@ -317,12 +328,12 @@ namespace WInterop
             {
                 using (NativeBuffer buffer = new NativeBuffer())
                 {
-                    int status = NtStatus.STATUS_BUFFER_OVERFLOW;
+                    NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
 
                     // We'll initially give room for 50 characters for the type name
                     uint returnLength = (uint)Marshal.SizeOf<OBJECT_TYPE_INFORMATION>() + 50 * sizeof(char);
 
-                    while (status == NtStatus.STATUS_BUFFER_OVERFLOW || status == NtStatus.STATUS_BUFFER_TOO_SMALL || status == NtStatus.STATUS_INFO_LENGTH_MISMATCH)
+                    while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW || status == NTSTATUS.STATUS_BUFFER_TOO_SMALL || status == NTSTATUS.STATUS_INFO_LENGTH_MISMATCH)
                     {
                         buffer.EnsureByteCapacity(returnLength);
 
@@ -339,6 +350,71 @@ namespace WInterop
 
                     return new NativeBufferReader(buffer).ReadStruct<OBJECT_TYPE_INFORMATION>().TypeName.ToString();
                 }
+            }
+
+            public static string GetFileName(SafeFileHandle fileHandle)
+            {
+                // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545817.aspx
+
+                //  typedef struct _FILE_NAME_INFORMATION
+                //  {
+                //      ULONG FileNameLength;
+                //      WCHAR FileName[1];
+                //  } FILE_NAME_INFORMATION, *PFILE_NAME_INFORMATION;
+
+                return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileNameInformation);
+            }
+
+            public static string GetVolumeName(SafeFileHandle fileHandle)
+            {
+                // Same basic structure as FILE_NAME_INFORMATION
+                return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileVolumeNameInformation);
+            }
+
+            /// <summary>
+            /// This is the short name for the file/directory name, not the path. Available from WindowsStore.
+            /// </summary>
+            public static string GetShortName(SafeFileHandle fileHandle)
+            {
+                // Same basic structure as FILE_NAME_INFORMATION
+                return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileAlternateNameInformation);
+            }
+
+            private static string GetFileInformationString(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass)
+            {
+                return StringBufferCache.CachedBufferInvoke((buffer) =>
+                {
+                    NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
+                    uint nameLength = 260 * sizeof(char);
+
+                    IO_STATUS_BLOCK ioStatus;
+                    var reader = new NativeBufferReader(buffer);
+
+                    while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
+                    {
+                        // Add space for the FileNameLength
+                        buffer.EnsureByteCapacity(nameLength + sizeof(uint));
+
+                        status = Direct.NtQueryInformationFile(
+                            FileHandle: fileHandle,
+                            IoStatusBlock: out ioStatus,
+                            FileInformation: buffer,
+                            Length: checked((uint)buffer.ByteCapacity),
+                            FileInformationClass: fileInformationClass);
+
+                        if (status == NTSTATUS.STATUS_SUCCESS || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
+                        {
+                            reader.ByteOffset = 0;
+                            nameLength = reader.ReadUint();
+                        }
+                    }
+
+                    if (status != NTSTATUS.STATUS_SUCCESS)
+                        throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
+
+                    // The string isn't null terminated so we have to explicitly pass the size
+                    return reader.ReadString(checked((int)nameLength) / sizeof(char));
+                });
             }
         }
     }

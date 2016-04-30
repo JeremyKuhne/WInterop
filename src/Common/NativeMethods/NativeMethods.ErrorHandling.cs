@@ -47,7 +47,7 @@ namespace WInterop
             {
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
                 [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-                public static extern uint LsaNtStatusToWinError(int Status);
+                public static extern uint LsaNtStatusToWinError(NTSTATUS Status);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679351.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -61,95 +61,57 @@ namespace WInterop
                     // Size is in chars
                     uint nSize,
                     string[] Arguments);
-
-                /// <summary>
-                /// Extracts the code portion of the specified HRESULT
-                /// </summary>
-                public static uint HRESULT_CODE(uint hr)
-                {
-                    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679761.aspx
-                    // #define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
-                    return hr & 0xFFFF;
-                }
-
-                /// <summary>
-                /// Extracts the facility of the specified HRESULT
-                /// </summary>
-                public static uint HRESULT_FACILITY(uint hr)
-                {
-                    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680579.aspx
-                    // #define HRESULT_FACILITY(hr)  (((hr) >> 16) & 0x1fff)
-                    return (hr >> 16) & 0x1fff;
-                }
-
-                /// <summary>
-                /// Extracts the severity of the specified result
-                /// </summary>
-                public static uint HRESULT_SEVERITY(uint hr)
-                {
-                    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms693761.aspx
-                    // #define HRESULT_SEVERITY(hr)  (((hr) >> 31) & 0x1)  
-                    return (((hr) >> 31) & 0x1);
-                }
-
-                public static uint HRESULT_FROM_WIN32(uint error)
-                {
-                    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680746(v=vs.85).aspx
-                    // return (HRESULT)(x) <= 0 ? (HRESULT)(x) : (HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
-                    return error <= 0 ? error : ((error & 0x0000FFFF) | ((uint)Facility.WIN32 << 16) | 0x80000000);
-                }
             }
 
             /// <summary>
-            /// Convert a Win32 error to an HRESULT
+            /// Extracts the code portion of the specified HRESULT
             /// </summary>
-            public static uint GetHResultForWindowsError(uint error)
+            public static int HRESULT_CODE(int hr)
             {
-                return Direct.HRESULT_FROM_WIN32(error);
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679761.aspx
+                // #define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
+                return hr & 0xFFFF;
             }
 
             /// <summary>
-            /// Get the facility for the given HRESULT
+            /// Extracts the facility of the specified HRESULT
             /// </summary>
-            public static Facility GetHResultFacility(uint result)
+            public static Facility HRESULT_FACILITY(int hr)
             {
-                return (Facility)Direct.HRESULT_FACILITY(result);
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680579.aspx
+                // #define HRESULT_FACILITY(hr)  (((hr) >> 16) & 0x1fff)
+                return (Facility)((hr >> 16) & 0x1fff);
             }
 
             /// <summary>
-            /// Get the status code for the given HRESULT
+            /// Extracts the severity of the specified result
             /// </summary>
-            private static uint GetHResultStatusCode(uint result)
+            public static int HRESULT_SEVERITY(int hr)
             {
-                return Direct.HRESULT_CODE(result);
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms693761.aspx
+                // #define HRESULT_SEVERITY(hr)  (((hr) >> 31) & 0x1)  
+                return (((hr) >> 31) & 0x1);
             }
 
-            /// <summary>
-            /// Try to get the string for an HRESULT
-            /// </summary>
-            public static string HResultToString(uint result)
+            public static int HRESULT_FROM_WIN32(uint error)
             {
-                string message;
-                if (GetHResultFacility(result) == Facility.WIN32)
-                {
-                    // Win32 Error, extract the code
-                    message = FormatMessage(
-                        messageId: Direct.HRESULT_CODE(result),
-                        source: IntPtr.Zero,
-                        flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
-                }
-                else
-                {
-                    // Hope that we get a rational IErrorInfo
-                    Exception exception = Marshal.GetExceptionForHR((int)result);
-                    message = exception.Message;
-                }
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680746.aspx
+                // return (HRESULT)(x) <= 0 ? (HRESULT)(x) : (HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
+                return (int)(error <= 0 ? error : ((error & 0x0000FFFF) | ((int)Facility.WIN32 << 16) | 0x80000000));
+            }
 
-                return string.Format(
-                    CultureInfo.CurrentUICulture,
-                    "HRESULT {0:D} [0x{0:X}]: {1}",
-                    result,
-                    message);
+            public static bool SUCCEEDED(int hr)
+            {
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms687197.aspx
+                // #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
+                return hr >= 0;
+            }
+
+            public static bool FAILED(int hr)
+            {
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms693474.aspx
+                // #define FAILED(hr) (((HRESULT)(hr)) < 0)
+                return hr < 0;
             }
 
             /// <summary>
@@ -213,7 +175,7 @@ namespace WInterop
                         }
                     }
 
-                    throw new IOException("Failed to get error string.", (int)Direct.HRESULT_FROM_WIN32(lastError));
+                    throw new IOException("Failed to get error string.", HRESULT_FROM_WIN32(lastError));
                 }
             }
 
@@ -224,27 +186,27 @@ namespace WInterop
             private const int STATUS_SEVERITY_WARNING = 0x2;
             private const int STATUS_SEVERITY_ERROR = 0x3;
 
-            public static bool NT_SUCCESS(int NTSTATUS)
+            public static bool NT_SUCCESS(NTSTATUS NTSTATUS)
             {
                 return NTSTATUS >= 0;
             }
 
-            public static bool NT_INFORMATION(int NTSTATUS)
+            public static bool NT_INFORMATION(NTSTATUS NTSTATUS)
             {
                 return (uint)NTSTATUS >> 30 == STATUS_SEVERITY_INFORMATIONAL;
             }
 
-            public static bool NT_WARNING(int NTSTATUS)
+            public static bool NT_WARNING(NTSTATUS NTSTATUS)
             {
                 return (uint)NTSTATUS >> 30 == STATUS_SEVERITY_WARNING;
             }
 
-            public static bool NT_ERROR(int NTSTATUS)
+            public static bool NT_ERROR(NTSTATUS NTSTATUS)
             {
                 return (uint)NTSTATUS >> 30 == STATUS_SEVERITY_ERROR;
             }
 
-            public static uint NtStatusToWinError(int status)
+            public static uint NtStatusToWinError(NTSTATUS status)
             {
                 return Direct.LsaNtStatusToWinError(status);
             }

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -28,6 +29,43 @@ namespace WInterop.ErrorHandling
         }
 
         /// <summary>
+        /// Try to get the string for an HRESULT
+        /// </summary>
+        public static string HResultToString(int hr)
+        {
+            string message;
+            if (NativeMethods.ErrorHandling.HRESULT_FACILITY(hr) == Facility.WIN32)
+            {
+                // Win32 Error, extract the code
+                message = NativeMethods.ErrorHandling.FormatMessage(
+                    messageId: (uint)NativeMethods.ErrorHandling.HRESULT_CODE(hr),
+                    source: IntPtr.Zero,
+                    flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
+            }
+            else
+            {
+                // Hope that we get a rational IErrorInfo
+                Exception exception = Marshal.GetExceptionForHR(hr);
+                message = exception.Message;
+            }
+
+            return $"HRESULT {hr:D} [0x{hr:X}]: {message}";
+        }
+
+        /// <summary>
+        /// Turns HRESULT errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
+        /// There are additional IOException derived errors for ease of client error handling.
+        /// </summary>
+        public static Exception GetIoExceptionForHResult(int hr, string path = null)
+        {
+            string message = $"{HResultToString(hr)} > '{path ?? WInteropStrings.NoValue}'";
+            if (NativeMethods.ErrorHandling.HRESULT_FACILITY(hr) == Facility.WIN32)
+                return WinErrorToException((uint)NativeMethods.ErrorHandling.HRESULT_CODE(hr), message, path);
+            else
+                return new IOException(message, hr);
+        }
+
+        /// <summary>
         /// Turns Windows errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
@@ -35,37 +73,43 @@ namespace WInterop.ErrorHandling
         {
             // http://referencesource.microsoft.com/#mscorlib/system/io/__error.cs,142
 
-            string errorText = $"{NativeMethods.ErrorHandling.LastErrorToString(error)} : '{path ?? WInteropStrings.NoValue}'";
+            string message = $"{NativeMethods.ErrorHandling.LastErrorToString(error)} > '{path ?? WInteropStrings.NoValue}'";
+            return WinErrorToException(error, message, path);
+        }
 
+        private static Exception WinErrorToException(uint error, string message, string path)
+        {
             switch (error)
             {
                 case WinErrors.ERROR_FILE_NOT_FOUND:
-                    return new FileNotFoundException(errorText, path);
+                    return new FileNotFoundException(message, path);
                 case WinErrors.ERROR_PATH_NOT_FOUND:
-                    return new DirectoryNotFoundException(errorText);
+                    return new DirectoryNotFoundException(message);
                 case WinErrors.ERROR_ACCESS_DENIED:
                 // Network access doesn't throw UnauthorizedAccess in .NET
                 case WinErrors.ERROR_NETWORK_ACCESS_DENIED:
-                    return new UnauthorizedAccessException(errorText);
+                    return new UnauthorizedAccessException(message);
                 case WinErrors.ERROR_FILENAME_EXCED_RANGE:
-                    return new PathTooLongException(errorText);
+                    return new PathTooLongException(message);
                 case WinErrors.ERROR_INVALID_DRIVE:
 #if DESKTOP
-                    return new DriveNotFoundException(errorText);
+                    return new DriveNotFoundException(message);
 #else
                     goto default;
 #endif
                 case WinErrors.ERROR_OPERATION_ABORTED:
-                    return new OperationCanceledException(errorText);
+                    return new OperationCanceledException(message);
                 case WinErrors.ERROR_NOT_READY:
-                    return new DriveNotReadyException(errorText);
+                    return new DriveNotReadyException(message);
                 case WinErrors.FVE_E_LOCKED_VOLUME:
-                    return new DriveLockedException(errorText);
+                    return new DriveLockedException(message);
+                case WinErrors.ERROR_INVALID_PARAMETER:
+                    return new ArgumentException(message);
                 case WinErrors.ERROR_ALREADY_EXISTS:
                 case WinErrors.ERROR_SHARING_VIOLATION:
                 case WinErrors.ERROR_FILE_EXISTS:
                 default:
-                    return new IOException(errorText, (int)NativeMethods.ErrorHandling.GetHResultForWindowsError(error));
+                    return new IOException(message, NativeMethods.ErrorHandling.HRESULT_FROM_WIN32(error));
             }
         }
 

@@ -10,7 +10,7 @@ namespace WInterop.ErrorHandling
     /// <summary>
     /// Windows error facility codes
     /// </summary>
-    public enum Facility : uint
+    public enum Facility : int
     {
         XPS = 82,
         XAML = 43,

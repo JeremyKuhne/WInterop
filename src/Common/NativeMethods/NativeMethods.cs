@@ -137,8 +137,10 @@ namespace WInterop
         //  LARGE_INTEGER   __int64             long
         //  LONGLONG        __int64             long
         //  ULONGLONG       unsigned __int64    ulong
+        //  ULARGE_INTEGER  unsigned __int64    ulong
         //  UCHAR           unsigned char       byte
         //  HANDLE          void*               IntPtr
+        //  HRESULT         long                int
         //
         //  Windows         C (x32/x64)                 C#
         //  -------         -----------                 --

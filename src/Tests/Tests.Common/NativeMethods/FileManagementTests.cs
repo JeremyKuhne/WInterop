@@ -8,6 +8,7 @@
 using FluentAssertions;
 using System.IO;
 using System.Linq;
+using WInterop.Tests.Support;
 using Xunit;
 
 namespace WInterop.Tests.NativeMethodTests
@@ -262,6 +263,25 @@ namespace WInterop.Tests.NativeMethodTests
             finally
             {
                 NativeMethods.FileManagement.DeleteFile(tempFileName);
+            }
+        }
+
+        [Fact]
+        public void CopyFile2Basic()
+        {
+            using (var temp = new TestFileCleaner())
+            {
+                string source = temp.GetTestPath();
+                using (var file = NativeMethods.FileManagement.CreateFile(source, FileAccess.Read, FileShare.ReadWrite, FileMode.CreateNew))
+                {
+                    file.IsInvalid.Should().BeFalse();
+                }
+
+                string destination = temp.GetTestPath();
+                NativeMethods.FileManagement.CopyFile2(source, destination);
+
+                var info = NativeMethods.FileManagement.GetFileAttributesEx(destination);
+                info.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
             }
         }
     }
