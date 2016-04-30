@@ -27,7 +27,7 @@ namespace WInterop.Tests.NativeMethodsTests
             using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, FileAccess.Read, FileShare.ReadWrite, FileMode.Open,
                 FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
-                string name = NativeMethods.Handles.GetObjectTypeName(directory);
+                string name = NativeMethods.Handles.GetObjectType(directory);
                 name.Should().Be("File");
             }
         }

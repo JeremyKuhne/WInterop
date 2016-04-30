@@ -25,7 +25,6 @@ namespace WInterop
             // Windows Kernel Architecture Internals
             // http://research.microsoft.com/en-us/um/redmond/events/wincore2010/Dave_Probert_1.pdf
 
-
             // Object Manager Routines (kernel-mode file systems and file system filter drivers)
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff550969.aspx
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff557759.aspx
@@ -57,7 +56,7 @@ namespace WInterop
                 // The Zw version of this is documented as available to UWP, Nt has no clarifying restrictions and is not included in a header.
                 [DllImport(Libraries.Ntdll, ExactSpelling = true)]
                 public static extern int NtQueryObject(
-                    IntPtr Handle,
+                    SafeHandle Handle,
                     OBJECT_INFORMATION_CLASS ObjectInformationClass,
                     IntPtr ObjectInformation,
                     uint ObjectInformationLength,
@@ -111,6 +110,9 @@ namespace WInterop
                     throw ErrorHelper.GetIoExceptionForLastError();
             }
 
+            /// <summary>
+            /// Opend a handle to a directory object at the given NT path.
+            /// </summary>
             public static SafeDirectoryObjectHandle OpenDirectoryObject(
                 string path,
                 ACCESS_MASK desiredAccess = ACCESS_MASK.DIRECTORY_QUERY)
@@ -130,6 +132,9 @@ namespace WInterop
                 });
             }
 
+            /// <summary>
+            /// Open a handle to a symbolic link at the given NT path.
+            /// </summary>
             public static SafeSymbolicLinkObjectHandle OpenSymbolicLinkObject(
                 string path,
                 ACCESS_MASK desiredAccess = ACCESS_MASK.GENERIC_READ)
@@ -177,6 +182,9 @@ namespace WInterop
                 }
             }
 
+            /// <summary>
+            /// Get the symbolic link's target path.
+            /// </summary>
             public static string GetSymbolicLinkTarget(SafeSymbolicLinkObjectHandle linkHandle)
             {
                 return StringBufferCache.CachedBufferInvoke((buffer) =>
@@ -248,21 +256,10 @@ namespace WInterop
                 return infos.OrderBy(i => i.Name); ;
             }
 
-            public static string GetObjectName(SafeHandle windowsHandle)
-            {
-                bool success = true;
-                windowsHandle.DangerousAddRef(ref success);
-                try
-                {
-                    return GetObjectName(windowsHandle.DangerousGetHandle());
-                }
-                finally
-                {
-                    windowsHandle.DangerousRelease();
-                }
-            }
-
-            public static string GetObjectName(IntPtr windowsObject)
+            /// <summary>
+            /// Get the name fot he given handle. This is typically the NT path of the object.
+            /// </summary>
+            public static string GetObjectName(SafeHandle handle)
             {
                 // IoQueryFileDosDeviceName wraps this for file handles, but requires calling ExFreePool to free the allocated memory
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff548474.aspx
@@ -287,7 +284,7 @@ namespace WInterop
                         buffer.EnsureByteCapacity(returnLength);
 
                         status = Direct.NtQueryObject(
-                            Handle: windowsObject,
+                            Handle: handle,
                             ObjectInformationClass: OBJECT_INFORMATION_CLASS.ObjectNameInformation,
                             ObjectInformation: buffer.DangerousGetHandle(),
                             ObjectInformationLength: checked((uint)buffer.ByteCapacity),
@@ -295,26 +292,16 @@ namespace WInterop
                     }
 
                     if (!ErrorHandling.NT_SUCCESS(status))
-                    {
                         throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
-                    }
 
-                    var info = Marshal.PtrToStructure<UNICODE_STRING>(buffer.DangerousGetHandle());
-
-                    // The string isn't null terminated so we have to explicitly pass the size
-                    unsafe
-                    {
-                        return new string(info.Buffer, 0, info.Length / sizeof(char));
-                    }
+                    return new NativeBufferReader(buffer).ReadStruct<UNICODE_STRING>().ToString();
                 }
             }
 
-            public static string GetObjectTypeName(SafeHandle windowsHandle)
-            {
-                return GetObjectTypeName(windowsHandle.DangerousGetHandle());
-            }
-
-            public static string GetObjectTypeName(IntPtr windowsObject)
+            /// <summary>
+            /// Get the type name of the given object.
+            /// </summary>
+            public static string GetObjectType(SafeHandle handle)
             {
                 using (NativeBuffer buffer = new NativeBuffer())
                 {
@@ -328,7 +315,7 @@ namespace WInterop
                         buffer.EnsureByteCapacity(returnLength);
 
                         status = Direct.NtQueryObject(
-                            Handle: windowsObject,
+                            Handle: handle,
                             ObjectInformationClass: OBJECT_INFORMATION_CLASS.ObjectTypeInformation,
                             ObjectInformation: buffer.DangerousGetHandle(),
                             ObjectInformationLength: checked((uint)buffer.ByteCapacity),
@@ -336,17 +323,9 @@ namespace WInterop
                     }
 
                     if (!ErrorHandling.NT_SUCCESS(status))
-                    {
                         throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
-                    }
 
-                    var info = Marshal.PtrToStructure<OBJECT_TYPE_INFORMATION>(buffer.DangerousGetHandle());
-
-                    // The string isn't null terminated so we have to explicitly pass the size
-                    unsafe
-                    {
-                        return new string(info.TypeName.Buffer, 0, info.TypeName.Length / sizeof(char));
-                    }
+                    return new NativeBufferReader(buffer).ReadStruct<OBJECT_TYPE_INFORMATION>().TypeName.ToString();
                 }
             }
         }
