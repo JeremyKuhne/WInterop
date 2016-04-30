@@ -17,6 +17,11 @@ namespace WInterop.ErrorHandling
         public const int STATUS_SUCCESS = 0x00000000;
 
         /// <summary>
+        /// Returned by enumeration APIs to indicate more information is available to successive calls.
+        /// </summary>
+        public const int STATUS_MORE_ENTRIES = 0x00000105;
+
+        /// <summary>
         /// {Buffer Overflow} The data was too large to fit into the specified buffer.
         /// </summary>
         public const int STATUS_BUFFER_OVERFLOW = unchecked((int)0x80000005);
