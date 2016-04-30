@@ -49,6 +49,18 @@ namespace WInterop
                 public static extern bool CloseHandle(
                     IntPtr handle);
 
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724251.aspx
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                public static extern bool DuplicateHandle(
+                    SafeProcessHandle hSourceProcessHandle,
+                    IntPtr hSourceHandle,
+                    SafeProcessHandle hTargetProcessHandle,
+                    SafeHandle lpTargetHandle,
+                    uint dwDesiredAccess,
+                    [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle,
+                    uint dwOptions);
+
                 // http://forum.sysinternals.com/howto-enumerate-handles_topic18892.html
 
                 // https://msdn.microsoft.com/en-us/library/bb432383.aspx

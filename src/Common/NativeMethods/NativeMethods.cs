@@ -120,18 +120,35 @@ namespace WInterop
         // "Windows Data Types"                  http://msdn.microsoft.com/en-us/library/aa383751.aspx
         // "Data Type Ranges"                    http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx
         //
-        //  Windows         C               C#          Alt
-        //  -------         -               --          ---
-        //  BOOL            int             int         bool
-        //  BOOLEAN         unsigned char   byte        [MarshalAs(UnmanagedType.U1)] bool
-        //  BYTE            unsigned char   byte
-        //  CHAR            char            sbyte
-        //  DWORD           unsigned long   uint
-        //  HANDLE          void*           IntPtr
-        //  LARGE_INTEGER   __int64         long
-        //  LONG            long            int
-        //  LONGLONG        __int64         long
-        //  UCHAR           unsigned char   byte
+        //  Windows         C                   C#          Alt
+        //  -------         -                   --          ---
+        //  BOOL            int                 int         bool
+        //  BOOLEAN         unsigned char       byte        [MarshalAs(UnmanagedType.U1)] bool
+        //  BYTE            unsigned char       byte
+        //  CHAR            char                sbyte
+        //  UCHAR           unsigned char       byte
+        //  SHORT           short               short
+        //  USHORT          unsigned short      ushort
+        //  WORD            unsigned short      ushort
+        //  INT             int                 int
+        //  LONG            long                int
+        //  ULONG           unsigned long       uint
+        //  DWORD           unsigned long       uint
+        //  LARGE_INTEGER   __int64             long
+        //  LONGLONG        __int64             long
+        //  ULONGLONG       unsigned __int64    ulong
+        //  UCHAR           unsigned char       byte
+        //  HANDLE          void*               IntPtr
+        //
+        //  Windows         C (x32/x64)                 C#
+        //  -------         -----------                 --
+        //  LPARAM          long/__int64                IntPtr
+        //  LRESULT         long/__int64                IntPtr
+        //  LONG_PTR        long/__int64                IntPtr
+        //  ULONG_PTR       unsigned long/__int64       UIntPtr
+        //  INT_PTR         int/__int64                 IntPtr
+        //  UINT_PTR        unsigned int/__int64        UIntPtr
+        //  WPARAM          unsigned int/__int64        UIntPtr
 
         // Keeping Managed Objects Alive
         // =============================
