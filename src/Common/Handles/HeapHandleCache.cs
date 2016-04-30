@@ -51,6 +51,8 @@ namespace WInterop.Handles
         {
             if (item.ByteLength <= _maxSize)
                 base.Release(item);
+            else
+                item.Dispose();
         }
     }
 }

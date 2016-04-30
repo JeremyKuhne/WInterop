@@ -16,9 +16,11 @@ namespace WInterop.Buffers
     public sealed class StringBufferCache : Cache<StringBuffer>
     {
         private static readonly StringBufferCache s_Instance = new StringBufferCache(0);
+        private uint _maxSize;
 
-        public StringBufferCache(int maxBuffers) : base(maxBuffers)
+        public StringBufferCache(int maxBuffers, uint maxSize = 1024) : base(maxBuffers)
         {
+            _maxSize = maxSize;
         }
 
         public StringBuffer Acquire(uint minCapacity)
@@ -35,8 +37,15 @@ namespace WInterop.Buffers
 
         public override void Release(StringBuffer item)
         {
-            item.Length = 0;
-            base.Release(item);
+            if (item.CharCapacity <= _maxSize)
+            {
+                item.Length = 0;
+                base.Release(item);
+            }
+            else
+            {
+                item.Dispose();
+            }
         }
 
         public string ToStringAndRelease(StringBuffer item)

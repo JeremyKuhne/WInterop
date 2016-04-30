@@ -945,6 +945,22 @@ namespace WInterop.Tests.Buffers
             }
         }
 
+        [Fact]
+        public void DisposedObjectIsCleared()
+        {
+            StringBuffer buffer = new StringBuffer("Foo");
+            buffer.Dispose();
+            buffer.Length.Should().Be(0);
+            buffer.CharCapacity.Should().Be(0);
+            buffer.ByteCapacity.Should().Be(0);
+            unsafe
+            {
+                (buffer.CharPointer == null).Should().BeTrue("disposed char pointer should be null");
+                (buffer.BytePointer == null).Should().BeTrue("disposed byte pointer should be null");
+                (buffer.VoidPointer == null).Should().BeTrue("disposed void pointer should be null");
+            }
+        }
+
         // [Fact]
         public void AppendCharCountPerf()
         {

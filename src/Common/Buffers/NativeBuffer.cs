@@ -41,13 +41,17 @@ namespace WInterop.Buffers
         /// Create a buffer with at least the specified initial capacity in bytes.
         /// </summary>
         /// <exception cref="OverflowException">Thrown if trying to allocate more than a uint on 32bit.</exception>
-        public unsafe NativeBuffer(ulong initialMinCapacity = 0)
+        public NativeBuffer(ulong initialMinCapacity = 0)
         {
             _handle = HeapHandleCache.Instance.Acquire(initialMinCapacity);
-            _byteCapacity = (void*)(initialMinCapacity);
+
+            unsafe
+            {
+                _byteCapacity = (void*)(initialMinCapacity);
+            }
         }
 
-        protected unsafe void* VoidPointer
+        public unsafe void* VoidPointer
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
@@ -56,7 +60,7 @@ namespace WInterop.Buffers
             }
         }
 
-        protected unsafe byte* BytePointer
+        public unsafe byte* BytePointer
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
@@ -82,11 +86,11 @@ namespace WInterop.Buffers
         /// <summary>
         /// The capacity of the buffer in bytes.
         /// </summary>
-        public unsafe ulong ByteCapacity
+        public ulong ByteCapacity
         {
             // Capacity will never decrease, except after disposal. In addition, using the void* allows reads/writes
             // to capacity to be atomic. As such we shouldn't have to worry about returning a size that is too small.
-            get { return (ulong)_byteCapacity; }
+            get { unsafe { return (ulong)_byteCapacity; } }
         }
 
         /// <summary>
@@ -124,7 +128,7 @@ namespace WInterop.Buffers
         /// Get the byte at the specified byte index.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if attempting to get or set a value that is over the capacity of the buffer.</exception>
-        public unsafe byte this[ulong index]
+        public byte this[ulong index]
         {
             // We only need a read lock here to avoid accessing old memory after a resize (as the block may move). The actual read/write is atomic.
             get
@@ -134,7 +138,7 @@ namespace WInterop.Buffers
                 _handleLock.EnterReadLock();
                 try
                 {
-                    return BytePointer[index];
+                    unsafe { return BytePointer[index]; }
                 }
                 finally
                 {
@@ -148,7 +152,7 @@ namespace WInterop.Buffers
                 _handleLock.EnterReadLock();
                 try
                 {
-                    BytePointer[index] = value;
+                    unsafe { BytePointer[index] = value; }
                 }
                 finally
                 {
