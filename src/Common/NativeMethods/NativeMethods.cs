@@ -206,11 +206,9 @@ namespace WInterop
             {
                 uint returnValue = 0;
 
+                // Ensure enough room for the output string
                 while ((returnValue = invoker(buffer)) > buffer.CharCapacity)
-                {
-                    // Need more room for the output string
                     buffer.EnsureCharCapacity(returnValue);
-                }
 
                 if (returnValue == 0)
                 {
@@ -218,9 +216,8 @@ namespace WInterop
                     uint error = (uint)Marshal.GetLastWin32Error();
 
                     if (shouldThrow != null && !shouldThrow(error))
-                    {
                         return null;
-                    }
+
                     throw ErrorHelper.GetIoExceptionForError(error, value);
                 }
 

@@ -90,6 +90,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Cryptography.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DeviceManagement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DirectoryManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ErrorHandling.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />
