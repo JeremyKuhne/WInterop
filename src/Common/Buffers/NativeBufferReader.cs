@@ -7,6 +7,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace WInterop.Buffers
 {
@@ -159,6 +160,36 @@ namespace WInterop.Buffers
                 int hi = *(address + 4) | *(address + 5) << 8 | *(address + 6) << 16 | *(address + 7) << 24;
                 return ((long)hi << 32) | (uint)lo;
             }
+        }
+
+        /// <summary>
+        /// Get a pointer at the current offset.
+        /// </summary>
+        /// <exception cref="EndOfStreamException">Thrown if reading a pointer would go past the end of the buffer.</exception>
+        public IntPtr ReadIntPtr()
+        {
+            if (Utility.Environment.Is64BitProcess)
+            {
+                return (IntPtr)ReadUlong();
+            }
+            else
+            {
+                return (IntPtr)ReadUint();
+            }
+        }
+
+        /// <summary>
+        /// Read the given struct type at the current offset.
+        /// </summary>
+        /// <exception cref="EndOfStreamException">Thrown if reading the given struct would go past the end of the buffer.</exception>
+        public T ReadStruct<T>() where T : struct
+        {
+            ulong sizeOfStruct = (ulong)Marshal.SizeOf<T>();
+            if (_buffer.ByteCapacity < sizeOfStruct || _byteOffset > _buffer.ByteCapacity - sizeOfStruct) throw new System.IO.EndOfStreamException();
+
+            T value = Marshal.PtrToStructure<T>(_buffer.DangerousGetHandle() + checked((int)_byteOffset));
+            _byteOffset += sizeOfStruct;
+            return value;
         }
     }
 }
