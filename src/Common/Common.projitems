@@ -69,6 +69,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\GENERIC_MAPPING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HeapHandleCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\ObjectAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\ObjectInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\OBJECT_ATTRIBUTES.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\OBJECT_BASIC_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\OBJECT_INFORMATION_CLASS.cs" />

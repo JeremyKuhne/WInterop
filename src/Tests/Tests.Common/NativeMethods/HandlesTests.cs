@@ -7,10 +7,12 @@
 
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Buffers;
+using WInterop.Handles;
 using WInterop.Utility;
 using Xunit;
 
@@ -80,6 +82,21 @@ namespace WInterop.Tests.NativeMethodsTests
                 }
             });
         }
+
+        [Fact]
+        public void GetRootDirectoryEntries()
+        {
+            StoreUnauthorizedAccess(() =>
+            {
+                using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\"))
+                {
+                    IEnumerable<ObjectInformation> objects = NativeMethods.Handles.GetDirectoryEntries(directory);
+                    objects.Should().NotBeEmpty();
+                    objects.Should().Contain(new ObjectInformation { Name = "Device", TypeName = "Directory" });
+                }
+            });
+        }
+
 
         [Fact]
         public void OpenCDriveSymbolicLink()

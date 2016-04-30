@@ -6,6 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using WInterop.Authentication;
@@ -84,6 +86,17 @@ namespace WInterop
                     SafeSymbolicLinkObjectHandle LinkHandle,
                     ref UNICODE_STRING LinkTarget,
                     out uint ReturnedLength);
+
+                // https://msdn.microsoft.com/en-us/library/bb470238.aspx
+                [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+                public static extern int NtQueryDirectoryObject(
+                    SafeDirectoryObjectHandle DirectoryHandle,
+                    SafeHandle Buffer,
+                    uint Length,
+                    [MarshalAs(UnmanagedType.U1)] bool ReturnSingleEntry,
+                    [MarshalAs(UnmanagedType.U1)] bool RestartScan,
+                    ref uint Context,
+                    out uint ReturnLength);
 
                 //  typedef struct _OBJECT_TYPES_INFORMATION
                 //  {
@@ -170,16 +183,69 @@ namespace WInterop
                 {
                     UNICODE_STRING target = new UNICODE_STRING(buffer);
                     uint returnedLength;
-                    int result;
-                    while ((result = Direct.NtQuerySymbolicLinkObject(linkHandle, ref target, out returnedLength)) == NtStatus.STATUS_BUFFER_TOO_SMALL)
+                    int status;
+                    while ((status = Direct.NtQuerySymbolicLinkObject(linkHandle, ref target, out returnedLength)) == NtStatus.STATUS_BUFFER_TOO_SMALL)
                     {
                         buffer.EnsureByteCapacity(returnedLength);
                         target.UpdateFromStringBuffer(buffer);
                     }
 
+                    if (status != NtStatus.STATUS_SUCCESS)
+                        throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
+
                     buffer.Length = (uint)(target.Length / sizeof(char));
                     return buffer.ToString();
                 });
+            }
+
+            public static IEnumerable<ObjectInformation> GetDirectoryEntries(SafeDirectoryObjectHandle directoryHandle)
+            {
+                List<ObjectInformation> infos = new List<ObjectInformation>();
+
+                StringBufferCache.CachedBufferInvoke((buffer) =>
+                {
+                    buffer.EnsureCharCapacity(1024);
+
+                    uint context = 0;
+                    uint returnLength;
+                    int status;
+
+                    do
+                    {
+                        status = Direct.NtQueryDirectoryObject(
+                            DirectoryHandle: directoryHandle,
+                            Buffer: buffer,
+                            Length: (uint)buffer.ByteCapacity,
+                            ReturnSingleEntry: false,
+                            RestartScan: false,
+                            Context: ref context,
+                            ReturnLength: out returnLength);
+
+                        if (status != NtStatus.STATUS_SUCCESS && status != NtStatus.STATUS_MORE_ENTRIES)
+                            break;
+
+                        NativeBufferReader reader = new NativeBufferReader(buffer);
+
+                        do
+                        {
+                            UNICODE_STRING name = reader.ReadStruct<UNICODE_STRING>();
+                            if (name.Length == 0) break;
+                            UNICODE_STRING type = reader.ReadStruct<UNICODE_STRING>();
+
+                            infos.Add(new ObjectInformation
+                            {
+                                Name = name.ToString(),
+                                TypeName = type.ToString()
+                            });
+                        } while (true);
+
+                    } while (status == NtStatus.STATUS_MORE_ENTRIES);
+
+                    if (status != NtStatus.STATUS_SUCCESS)
+                        throw ErrorHelper.GetIoExceptionForError(ErrorHandling.NtStatusToWinError(status));
+                });
+
+                return infos.OrderBy(i => i.Name); ;
             }
 
             public static string GetObjectName(SafeHandle windowsHandle)
