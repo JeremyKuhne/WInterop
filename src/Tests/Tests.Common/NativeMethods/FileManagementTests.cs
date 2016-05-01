@@ -94,6 +94,19 @@ namespace WInterop.Tests.NativeMethodTests
         }
 
         [Fact]
+        public void CreateFileOpenDriveRoot()
+        {
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            {
+                using (var file = NativeMethods.FileManagement.CreateFile(@"C:\.", 0, FileShare.ReadWrite, FileMode.Open,
+                    FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                {
+                    file.IsInvalid.Should().BeFalse();
+                }
+            });
+        }
+
+        [Fact]
         public void CreateFileCreateTempFile()
         {
             string tempPath = NativeMethods.FileManagement.GetTempPath();

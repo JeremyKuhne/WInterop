@@ -50,6 +50,7 @@
     <EmbeddedResource Include="WInteropStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>WInteropStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

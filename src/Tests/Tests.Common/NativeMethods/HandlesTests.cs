@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Buffers;
 using WInterop.Handles;
+using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
@@ -106,7 +107,7 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void OpenDosDeviceDirectory()
         {
-            StoreUnauthorizedAccess(() =>
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\??"))
                 {
@@ -118,7 +119,7 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void OpenGlobalDosDeviceDirectory()
         {
-            StoreUnauthorizedAccess(() =>
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\Global??"))
                 {
@@ -130,7 +131,7 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void OpenRootDirectory()
         {
-            StoreUnauthorizedAccess(() =>
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\"))
                 {
@@ -142,7 +143,7 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void GetRootDirectoryEntries()
         {
-            StoreUnauthorizedAccess(() =>
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\"))
                 {
@@ -157,7 +158,7 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void OpenCDriveSymbolicLink()
         {
-            StoreUnauthorizedAccess(() =>
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var link = NativeMethods.Handles.OpenSymbolicLinkObject(@"\??\C:"))
                 {
@@ -169,7 +170,7 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void GetTargetForCDriveSymbolicLink()
         {
-            StoreUnauthorizedAccess(() =>
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var link = NativeMethods.Handles.OpenSymbolicLinkObject(@"\??\C:"))
                 {
@@ -179,23 +180,10 @@ namespace WInterop.Tests.NativeMethodsTests
             });
         }
 
-        public static void StoreUnauthorizedAccess(Action action)
-        {
-            try
-            {
-                action();
-                Utility.Environment.IsWindowsStoreApplication().Should().BeFalse();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Utility.Environment.IsWindowsStoreApplication().Should().BeTrue();
-            }
-        }
-
         [Fact]
         public void CanCreateHandleToMountPointManager()
         {
-            StoreUnauthorizedAccess(() =>
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var mountPointManager = NativeMethods.FileManagement.CreateFile(
                     @"\\.\MountPointManager", 0, FileShare.ReadWrite, FileMode.Open, FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL))
