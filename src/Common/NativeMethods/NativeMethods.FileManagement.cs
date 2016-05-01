@@ -149,16 +149,27 @@ namespace WInterop
                     SafeHandle lpTempFileName);
             }
 
+            /// <summary>
+            /// Get the temporary directory path.
+            /// </summary>
             public static string GetTempPath()
             {
                 return BufferInvoke((buffer) => Direct.GetTempPathW(buffer.CharCapacity, buffer));
             }
 
+            /// <summary>
+            /// Get the fully resolved path name.
+            /// </summary>
             public static string GetFullPathName(string path)
             {
                 return BufferInvoke((buffer) => Direct.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero));
             }
 
+            /// <summary>
+            /// Get a temporary file name. Creates a 0 length file.
+            /// </summary>
+            /// <param name="path">The directory for the file.</param>
+            /// <param name="prefix">Three character prefix for the filename.</param>
             public static string GetTempFileName(string path, string prefix)
             {
                 return StringBufferCache.CachedBufferInvoke((buffer) =>
@@ -177,6 +188,9 @@ namespace WInterop
                 });
             }
 
+            /// <summary>
+            /// Delete the given file.
+            /// </summary>
             public static void DeleteFile(string path)
             {
                 if (!Direct.DeleteFileW(path))

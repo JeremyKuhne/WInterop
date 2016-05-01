@@ -45,6 +45,14 @@ namespace WInterop.Tests.NativeMethodTests
         }
 
         [Fact]
+        public void GetFullPathNameForCurrent()
+        {
+            string fullPath = NativeMethods.FileManagement.GetFullPathName(".");
+            fullPath.Length.Should().BeGreaterThan(2);
+            fullPath[1].Should().Be(':');
+        }
+
+        [Fact]
         public void GetTempFileNameBasic()
         {
             string tempPath = NativeMethods.FileManagement.GetTempPath();
