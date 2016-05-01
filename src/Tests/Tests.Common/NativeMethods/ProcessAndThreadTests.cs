@@ -32,7 +32,7 @@ namespace WInterop.Tests.NativeMethodTests
         public void SetEmptyStringNotValid()
         {
             Action action = () => NativeMethods.ProcessAndThreads.Desktop.SetEnvironmentVariable("", "invalid");
-            action.ShouldThrow<System.IO.IOException>();
+            action.ShouldThrow<ArgumentException>();
         }
 
         [Theory
@@ -44,7 +44,7 @@ namespace WInterop.Tests.NativeMethodTests
             // Anything past the first character in the name isn't allowed to be an equals character.
             // If this does change we'd need to change the logic in GetEnvironmentVariables().
             Action action = () => NativeMethods.ProcessAndThreads.Desktop.SetEnvironmentVariable(name, "invalid");
-            action.ShouldThrow<System.IO.IOException>();
+            action.ShouldThrow<ArgumentException>();
         }
 
         [Theory
