@@ -245,6 +245,35 @@ namespace WInterop.Tests.NativeMethodTests
         }
 
         [Fact]
+        public void GetMultipleStreamInfoByHandle()
+        {
+            using (var temp = new TestFileCleaner())
+            {
+                string source = temp.GetTestPath();
+                using (var file = NativeMethods.FileManagement.CreateFile(source, FileAccess.Read, FileShare.ReadWrite, FileMode.CreateNew))
+                {
+                    file.IsInvalid.Should().BeFalse();
+                }
+
+                string destination = temp.GetTestPath();
+                NativeMethods.FileManagement.CopyFile(source, destination);
+
+                string alternateStream = destination + @":Foo:$DATA";
+                NativeMethods.FileManagement.CopyFile(source, alternateStream);
+
+                using (var file = NativeMethods.FileManagement.CreateFile(destination, FileAccess.ReadWrite, FileShare.ReadWrite, FileMode.Open))
+                {
+                    var fileInfo = NativeMethods.FileManagement.GetStreamInformationByHandle(file);
+                    fileInfo.Should().BeEquivalentTo(new FileManagement.StreamInformation[]
+                    {
+                        new FileManagement.StreamInformation { Name = @"::$DATA" },
+                        new FileManagement.StreamInformation { Name = @":Foo:$DATA" }
+                    });
+                }
+            }
+        }
+
+        [Fact]
         public void SetFileAttributesBasic()
         {
             string tempPath = NativeMethods.FileManagement.GetTempPath();
@@ -267,7 +296,7 @@ namespace WInterop.Tests.NativeMethodTests
         }
 
         [Fact]
-        public void CopyFile2Basic()
+        public void CopyFileBasic()
         {
             using (var temp = new TestFileCleaner())
             {
@@ -278,7 +307,7 @@ namespace WInterop.Tests.NativeMethodTests
                 }
 
                 string destination = temp.GetTestPath();
-                NativeMethods.FileManagement.CopyFile2(source, destination);
+                NativeMethods.FileManagement.CopyFile(source, destination);
 
                 var info = NativeMethods.FileManagement.GetFileAttributesEx(destination);
                 info.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);

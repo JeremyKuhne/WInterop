@@ -207,11 +207,14 @@ namespace WInterop
 #if !WINRT
                 else
                 {
-                    return Desktop.CreateFileW(path, fileAccess, fileShare, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
+                    return Desktop.CreateFile(path, fileAccess, fileShare, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
                 }
 #endif
             }
 
+            /// <summary>
+            /// CreateFile2 wrapper. Only available on Windows 8 and above.
+            /// </summary>
             public static SafeFileHandle CreateFile2(
                 string path,
                 System.IO.FileAccess fileAccess,
@@ -248,6 +251,31 @@ namespace WInterop
                 return handle;
             }
 
+            /// <summary>
+            /// CopyFile wrapper that attempts to use CopyFile2 if running as Windows Store app.
+            /// </summary>
+            public static void CopyFile(string source, string destination)
+            {
+                // We could also potentially add logic to use CreateFile2 if we're at Win8 or greater. Version checking can only be done if
+                // we are running as a normal desktop app.
+
+#if !WINRT
+                if (Utility.Environment.IsWindowsStoreApplication())
+#endif
+                {
+                    CopyFile2(source, destination);
+                }
+#if !WINRT
+                else
+                {
+                    Desktop.CopyFileEx(source, destination);
+                }
+#endif
+            }
+
+            /// <summary>
+            /// CopyFile2 wrapper. Only available on Windows8 and above.
+            /// </summary>
             public static void CopyFile2(string source, string destination)
             {
                 unsafe

@@ -156,10 +156,10 @@ namespace WInterop
                 }
 
                 /// <summary>
-                /// CreateFile wrapper. Desktop only. Prefer CreateFile() as it will handle all supported platforms.
+                /// CreateFile wrapper. Desktop only. Prefer FileManagement.CreateFile() as it will handle all supported platforms.
                 /// </summary>
                 /// <remarks>Not available in Windows Store applications.</remarks>
-                public static SafeFileHandle CreateFileW(
+                public static SafeFileHandle CreateFile(
                     string path,
                     System.IO.FileAccess fileAccess,
                     System.IO.FileShare fileShare,
@@ -181,6 +181,26 @@ namespace WInterop
                         throw ErrorHelper.GetIoExceptionForLastError(path);
 
                     return handle;
+                }
+
+                /// <summary>
+                /// CopyFileEx wrapper. Desktop only. Prefer FileManagement.CopyFile() as it will handle all supported platforms.
+                /// </summary>
+                /// <param name="overwrite">Overwrite an existing file if true.</param>
+                public static void CopyFileEx(string source, string destination, bool overwrite = false)
+                {
+                    bool cancel = false;
+
+                    if (!Direct.CopyFileExW(
+                        lpExistingFileName: source,
+                        lpNewFileName: destination,
+                        lpProgressRoutine: null,
+                        lpData: IntPtr.Zero,
+                        pbCancel: ref cancel,
+                        dwCopyFlags: overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS))
+                    {
+                        throw ErrorHelper.GetIoExceptionForLastError(source);
+                    }
                 }
             }
         }
