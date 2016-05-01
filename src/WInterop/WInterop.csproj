@@ -36,29 +36,13 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\WInteropStrings.Designer.cs">
-      <Link>WInteropStrings.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WInteropStrings.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <!-- CommonSharedDirectory is set by Common.projitems -->
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\Common.Desktop\Common.Desktop.projitems" Label="Shared" />
   <ItemGroup>
-    <None Include="$(CommonSharedDirectory)WInteropStrings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>WInteropStrings.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
