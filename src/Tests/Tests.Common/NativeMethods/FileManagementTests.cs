@@ -8,6 +8,7 @@
 using FluentAssertions;
 using System.IO;
 using System.Linq;
+using WInterop.Handles;
 using WInterop.Tests.Support;
 using Xunit;
 
@@ -356,6 +357,76 @@ namespace WInterop.Tests.NativeMethodTests
                 foundFile.FileName.Should().Be("..");
                 foundFile = NativeMethods.FileManagement.FindNextFile(foundFile);
                 foundFile.Should().BeNull();
+            }
+        }
+
+        [Theory
+            InlineData(new byte[] { 0xDE })
+            ]
+        public void WriteFileBasic(byte[] data)
+        {
+            using (var temp = new TestFileCleaner())
+            {
+                using (var fileHandle = NativeMethods.FileManagement.CreateFile(temp.GetTestPath(), FileAccess.ReadWrite, FileShare.None, FileMode.CreateNew))
+                {
+                    NativeMethods.FileManagement.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
+                    NativeMethods.FileManagement.GetFilePointer(fileHandle).Should().Be(data.Length);
+                }
+            }
+        }
+
+        [Fact]
+        public void GetFilePositionForEmptyFile()
+        {
+            using (var temp = new TestFileCleaner())
+            {
+                using (var fileHandle = NativeMethods.FileManagement.CreateFile(temp.GetTestPath(), FileAccess.ReadWrite, FileShare.None, FileMode.CreateNew))
+                {
+                    NativeMethods.FileManagement.SetFilePointer(fileHandle, 0, FileManagement.MoveMethod.FILE_CURRENT).Should().Be(0);
+                }
+            }
+        }
+
+        [Theory
+            InlineData(new byte[] { 0xDE })
+            InlineData(new byte[] { 0xDE, 0xAD, 0xBE, 0xEF })
+            ]
+        public void ReadWriteFileBasic(byte[] data)
+        {
+            using (var temp = new TestFileCleaner())
+            {
+                using (var fileHandle = NativeMethods.FileManagement.CreateFile(temp.GetTestPath(), FileAccess.ReadWrite, FileShare.None, FileMode.CreateNew))
+                {
+                    NativeMethods.FileManagement.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
+                    NativeMethods.FileManagement.GetFilePointer(fileHandle).Should().Be(data.Length);
+                    NativeMethods.FileManagement.SetFilePointer(fileHandle, 0, FileManagement.MoveMethod.FILE_BEGIN);
+                    byte[] outBuffer = new byte[data.Length];
+                    NativeMethods.FileManagement.ReadFile(fileHandle, outBuffer, (uint)data.Length).Should().Be((uint)data.Length);
+                    outBuffer.ShouldBeEquivalentTo(data);
+                }
+            }
+        }
+
+        [Fact]
+        public void GetEmptyFileSize()
+        {
+            using (var temp = new TestFileCleaner())
+            {
+                using (var fileHandle = NativeMethods.FileManagement.CreateFile(temp.GetTestPath(), FileAccess.ReadWrite, FileShare.None, FileMode.CreateNew))
+                {
+                    NativeMethods.FileManagement.GetFileSize(fileHandle).Should().Be(0);
+                }
+            }
+        }
+
+        [Fact]
+        public void GetFileTypeDisk()
+        {
+            string tempPath = NativeMethods.FileManagement.GetTempPath();
+            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, FileAccess.Read, FileShare.ReadWrite, FileMode.Open,
+                FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+            {
+                NativeMethods.FileManagement.GetFileType(directory).Should().Be(FileManagement.FileType.FILE_TYPE_DISK);
             }
         }
     }

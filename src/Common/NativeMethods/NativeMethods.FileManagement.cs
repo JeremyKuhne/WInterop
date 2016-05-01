@@ -114,14 +114,40 @@ namespace WInterop
                     string lpFilename);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467.aspx
-                [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
                 [return: MarshalAs(UnmanagedType.Bool)]
                 unsafe public static extern bool ReadFile(
                     SafeFileHandle hFile,
                     byte* lpBuffer,
                     uint nNumberOfBytesToRead,
-                    out uint lpNumberOfBytesRead,
-                    ref OVERLAPPED lpOverlapped);
+                    uint* lpNumberOfBytesRead,
+                    OVERLAPPED* lpOverlapped);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747.aspx
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                unsafe public static extern bool WriteFile(
+                    SafeFileHandle hFile,
+                    byte* lpBuffer,
+                    uint nNumberOfBytesToWrite,
+                    uint* lpNumberOfBytesWritten,
+                    OVERLAPPED* lpOverlapped);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365542.aspx
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                public static extern bool SetFilePointerEx(
+                    SafeFileHandle hFile,
+                    long liDistanceToMove,
+                    out long lpNewFilePointer,
+                    MoveMethod dwMoveMethod);
+
+                // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364957.aspx
+                [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                public static extern bool GetFileSizeEx(
+                    SafeFileHandle hFile,
+                    out long lpFileSize);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364960.aspx
                 [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -489,6 +515,215 @@ namespace WInterop
 
                     return infos;
                 });
+            }
+
+            /// <summary>
+            /// Synchronous wrapper for ReadFile.
+            /// </summary>
+            /// <param name="fileHandle">Handle to the file to read.</param>
+            /// <param name="fileOffset">Offset into the file, or null for current.</param>
+            /// <param name="numberOfBytes">Number of bytes to read.</param>
+            /// <param name="buffer">Buffer to read bytes into.</param>
+            /// <param name="bufferOffset">Buffer offset.</param>
+            /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="nameof(numberOfBytes)"/> or <paramref name="nameof(bufferOffset)"/> would overrun the buffer.</exception>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
+            /// <returns>The number of bytes read.</returns>
+            public static uint ReadFile(SafeFileHandle fileHandle, byte[] buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
+            {
+                if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+                if (bufferOffset >= buffer.Length) throw new ArgumentOutOfRangeException(nameof(bufferOffset));
+                if (numberOfBytes > buffer.Length - bufferOffset) throw new ArgumentOutOfRangeException(nameof(numberOfBytes));
+
+                unsafe
+                {
+                    fixed (byte* pinnedBuffer = buffer)
+                    {
+                        return ReadFile(fileHandle, pinnedBuffer, numberOfBytes, fileOffset, bufferOffset);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Synchronous wrapper for ReadFile.
+            /// </summary>
+            /// <param name="fileHandle">Handle to the file to read.</param>
+            /// <param name="fileOffset">Offset into the file, or null for current.</param>
+            /// <param name="numberOfBytes">Number of bytes to read.</param>
+            /// <param name="buffer">Buffer to read bytes into.</param>
+            /// <param name="bufferOffset">Buffer offset.</param>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
+            /// <returns>The number of bytes read.</returns>
+            public static uint ReadFile(SafeFileHandle fileHandle, IntPtr buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
+            {
+                return ReadFile(fileHandle, buffer, numberOfBytes, fileOffset, bufferOffset);
+            }
+
+            /// <summary>
+            /// Synchronous wrapper for ReadFile.
+            /// </summary>
+            /// <param name="fileHandle">Handle to the file to read.</param>
+            /// <param name="fileOffset">Offset into the file, or null for current.</param>
+            /// <param name="numberOfBytes">Number of bytes to read.</param>
+            /// <param name="buffer">Buffer to read bytes into.</param>
+            /// <param name="bufferOffset">Buffer offset.</param>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
+            /// <returns>The number of bytes read.</returns>
+            unsafe public static uint ReadFile(SafeFileHandle fileHandle, byte* buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
+            {
+                if (buffer == null) throw new ArgumentNullException("buffer");
+                if (fileHandle == null) throw new ArgumentNullException("fileHandle");
+                if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException("fileHandle");
+
+                uint numberOfBytesRead;
+                buffer = buffer + bufferOffset;
+
+                if (fileOffset.HasValue)
+                {
+                    OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
+                    if (!Direct.ReadFile(fileHandle, buffer, numberOfBytes, &numberOfBytesRead, &overlapped))
+                        throw ErrorHelper.GetIoExceptionForLastError();
+                }
+                else
+                {
+                    if (!Direct.ReadFile(fileHandle, buffer, numberOfBytes, &numberOfBytesRead, null))
+                        throw ErrorHelper.GetIoExceptionForLastError();
+                }
+
+                return numberOfBytesRead;
+            }
+
+            /// <summary>
+            /// Synchronous wrapper for WriteFile.
+            /// </summary>
+            /// <param name="fileHandle">Handle to the file to write.</param>
+            /// <param name="fileOffset">Offset into the file, or null for current.</param>
+            /// <param name="numberOfBytes">Number of bytes to write.</param>
+            /// <param name="buffer">Buffer to write bytes to.</param>
+            /// <param name="bufferOffset">Buffer offset.</param>
+            /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="nameof(numberOfBytes)"/> or <paramref name="nameof(bufferOffset)"/> would overrun the buffer.</exception>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
+            /// <returns>The number of bytes written.</returns>
+            public static uint WriteFile(SafeFileHandle fileHandle, byte[] buffer, uint? numberOfBytes = null, ulong? fileOffset = null, uint bufferOffset = 0)
+            {
+                if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+                if (bufferOffset >= buffer.Length) throw new ArgumentOutOfRangeException(nameof(bufferOffset));
+
+                uint actualBytes;
+                if (numberOfBytes.HasValue)
+                {
+                    if (numberOfBytes > buffer.Length - bufferOffset) throw new ArgumentOutOfRangeException(nameof(numberOfBytes));
+                    actualBytes = numberOfBytes.Value;
+                }
+                else
+                {
+                    actualBytes = (uint)buffer.Length;
+                }
+
+                unsafe
+                {
+                    fixed (byte* pinnedBuffer = buffer)
+                    {
+                        return WriteFile(fileHandle, pinnedBuffer, actualBytes, fileOffset, bufferOffset);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Synchronous wrapper for WriteFile.
+            /// </summary>
+            /// <param name="fileHandle">Handle to the file to write.</param>
+            /// <param name="fileOffset">Offset into the file, or null for current.</param>
+            /// <param name="numberOfBytes">Number of bytes to write.</param>
+            /// <param name="buffer">Buffer to write bytes to.</param>
+            /// <param name="bufferOffset">Buffer offset.</param>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
+            /// <returns>The number of bytes written.</returns>
+            public static uint WriteFile(SafeFileHandle fileHandle, IntPtr buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
+            {
+                return WriteFile(fileHandle, buffer, numberOfBytes, fileOffset, bufferOffset);
+            }
+
+            /// <summary>
+            /// Synchronous wrapper for WriteFile.
+            /// </summary>
+            /// <param name="fileHandle">Handle to the file to write.</param>
+            /// <param name="fileOffset">Offset into the file, or null for current.</param>
+            /// <param name="numberOfBytes">Number of bytes to write.</param>
+            /// <param name="buffer">Buffer to read bytes from.</param>
+            /// <param name="bufferOffset">Buffer offset.</param>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
+            /// <returns>The number of bytes written.</returns>
+            unsafe public static uint WriteFile(SafeFileHandle fileHandle, byte* buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
+            {
+                if (buffer == null) throw new ArgumentNullException("buffer");
+                if (fileHandle == null) throw new ArgumentNullException("fileHandle");
+                if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException("fileHandle");
+
+                uint numberOfBytesWritten;
+                buffer = buffer + bufferOffset;
+
+                if (fileOffset.HasValue)
+                {
+                    OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
+                    if (!Direct.WriteFile(fileHandle, buffer, numberOfBytes, &numberOfBytesWritten, &overlapped))
+                        throw ErrorHelper.GetIoExceptionForLastError();
+                }
+                else
+                {
+                    if (!Direct.WriteFile(fileHandle, buffer, numberOfBytes, &numberOfBytesWritten, null))
+                        throw ErrorHelper.GetIoExceptionForLastError();
+                }
+
+                return numberOfBytesWritten;
+            }
+
+            /// <summary>
+            /// Set the file pointer position for the given file.
+            /// </summary>
+            /// <param name="distance">Offset.</param>
+            /// <param name="moveMethod">Start position.</param>
+            /// <returns>The new pointer position.</returns>
+            public static long SetFilePointer(SafeFileHandle fileHandle, long distance, MoveMethod moveMethod)
+            {
+                long position;
+
+                if (!Direct.SetFilePointerEx(fileHandle, distance, out position, moveMethod))
+                    throw ErrorHelper.GetIoExceptionForLastError();
+
+                return position;
+            }
+
+            /// <summary>
+            /// Get the position of the pointer for the given file.
+            /// </summary>
+            public static long GetFilePointer(SafeFileHandle fileHandle)
+            {
+                return SetFilePointer(fileHandle, 0, MoveMethod.FILE_CURRENT);
+            }
+
+            /// <summary>
+            /// Get the size of the given file.
+            /// </summary>
+            public static long GetFileSize(SafeFileHandle fileHandle)
+            {
+                long size;
+                if (!Direct.GetFileSizeEx(fileHandle, out size))
+                    throw ErrorHelper.GetIoExceptionForLastError();
+
+                return size;
+            }
+
+            /// <summary>
+            /// Get the type of the given file handle.
+            /// </summary>
+            public static FileType GetFileType(SafeFileHandle fileHandle)
+            {
+                FileType fileType = Direct.GetFileType(fileHandle);
+                if (fileType == FileType.FILE_TYPE_UNKNOWN)
+                    throw ErrorHelper.GetIoExceptionForLastError();
+
+                return fileType;
             }
         }
     }
