@@ -13,7 +13,7 @@ namespace WInterop.FileManagement
 {
     public class FindResult
     {
-        public string BasePath { get; private set; }
+        public string OriginalPath { get; private set; }
         public string FileName { get; private set; }
         public string AlternateFileName { get; private set; }
         public SafeFindHandle FindHandle { get; private set; }
@@ -23,9 +23,9 @@ namespace WInterop.FileManagement
         public DateTime LastWrite { get; private set; }
         public ulong Length { get; private set; }
 
-        public FindResult(SafeFindHandle handle, WIN32_FIND_DATA findData, string basePath)
+        public FindResult(SafeFindHandle handle, WIN32_FIND_DATA findData, string originalPath)
         {
-            BasePath = basePath;
+            OriginalPath = originalPath;
             FindHandle = handle;
             FileName = findData.cFileName;
             AlternateFileName = findData.cAlternateFileName;

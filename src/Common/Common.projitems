@@ -51,6 +51,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyFile2\PollContinue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyFile2\StreamFinished.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyFile2\StreamStarted.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindFirstFileExFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\StreamInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BY_HANDLE_FILE_INFORMATION.cs" />

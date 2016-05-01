@@ -334,5 +334,29 @@ namespace WInterop.Tests.NativeMethodTests
                 info.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
             }
         }
+
+        [Fact]
+        public void FindFirstFileNoFiles()
+        {
+            NativeMethods.FileManagement.FindFirstFile(NativeMethods.FileManagement.GetTempPath() + Path.GetRandomFileName()).Should().BeNull();
+        }
+
+        [Fact]
+        public void FindFileEmptyFolder()
+        {
+            using (var temp = new TestFileCleaner())
+            {
+                string subdir = Path.Combine(temp.TempFolder, "Subdir");
+                NativeMethods.DirectoryManagement.CreateDirectory(subdir);
+                var foundFile = NativeMethods.FileManagement.FindFirstFile(subdir + @"\*");
+                foundFile.Should().NotBeNull();
+                foundFile.FileName.Should().Be(".");
+                foundFile = NativeMethods.FileManagement.FindNextFile(foundFile);
+                foundFile.Should().NotBeNull();
+                foundFile.FileName.Should().Be("..");
+                foundFile = NativeMethods.FileManagement.FindNextFile(foundFile);
+                foundFile.Should().BeNull();
+            }
+        }
     }
 }

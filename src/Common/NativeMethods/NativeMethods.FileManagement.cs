@@ -83,7 +83,7 @@ namespace WInterop
                      out WIN32_FIND_DATA lpFindFileData,
                      FINDEX_SEARCH_OPS fSearchOp,
                      IntPtr lpSearchFilter,                 // Reserved
-                     int dwAdditionalFlags);
+                     FindFirstFileExFlags dwAdditionalFlags);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364428.aspx (kernel32)
                 [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -300,6 +300,57 @@ namespace WInterop
                 }
             }
 
+            /// <summary>
+            /// Finds the first file in a file search. Does not take a trailing separator. Returns null if there are no matches.
+            /// </summary>
+            /// <param name="directoriesOnly">Attempts to filter to just directories where supported.</param>
+            /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
+            public static FindResult FindFirstFile(
+                string path,
+                bool directoriesOnly = false,
+                bool getAlternateName = false)
+            {
+                WIN32_FIND_DATA findData;
+                SafeFindHandle handle = Direct.FindFirstFileExW(
+                    path,
+                    getAlternateName ? FINDEX_INFO_LEVELS.FindExInfoStandard : FINDEX_INFO_LEVELS.FindExInfoBasic,
+                    out findData,
+                    // FINDEX_SEARCH_OPS.FindExSearchNameMatch is what FindFirstFile calls Ex wtih
+                    directoriesOnly ? FINDEX_SEARCH_OPS.FindExSearchLimitToDirectories : FINDEX_SEARCH_OPS.FindExSearchNameMatch,
+                    IntPtr.Zero,
+                    FindFirstFileExFlags.FIND_FIRST_EX_LARGE_FETCH);
+
+                if (handle.IsInvalid)
+                {
+                    uint error = (uint)Marshal.GetLastWin32Error();
+                    if (error == WinErrors.ERROR_FILE_NOT_FOUND)
+                        return null;
+                    throw ErrorHelper.GetIoExceptionForLastError(path);
+                }
+
+                return new FindResult(handle, findData, path);
+            }
+
+            /// <summary>
+            /// Finds the next file for a given search operation.
+            /// </summary>
+            public static FindResult FindNextFile(FindResult priorResult)
+            {
+                WIN32_FIND_DATA findData;
+                if (!Direct.FindNextFileW(priorResult.FindHandle, out findData))
+                {
+                    uint error = (uint)Marshal.GetLastWin32Error();
+                    if (error == WinErrors.ERROR_NO_MORE_FILES)
+                        return null;
+                    throw ErrorHelper.GetIoExceptionForLastError(priorResult.OriginalPath);
+                }
+
+                return new FindResult(priorResult.FindHandle, findData, priorResult.OriginalPath);
+            }
+
+            /// <summary>
+            /// Gets the file attributes for the given path.
+            /// </summary>
             public static FileInfo GetFileAttributesEx(string path)
             {
                 WIN32_FILE_ATTRIBUTE_DATA data;
@@ -309,12 +360,18 @@ namespace WInterop
                 return new FileInfo(data);
             }
 
+            /// <summary>
+            /// Sets the file attributes for the given path.
+            /// </summary>
             public static void SetFileAttributes(string path, FileAttributes attributes)
             {
                 if (!Direct.SetFileAttributesW(path, attributes))
                     throw ErrorHelper.GetIoExceptionForLastError(path);
             }
 
+            /// <summary>
+            /// Flush file buffers.
+            /// </summary>
             public static void FlushFileBuffers(SafeFileHandle fileHandle)
             {
                 if (!Direct.FlushFileBuffers(fileHandle))
@@ -342,6 +399,9 @@ namespace WInterop
                 });
             }
 
+            /// <summary>
+            /// Get standard file info from the given file handle.
+            /// </summary>
             public static FILE_STANDARD_INFO GetFileStandardInfoByHandle(SafeFileHandle fileHandle)
             {
                 return StringBufferCache.CachedBufferInvoke((buffer) =>
@@ -357,6 +417,9 @@ namespace WInterop
                 });
             }
 
+            /// <summary>
+            /// Get basic file info from the given file handle.
+            /// </summary>
             public static FileBasicInfo GetFileBasicInfoByHandle(SafeFileHandle fileHandle)
             {
                 return StringBufferCache.CachedBufferInvoke((buffer) =>

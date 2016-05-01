@@ -7,7 +7,7 @@
 
 namespace WInterop.Handles
 {
-    public sealed class SafeFindHandle : SafeHandleZeroIsInvalid
+    public sealed class SafeFindHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
         public SafeFindHandle() : base(true) { }
 
