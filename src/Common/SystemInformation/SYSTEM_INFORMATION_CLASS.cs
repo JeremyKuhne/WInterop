@@ -9,6 +9,7 @@ namespace WInterop.SystemInformation
 {
     public enum SYSTEM_INFORMATION_CLASS : uint
     {
+#if !(COMPACT)
         SystemBasicInformation,
         SystemProcessorInformation,
         SystemPerformanceInformation,
@@ -186,5 +187,6 @@ namespace WInterop.SystemInformation
         SystemAffinitizedInterruptProcessorInformation,
         SystemRootSiloInformation,
         MaxSystemInfoClass
+#endif
     }
 }

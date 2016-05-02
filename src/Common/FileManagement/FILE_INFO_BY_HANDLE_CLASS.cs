@@ -16,6 +16,7 @@ namespace WInterop.FileManagement
         FileStandardInfo = 1,
         // Store apps
         FileNameInfo = 2,
+#if !(COMPACT)
         // Desktop only (MoveFileEx is supported)
         FileRenameInfo = 3,
         // Desktop only (DeleteFile is supported)
@@ -24,8 +25,10 @@ namespace WInterop.FileManagement
         FileAllocationInfo = 5,
         // Desktop only (SetEndOfFile is supported)
         FileEndOfFileInfo = 6,
+#endif
         // Store apps
         FileStreamInfo = 7,
+#if !(COMPACT)
         // Store apps
         FileCompressionInfo = 8,
         // Store apps
@@ -52,6 +55,7 @@ namespace WInterop.FileManagement
         FileIdExtdDirectoryInfo = 19, // 0x13
         // Server desktop only
         FileIdExtdDirectoryRestartInfo = 20, // 0x14
-        MaximumFileInfoByHandlesClass
+        MaximumFileInfoByHandlesClass = 21
+#endif
     }
 }
