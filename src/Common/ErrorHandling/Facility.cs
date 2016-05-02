@@ -32,7 +32,7 @@ namespace WInterop.ErrorHandling
         SETUPAPI = 15,
         SCARD = 16,
         COMPLUS = 17,
-        AAF = 18
+        AAF = 18,
         URT = 19,
         ACS = 20,
         DPLAY = 21,

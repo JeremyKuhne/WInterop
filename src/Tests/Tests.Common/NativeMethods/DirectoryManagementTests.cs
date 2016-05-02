@@ -7,8 +7,8 @@
 
 using FluentAssertions;
 using System;
-using System.IO;
 using System.Linq;
+using WInterop.FileManagement;
 using WInterop.Tests.Support;
 using Xunit;
 
@@ -44,8 +44,8 @@ namespace WInterop.Tests.NativeMethodTests
             {
                 string directoryPath = temp.GetTestPath();
                 NativeMethods.DirectoryManagement.CreateDirectory(directoryPath);
-                using (var directory = NativeMethods.FileManagement.CreateFile(directoryPath, 0, FileShare.ReadWrite, FileMode.Open,
-                    FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                using (var directory = NativeMethods.FileManagement.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+                    FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
@@ -59,8 +59,8 @@ namespace WInterop.Tests.NativeMethodTests
             {
                 string directoryPath = temp.GetTestPath();
                 NativeMethods.DirectoryManagement.CreateDirectory(directoryPath);
-                using (var directory = NativeMethods.FileManagement.CreateFile(directoryPath, 0, FileShare.ReadWrite, FileMode.Open,
-                    FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                using (var directory = NativeMethods.FileManagement.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+                    FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
@@ -69,14 +69,14 @@ namespace WInterop.Tests.NativeMethodTests
 
                 Action action = () =>
                 {
-                    using (var directory = NativeMethods.FileManagement.CreateFile(directoryPath, 0, FileShare.ReadWrite, FileMode.Open,
-                        FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                    using (var directory = NativeMethods.FileManagement.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+                        FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                     {
 
                     }
                 };
 
-                action.ShouldThrow<FileNotFoundException>();
+                action.ShouldThrow<System.IO.FileNotFoundException>();
             }
         }
     }

@@ -39,10 +39,10 @@ namespace WInterop
                     [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                     public static extern SafeFileHandle CreateFileW(
                         string lpFileName,
-                        uint dwDesiredAccess,
-                        [MarshalAs(UnmanagedType.U4)] System.IO.FileShare dwShareMode,
+                        DesiredAccess dwDesiredAccess,
+                        ShareMode dwShareMode,
                         IntPtr lpSecurityAttributes,
-                        [MarshalAs(UnmanagedType.U4)] System.IO.FileMode dwCreationDisposition,
+                        CreationDisposition dwCreationDisposition,
                         uint dwFlagsAndAttributes,
                         IntPtr hTemplateFile);
 
@@ -161,22 +161,16 @@ namespace WInterop
                 /// <remarks>Not available in Windows Store applications.</remarks>
                 public static SafeFileHandle CreateFile(
                     string path,
-                    System.IO.FileAccess fileAccess,
-                    System.IO.FileShare fileShare,
-                    System.IO.FileMode creationDisposition,
+                    DesiredAccess desiredAccess,
+                    ShareMode shareMode,
+                    CreationDisposition creationDisposition,
                     FileAttributes fileAttributes = FileAttributes.NONE,
                     FileFlags fileFlags = FileFlags.NONE,
                     SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
                 {
-                    if (creationDisposition == System.IO.FileMode.Append) creationDisposition = System.IO.FileMode.OpenOrCreate;
-
-                    uint dwDesiredAccess =
-                        ((fileAccess & System.IO.FileAccess.Read) != 0 ? (uint)GenericAccessRights.GENERIC_READ : 0) |
-                        ((fileAccess & System.IO.FileAccess.Write) != 0 ? (uint)GenericAccessRights.GENERIC_WRITE : 0);
-
                     uint flags = (uint)fileAttributes | (uint)fileFlags | (uint)securityQosFlags;
 
-                    SafeFileHandle handle = Direct.CreateFileW(path, dwDesiredAccess, fileShare, IntPtr.Zero, creationDisposition, flags, IntPtr.Zero);
+                    SafeFileHandle handle = Direct.CreateFileW(path, desiredAccess, shareMode, IntPtr.Zero, creationDisposition, flags, IntPtr.Zero);
                     if (handle.IsInvalid)
                         throw ErrorHelper.GetIoExceptionForLastError(path);
 

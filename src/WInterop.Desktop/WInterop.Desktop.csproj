@@ -42,8 +42,5 @@
   <!-- CommonSharedDirectory is set by Common.projitems -->
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\Common.Desktop\Common.Desktop.projitems" Label="Shared" />
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

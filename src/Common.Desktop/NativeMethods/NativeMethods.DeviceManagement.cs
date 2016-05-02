@@ -12,6 +12,7 @@ using System.Security;
 using WInterop.Buffers;
 using WInterop.DeviceManagement;
 using WInterop.ErrorHandling;
+using WInterop.FileManagement;
 
 namespace WInterop
 {
@@ -28,7 +29,7 @@ namespace WInterop
                 public static string QueryDosVolumePath(string volume)
                 {
                     var mountManager = FileManagement.CreateFile(
-                        @"\\?\MountPointManager", 0, FileShare.ReadWrite, FileMode.Open, WInterop.FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL);
+                        @"\\?\MountPointManager", 0, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING, WInterop.FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL);
 
                     uint controlCode = CTL_CODE(ControlCodeDeviceType.MOUNTMGRCONTROLTYPE, 12, ControlCodeMethod.METHOD_BUFFERED, ControlCodeAccess.FILE_ANY_ACCESS);
 

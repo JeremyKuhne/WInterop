@@ -33,6 +33,9 @@
   <ItemGroup>
     <None Include="project.json" />
     <None Include="..\WInterop.snk" />
+    <None Include="WInterop.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>

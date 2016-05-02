@@ -13,9 +13,17 @@ namespace WInterop.Authorization
     [Flags]
     public enum ACCESS_MASK : uint
     {
+        FILE_READ_DATA = 0x0001,
+        FILE_LIST_DIRECTORY = 0x0001,
         DIRECTORY_QUERY = 0x0001,
+        FILE_WRITE_DATA = 0x0002,
+        FILE_ADD_FILE = 0x0002,
         DIRECTORY_TRAVERSE = 0x0002,
+        FILE_APPEND_DATA = 0x0004,
+        FILE_ADD_SUBDIRECTORY = 0x0004,
+        FILE_CREATE_PIPE_INSTANCE = 0x0004,
         DIRECTORY_CREATE_OBJECT = 0x0004,
+        FILE_READ_EA = 0x0008,
         DIRECTORY_CREATE_SUBDIRECTORY = 0x0008,
         DELETE = 0x00010000,
         READ_CONTROL = 0x00020000,

@@ -40,9 +40,9 @@ namespace WInterop
                 [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
                 public static extern SafeFileHandle CreateFile2(
                     string lpFileName,
-                    uint dwDesiredAccess,
-                    [MarshalAs(UnmanagedType.U4)] System.IO.FileShare dwShareMode,
-                    [MarshalAs(UnmanagedType.U4)] System.IO.FileMode dwCreationDisposition,
+                    DesiredAccess dwDesiredAccess,
+                    ShareMode dwShareMode,
+                    CreationDisposition dwCreationDisposition,
                     [In] ref CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
 
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449404.aspx (kernel32)
@@ -228,9 +228,9 @@ namespace WInterop
             /// </summary>
             public static SafeFileHandle CreateFile(
                 string path,
-                System.IO.FileAccess fileAccess,
-                System.IO.FileShare fileShare,
-                System.IO.FileMode creationDisposition,
+                DesiredAccess desiredAccess,
+                ShareMode shareMode,
+                CreationDisposition creationDisposition,
                 FileAttributes fileAttributes = FileAttributes.NONE,
                 FileFlags fileFlags = FileFlags.NONE,
                 SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
@@ -242,12 +242,12 @@ namespace WInterop
                 if (Utility.Environment.IsWindowsStoreApplication())
 #endif
                 {
-                    return CreateFile2(path, fileAccess, fileShare, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
+                    return CreateFile2(path, desiredAccess, shareMode, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
                 }
 #if !WINRT
                 else
                 {
-                    return Desktop.CreateFile(path, fileAccess, fileShare, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
+                    return Desktop.CreateFile(path, desiredAccess, shareMode, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
                 }
 #endif
             }
@@ -257,19 +257,13 @@ namespace WInterop
             /// </summary>
             public static SafeFileHandle CreateFile2(
                 string path,
-                System.IO.FileAccess fileAccess,
-                System.IO.FileShare fileShare,
-                System.IO.FileMode creationDisposition,
+                DesiredAccess desiredAccess,
+                ShareMode shareMode,
+                CreationDisposition creationDisposition,
                 FileAttributes fileAttributes = FileAttributes.NONE,
                 FileFlags fileFlags = FileFlags.NONE,
                 SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
             {
-                if (creationDisposition == System.IO.FileMode.Append) creationDisposition = System.IO.FileMode.OpenOrCreate;
-
-                uint dwDesiredAccess =
-                    ((fileAccess & System.IO.FileAccess.Read) != 0 ? (uint)GenericAccessRights.GENERIC_READ : 0) |
-                    ((fileAccess & System.IO.FileAccess.Write) != 0 ? (uint)GenericAccessRights.GENERIC_WRITE : 0);
-
                 CREATEFILE2_EXTENDED_PARAMETERS extended = new CREATEFILE2_EXTENDED_PARAMETERS();
                 extended.dwSize = (uint)Marshal.SizeOf<CREATEFILE2_EXTENDED_PARAMETERS>();
                 extended.dwFileAttributes = fileAttributes;
@@ -280,8 +274,8 @@ namespace WInterop
 
                 SafeFileHandle handle = Direct.CreateFile2(
                     lpFileName: path,
-                    dwDesiredAccess: dwDesiredAccess,
-                    dwShareMode: fileShare,
+                    dwDesiredAccess: desiredAccess,
+                    dwShareMode: shareMode,
                     dwCreationDisposition: creationDisposition,
                     pCreateExParams: ref extended);
 

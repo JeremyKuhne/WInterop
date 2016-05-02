@@ -65,9 +65,9 @@ namespace WInterop
                     using (var fileHandle = FileManagement.CreateFile(
                         path: path,
                         // To look at metadata we don't need read or write access
-                        fileAccess: 0,
-                        fileShare: System.IO.FileShare.ReadWrite,
-                        creationDisposition: System.IO.FileMode.Open,
+                        desiredAccess: 0,
+                        shareMode: ShareMode.ReadWrite,
+                        creationDisposition: CreationDisposition.OPEN_EXISTING,
                         fileAttributes: FileAttributes.NONE,
                         fileFlags: FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                     {
