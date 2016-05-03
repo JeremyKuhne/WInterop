@@ -9,7 +9,6 @@ using FluentAssertions;
 using System;
 using WInterop.Buffers;
 using Xunit;
-using static WInterop.NativeMethods;
 
 namespace WInterop.Tests.Buffers
 {

@@ -6,12 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace WInterop.ErrorHandling
 {
@@ -34,11 +31,11 @@ namespace WInterop.ErrorHandling
         public static string HResultToString(int hr)
         {
             string message;
-            if (NativeMethods.ErrorHandling.HRESULT_FACILITY(hr) == Facility.WIN32)
+            if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
             {
                 // Win32 Error, extract the code
-                message = NativeMethods.ErrorHandling.FormatMessage(
-                    messageId: (uint)NativeMethods.ErrorHandling.HRESULT_CODE(hr),
+                message = NativeMethods.FormatMessage(
+                    messageId: (uint)ErrorMacros.HRESULT_CODE(hr),
                     source: IntPtr.Zero,
                     flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
             }
@@ -59,8 +56,8 @@ namespace WInterop.ErrorHandling
         public static Exception GetIoExceptionForHResult(int hr, string path = null)
         {
             string message = $"{HResultToString(hr)} > '{path ?? WInteropStrings.NoValue}'";
-            if (NativeMethods.ErrorHandling.HRESULT_FACILITY(hr) == Facility.WIN32)
-                return WinErrorToException((uint)NativeMethods.ErrorHandling.HRESULT_CODE(hr), message, path);
+            if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
+                return WinErrorToException((uint)ErrorMacros.HRESULT_CODE(hr), message, path);
             else
                 return new IOException(message, hr);
         }
@@ -73,8 +70,17 @@ namespace WInterop.ErrorHandling
         {
             // http://referencesource.microsoft.com/#mscorlib/system/io/__error.cs,142
 
-            string message = $"{NativeMethods.ErrorHandling.LastErrorToString(error)} > '{path ?? WInteropStrings.NoValue}'";
+            string message = $"{NativeMethods.LastErrorToString(error)} > '{path ?? WInteropStrings.NoValue}'";
             return WinErrorToException(error, message, path);
+        }
+
+        /// <summary>
+        /// Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
+        /// There are additional IOException derived errors for ease of client error handling.
+        /// </summary>
+        public static Exception GetIOExceptionForNTStatus(NTSTATUS status, string path = null)
+        {
+            return GetIoExceptionForError(NativeMethods.NtStatusToWinError(status), path);
         }
 
         private static Exception WinErrorToException(uint error, string message, string path)
@@ -109,7 +115,7 @@ namespace WInterop.ErrorHandling
                 case WinErrors.ERROR_SHARING_VIOLATION:
                 case WinErrors.ERROR_FILE_EXISTS:
                 default:
-                    return new IOException(message, NativeMethods.ErrorHandling.HRESULT_FROM_WIN32(error));
+                    return new IOException(message, ErrorMacros.HRESULT_FROM_WIN32(error));
             }
         }
 

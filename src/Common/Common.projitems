@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\Cache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\PhysicalStoreInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreOpenFlags.cs" />
@@ -30,14 +31,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocationId.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\ControlCodeAccess.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\ControlCodeDeviceType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\ControlCodeMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveLockedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveNotReadyException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMacros.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Facility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FormatMessageFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\NTSTATUS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WinErrors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyFile2\ChunkFinished.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CopyFile2\StreamStarted.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CreationDisposition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\DesiredAccess.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\ShareMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindFirstFileExFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindResult.cs" />
@@ -89,6 +92,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HeapHandleCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\IO_STATUS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\IO_STATUS_BLOCK.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMacros.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\ObjectAttributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\ObjectInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\OBJECT_ATTRIBUTES.cs" />
@@ -106,28 +111,20 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeProcessHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeSymbolicLinkObjectHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SafeThreadHandle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ApiSets.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Authorization.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Cryptography.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DeviceManagement.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.DirectoryManagement.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ErrorHandling.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.FileManagement.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Handles.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Heap.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.Libraries.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.ProcessAndThreads.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.SystemInformation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NativeMethods.WindowsStore.Query.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ApiSets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Heap\NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Libraries.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\SID_NAME_USE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\NativeMethods.ProcessAndThreads.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\OVERLAPPED.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SYSTEM_INFORMATION_CLASS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\AssemblyInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Conversion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Environment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Paths.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
     <!--
       Linking the resource into a subfolder will override the path to the .resources in the assembly, while the designer (.cs)
       file will only take the default namespace. :(
@@ -147,5 +144,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\AutoGenerated\AutoGeneratedConstants.cs">
       <Link>AutoGenerated\AutoGeneratedConstants.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)NativeMethods\" />
   </ItemGroup>
 </Project>

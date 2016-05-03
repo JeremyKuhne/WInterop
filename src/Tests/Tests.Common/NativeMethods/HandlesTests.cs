@@ -20,11 +20,11 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void GetHandleTypeBasic()
         {
-            string tempPath = NativeMethods.FileManagement.GetTempPath();
-            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
-                string name = NativeMethods.Handles.GetObjectType(directory);
+                string name = Handles.NativeMethods.GetObjectType(directory);
                 name.Should().Be("File");
             }
         }
@@ -32,12 +32,12 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void GetHandleNameBasic()
         {
-            string tempPath = NativeMethods.FileManagement.GetTempPath();
-            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
-                string name = NativeMethods.Handles.GetObjectName(directory);
+                string name = Handles.NativeMethods.GetObjectName(directory);
 
                 // Skip past the C:\
                 Paths.AddTrailingSeparator(name).Should().EndWith(tempPath.Substring(3));
@@ -47,12 +47,12 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void GetFileNameBasic()
         {
-            string tempPath = NativeMethods.FileManagement.GetTempPath();
-            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
-                string name = NativeMethods.Handles.GetFileName(directory);
+                string name = Handles.NativeMethods.GetFileName(directory);
 
                 tempPath.Should().EndWith(Paths.AddTrailingSeparator(name));
             }
@@ -61,12 +61,12 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void GetVolumeNameBasic()
         {
-            string tempPath = NativeMethods.FileManagement.GetTempPath();
-            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                string name = NativeMethods.Handles.GetVolumeName(directory);
+                string name = Handles.NativeMethods.GetVolumeName(directory);
 
                 name.Should().StartWith(@"\Device\");
             }
@@ -75,27 +75,27 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void GetShortNameBasic()
         {
-            string tempPath = NativeMethods.FileManagement.GetTempPath();
-            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                string directoryName = NativeMethods.Handles.GetShortName(directory);
+                string directoryName = Handles.NativeMethods.GetShortName(directory);
                 directoryName.Should().Be("Temp");
 
                 string tempFileName = "ExtraLongName" + System.IO.Path.GetRandomFileName();
                 string tempFilePath = System.IO.Path.Combine(tempPath, tempFileName);
                 try
                 {
-                    using (var file = NativeMethods.FileManagement.CreateFile(tempFilePath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                    using (var file = FileManagement.NativeMethods.CreateFile(tempFilePath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
                     {
-                        string fileName = NativeMethods.Handles.GetShortName(file);
+                        string fileName = Handles.NativeMethods.GetShortName(file);
                         fileName.Length.Should().BeLessOrEqualTo(12);
                     }
                 }
                 finally
                 {
-                    NativeMethods.FileManagement.DeleteFile(tempFilePath);
+                    FileManagement.NativeMethods.DeleteFile(tempFilePath);
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace WInterop.Tests.NativeMethodsTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\??"))
+                using (var directory = Handles.NativeMethods.OpenDirectoryObject(@"\??"))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
@@ -117,7 +117,7 @@ namespace WInterop.Tests.NativeMethodsTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\Global??"))
+                using (var directory = Handles.NativeMethods.OpenDirectoryObject(@"\Global??"))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
@@ -129,7 +129,7 @@ namespace WInterop.Tests.NativeMethodsTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\"))
+                using (var directory = Handles.NativeMethods.OpenDirectoryObject(@"\"))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
@@ -141,9 +141,9 @@ namespace WInterop.Tests.NativeMethodsTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var directory = NativeMethods.Handles.OpenDirectoryObject(@"\"))
+                using (var directory = Handles.NativeMethods.OpenDirectoryObject(@"\"))
                 {
-                    IEnumerable<ObjectInformation> objects = NativeMethods.Handles.GetDirectoryEntries(directory);
+                    IEnumerable<ObjectInformation> objects = Handles.NativeMethods.GetDirectoryEntries(directory);
                     objects.Should().NotBeEmpty();
                     objects.Should().Contain(new ObjectInformation { Name = "Device", TypeName = "Directory" });
                 }
@@ -156,7 +156,7 @@ namespace WInterop.Tests.NativeMethodsTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var link = NativeMethods.Handles.OpenSymbolicLinkObject(@"\??\C:"))
+                using (var link = Handles.NativeMethods.OpenSymbolicLinkObject(@"\??\C:"))
                 {
                     link.IsInvalid.Should().BeFalse();
                 }
@@ -168,9 +168,9 @@ namespace WInterop.Tests.NativeMethodsTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var link = NativeMethods.Handles.OpenSymbolicLinkObject(@"\??\C:"))
+                using (var link = Handles.NativeMethods.OpenSymbolicLinkObject(@"\??\C:"))
                 {
-                    string target = NativeMethods.Handles.GetSymbolicLinkTarget(link);
+                    string target = Handles.NativeMethods.GetSymbolicLinkTarget(link);
                     target.Should().StartWith(@"\Device\");
                 }
             });
@@ -181,7 +181,7 @@ namespace WInterop.Tests.NativeMethodsTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var mountPointManager = NativeMethods.FileManagement.CreateFile(
+                using (var mountPointManager = FileManagement.NativeMethods.CreateFile(
                     @"\\.\MountPointManager", 0, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING, FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL))
                 {
                     mountPointManager.IsInvalid.Should().BeFalse();
@@ -193,16 +193,16 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void QueryDosVolumePathBasic()
         {
-            string tempPath = NativeMethods.FileManagement.GetTempPath();
-            using (var directory = NativeMethods.FileManagement.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
+            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
-                string fullName = NativeMethods.Handles.GetObjectName(directory);
-                string fileName = NativeMethods.FileManagement.GetFileNameByHandle(directory);
+                string fullName = Handles.NativeMethods.GetObjectName(directory);
+                string fileName = FileManagement.NativeMethods.GetFileNameByHandle(directory);
                 string deviceName = fullName.Substring(0, fullName.Length - fileName.Length);
 
-                string dosVolumePath = NativeMethods.DeviceManagement.Desktop.QueryDosVolumePath(deviceName);
+                string dosVolumePath = DeviceManagement.Desktop.NativeMethods.QueryDosVolumePath(deviceName);
 
                 tempPath.Should().StartWith(dosVolumePath);
                 tempPath.Should().Be(dosVolumePath + fileName + @"\");

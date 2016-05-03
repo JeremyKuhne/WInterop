@@ -13,7 +13,7 @@ namespace WInterop.Handles
 
         override protected bool ReleaseHandle()
         {
-            return NativeMethods.FileManagement.Direct.FindClose(handle);
+            return FileManagement.NativeMethods.Direct.FindClose(handle);
         }
     }
 }

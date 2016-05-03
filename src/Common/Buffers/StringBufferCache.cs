@@ -6,7 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Runtime.InteropServices;
 using WInterop.Collections;
+using WInterop.ErrorHandling;
 
 namespace WInterop.Buffers
 {
@@ -87,6 +89,35 @@ namespace WInterop.Buffers
             {
                 Instance.Release(buffer);
             }
+        }
+
+        /// <summary>
+        /// Uses the stringbuilder cache and increases the buffer size if needed.
+        /// </summary>
+        public static string BufferInvoke(Func<StringBuffer, uint> invoker, string value = null, Func<uint, bool> shouldThrow = null)
+        {
+            return CachedBufferInvoke(minCapacity: 260u, func: (buffer) =>
+            {
+                uint returnValue = 0;
+
+                // Ensure enough room for the output string
+                while ((returnValue = invoker(buffer)) > buffer.CharCapacity)
+                    buffer.EnsureCharCapacity(returnValue);
+
+                if (returnValue == 0)
+                {
+                    // Failed
+                    uint error = (uint)Marshal.GetLastWin32Error();
+
+                    if (shouldThrow != null && !shouldThrow(error))
+                        return null;
+
+                    throw ErrorHelper.GetIoExceptionForError(error, value);
+                }
+
+                buffer.Length = returnValue;
+                return buffer.ToString();
+            });
         }
     }
 }

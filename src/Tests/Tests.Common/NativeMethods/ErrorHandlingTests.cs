@@ -9,6 +9,9 @@ using FluentAssertions;
 using System;
 using System.IO;
 using WInterop.ErrorHandling;
+#if DESKTOP
+using WInterop.ErrorHandling.Desktop;
+#endif
 using Xunit;
 
 namespace WInterop.Tests.NativeMethodTests
@@ -42,7 +45,7 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void BasicBeep()
         {
-            NativeMethods.ErrorHandling.Desktop.Beep(frequency: 262, duration: 500);
+            ErrorHandling.Desktop.NativeMethods.Beep(frequency: 262, duration: 500);
         }
 
         [Theory
@@ -55,29 +58,29 @@ namespace WInterop.Tests.NativeMethodTests
             ]
         public void BasicMessageBeep(MessageBeepType type)
         {
-            NativeMethods.ErrorHandling.Desktop.MessageBeep(type);
+            ErrorHandling.Desktop.NativeMethods.MessageBeep(type);
         }
 
         [Fact]
         public void GetProcessErrorMode()
         {
-            ErrorMode mode = NativeMethods.ErrorHandling.Desktop.GetProcessErrorMode();
+            ErrorMode mode = ErrorHandling.Desktop.NativeMethods.GetProcessErrorMode();
         }
 
         [Fact]
         public void BasicThreadErrorMode()
         {
-            ErrorMode mode = NativeMethods.ErrorHandling.Desktop.GetThreadErrorMode();
+            ErrorMode mode = ErrorHandling.Desktop.NativeMethods.GetThreadErrorMode();
             ErrorMode newMode = mode ^ ErrorMode.SEM_NOOPENFILEERRORBOX;
-            ErrorMode oldMode = NativeMethods.ErrorHandling.Desktop.SetThreadErrorMode(newMode);
+            ErrorMode oldMode = ErrorHandling.Desktop.NativeMethods.SetThreadErrorMode(newMode);
             try
             {
                 oldMode.Should().Be(mode);
-                NativeMethods.ErrorHandling.Desktop.GetThreadErrorMode().Should().Be(newMode);
+                ErrorHandling.Desktop.NativeMethods.GetThreadErrorMode().Should().Be(newMode);
             }
             finally
             {
-                NativeMethods.ErrorHandling.Desktop.SetThreadErrorMode(mode).Should().Be(newMode);
+                ErrorHandling.Desktop.NativeMethods.SetThreadErrorMode(mode).Should().Be(newMode);
             }
         }
 #endif

@@ -65,14 +65,14 @@ namespace WInterop.Handles
 
             if (handle == IntPtr.Zero)
             {
-                handle = NativeMethods.Heap.HeapAllocate(byteLength, zeroMemory);
+                handle = Heap.NativeMethods.HeapAllocate(byteLength, zeroMemory);
             }
             else
             {
                 // This may or may not be the same handle, Windows may realloc in place. If the
                 // handle changes Windows will deal with the old handle, trying to free it will
                 // cause an error.
-                handle = NativeMethods.Heap.HeapReallocate(handle, byteLength, zeroMemory);
+                handle = Heap.NativeMethods.HeapReallocate(handle, byteLength, zeroMemory);
             }
 
             if (handle == IntPtr.Zero)
@@ -86,7 +86,7 @@ namespace WInterop.Handles
 
         protected override bool ReleaseHandle()
         {
-            bool success = NativeMethods.Heap.HeapFree(handle);
+            bool success = Heap.NativeMethods.HeapFree(handle);
             Debug.Assert(success);
             handle = IntPtr.Zero;
             return success;

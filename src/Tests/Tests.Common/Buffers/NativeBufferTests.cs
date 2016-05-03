@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using WInterop.Buffers;
 using Xunit;
-using static WInterop.NativeMethods;
 
 namespace WInterop.Tests.Buffers
 {

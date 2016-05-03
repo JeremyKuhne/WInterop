@@ -36,7 +36,7 @@ namespace WInterop.Utility
                     uint bufferSize = buffer.CharCapacity;
                     try
                     {
-                        uint result = NativeMethods.WindowsStore.Query.Direct.GetCurrentApplicationUserModelId(ref bufferSize, buffer);
+                        uint result = WindowsStore.Query.NativeMethods.Direct.GetCurrentApplicationUserModelId(ref bufferSize, buffer);
                         switch (result)
                         {
                             case WinErrors.APPMODEL_ERROR_NO_APPLICATION:
