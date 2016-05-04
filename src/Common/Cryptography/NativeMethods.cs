@@ -33,17 +33,6 @@ namespace WInterop.Cryptography
             public const uint CERT_SYSTEM_STORE_LOCATION_MASK = 0x00FF0000;
             public const int CERT_SYSTEM_STORE_LOCATION_SHIFT = 16;
 
-            // System Store Locations
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa388136.aspx
-
-#if DESKTOP
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376560.aspx
-            [DllImport(Libraries.Crypt32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern SafeCertificateStoreHandle CertOpenSystemStoreW(
-                IntPtr hprov,
-                string szSubsystemProtocol);
-#endif
-
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
             public static extern SafeCertificateStoreHandle CertOpenStore(
@@ -71,14 +60,6 @@ namespace WInterop.Cryptography
                 IntPtr pvArg,
                 CertEnumSystemStoreLocationCallback pfnEnum);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376061.aspx
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public delegate bool CertEnumSystemStoreLocationCallback(
-                IntPtr pvszStoreLocations,
-                uint dwFlags,
-                IntPtr pvReserved,
-                IntPtr pvArg);
-
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376058.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
@@ -88,15 +69,6 @@ namespace WInterop.Cryptography
                 IntPtr pvArg,
                 CertEnumSystemStoreCallback pfnEnum);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376059.aspx
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public delegate bool CertEnumSystemStoreCallback(
-                IntPtr pvSystemStore,
-                uint dwFlags,
-                IntPtr pStoreInfo,
-                IntPtr pvReserved,
-                IntPtr pvArg);
-
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376055.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
@@ -105,58 +77,6 @@ namespace WInterop.Cryptography
                 uint dwFlags,
                 IntPtr pvArg,
                 CertEnumPhysicalStoreCallback pfnEnum);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376056.aspx
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public delegate bool CertEnumPhysicalStoreCallback(
-                IntPtr pvSystemStore,
-                uint dwFlags,
-                IntPtr pwszStoreName,
-                IntPtr pStoreInfo,
-                IntPtr pvReserved,
-                IntPtr pvArg);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa377568.aspx
-            [StructLayout(LayoutKind.Sequential)]
-            public struct CERT_SYSTEM_STORE_INFO
-            {
-                public uint cbSize;
-            }
-
-            [StructLayout(LayoutKind.Sequential)]
-            public struct CERT_PHYSICAL_STORE_INFO
-            {
-                public uint cbSize;
-                public string pszOpenStoreProvider;
-                public uint dwOpenEncodingType;
-                public uint dwOpenFlags;
-                CRYPT_DATA_BLOB OpenParameters;
-                uint dwFlags;
-                uint dwPriority;
-            }
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa381414.aspx
-            [StructLayout(LayoutKind.Sequential)]
-            public struct CRYPT_DATA_BLOB
-            {
-                uint cbData;
-                IntPtr pbData;
-            }
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa377575.aspx
-            [StructLayout(LayoutKind.Sequential)]
-            public struct CERT_SYSTEM_STORE_RELOCATE_PARA
-            {
-                /// <summary>
-                /// Can be HKEY hKeyBase
-                /// </summary>
-                public IntPtr pvBase;
-
-                /// <summary>
-                /// Can be LPCSTR pszSystemStore or LPCWSTR pwszSystemStore
-                /// </summary>
-                public IntPtr pvSystemStore;
-            }
         }
 
         /// <summary>
@@ -213,7 +133,7 @@ namespace WInterop.Cryptography
 
             try
             {
-                var callBack = new Direct.CertEnumSystemStoreLocationCallback(SystemStoreLocationCallback);
+                var callBack = new CertEnumSystemStoreLocationCallback(SystemStoreLocationCallback);
                 Direct.CertEnumSystemStoreLocation(
                     dwFlags: 0,
                     pvArg: GCHandle.ToIntPtr(handle),
@@ -251,7 +171,7 @@ namespace WInterop.Cryptography
                 {
                     // To lookup system stores in an alternate location you need to set CERT_SYSTEM_STORE_RELOCATE_FLAG
                     // and pass in the name and alternate location (HKEY) in pvSystemStoreLocationPara.
-                    var callBack = new Direct.CertEnumSystemStoreCallback(SystemStoreEnumeratorCallback);
+                    var callBack = new CertEnumSystemStoreCallback(SystemStoreEnumeratorCallback);
                     Direct.CertEnumSystemStore(
                         dwFlags: (uint)location,
                         pvSystemStoreLocationPara: (IntPtr)namePointer,
@@ -281,7 +201,7 @@ namespace WInterop.Cryptography
             PhysicalStoreInformation info = new PhysicalStoreInformation();
             info.SystemStoreInformation = GetSystemNameAndKey(dwFlags, pvSystemStore);
             info.PhysicalStoreName = Marshal.PtrToStringUni(pwszStoreName);
-            var physicalInfo = Marshal.PtrToStructure<Direct.CERT_PHYSICAL_STORE_INFO>(pStoreInfo);
+            var physicalInfo = Marshal.PtrToStructure<CERT_PHYSICAL_STORE_INFO>(pStoreInfo);
             info.ProviderType = physicalInfo.pszOpenStoreProvider;
             infos.Add(info);
 
@@ -299,7 +219,7 @@ namespace WInterop.Cryptography
                 {
                     // To lookup system stores in an alternate location you need to set CERT_SYSTEM_STORE_RELOCATE_FLAG
                     // and pass in the name and alternate location (HKEY) in pvSystemStoreLocationPara.
-                    var callBack = new Direct.CertEnumPhysicalStoreCallback(PhysicalStoreEnumeratorCallback);
+                    var callBack = new CertEnumPhysicalStoreCallback(PhysicalStoreEnumeratorCallback);
                     Direct.CertEnumPhysicalStore(
                         pvSystemStore: (IntPtr)namePointer,
                         dwFlags: (uint)location,
@@ -322,13 +242,13 @@ namespace WInterop.Cryptography
             if ((dwFlags & Direct.CERT_SYSTEM_STORE_RELOCATE_FLAG) == Direct.CERT_SYSTEM_STORE_RELOCATE_FLAG)
             {
 #if DESKTOP
-            var relocate = Marshal.PtrToStructure<Direct.CERT_SYSTEM_STORE_RELOCATE_PARA>(pvSystemStore);
-            var registryHandle = new SafeRegistryHandle(relocate.pvBase, ownsHandle: false);
+                var relocate = Marshal.PtrToStructure<CERT_SYSTEM_STORE_RELOCATE_PARA>(pvSystemStore);
+                var registryHandle = new SafeRegistryHandle(relocate.pvBase, ownsHandle: false);
 
-            info.Key = RegistryKey.FromHandle(registryHandle).Name;
+                info.Key = RegistryKey.FromHandle(registryHandle).Name;
 
-            // The name is null terminated
-            info.Name = Marshal.PtrToStringUni(relocate.pvSystemStore);
+                // The name is null terminated
+                info.Name = Marshal.PtrToStringUni(relocate.pvSystemStore);
 #else
                 // Can't do registry access on WinRT
                 throw new PlatformNotSupportedException();

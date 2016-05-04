@@ -176,8 +176,8 @@ namespace WInterop.ErrorHandling
         public const uint ERROR_FILENAME_EXCED_RANGE = 206;
         public const uint ERROR_MORE_DATA = 234;
         public const uint ERROR_OPERATION_ABORTED = 995;
-#if !(COMPACT)
         public const uint ERROR_NO_TOKEN = 1008;
+#if !(COMPACT)
         public const uint ERROR_NOT_FOUND = 1168;
         public const uint ERROR_REQUEST_ABORTED = 1235;
         public const uint ERROR_CONNECTION_ABORTED = 1236;

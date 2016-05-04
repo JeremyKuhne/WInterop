@@ -22,6 +22,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\Cache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumPhysicalStoreCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumSystemStoreCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumSystemStoreLocationCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_PHYSICAL_STORE_INFO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_SYSTEM_STORE_INFO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_SYSTEM_STORE_RELOCATE_PARA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CRYPT_DATA_BLOB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\PhysicalStoreInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreName.cs" />

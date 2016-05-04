@@ -96,7 +96,7 @@ namespace WInterop.Authorization.Desktop
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool DuplicateTokenEx(
                 SafeCloseHandle hExistingToken,
-                TokenAccessLevels dwDesiredAccess,
+                TokenRights dwDesiredAccess,
                 IntPtr lpTokenAttributes,
                 SECURITY_IMPERSONATION_LEVEL ImpersonationLevel,
                 TOKEN_TYPE TokenType,
@@ -107,7 +107,7 @@ namespace WInterop.Authorization.Desktop
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool OpenProcessToken(
                 IntPtr ProcessHandle,
-                TokenAccessLevels DesiredAccesss,
+                TokenRights DesiredAccesss,
                 out SafeCloseHandle TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
@@ -115,7 +115,7 @@ namespace WInterop.Authorization.Desktop
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool OpenThreadToken(
                 SafeThreadHandle ThreadHandle,
-                TokenAccessLevels DesiredAccess,
+                TokenRights DesiredAccess,
                 [MarshalAs(UnmanagedType.Bool)] bool OpenAsSelf,
                 out SafeCloseHandle TokenHandle);
 
@@ -271,16 +271,16 @@ namespace WInterop.Authorization.Desktop
             return result;
         }
 
-        public static SafeCloseHandle OpenProcessToken(TokenAccessLevels desiredAccess)
+        public static SafeCloseHandle OpenProcessToken(TokenRights desiredAccess)
         {
             SafeCloseHandle processToken;
-            if (!Direct.OpenProcessToken(Process.GetCurrentProcess().Handle, desiredAccess, out processToken))
+            if (!Direct.OpenProcessToken(ProcessAndThreads.NativeMethods.Direct.GetCurrentProcess().DangerousGetHandle(), desiredAccess, out processToken))
                 throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
         }
 
-        public static SafeCloseHandle OpenThreadToken(TokenAccessLevels desiredAccess, bool openAsSelf)
+        public static SafeCloseHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
         {
             SafeCloseHandle threadToken;
             if (!Direct.OpenThreadToken(ProcessAndThreads.NativeMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
@@ -289,10 +289,10 @@ namespace WInterop.Authorization.Desktop
                 if (error != WinErrors.ERROR_NO_TOKEN)
                     throw ErrorHelper.GetIoExceptionForError(error, desiredAccess.ToString());
 
-                SafeCloseHandle processToken = OpenProcessToken(TokenAccessLevels.Duplicate);
+                SafeCloseHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE);
                 if (!Direct.DuplicateTokenEx(
                     processToken,
-                    TokenAccessLevels.Impersonate | TokenAccessLevels.Query | TokenAccessLevels.AdjustPrivileges,
+                    TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_ADJUST_PRIVILEGES,
                     IntPtr.Zero,
                     SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation,
                     TOKEN_TYPE.TokenImpersonation,
