@@ -8,7 +8,6 @@
 using FluentAssertions;
 using System.Collections.Generic;
 using WInterop.FileManagement;
-using WInterop.Handles;
 using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
@@ -17,6 +16,7 @@ namespace WInterop.Tests.NativeMethodsTests
 {
     public class HandlesTests
     {
+#if DESKTOP
         [Fact]
         public void GetHandleTypeBasic()
         {
@@ -24,7 +24,7 @@ namespace WInterop.Tests.NativeMethodsTests
             using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
-                string name = Handles.NativeMethods.GetObjectType(directory);
+                string name = Handles.Desktop.NativeMethods.GetObjectType(directory);
                 name.Should().Be("File");
             }
         }
@@ -37,7 +37,7 @@ namespace WInterop.Tests.NativeMethodsTests
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
-                string name = Handles.NativeMethods.GetObjectName(directory);
+                string name = Handles.Desktop.NativeMethods.GetObjectName(directory);
 
                 // Skip past the C:\
                 Paths.AddTrailingSeparator(name).Should().EndWith(tempPath.Substring(3));
@@ -52,7 +52,7 @@ namespace WInterop.Tests.NativeMethodsTests
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
-                string name = Handles.NativeMethods.GetFileName(directory);
+                string name = Handles.Desktop.NativeMethods.GetFileName(directory);
 
                 tempPath.Should().EndWith(Paths.AddTrailingSeparator(name));
             }
@@ -66,7 +66,7 @@ namespace WInterop.Tests.NativeMethodsTests
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                string name = Handles.NativeMethods.GetVolumeName(directory);
+                string name = Handles.Desktop.NativeMethods.GetVolumeName(directory);
 
                 name.Should().StartWith(@"\Device\");
             }
@@ -80,7 +80,7 @@ namespace WInterop.Tests.NativeMethodsTests
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                string directoryName = Handles.NativeMethods.GetShortName(directory);
+                string directoryName = Handles.Desktop.NativeMethods.GetShortName(directory);
                 directoryName.Should().Be("Temp");
 
                 string tempFileName = "ExtraLongName" + System.IO.Path.GetRandomFileName();
@@ -89,7 +89,7 @@ namespace WInterop.Tests.NativeMethodsTests
                 {
                     using (var file = FileManagement.NativeMethods.CreateFile(tempFilePath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
                     {
-                        string fileName = Handles.NativeMethods.GetShortName(file);
+                        string fileName = Handles.Desktop.NativeMethods.GetShortName(file);
                         fileName.Length.Should().BeLessOrEqualTo(12);
                     }
                 }
@@ -103,78 +103,60 @@ namespace WInterop.Tests.NativeMethodsTests
         [Fact]
         public void OpenDosDeviceDirectory()
         {
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            using (var directory = Handles.Desktop.NativeMethods.OpenDirectoryObject(@"\??"))
             {
-                using (var directory = Handles.NativeMethods.OpenDirectoryObject(@"\??"))
-                {
-                    directory.IsInvalid.Should().BeFalse();
-                }
-            });
+                directory.IsInvalid.Should().BeFalse();
+            }
         }
 
         [Fact]
         public void OpenGlobalDosDeviceDirectory()
         {
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            using (var directory = Handles.Desktop.NativeMethods.OpenDirectoryObject(@"\Global??"))
             {
-                using (var directory = Handles.NativeMethods.OpenDirectoryObject(@"\Global??"))
-                {
-                    directory.IsInvalid.Should().BeFalse();
-                }
-            });
+                directory.IsInvalid.Should().BeFalse();
+            }
         }
 
         [Fact]
         public void OpenRootDirectory()
         {
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            using (var directory = Handles.Desktop.NativeMethods.OpenDirectoryObject(@"\"))
             {
-                using (var directory = Handles.NativeMethods.OpenDirectoryObject(@"\"))
-                {
-                    directory.IsInvalid.Should().BeFalse();
-                }
-            });
+                directory.IsInvalid.Should().BeFalse();
+            }
         }
 
         [Fact]
         public void GetRootDirectoryEntries()
         {
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            using (var directory = Handles.Desktop.NativeMethods.OpenDirectoryObject(@"\"))
             {
-                using (var directory = Handles.NativeMethods.OpenDirectoryObject(@"\"))
-                {
-                    IEnumerable<ObjectInformation> objects = Handles.NativeMethods.GetDirectoryEntries(directory);
-                    objects.Should().NotBeEmpty();
-                    objects.Should().Contain(new ObjectInformation { Name = "Device", TypeName = "Directory" });
-                }
-            });
+                IEnumerable<Handles.Desktop.ObjectInformation> objects = Handles.Desktop.NativeMethods.GetDirectoryEntries(directory);
+                objects.Should().NotBeEmpty();
+                objects.Should().Contain(new Handles.Desktop.ObjectInformation { Name = "Device", TypeName = "Directory" });
+            }
         }
-
 
         [Fact]
         public void OpenCDriveSymbolicLink()
         {
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            using (var link = Handles.Desktop.NativeMethods.OpenSymbolicLinkObject(@"\??\C:"))
             {
-                using (var link = Handles.NativeMethods.OpenSymbolicLinkObject(@"\??\C:"))
-                {
-                    link.IsInvalid.Should().BeFalse();
-                }
-            });
+                link.IsInvalid.Should().BeFalse();
+            }
         }
 
         [Fact]
         public void GetTargetForCDriveSymbolicLink()
         {
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            using (var link = Handles.Desktop.NativeMethods.OpenSymbolicLinkObject(@"\??\C:"))
             {
-                using (var link = Handles.NativeMethods.OpenSymbolicLinkObject(@"\??\C:"))
-                {
-                    string target = Handles.NativeMethods.GetSymbolicLinkTarget(link);
-                    target.Should().StartWith(@"\Device\");
-                }
-            });
+                string target = Handles.Desktop.NativeMethods.GetSymbolicLinkTarget(link);
+                target.Should().StartWith(@"\Device\");
+            }
         }
+#endif
 
         [Fact]
         public void CanCreateHandleToMountPointManager()
@@ -198,7 +180,7 @@ namespace WInterop.Tests.NativeMethodsTests
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
-                string fullName = Handles.NativeMethods.GetObjectName(directory);
+                string fullName = Handles.Desktop.NativeMethods.GetObjectName(directory);
                 string fileName = FileManagement.NativeMethods.GetFileNameByHandle(directory);
                 string deviceName = fullName.Substring(0, fullName.Length - fileName.Length);
 

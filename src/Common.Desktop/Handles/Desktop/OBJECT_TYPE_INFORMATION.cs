@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Authentication;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.Desktop
 {
     // The full struct isn't officially documented, names may be wrong.
     //

@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.Desktop
 {
     // The full struct isn't officially documented, names may be wrong.
     //

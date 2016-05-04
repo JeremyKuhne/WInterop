@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.Desktop
 {
     // This isn't an actual Windows type, we have to separate it out as the size of IntPtr varies by architecture
     // and we can't specify the size at compile time to offset the Information pointer in the status block.

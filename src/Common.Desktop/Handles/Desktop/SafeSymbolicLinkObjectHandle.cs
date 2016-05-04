@@ -5,13 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Handles
+namespace WInterop.Handles.Desktop
 {
     /// <summary>
-    /// Safe handle for a Windows object manager directory.
+    /// Safe handle for a Windows object manager symbolic link.
     /// </summary>
-    public class SafeDirectoryObjectHandle : SafeCloseHandle
+    public class SafeSymbolicLinkObjectHandle : SafeCloseHandle
     {
-        public SafeDirectoryObjectHandle() : base() { }
+        public SafeSymbolicLinkObjectHandle() : base() { }
     }
 }
