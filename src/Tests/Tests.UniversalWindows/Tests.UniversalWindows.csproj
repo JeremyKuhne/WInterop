@@ -93,13 +93,17 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Winterop.WindowsRuntime\WInterop.WindowsRuntime.csproj">
-      <Project>{58c13843-52c3-4125-bbc7-30a8b53f2d57}</Project>
-      <Name>WInterop.WindowsRuntime</Name>
-    </ProjectReference>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <ProjectReference Include="..\..\Winterop\WInterop.csproj">
+      <Project>{8031257a-b9c2-473f-a4dd-690bd6263feb}</Project>
+      <Name>WInterop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.Support\Tests.Support.csproj">
+      <Project>{ea2ce4ef-05b6-458c-aeec-986f62d0e5af}</Project>
+      <Name>Tests.Support</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Tests.Common\Tests.Common.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

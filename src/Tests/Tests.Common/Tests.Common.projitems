@@ -20,11 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\FileManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\HandlesTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NetworkManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\ProcessAndThreadTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\VolumeManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support\StoreHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support\TestFileCleaner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\DelegatesTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\EnvironmentTests.cs" />
   </ItemGroup>
 </Project>

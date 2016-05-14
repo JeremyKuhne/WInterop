@@ -9,10 +9,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WInterop</RootNamespace>
     <AssemblyName>WInterop.Desktop</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <DefineConstants>$(DefineConstants);DESKTOP</DefineConstants>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -24,23 +28,79 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <None Include="project.json" />
+    <None Include="..\WInterop.snk" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\Desktop\LUID.cs" />
+    <Compile Include="Authorization\Desktop\LUID_AND_ATTRIBUTES.cs" />
+    <Compile Include="Authorization\Desktop\NativeMethods.cs" />
+    <Compile Include="Authorization\Desktop\PrivilegeAttributes.cs" />
+    <Compile Include="Authorization\Desktop\Privileges.cs" />
+    <Compile Include="Authorization\Desktop\PrivilegeSetting.cs" />
+    <Compile Include="Authorization\Desktop\PRIVILEGE_SET.cs" />
+    <Compile Include="Authorization\Desktop\SID_NAME_USE.cs" />
+    <Compile Include="Authorization\Desktop\TokenRights.cs" />
+    <Compile Include="Authorization\Desktop\TOKEN_INFORMATION_CLASS.cs" />
+    <Compile Include="Authorization\Desktop\TOKEN_PRIVILEGES.cs" />
+    <Compile Include="Authorization\Desktop\TOKEN_TYPE.cs" />
+    <Compile Include="Backup\Desktop\BackupReader.cs" />
+    <Compile Include="Backup\Desktop\BackupStreamType.cs" />
+    <Compile Include="Backup\Desktop\NativeMethods.cs" />
+    <Compile Include="Backup\Desktop\StreamAttributes.cs" />
+    <Compile Include="Backup\Desktop\StreamInformation.cs" />
+    <Compile Include="Backup\Desktop\WIN32_STREAM_ID.cs" />
+    <Compile Include="Cryptography\Desktop\NativeMethods.cs" />
+    <Compile Include="DeviceManagement\Desktop\ControlCodeAccess.cs" />
+    <Compile Include="DeviceManagement\Desktop\ControlCodeDeviceType.cs" />
+    <Compile Include="DeviceManagement\Desktop\ControlCodeMethod.cs" />
+    <Compile Include="DeviceManagement\Desktop\DeviceMacros.cs" />
+    <Compile Include="DeviceManagement\Desktop\NativeMethods.cs" />
+    <Compile Include="DynamicLinkLibrary\Desktop\LoadLibraryFlags.cs" />
+    <Compile Include="DynamicLinkLibrary\Desktop\NativeMethods.cs" />
+    <Compile Include="ErrorHandling\Desktop\ErrorMode.cs" />
+    <Compile Include="ErrorHandling\Desktop\MessageBeepType.cs" />
+    <Compile Include="ErrorHandling\Desktop\NativeMethods.cs" />
+    <Compile Include="ErrorHandling\Desktop\TemporaryErrorMode.cs" />
+    <Compile Include="FileManagement\Desktop\CopyProgressRoutine.cs" />
+    <Compile Include="FileManagement\Desktop\NativeMethods.cs" />
+    <Compile Include="Handles\Desktop\FILE_INFORMATION_CLASS.cs" />
+    <Compile Include="Handles\Desktop\IO_STATUS.cs" />
+    <Compile Include="Handles\Desktop\IO_STATUS_BLOCK.cs" />
+    <Compile Include="Handles\Desktop\NativeMethods.cs" />
+    <Compile Include="Handles\Desktop\ObjectInformation.cs" />
+    <Compile Include="Handles\Desktop\OBJECT_ATTRIBUTES.cs" />
+    <Compile Include="Handles\Desktop\OBJECT_BASIC_INFORMATION.cs" />
+    <Compile Include="Handles\Desktop\OBJECT_INFORMATION_CLASS.cs" />
+    <Compile Include="Handles\Desktop\OBJECT_TYPE_INFORMATION.cs" />
+    <Compile Include="Handles\Desktop\SafeDirectoryObjectHandle.cs" />
+    <Compile Include="Handles\Desktop\SafeEnvironmentStringsHandle.cs" />
+    <Compile Include="Handles\Desktop\SafeFindVolumeHandle.cs" />
+    <Compile Include="Handles\Desktop\SafeLibraryHandle.cs" />
+    <Compile Include="Handles\Desktop\SafeNetApiBufferHandle.cs" />
+    <Compile Include="Handles\Desktop\SafeSymbolicLinkObjectHandle.cs" />
+    <Compile Include="NetworkManagement\Desktop\MemberInfo.cs" />
+    <Compile Include="NetworkManagement\Desktop\NativeMethods.cs" />
+    <Compile Include="ProcessAndThreads\Desktop\NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecurityManagement\Desktop\NativeMethods.cs" />
+    <Compile Include="Strings\Desktop\NativeMethods.Strings.cs" />
+    <Compile Include="VolumeManagement\Desktop\DriveType.cs" />
+    <Compile Include="VolumeManagement\Desktop\FileSystemFeature.cs" />
+    <Compile Include="VolumeManagement\Desktop\NativeMethods.VolumeManagement.cs" />
+    <Compile Include="VolumeManagement\Desktop\VolumeInformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\WInterop.snk" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Winterop\WInterop.csproj">
+      <Project>{8031257a-b9c2-473f-a4dd-690bd6263feb}</Project>
+      <Name>WInterop</Name>
+    </ProjectReference>
+  </ItemGroup>
   <!-- CommonSharedDirectory is set by Common.projitems -->
   <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\Common.Desktop\Common.Desktop.projitems" Label="Shared" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

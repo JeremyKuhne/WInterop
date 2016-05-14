@@ -3,7 +3,7 @@
   "version": 1,
   "targets": {
     "UAP,Version=v10.0": {
-      "FluentAssertions/4.5.0": {
+      "FluentAssertions/4.6.1": {
         "compile": {
           "lib/win81/FluentAssertions.Core.dll": {},
           "lib/win81/FluentAssertions.dll": {}
@@ -1841,7 +1841,7 @@
       "xunit.runner.visualstudio/2.2.0-beta1-build1144": {}
     },
     "UAP,Version=v10.0/win10-arm": {
-      "FluentAssertions/4.5.0": {
+      "FluentAssertions/4.6.1": {
         "compile": {
           "lib/win81/FluentAssertions.Core.dll": {},
           "lib/win81/FluentAssertions.dll": {}
@@ -3540,7 +3540,7 @@
       "xunit.runner.visualstudio/2.2.0-beta1-build1144": {}
     },
     "UAP,Version=v10.0/win10-arm-aot": {
-      "FluentAssertions/4.5.0": {
+      "FluentAssertions/4.6.1": {
         "compile": {
           "lib/win81/FluentAssertions.Core.dll": {},
           "lib/win81/FluentAssertions.dll": {}
@@ -5197,7 +5197,7 @@
       "xunit.runner.visualstudio/2.2.0-beta1-build1144": {}
     },
     "UAP,Version=v10.0/win10-x64": {
-      "FluentAssertions/4.5.0": {
+      "FluentAssertions/4.6.1": {
         "compile": {
           "lib/win81/FluentAssertions.Core.dll": {},
           "lib/win81/FluentAssertions.dll": {}
@@ -6904,7 +6904,7 @@
       "xunit.runner.visualstudio/2.2.0-beta1-build1144": {}
     },
     "UAP,Version=v10.0/win10-x64-aot": {
-      "FluentAssertions/4.5.0": {
+      "FluentAssertions/4.6.1": {
         "compile": {
           "lib/win81/FluentAssertions.Core.dll": {},
           "lib/win81/FluentAssertions.dll": {}
@@ -8561,7 +8561,7 @@
       "xunit.runner.visualstudio/2.2.0-beta1-build1144": {}
     },
     "UAP,Version=v10.0/win10-x86": {
-      "FluentAssertions/4.5.0": {
+      "FluentAssertions/4.6.1": {
         "compile": {
           "lib/win81/FluentAssertions.Core.dll": {},
           "lib/win81/FluentAssertions.dll": {}
@@ -10268,7 +10268,7 @@
       "xunit.runner.visualstudio/2.2.0-beta1-build1144": {}
     },
     "UAP,Version=v10.0/win10-x86-aot": {
-      "FluentAssertions/4.5.0": {
+      "FluentAssertions/4.6.1": {
         "compile": {
           "lib/win81/FluentAssertions.Core.dll": {},
           "lib/win81/FluentAssertions.dll": {}
@@ -11926,11 +11926,11 @@
     }
   },
   "libraries": {
-    "FluentAssertions/4.5.0": {
-      "sha512": "EJneDgnbBZGTqnWKgJ9HKq3TlvhuyxtJc2Ilmzx7HI6l4mzask7h2mAhK0KLjgLoDFacy2dE9XnGS/A9xnLxAg==",
+    "FluentAssertions/4.6.1": {
+      "sha512": "pxxaKSdcsTiOh9dLssgGF8ADz95LwezuR6kkPAyQRDUz5Nt8SIdIrOIueUtLZZB2/pO1nivy8OZJwIg1kkP95w==",
       "type": "package",
       "files": [
-        "FluentAssertions.4.5.0.nupkg.sha512",
+        "FluentAssertions.4.6.1.nupkg.sha512",
         "FluentAssertions.nuspec",
         "lib/dotnet/FluentAssertions.Core.dll",
         "lib/dotnet/FluentAssertions.Core.pdb",
@@ -15643,7 +15643,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "FluentAssertions >= 4.5.0",
+      "FluentAssertions >= 4.6.1",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0",
       "xunit >= 2.2.0-beta1-build3239",
       "xunit.runner.visualstudio >= 2.2.0-beta1-build1144"

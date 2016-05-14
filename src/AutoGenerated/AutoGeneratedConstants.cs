@@ -29,17 +29,17 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const int CurrentDayOfMonth =  2;
+            public const int CurrentDayOfMonth =  13;
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const int CurrentHour = 23;
+            public const int CurrentHour = 22;
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const int CurrentMinute = 17;
+            public const int CurrentMinute = 11;
         }
 
         public static class Strings
@@ -62,32 +62,32 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const string CurrentDayOfMonth =  "2";
+            public const string CurrentDayOfMonth =  "13";
 
             /// <summary>
             /// Current two digit day of the month 01..31
             /// </summary>
-            public const string CurrentTwoDigitDayOfMonth =  "02";
+            public const string CurrentTwoDigitDayOfMonth =  "13";
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const string CurrentHour = "23";
+            public const string CurrentHour = "22";
 
             /// <summary>
             /// Current two digit hour from 00..23
             /// </summary>
-            public const string CurrentTwoDigitHour = "23";
+            public const string CurrentTwoDigitHour = "22";
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const string CurrentMinute = "17";
+            public const string CurrentMinute = "11";
 
             /// <summary>
             /// Current two digit hour from 00..59
             /// </summary>
-            public const string CurrentTwoDigitMinute = "17";
+            public const string CurrentTwoDigitMinute = "11";
         }
     }
 }

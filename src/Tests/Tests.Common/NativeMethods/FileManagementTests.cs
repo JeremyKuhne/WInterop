@@ -13,29 +13,13 @@ using Xunit;
 
 namespace WInterop.Tests.NativeMethodTests
 {
-    public class FileManagementTests
+    public partial class FileManagementTests
     {
         [Fact]
         public void GetTempPathBasic()
         {
             FileManagement.NativeMethods.GetTempPath().Should().NotBeNullOrWhiteSpace();
         }
-
-#if DESKTOP
-        [Fact]
-        public void GetShortPathBasic()
-        {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
-            FileManagement.Desktop.NativeMethods.GetShortPathName(tempPath).Should().NotBeNullOrWhiteSpace();
-        }
-
-        [Fact]
-        public void GetLongPathBasic()
-        {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
-            FileManagement.Desktop.NativeMethods.GetLongPathName(tempPath).Should().NotBeNullOrWhiteSpace();
-        }
-#endif
 
         [Fact]
         public void GetFullPathBasic()
