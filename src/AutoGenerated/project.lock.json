@@ -728,7 +728,7 @@
           "lib/net46/_._": {}
         }
       },
-      "Unofficial.Microsoft.VisualStudio.TextTemplating/12.0.0": {
+      "Unofficial.Microsoft.VisualStudio.TextTemplating/14.0.0": {
         "type": "package"
       }
     },
@@ -1495,7 +1495,7 @@
           "lib/net46/_._": {}
         }
       },
-      "Unofficial.Microsoft.VisualStudio.TextTemplating/12.0.0": {
+      "Unofficial.Microsoft.VisualStudio.TextTemplating/14.0.0": {
         "type": "package"
       }
     },
@@ -2262,7 +2262,7 @@
           "lib/net46/_._": {}
         }
       },
-      "Unofficial.Microsoft.VisualStudio.TextTemplating/12.0.0": {
+      "Unofficial.Microsoft.VisualStudio.TextTemplating/14.0.0": {
         "type": "package"
       }
     },
@@ -3115,7 +3115,7 @@
           "lib/dotnet/System.Xml.XDocument.dll": {}
         }
       },
-      "Unofficial.Microsoft.VisualStudio.TextTemplating/12.0.0": {
+      "Unofficial.Microsoft.VisualStudio.TextTemplating/14.0.0": {
         "type": "package"
       }
     },
@@ -4251,7 +4251,7 @@
           "lib/dotnet/System.Xml.XDocument.dll": {}
         }
       },
-      "Unofficial.Microsoft.VisualStudio.TextTemplating/12.0.0": {
+      "Unofficial.Microsoft.VisualStudio.TextTemplating/14.0.0": {
         "type": "package"
       }
     },
@@ -5618,7 +5618,7 @@
           "lib/dotnet/System.Xml.XDocument.dll": {}
         }
       },
-      "Unofficial.Microsoft.VisualStudio.TextTemplating/12.0.0": {
+      "Unofficial.Microsoft.VisualStudio.TextTemplating/14.0.0": {
         "type": "package"
       }
     },
@@ -6985,7 +6985,7 @@
           "lib/dotnet/System.Xml.XDocument.dll": {}
         }
       },
-      "Unofficial.Microsoft.VisualStudio.TextTemplating/12.0.0": {
+      "Unofficial.Microsoft.VisualStudio.TextTemplating/14.0.0": {
         "type": "package"
       }
     }
@@ -9450,25 +9450,17 @@
         "ref/xamarinmac20/_._"
       ]
     },
-    "Unofficial.Microsoft.VisualStudio.TextTemplating/12.0.0": {
-      "sha512": "JinGj3fa0nV1JkdFWPa8IxAP+niBo8ZhejmCEqZzDhEKBFQbPDSrl7LAP07R940vVXPuLQNWMwNdCHMSlAlVdQ==",
+    "Unofficial.Microsoft.VisualStudio.TextTemplating/14.0.0": {
+      "sha512": "oLfVlAUp09BHE2tMtnYsYnSRRY8dvbnuv99+ysHY1As340SUhC0/WMgnlJK+4I9qKuCbTbL+jmTQb13XoCvdcQ==",
       "type": "package",
       "files": [
-        "Unofficial.Microsoft.VisualStudio.TextTemplating.12.0.0.nupkg.sha512",
+        "Unofficial.Microsoft.VisualStudio.TextTemplating.14.0.0.nupkg.sha512",
         "Unofficial.Microsoft.VisualStudio.TextTemplating.nuspec",
         "build/Microsoft.TextTemplating.Build.Tasks.dll",
-        "build/Microsoft.VisualStudio.TextTemplating.12.0.dll",
-        "build/Microsoft.VisualStudio.TextTemplating.12.0.xml",
+        "build/Microsoft.VisualStudio.TextTemplating.14.0.dll",
         "build/Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll",
-        "build/Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.xml",
         "build/Microsoft.VisualStudio.TextTemplating.Interfaces.11.0.dll",
-        "build/Microsoft.VisualStudio.TextTemplating.Interfaces.11.0.xml",
-        "build/Microsoft.VisualStudio.TextTemplating.Interfaces.12.0.dll",
-        "build/Microsoft.VisualStudio.TextTemplating.Interfaces.12.0.xml",
-        "build/Microsoft.VisualStudio.TextTemplating.Modeling.12.0.dll",
-        "build/Microsoft.VisualStudio.TextTemplating.Sdk.Host.12.0.dll",
-        "build/Microsoft.VisualStudio.TextTemplating.VSHost.12.0.dll",
-        "build/Microsoft.VisualStudio.TextTemplating.VSHost.12.0.xml",
+        "build/Microsoft.VisualStudio.TextTemplating.Sdk.Host.14.0.dll",
         "build/Unofficial.Microsoft.VisualStudio.TextTemplating.targets"
       ]
     }
@@ -9477,7 +9469,7 @@
     "": [
       "Microsoft.NETCore >= 5.0.0",
       "Microsoft.NETCore.Portable.Compatibility >= 1.0.0",
-      "Unofficial.Microsoft.VisualStudio.TextTemplating >= 12.0.0"
+      "Unofficial.Microsoft.VisualStudio.TextTemplating >= 14.0.0"
     ],
     ".NETPlatform,Version=v5.0": []
   }
