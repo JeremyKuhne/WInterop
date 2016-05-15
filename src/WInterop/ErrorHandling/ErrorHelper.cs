@@ -80,6 +80,12 @@ namespace WInterop.ErrorHandling
         /// </summary>
         public static Exception GetIOExceptionForNTStatus(NTSTATUS status, string path = null)
         {
+            switch (status)
+            {
+                case NTSTATUS.STATUS_NOT_IMPLEMENTED:
+                    return new NotImplementedException(path ?? WInteropStrings.NoValue);
+            }
+
             return GetIoExceptionForError(NativeMethods.NtStatusToWinError(status), path);
         }
 
