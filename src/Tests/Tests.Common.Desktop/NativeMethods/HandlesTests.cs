@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System;
 using System.Collections.Generic;
 using WInterop.FileManagement;
 using WInterop.Tests.Support;
@@ -65,9 +66,16 @@ namespace WInterop.DesktopTests.NativeMethodsTests
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                string name = Handles.Desktop.NativeMethods.GetVolumeName(directory);
-
-                name.Should().StartWith(@"\Device\");
+                try
+                {
+                    string name = Handles.Desktop.NativeMethods.GetVolumeName(directory);
+                    name.Should().StartWith(@"\Device\");
+                }
+                catch (NotImplementedException)
+                {
+                    // Needs Windows 10
+                    System.Environment.OSVersion.Version.Major.Should().BeLessThan(10);
+                }
             }
         }
 

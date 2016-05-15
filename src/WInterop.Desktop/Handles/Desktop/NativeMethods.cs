@@ -55,15 +55,15 @@ namespace WInterop.Handles.Desktop
             public static extern NTSTATUS NtOpenDirectoryObject(
                 out SafeDirectoryObjectHandle DirectoryHandle,
                 ACCESS_MASK DesiredAccess,
-                OBJECT_ATTRIBUTES ObjectAttributes);
+                ref OBJECT_ATTRIBUTES ObjectAttributes);
 
             // https://msdn.microsoft.com/en-us/library/bb470236.aspx
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567030.aspx
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-            public static extern NTSTATUS NtOpenSymbolicLinkObject(
+            unsafe public static extern NTSTATUS NtOpenSymbolicLinkObject(
                 out SafeSymbolicLinkObjectHandle LinkHandle,
                 ACCESS_MASK DesiredAccess,
-                OBJECT_ATTRIBUTES ObjectAttributes);
+                ref OBJECT_ATTRIBUTES ObjectAttributes);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567068.aspx
             // https://msdn.microsoft.com/en-us/library/bb470241.aspx
@@ -111,10 +111,11 @@ namespace WInterop.Handles.Desktop
             return (SafeDirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
                 SafeDirectoryObjectHandle directory;
+
                 NTSTATUS status = Direct.NtOpenDirectoryObject(
                     DirectoryHandle: out directory,
                     DesiredAccess: desiredAccess,
-                    ObjectAttributes: attributes);
+                    ObjectAttributes: ref attributes);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
                     throw ErrorHelper.GetIOExceptionForNTStatus(status, path);
@@ -136,7 +137,7 @@ namespace WInterop.Handles.Desktop
                 NTSTATUS status = Direct.NtOpenSymbolicLinkObject(
                     LinkHandle: out link,
                     DesiredAccess: desiredAccess,
-                    ObjectAttributes: attributes);
+                    ObjectAttributes: ref attributes);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
                     throw ErrorHelper.GetIOExceptionForNTStatus(status, path);
@@ -168,7 +169,8 @@ namespace WInterop.Handles.Desktop
                         SecurityQualityOfService = IntPtr.Zero
                     };
 
-                    return invoker(attributes);
+                    SafeHandle handle = invoker(attributes);
+                    return handle;
                 }
             }
         }
