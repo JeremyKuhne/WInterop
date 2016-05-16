@@ -7,16 +7,18 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Authentication;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
+using WInterop.FileManagement.Desktop;
 using WInterop.Handles;
 
-namespace WInterop.FileManagement.Desktop
+namespace WInterop.FileManagement
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class NativeMethods
+    public static class DesktopNativeMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -28,11 +30,11 @@ namespace WInterop.FileManagement.Desktop
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern SafeFileHandle CreateFileW(
+            unsafe public static extern SafeFileHandle CreateFileW(
                 string lpFileName,
                 DesiredAccess dwDesiredAccess,
                 ShareMode dwShareMode,
-                IntPtr lpSecurityAttributes,
+                SECURITY_ATTRIBUTES* lpSecurityAttributes,
                 CreationDisposition dwCreationDisposition,
                 uint dwFlagsAndAttributes,
                 IntPtr hTemplateFile);
@@ -197,11 +199,13 @@ namespace WInterop.FileManagement.Desktop
         {
             uint flags = (uint)fileAttributes | (uint)fileFlags | (uint)securityQosFlags;
 
-            SafeFileHandle handle = Direct.CreateFileW(path, desiredAccess, shareMode, IntPtr.Zero, creationDisposition, flags, IntPtr.Zero);
-            if (handle.IsInvalid)
-                throw ErrorHelper.GetIoExceptionForLastError(path);
-
-            return handle;
+            unsafe
+            {
+                SafeFileHandle handle = Direct.CreateFileW(path, desiredAccess, shareMode, null, creationDisposition, flags, IntPtr.Zero);
+                if (handle.IsInvalid)
+                    throw ErrorHelper.GetIoExceptionForLastError(path);
+                return handle;
+            }
         }
 
         /// <summary>

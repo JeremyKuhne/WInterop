@@ -215,6 +215,25 @@ namespace WInterop.FileManagement
                 throw ErrorHelper.GetIoExceptionForLastError(path);
         }
 
+        /// <summary>
+        /// Get a stream for the specified file.
+        /// </summary>
+        public static System.IO.Stream CreateFileStream(
+            string path,
+            DesiredAccess desiredAccess,
+            ShareMode shareMode,
+            CreationDisposition creationDisposition,
+            FileAttributes fileAttributes = FileAttributes.NONE,
+            FileFlags fileFlags = FileFlags.NONE,
+            SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
+        {
+            var fileHandle = CreateFile(path, desiredAccess, shareMode, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
+            var fileStream = new System.IO.FileStream(
+                new Microsoft.Win32.SafeHandles.SafeFileHandle(fileHandle.DangerousGetHandle(), ownsHandle: false),
+                Conversion.DesiredAccessToFileAccess(desiredAccess));
+            return new SafeHandleStreamWrapper(fileStream, fileHandle);
+        }
+
         private delegate SafeFileHandle CreateFileDelegate(
             string path,
             DesiredAccess desiredAccess,
@@ -278,7 +297,10 @@ namespace WInterop.FileManagement
             extended.dwFileAttributes = fileAttributes;
             extended.dwFileFlags = fileFlags;
             extended.dwSecurityQosFlags = securityQosFlags;
-            extended.lpSecurityAttributes = IntPtr.Zero;
+            unsafe
+            {
+                extended.lpSecurityAttributes = null;
+            }
             extended.hTemplateFile = IntPtr.Zero;
 
             SafeFileHandle handle = Direct.CreateFile2(

@@ -69,7 +69,7 @@
     <Compile Include="FileManagement\Desktop\BY_HANDLE_FILE_INFORMATION.cs" />
     <Compile Include="FileManagement\Desktop\CopyProgressRoutine.cs" />
     <Compile Include="FileManagement\Desktop\GetFinalPathNameByHandleFlags.cs" />
-    <Compile Include="FileManagement\Desktop\NativeMethods.cs" />
+    <Compile Include="FileManagement\DesktopNativeMethods.cs" />
     <Compile Include="FileManagement\Desktop\SYMBOLIC_LINK_FLAG.cs" />
     <Compile Include="Handles\Desktop\FILE_INFORMATION_CLASS.cs" />
     <Compile Include="Handles\Desktop\IO_STATUS.cs" />

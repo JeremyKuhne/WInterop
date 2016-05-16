@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using WInterop.FileManagement;
 
 namespace WInterop.Tests.Support
 {
@@ -94,6 +95,21 @@ namespace WInterop.Tests.Support
         public string GetTestPath(string basePath = null)
         {
             return Path.Combine(basePath ?? TempFolder, Path.GetRandomFileName());
+        }
+
+        public string CreateTestFile(string content, string basePath = null)
+        {
+            string testFile = GetTestPath(basePath);
+            using (var stream = NativeMethods.CreateFileStream(testFile,
+                DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+            {
+                using (var writer = new System.IO.StreamWriter(stream))
+                {
+                    writer.Write(content);
+                }
+            }
+
+            return testFile;
         }
 
         public void Dispose()

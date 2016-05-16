@@ -18,20 +18,20 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void GetTempPathBasic()
         {
-            FileManagement.NativeMethods.GetTempPath().Should().NotBeNullOrWhiteSpace();
+            NativeMethods.GetTempPath().Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void GetFullPathBasic()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
-            FileManagement.NativeMethods.GetFullPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+            string tempPath = NativeMethods.GetTempPath();
+            NativeMethods.GetFullPathName(tempPath).Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void GetFullPathNameForCurrent()
         {
-            string fullPath = FileManagement.NativeMethods.GetFullPathName(".");
+            string fullPath = NativeMethods.GetFullPathName(".");
             fullPath.Length.Should().BeGreaterThan(2);
             fullPath[1].Should().Be(':');
         }
@@ -39,30 +39,30 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void GetTempFileNameBasic()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
-            string tempFileName = FileManagement.NativeMethods.GetTempFileName(tempPath, "tfn");
+            string tempPath = NativeMethods.GetTempPath();
+            string tempFileName = NativeMethods.GetTempFileName(tempPath, "tfn");
             try
             {
                 tempFileName.Should().StartWith(tempPath);
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
         [Fact]
         public void DeleteFileBasic()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
-            string tempFileName = FileManagement.NativeMethods.GetTempFileName(tempPath, "tfn");
+            string tempPath = NativeMethods.GetTempPath();
+            string tempFileName = NativeMethods.GetTempFileName(tempPath, "tfn");
             try
             {
                 System.IO.File.Exists(tempFileName).Should().BeTrue();
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
                 System.IO.File.Exists(tempFileName).Should().BeFalse();
             }
         }
@@ -70,18 +70,18 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void CreateFileBasic()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
-            string tempFileName = FileManagement.NativeMethods.GetTempFileName(tempPath, "tfn");
+            string tempPath = NativeMethods.GetTempPath();
+            string tempFileName = NativeMethods.GetTempFileName(tempPath, "tfn");
             try
             {
-                using (var file = FileManagement.NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING))
+                using (var file = NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
@@ -90,8 +90,8 @@ namespace WInterop.Tests.NativeMethodTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var file = FileManagement.NativeMethods.CreateFile(@"C:\.", 0, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
-                    FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                using (var file = NativeMethods.CreateFile(@"C:\.", 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                    FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -101,11 +101,11 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void CreateFileCreateTempFile()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            string tempPath = NativeMethods.GetTempPath();
             string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
             try
             {
-                using (var file = FileManagement.NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                using (var file = NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     file.IsInvalid.Should().BeFalse();
                     System.IO.File.Exists(tempFileName).Should().BeTrue();
@@ -113,15 +113,15 @@ namespace WInterop.Tests.NativeMethodTests
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
         [Fact]
         public void GetFileAttributesExBasic()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
-            var info = FileManagement.NativeMethods.GetFileAttributesEx(tempPath);
+            string tempPath = NativeMethods.GetTempPath();
+            var info = NativeMethods.GetFileAttributesEx(tempPath);
             info.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
         }
 
@@ -132,14 +132,14 @@ namespace WInterop.Tests.NativeMethodTests
             string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
             try
             {
-                using (var file = FileManagement.NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                using (var file = NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
-                    FileManagement.NativeMethods.FlushFileBuffers(file);
+                    NativeMethods.FlushFileBuffers(file);
                 }
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
@@ -150,33 +150,33 @@ namespace WInterop.Tests.NativeMethodTests
             string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
             try
             {
-                using (var file = FileManagement.NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                using (var file = NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
-                    string fileName = FileManagement.NativeMethods.GetFileNameByHandle(file);
+                    string fileName = NativeMethods.GetFileNameByHandle(file);
                     tempFileName.Should().EndWith(fileName);
                 }
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
         [Fact]
         public void GetStandardInfoByHandleBasic()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            string tempPath = NativeMethods.GetTempPath();
             string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
             try
             {
-                using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
-                    FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                using (var directory = NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                    FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
-                    var info = FileManagement.NativeMethods.GetFileStandardInfoByHandle(directory);
+                    var info = NativeMethods.GetFileStandardInfoByHandle(directory);
                     info.Directory.Should().BeTrue();
                 }
 
-                using (var file = FileManagement.NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                using (var file = NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     var info = FileManagement.NativeMethods.GetFileStandardInfoByHandle(file);
                     info.Directory.Should().BeFalse();
@@ -188,26 +188,26 @@ namespace WInterop.Tests.NativeMethodTests
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
         [Fact]
         public void GetBasicInfoByHandleBasic()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            string tempPath = NativeMethods.GetTempPath();
             string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
             try
             {
-                using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
-                    FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                using (var directory = NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                    FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
-                    var directoryInfo = FileManagement.NativeMethods.GetFileBasicInfoByHandle(directory);
+                    var directoryInfo = NativeMethods.GetFileBasicInfoByHandle(directory);
                     directoryInfo.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
 
-                    using (var file = FileManagement.NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                    using (var file = NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                     {
-                        var fileInfo = FileManagement.NativeMethods.GetFileBasicInfoByHandle(file);
+                        var fileInfo = NativeMethods.GetFileBasicInfoByHandle(file);
                         fileInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
                         fileInfo.CreationTime.Should().BeAfter(directoryInfo.CreationTime);
                     }
@@ -215,26 +215,26 @@ namespace WInterop.Tests.NativeMethodTests
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
         [Fact]
         public void GetStreamInfoByHandleBasic()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
+            string tempPath = NativeMethods.GetTempPath();
             string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
             try
             {
-                using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
-                    FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                using (var directory = NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                    FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     var directoryInfo = FileManagement.NativeMethods.GetStreamInformationByHandle(directory);
                     directoryInfo.Should().BeEmpty();
 
-                    using (var file = FileManagement.NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                    using (var file = NativeMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                     {
-                        var fileInfo = FileManagement.NativeMethods.GetStreamInformationByHandle(file);
+                        var fileInfo = NativeMethods.GetStreamInformationByHandle(file);
                         fileInfo.Should().HaveCount(1);
                         var info = fileInfo.First();
                         info.Name.Should().Be(@"::$DATA");
@@ -245,7 +245,7 @@ namespace WInterop.Tests.NativeMethodTests
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
@@ -255,7 +255,7 @@ namespace WInterop.Tests.NativeMethodTests
             using (var temp = new TestFileCleaner())
             {
                 string source = temp.GetTestPath();
-                using (var file = FileManagement.NativeMethods.CreateFile(source, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                using (var file = NativeMethods.CreateFile(source, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -264,15 +264,15 @@ namespace WInterop.Tests.NativeMethodTests
                 FileManagement.NativeMethods.CopyFile(source, destination);
 
                 string alternateStream = destination + @":Foo:$DATA";
-                FileManagement.NativeMethods.CopyFile(source, alternateStream);
+                NativeMethods.CopyFile(source, alternateStream);
 
-                using (var file = FileManagement.NativeMethods.CreateFile(destination, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING))
+                using (var file = NativeMethods.CreateFile(destination, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
-                    var fileInfo = FileManagement.NativeMethods.GetStreamInformationByHandle(file);
+                    var fileInfo = NativeMethods.GetStreamInformationByHandle(file);
                     fileInfo.Should().BeEquivalentTo(new FileManagement.StreamInformation[]
                     {
-                        new FileManagement.StreamInformation { Name = @"::$DATA" },
-                        new FileManagement.StreamInformation { Name = @":Foo:$DATA" }
+                        new StreamInformation { Name = @"::$DATA" },
+                        new StreamInformation { Name = @":Foo:$DATA" }
                     });
                 }
             }
@@ -287,16 +287,16 @@ namespace WInterop.Tests.NativeMethodTests
             {
                 var originalInfo = FileManagement.NativeMethods.GetFileAttributesEx(tempFileName);
                 originalInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
-                FileManagement.NativeMethods.SetFileAttributes(tempFileName, originalInfo.Attributes | FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
-                var newInfo = FileManagement.NativeMethods.GetFileAttributesEx(tempFileName);
+                NativeMethods.SetFileAttributes(tempFileName, originalInfo.Attributes | FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
+                var newInfo = NativeMethods.GetFileAttributesEx(tempFileName);
                 newInfo.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
-                FileManagement.NativeMethods.SetFileAttributes(tempFileName, originalInfo.Attributes);
-                newInfo = FileManagement.NativeMethods.GetFileAttributesEx(tempFileName);
+                NativeMethods.SetFileAttributes(tempFileName, originalInfo.Attributes);
+                newInfo = NativeMethods.GetFileAttributesEx(tempFileName);
                 newInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
             }
             finally
             {
-                FileManagement.NativeMethods.DeleteFile(tempFileName);
+                NativeMethods.DeleteFile(tempFileName);
             }
         }
 
@@ -306,15 +306,15 @@ namespace WInterop.Tests.NativeMethodTests
             using (var temp = new TestFileCleaner())
             {
                 string source = temp.GetTestPath();
-                using (var file = FileManagement.NativeMethods.CreateFile(source, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.CREATE_NEW))
+                using (var file = NativeMethods.CreateFile(source, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
 
                 string destination = temp.GetTestPath();
-                FileManagement.NativeMethods.CopyFile(source, destination);
+                NativeMethods.CopyFile(source, destination);
 
-                var info = FileManagement.NativeMethods.GetFileAttributesEx(destination);
+                var info = NativeMethods.GetFileAttributesEx(destination);
                 info.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
             }
         }
@@ -322,7 +322,7 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void FindFirstFileNoFiles()
         {
-            FileManagement.NativeMethods.FindFirstFile(FileManagement.NativeMethods.GetTempPath() + System.IO.Path.GetRandomFileName()).Should().BeNull();
+            NativeMethods.FindFirstFile(FileManagement.NativeMethods.GetTempPath() + System.IO.Path.GetRandomFileName()).Should().BeNull();
         }
 
         [Fact]
@@ -332,13 +332,13 @@ namespace WInterop.Tests.NativeMethodTests
             {
                 string subdir = System.IO.Path.Combine(temp.TempFolder, "Subdir");
                 DirectoryManagement.NativeMethods.CreateDirectory(subdir);
-                var foundFile = FileManagement.NativeMethods.FindFirstFile(subdir + @"\*");
+                var foundFile = NativeMethods.FindFirstFile(subdir + @"\*");
                 foundFile.Should().NotBeNull();
                 foundFile.FileName.Should().Be(".");
-                foundFile = FileManagement.NativeMethods.FindNextFile(foundFile);
+                foundFile = NativeMethods.FindNextFile(foundFile);
                 foundFile.Should().NotBeNull();
                 foundFile.FileName.Should().Be("..");
-                foundFile = FileManagement.NativeMethods.FindNextFile(foundFile);
+                foundFile = NativeMethods.FindNextFile(foundFile);
                 foundFile.Should().BeNull();
             }
         }
@@ -350,10 +350,10 @@ namespace WInterop.Tests.NativeMethodTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileManagement.NativeMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.None, CreationDisposition.CREATE_NEW))
+                using (var fileHandle = NativeMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
-                    FileManagement.NativeMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
-                    FileManagement.NativeMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
+                    NativeMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
+                    NativeMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
                 }
             }
         }
@@ -363,9 +363,9 @@ namespace WInterop.Tests.NativeMethodTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileManagement.NativeMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.None, CreationDisposition.CREATE_NEW))
+                using (var fileHandle = NativeMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
-                    FileManagement.NativeMethods.SetFilePointer(fileHandle, 0, FileManagement.MoveMethod.FILE_CURRENT).Should().Be(0);
+                    NativeMethods.SetFilePointer(fileHandle, 0, FileManagement.MoveMethod.FILE_CURRENT).Should().Be(0);
                 }
             }
         }
@@ -378,13 +378,13 @@ namespace WInterop.Tests.NativeMethodTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileManagement.NativeMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.None, CreationDisposition.CREATE_NEW))
+                using (var fileHandle = NativeMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
-                    FileManagement.NativeMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
-                    FileManagement.NativeMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
-                    FileManagement.NativeMethods.SetFilePointer(fileHandle, 0, FileManagement.MoveMethod.FILE_BEGIN);
+                    NativeMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
+                    NativeMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
+                    NativeMethods.SetFilePointer(fileHandle, 0, FileManagement.MoveMethod.FILE_BEGIN);
                     byte[] outBuffer = new byte[data.Length];
-                    FileManagement.NativeMethods.ReadFile(fileHandle, outBuffer, (uint)data.Length).Should().Be((uint)data.Length);
+                    NativeMethods.ReadFile(fileHandle, outBuffer, (uint)data.Length).Should().Be((uint)data.Length);
                     outBuffer.ShouldBeEquivalentTo(data);
                 }
             }
@@ -395,9 +395,9 @@ namespace WInterop.Tests.NativeMethodTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileManagement.NativeMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.None, CreationDisposition.CREATE_NEW))
+                using (var fileHandle = NativeMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
-                    FileManagement.NativeMethods.GetFileSize(fileHandle).Should().Be(0);
+                    NativeMethods.GetFileSize(fileHandle).Should().Be(0);
                 }
             }
         }
@@ -405,11 +405,11 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void GetFileTypeDisk()
         {
-            string tempPath = FileManagement.NativeMethods.GetTempPath();
-            using (var directory = FileManagement.NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.ReadWrite, CreationDisposition.OPEN_EXISTING,
-                FileManagement.FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+            string tempPath = NativeMethods.GetTempPath();
+            using (var directory = NativeMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
-                FileManagement.NativeMethods.GetFileType(directory).Should().Be(FileManagement.FileType.FILE_TYPE_DISK);
+                NativeMethods.GetFileType(directory).Should().Be(FileManagement.FileType.FILE_TYPE_DISK);
             }
         }
     }

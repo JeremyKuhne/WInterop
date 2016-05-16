@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Authentication;
 
 namespace WInterop.FileManagement
 {
@@ -18,7 +19,7 @@ namespace WInterop.FileManagement
         public FileAttributes dwFileAttributes;
         public FileFlags dwFileFlags;
         public SecurityQosFlags dwSecurityQosFlags;
-        public IntPtr lpSecurityAttributes;
+        unsafe public SECURITY_ATTRIBUTES* lpSecurityAttributes;
         public IntPtr hTemplateFile;
     }
 }

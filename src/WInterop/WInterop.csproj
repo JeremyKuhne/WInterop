@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiSets.cs" />
+    <Compile Include="Authentication\SECURITY_ATTRIBUTES.cs" />
     <Compile Include="Authentication\UNICODE_STRING.cs" />
     <Compile Include="Authorization\AccessTypes.cs" />
     <Compile Include="Authorization\ACCESS_MASK.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Handles\SafeHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="Handles\SafeHeapHandle.cs" />
     <Compile Include="Handles\SafeProcessHandle.cs" />
+    <Compile Include="Handles\SafeHandleStreamWrapper.cs" />
     <Compile Include="Handles\SafeThreadHandle.cs" />
     <Compile Include="Heap\NativeMethods.cs" />
     <Compile Include="Libraries.cs" />

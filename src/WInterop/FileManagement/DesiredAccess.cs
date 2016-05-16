@@ -13,7 +13,7 @@ using WInterop.Authorization;
 namespace WInterop.FileManagement
 {
     /// <summary>
-    /// System.IO.FileAccess looks up these values when
+    /// System.IO.FileAccess looks up these values when creating handles
     /// </summary>
     [Flags]
     public enum DesiredAccess : uint
@@ -25,6 +25,7 @@ namespace WInterop.FileManagement
         GENERIC_READ = AccessTypes.GENERIC_READ,
         GENERIC_WRITE = AccessTypes.GENERIC_WRITE,
         GENERIC_EXECUTE = AccessTypes.GENERIC_EXECUTE,
+        GENERIC_READWRITE = GENERIC_READ | GENERIC_WRITE,
 
         // File Access Rights Constants
         // https://msdn.microsoft.com/en-us/library/windows/desktop/gg258116.aspx
@@ -46,6 +47,7 @@ namespace WInterop.FileManagement
         FILE_ALL_ACCESS = AccessTypes.STANDARD_RIGHTS_REQUIRED | AccessTypes.SYNCHRONIZE | 0x1FF,
         FILE_GENERIC_READ = AccessTypes.STANDARD_RIGHTS_READ | FILE_READ_DATA | FILE_READ_ATTRIBUTES | FILE_READ_EA | AccessTypes.SYNCHRONIZE,
         FILE_GENERIC_WRITE = AccessTypes.STANDARD_RIGHTS_WRITE | FILE_WRITE_DATA | FILE_WRITE_ATTRIBUTES | FILE_WRITE_EA | FILE_APPEND_DATA | AccessTypes.SYNCHRONIZE,
+        FILE_GENERIC_READWRITE = FILE_GENERIC_READ | FILE_GENERIC_WRITE,
         FILE_GENERIC_EXECUTE = AccessTypes.STANDARD_RIGHTS_EXECUTE | FILE_READ_ATTRIBUTES | FILE_EXECUTE | AccessTypes.SYNCHRONIZE
     }
 }
