@@ -79,7 +79,6 @@
     <Compile Include="ErrorHandling\NativeMethods.cs" />
     <Compile Include="ErrorHandling\NTSTATUS.cs" />
     <Compile Include="ErrorHandling\WinErrors.cs" />
-    <Compile Include="FileManagement\BY_HANDLE_FILE_INFORMATION.cs" />
     <Compile Include="FileManagement\CopyFile2\ChunkFinished.cs" />
     <Compile Include="FileManagement\CopyFile2\ChunkStarted.cs" />
     <Compile Include="FileManagement\CopyFile2\CopyFile2ProgressRoutine.cs" />
@@ -114,7 +113,6 @@
     <Compile Include="FileManagement\FINDEX_SEARCH_OPS.cs" />
     <Compile Include="FileManagement\FindFirstFileExFlags.cs" />
     <Compile Include="FileManagement\FindResult.cs" />
-    <Compile Include="FileManagement\GetFinalPathNameByHandleFlags.cs" />
     <Compile Include="FileManagement\GET_FILEEX_INFO_LEVELS.cs" />
     <Compile Include="FileManagement\MoveMethod.cs" />
     <Compile Include="FileManagement\NativeMethods.cs" />

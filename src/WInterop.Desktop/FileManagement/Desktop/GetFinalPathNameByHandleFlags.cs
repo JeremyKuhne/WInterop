@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement
+namespace WInterop.FileManagement.Desktop
 {
     /// <summary>
     /// Flags used by the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364962.aspx">GetFinalPathNameByHandle</a> API.

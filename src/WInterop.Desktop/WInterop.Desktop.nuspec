@@ -13,8 +13,11 @@
     <releaseNotes>Initial prototype.</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>PInvoke Win32 WinRT</tags>
+    <dependencies>
+      <dependency id="WInterop" version="$version$" />
+    </dependencies>
   </metadata>
   <files>
-    <file src="$OutputPath$WInterop.dll" target="lib\portable-net46+win+dnxcore50+netcore50+uap10.0" />
+    <file src="$OutputPath$WInterop.Desktop.dll" target="lib\portable-net46+win+dnxcore50+netcore50+uap10.0" />
   </files>
 </package>

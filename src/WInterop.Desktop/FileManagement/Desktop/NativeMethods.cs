@@ -89,10 +89,11 @@ namespace WInterop.FileManagement.Desktop
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363866.aspx
             // Note that CreateSymbolicLinkW returns a BOOLEAN (byte), not a BOOL (int)
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern byte CreateSymbolicLinkW(
+            [return: MarshalAs(UnmanagedType.U1)]
+            public static extern bool CreateSymbolicLinkW(
                 string lpSymlinkFileName,
                 string lpTargetFileName,
-                uint dwFlags);
+                SYMBOLIC_LINK_FLAG dwFlags);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364021.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -136,14 +137,49 @@ namespace WInterop.FileManagement.Desktop
                 IntPtr pUsers);
         }
 
+        /// <summary>
+        /// Get the long (non 8.3) path version of the given path.
+        /// </summary>
         public static string GetLongPathName(string path)
         {
             return StringBufferCache.BufferInvoke((buffer) => Direct.GetLongPathNameW(path, buffer, buffer.CharCapacity));
         }
 
+        /// <summary>
+        /// Get the short (8.3) path version of the given path.
+        /// </summary>
         public static string GetShortPathName(string path)
         {
             return StringBufferCache.BufferInvoke((buffer) => Direct.GetShortPathNameW(path, buffer, buffer.CharCapacity));
+        }
+
+        /// <summary>
+        /// Gets a canonical version of the given handle's path.
+        /// </summary>
+        public static string GetFinalPathNameByHandle(SafeFileHandle fileHandle, GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED | GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+        {
+            return StringBufferCache.BufferInvoke((buffer) => Direct.GetFinalPathNameByHandleW(fileHandle, buffer, buffer.CharCapacity, flags));
+        }
+
+        /// <summary>
+        /// Gets the file information for the given handle.
+        /// </summary>
+        public static BY_HANDLE_FILE_INFORMATION GetFileInformationByHandle(SafeFileHandle fileHandle)
+        {
+            BY_HANDLE_FILE_INFORMATION fileInformation;
+            if (!Direct.GetFileInformationByHandle(fileHandle, out fileInformation))
+                throw ErrorHelper.GetIoExceptionForLastError();
+            return fileInformation;
+        }
+
+        /// <summary>
+        /// Creates symbolic links.
+        /// </summary>
+        public static void CreateSymbolicLink(string symbolicLinkPath, string targetPath, bool targetIsDirectory = false)
+        {
+            if (!Direct.CreateSymbolicLinkW(symbolicLinkPath, targetPath,
+                targetIsDirectory ? SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_DIRECTORY : SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_FILE))
+                throw ErrorHelper.GetIoExceptionForLastError(symbolicLinkPath);
         }
 
         /// <summary>

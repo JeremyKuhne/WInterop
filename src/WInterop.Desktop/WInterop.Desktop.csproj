@@ -30,6 +30,9 @@
   <ItemGroup>
     <None Include="project.json" />
     <None Include="..\WInterop.snk" />
+    <None Include="WInterop.Desktop.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
@@ -63,8 +66,11 @@
     <Compile Include="ErrorHandling\Desktop\MessageBeepType.cs" />
     <Compile Include="ErrorHandling\Desktop\NativeMethods.cs" />
     <Compile Include="ErrorHandling\Desktop\TemporaryErrorMode.cs" />
+    <Compile Include="FileManagement\Desktop\BY_HANDLE_FILE_INFORMATION.cs" />
     <Compile Include="FileManagement\Desktop\CopyProgressRoutine.cs" />
+    <Compile Include="FileManagement\Desktop\GetFinalPathNameByHandleFlags.cs" />
     <Compile Include="FileManagement\Desktop\NativeMethods.cs" />
+    <Compile Include="FileManagement\Desktop\SYMBOLIC_LINK_FLAG.cs" />
     <Compile Include="Handles\Desktop\FILE_INFORMATION_CLASS.cs" />
     <Compile Include="Handles\Desktop\IO_STATUS.cs" />
     <Compile Include="Handles\Desktop\IO_STATUS_BLOCK.cs" />
