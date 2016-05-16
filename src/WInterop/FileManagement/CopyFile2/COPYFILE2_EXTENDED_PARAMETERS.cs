@@ -6,9 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace WInterop.FileManagement.CopyFile2
 {
@@ -16,8 +14,9 @@ namespace WInterop.FileManagement.CopyFile2
     public struct COPYFILE2_EXTENDED_PARAMETERS
     {
         public uint dwSize;
-        public uint dwCopyFlags;
+        public CopyFileFlags dwCopyFlags;
         unsafe public int* pfCanel;
-        IntPtr pProgressRoutine;
+        public IntPtr pProgressRoutine;
+        public IntPtr pvCallbackContext;
     }
 }

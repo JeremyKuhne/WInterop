@@ -253,7 +253,7 @@ namespace WInterop.FileManagement
                         throw;
 
                     s_createFileDelegate = Delegates.CreateDelegate<CreateFileDelegate>(
-                        "WInterop.FileManagement.Desktop.CreateFileEx, WInterop.Desktop",
+                        "WInterop.FileManagement.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
                         "CreateFileW");
                 }
             }
@@ -296,14 +296,15 @@ namespace WInterop.FileManagement
 
         private delegate void CopyFileDelegate(
             string source,
-            string destination);
+            string destination,
+            bool overwrite);
 
         private static CopyFileDelegate s_copyFileDelegate;
 
         /// <summary>
         /// CopyFile wrapper that attempts to use CopyFile2 if running as Windows Store app.
         /// </summary>
-        public static void CopyFile(string source, string destination)
+        public static void CopyFile(string source, string destination, bool overwrite = false)
         {
             // Prefer CreateFile2, falling back to CreateFileEx if we can
             if (s_copyFileDelegate == null)
@@ -311,7 +312,7 @@ namespace WInterop.FileManagement
                 s_copyFileDelegate = CopyFile2;
                 try
                 {
-                    s_copyFileDelegate(source, destination);
+                    s_copyFileDelegate(source, destination, overwrite);
                     return;
                 }
                 catch (Exception exception)
@@ -320,23 +321,29 @@ namespace WInterop.FileManagement
                     if (!ErrorHelper.IsEntryPointNotFoundException(exception))
                         throw;
 
-                    s_createFileDelegate = Delegates.CreateDelegate<CreateFileDelegate>(
-                        "WInterop.FileManagement.Desktop.NativeMethods.CreateFileEx, WInterop.Desktop",
+                    s_copyFileDelegate = Delegates.CreateDelegate<CopyFileDelegate>(
+                        "WInterop.FileManagement.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
                         "CopyFileEx");
                 }
             }
 
-            s_copyFileDelegate(source, destination);
+            s_copyFileDelegate(source, destination, overwrite);
         }
 
         /// <summary>
         /// CopyFile2 wrapper. Only available on Windows8 and above.
         /// </summary>
-        public static void CopyFile2(string source, string destination)
+        public static void CopyFile2(string source, string destination, bool overwrite = false)
         {
             unsafe
             {
-                int hr = Direct.CopyFile2(source, destination, null);
+                int cancel = 0;
+                COPYFILE2_EXTENDED_PARAMETERS parameters = new COPYFILE2_EXTENDED_PARAMETERS();
+                parameters.dwSize = (uint)Marshal.SizeOf<COPYFILE2_EXTENDED_PARAMETERS>();
+                parameters.pfCanel = &cancel;
+                parameters.dwCopyFlags = overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS;
+
+                int hr = Direct.CopyFile2(source, destination, &parameters);
                 if (ErrorMacros.FAILED(hr))
                     throw ErrorHelper.GetIoExceptionForHResult(hr, source);
             }
