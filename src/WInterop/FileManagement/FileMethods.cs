@@ -18,7 +18,7 @@ using WInterop.Utility;
 
 namespace WInterop.FileManagement
 {
-    public static partial class NativeMethods
+    public static partial class FileMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -374,7 +374,12 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Creates a wrapper for finding files.
         /// </summary>
-        /// <param name="directoriesOnly">Attempts to filter to just directories where supported.</param>
+        /// <param name="path">
+        /// The search path. The path must not end in a directory separator. The final file/directory name (after the last
+        /// directory separator) can contain wildcards, the full details can be found at
+        /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
+        /// </param>
+        /// <aram name="directoriesOnly">Attempts to filter to just directories where supported.</param>
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
         public static FindOperation CreateFindOperation(
             string path,
@@ -412,7 +417,7 @@ namespace WInterop.FileManagement
         public static bool FileExists(string path)
         {
             var data = TryGetFileAttributes(path);
-            return data.HasValue && (data.Value.dwFileAttributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) != FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
+            return data.HasValue && (data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) != FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
         }
 
         /// <summary>
@@ -422,14 +427,14 @@ namespace WInterop.FileManagement
         public static bool DirectoryExists(string path)
         {
             var data = TryGetFileAttributes(path);
-            return data.HasValue && (data.Value.dwFileAttributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) == FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
+            return data.HasValue && (data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) == FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
         }
 
         /// <summary>
         /// Tries to get file attributes, returns null if the given path doesn't exist.
         /// </summary>
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
-        public static WIN32_FILE_ATTRIBUTE_DATA? TryGetFileAttributes(string path)
+        public static FileInfo? TryGetFileAttributes(string path)
         {
             WIN32_FILE_ATTRIBUTE_DATA data;
             if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out data))
@@ -446,9 +451,8 @@ namespace WInterop.FileManagement
                 }
             }
 
-            return data;
+            return new FileInfo(data);
         }
-
 
         /// <summary>
         /// Sets the file attributes for the given path.

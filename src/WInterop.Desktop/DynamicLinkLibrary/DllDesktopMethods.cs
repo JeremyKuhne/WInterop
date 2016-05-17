@@ -16,7 +16,7 @@ namespace WInterop.DynamicLinkLibrary
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class DesktopNativeMethods
+    public static class DllDesktopMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.

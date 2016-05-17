@@ -19,7 +19,10 @@ using WInterop.Handles.Desktop;
 
 namespace WInterop.Authorization
 {
-    public static partial class DesktopNativeMethods
+    /// <summary>
+    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
+    /// </summary>
+    public static partial class AuthorizationDesktopMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -270,7 +273,7 @@ namespace WInterop.Authorization
         public static SafeTokenHandle OpenProcessToken(TokenRights desiredAccess)
         {
             SafeTokenHandle processToken;
-            if (!Direct.OpenProcessToken(ProcessAndThreads.NativeMethods.Direct.GetCurrentProcess().DangerousGetHandle(), desiredAccess, out processToken))
+            if (!Direct.OpenProcessToken(ProcessAndThreads.ProcessAndThreadMethods.Direct.GetCurrentProcess().DangerousGetHandle(), desiredAccess, out processToken))
                 throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
@@ -279,7 +282,7 @@ namespace WInterop.Authorization
         public static SafeTokenHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
         {
             SafeTokenHandle threadToken;
-            if (!Direct.OpenThreadToken(ProcessAndThreads.NativeMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
+            if (!Direct.OpenThreadToken(ProcessAndThreads.ProcessAndThreadMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
             {
                 uint error = (uint)Marshal.GetLastWin32Error();
                 if (error != WinErrors.ERROR_NO_TOKEN)

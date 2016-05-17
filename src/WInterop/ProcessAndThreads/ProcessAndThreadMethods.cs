@@ -12,7 +12,7 @@ using WInterop.Handles;
 
 namespace WInterop.ProcessAndThreads
 {
-    public static class NativeMethods
+    public static class ProcessAndThreadMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.

@@ -20,7 +20,7 @@ namespace WInterop.Handles.Desktop
 
         protected override bool ReleaseHandle()
         {
-            ProcessAndThreads.DesktopNativeMethods.Direct.FreeEnvironmentStringsW(handle);
+            ProcessAndThreads.ProcessAndThreadDesktopMethods.Direct.FreeEnvironmentStringsW(handle);
             handle = IntPtr.Zero;
             return true;
         }

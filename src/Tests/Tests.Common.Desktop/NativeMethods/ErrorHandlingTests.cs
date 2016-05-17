@@ -19,7 +19,7 @@ namespace WInterop.DesktopTests.NativeMethodTests
         [Fact]
         public void BasicBeep()
         {
-            DesktopNativeMethods.Beep(frequency: 262, duration: 500);
+            ErrorDesktopMethods.Beep(frequency: 262, duration: 500);
         }
 
         [Theory
@@ -32,29 +32,29 @@ namespace WInterop.DesktopTests.NativeMethodTests
             ]
         public void BasicMessageBeep(MessageBeepType type)
         {
-            DesktopNativeMethods.MessageBeep(type);
+            ErrorDesktopMethods.MessageBeep(type);
         }
 
         [Fact]
         public void GetProcessErrorMode()
         {
-            ErrorMode mode = DesktopNativeMethods.GetProcessErrorMode();
+            ErrorMode mode = ErrorDesktopMethods.GetProcessErrorMode();
         }
 
         [Fact]
         public void BasicThreadErrorMode()
         {
-            ErrorMode mode = DesktopNativeMethods.GetThreadErrorMode();
+            ErrorMode mode = ErrorDesktopMethods.GetThreadErrorMode();
             ErrorMode newMode = mode ^ ErrorMode.SEM_NOOPENFILEERRORBOX;
-            ErrorMode oldMode = DesktopNativeMethods.SetThreadErrorMode(newMode);
+            ErrorMode oldMode = ErrorDesktopMethods.SetThreadErrorMode(newMode);
             try
             {
                 oldMode.Should().Be(mode);
-                DesktopNativeMethods.GetThreadErrorMode().Should().Be(newMode);
+                ErrorDesktopMethods.GetThreadErrorMode().Should().Be(newMode);
             }
             finally
             {
-                DesktopNativeMethods.SetThreadErrorMode(mode).Should().Be(newMode);
+                ErrorDesktopMethods.SetThreadErrorMode(mode).Should().Be(newMode);
             }
         }
     }

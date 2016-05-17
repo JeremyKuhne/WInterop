@@ -41,7 +41,7 @@ namespace WInterop.Tests.Support
                 FileHelper.CreateDirectoryRecursive(TempFolder);
 
                 // Create a flag file and leave it open- this way we can track and clean abandoned (crashed/terminated) processes
-                _flagFile = NativeMethods.CreateFileStream(flagFile,
+                _flagFile = FileMethods.CreateFileStream(flagFile,
                     DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW);
 
                 var writer = new StreamWriter(_flagFile);
@@ -79,7 +79,7 @@ namespace WInterop.Tests.Support
                         try
                         {
                             // If we can't delete the flag file (open handle) we'll throw and move on
-                            NativeMethods.DeleteFile(@"\\?\" + flagFile.File);
+                            FileMethods.DeleteFile(@"\\?\" + flagFile.File);
 
                             FileHelper.DeleteDirectoryRecursive(@"\\?\" + flagFile.Directory);
                         }
@@ -103,7 +103,7 @@ namespace WInterop.Tests.Support
         public string CreateTestFile(string content, string basePath = null)
         {
             string testFile = GetTestPath(basePath);
-            using (var stream = NativeMethods.CreateFileStream(testFile,
+            using (var stream = FileMethods.CreateFileStream(testFile,
                 DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
             {
                 using (var writer = new StreamWriter(stream))
@@ -154,7 +154,7 @@ namespace WInterop.Tests.Support
 
                     try
                     {
-                        NativeMethods.DeleteFile(@"\\?\" + file);
+                        FileMethods.DeleteFile(@"\\?\" + file);
                     }
                     catch (Exception)
                     {

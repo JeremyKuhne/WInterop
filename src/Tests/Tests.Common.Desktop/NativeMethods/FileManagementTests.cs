@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using WInterop.Authorization;
 using WInterop.Authorization.Desktop;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Desktop;
@@ -20,15 +21,15 @@ namespace WInterop.DesktopTests.NativeMethodTests
         [Fact]
         public void GetShortPathBasic()
         {
-            string tempPath = NativeMethods.GetTempPath();
-            DesktopNativeMethods.GetShortPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+            string tempPath = FileMethods.GetTempPath();
+            FileDesktopMethods.GetShortPathName(tempPath).Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void GetLongPathBasic()
         {
-            string tempPath = NativeMethods.GetTempPath();
-            DesktopNativeMethods.GetLongPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+            string tempPath = FileMethods.GetTempPath();
+            FileDesktopMethods.GetLongPathName(tempPath).Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -39,23 +40,23 @@ namespace WInterop.DesktopTests.NativeMethodTests
             {
                 string filePath = cleaner.CreateTestFile("FinalPathNameVolumeNameBehavior");
 
-                using (var handle = NativeMethods.CreateFile(filePath.ToLower(),
+                using (var handle = FileMethods.CreateFile(filePath.ToLower(),
                      DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
                     string extendedPath = @"\\?\" + filePath;
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedPath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedPath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
                         .Should().Be(extendedPath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
                         .Should().StartWith(@"\\?\Volume");
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
                         .Should().StartWith(@"\Device\");
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
                         .Should().Be(filePath.Substring(2));
                 }
             }
@@ -64,9 +65,9 @@ namespace WInterop.DesktopTests.NativeMethodTests
         private static bool CanCreateSymbolicLinks()
         {
             // Assuming that the current thread can replicate rights from the process
-            using (var processToken = Authorization.DesktopNativeMethods.OpenProcessToken(TokenRights.TOKEN_QUERY | TokenRights.TOKEN_READ))
+            using (var processToken = AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_QUERY | TokenRights.TOKEN_READ))
             {
-                return Authorization.DesktopNativeMethods.HasPrivilege(processToken, Privileges.SeCreateSymbolicLinkPrivilege);
+                return AuthorizationDesktopMethods.HasPrivilege(processToken, Privileges.SeCreateSymbolicLinkPrivilege);
             }
         }
 
@@ -85,26 +86,26 @@ namespace WInterop.DesktopTests.NativeMethodTests
 
                 string symbolicLink = Paths.Combine(cleaner.TempFolder, "Link");
                 string extendedLink = @"\\?\" + symbolicLink;
-                DesktopNativeMethods.CreateSymbolicLink(symbolicLink, filePath);
-                NativeMethods.FileExists(symbolicLink).Should().BeTrue("symbolic link should exist");
+                FileDesktopMethods.CreateSymbolicLink(symbolicLink, filePath);
+                FileMethods.FileExists(symbolicLink).Should().BeTrue("symbolic link should exist");
 
                 // GetFinalPathName should normalize the casing, pushing ToUpper to validate
-                using (var handle = NativeMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedPath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedPath);
                 }
 
-                using (var handle = NativeMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.FILE_GENERIC_READ,
+                using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.FILE_GENERIC_READ,
                     ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, FileAttributes.NONE, FileFlags.FILE_FLAG_OPEN_REPARSE_POINT))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedLink);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedLink);
                 }
             }
@@ -117,23 +118,23 @@ namespace WInterop.DesktopTests.NativeMethodTests
             {
                 string filePath = cleaner.CreateTestFile("FinalPathNameBehavior");
 
-                using (var handle = NativeMethods.CreateFile(filePath.ToLower(),
+                using (var handle = FileMethods.CreateFile(filePath.ToLower(),
                     DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
                     string extendedPath = @"\\?\" + filePath;
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedPath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedPath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
                         .Should().Be(extendedPath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
                         .Should().StartWith(@"\\?\Volume");
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
                         .Should().StartWith(@"\Device\");
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
                         .Should().Be(filePath.Substring(2));
                 }
             }
@@ -150,22 +151,22 @@ namespace WInterop.DesktopTests.NativeMethodTests
                 FileHelper.CreateDirectoryRecursive(longPath);
                 FileHelper.WriteAllText(filePath, "FinalPathNameLongPathPrefixRoundTripBehavior");
 
-                using (var handle = NativeMethods.CreateFile(filePath,
+                using (var handle = FileMethods.CreateFile(filePath,
                     DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(filePath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(filePath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
                         .Should().Be(filePath);
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
                         .Should().StartWith(@"\\?\Volume");
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
                         .Should().StartWith(@"\Device\");
-                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
                         .Should().Be(filePath.Substring(6));
                 }
             }

@@ -17,7 +17,7 @@ namespace WInterop.Handles.Desktop
 
         protected override bool ReleaseHandle()
         {
-            DynamicLinkLibrary.DesktopNativeMethods.FreeLibrary(handle);
+            DynamicLinkLibrary.DllDesktopMethods.FreeLibrary(handle);
             handle = IntPtr.Zero;
             return true;
         }

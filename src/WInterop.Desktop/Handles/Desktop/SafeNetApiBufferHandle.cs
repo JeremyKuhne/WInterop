@@ -23,7 +23,7 @@ namespace WInterop.Handles.Desktop
 
         protected override bool ReleaseHandle()
         {
-            NetworkManagement.DesktopNativeMethods.NetApiBufferFree(handle);
+            NetworkManagement.NetworkDesktopMethods.NetApiBufferFree(handle);
             handle = IntPtr.Zero;
             return true;
         }

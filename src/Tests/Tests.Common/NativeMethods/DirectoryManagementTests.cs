@@ -19,22 +19,22 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void GetCurrentDirectoryBasic()
         {
-            string currentDirectory = DirectoryManagement.NativeMethods.GetCurrentDirectory();
+            string currentDirectory = DirectoryManagement.DirectoryMethods.GetCurrentDirectory();
             currentDirectory.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void SetCurrentDirectoryBasic()
         {
-            string currentDirectory = DirectoryManagement.NativeMethods.GetCurrentDirectory();
+            string currentDirectory = DirectoryManagement.DirectoryMethods.GetCurrentDirectory();
 
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                DirectoryManagement.NativeMethods.SetCurrentDirectory(@"C:\");
-                DirectoryManagement.NativeMethods.GetCurrentDirectory().Should().Be(@"C:\");
+                DirectoryManagement.DirectoryMethods.SetCurrentDirectory(@"C:\");
+                DirectoryManagement.DirectoryMethods.GetCurrentDirectory().Should().Be(@"C:\");
             });
-            DirectoryManagement.NativeMethods.SetCurrentDirectory(currentDirectory);
-            DirectoryManagement.NativeMethods.GetCurrentDirectory().Should().Be(currentDirectory);
+            DirectoryManagement.DirectoryMethods.SetCurrentDirectory(currentDirectory);
+            DirectoryManagement.DirectoryMethods.GetCurrentDirectory().Should().Be(currentDirectory);
         }
 
         [Fact]
@@ -43,8 +43,8 @@ namespace WInterop.Tests.NativeMethodTests
             using (var temp = new TestFileCleaner())
             {
                 string directoryPath = temp.GetTestPath();
-                DirectoryManagement.NativeMethods.CreateDirectory(directoryPath);
-                using (var directory = NativeMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                DirectoryManagement.DirectoryMethods.CreateDirectory(directoryPath);
+                using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     directory.IsInvalid.Should().BeFalse();
@@ -58,18 +58,18 @@ namespace WInterop.Tests.NativeMethodTests
             using (var temp = new TestFileCleaner())
             {
                 string directoryPath = temp.GetTestPath();
-                DirectoryManagement.NativeMethods.CreateDirectory(directoryPath);
-                using (var directory = NativeMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                DirectoryManagement.DirectoryMethods.CreateDirectory(directoryPath);
+                using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
 
-                DirectoryManagement.NativeMethods.RemoveDirectory(directoryPath);
+                DirectoryManagement.DirectoryMethods.RemoveDirectory(directoryPath);
 
                 Action action = () =>
                 {
-                    using (var directory = NativeMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                    using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                         FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                     {
 

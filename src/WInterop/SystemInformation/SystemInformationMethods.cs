@@ -11,7 +11,7 @@ using System.Security;
 
 namespace WInterop.SystemInformation
 {
-    public static class NativeMethods
+    public static class SystemInformationMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.

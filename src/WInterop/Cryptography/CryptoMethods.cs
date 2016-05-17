@@ -16,7 +16,7 @@ using WInterop.Handles;
 
 namespace WInterop.Cryptography
 {
-    public static class NativeMethods
+    public static class CryptoMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.

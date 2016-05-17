@@ -17,8 +17,7 @@ namespace WInterop.Backup
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-
-    public static partial class DesktopNativeMethods
+    public static partial class BackupDesktopMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -55,7 +54,7 @@ namespace WInterop.Backup
         public static IEnumerable<BackupStreamInformation> GetAlternateStreamInformation(string path)
         {
             List<BackupStreamInformation> streams = new List<BackupStreamInformation>();
-            using (var fileHandle = FileManagement.NativeMethods.CreateFile(
+            using (var fileHandle = FileManagement.FileMethods.CreateFile(
                 path: path,
                 // To look at metadata we don't need read or write access
                 desiredAccess: 0,

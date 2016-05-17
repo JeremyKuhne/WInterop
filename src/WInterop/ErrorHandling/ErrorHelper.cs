@@ -34,7 +34,7 @@ namespace WInterop.ErrorHandling
             if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
             {
                 // Win32 Error, extract the code
-                message = NativeMethods.FormatMessage(
+                message = ErrorMethods.FormatMessage(
                     messageId: (uint)ErrorMacros.HRESULT_CODE(hr),
                     source: IntPtr.Zero,
                     flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
@@ -70,7 +70,7 @@ namespace WInterop.ErrorHandling
         {
             // http://referencesource.microsoft.com/#mscorlib/system/io/__error.cs,142
 
-            string message = $"{NativeMethods.LastErrorToString(error)} > '{path ?? WInteropStrings.NoValue}'";
+            string message = $"{ErrorMethods.LastErrorToString(error)} > '{path ?? WInteropStrings.NoValue}'";
             return WinErrorToException(error, message, path);
         }
 
@@ -86,7 +86,7 @@ namespace WInterop.ErrorHandling
                     return new NotImplementedException(path ?? WInteropStrings.NoValue);
             }
 
-            return GetIoExceptionForError(NativeMethods.NtStatusToWinError(status), path);
+            return GetIoExceptionForError(ErrorMethods.NtStatusToWinError(status), path);
         }
 
         private static Exception WinErrorToException(uint error, string message, string path)

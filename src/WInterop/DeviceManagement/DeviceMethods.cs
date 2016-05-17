@@ -11,7 +11,7 @@ using System.Security;
 
 namespace WInterop.DeviceManagement
 {
-    public static class NativeMethods
+    public static class DeviceMethods
     {
 
 

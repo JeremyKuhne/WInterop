@@ -19,10 +19,10 @@ namespace WInterop.ErrorHandling.Desktop
 
         private TemporaryErrorMode(ErrorMode modesToEnable)
         {
-            _oldMode = DesktopNativeMethods.GetThreadErrorMode();
+            _oldMode = ErrorDesktopMethods.GetThreadErrorMode();
             if ((_oldMode & modesToEnable) != modesToEnable)
             {
-                _oldMode = DesktopNativeMethods.SetThreadErrorMode(_oldMode | modesToEnable);
+                _oldMode = ErrorDesktopMethods.SetThreadErrorMode(_oldMode | modesToEnable);
                 _restoreOldMode = true;
             }
         }
@@ -40,7 +40,7 @@ namespace WInterop.ErrorHandling.Desktop
             if (_restoreOldMode)
             {
                 _restoreOldMode = false;
-                DesktopNativeMethods.SetThreadErrorMode(_oldMode);
+                ErrorDesktopMethods.SetThreadErrorMode(_oldMode);
             }
         }
     }

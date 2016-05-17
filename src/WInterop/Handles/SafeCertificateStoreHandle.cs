@@ -24,7 +24,7 @@ namespace WInterop.Handles
 
         protected override bool ReleaseHandle()
         {
-            Cryptography.NativeMethods.CloseStore(handle);
+            Cryptography.CryptoMethods.CloseStore(handle);
             handle = IntPtr.Zero;
             return true;
         }

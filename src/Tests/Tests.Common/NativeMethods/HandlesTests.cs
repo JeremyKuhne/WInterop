@@ -21,7 +21,7 @@ namespace WInterop.Tests.NativeMethodsTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var mountPointManager = FileManagement.NativeMethods.CreateFile(
+                using (var mountPointManager = FileManagement.FileMethods.CreateFile(
                     @"\\.\MountPointManager", 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL))
                 {
                     mountPointManager.IsInvalid.Should().BeFalse();

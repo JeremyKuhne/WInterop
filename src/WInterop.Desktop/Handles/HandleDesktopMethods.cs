@@ -17,7 +17,7 @@ using WInterop.Handles.Desktop;
 
 namespace WInterop.Handles
 {
-    public static class DesktopNativeMethods
+    public static class HandleDesktopMethods
     {
         // Windows Kernel Architecture Internals
         // http://research.microsoft.com/en-us/um/redmond/events/wincore2010/Dave_Probert_1.pdf

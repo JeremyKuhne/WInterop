@@ -6,12 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using WInterop.ErrorHandling;
 
 namespace WInterop.FileManagement
@@ -32,6 +28,11 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Encapsulates a find operation. Does not take a trailing separator.
         /// </summary>
+        /// <param name="path">
+        /// The search path. The path must not end in a directory separator. The final file/directory name (after the last
+        /// directory separator) can contain wildcards, the full details can be found at
+        /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
+        /// </param>
         /// <param name="directoriesOnly">Attempts to filter to just directories where supported.</param>
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
         public FindOperation(
@@ -70,7 +71,7 @@ namespace WInterop.FileManagement
             bool getAlternateName = false)
         {
             WIN32_FIND_DATA findData;
-            IntPtr handle = NativeMethods.Direct.FindFirstFileExW(
+            IntPtr handle = FileMethods.Direct.FindFirstFileExW(
                 path,
                 getAlternateName ? FINDEX_INFO_LEVELS.FindExInfoStandard : FINDEX_INFO_LEVELS.FindExInfoBasic,
                 out findData,
@@ -94,7 +95,7 @@ namespace WInterop.FileManagement
         private FindResult FindNextFile(FindResult priorResult)
         {
             WIN32_FIND_DATA findData;
-            if (!NativeMethods.Direct.FindNextFileW(priorResult.FindHandle, out findData))
+            if (!FileMethods.Direct.FindNextFileW(priorResult.FindHandle, out findData))
             {
                 uint error = (uint)Marshal.GetLastWin32Error();
                 if (error == WinErrors.ERROR_NO_MORE_FILES)
@@ -114,7 +115,7 @@ namespace WInterop.FileManagement
         protected void Dispose(bool disposing)
         {
             if (_findHandle != IntPtr.Zero)
-                NativeMethods.Direct.FindClose(_findHandle);
+                FileMethods.Direct.FindClose(_findHandle);
         }
 
         ~FindOperation()

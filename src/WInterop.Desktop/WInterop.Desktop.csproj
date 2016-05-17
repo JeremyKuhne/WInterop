@@ -38,7 +38,7 @@
   <ItemGroup>
     <Compile Include="Authorization\Desktop\LUID.cs" />
     <Compile Include="Authorization\Desktop\LUID_AND_ATTRIBUTES.cs" />
-    <Compile Include="Authorization\DesktopNativeMethods.cs" />
+    <Compile Include="Authorization\AuthorizationDesktopMethods.cs" />
     <Compile Include="Authorization\Desktop\PrivilegeAttributes.cs" />
     <Compile Include="Authorization\Desktop\Privileges.cs" />
     <Compile Include="Authorization\Desktop\PrivilegeSetting.cs" />
@@ -50,31 +50,31 @@
     <Compile Include="Authorization\Desktop\TOKEN_TYPE.cs" />
     <Compile Include="Backup\Desktop\BackupReader.cs" />
     <Compile Include="Backup\Desktop\BackupStreamType.cs" />
-    <Compile Include="Backup\DesktopNativeMethods.cs" />
+    <Compile Include="Backup\BackupDesktopMethods.cs" />
     <Compile Include="Backup\Desktop\StreamAttributes.cs" />
     <Compile Include="Backup\Desktop\BackupStreamInformation.cs" />
     <Compile Include="Backup\Desktop\WIN32_STREAM_ID.cs" />
-    <Compile Include="Cryptography\DesktopNativeMethods.cs" />
+    <Compile Include="Cryptography\CryptoDesktopMethods.cs" />
     <Compile Include="DeviceManagement\Desktop\ControlCodeAccess.cs" />
     <Compile Include="DeviceManagement\Desktop\ControlCodeDeviceType.cs" />
     <Compile Include="DeviceManagement\Desktop\ControlCodeMethod.cs" />
     <Compile Include="DeviceManagement\Desktop\DeviceMacros.cs" />
-    <Compile Include="DeviceManagement\DesktopNativeMethods.cs" />
+    <Compile Include="DeviceManagement\DeviceDesktopMethods.cs" />
     <Compile Include="DynamicLinkLibrary\Desktop\LoadLibraryFlags.cs" />
-    <Compile Include="DynamicLinkLibrary\DesktopNativeMethods.cs" />
+    <Compile Include="DynamicLinkLibrary\DllDesktopMethods.cs" />
     <Compile Include="ErrorHandling\Desktop\ErrorMode.cs" />
     <Compile Include="ErrorHandling\Desktop\MessageBeepType.cs" />
-    <Compile Include="ErrorHandling\NativeMethods.cs" />
+    <Compile Include="ErrorHandling\ErrorDesktopMethods.cs" />
     <Compile Include="ErrorHandling\Desktop\TemporaryErrorMode.cs" />
     <Compile Include="FileManagement\Desktop\BY_HANDLE_FILE_INFORMATION.cs" />
     <Compile Include="FileManagement\Desktop\CopyProgressRoutine.cs" />
     <Compile Include="FileManagement\Desktop\GetFinalPathNameByHandleFlags.cs" />
-    <Compile Include="FileManagement\DesktopNativeMethods.cs" />
+    <Compile Include="FileManagement\FileDesktopMethods.cs" />
     <Compile Include="FileManagement\Desktop\SYMBOLIC_LINK_FLAG.cs" />
     <Compile Include="Handles\Desktop\FILE_INFORMATION_CLASS.cs" />
     <Compile Include="Handles\Desktop\IO_STATUS.cs" />
     <Compile Include="Handles\Desktop\IO_STATUS_BLOCK.cs" />
-    <Compile Include="Handles\DesktopNativeMethods.cs" />
+    <Compile Include="Handles\HandleDesktopMethods.cs" />
     <Compile Include="Handles\Desktop\ObjectInformation.cs" />
     <Compile Include="Handles\Desktop\OBJECT_ATTRIBUTES.cs" />
     <Compile Include="Handles\Desktop\OBJECT_BASIC_INFORMATION.cs" />
@@ -88,14 +88,14 @@
     <Compile Include="Handles\Desktop\SafeSymbolicLinkObjectHandle.cs" />
     <Compile Include="Handles\Desktop\SafeTokenHandle.cs" />
     <Compile Include="NetworkManagement\Desktop\MemberInfo.cs" />
-    <Compile Include="NetworkManagement\DesktopNativeMethods.cs" />
-    <Compile Include="ProcessAndThreads\DesktopNativeMethods.cs" />
+    <Compile Include="NetworkManagement\NetworkDesktopMethods.cs" />
+    <Compile Include="ProcessAndThreads\ProcessAndThreadDesktopMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SecurityManagement\DesktopNativeMethods.cs" />
-    <Compile Include="Strings\DesktopNativeMethods.cs" />
+    <Compile Include="SecurityManagement\SecurityDesktopMethods.cs" />
+    <Compile Include="Strings\StringDesktopMethods.cs" />
     <Compile Include="VolumeManagement\Desktop\DriveType.cs" />
     <Compile Include="VolumeManagement\Desktop\FileSystemFeature.cs" />
-    <Compile Include="VolumeManagement\DesktopNativeMethods.cs" />
+    <Compile Include="VolumeManagement\VolumeDesktopMethods.cs" />
     <Compile Include="VolumeManagement\Desktop\VolumeInformation.cs" />
   </ItemGroup>
   <ItemGroup>

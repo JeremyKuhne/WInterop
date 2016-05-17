@@ -14,7 +14,7 @@ using WInterop.Buffers;
 
 namespace WInterop.ErrorHandling
 {
-    public static class NativeMethods
+    public static class ErrorMethods
     {
         // All defines referenced in this file are from winerror.h unless otherwise specified
 

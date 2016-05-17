@@ -17,7 +17,7 @@ namespace WInterop.DeviceManagement
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class DesktopNativeMethods
+    public static class DeviceDesktopMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -44,7 +44,7 @@ namespace WInterop.DeviceManagement
         // Access to the MountPointManager is denied for store apps
         public static string QueryDosVolumePath(string volume)
         {
-            var mountManager = FileManagement.NativeMethods.CreateFile(
+            var mountManager = FileManagement.FileMethods.CreateFile(
                 @"\\?\MountPointManager", 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, WInterop.FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL);
 
             uint controlCode = DeviceMacros.CTL_CODE(ControlCodeDeviceType.MOUNTMGRCONTROLTYPE, 12, ControlCodeMethod.METHOD_BUFFERED, ControlCodeAccess.FILE_ANY_ACCESS);

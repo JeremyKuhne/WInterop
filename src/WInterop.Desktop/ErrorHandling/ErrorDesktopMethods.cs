@@ -10,7 +10,7 @@ using WInterop.ErrorHandling.Desktop;
 
 namespace WInterop.ErrorHandling
 {
-    public static class DesktopNativeMethods
+    public static class ErrorDesktopMethods
     {
         // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
         public static class Direct
