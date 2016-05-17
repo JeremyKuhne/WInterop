@@ -81,6 +81,20 @@ namespace WInterop.Utility
         }
 
         /// <summary>
+        /// Returns true if the path ends in a directory separator.
+        /// </summary>
+        public static bool EndsInDirectorySeparator(StringBuilder path)
+        {
+            if (path == null || path.Length == 0)
+            {
+                return false;
+            }
+
+            char lastChar = path[path.Length - 1];
+            return IsDirectorySeparator(lastChar);
+        }
+
+        /// <summary>
         /// Returns true if the given character is a directory separator.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -151,6 +165,29 @@ namespace WInterop.Utility
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Combines two string builders into the first string builder, adding a directory separator between if needed.
+        /// Does not validate path characters.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="path1"/> is null.</exception>
+        public static void Combine(StringBuilder path1, string path2)
+        {
+            if (path1 == null) throw new ArgumentNullException(nameof(path1));
+
+            // Add nothing to something is something
+            if (path2 == null || path2.Length == 0) return;
+
+            if (!EndsInDirectorySeparator(path1) && !BeginsWithDirectorySeparator(path2))
+            {
+                path1.Append(DirectorySeparator);
+                path1.Append(path2);
+            }
+            else
+            {
+                path1.Append(path2);
+            }
         }
     }
 }

@@ -113,6 +113,7 @@
     <Compile Include="FileManagement\FINDEX_INFO_LEVELS.cs" />
     <Compile Include="FileManagement\FINDEX_SEARCH_OPS.cs" />
     <Compile Include="FileManagement\FindFirstFileExFlags.cs" />
+    <Compile Include="FileManagement\FindOperation.cs" />
     <Compile Include="FileManagement\FindResult.cs" />
     <Compile Include="FileManagement\GET_FILEEX_INFO_LEVELS.cs" />
     <Compile Include="FileManagement\MoveMethod.cs" />
@@ -131,7 +132,6 @@
     <Compile Include="Handles\SafeCertificateStoreHandle.cs" />
     <Compile Include="Handles\SafeCloseHandle.cs" />
     <Compile Include="Handles\SafeFileHandle.cs" />
-    <Compile Include="Handles\SafeFindHandle.cs" />
     <Compile Include="Handles\SafeHandleZeroIsInvalid.cs" />
     <Compile Include="Handles\SafeHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="Handles\SafeHeapHandle.cs" />

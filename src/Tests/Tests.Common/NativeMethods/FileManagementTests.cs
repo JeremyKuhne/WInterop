@@ -322,7 +322,10 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void FindFirstFileNoFiles()
         {
-            NativeMethods.FindFirstFile(FileManagement.NativeMethods.GetTempPath() + System.IO.Path.GetRandomFileName()).Should().BeNull();
+            using (var find = NativeMethods.CreateFindOperation(NativeMethods.GetTempPath() + System.IO.Path.GetRandomFileName()))
+            {
+                find.GetNextResult().Should().BeNull();
+            }
         }
 
         [Fact]
@@ -332,14 +335,18 @@ namespace WInterop.Tests.NativeMethodTests
             {
                 string subdir = System.IO.Path.Combine(temp.TempFolder, "Subdir");
                 DirectoryManagement.NativeMethods.CreateDirectory(subdir);
-                var foundFile = NativeMethods.FindFirstFile(subdir + @"\*");
-                foundFile.Should().NotBeNull();
-                foundFile.FileName.Should().Be(".");
-                foundFile = NativeMethods.FindNextFile(foundFile);
-                foundFile.Should().NotBeNull();
-                foundFile.FileName.Should().Be("..");
-                foundFile = NativeMethods.FindNextFile(foundFile);
-                foundFile.Should().BeNull();
+
+                using (var find = NativeMethods.CreateFindOperation(subdir + @"\*"))
+                {
+                    var foundFile = find.GetNextResult();
+                    foundFile.Should().NotBeNull();
+                    foundFile.FileName.Should().Be(".");
+                    foundFile = find.GetNextResult();
+                    foundFile.Should().NotBeNull();
+                    foundFile.FileName.Should().Be("..");
+                    foundFile = find.GetNextResult();
+                    foundFile.Should().BeNull();
+                }
             }
         }
 

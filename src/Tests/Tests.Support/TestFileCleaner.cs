@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using WInterop.FileManagement;
@@ -17,7 +18,7 @@ namespace WInterop.Tests.Support
     {
         protected const string WinteropFlagFileName = @"%WinteropFlagFile%";
         protected ConcurrentBag<string> _filesToClean = new ConcurrentBag<string>();
-        private StreamWriter _flagFile;
+        private Stream _flagFile;
         private static string s_rootTempFolder;
         private static object s_CleanLock;
 
@@ -37,17 +38,19 @@ namespace WInterop.Tests.Support
             lock (s_CleanLock)
             {
                 // Make sure we fully lock the directory before allowing cleaning
-                Directory.CreateDirectory(TempFolder);
+                FileHelper.CreateDirectoryRecursive(TempFolder);
 
                 // Create a flag file and leave it open- this way we can track and clean abandoned (crashed/terminated) processes
-                FileStream flagStream = new FileStream(flagFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
-                _flagFile = new StreamWriter(flagStream);
-                _flagFile.WriteLine("Temporary Flag File");
-                _flagFile.Flush();
+                _flagFile = NativeMethods.CreateFileStream(flagFile,
+                    DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW);
+
+                var writer = new StreamWriter(_flagFile);
+                writer.WriteLine("Temporary Flag File");
+                writer.Flush();
             }
         }
 
-        public string TempFolder { get; private set; }
+        public string TempFolder { [DebuggerStepThrough] get; private set; }
 
         public void TrackFile(string path)
         {
@@ -76,9 +79,9 @@ namespace WInterop.Tests.Support
                         try
                         {
                             // If we can't delete the flag file (open handle) we'll throw and move on
-                            File.Delete(flagFile.File);
+                            NativeMethods.DeleteFile(@"\\?\" + flagFile.File);
 
-                            Directory.Delete(flagFile.Directory, recursive: true);
+                            FileHelper.DeleteDirectoryRecursive(@"\\?\" + flagFile.Directory);
                         }
                         catch (Exception)
                         {
@@ -103,7 +106,7 @@ namespace WInterop.Tests.Support
             using (var stream = NativeMethods.CreateFileStream(testFile,
                 DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
             {
-                using (var writer = new System.IO.StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
                     writer.Write(content);
                 }
@@ -138,7 +141,7 @@ namespace WInterop.Tests.Support
                 // Delete our own temp folder
                 try
                 {
-                    Directory.Delete(TempFolder, recursive: true);
+                    FileHelper.DeleteDirectoryRecursive(@"\\?\" + TempFolder);
                 }
                 catch (Exception)
                 {
@@ -151,7 +154,7 @@ namespace WInterop.Tests.Support
 
                     try
                     {
-                        File.Delete(file);
+                        NativeMethods.DeleteFile(@"\\?\" + file);
                     }
                     catch (Exception)
                     {

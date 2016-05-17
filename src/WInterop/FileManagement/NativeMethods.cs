@@ -69,7 +69,7 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern SafeFindHandle FindFirstFileExW(
+            public static extern IntPtr FindFirstFileExW(
                     string lpFileName,
                     FINDEX_INFO_LEVELS fInfoLevelId,
                     out WIN32_FIND_DATA lpFindFileData,
@@ -81,7 +81,7 @@ namespace WInterop.FileManagement
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool FindNextFileW(
-                SafeFindHandle hFindFile,
+                IntPtr hFindFile,
                 out WIN32_FIND_DATA lpFindFileData);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364413.aspx (kernel32)
@@ -372,51 +372,16 @@ namespace WInterop.FileManagement
         }
 
         /// <summary>
-        /// Finds the first file in a file search. Does not take a trailing separator. Returns null if there are no matches.
+        /// Creates a wrapper for finding files.
         /// </summary>
         /// <param name="directoriesOnly">Attempts to filter to just directories where supported.</param>
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
-        public static FindResult FindFirstFile(
+        public static FindOperation CreateFindOperation(
             string path,
             bool directoriesOnly = false,
             bool getAlternateName = false)
         {
-            WIN32_FIND_DATA findData;
-            SafeFindHandle handle = Direct.FindFirstFileExW(
-                path,
-                getAlternateName ? FINDEX_INFO_LEVELS.FindExInfoStandard : FINDEX_INFO_LEVELS.FindExInfoBasic,
-                out findData,
-                // FINDEX_SEARCH_OPS.FindExSearchNameMatch is what FindFirstFile calls Ex wtih
-                directoriesOnly ? FINDEX_SEARCH_OPS.FindExSearchLimitToDirectories : FINDEX_SEARCH_OPS.FindExSearchNameMatch,
-                IntPtr.Zero,
-                FindFirstFileExFlags.FIND_FIRST_EX_LARGE_FETCH);
-
-            if (handle.IsInvalid)
-            {
-                uint error = (uint)Marshal.GetLastWin32Error();
-                if (error == WinErrors.ERROR_FILE_NOT_FOUND)
-                    return null;
-                throw ErrorHelper.GetIoExceptionForLastError(path);
-            }
-
-            return new FindResult(handle, findData, path);
-        }
-
-        /// <summary>
-        /// Finds the next file for a given search operation.
-        /// </summary>
-        public static FindResult FindNextFile(FindResult priorResult)
-        {
-            WIN32_FIND_DATA findData;
-            if (!Direct.FindNextFileW(priorResult.FindHandle, out findData))
-            {
-                uint error = (uint)Marshal.GetLastWin32Error();
-                if (error == WinErrors.ERROR_NO_MORE_FILES)
-                    return null;
-                throw ErrorHelper.GetIoExceptionForLastError(priorResult.OriginalPath);
-            }
-
-            return new FindResult(priorResult.FindHandle, findData, priorResult.OriginalPath);
+            return new FindOperation(path, directoriesOnly, getAlternateName);
         }
 
         /// <summary>
@@ -430,6 +395,60 @@ namespace WInterop.FileManagement
 
             return new FileInfo(data);
         }
+
+        /// <summary>
+        /// Simple wrapper to check if a given path exists.
+        /// </summary>
+        /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
+        public static bool PathExists(string path)
+        {
+            return TryGetFileAttributes(path).HasValue;
+        }
+
+        /// <summary>
+        /// Simple wrapper to check if a given path exists and is a file.
+        /// </summary>
+        /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
+        public static bool FileExists(string path)
+        {
+            var data = TryGetFileAttributes(path);
+            return data.HasValue && (data.Value.dwFileAttributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) != FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
+        }
+
+        /// <summary>
+        /// Simple wrapper to check if a given path exists and is a directory.
+        /// </summary>
+        /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
+        public static bool DirectoryExists(string path)
+        {
+            var data = TryGetFileAttributes(path);
+            return data.HasValue && (data.Value.dwFileAttributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) == FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
+        }
+
+        /// <summary>
+        /// Tries to get file attributes, returns null if the given path doesn't exist.
+        /// </summary>
+        /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
+        public static WIN32_FILE_ATTRIBUTE_DATA? TryGetFileAttributes(string path)
+        {
+            WIN32_FILE_ATTRIBUTE_DATA data;
+            if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out data))
+            {
+                uint error = (uint)Marshal.GetLastWin32Error();
+                switch (error)
+                {
+                    case WinErrors.ERROR_ACCESS_DENIED:
+                    case WinErrors.ERROR_NETWORK_ACCESS_DENIED:
+                        throw ErrorHelper.GetIoExceptionForError(error, path);
+                    case WinErrors.ERROR_PATH_NOT_FOUND:
+                    default:
+                        return null;
+                }
+            }
+
+            return data;
+        }
+
 
         /// <summary>
         /// Sets the file attributes for the given path.
