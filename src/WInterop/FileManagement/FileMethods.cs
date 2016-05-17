@@ -271,7 +271,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Wrapper that allows using System.IO defines where available. Calls CreateFile2 if available.
         /// </summary>
-        public static SafeHandle CreateFile(
+        public static SafeFileHandle CreateFile(
             string path,
             System.IO.FileAccess fileAccess,
             System.IO.FileShare fileShare,
@@ -452,7 +452,7 @@ namespace WInterop.FileManagement
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
         public static bool PathExists(string path)
         {
-            return TryGetFileAttributes(path).HasValue;
+            return TryGetFileInfo(path).HasValue;
         }
 
         /// <summary>
@@ -461,7 +461,7 @@ namespace WInterop.FileManagement
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
         public static bool FileExists(string path)
         {
-            var data = TryGetFileAttributes(path);
+            var data = TryGetFileInfo(path);
             return data.HasValue && (data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) != FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
         }
 
@@ -471,15 +471,15 @@ namespace WInterop.FileManagement
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
         public static bool DirectoryExists(string path)
         {
-            var data = TryGetFileAttributes(path);
+            var data = TryGetFileInfo(path);
             return data.HasValue && (data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) == FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
         }
 
         /// <summary>
-        /// Tries to get file attributes, returns null if the given path doesn't exist.
+        /// Tries to get file info, returns null if the given path doesn't exist.
         /// </summary>
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
-        public static FileInfo? TryGetFileAttributes(string path)
+        public static FileInfo? TryGetFileInfo(string path)
         {
             WIN32_FILE_ATTRIBUTE_DATA data;
             if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out data))

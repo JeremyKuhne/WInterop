@@ -36,7 +36,7 @@ namespace WInterop.Tests.Support
 
         public static void DeleteDirectoryRecursive(string path)
         {
-            var data = FileMethods.TryGetFileAttributes(path);
+            var data = FileMethods.TryGetFileInfo(path);
             if (!data.HasValue)
             {
                 // Nothing found
