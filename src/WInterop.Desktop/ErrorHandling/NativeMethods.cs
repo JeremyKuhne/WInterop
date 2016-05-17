@@ -6,11 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.Desktop;
 
-namespace WInterop.ErrorHandling.Desktop
+namespace WInterop.ErrorHandling
 {
-    public static class NativeMethods
+    public static class DesktopNativeMethods
     {
         // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
         public static class Direct

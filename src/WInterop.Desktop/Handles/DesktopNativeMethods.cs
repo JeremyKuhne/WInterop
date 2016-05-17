@@ -13,10 +13,11 @@ using WInterop.Authentication;
 using WInterop.Authorization;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
+using WInterop.Handles.Desktop;
 
-namespace WInterop.Handles.Desktop
+namespace WInterop.Handles
 {
-    public static class NativeMethods
+    public static class DesktopNativeMethods
     {
         // Windows Kernel Architecture Internals
         // http://research.microsoft.com/en-us/um/redmond/events/wincore2010/Dave_Probert_1.pdf

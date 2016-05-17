@@ -7,12 +7,12 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.SecurityManagement.Desktop
+namespace WInterop.SecurityManagement
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class NativeMethods
+    public static class DesktopNativeMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.

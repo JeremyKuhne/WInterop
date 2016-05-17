@@ -25,10 +25,10 @@ namespace WInterop.Backup.Desktop
             _fileHandle = fileHandle;
         }
 
-        public StreamInformation? GetNextInfo()
+        public BackupStreamInformation? GetNextInfo()
         {
             uint bytesRead;
-            if (!NativeMethods.Direct.BackupRead(
+            if (!DesktopNativeMethods.Direct.BackupRead(
                 hFile: _fileHandle,
                 lpBuffer: _buffer,
                 nNumberOfBytesToRead: WIN32_STREAM_ID_SIZE,
@@ -48,7 +48,7 @@ namespace WInterop.Backup.Desktop
             if (streamId.dwStreamNameSize > 0)
             {
                 _buffer.EnsureByteCapacity(streamId.dwStreamNameSize);
-                if (!NativeMethods.Direct.BackupRead(
+                if (!DesktopNativeMethods.Direct.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: _buffer,
                     nNumberOfBytesToRead: streamId.dwStreamNameSize,
@@ -66,7 +66,7 @@ namespace WInterop.Backup.Desktop
             {
                 // Move to the next header, if any
                 uint low, high;
-                if (!NativeMethods.Direct.BackupSeek(
+                if (!DesktopNativeMethods.Direct.BackupSeek(
                     hFile: _fileHandle,
                     dwLowBytesToSeek: uint.MaxValue,
                     dwHighBytesToSeek: int.MaxValue,
@@ -82,7 +82,7 @@ namespace WInterop.Backup.Desktop
                 }
             }
 
-            return new StreamInformation
+            return new BackupStreamInformation
             {
                 Name = name,
                 StreamType = streamId.dwStreamId,
@@ -104,7 +104,7 @@ namespace WInterop.Backup.Desktop
             if (_context != IntPtr.Zero)
             {
                 uint bytesRead;
-                if (!NativeMethods.Direct.BackupRead(
+                if (!DesktopNativeMethods.Direct.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: EmptySafeHandle.Instance,
                     nNumberOfBytesToRead: 0,

@@ -10,7 +10,7 @@ namespace WInterop.Backup.Desktop
     /// <summary>
     /// Basic information about a stream
     /// </summary>
-    public struct StreamInformation
+    public struct BackupStreamInformation
     {
         /// <summary>
         /// Name of the alternate stream

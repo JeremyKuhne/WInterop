@@ -10,13 +10,14 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.Handles.Desktop;
+using WInterop.NetworkManagement.Desktop;
 
-namespace WInterop.NetworkManagement.Desktop
+namespace WInterop.NetworkManagement
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static partial class NativeMethods
+    public static partial class DesktopNativeMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.

@@ -8,16 +8,17 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using WInterop.Backup.Desktop;
 using WInterop.FileManagement;
 using WInterop.Handles;
 
-namespace WInterop.Backup.Desktop
+namespace WInterop.Backup
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
 
-    public static partial class NativeMethods
+    public static partial class DesktopNativeMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -51,9 +52,9 @@ namespace WInterop.Backup.Desktop
                 ref IntPtr context);
         }
 
-        public static IEnumerable<StreamInformation> GetAlternateStreamInformation(string path)
+        public static IEnumerable<BackupStreamInformation> GetAlternateStreamInformation(string path)
         {
-            List<StreamInformation> streams = new List<StreamInformation>();
+            List<BackupStreamInformation> streams = new List<BackupStreamInformation>();
             using (var fileHandle = FileManagement.NativeMethods.CreateFile(
                 path: path,
                 // To look at metadata we don't need read or write access
@@ -65,12 +66,12 @@ namespace WInterop.Backup.Desktop
             {
                 using (BackupReader reader = new BackupReader(fileHandle))
                 {
-                    StreamInformation? info;
+                    BackupStreamInformation? info;
                     while ((info = reader.GetNextInfo()).HasValue)
                     {
                         if (info.Value.StreamType == BackupStreamType.BACKUP_ALTERNATE_DATA)
                         {
-                            streams.Add(new StreamInformation { Name = info.Value.Name, Size = info.Value.Size });
+                            streams.Add(new BackupStreamInformation { Name = info.Value.Name, Size = info.Value.Size });
                         }
                     }
                 }

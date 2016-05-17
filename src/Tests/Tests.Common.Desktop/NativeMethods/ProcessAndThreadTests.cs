@@ -16,21 +16,21 @@ namespace WInterop.DesktopTests.NativeMethodTests
         [Fact]
         public void GetNullStringThrows()
         {
-            Action action = () => ProcessAndThreads.Desktop.NativeMethods.GetEnvironmentVariable(null);
+            Action action = () => ProcessAndThreads.DesktopNativeMethods.GetEnvironmentVariable(null);
             action.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
         public void SetNullStringThrows()
         {
-            Action action = () => ProcessAndThreads.Desktop.NativeMethods.SetEnvironmentVariable(null, "invalid");
+            Action action = () => ProcessAndThreads.DesktopNativeMethods.SetEnvironmentVariable(null, "invalid");
             action.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
         public void SetEmptyStringNotValid()
         {
-            Action action = () => ProcessAndThreads.Desktop.NativeMethods.SetEnvironmentVariable("", "invalid");
+            Action action = () => ProcessAndThreads.DesktopNativeMethods.SetEnvironmentVariable("", "invalid");
             action.ShouldThrow<ArgumentException>();
         }
 
@@ -42,7 +42,7 @@ namespace WInterop.DesktopTests.NativeMethodTests
         {
             // Anything past the first character in the name isn't allowed to be an equals character.
             // If this does change we'd need to change the logic in GetEnvironmentVariables().
-            Action action = () => ProcessAndThreads.Desktop.NativeMethods.SetEnvironmentVariable(name, "invalid");
+            Action action = () => ProcessAndThreads.DesktopNativeMethods.SetEnvironmentVariable(name, "invalid");
             action.ShouldThrow<ArgumentException>();
         }
 
@@ -54,10 +54,10 @@ namespace WInterop.DesktopTests.NativeMethodTests
         public void BasicGetSetEnvironmentVariable(string prefix)
         {
             string name = prefix + System.IO.Path.GetRandomFileName();
-            ProcessAndThreads.Desktop.NativeMethods.SetEnvironmentVariable(name, "BasicGetSetEnvironmentVariable");
-            ProcessAndThreads.Desktop.NativeMethods.GetEnvironmentVariable(name).Should().Be("BasicGetSetEnvironmentVariable");
-            ProcessAndThreads.Desktop.NativeMethods.SetEnvironmentVariable(name, null);
-            ProcessAndThreads.Desktop.NativeMethods.GetEnvironmentVariable(name).Should().BeNull();
+            ProcessAndThreads.DesktopNativeMethods.SetEnvironmentVariable(name, "BasicGetSetEnvironmentVariable");
+            ProcessAndThreads.DesktopNativeMethods.GetEnvironmentVariable(name).Should().Be("BasicGetSetEnvironmentVariable");
+            ProcessAndThreads.DesktopNativeMethods.SetEnvironmentVariable(name, null);
+            ProcessAndThreads.DesktopNativeMethods.GetEnvironmentVariable(name).Should().BeNull();
         }
 
         [Theory
@@ -68,14 +68,14 @@ namespace WInterop.DesktopTests.NativeMethodTests
         public void BasicListEnvironmentVariables(string prefix)
         {
             string name = System.IO.Path.GetRandomFileName();
-            ProcessAndThreads.Desktop.NativeMethods.SetEnvironmentVariable(name, "test");
-            ProcessAndThreads.Desktop.NativeMethods.GetEnvironmentVariable(name).Should().Be("test");
-            var variables = ProcessAndThreads.Desktop.NativeMethods.GetEnvironmentVariables();
+            ProcessAndThreads.DesktopNativeMethods.SetEnvironmentVariable(name, "test");
+            ProcessAndThreads.DesktopNativeMethods.GetEnvironmentVariable(name).Should().Be("test");
+            var variables = ProcessAndThreads.DesktopNativeMethods.GetEnvironmentVariables();
             variables.Should().ContainKey(name);
             variables[name].Should().Be("test");
-            ProcessAndThreads.Desktop.NativeMethods.SetEnvironmentVariable(name, null);
-            ProcessAndThreads.Desktop.NativeMethods.GetEnvironmentVariable(name).Should().BeNull();
-            variables = ProcessAndThreads.Desktop.NativeMethods.GetEnvironmentVariables();
+            ProcessAndThreads.DesktopNativeMethods.SetEnvironmentVariable(name, null);
+            ProcessAndThreads.DesktopNativeMethods.GetEnvironmentVariable(name).Should().BeNull();
+            variables = ProcessAndThreads.DesktopNativeMethods.GetEnvironmentVariables();
             variables.Should().NotContainKey(name);
         }
     }

@@ -12,13 +12,14 @@ using System.Runtime.InteropServices;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.Utility;
+using WInterop.VolumeManagement.Desktop;
 
-namespace WInterop.VolumeManagement.Desktop
+namespace WInterop.VolumeManagement
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static partial class NativeMethods
+    public static partial class DesktopNativeMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
