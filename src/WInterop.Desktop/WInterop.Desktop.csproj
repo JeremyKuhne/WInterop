@@ -38,7 +38,7 @@
   <ItemGroup>
     <Compile Include="Authorization\Desktop\LUID.cs" />
     <Compile Include="Authorization\Desktop\LUID_AND_ATTRIBUTES.cs" />
-    <Compile Include="Authorization\Desktop\NativeMethods.cs" />
+    <Compile Include="Authorization\DesktopNativeMethods.cs" />
     <Compile Include="Authorization\Desktop\PrivilegeAttributes.cs" />
     <Compile Include="Authorization\Desktop\Privileges.cs" />
     <Compile Include="Authorization\Desktop\PrivilegeSetting.cs" />
@@ -86,6 +86,7 @@
     <Compile Include="Handles\Desktop\SafeLibraryHandle.cs" />
     <Compile Include="Handles\Desktop\SafeNetApiBufferHandle.cs" />
     <Compile Include="Handles\Desktop\SafeSymbolicLinkObjectHandle.cs" />
+    <Compile Include="Handles\Desktop\SafeTokenHandle.cs" />
     <Compile Include="NetworkManagement\Desktop\MemberInfo.cs" />
     <Compile Include="NetworkManagement\Desktop\NativeMethods.cs" />
     <Compile Include="ProcessAndThreads\Desktop\NativeMethods.cs" />

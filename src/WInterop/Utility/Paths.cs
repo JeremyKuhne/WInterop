@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace WInterop.Utility
 {
@@ -51,6 +52,19 @@ namespace WInterop.Utility
         /// The alternate directory separator
         /// </summary>
         public static readonly char AltDirectorySeparator = System.IO.Path.AltDirectorySeparatorChar;
+
+        /// <summary>
+        /// Returns true if the path begins with a directory separator.
+        /// </summary>
+        public static bool BeginsWithDirectorySeparator(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+
+            return IsDirectorySeparator(path[0]);
+        }
 
         /// <summary>
         /// Returns true if the path ends in a directory separator.
@@ -109,6 +123,34 @@ namespace WInterop.Utility
             {
                 return path;
             }
+        }
+
+        /// <summary>
+        /// Combines two strings, adding a directory separator between if needed.
+        /// Does not validate path characters.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="path1"/> is null.</exception>
+        public static string Combine(string path1, string path2)
+        {
+            if (path1 == null) throw new ArgumentNullException(nameof(path1));
+
+            // Add nothing to something is something
+            if (string.IsNullOrEmpty(path2)) return path1;
+
+            StringBuilder sb = new StringBuilder();
+            if (!EndsInDirectorySeparator(path1) && !BeginsWithDirectorySeparator(path2))
+            {
+                sb.Append(path1);
+                sb.Append(DirectorySeparator);
+                sb.Append(path2);
+            }
+            else
+            {
+                sb.Append(path1);
+                sb.Append(path2);
+            }
+
+            return sb.ToString();
         }
     }
 }

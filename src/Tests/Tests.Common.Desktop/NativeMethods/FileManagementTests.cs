@@ -7,6 +7,8 @@
 
 using FluentAssertions;
 using System.Linq;
+using Tests.Support;
+using WInterop.Authorization.Desktop;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Desktop;
 using WInterop.Tests.Support;
@@ -56,6 +58,55 @@ namespace WInterop.DesktopTests.NativeMethodTests
                         .Should().StartWith(@"\Device\");
                     DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
                         .Should().Be(filePath.Substring(2));
+                }
+            }
+        }
+
+        private static bool CanCreateSymbolicLinks()
+        {
+            // Assuming that the current thread can replicate rights from the process
+            using (var processToken = Authorization.DesktopNativeMethods.OpenProcessToken(TokenRights.TOKEN_QUERY | TokenRights.TOKEN_READ))
+            {
+                return Authorization.DesktopNativeMethods.HasPrivilege(processToken, Privileges.SeCreateSymbolicLinkPrivilege);
+            }
+        }
+
+        [Fact]
+        public void FinalPathNameLinkBehavior()
+        {
+            if (!CanCreateSymbolicLinks()) return;
+
+            // GetFinalPathName always points to the linked file unless you specifically open the reparse point
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = Paths.Combine(cleaner.TempFolder, "Target");
+                string extendedPath = @"\\?\" + filePath;
+
+                FileHelper.WriteAllText(filePath, "CreateSymbolicLinkToFile");
+
+                string symbolicLink = Paths.Combine(cleaner.TempFolder, "Link");
+                string extendedLink = @"\\?\" + symbolicLink;
+                DesktopNativeMethods.CreateSymbolicLink(symbolicLink, filePath);
+                FileHelper.FileExists(symbolicLink).Should().BeTrue("symbolic link should exist");
+
+                // GetFinalPathName should normalize the casing, pushing ToUpper to validate
+                using (var handle = NativeMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                {
+                    handle.IsInvalid.Should().BeFalse();
+                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                        .Should().Be(extendedPath);
+                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                        .Should().Be(extendedPath);
+                }
+
+                using (var handle = NativeMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.FILE_GENERIC_READ,
+                    ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, FileAttributes.NONE, FileFlags.FILE_FLAG_OPEN_REPARSE_POINT))
+                {
+                    handle.IsInvalid.Should().BeFalse();
+                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                        .Should().Be(extendedLink);
+                    DesktopNativeMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                        .Should().Be(extendedLink);
                 }
             }
         }

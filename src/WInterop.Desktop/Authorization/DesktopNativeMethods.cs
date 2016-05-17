@@ -7,20 +7,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.Principal;
 using System.Text;
+using WInterop.Authorization.Desktop;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.Handles;
+using WInterop.Handles.Desktop;
 
-namespace WInterop.Authorization.Desktop
+namespace WInterop.Authorization
 {
-    public static partial class NativeMethods
+    public static partial class DesktopNativeMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -34,7 +33,7 @@ namespace WInterop.Authorization.Desktop
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool AdjustTokenPrivileges(
-                IntPtr TokenHandle,
+                SafeTokenHandle TokenHandle,
                 [MarshalAs(UnmanagedType.Bool)] bool DisableAllPrivileges,
                 ref TOKEN_PRIVILEGES NewState,
                 uint BufferLength,
@@ -45,7 +44,7 @@ namespace WInterop.Authorization.Desktop
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetTokenInformation(
-                IntPtr TokenHandle,
+                SafeTokenHandle TokenHandle,
                 TOKEN_INFORMATION_CLASS TokenInformationClass,
                 SafeHandle TokenInformation,
                 uint TokenInformationLength,
@@ -72,7 +71,7 @@ namespace WInterop.Authorization.Desktop
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool PrivilegeCheck(
-                SafeCloseHandle ClientToken,
+                SafeTokenHandle ClientToken,
                 ref PRIVILEGE_SET RequiredPrivileges,
                 [MarshalAs(UnmanagedType.Bool)] out bool pfResult);
 
@@ -81,7 +80,7 @@ namespace WInterop.Authorization.Desktop
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool SetThreadToken(
                 IntPtr Thread,
-                SafeCloseHandle Token);
+                SafeTokenHandle Token);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -92,12 +91,12 @@ namespace WInterop.Authorization.Desktop
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool DuplicateTokenEx(
-                SafeCloseHandle hExistingToken,
+                SafeTokenHandle hExistingToken,
                 TokenRights dwDesiredAccess,
                 IntPtr lpTokenAttributes,
                 SECURITY_IMPERSONATION_LEVEL ImpersonationLevel,
                 TOKEN_TYPE TokenType,
-                ref SafeCloseHandle phNewToken);
+                ref SafeTokenHandle phNewToken);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379295.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -105,7 +104,7 @@ namespace WInterop.Authorization.Desktop
             public static extern bool OpenProcessToken(
                 IntPtr ProcessHandle,
                 TokenRights DesiredAccesss,
-                out SafeCloseHandle TokenHandle);
+                out SafeTokenHandle TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
             [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -114,7 +113,7 @@ namespace WInterop.Authorization.Desktop
                 SafeThreadHandle ThreadHandle,
                 TokenRights DesiredAccess,
                 [MarshalAs(UnmanagedType.Bool)] bool OpenAsSelf,
-                out SafeCloseHandle TokenHandle);
+                out SafeTokenHandle TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379166.aspx
             // LookupAccountSid
@@ -158,12 +157,12 @@ namespace WInterop.Authorization.Desktop
         // 
         // https://msdn.microsoft.com/en-us/library/system.security.principal.securityidentifier.aspx
 
-        public static IEnumerable<PrivilegeSetting> GetTokenPrivileges(SafeCloseHandle token)
+        public static IEnumerable<PrivilegeSetting> GetTokenPrivileges(SafeTokenHandle token)
         {
             // Get the buffer size we need
             uint bytesNeeded;
             if (!Direct.GetTokenInformation(
-                token.DangerousGetHandle(),
+                token,
                 TOKEN_INFORMATION_CLASS.TokenPrivileges,
                 EmptySafeHandle.Instance,
                 0,
@@ -182,7 +181,7 @@ namespace WInterop.Authorization.Desktop
             // Initialize the buffer and get the data
             var streamBuffer = new StreamBuffer(bytesNeeded);
             if (!Direct.GetTokenInformation(
-                token.DangerousGetHandle(),
+                token,
                 TOKEN_INFORMATION_CLASS.TokenPrivileges,
                 streamBuffer,
                 (uint)streamBuffer.Length,
@@ -225,7 +224,7 @@ namespace WInterop.Authorization.Desktop
         /// <summary>
         /// Returns true if the given token has the specified privilege. The privilege may or may not be enabled.
         /// </summary>
-        public static bool HasPrivilege(SafeCloseHandle token, Privileges privilege)
+        public static bool HasPrivilege(SafeTokenHandle token, Privileges privilege)
         {
             return GetTokenPrivileges(token).Any(t => t.Privilege == privilege);
         }
@@ -243,7 +242,7 @@ namespace WInterop.Authorization.Desktop
         /// Checks if the given privilege is enabled. This does not tell you whether or not it
         /// is possible to get a privilege- most held privileges are not enabled by default.
         /// </summary>
-        public static bool IsPrivilegeEnabled(SafeCloseHandle token, Privileges privilege)
+        public static bool IsPrivilegeEnabled(SafeTokenHandle token, Privileges privilege)
         {
             LUID luid = LookupPrivilegeValue(privilege.ToString());
 
@@ -268,25 +267,25 @@ namespace WInterop.Authorization.Desktop
             return result;
         }
 
-        public static SafeCloseHandle OpenProcessToken(TokenRights desiredAccess)
+        public static SafeTokenHandle OpenProcessToken(TokenRights desiredAccess)
         {
-            SafeCloseHandle processToken;
+            SafeTokenHandle processToken;
             if (!Direct.OpenProcessToken(ProcessAndThreads.NativeMethods.Direct.GetCurrentProcess().DangerousGetHandle(), desiredAccess, out processToken))
                 throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
         }
 
-        public static SafeCloseHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
+        public static SafeTokenHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
         {
-            SafeCloseHandle threadToken;
+            SafeTokenHandle threadToken;
             if (!Direct.OpenThreadToken(ProcessAndThreads.NativeMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
             {
                 uint error = (uint)Marshal.GetLastWin32Error();
                 if (error != WinErrors.ERROR_NO_TOKEN)
                     throw ErrorHelper.GetIoExceptionForError(error, desiredAccess.ToString());
 
-                SafeCloseHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE);
+                SafeTokenHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE);
                 if (!Direct.DuplicateTokenEx(
                     processToken,
                     TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_ADJUST_PRIVILEGES,
