@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Utility;
 
 namespace WInterop.FileManagement
 {
@@ -21,10 +20,10 @@ namespace WInterop.FileManagement
         public FileBasicInfo(FILE_BASIC_INFO data)
         {
             Attributes = data.FileAttributes;
-            CreationTime = Conversion.FileTimeToDateTime(data.CreationTime);
-            LastAccessTime = Conversion.FileTimeToDateTime(data.LastAccessTime);
-            LastWriteTime = Conversion.FileTimeToDateTime(data.LastWriteTime);
-            ChangeTime = Conversion.FileTimeToDateTime(data.ChangeTime);
+            CreationTime = DateTime.FromFileTime(data.CreationTime);
+            LastAccessTime = DateTime.FromFileTime(data.LastAccessTime);
+            LastWriteTime = DateTime.FromFileTime(data.LastWriteTime);
+            ChangeTime = DateTime.FromFileTime(data.ChangeTime);
         }
     }
 }

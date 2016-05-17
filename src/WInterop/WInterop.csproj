@@ -106,6 +106,7 @@
     <Compile Include="FileManagement\FileFlags.cs" />
     <Compile Include="FileManagement\FileInfo.cs" />
     <Compile Include="FileManagement\FileManagementExtensions.cs" />
+    <Compile Include="FileManagement\FileStandardInfo.cs" />
     <Compile Include="FileManagement\FileType.cs" />
     <Compile Include="FileManagement\FILE_BASIC_INFO.cs" />
     <Compile Include="FileManagement\FILE_INFO_BY_HANDLE_CLASS.cs" />

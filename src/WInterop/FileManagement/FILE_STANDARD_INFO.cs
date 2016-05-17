@@ -18,9 +18,7 @@ namespace WInterop.FileManagement
         public ulong AllocationSize;
         public ulong EndOfFile;
         public uint NumberOfLinks;
-        [MarshalAs(UnmanagedType.U1)]
-        public bool DeletePending;
-        [MarshalAs(UnmanagedType.U1)]
-        public bool Directory;
+        public byte DeletePending;
+        public byte Directory;
     }
 }

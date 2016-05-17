@@ -16,10 +16,10 @@ namespace WInterop.FileManagement
     [StructLayout(LayoutKind.Sequential)]
     public struct FILE_BASIC_INFO
     {
-        public ComTypes.FILETIME CreationTime;
-        public ComTypes.FILETIME LastAccessTime;
-        public ComTypes.FILETIME LastWriteTime;
-        public ComTypes.FILETIME ChangeTime;
+        public long CreationTime;
+        public long LastAccessTime;
+        public long LastWriteTime;
+        public long ChangeTime;
         public FileAttributes FileAttributes;
     }
 }

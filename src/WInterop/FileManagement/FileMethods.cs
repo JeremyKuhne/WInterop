@@ -93,10 +93,10 @@ namespace WInterop.FileManagement
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364953.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l2_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GetFileInformationByHandleEx(
+            unsafe public static extern bool GetFileInformationByHandleEx(
                 SafeFileHandle hFile,
                 FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
-                IntPtr lpFileInformation,
+                void* lpFileInformation,
                 uint dwBufferSize);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915.aspx (kernel32)
@@ -135,6 +135,7 @@ namespace WInterop.FileManagement
                 MoveMethod dwMoveMethod);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364957.aspx
+            // This returns FILE_STANDARD_INFO.EndOfFile
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetFileSizeEx(
@@ -216,6 +217,28 @@ namespace WInterop.FileManagement
         }
 
         /// <summary>
+        /// Wrapper that allows getting a file stream using System.IO defines.
+        /// </summary>
+        public static System.IO.Stream CreateFileStream(
+            string path,
+            System.IO.FileAccess fileAccess,
+            System.IO.FileShare fileShare,
+            System.IO.FileMode fileMode,
+            System.IO.FileAttributes fileAttributes = 0,
+            FileFlags fileFlags = FileFlags.NONE,
+            SecurityQosFlags securityFlags = SecurityQosFlags.NONE)
+        {
+            return CreateFileStream(
+                path: path,
+                desiredAccess: Conversion.FileAccessToDesiredAccess(fileAccess),
+                shareMode: Conversion.FileShareToShareMode(fileShare),
+                creationDisposition: Conversion.FileModeToCreationDisposition(fileMode),
+                fileAttributes: (FileAttributes)fileAttributes,
+                fileFlags: fileFlags,
+                securityQosFlags: securityFlags);
+        }
+
+        /// <summary>
         /// Get a stream for the specified file.
         /// </summary>
         public static System.IO.Stream CreateFileStream(
@@ -244,6 +267,28 @@ namespace WInterop.FileManagement
             SecurityQosFlags securityQosFlags);
 
         private static CreateFileDelegate s_createFileDelegate;
+
+        /// <summary>
+        /// Wrapper that allows using System.IO defines where available. Calls CreateFile2 if available.
+        /// </summary>
+        public static SafeHandle CreateFile(
+            string path,
+            System.IO.FileAccess fileAccess,
+            System.IO.FileShare fileShare,
+            System.IO.FileMode fileMode,
+            System.IO.FileAttributes fileAttributes = 0,
+            FileFlags fileFlags = FileFlags.NONE,
+            SecurityQosFlags securityFlags = SecurityQosFlags.NONE)
+        {
+            return CreateFile(
+                path: path,
+                desiredAccess: Conversion.FileAccessToDesiredAccess(fileAccess),
+                shareMode: Conversion.FileShareToShareMode(fileShare),
+                creationDisposition: Conversion.FileModeToCreationDisposition(fileMode),
+                fileAttributes: (FileAttributes)fileAttributes,
+                fileFlags: fileFlags,
+                securityQosFlags: securityFlags);
+        }
 
         /// <summary>
         /// CreateFile wrapper that attempts to use CreateFile2 if running as Windows Store app.
@@ -480,12 +525,15 @@ namespace WInterop.FileManagement
         {
             return StringBufferCache.CachedBufferInvoke(Paths.MaxPath, (buffer) =>
             {
-                while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
+                unsafe
                 {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    if (error != WinErrors.ERROR_MORE_DATA)
-                        throw ErrorHelper.GetIoExceptionForError(error);
-                    buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
+                    while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo, buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
+                    {
+                        uint error = (uint)Marshal.GetLastWin32Error();
+                        if (error != WinErrors.ERROR_MORE_DATA)
+                            throw ErrorHelper.GetIoExceptionForError(error);
+                        buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
+                    }
                 }
 
                 var reader = new NativeBufferReader(buffer);
@@ -496,19 +544,16 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Get standard file info from the given file handle.
         /// </summary>
-        public static FILE_STANDARD_INFO GetFileStandardInfoByHandle(SafeFileHandle fileHandle)
+        public static FileStandardInfo GetFileStandardInfoByHandle(SafeFileHandle fileHandle)
         {
-            return StringBufferCache.CachedBufferInvoke((buffer) =>
+            FILE_STANDARD_INFO info;
+            unsafe
             {
-                FILE_STANDARD_INFO info;
-                buffer.EnsureByteCapacity((ulong)Marshal.SizeOf<FILE_STANDARD_INFO>());
-
-                if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
+                if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo, &info, (uint)Marshal.SizeOf<FILE_STANDARD_INFO>()))
                     throw ErrorHelper.GetIoExceptionForLastError();
+            }
 
-                info = Marshal.PtrToStructure<FILE_STANDARD_INFO>(buffer.DangerousGetHandle());
-                return info;
-            });
+            return new FileStandardInfo(info);
         }
 
         /// <summary>
@@ -516,17 +561,13 @@ namespace WInterop.FileManagement
         /// </summary>
         public static FileBasicInfo GetFileBasicInfoByHandle(SafeFileHandle fileHandle)
         {
-            return StringBufferCache.CachedBufferInvoke((buffer) =>
+            FILE_BASIC_INFO info;
+            unsafe
             {
-                FILE_BASIC_INFO info;
-                buffer.EnsureByteCapacity((ulong)Marshal.SizeOf<FILE_BASIC_INFO>());
-
-                if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
+                if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo, &info, (uint)Marshal.SizeOf<FILE_BASIC_INFO>()))
                     throw ErrorHelper.GetIoExceptionForLastError();
-
-                info = Marshal.PtrToStructure<FILE_BASIC_INFO>(buffer.DangerousGetHandle());
-                return new FileBasicInfo(info);
-            });
+            }
+            return new FileBasicInfo(info);
         }
 
         /// <summary>
@@ -548,19 +589,23 @@ namespace WInterop.FileManagement
             // We'll ensure we have at least 100 characters worth in the buffer to start
             return StringBufferCache.CachedBufferInvoke(100, (buffer) =>
             {
-                while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStreamInfo, buffer.DangerousGetHandle(), checked((uint)buffer.ByteCapacity)))
+                unsafe
                 {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    switch (error)
+                    while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStreamInfo,
+                        buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
                     {
-                        case WinErrors.ERROR_HANDLE_EOF:
-                            // No streams
-                            return Enumerable.Empty<StreamInformation>();
-                        case WinErrors.ERROR_MORE_DATA:
-                            buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
-                            break;
-                        default:
-                            throw ErrorHelper.GetIoExceptionForError(error);
+                        uint error = (uint)Marshal.GetLastWin32Error();
+                        switch (error)
+                        {
+                            case WinErrors.ERROR_HANDLE_EOF:
+                                // No streams
+                                return Enumerable.Empty<StreamInformation>();
+                            case WinErrors.ERROR_MORE_DATA:
+                                buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
+                                break;
+                            default:
+                                throw ErrorHelper.GetIoExceptionForError(error);
+                        }
                     }
                 }
 

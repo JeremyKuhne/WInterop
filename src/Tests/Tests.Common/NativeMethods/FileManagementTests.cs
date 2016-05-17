@@ -178,7 +178,7 @@ namespace WInterop.Tests.NativeMethodTests
 
                 using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
-                    var info = FileManagement.FileMethods.GetFileStandardInfoByHandle(file);
+                    var info = FileMethods.GetFileStandardInfoByHandle(file);
                     info.Directory.Should().BeFalse();
                     info.NumberOfLinks.Should().Be(1);
                     info.DeletePending.Should().BeFalse();
@@ -203,12 +203,12 @@ namespace WInterop.Tests.NativeMethodTests
                     FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     var directoryInfo = FileMethods.GetFileBasicInfoByHandle(directory);
-                    directoryInfo.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+                    directoryInfo.Attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
 
                     using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                     {
                         var fileInfo = FileMethods.GetFileBasicInfoByHandle(file);
-                        fileInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+                        fileInfo.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
                         fileInfo.CreationTime.Should().BeAfter(directoryInfo.CreationTime);
                     }
                 }
