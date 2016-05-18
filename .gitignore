@@ -62,3 +62,7 @@ ipch/
 /BundleArtifacts
 /src/.vs/config
 *.nupkg
+
+# C++ database files
+*.vc.opendb
+*.vc.db

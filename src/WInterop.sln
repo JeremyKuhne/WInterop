@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Support", "Tests\Test
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tests.Common.Desktop", "Tests\Tests.Common.Desktop\Tests.Common.Desktop.shproj", "{A6BC8AF5-E3BF-4F75-9FBA-FE5ED7D50AD2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeTestLibrary", "Tests\NativeTestLibrary\NativeTestLibrary.vcxproj", "{9B6766AF-03F6-48B0-89DC-41881B3E00CA}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Tests\Tests.Common\Tests.Common.projitems*{2035a6ee-3425-4eba-8067-919adab2599e}*SharedItemsImports = 13
@@ -178,6 +180,18 @@ Global
 		{EA2CE4EF-05B6-458C-AEEC-986F62D0E5AF}.Release|x64.Build.0 = Release|Any CPU
 		{EA2CE4EF-05B6-458C-AEEC-986F62D0E5AF}.Release|x86.ActiveCfg = Release|Any CPU
 		{EA2CE4EF-05B6-458C-AEEC-986F62D0E5AF}.Release|x86.Build.0 = Release|Any CPU
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Debug|ARM.ActiveCfg = Debug|Win32
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Debug|x64.ActiveCfg = Debug|x64
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Debug|x64.Build.0 = Debug|x64
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Debug|x86.ActiveCfg = Debug|Win32
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Debug|x86.Build.0 = Debug|Win32
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Release|Any CPU.ActiveCfg = Release|Win32
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Release|ARM.ActiveCfg = Release|Win32
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Release|x64.ActiveCfg = Release|x64
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Release|x64.Build.0 = Release|x64
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Release|x86.ActiveCfg = Release|Win32
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,5 +205,6 @@ Global
 		{C17F4110-A1D1-4FAC-83F6-19B49A36F075} = {9BFE01D1-0EF4-4CFC-8E20-254A7E39FB14}
 		{EA2CE4EF-05B6-458C-AEEC-986F62D0E5AF} = {9BFE01D1-0EF4-4CFC-8E20-254A7E39FB14}
 		{A6BC8AF5-E3BF-4F75-9FBA-FE5ED7D50AD2} = {9BFE01D1-0EF4-4CFC-8E20-254A7E39FB14}
+		{9B6766AF-03F6-48B0-89DC-41881B3E00CA} = {9BFE01D1-0EF4-4CFC-8E20-254A7E39FB14}
 	EndGlobalSection
 EndGlobal
