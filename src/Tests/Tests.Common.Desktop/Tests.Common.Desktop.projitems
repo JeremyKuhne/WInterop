@@ -9,11 +9,11 @@
     <Import_RootNamespace>Tests.Common.Desktop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\ErrorHandlingTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\FileManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\HandlesTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\NetworkManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\ProcessAndThreadTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\VolumeManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HandlesTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreadTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VolumeManagementTests.cs" />
   </ItemGroup>
 </Project>

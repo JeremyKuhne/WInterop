@@ -16,7 +16,7 @@ namespace WInterop.FileManagement
     /// Called FileMode in .NET System.IO.
     /// </summary>
     /// <remarks>
-    /// FileMode.Append is a .NET construct.
+    /// FileMode.Append is a .NET construct- it is OPEN_ALWAYS with FileIOPermissionAccess.Append.
     /// </remarks>
     public enum CreationDisposition : uint
     {

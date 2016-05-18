@@ -12,7 +12,7 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Desktop;
 using Xunit;
 
-namespace WInterop.DesktopTests.NativeMethodTests
+namespace WInterop.DesktopTests
 {
     public partial class ErrorHandlingTests
     {

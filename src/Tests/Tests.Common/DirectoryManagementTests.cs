@@ -12,7 +12,7 @@ using WInterop.FileManagement;
 using WInterop.Tests.Support;
 using Xunit;
 
-namespace WInterop.Tests.NativeMethodTests
+namespace WInterop.Tests
 {
     public class DirectoryManagementTests
     {

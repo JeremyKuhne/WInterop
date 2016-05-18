@@ -9,7 +9,7 @@ using System;
 using Xunit;
 using FluentAssertions;
 
-namespace WInterop.DesktopTests.NativeMethodTests
+namespace WInterop.DesktopTests
 {
     public class ProcessAndThreadTests
     {

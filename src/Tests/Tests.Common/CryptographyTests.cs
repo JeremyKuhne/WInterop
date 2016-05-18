@@ -11,7 +11,7 @@ using Xunit;
 using System.Linq;
 using WInterop.Cryptography;
 
-namespace WInterop.Tests.NativeMethodTests
+namespace WInterop.Tests
 {
     public class CryptographyTests
     {

@@ -10,11 +10,12 @@ using System;
 using System.Collections.Generic;
 using WInterop.DeviceManagement;
 using WInterop.FileManagement;
+using WInterop.Handles;
 using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.DesktopTests.NativeMethodsTests
+namespace WInterop.DesktopTests
 {
     public partial class HandlesTests
     {
@@ -182,6 +183,51 @@ namespace WInterop.DesktopTests.NativeMethodsTests
                 tempPath.Should().StartWith(dosVolumePath);
                 tempPath.Should().Be(dosVolumePath + fileName + @"\");
             }
+        }
+
+        [Fact]
+        public void GetPipeObjectInfo()
+        {
+            var fileHandle = FileMethods.CreateFile(
+                @"\\.\pipe\",
+                0,                  // We don't care about read or write, we're just getting metadata with this handle
+                System.IO.FileShare.ReadWrite,
+                System.IO.FileMode.Open,
+                0,
+                FileFlags.FILE_FLAG_OPEN_REPARSE_POINT          // To avoid traversing links
+                    | FileFlags.FILE_FLAG_BACKUP_SEMANTICS);    // To open directories
+
+            string name = HandleDesktopMethods.GetObjectName(fileHandle);
+            name.Should().Be(@"\Device\NamedPipe\");
+
+            string typeName = HandleDesktopMethods.GetObjectType(fileHandle);
+            typeName.Should().Be(@"File");
+
+            string fileName = FileMethods.GetFileNameByHandle(fileHandle);
+            fileName.Should().Be(@"\");
+        }
+
+        [Fact]
+        public void GetPipeObjectInfoNoTrailingSlash()
+        {
+            var fileHandle = FileMethods.CreateFile(
+                @"\\.\pipe",
+                0,                  // We don't care about read or write, we're just getting metadata with this handle
+                System.IO.FileShare.ReadWrite,
+                System.IO.FileMode.Open,
+                0,
+                FileFlags.FILE_FLAG_OPEN_REPARSE_POINT          // To avoid traversing links
+                    | FileFlags.FILE_FLAG_BACKUP_SEMANTICS);    // To open directories
+
+            string name = HandleDesktopMethods.GetObjectName(fileHandle);
+            name.Should().Be(@"\Device\NamedPipe");
+
+            string typeName = HandleDesktopMethods.GetObjectType(fileHandle);
+            typeName.Should().Be(@"File");
+
+            // Not sure why this is- probably the source of why so many other things go wrong
+            Action action = () => FileMethods.GetFileNameByHandle(fileHandle);
+            action.ShouldThrow<ArgumentException>().And.HResult.Should().Be(unchecked((int)0x80070057));
         }
     }
 }

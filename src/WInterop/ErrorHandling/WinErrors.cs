@@ -190,6 +190,10 @@ namespace WInterop.ErrorHandling
         public const uint NERR_InvalidComputer = NERR_BASE + 251;
 
         public const uint ERROR_REQUEST_PAUSED = 3050;
+
+        public const uint ERROR_NOT_APPCONTAINER = 4250;
+        public const uint ERROR_APPCONTAINER_REQUIRED = 4251;
+        public const uint ERROR_NOT_SUPPORTED_IN_APPCONTAINER = 4252;
 #endif
         public const uint APPMODEL_ERROR_NO_APPLICATION = 15703;
 

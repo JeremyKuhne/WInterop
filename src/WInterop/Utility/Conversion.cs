@@ -65,7 +65,10 @@ namespace WInterop.Utility
 
         public static CreationDisposition FileModeToCreationDisposition(System.IO.FileMode fileMode)
         {
-            return unchecked((CreationDisposition)fileMode);
+            if (fileMode == System.IO.FileMode.Append)
+                return CreationDisposition.OPEN_ALWAYS;
+            else
+                return unchecked((CreationDisposition)fileMode);
         }
     }
 }

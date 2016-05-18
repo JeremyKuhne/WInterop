@@ -12,7 +12,7 @@ using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.Tests.NativeMethodsTests
+namespace WInterop.Tests
 {
     public partial class HandlesTests
     {

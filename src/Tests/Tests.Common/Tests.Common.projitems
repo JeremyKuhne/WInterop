@@ -15,11 +15,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferCacheTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CacheTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\CryptographyTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\DirectoryManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\ErrorHandlingTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\FileManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods\HandlesTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CryptographyTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HandlesTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\ConversionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\DelegatesTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\EnvironmentTests.cs" />
   </ItemGroup>

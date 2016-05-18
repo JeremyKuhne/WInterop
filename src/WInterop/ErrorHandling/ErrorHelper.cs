@@ -115,6 +115,9 @@ namespace WInterop.ErrorHandling
                     return new DriveLockedException(message);
                 case WinErrors.ERROR_INVALID_PARAMETER:
                     return new ArgumentException(message);
+                case WinErrors.ERROR_NOT_SUPPORTED:
+                case WinErrors.ERROR_NOT_SUPPORTED_IN_APPCONTAINER:
+                    return new NotSupportedException(message);
                 case WinErrors.ERROR_ALREADY_EXISTS:
                 case WinErrors.ERROR_SHARING_VIOLATION:
                 case WinErrors.ERROR_FILE_EXISTS:

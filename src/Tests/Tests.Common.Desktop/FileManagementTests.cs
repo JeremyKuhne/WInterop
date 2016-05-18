@@ -16,7 +16,7 @@ using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.DesktopTests.NativeMethodTests
+namespace WInterop.DesktopTests
 {
     public partial class FileManagementTests
     {

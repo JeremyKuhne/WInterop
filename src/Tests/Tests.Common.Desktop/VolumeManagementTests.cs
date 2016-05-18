@@ -9,7 +9,7 @@ using FluentAssertions;
 using WInterop.ErrorHandling;
 using Xunit;
 
-namespace WInterop.DesktopTests.NativeMethodTests
+namespace WInterop.DesktopTests
 {
     public class VolumeManagementTests
     {

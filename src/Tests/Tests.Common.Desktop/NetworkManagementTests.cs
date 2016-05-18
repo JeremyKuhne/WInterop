@@ -9,7 +9,7 @@ using Xunit;
 using FluentAssertions;
 using System.Linq;
 
-namespace WInterop.DesktopTests.NativeMethodTests
+namespace WInterop.DesktopTests
 {
     public partial class NetworkManagementTests
     {

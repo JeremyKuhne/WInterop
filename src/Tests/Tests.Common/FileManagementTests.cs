@@ -14,7 +14,7 @@ using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.Tests.NativeMethodTests
+namespace WInterop.Tests
 {
     public partial class FileManagementTests
     {
@@ -232,7 +232,7 @@ namespace WInterop.Tests.NativeMethodTests
                 using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
-                    var directoryInfo = FileManagement.FileMethods.GetStreamInformationByHandle(directory);
+                    var directoryInfo = FileMethods.GetStreamInformationByHandle(directory);
                     directoryInfo.Should().BeEmpty();
 
                     using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
@@ -284,18 +284,18 @@ namespace WInterop.Tests.NativeMethodTests
         [Fact]
         public void SetFileAttributesBasic()
         {
-            string tempPath = FileManagement.FileMethods.GetTempPath();
-            string tempFileName = FileManagement.FileMethods.GetTempFileName(tempPath, "tfn");
+            string tempPath = FileMethods.GetTempPath();
+            string tempFileName = FileMethods.GetTempFileName(tempPath, "tfn");
             try
             {
-                var originalInfo = FileManagement.FileMethods.GetFileAttributesEx(tempFileName);
-                originalInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
+                var originalInfo = FileMethods.GetFileAttributesEx(tempFileName);
+                originalInfo.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_READONLY);
                 FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes | FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
                 var newInfo = FileMethods.GetFileAttributesEx(tempFileName);
-                newInfo.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
+                newInfo.Attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_READONLY);
                 FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes);
                 newInfo = FileMethods.GetFileAttributesEx(tempFileName);
-                newInfo.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
+                newInfo.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_READONLY);
             }
             finally
             {
@@ -337,7 +337,7 @@ namespace WInterop.Tests.NativeMethodTests
             using (var temp = new TestFileCleaner())
             {
                 string subdir = System.IO.Path.Combine(temp.TempFolder, "Subdir");
-                DirectoryManagement.DirectoryMethods.CreateDirectory(subdir);
+                DirectoryMethods.CreateDirectory(subdir);
 
                 using (var find = FileMethods.CreateFindOperation(subdir + @"\*"))
                 {
@@ -572,7 +572,6 @@ namespace WInterop.Tests.NativeMethodTests
             }
         }
 
-
         [Theory
             InlineData(@"C:\")
             InlineData(@"\\?\C:\")
@@ -582,6 +581,46 @@ namespace WInterop.Tests.NativeMethodTests
             using (var find = FileMethods.CreateFindOperation(path))
             {
                 find.GetNextResult().Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public void GetFileNameByHandle()
+        {
+            // Can't open the Users folder in a Store app
+            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            {
+                // @"C:\" -> @"\"
+                var fileHandle = FileMethods.CreateFile(
+                    @"C:\Users",
+                    0,                  // We don't care about read or write, we're just getting metadata with this handle
+                    System.IO.FileShare.ReadWrite,
+                    System.IO.FileMode.Open,
+                    0,
+                    FileFlags.FILE_FLAG_OPEN_REPARSE_POINT      // To avoid traversing links
+                        | FileFlags.FILE_FLAG_BACKUP_SEMANTICS);    // To open directories
+
+                string name = FileMethods.GetFileNameByHandle(fileHandle);
+                name.Should().Be(@"\Users");
+            });
+        }
+
+        [Fact]
+        public void CreateStreamSystemIoDefines()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = cleaner.GetTestPath();
+                using (var stream = FileMethods.CreateFileStream(
+                    path: filePath,
+                    fileAccess: System.IO.FileAccess.Write,
+                    fileShare: System.IO.FileShare.ReadWrite,
+                    fileMode: System.IO.FileMode.Append,
+                    fileAttributes: 0,
+                    securityFlags: Utility.Environment.IsWindowsStoreApplication() ? SecurityQosFlags.NONE : SecurityQosFlags.SECURITY_SQOS_PRESENT | SecurityQosFlags.SECURITY_ANONYMOUS ))
+                {
+                    stream.Should().NotBeNull();
+                }
             }
         }
     }
