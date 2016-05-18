@@ -265,6 +265,9 @@ namespace WInterop.VolumeManagement
             }
         }
 
+        /// <summary>
+        /// Get the drive type for the given root path.
+        /// </summary>
         public static DriveType GetDriveType(string rootPath)
         {
             if (rootPath != null) rootPath = Paths.AddTrailingSeparator(rootPath);

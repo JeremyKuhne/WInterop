@@ -21,9 +21,6 @@ namespace WInterop.DirectoryManagement
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-#if DESKTOP
-        [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
-#endif
         public static class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365488.aspx

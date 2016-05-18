@@ -9,6 +9,7 @@
     <Import_RootNamespace>Tests.Common.Desktop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Backup\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Behaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Methods.cs" />

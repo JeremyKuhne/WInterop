@@ -623,5 +623,13 @@ namespace WInterop.Tests.FileManagementTests
                 }
             }
         }
+
+        [Theory
+            InlineData("")]
+        public void FullPathErrorCases(string value)
+        {
+            Action action = () => FileMethods.GetFullPathName(value);
+            action.ShouldThrow<System.IO.IOException>();
+        }
     }
 }

@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System;
-using System.Linq;
+using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
 using WInterop.Tests.Support;
 using Xunit;
@@ -19,22 +19,33 @@ namespace WInterop.Tests
         [Fact]
         public void GetCurrentDirectoryBasic()
         {
-            string currentDirectory = DirectoryManagement.DirectoryMethods.GetCurrentDirectory();
+            string currentDirectory = DirectoryMethods.GetCurrentDirectory();
             currentDirectory.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void SetCurrentDirectoryBasic()
         {
-            string currentDirectory = DirectoryManagement.DirectoryMethods.GetCurrentDirectory();
+            string currentDirectory = DirectoryMethods.GetCurrentDirectory();
 
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                DirectoryManagement.DirectoryMethods.SetCurrentDirectory(@"C:\");
-                DirectoryManagement.DirectoryMethods.GetCurrentDirectory().Should().Be(@"C:\");
+                DirectoryMethods.SetCurrentDirectory(@"C:\");
+                DirectoryMethods.GetCurrentDirectory().Should().Be(@"C:\");
             });
-            DirectoryManagement.DirectoryMethods.SetCurrentDirectory(currentDirectory);
-            DirectoryManagement.DirectoryMethods.GetCurrentDirectory().Should().Be(currentDirectory);
+            DirectoryMethods.SetCurrentDirectory(currentDirectory);
+            DirectoryMethods.GetCurrentDirectory().Should().Be(currentDirectory);
+        }
+
+        [Fact]
+        public void SetCurrentDirectoryToNonExistant()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string directoryPath = cleaner.GetTestPath();
+                Action action = () => DirectoryMethods.SetCurrentDirectory(directoryPath);
+                action.ShouldThrow<System.IO.FileNotFoundException>();
+            }
         }
 
         [Fact]
@@ -43,7 +54,7 @@ namespace WInterop.Tests
             using (var temp = new TestFileCleaner())
             {
                 string directoryPath = temp.GetTestPath();
-                DirectoryManagement.DirectoryMethods.CreateDirectory(directoryPath);
+                DirectoryMethods.CreateDirectory(directoryPath);
                 using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
@@ -58,14 +69,14 @@ namespace WInterop.Tests
             using (var temp = new TestFileCleaner())
             {
                 string directoryPath = temp.GetTestPath();
-                DirectoryManagement.DirectoryMethods.CreateDirectory(directoryPath);
+                DirectoryMethods.CreateDirectory(directoryPath);
                 using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
 
-                DirectoryManagement.DirectoryMethods.RemoveDirectory(directoryPath);
+                DirectoryMethods.RemoveDirectory(directoryPath);
 
                 Action action = () =>
                 {

@@ -271,6 +271,9 @@ namespace WInterop.Authorization
             return result;
         }
 
+        /// <summary>
+        /// Opens a process token.
+        /// </summary>
         public static SafeTokenHandle OpenProcessToken(TokenRights desiredAccess)
         {
             SafeTokenHandle processToken;
@@ -280,6 +283,9 @@ namespace WInterop.Authorization
             return processToken;
         }
 
+        /// <summary>
+        /// Opens a thread token.
+        /// </summary>
         public static SafeTokenHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
         {
             SafeTokenHandle threadToken;
