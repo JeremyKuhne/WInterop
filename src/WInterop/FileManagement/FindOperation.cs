@@ -9,6 +9,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
+using WInterop.Utility;
 
 namespace WInterop.FileManagement
 {
@@ -17,8 +18,8 @@ namespace WInterop.FileManagement
     /// </summary>
     public class FindOperation : IDisposable
     {
-        private FindResult _lastGoodResult;
         private IntPtr _findHandle;
+        private bool _lastEntryFound;
 
         public bool DirectoriesOnly { get; private set; }
         public bool GetAlternateName { get; private set; }
@@ -26,7 +27,7 @@ namespace WInterop.FileManagement
         public string OriginalPath { get; private set; }
 
         /// <summary>
-        /// Encapsulates a find operation. Does not take a trailing separator.
+        /// Encapsulates a find operation. Will strip trailing separator as FindFile will not take it.
         /// </summary>
         /// <param name="path">
         /// The search path. The path must not end in a directory separator. The final file/directory name (after the last
@@ -40,6 +41,26 @@ namespace WInterop.FileManagement
             bool directoriesOnly = false,
             bool getAlternateName = false)
         {
+            if (Paths.EndsInDirectorySeparator(path))
+            {
+                // Find first file does not like trailing separators so we'll cull it
+                //
+                // There is one weird special case. If we're passed a legacy root volume (e.g. C:\) then removing the
+                // trailing separator will make the path drive relative, leading to whatever the current directory is
+                // on that particular drive (randomness). (System32 for some odd reason in my tests.)
+                //
+                // You can't find a volume on it's own anyway, so we'll exit out in this case. For C: without a
+                // trailing slash it is legitimate to try and find whatever that matches. Note that we also don't need
+                // to bother checking the first character, as anything else there would be invalid.
+
+                path = Paths.RemoveTrailingSeparators(path);
+                if ((path.Length == 2 && path[1] == ':')   // C:
+                    || (path.Length == 6 && path[5] == ':' && Paths.IsExtendedDosDevicePath(path))) // \\?\C:
+                {
+                    _lastEntryFound = true;
+                }
+            }
+
             OriginalPath = path;
             DirectoriesOnly = directoriesOnly;
             GetAlternateName = getAlternateName;
@@ -50,60 +71,61 @@ namespace WInterop.FileManagement
         /// </summary>
         public FindResult GetNextResult()
         {
-            FindResult result;
-            if (_lastGoodResult == null)
-                result = FindFirstFile(OriginalPath, directoriesOnly: DirectoriesOnly, getAlternateName: GetAlternateName);
-            else
-                result = FindNextFile(_lastGoodResult);
+            if (_lastEntryFound) return null;
 
-            if (result != null)
+            FindResult result = null;
+            if (_findHandle == IntPtr.Zero)
+                result = FindFirstFile();
+            else
+                result = FindNextFile();
+
+            if (result == null)
             {
-                _lastGoodResult = result;
-                _findHandle = result.FindHandle;
+                // Agressively close the handle
+                _lastEntryFound = true;
+                CloseHandle();
             }
 
             return result;
         }
 
-        private FindResult FindFirstFile(
-            string path,
-            bool directoriesOnly = false,
-            bool getAlternateName = false)
+        private FindResult FindFirstFile()
         {
             WIN32_FIND_DATA findData;
-            IntPtr handle = FileMethods.Direct.FindFirstFileExW(
-                path,
-                getAlternateName ? FINDEX_INFO_LEVELS.FindExInfoStandard : FINDEX_INFO_LEVELS.FindExInfoBasic,
+            _findHandle = FileMethods.Direct.FindFirstFileExW(
+                OriginalPath,
+                GetAlternateName ? FINDEX_INFO_LEVELS.FindExInfoStandard : FINDEX_INFO_LEVELS.FindExInfoBasic,
                 out findData,
                 // FINDEX_SEARCH_OPS.FindExSearchNameMatch is what FindFirstFile calls Ex wtih
-                directoriesOnly ? FINDEX_SEARCH_OPS.FindExSearchLimitToDirectories : FINDEX_SEARCH_OPS.FindExSearchNameMatch,
+                DirectoriesOnly ? FINDEX_SEARCH_OPS.FindExSearchLimitToDirectories : FINDEX_SEARCH_OPS.FindExSearchNameMatch,
                 IntPtr.Zero,
                 FindFirstFileExFlags.FIND_FIRST_EX_LARGE_FETCH);
 
-            if (handle == (IntPtr)(-1))
+            if (_findHandle == (IntPtr)(-1))
             {
+                _findHandle = IntPtr.Zero;
                 uint error = (uint)Marshal.GetLastWin32Error();
                 if (error == WinErrors.ERROR_FILE_NOT_FOUND)
                     return null;
 
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw ErrorHelper.GetIoExceptionForLastError(OriginalPath);
             }
 
-            return new FindResult(handle, findData, path);
+            return new FindResult(findData, OriginalPath);
         }
 
-        private FindResult FindNextFile(FindResult priorResult)
+        private FindResult FindNextFile()
         {
             WIN32_FIND_DATA findData;
-            if (!FileMethods.Direct.FindNextFileW(priorResult.FindHandle, out findData))
+            if (!FileMethods.Direct.FindNextFileW(_findHandle, out findData))
             {
                 uint error = (uint)Marshal.GetLastWin32Error();
                 if (error == WinErrors.ERROR_NO_MORE_FILES)
                     return null;
-                throw ErrorHelper.GetIoExceptionForLastError(priorResult.OriginalPath);
+                throw ErrorHelper.GetIoExceptionForLastError(OriginalPath);
             }
 
-            return new FindResult(priorResult.FindHandle, findData, priorResult.OriginalPath);
+            return new FindResult(findData, OriginalPath);
         }
 
         public void Dispose()
@@ -114,8 +136,16 @@ namespace WInterop.FileManagement
 
         protected void Dispose(bool disposing)
         {
+            CloseHandle();
+        }
+
+        private void CloseHandle()
+        {
             if (_findHandle != IntPtr.Zero)
+            {
                 FileMethods.Direct.FindClose(_findHandle);
+                _findHandle = IntPtr.Zero;
+            }
         }
 
         ~FindOperation()

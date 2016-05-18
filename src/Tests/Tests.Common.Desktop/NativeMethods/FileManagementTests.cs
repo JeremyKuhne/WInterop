@@ -6,8 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System;
 using WInterop.Authorization;
 using WInterop.Authorization.Desktop;
+using WInterop.ErrorHandling;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Desktop;
 using WInterop.Tests.Support;
@@ -179,6 +181,62 @@ namespace WInterop.DesktopTests.NativeMethodTests
             string lowerTempPath = tempPath.ToLowerInvariant();
             tempPath.Should().NotBe(lowerTempPath);
             FileDesktopMethods.GetFinalPathName(lowerTempPath, 0, false).Should().Be(@"\\?\" + Paths.RemoveTrailingSeparators(tempPath));
+        }
+
+        [Fact]
+        public void CreateSymbolicLinkToFile()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = cleaner.CreateTestFile("CreateSymbolicLinkToFile");
+                string symbolicLink = cleaner.GetTestPath();
+                Action action = () => FileDesktopMethods.CreateSymbolicLink(symbolicLink, filePath);
+
+                if (CanCreateSymbolicLinks())
+                {
+                    action();
+                    var attributes = FileDesktopMethods.GetFileAttributes(symbolicLink);
+                    attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT);
+                }
+                else
+                {
+                    // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
+                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be(ErrorMacros.HRESULT_FROM_WIN32(WinErrors.ERROR_PRIVILEGE_NOT_HELD));
+                }
+            }
+        }
+
+        [Fact]
+        public void CreateSymbolicLinkToLongPathFile()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+                FileHelper.CreateDirectoryRecursive(longPath);
+                string filePath = cleaner.CreateTestFile("CreateSymbolicLinkToLongPathFile", longPath);
+
+                string symbolicLink = cleaner.GetTestPath();
+                Action action = () => FileDesktopMethods.CreateSymbolicLink(symbolicLink, filePath);
+
+                if (CanCreateSymbolicLinks())
+                {
+                    action();
+                    var attributes = FileDesktopMethods.GetFileAttributes(symbolicLink);
+                    attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT);
+                }
+                else
+                {
+                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be(ErrorMacros.HRESULT_FROM_WIN32(WinErrors.ERROR_PRIVILEGE_NOT_HELD));
+                }
+            }
+        }
+
+        [Fact]
+        public void GetFileAttributesLongPath()
+        {
+            string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(@"C:\", 300);
+            Action action = () => FileDesktopMethods.GetFileAttributes(longPath);
+            action.ShouldThrow<System.IO.DirectoryNotFoundException>();
         }
     }
 }

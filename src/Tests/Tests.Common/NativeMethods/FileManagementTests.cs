@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System;
 using System.Linq;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
@@ -550,6 +551,37 @@ namespace WInterop.Tests.NativeMethodTests
             {
                 string longPath = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
                 FileMethods.TryGetFileInfo(longPath).Should().BeNull();
+            }
+        }
+
+
+        [Fact]
+        public void FileTypeOfFile()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                using (var testFile = FileMethods.CreateFile(
+                    cleaner.GetTestPath(),
+                    System.IO.FileAccess.ReadWrite,
+                    System.IO.FileShare.ReadWrite,
+                    System.IO.FileMode.Create,
+                    0))
+                {
+                    FileMethods.GetFileType(testFile).Should().Be(FileType.FILE_TYPE_DISK);
+                }
+            }
+        }
+
+
+        [Theory
+            InlineData(@"C:\")
+            InlineData(@"\\?\C:\")
+            ]
+        public void FindFirstFileHandlesRoots(string path)
+        {
+            using (var find = FileMethods.CreateFindOperation(path))
+            {
+                find.GetNextResult().Should().BeNull();
             }
         }
     }

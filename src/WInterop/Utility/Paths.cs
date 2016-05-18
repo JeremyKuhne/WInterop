@@ -54,6 +54,16 @@ namespace WInterop.Utility
         public static readonly char AltDirectorySeparator = System.IO.Path.AltDirectorySeparatorChar;
 
         /// <summary>
+        /// Path prefix for DOS device paths
+        /// </summary>
+        public const string DosDevicePathPrefix = @"\\.\";
+
+        /// <summary>
+        /// Path prefix for extended DOS device paths
+        /// </summary>
+        public const string ExtendedDosDevicePathPrefix = @"\\?\";
+
+        /// <summary>
         /// Returns true if the path begins with a directory separator.
         /// </summary>
         public static bool BeginsWithDirectorySeparator(string path)
@@ -188,6 +198,43 @@ namespace WInterop.Utility
             {
                 path1.Append(path2);
             }
+        }
+
+        /// <summary>
+        /// Returns true if the given path is a device path.
+        /// </summary>
+        /// <remarks>
+        /// This will return true if the path returns any of the following with either forward or back slashes.
+        ///  \\?\  \??\  \\.\
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDosDevicePath(string path)
+        {
+            return path != null
+                && path.Length >= DosDevicePathPrefix.Length
+                && IsDirectorySeparator(path[0])
+                &&
+                (
+                    (IsDirectorySeparator(path[1]) && (path[2] == '.' || path[2] == '?'))
+                    || (path[1] == '?' && path[2] == '?')
+                )
+                && IsDirectorySeparator(path[3]);
+        }
+
+        /// <summary>
+        /// Returns true if the given path is extended and will skip normalization and MAX_PATH checks.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsExtendedDosDevicePath(string path)
+        {
+            // While paths like "//?/C:/" will work, they're treated the same as "\\.\" paths.
+            // Skipping of normalization will *only* occur if back slashes ('\') are used.
+            return path != null
+                && path.Length >= ExtendedDosDevicePathPrefix.Length
+                && path[0] == '\\'
+                && (path[1] == '\\' || path[1] == '?')
+                && path[2] == '?'
+                && path[3] == '\\';
         }
     }
 }

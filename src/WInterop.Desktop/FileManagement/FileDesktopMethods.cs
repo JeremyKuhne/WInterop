@@ -207,7 +207,7 @@ namespace WInterop.FileManagement
         /// CreateFile wrapper. Desktop only. Prefer FileManagement.CreateFile() as it will handle all supported platforms.
         /// </summary>
         /// <remarks>Not available in Windows Store applications.</remarks>
-        public static SafeFileHandle CreateFileW(
+        public static SafeFileHandle CreateFile(
             string path,
             DesiredAccess desiredAccess,
             ShareMode shareMode,
@@ -245,6 +245,19 @@ namespace WInterop.FileManagement
             {
                 throw ErrorHelper.GetIoExceptionForLastError(source);
             }
+        }
+
+        /// <summary>
+        /// Gets file attributes for the given path.
+        /// </summary>
+        /// <remarks>Not available in Store apps, use FileMethods.GetFileInfo instead.</remarks>
+        public static FileAttributes GetFileAttributes(string path)
+        {
+            FileAttributes attributes = Direct.GetFileAttributesW(path);
+            if (attributes == FileAttributes.INVALID_FILE_ATTRIBUTES)
+                throw ErrorHelper.GetIoExceptionForLastError(path);
+
+            return attributes;
         }
     }
 }
