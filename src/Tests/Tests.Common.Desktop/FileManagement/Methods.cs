@@ -16,9 +16,9 @@ using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.DesktopTests
+namespace WInterop.DesktopTests.FileManagementTests
 {
-    public partial class FileManagementTests
+    public class Methods
     {
         [Fact]
         public void GetShortPathBasic()
@@ -74,7 +74,7 @@ namespace WInterop.DesktopTests
         }
 
         [Fact]
-        public void FinalPathNameLinkBehavior()
+        public void FinalPathNameForLinks()
         {
             if (!CanCreateSymbolicLinks()) return;
 
@@ -114,7 +114,7 @@ namespace WInterop.DesktopTests
         }
 
         [Fact]
-        public void FinalPathNameBehavior()
+        public void FinalPathNameBasic()
         {
             using (var cleaner = new TestFileCleaner())
             {
@@ -143,7 +143,7 @@ namespace WInterop.DesktopTests
         }
 
         [Fact]
-        public void FinalPathNameLongPathPrefixRoundTripBehavior()
+        public void FinalPathNameLongPath()
         {
             using (var cleaner = new TestFileCleaner())
             {

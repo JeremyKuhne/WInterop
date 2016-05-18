@@ -10,10 +10,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FileManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Behaviors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HandlesTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreadTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagementTests.cs" />
   </ItemGroup>
 </Project>

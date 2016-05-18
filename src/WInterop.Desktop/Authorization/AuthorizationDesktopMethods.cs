@@ -16,6 +16,7 @@ using WInterop.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.Handles;
 using WInterop.Handles.Desktop;
+using WInterop.ProcessAndThreads;
 
 namespace WInterop.Authorization
 {
@@ -273,7 +274,7 @@ namespace WInterop.Authorization
         public static SafeTokenHandle OpenProcessToken(TokenRights desiredAccess)
         {
             SafeTokenHandle processToken;
-            if (!Direct.OpenProcessToken(ProcessAndThreads.ProcessAndThreadMethods.Direct.GetCurrentProcess().DangerousGetHandle(), desiredAccess, out processToken))
+            if (!Direct.OpenProcessToken(ProcessMethods.Direct.GetCurrentProcess().DangerousGetHandle(), desiredAccess, out processToken))
                 throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
@@ -282,7 +283,7 @@ namespace WInterop.Authorization
         public static SafeTokenHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
         {
             SafeTokenHandle threadToken;
-            if (!Direct.OpenThreadToken(ProcessAndThreads.ProcessAndThreadMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
+            if (!Direct.OpenThreadToken(ThreadMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
             {
                 uint error = (uint)Marshal.GetLastWin32Error();
                 if (error != WinErrors.ERROR_NO_TOKEN)

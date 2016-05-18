@@ -12,7 +12,11 @@ namespace WInterop.FileManagement
 {
     public class FindResult
     {
-        public string OriginalPath { get; private set; }
+        /// <summary>
+        /// The path used for creating the FindOperation.
+        /// </summary>
+        public string SearchPath { get; private set; }
+
         public string FileName { get; private set; }
         public string AlternateFileName { get; private set; }
         public FileAttributes Attributes { get; private set; }
@@ -21,9 +25,9 @@ namespace WInterop.FileManagement
         public DateTime LastWrite { get; private set; }
         public ulong Length { get; private set; }
 
-        public FindResult(WIN32_FIND_DATA findData, string originalPath)
+        public FindResult(WIN32_FIND_DATA findData, string searchPath)
         {
-            OriginalPath = originalPath;
+            SearchPath = searchPath;
             FileName = findData.cFileName;
             AlternateFileName = findData.cAlternateFileName;
             Attributes = findData.dwFileAttributes;

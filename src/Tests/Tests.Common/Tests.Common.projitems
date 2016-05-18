@@ -18,7 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CryptographyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FileManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Behaviors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HandlesTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\ConversionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\DelegatesTests.cs" />

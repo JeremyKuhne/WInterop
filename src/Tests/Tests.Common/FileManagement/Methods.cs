@@ -14,9 +14,9 @@ using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.Tests
+namespace WInterop.Tests.FileManagementTests
 {
-    public partial class FileManagementTests
+    public partial class Methods
     {
         [Fact]
         public void GetTempPathBasic()

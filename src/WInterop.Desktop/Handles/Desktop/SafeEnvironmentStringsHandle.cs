@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.ProcessAndThreads;
 
 namespace WInterop.Handles.Desktop
 {
@@ -20,7 +21,7 @@ namespace WInterop.Handles.Desktop
 
         protected override bool ReleaseHandle()
         {
-            ProcessAndThreads.ProcessAndThreadDesktopMethods.Direct.FreeEnvironmentStringsW(handle);
+            ProcessDesktopMethods.Direct.FreeEnvironmentStringsW(handle);
             handle = IntPtr.Zero;
             return true;
         }

@@ -142,7 +142,8 @@
     <Compile Include="Heap\HeapMethods.cs" />
     <Compile Include="Libraries.cs" />
     <Compile Include="NetworkManagement\SID_NAME_USE.cs" />
-    <Compile Include="ProcessAndThreads\ProcessAndThreadMethods.cs" />
+    <Compile Include="ProcessAndThreads\ProcessMethods.cs" />
+    <Compile Include="ProcessAndThreads\ThreadMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Synchronization\OVERLAPPED.cs" />
     <Compile Include="SystemInformation\SystemInformationMethods.cs" />
