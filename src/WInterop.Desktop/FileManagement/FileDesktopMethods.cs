@@ -164,6 +164,25 @@ namespace WInterop.FileManagement
         }
 
         /// <summary>
+        /// Gets a canonical version of the given file's path.
+        /// </summary>
+        /// <param name="resolveLinks">True to get the destination of links rather than the link itself.</param>
+        public static string GetFinalPathName(string path, GetFinalPathNameByHandleFlags finalPathFlags, bool resolveLinks)
+        {
+            if (path == null) return null;
+
+            // BackupSemantics is needed to get directory handles
+            FileFlags flags = FileFlags.FILE_FLAG_BACKUP_SEMANTICS;
+            if (!resolveLinks) flags |= FileFlags.FILE_FLAG_OPEN_REPARSE_POINT;
+
+            using (SafeFileHandle fileHandle = FileMethods.CreateFile(path, 0, ShareMode.FILE_SHARE_READWRITE,
+                CreationDisposition.OPEN_EXISTING, FileAttributes.NONE, flags))
+            {
+                return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
+            }
+        }
+
+        /// <summary>
         /// Gets the file information for the given handle.
         /// </summary>
         public static BY_HANDLE_FILE_INFORMATION GetFileInformationByHandle(SafeFileHandle fileHandle)

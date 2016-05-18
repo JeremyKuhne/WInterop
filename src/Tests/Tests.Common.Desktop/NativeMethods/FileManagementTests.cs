@@ -171,5 +171,14 @@ namespace WInterop.DesktopTests.NativeMethodTests
                 }
             }
         }
+
+        [Fact]
+        public void FinalPathNameFromPath()
+        {
+            string tempPath = FileMethods.GetTempPath();
+            string lowerTempPath = tempPath.ToLowerInvariant();
+            tempPath.Should().NotBe(lowerTempPath);
+            FileDesktopMethods.GetFinalPathName(lowerTempPath, 0, false).Should().Be(@"\\?\" + Paths.RemoveTrailingSeparators(tempPath));
+        }
     }
 }

@@ -7,8 +7,10 @@
 
 using FluentAssertions;
 using System.Linq;
+using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
 using WInterop.Tests.Support;
+using WInterop.Utility;
 using Xunit;
 
 namespace WInterop.Tests.NativeMethodTests
@@ -417,6 +419,137 @@ namespace WInterop.Tests.NativeMethodTests
                 FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 FileMethods.GetFileType(directory).Should().Be(FileManagement.FileType.FILE_TYPE_DISK);
+            }
+        }
+
+        [Theory
+            // InlineData(@" "),  // 5 Access is denied (UnauthorizedAccess)
+            // InlineData(@"...") // 5 
+            InlineData(@"A ")
+            InlineData(@"A.")
+            ]
+        public void CreateFileUnextendedTests(string fileName)
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = Paths.Combine(cleaner.TempFolder, fileName);
+                using (var handle = FileMethods.CreateFile(filePath, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                {
+                    handle.IsInvalid.Should().BeFalse();
+                    FileMethods.FileExists(filePath).Should().BeTrue();
+                }
+            }
+        }
+
+        [Theory
+            InlineData(@" "),
+            InlineData(@"...")
+            InlineData(@"A ")
+            InlineData(@"A.")
+            ]
+        public void CreateFileExtendedTests(string fileName)
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = @"\\?\" + Paths.Combine(cleaner.TempFolder, fileName);
+                using (var handle = FileMethods.CreateFile(filePath, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                {
+                    handle.IsInvalid.Should().BeFalse();
+                    FileMethods.FlushFileBuffers(handle);
+                    FileMethods.FileExists(filePath).Should().BeTrue();
+                }
+            }
+        }
+
+        [Fact]
+        public void FileExistsTests()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = cleaner.GetTestPath();
+                FileHelper.WriteAllText(filePath, "FileExists");
+                FileMethods.FileExists(filePath).Should().BeTrue();
+                FileMethods.PathExists(filePath).Should().BeTrue();
+                FileMethods.DirectoryExists(filePath).Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void FileNotExistsTests()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = cleaner.GetTestPath();
+                FileMethods.FileExists(filePath).Should().BeFalse();
+                FileMethods.PathExists(filePath).Should().BeFalse();
+                FileMethods.DirectoryExists(filePath).Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void LongPathFileExistsTests()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+                FileHelper.CreateDirectoryRecursive(longPath);
+
+                string filePath = cleaner.CreateTestFile("FileExists", longPath);
+
+                FileMethods.FileExists(filePath).Should().BeTrue();
+                FileMethods.PathExists(filePath).Should().BeTrue();
+                FileMethods.DirectoryExists(filePath).Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void LongPathFileNotExistsTests()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+                string filePath = cleaner.GetTestPath();
+
+                FileMethods.FileExists(filePath).Should().BeFalse();
+                FileMethods.PathExists(filePath).Should().BeFalse();
+                FileMethods.DirectoryExists(filePath).Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void DirectoryExistsTests()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string directoryPath = cleaner.GetTestPath();
+                FileHelper.CreateDirectoryRecursive(directoryPath);
+
+                FileMethods.FileExists(directoryPath).Should().BeFalse();
+                FileMethods.PathExists(directoryPath).Should().BeTrue();
+                FileMethods.DirectoryExists(directoryPath).Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void DirectoryNotExistsTests()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string directoryPath = cleaner.GetTestPath();
+
+                FileMethods.FileExists(directoryPath).Should().BeFalse();
+                FileMethods.PathExists(directoryPath).Should().BeFalse();
+                FileMethods.DirectoryExists(directoryPath).Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void InfoForNonExistantLongPath()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string longPath = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+                FileMethods.TryGetFileInfo(longPath).Should().BeNull();
             }
         }
     }
