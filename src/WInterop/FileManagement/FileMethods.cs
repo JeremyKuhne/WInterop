@@ -356,7 +356,10 @@ namespace WInterop.FileManagement
                 pCreateExParams: ref extended);
 
             if (handle.IsInvalid)
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+            {
+                uint error = (uint)Marshal.GetLastWin32Error();
+                throw ErrorHelper.GetIoExceptionForError(error);
+            }
 
             return handle;
         }

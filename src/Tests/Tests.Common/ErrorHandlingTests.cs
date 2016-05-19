@@ -33,5 +33,15 @@ namespace WInterop.Tests
         {
             ErrorHelper.GetIoExceptionForError(error).Should().BeOfType(exceptionType);
         }
+
+        [Theory,
+            InlineData(0, @"Error 0: The operation completed successfully. "),
+            InlineData(2, @"Error 2: The system cannot find the file specified. "),
+            InlineData(3, @"Error 3: The system cannot find the path specified. "),
+            InlineData(123, @"Error 123: The filename, directory name, or volume label syntax is incorrect. ")]
+        public void WindowsErrorTextIsAsExpected(uint error, string expected)
+        {
+            ErrorMethods.LastErrorToString(error).Should().Be(expected);
+        }
     }
 }

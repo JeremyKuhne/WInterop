@@ -18,6 +18,8 @@ namespace WInterop.FileManagement
     [Flags]
     public enum DesiredAccess : uint
     {
+        NONE = 0,
+
         // File Security and Access Rights
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364399.aspx
 

@@ -238,5 +238,28 @@ namespace WInterop.DesktopTests.FileManagementTests
             Action action = () => FileDesktopMethods.GetFileAttributes(longPath);
             action.ShouldThrow<System.IO.DirectoryNotFoundException>();
         }
+
+        [Fact]
+        public void CreateFileRawParition()
+        {
+            // You can't open with read/write access unless running elevated
+            using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\Harddisk0\Partition0",
+                DesiredAccess.NONE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+            {
+                file.IsInvalid.Should().BeFalse();
+                FileMethods.GetFileType(file).Should().Be(FileType.FILE_TYPE_DISK);
+            }
+        }
+
+        [Fact]
+        public void CreateFileHarddiskVolume()
+        {
+            using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\HarddiskVolume1",
+                DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+            {
+                file.IsInvalid.Should().BeFalse();
+                FileMethods.GetFileType(file).Should().Be(FileType.FILE_TYPE_DISK);
+            }
+        }
     }
 }

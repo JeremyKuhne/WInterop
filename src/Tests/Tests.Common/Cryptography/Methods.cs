@@ -11,9 +11,9 @@ using Xunit;
 using System.Linq;
 using WInterop.Cryptography;
 
-namespace WInterop.Tests
+namespace WInterop.Tests.CryptographyTests
 {
-    public class CryptographyTests
+    public class Methods
     {
         [Theory
             InlineData(StoreName.TrustedPeople)
@@ -21,7 +21,7 @@ namespace WInterop.Tests
             ]
         public void OpenSystemStore(StoreName store)
         {
-            Cryptography.CryptoMethods.OpenSystemStore(store).IsInvalid.Should().BeFalse();
+            CryptoMethods.OpenSystemStore(store).IsInvalid.Should().BeFalse();
         }
 
         [Fact]
