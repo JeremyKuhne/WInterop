@@ -13,8 +13,8 @@ namespace WInterop.Utility
 {
     public static class Delegates
     {
-        public static string DesktopLibrary = "WInterop.Desktop, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1ea30a2edb2b5ea2";
-        public static string BaseLibrary = "WInterop, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1ea30a2edb2b5ea2";
+        public static string DesktopLibrary = "WInterop.Desktop, " + AssemblyInformation.FullyQualifiedVersion;
+        public static string BaseLibrary = "WInterop, " + AssemblyInformation.FullyQualifiedVersion;
 
         public static T CreateDelegate<T>(string typeName, string methodName) where T : class
         {

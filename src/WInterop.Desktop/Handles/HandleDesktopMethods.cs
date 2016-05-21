@@ -87,8 +87,8 @@ namespace WInterop.Handles
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567052.aspx
             // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
-            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            unsafe internal static extern NTSTATUS NtQueryInformationFile(
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            unsafe public static extern NTSTATUS NtQueryInformationFile(
                 SafeFileHandle FileHandle,
                 out IO_STATUS_BLOCK IoStatusBlock,
                 void* FileInformation,

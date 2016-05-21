@@ -13,7 +13,6 @@ using Xunit;
 using FluentAssertions;
 using WInterop.Tests.Support;
 using WInterop.FileManagement;
-using WInterop.FileManagement.Internal;
 using WInterop.Handles;
 using WInterop.Handles.Desktop;
 
