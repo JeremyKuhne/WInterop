@@ -20,6 +20,9 @@ namespace WInterop.FileManagement
 {
     public static partial class FileMethods
     {
+        // Asynchronous Disk I/O Appears as Synchronous on Windows
+        // https://support.microsoft.com/en-us/kb/156932
+
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
@@ -43,6 +46,17 @@ namespace WInterop.FileManagement
                 string pwszExistingFileName,
                 string pwszNewFileName,
                 COPYFILE2_EXTENDED_PARAMETERS* pExtendedParameters);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365512.aspx
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool ReplaceFileW(
+                string lpReplacedFileName,
+                string lpReplacementFileName,
+                string lpBackupFileName,
+                ReplaceFileFlags dwReplaceFlags,
+                IntPtr lpExclude,
+                IntPtr lpReserved);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364946.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -252,8 +266,11 @@ namespace WInterop.FileManagement
         {
             var fileHandle = CreateFile(path, desiredAccess, shareMode, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
             var fileStream = new System.IO.FileStream(
-                new Microsoft.Win32.SafeHandles.SafeFileHandle(fileHandle.DangerousGetHandle(), ownsHandle: false),
-                Conversion.DesiredAccessToFileAccess(desiredAccess));
+                handle: new Microsoft.Win32.SafeHandles.SafeFileHandle(fileHandle.DangerousGetHandle(), ownsHandle: false),
+                access: Conversion.DesiredAccessToFileAccess(desiredAccess),
+                bufferSize: 4096,
+                isAsync: (fileFlags & FileFlags.FILE_FLAG_OVERLAPPED) != 0);
+
             return new SafeHandleStreamWrapper(fileStream, fileHandle);
         }
 
@@ -837,7 +854,11 @@ namespace WInterop.FileManagement
         {
             FileType fileType = Direct.GetFileType(fileHandle);
             if (fileType == FileType.FILE_TYPE_UNKNOWN)
-                throw ErrorHelper.GetIoExceptionForLastError();
+            {
+                uint error = (uint)Marshal.GetLastWin32Error();
+                if (error != WinErrors.NO_ERROR)
+                    throw ErrorHelper.GetIoExceptionForLastError();
+            }
 
             return fileType;
         }

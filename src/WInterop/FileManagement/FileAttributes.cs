@@ -28,6 +28,10 @@ namespace WInterop.FileManagement
         FILE_ATTRIBUTE_ARCHIVE = 0x00000020,
         FILE_ATTRIBUTE_DEVICE = 0x00000040,
         FILE_ATTRIBUTE_NORMAL = 0x00000080,
+
+        /// <summary>
+        /// Indicates that file is temporary and will attempt to keep as much in the cache as possible.
+        /// </summary>
         FILE_ATTRIBUTE_TEMPORARY = 0x00000100,
         FILE_ATTRIBUTE_SPARSE_FILE = 0x00000200,
         FILE_ATTRIBUTE_REPARSE_POINT = 0x00000400,
