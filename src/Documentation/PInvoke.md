@@ -104,6 +104,7 @@ Common Windows Data Types
 |CHAR           |char               |sbyte
 |UCHAR          |unsigned char      |byte
 |SHORT          |short              |short
+|CSHORT         |short              |short
 |USHORT         |unsigned short     |ushort
 |WORD           |unsigned short     |ushort
 |INT            |int                |int
