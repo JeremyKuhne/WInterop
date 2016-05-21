@@ -74,8 +74,10 @@
     <Compile Include="FileManagement\FileDesktopMethods.cs" />
     <Compile Include="FileManagement\Desktop\SYMBOLIC_LINK_FLAG.cs" />
     <Compile Include="Handles\Desktop\FILE_INFORMATION_CLASS.cs" />
+    <Compile Include="Handles\Desktop\FILE_MODE_INFORMATION.cs" />
     <Compile Include="Handles\Desktop\IO_STATUS.cs" />
     <Compile Include="Handles\Desktop\IO_STATUS_BLOCK.cs" />
+    <Compile Include="Handles\Desktop\SafeMailslotHandle.cs" />
     <Compile Include="Handles\HandleDesktopMethods.cs" />
     <Compile Include="Handles\Desktop\ObjectInformation.cs" />
     <Compile Include="Handles\Desktop\OBJECT_ATTRIBUTES.cs" />
@@ -89,6 +91,8 @@
     <Compile Include="Handles\Desktop\SafeNetApiBufferHandle.cs" />
     <Compile Include="Handles\Desktop\SafeSymbolicLinkObjectHandle.cs" />
     <Compile Include="Handles\Desktop\SafeTokenHandle.cs" />
+    <Compile Include="Ipc\Desktop\MailslotInfo.cs" />
+    <Compile Include="Ipc\MailslotDesktopMethods.cs" />
     <Compile Include="NetworkManagement\Desktop\MemberInfo.cs" />
     <Compile Include="NetworkManagement\NetworkDesktopMethods.cs" />
     <Compile Include="ProcessAndThreads\ProcessDesktopMethods.cs" />

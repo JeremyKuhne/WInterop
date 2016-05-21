@@ -11,11 +11,11 @@ using System.Collections.Generic;
 using WInterop.DeviceManagement;
 using WInterop.FileManagement;
 using WInterop.Handles;
-using WInterop.Tests.Support;
+using WInterop.Handles.Desktop;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.DesktopTests
+namespace DesktopTests
 {
     public partial class HandlesTests
     {
@@ -26,7 +26,7 @@ namespace WInterop.DesktopTests
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
-                string name = Handles.HandleDesktopMethods.GetObjectType(directory);
+                string name = HandleDesktopMethods.GetObjectType(directory);
                 name.Should().Be("File");
             }
         }
@@ -39,7 +39,7 @@ namespace WInterop.DesktopTests
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
-                string name = Handles.HandleDesktopMethods.GetObjectName(directory);
+                string name = HandleDesktopMethods.GetObjectName(directory);
 
                 // Skip past the C:\
                 Paths.AddTrailingSeparator(name).Should().EndWith(tempPath.Substring(3));
@@ -54,7 +54,7 @@ namespace WInterop.DesktopTests
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
-                string name = Handles.HandleDesktopMethods.GetFileName(directory);
+                string name = HandleDesktopMethods.GetFileName(directory);
 
                 tempPath.Should().EndWith(Paths.AddTrailingSeparator(name));
             }
@@ -70,7 +70,7 @@ namespace WInterop.DesktopTests
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
                 try
                 {
-                    string name = Handles.HandleDesktopMethods.GetVolumeName(directory);
+                    string name = HandleDesktopMethods.GetVolumeName(directory);
                     name.Should().StartWith(@"\Device\");
                 }
                 catch (NotImplementedException)
@@ -89,7 +89,7 @@ namespace WInterop.DesktopTests
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                string directoryName = Handles.HandleDesktopMethods.GetShortName(directory);
+                string directoryName = HandleDesktopMethods.GetShortName(directory);
                 directoryName.Should().Be("Temp");
 
                 string tempFileName = "ExtraLongName" + System.IO.Path.GetRandomFileName();
@@ -98,7 +98,7 @@ namespace WInterop.DesktopTests
                 {
                     using (var file = FileMethods.CreateFile(tempFilePath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                     {
-                        string fileName = Handles.HandleDesktopMethods.GetShortName(file);
+                        string fileName = HandleDesktopMethods.GetShortName(file);
                         fileName.Length.Should().BeLessOrEqualTo(12);
                     }
                 }
@@ -112,7 +112,7 @@ namespace WInterop.DesktopTests
         [Fact]
         public void OpenDosDeviceDirectory()
         {
-            using (var directory = Handles.HandleDesktopMethods.OpenDirectoryObject(@"\??"))
+            using (var directory = HandleDesktopMethods.OpenDirectoryObject(@"\??"))
             {
                 directory.IsInvalid.Should().BeFalse();
             }
@@ -121,7 +121,7 @@ namespace WInterop.DesktopTests
         [Fact]
         public void OpenGlobalDosDeviceDirectory()
         {
-            using (var directory = Handles.HandleDesktopMethods.OpenDirectoryObject(@"\Global??"))
+            using (var directory = HandleDesktopMethods.OpenDirectoryObject(@"\Global??"))
             {
                 directory.IsInvalid.Should().BeFalse();
             }
@@ -130,7 +130,7 @@ namespace WInterop.DesktopTests
         [Fact]
         public void OpenRootDirectory()
         {
-            using (var directory = Handles.HandleDesktopMethods.OpenDirectoryObject(@"\"))
+            using (var directory = HandleDesktopMethods.OpenDirectoryObject(@"\"))
             {
                 directory.IsInvalid.Should().BeFalse();
             }
@@ -139,18 +139,18 @@ namespace WInterop.DesktopTests
         [Fact]
         public void GetRootDirectoryEntries()
         {
-            using (var directory = Handles.HandleDesktopMethods.OpenDirectoryObject(@"\"))
+            using (var directory = HandleDesktopMethods.OpenDirectoryObject(@"\"))
             {
-                IEnumerable<Handles.Desktop.ObjectInformation> objects = Handles.HandleDesktopMethods.GetDirectoryEntries(directory);
+                IEnumerable<ObjectInformation> objects = HandleDesktopMethods.GetDirectoryEntries(directory);
                 objects.Should().NotBeEmpty();
-                objects.Should().Contain(new Handles.Desktop.ObjectInformation { Name = "Device", TypeName = "Directory" });
+                objects.Should().Contain(new ObjectInformation { Name = "Device", TypeName = "Directory" });
             }
         }
 
         [Fact]
         public void OpenCDriveSymbolicLink()
         {
-            using (var link = Handles.HandleDesktopMethods.OpenSymbolicLinkObject(@"\??\C:"))
+            using (var link = HandleDesktopMethods.OpenSymbolicLinkObject(@"\??\C:"))
             {
                 link.IsInvalid.Should().BeFalse();
             }
@@ -159,9 +159,9 @@ namespace WInterop.DesktopTests
         [Fact]
         public void GetTargetForCDriveSymbolicLink()
         {
-            using (var link = Handles.HandleDesktopMethods.OpenSymbolicLinkObject(@"\??\C:"))
+            using (var link = HandleDesktopMethods.OpenSymbolicLinkObject(@"\??\C:"))
             {
-                string target = Handles.HandleDesktopMethods.GetSymbolicLinkTarget(link);
+                string target = HandleDesktopMethods.GetSymbolicLinkTarget(link);
                 target.Should().StartWith(@"\Device\");
             }
         }
@@ -174,7 +174,7 @@ namespace WInterop.DesktopTests
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
-                string fullName = Handles.HandleDesktopMethods.GetObjectName(directory);
+                string fullName = HandleDesktopMethods.GetObjectName(directory);
                 string fileName = FileMethods.GetFileNameByHandle(directory);
                 string deviceName = fullName.Substring(0, fullName.Length - fileName.Length);
 

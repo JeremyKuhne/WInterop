@@ -10,7 +10,7 @@ using Xunit;
 using FluentAssertions;
 using WInterop.ProcessAndThreads;
 
-namespace WInterop.DesktopTests
+namespace DesktopTests
 {
     public class ProcessAndThreadTests
     {

@@ -11,7 +11,7 @@ using WInterop.Backup;
 using WInterop.Tests.Support;
 using Xunit;
 
-namespace WInterop.DesktopTests.BackupTests
+namespace DesktopTests.BackupTests
 {
     public class Methods
     {

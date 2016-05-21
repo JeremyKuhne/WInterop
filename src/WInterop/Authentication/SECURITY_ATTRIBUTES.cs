@@ -16,6 +16,6 @@ namespace WInterop.Authentication
     {
         public uint nLength;
         public IntPtr lpSecurityDescriptor;
-        [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle;
+        byte bInheritHandle;
     }
 }

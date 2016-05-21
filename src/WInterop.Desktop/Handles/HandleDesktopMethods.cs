@@ -88,10 +88,10 @@ namespace WInterop.Handles
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567052.aspx
             // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            internal static extern NTSTATUS NtQueryInformationFile(
+            unsafe internal static extern NTSTATUS NtQueryInformationFile(
                 SafeFileHandle FileHandle,
                 out IO_STATUS_BLOCK IoStatusBlock,
-                SafeHandle FileInformation,
+                void* FileInformation,
                 uint Length,
                 FILE_INFORMATION_CLASS FileInformationClass);
 
@@ -351,6 +351,11 @@ namespace WInterop.Handles
             return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileAlternateNameInformation);
         }
 
+        private static void BufferedGetFileInformation(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass, Func<NativeBufferReader> filledBuffer)
+        {
+            
+        }
+
         private static string GetFileInformationString(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass)
         {
             return StringBufferCache.CachedBufferInvoke((buffer) =>
@@ -366,12 +371,15 @@ namespace WInterop.Handles
                     // Add space for the FileNameLength
                     buffer.EnsureByteCapacity(nameLength + sizeof(uint));
 
-                    status = Direct.NtQueryInformationFile(
-                        FileHandle: fileHandle,
-                        IoStatusBlock: out ioStatus,
-                        FileInformation: buffer,
-                        Length: checked((uint)buffer.ByteCapacity),
-                        FileInformationClass: fileInformationClass);
+                    unsafe
+                    {
+                        status = Direct.NtQueryInformationFile(
+                            FileHandle: fileHandle,
+                            IoStatusBlock: out ioStatus,
+                            FileInformation: buffer.VoidPointer,
+                            Length: checked((uint)buffer.ByteCapacity),
+                            FileInformationClass: fileInformationClass);
+                    }
 
                     if (status == NTSTATUS.STATUS_SUCCESS || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
                     {
@@ -386,6 +394,34 @@ namespace WInterop.Handles
                 // The string isn't null terminated so we have to explicitly pass the size
                 return reader.ReadString(checked((int)nameLength) / sizeof(char));
             });
+        }
+
+        unsafe private static void GetFileInformation(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass, void* value, uint size)
+        {
+            IO_STATUS_BLOCK ioStatus;
+
+            NTSTATUS status = Direct.NtQueryInformationFile(
+                FileHandle: fileHandle,
+                IoStatusBlock: out ioStatus,
+                FileInformation: value,
+                Length: size,
+                FileInformationClass: fileInformationClass);
+
+            if (status != NTSTATUS.STATUS_SUCCESS)
+                throw ErrorHelper.GetIOExceptionForNTStatus(status);
+        }
+
+        /// <summary>
+        /// Gets the file mode for the given handle.
+        /// </summary>
+        public static FILE_MODE_INFORMATION GetFileModeInformation(SafeFileHandle fileHandle)
+        {
+            FILE_MODE_INFORMATION info = new FILE_MODE_INFORMATION();
+            unsafe
+            {
+                GetFileInformation(fileHandle, FILE_INFORMATION_CLASS.FileModeInformation, &info, sizeof(FILE_MODE_INFORMATION));
+            }
+            return info;
         }
     }
 }

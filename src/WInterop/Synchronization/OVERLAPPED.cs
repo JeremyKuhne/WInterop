@@ -13,17 +13,36 @@ namespace WInterop.Synchronization
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms684342.aspx">OVERLAPPED</a> structure.
     /// </summary>
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct OVERLAPPED
     {
-        [FieldOffset(0)] public uint Internal;
-        [FieldOffset(4)] public uint InternalHigh;
-        // Defined as Offset in the specs
-        [FieldOffset(8)] public uint OffsetLow;
-        [FieldOffset(12)] public uint OffsetHigh;
-        // Not technically part of the definition, adding for easier use.
-        [FieldOffset(8)] public ulong Offset;
-        [FieldOffset(8)] public IntPtr Pointer;
-        [FieldOffset(16)] public IntPtr hEvent;
+        /// <summary>
+        /// Status code for the request. STATUS_PENDING until completed.
+        /// </summary>
+        public UIntPtr Internal;
+
+        /// <summary>
+        /// Number of bytes written when completed without errors.
+        /// </summary>
+        public UIntPtr InternalHigh;
+
+        // Offset as defined here is not technically part of the definition, adding for easier use.
+        // OffsetLot is defined as Offset in the specs
+        // public uint OffsetLow;
+        // public uint OffsetHigh;
+
+        /// <summary>
+        /// The offset to read from if the file supports seeking. Must be zero otherwise.
+        /// </summary>
+        public ulong Offset;
+
+        // Ignoring this union of offset as it is reserved.
+        // public IntPtr Pointer;
+
+        /// <summary>
+        /// The event that will be signaled when the operation is completed. Must be zero or a valid CreateEvent handle.
+        /// Should be a manual reset event.
+        /// </summary>
+        public IntPtr hEvent;
     }
 }

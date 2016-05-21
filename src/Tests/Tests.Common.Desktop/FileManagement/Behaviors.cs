@@ -12,7 +12,7 @@ using WInterop.FileManagement;
 using WInterop.ProcessAndThreads;
 using Xunit;
 
-namespace WInterop.DesktopTests.FileManagementTests
+namespace DesktopTests.FileManagementTests
 {
     public class Behaviors
     {

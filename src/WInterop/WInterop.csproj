@@ -119,6 +119,7 @@
     <Compile Include="FileManagement\GET_FILEEX_INFO_LEVELS.cs" />
     <Compile Include="FileManagement\MoveMethod.cs" />
     <Compile Include="FileManagement\FileMethods.cs" />
+    <Compile Include="FileManagement\ReplaceFileFlags.cs" />
     <Compile Include="FileManagement\SecurityQosFlags.cs" />
     <Compile Include="FileManagement\ShareMode.cs" />
     <Compile Include="FileManagement\StreamInformation.cs" />

@@ -7,16 +7,17 @@
 
 using FluentAssertions;
 using WInterop.ErrorHandling;
+using WInterop.VolumeManagement;
 using Xunit;
 
-namespace WInterop.DesktopTests
+namespace DesktopTests
 {
     public class VolumeManagementTests
     {
         [Fact]
         public void BasicLogicalDriveStrings()
         {
-            var driveStrings = VolumeManagement.VolumeDesktopMethods.GetLogicalDriveStrings();
+            var driveStrings = VolumeDesktopMethods.GetLogicalDriveStrings();
             driveStrings.Should().NotBeEmpty();
             driveStrings.Should().OnlyContain(t => t.Length == 3 && t[0] >= 'A' && t[0] <= 'Z' && t[1] == ':' && t[2] == '\\');
         }
@@ -24,11 +25,11 @@ namespace WInterop.DesktopTests
         [Fact]
         public void BasicGetVolumeInformation()
         {
-            foreach (string drive in VolumeManagement.VolumeDesktopMethods.GetLogicalDriveStrings())
+            foreach (string drive in VolumeDesktopMethods.GetLogicalDriveStrings())
             {
                 try
                 {
-                    var info = VolumeManagement.VolumeDesktopMethods.GetVolumeInformation(drive);
+                    var info = VolumeDesktopMethods.GetVolumeInformation(drive);
                     info.RootPathName.Should().Be(drive);
                 }
                 catch (DriveNotReadyException)
@@ -43,9 +44,9 @@ namespace WInterop.DesktopTests
         [Fact]
         public void BasicGetDriveType()
         {
-            foreach (string drive in VolumeManagement.VolumeDesktopMethods.GetLogicalDriveStrings())
+            foreach (string drive in VolumeDesktopMethods.GetLogicalDriveStrings())
             {
-                var type = VolumeManagement.VolumeDesktopMethods.GetDriveType(drive);
+                var type = VolumeDesktopMethods.GetDriveType(drive);
             }
         }
     }

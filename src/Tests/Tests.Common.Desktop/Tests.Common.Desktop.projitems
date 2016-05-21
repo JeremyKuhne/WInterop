@@ -6,7 +6,7 @@
     <SharedGUID>a6bc8af5-e3bf-4f75-9fba-fe5ed7d50ad2</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Tests.Common.Desktop</Import_RootNamespace>
+    <Import_RootNamespace>DesktopTests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Backup\Methods.cs" />
@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Behaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HandlesTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreadTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />

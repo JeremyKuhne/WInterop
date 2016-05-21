@@ -25,7 +25,7 @@ namespace WInterop.Strings
         public static class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647486.aspx
-            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             unsafe public static extern int LoadStringW(
                 SafeLibraryHandle hInstance,
                 int uID,
@@ -38,6 +38,9 @@ namespace WInterop.Strings
         /// </summary>
         unsafe public static string LoadString(SafeLibraryHandle library, int identifier)
         {
+            // A string resource is mapped in with the dll, there is no need to allocate
+            // or free a buffer.
+
             // Passing 0 will give us a read only handle to the string resource
             char* buffer;
             int result = Direct.LoadStringW(library, identifier, out buffer, 0);

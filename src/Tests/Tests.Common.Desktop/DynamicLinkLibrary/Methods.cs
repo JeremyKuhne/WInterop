@@ -16,7 +16,7 @@ using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.DesktopTests.DllTests
+namespace DesktopTests.DllTests
 {
     public class Methods
     {

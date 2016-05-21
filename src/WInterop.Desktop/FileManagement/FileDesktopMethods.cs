@@ -39,6 +39,14 @@ namespace WInterop.FileManagement
                 uint dwFlagsAndAttributes,
                 IntPtr hTemplateFile);
 
+            // https://https://msdn.microsoft.com/en-us/library/windows/desktop/aa365497.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern IntPtr ReOpenFile(
+                SafeFileHandle hOriginalFile,
+                DesiredAccess dwDesiredAccess,
+                ShareMode dwShareMode,
+                uint dwFlags);
+
             // Ex version is supported by WinRT apps
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364944.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]

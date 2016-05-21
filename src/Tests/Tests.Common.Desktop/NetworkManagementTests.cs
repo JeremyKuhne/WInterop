@@ -8,8 +8,9 @@
 using Xunit;
 using FluentAssertions;
 using System.Linq;
+using WInterop.NetworkManagement;
 
-namespace WInterop.DesktopTests
+namespace DesktopTests
 {
     public partial class NetworkManagementTests
     {
@@ -17,7 +18,7 @@ namespace WInterop.DesktopTests
         public void BasicGetLocalGroupNames()
         {
             string[] knownLocalGroups = { "Administrators", "Guests", "Users" };
-            var localGroups = NetworkManagement.NetworkDesktopMethods.EnumerateLocalGroups();
+            var localGroups = NetworkDesktopMethods.EnumerateLocalGroups();
             localGroups.Should().Contain(knownLocalGroups);
             knownLocalGroups.Should().BeSubsetOf(localGroups);
         }
@@ -26,7 +27,7 @@ namespace WInterop.DesktopTests
         public void BasicGetLocalGroupMembers()
         {
             string[] knownMembers = { "Authenticated Users", "INTERACTIVE" };
-            var members = NetworkManagement.NetworkDesktopMethods.EnumerateGroupUsers("Users");
+            var members = NetworkDesktopMethods.EnumerateGroupUsers("Users");
             members.Select(m => m.Name).Should().Contain(knownMembers);
             knownMembers.Should().BeSubsetOf(members.Select(m => m.Name));
         }
@@ -34,7 +35,7 @@ namespace WInterop.DesktopTests
         [Fact(Skip = "Need to conditionalize this on admin rights.")]
         public void AddLocalGroup()
         {
-            NetworkManagement.NetworkDesktopMethods.AddLocalGroup("TestGroup", "This group is for testing");
+            NetworkDesktopMethods.AddLocalGroup("TestGroup", "This group is for testing");
         }
     }
 }

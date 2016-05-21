@@ -24,6 +24,18 @@ namespace WInterop.Tests.Support
             }
         }
 
+        public static string ReadAllText(string path)
+        {
+            using (var stream = FileMethods.CreateFileStream(path,
+                DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+            {
+                using (var reader = new System.IO.StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
         public static void CreateDirectoryRecursive(string path)
         {
             if (!FileMethods.PathExists(path))
