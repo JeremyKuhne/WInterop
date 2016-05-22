@@ -10,7 +10,6 @@ namespace WInterop.Handles
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff728840.aspx
     public enum FILE_INFORMATION_CLASS : uint
     {
-#if !(COMPACT)
         FileDirectoryInformation = 1,
         FileFullDirectoryInformation = 2,
         FileBothDirectoryInformation = 3,
@@ -19,9 +18,7 @@ namespace WInterop.Handles
         FileInternalInformation = 6,
         FileEaInformation = 7,
         FileAccessInformation = 8,
-#endif
         FileNameInformation = 9,
-#if !(COMPACT)
         FileRenameInformation = 10,
         FileLinkInformation = 11,
         FileNamesInformation = 12,
@@ -33,9 +30,7 @@ namespace WInterop.Handles
         FileAllInformation = 18,
         FileAllocationInformation = 19,
         FileEndOfFileInformation = 20,
-#endif
         FileAlternateNameInformation = 21,
-#if !(COMPACT)
         FileStreamInformation = 22,
         FilePipeInformation = 23,
         FilePipeLocalInformation = 24,
@@ -76,15 +71,12 @@ namespace WInterop.Handles
         // The following are starting with Windows 10
         FileRenameInformationBypassAccessCheck = 56,
         FileLinkInformationBypassAccessCheck = 57,
-#endif
         FileVolumeNameInformation = 58,
-#if !(COMPACT)
         FileIdInformation = 59,
         FileIdExtdDirectoryInformation = 60,
         FileReplaceCompletionInformation = 61, // Windows 8.1
         FileHardLinkFullIdInformation = 62,
         FileIdExtdBothDirectoryInformation = 63,
         FileMaximumInformation = 64
-#endif
     }
 }

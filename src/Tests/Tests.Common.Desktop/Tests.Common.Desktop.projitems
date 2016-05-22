@@ -14,7 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Behaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Methods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HandlesTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreadTests.cs" />

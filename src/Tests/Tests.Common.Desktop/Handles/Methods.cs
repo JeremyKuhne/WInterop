@@ -12,12 +12,13 @@ using WInterop.DeviceManagement;
 using WInterop.FileManagement;
 using WInterop.Handles;
 using WInterop.Handles.Desktop;
+using WInterop.Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace DesktopTests
+namespace DesktopTests.HandlesTests
 {
-    public partial class HandlesTests
+    public partial class Methods
     {
         [Fact]
         public void GetHandleTypeBasic()
@@ -228,6 +229,39 @@ namespace DesktopTests
             // Not sure why this is- probably the source of why so many other things go wrong
             Action action = () => FileMethods.GetFileNameByHandle(fileHandle);
             action.ShouldThrow<ArgumentException>().And.HResult.Should().Be(unchecked((int)0x80070057));
+        }
+
+        [Fact]
+        public void FileModeSynchronousFile()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = cleaner.GetTestPath();
+                using (var file = FileMethods.CreateFile(filePath, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE,
+                    CreationDisposition.CREATE_NEW))
+                {
+                    file.IsInvalid.Should().BeFalse();
+                    var mode = HandleDesktopMethods.GetFileMode(file);
+                    mode.Should().HaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
+                }
+            }
+        }
+
+        [Fact]
+        public void FileModeAsynchronousFile()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = cleaner.GetTestPath();
+                using (var file = FileMethods.CreateFile(filePath, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE,
+                    CreationDisposition.CREATE_NEW, FileAttributes.NONE, FileFlags.FILE_FLAG_OVERLAPPED))
+                {
+                    file.IsInvalid.Should().BeFalse();
+                    var mode = HandleDesktopMethods.GetFileMode(file);
+                    mode.Should().NotHaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
+                    mode.Should().NotHaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_ALERT);
+                }
+            }
         }
     }
 }

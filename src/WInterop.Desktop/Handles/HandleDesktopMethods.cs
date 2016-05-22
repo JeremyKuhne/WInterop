@@ -414,9 +414,9 @@ namespace WInterop.Handles
         /// <summary>
         /// Gets the file mode for the given handle.
         /// </summary>
-        public static FILE_MODE_INFORMATION GetFileModeInformation(SafeFileHandle fileHandle)
+        public static FILE_MODE_INFORMATION GetFileMode(SafeFileHandle fileHandle)
         {
-            FILE_MODE_INFORMATION info = new FILE_MODE_INFORMATION();
+            FILE_MODE_INFORMATION info;
             unsafe
             {
                 GetFileInformation(fileHandle, FILE_INFORMATION_CLASS.FileModeInformation, &info, sizeof(FILE_MODE_INFORMATION));

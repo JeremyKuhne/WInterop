@@ -33,7 +33,7 @@ namespace DesktopTests.Ipc.MailslotTests
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);
-                    var modeInfo = HandleDesktopMethods.GetFileModeInformation(fileHandle);
+                    var modeInfo = HandleDesktopMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened synchronously
                     modeInfo.Should().Be(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
@@ -55,7 +55,7 @@ namespace DesktopTests.Ipc.MailslotTests
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);
-                    var modeInfo = HandleDesktopMethods.GetFileModeInformation(fileHandle);
+                    var modeInfo = HandleDesktopMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened asynchronously (e.g. no synchronous flag)
                     modeInfo.Should().Be((FILE_MODE_INFORMATION)0);
