@@ -10,11 +10,11 @@ using System;
 using System.Linq;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
-using WInterop.Tests.Support;
+using Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.Tests.FileManagementTests
+namespace Tests.FileManagementTests
 {
     public partial class Methods
     {
@@ -125,13 +125,13 @@ namespace WInterop.Tests.FileManagementTests
         {
             string tempPath = FileMethods.GetTempPath();
             var info = FileMethods.GetFileAttributesEx(tempPath);
-            info.Attributes.Should().HaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+            info.Attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
         }
 
         [Fact]
         public void FlushFileBuffersBasic()
         {
-            string tempPath = FileManagement.FileMethods.GetTempPath();
+            string tempPath = FileMethods.GetTempPath();
             string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
             try
             {
@@ -149,7 +149,7 @@ namespace WInterop.Tests.FileManagementTests
         [Fact]
         public void GetFileNameByHandleBasic()
         {
-            string tempPath = FileManagement.FileMethods.GetTempPath();
+            string tempPath = FileMethods.GetTempPath();
             string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
             try
             {
@@ -264,7 +264,7 @@ namespace WInterop.Tests.FileManagementTests
                 }
 
                 string destination = temp.GetTestPath();
-                FileManagement.FileMethods.CopyFile(source, destination);
+                FileMethods.CopyFile(source, destination);
 
                 string alternateStream = destination + @":Foo:$DATA";
                 FileMethods.CopyFile(source, alternateStream);
@@ -272,7 +272,7 @@ namespace WInterop.Tests.FileManagementTests
                 using (var file = FileMethods.CreateFile(destination, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     var fileInfo = FileMethods.GetStreamInformationByHandle(file);
-                    fileInfo.Should().BeEquivalentTo(new FileManagement.StreamInformation[]
+                    fileInfo.Should().BeEquivalentTo(new StreamInformation[]
                     {
                         new StreamInformation { Name = @"::$DATA" },
                         new StreamInformation { Name = @":Foo:$DATA" }
@@ -290,7 +290,7 @@ namespace WInterop.Tests.FileManagementTests
             {
                 var originalInfo = FileMethods.GetFileAttributesEx(tempFileName);
                 originalInfo.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_READONLY);
-                FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes | FileManagement.FileAttributes.FILE_ATTRIBUTE_READONLY);
+                FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes | FileAttributes.FILE_ATTRIBUTE_READONLY);
                 var newInfo = FileMethods.GetFileAttributesEx(tempFileName);
                 newInfo.Attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_READONLY);
                 FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes);
@@ -318,7 +318,7 @@ namespace WInterop.Tests.FileManagementTests
                 FileMethods.CopyFile(source, destination);
 
                 var info = FileMethods.GetFileAttributesEx(destination);
-                info.Attributes.Should().NotHaveFlag(FileManagement.FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+                info.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
             }
         }
 
@@ -375,7 +375,7 @@ namespace WInterop.Tests.FileManagementTests
             {
                 using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
-                    FileMethods.SetFilePointer(fileHandle, 0, FileManagement.MoveMethod.FILE_CURRENT).Should().Be(0);
+                    FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.FILE_CURRENT).Should().Be(0);
                 }
             }
         }
@@ -392,7 +392,7 @@ namespace WInterop.Tests.FileManagementTests
                 {
                     FileMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
                     FileMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
-                    FileMethods.SetFilePointer(fileHandle, 0, FileManagement.MoveMethod.FILE_BEGIN);
+                    FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.FILE_BEGIN);
                     byte[] outBuffer = new byte[data.Length];
                     FileMethods.ReadFile(fileHandle, outBuffer, (uint)data.Length).Should().Be((uint)data.Length);
                     outBuffer.ShouldBeEquivalentTo(data);
@@ -417,9 +417,9 @@ namespace WInterop.Tests.FileManagementTests
         {
             string tempPath = FileMethods.GetTempPath();
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
-                FileAttributes.NONE, FileManagement.FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
-                FileMethods.GetFileType(directory).Should().Be(FileManagement.FileType.FILE_TYPE_DISK);
+                FileMethods.GetFileType(directory).Should().Be(FileType.FILE_TYPE_DISK);
             }
         }
 
@@ -617,7 +617,9 @@ namespace WInterop.Tests.FileManagementTests
                     fileShare: System.IO.FileShare.ReadWrite,
                     fileMode: System.IO.FileMode.Append,
                     fileAttributes: 0,
-                    securityFlags: Utility.Environment.IsWindowsStoreApplication() ? SecurityQosFlags.NONE : SecurityQosFlags.SECURITY_SQOS_PRESENT | SecurityQosFlags.SECURITY_ANONYMOUS ))
+                    securityFlags: WInterop.Utility.Environment.IsWindowsStoreApplication()
+                        ? SecurityQosFlags.NONE 
+                        : SecurityQosFlags.SECURITY_SQOS_PRESENT | SecurityQosFlags.SECURITY_ANONYMOUS ))
                 {
                     stream.Should().NotBeNull();
                 }

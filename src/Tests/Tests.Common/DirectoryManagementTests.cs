@@ -7,12 +7,12 @@
 
 using FluentAssertions;
 using System;
+using Tests.Support;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
-using WInterop.Tests.Support;
 using Xunit;
 
-namespace WInterop.Tests
+namespace Tests
 {
     public class DirectoryManagementTests
     {

@@ -10,11 +10,11 @@ using System;
 using System.Linq;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
-using WInterop.Tests.Support;
+using Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.Tests.FileManagementTests
+namespace Tests.FileManagementTests
 {
     public partial class Behaviors
     {

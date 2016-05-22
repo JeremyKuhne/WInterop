@@ -62,6 +62,8 @@
     <Compile Include="DeviceManagement\Desktop\ControlCodeMethod.cs" />
     <Compile Include="DeviceManagement\Desktop\DeviceMacros.cs" />
     <Compile Include="DeviceManagement\DeviceDesktopMethods.cs" />
+    <Compile Include="DiskManagement\Desktop\DiskFreeSpace.cs" />
+    <Compile Include="DiskManagement\DiskDesktopMethods.cs" />
     <Compile Include="DynamicLinkLibrary\Desktop\LoadLibraryFlags.cs" />
     <Compile Include="DynamicLinkLibrary\DllDesktopMethods.cs" />
     <Compile Include="ErrorHandling\Desktop\ErrorMode.cs" />

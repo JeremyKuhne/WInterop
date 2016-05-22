@@ -5,10 +5,12 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using WInterop.DirectoryManagement;
+using WInterop.ErrorHandling;
 using WInterop.FileManagement;
 using WInterop.Utility;
 
-namespace WInterop.Tests.Support
+namespace Tests.Support
 {
     public static class FileHelper
     {
@@ -42,7 +44,7 @@ namespace WInterop.Tests.Support
             {
                 int lastSeparator = path.LastIndexOfAny(new char[] { Paths.DirectorySeparator, Paths.AltDirectorySeparator });
                 CreateDirectoryRecursive(path.Substring(0, lastSeparator));
-                DirectoryManagement.DirectoryMethods.CreateDirectory(path);
+                DirectoryMethods.CreateDirectory(path);
             }
         }
 
@@ -52,13 +54,13 @@ namespace WInterop.Tests.Support
             if (!data.HasValue)
             {
                 // Nothing found
-                throw ErrorHandling.ErrorHelper.GetIoExceptionForError(ErrorHandling.WinErrors.ERROR_PATH_NOT_FOUND, path);
+                throw ErrorHelper.GetIoExceptionForError(WinErrors.ERROR_PATH_NOT_FOUND, path);
             }
 
             if ((data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) != FileAttributes.FILE_ATTRIBUTE_DIRECTORY)
             {
                 // Not a directory, a file
-                throw ErrorHandling.ErrorHelper.GetIoExceptionForError(ErrorHandling.WinErrors.ERROR_FILE_EXISTS, path);
+                throw ErrorHelper.GetIoExceptionForError(WinErrors.ERROR_FILE_EXISTS, path);
             }
 
             if ((data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_READONLY) == FileAttributes.FILE_ATTRIBUTE_READONLY)
@@ -89,7 +91,7 @@ namespace WInterop.Tests.Support
             }
 
             // We've either emptied or we're a reparse point, delete the directory
-            DirectoryManagement.DirectoryMethods.RemoveDirectory(path);
+            DirectoryMethods.RemoveDirectory(path);
         }
     }
 }

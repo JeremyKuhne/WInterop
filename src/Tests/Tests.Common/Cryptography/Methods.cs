@@ -11,7 +11,7 @@ using Xunit;
 using System.Linq;
 using WInterop.Cryptography;
 
-namespace WInterop.Tests.CryptographyTests
+namespace Tests.CryptographyTests
 {
     public class Methods
     {
@@ -37,10 +37,10 @@ namespace WInterop.Tests.CryptographyTests
                 null;
 #endif
 
-            var localMachine = Cryptography.CryptoMethods.EnumerateSystemStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE);
+            var localMachine = CryptoMethods.EnumerateSystemStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE);
             localMachine.Should().NotBeEmpty();
 
-            var localMachineByName = Cryptography.CryptoMethods.EnumerateSystemStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE, localMachineName);
+            var localMachineByName = CryptoMethods.EnumerateSystemStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE, localMachineName);
 
             if (localMachineName != null)
                 localMachineByName.Should().OnlyContain(x => x.Name.StartsWith(localMachineName, StringComparison.Ordinal), "when specifying the machine name they should come back with the name");
@@ -52,7 +52,7 @@ namespace WInterop.Tests.CryptographyTests
         public void BasicEnumerateLocations()
         {
             string[] knownLocations = { "CurrentUser", "LocalMachine", "CurrentService", "Services", "Users", "CurrentUserGroupPolicy", "LocalMachineGroupPolicy", "LocalMachineEnterprise" };
-            var locations = Cryptography.CryptoMethods.EnumerateSystemStoreLocations();
+            var locations = CryptoMethods.EnumerateSystemStoreLocations();
             knownLocations.Should().BeSubsetOf(locations);
         }
 
@@ -60,7 +60,7 @@ namespace WInterop.Tests.CryptographyTests
         public void BasicEnumeratePhysical()
         {
             string[] knownPhysical = { ".Default", ".AuthRoot", ".GroupPolicy", ".Enterprise" };
-            var physical = Cryptography.CryptoMethods.EnumeratePhysicalStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE, "Root");
+            var physical = CryptoMethods.EnumeratePhysicalStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE, "Root");
             knownPhysical.Should().BeSubsetOf(physical.Select(p => p.PhysicalStoreName));
         }
     }

@@ -11,7 +11,7 @@ using System.Text;
 using WInterop.Ipc;
 using Xunit;
 using FluentAssertions;
-using WInterop.Tests.Support;
+using Tests.Support;
 using WInterop.FileManagement;
 using WInterop.Handles;
 using WInterop.Handles.Desktop;

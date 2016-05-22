@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using WInterop.Buffers;
 using Xunit;
 
-namespace WInterop.Tests.Buffers
+namespace Tests.Buffers
 {
     public class StringBufferTests
     {
@@ -123,7 +123,7 @@ namespace WInterop.Tests.Buffers
             ]
         public void CharCapacityHasUintMax(uint plusValue)
         {
-            if (Utility.Environment.Is64BitProcess)
+            if (WInterop.Utility.Environment.Is64BitProcess)
             {
                 using (var buffer = new StringBuffer())
                 {
@@ -172,7 +172,7 @@ namespace WInterop.Tests.Buffers
             ]
         public void EnsureCharCapacityOver32Bit(uint initialBufferSize)
         {
-            if (!Utility.Environment.Is64BitProcess)
+            if (!WInterop.Utility.Environment.Is64BitProcess)
             {
                 using (var buffer = new StringBuffer(initialBufferSize))
                 {

@@ -12,7 +12,7 @@ using WInterop.Authorization.Desktop;
 using WInterop.ErrorHandling;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Desktop;
-using WInterop.Tests.Support;
+using Tests.Support;
 using WInterop.Utility;
 using Xunit;
 

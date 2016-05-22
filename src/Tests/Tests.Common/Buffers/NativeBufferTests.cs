@@ -9,10 +9,11 @@ using FluentAssertions;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using WInterop;
 using WInterop.Buffers;
 using Xunit;
 
-namespace WInterop.Tests.Buffers
+namespace Tests.Buffers
 {
     public class NativeBufferTests
     {
@@ -75,7 +76,7 @@ namespace WInterop.Tests.Buffers
         [Fact]
         public void CreateNativeBufferOver32BitCapacity()
         {
-            if (!Utility.Environment.Is64BitProcess)
+            if (!WInterop.Utility.Environment.Is64BitProcess)
             {
                 Action action = () => new NativeBuffer(uint.MaxValue + 1ul);
                 action.ShouldThrow<OverflowException>();
@@ -88,7 +89,7 @@ namespace WInterop.Tests.Buffers
             ]
         public void ResizeNativeBufferOver32BitCapacity(ulong initialBufferSize)
         {
-            if (!Utility.Environment.Is64BitProcess)
+            if (!WInterop.Utility.Environment.Is64BitProcess)
             {
                 using (var buffer = new NativeBuffer(initialBufferSize))
                 {

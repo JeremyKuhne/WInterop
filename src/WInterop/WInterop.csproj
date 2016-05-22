@@ -71,6 +71,8 @@
     <Compile Include="Cryptography\SystemStoreLocationId.cs" />
     <Compile Include="DeviceManagement\DeviceMethods.cs" />
     <Compile Include="DirectoryManagement\DirectoryMethods.cs" />
+    <Compile Include="DiskManagement\ExtendedDiskFreeSpace.cs" />
+    <Compile Include="DiskManagement\DiskMethods.cs" />
     <Compile Include="ErrorHandling\DriveLockedException.cs" />
     <Compile Include="ErrorHandling\DriveNotReadyException.cs" />
     <Compile Include="ErrorHandling\ErrorHelper.cs" />

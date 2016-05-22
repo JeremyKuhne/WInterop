@@ -8,7 +8,7 @@
 using System.Linq;
 using FluentAssertions;
 using WInterop.Backup;
-using WInterop.Tests.Support;
+using Tests.Support;
 using Xunit;
 
 namespace DesktopTests.BackupTests

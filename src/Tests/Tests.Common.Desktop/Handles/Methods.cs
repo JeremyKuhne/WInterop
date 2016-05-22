@@ -12,7 +12,7 @@ using WInterop.DeviceManagement;
 using WInterop.FileManagement;
 using WInterop.Handles;
 using WInterop.Handles.Desktop;
-using WInterop.Tests.Support;
+using Tests.Support;
 using WInterop.Utility;
 using Xunit;
 

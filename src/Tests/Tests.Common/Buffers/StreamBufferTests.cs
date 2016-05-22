@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 using WInterop.Buffers;
 using Xunit;
 
-namespace WInterop.Tests.Buffers
+namespace Tests.Buffers
 {
     public class StreamBufferTests
     {

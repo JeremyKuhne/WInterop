@@ -12,7 +12,7 @@ using WInterop.DynamicLinkLibrary;
 using WInterop.DynamicLinkLibrary.Desktop;
 using WInterop.FileManagement;
 using WInterop.Strings;
-using WInterop.Tests.Support;
+using Tests.Support;
 using WInterop.Utility;
 using Xunit;
 

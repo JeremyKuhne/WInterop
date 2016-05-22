@@ -9,7 +9,7 @@ using System;
 using System.Text;
 using WInterop.Utility;
 
-namespace WInterop.Tests.Support
+namespace Tests.Support
 {
     public static class PathGenerator
     {

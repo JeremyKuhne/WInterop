@@ -11,7 +11,7 @@ using System.IO;
 using WInterop.ErrorHandling;
 using Xunit;
 
-namespace WInterop.Tests
+namespace Tests
 {
     public partial class ErrorHandlingTests
     {

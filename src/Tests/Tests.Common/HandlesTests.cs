@@ -8,11 +8,11 @@
 using FluentAssertions;
 using System.Collections.Generic;
 using WInterop.FileManagement;
-using WInterop.Tests.Support;
+using Tests.Support;
 using WInterop.Utility;
 using Xunit;
 
-namespace WInterop.Tests
+namespace Tests
 {
     public partial class HandlesTests
     {
@@ -21,8 +21,8 @@ namespace WInterop.Tests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var mountPointManager = FileManagement.FileMethods.CreateFile(
-                    @"\\.\MountPointManager", 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL))
+                using (var mountPointManager = FileMethods.CreateFile(
+                    @"\\.\MountPointManager", 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, FileAttributes.FILE_ATTRIBUTE_NORMAL))
                 {
                     mountPointManager.IsInvalid.Should().BeFalse();
                 }

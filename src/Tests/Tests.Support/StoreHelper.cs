@@ -5,12 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using FluentAssertions;
+using System;
 
-namespace WInterop.Tests.Support
+namespace Tests.Support
 {
     public static class StoreHelper
     {
@@ -19,11 +17,11 @@ namespace WInterop.Tests.Support
             try
             {
                 action();
-                Utility.Environment.IsWindowsStoreApplication().Should().BeFalse();
+                WInterop.Utility.Environment.IsWindowsStoreApplication().Should().BeFalse();
             }
             catch (UnauthorizedAccessException)
             {
-                Utility.Environment.IsWindowsStoreApplication().Should().BeTrue();
+                WInterop.Utility.Environment.IsWindowsStoreApplication().Should().BeTrue();
             }
         }
     }

@@ -12,7 +12,7 @@ using System.IO;
 using System.Linq;
 using WInterop.FileManagement;
 
-namespace WInterop.Tests.Support
+namespace Tests.Support
 {
     public class TestFileCleaner : IDisposable
     {

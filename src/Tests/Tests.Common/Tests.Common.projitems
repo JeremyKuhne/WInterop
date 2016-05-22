@@ -6,7 +6,7 @@
     <SharedGUID>2035a6ee-3425-4eba-8067-919adab2599e</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>WInterop.Tests</Import_RootNamespace>
+    <Import_RootNamespace>Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferReaderTests.cs" />
@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CacheTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Behaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\Methods.cs" />
