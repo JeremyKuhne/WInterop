@@ -373,10 +373,7 @@ namespace WInterop.FileManagement
                 pCreateExParams: ref extended);
 
             if (handle.IsInvalid)
-            {
-                uint error = (uint)Marshal.GetLastWin32Error();
-                throw ErrorHelper.GetIoExceptionForError(error);
-            }
+                throw ErrorHelper.GetIoExceptionForLastError();
 
             return handle;
         }
@@ -504,13 +501,13 @@ namespace WInterop.FileManagement
             WIN32_FILE_ATTRIBUTE_DATA data;
             if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out data))
             {
-                uint error = (uint)Marshal.GetLastWin32Error();
+                WindowsError error = ErrorHelper.GetLastError();
                 switch (error)
                 {
-                    case WinErrors.ERROR_ACCESS_DENIED:
-                    case WinErrors.ERROR_NETWORK_ACCESS_DENIED:
+                    case WindowsError.ERROR_ACCESS_DENIED:
+                    case WindowsError.ERROR_NETWORK_ACCESS_DENIED:
                         throw ErrorHelper.GetIoExceptionForError(error, path);
-                    case WinErrors.ERROR_PATH_NOT_FOUND:
+                    case WindowsError.ERROR_PATH_NOT_FOUND:
                     default:
                         return null;
                 }
@@ -549,8 +546,8 @@ namespace WInterop.FileManagement
                 {
                     while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo, buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
                     {
-                        uint error = (uint)Marshal.GetLastWin32Error();
-                        if (error != WinErrors.ERROR_MORE_DATA)
+                        WindowsError error = ErrorHelper.GetLastError();
+                        if (error != WindowsError.ERROR_MORE_DATA)
                             throw ErrorHelper.GetIoExceptionForError(error);
                         buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                     }
@@ -614,13 +611,13 @@ namespace WInterop.FileManagement
                     while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStreamInfo,
                         buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
                     {
-                        uint error = (uint)Marshal.GetLastWin32Error();
+                        WindowsError error = ErrorHelper.GetLastError();
                         switch (error)
                         {
-                            case WinErrors.ERROR_HANDLE_EOF:
+                            case WindowsError.ERROR_HANDLE_EOF:
                                 // No streams
                                 return Enumerable.Empty<StreamInformation>();
-                            case WinErrors.ERROR_MORE_DATA:
+                            case WindowsError.ERROR_MORE_DATA:
                                 buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                                 break;
                             default:
@@ -855,8 +852,8 @@ namespace WInterop.FileManagement
             FileType fileType = Direct.GetFileType(fileHandle);
             if (fileType == FileType.FILE_TYPE_UNKNOWN)
             {
-                uint error = (uint)Marshal.GetLastWin32Error();
-                if (error != WinErrors.NO_ERROR)
+                WindowsError error = ErrorHelper.GetLastError();
+                if (error != WindowsError.NO_ERROR)
                     throw ErrorHelper.GetIoExceptionForLastError();
             }
 

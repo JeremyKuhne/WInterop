@@ -172,8 +172,8 @@ namespace WInterop.Authorization
                 0,
                 out bytesNeeded))
             {
-                uint error = (uint)Marshal.GetLastWin32Error();
-                if (error != WinErrors.ERROR_INSUFFICIENT_BUFFER)
+                WindowsError error = ErrorHelper.GetLastError();
+                if (error != WindowsError.ERROR_INSUFFICIENT_BUFFER)
                     throw ErrorHelper.GetIoExceptionForError(error);
             }
             else
@@ -291,8 +291,8 @@ namespace WInterop.Authorization
             SafeTokenHandle threadToken;
             if (!Direct.OpenThreadToken(ThreadMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
             {
-                uint error = (uint)Marshal.GetLastWin32Error();
-                if (error != WinErrors.ERROR_NO_TOKEN)
+                WindowsError error = ErrorHelper.GetLastError();
+                if (error != WindowsError.ERROR_NO_TOKEN)
                     throw ErrorHelper.GetIoExceptionForError(error, desiredAccess.ToString());
 
                 SafeTokenHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE);

@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -14,6 +15,12 @@ namespace WInterop.ErrorHandling
 {
     public static class ErrorHelper
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] // Want to try and force the get last error inline
+        public static WindowsError GetLastError()
+        {
+            return (WindowsError)Marshal.GetLastWin32Error();
+        }
+
         /// <summary>
         /// Turns the last Windows error into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
@@ -21,7 +28,7 @@ namespace WInterop.ErrorHandling
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // Want to try and force the get last error inline
         public static Exception GetIoExceptionForLastError(string path = null)
         {
-            uint error = (uint)Marshal.GetLastWin32Error();
+            WindowsError error = (WindowsError)Marshal.GetLastWin32Error();
             return GetIoExceptionForError(error, path);
         }
 
@@ -50,14 +57,33 @@ namespace WInterop.ErrorHandling
         }
 
         /// <summary>
+        /// Try to get the error message for GetLastError result
+        /// </summary>
+        public static string LastErrorToString(WindowsError error)
+        {
+            string message = ErrorMethods.FormatMessage(
+                messageId: (uint)error,
+                source: IntPtr.Zero,
+                flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
+
+            
+            return Enum.IsDefined(typeof(WindowsError), error)
+                ? $"{error} ({(uint)error}): {message}"
+                : $"Error {error}: {message}";
+        }
+
+        /// <summary>
         /// Turns HRESULT errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
         public static Exception GetIoExceptionForHResult(int hr, string path = null)
         {
-            string message = $"{HResultToString(hr)} > '{path ?? WInteropStrings.NoValue}'";
+            string message = path == null
+                ? $"{HResultToString(hr)}"
+                : $"{HResultToString(hr)} '{path}'";
+
             if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
-                return WinErrorToException((uint)ErrorMacros.HRESULT_CODE(hr), message, path);
+                return WindowsErrorToException((WindowsError)ErrorMacros.HRESULT_CODE(hr), message, path);
             else
                 return new IOException(message, hr);
         }
@@ -66,12 +92,15 @@ namespace WInterop.ErrorHandling
         /// Turns Windows errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetIoExceptionForError(uint error, string path = null)
+        public static Exception GetIoExceptionForError(WindowsError error, string path = null)
         {
             // http://referencesource.microsoft.com/#mscorlib/system/io/__error.cs,142
 
-            string message = $"{ErrorMethods.LastErrorToString(error)} > '{path ?? WInteropStrings.NoValue}'";
-            return WinErrorToException(error, message, path);
+            string message = path == null
+                ? $"{LastErrorToString(error)}"
+                : $"{LastErrorToString(error)} '{path}'";
+
+            return WindowsErrorToException(error, message, path);
         }
 
         /// <summary>
@@ -89,38 +118,38 @@ namespace WInterop.ErrorHandling
             return GetIoExceptionForError(ErrorMethods.NtStatusToWinError(status), path);
         }
 
-        private static Exception WinErrorToException(uint error, string message, string path)
+        private static Exception WindowsErrorToException(WindowsError error, string message, string path)
         {
             switch (error)
             {
-                case WinErrors.ERROR_FILE_NOT_FOUND:
+                case WindowsError.ERROR_FILE_NOT_FOUND:
                     return new FileNotFoundException(message, path);
-                case WinErrors.ERROR_PATH_NOT_FOUND:
+                case WindowsError.ERROR_PATH_NOT_FOUND:
                     return new DirectoryNotFoundException(message);
-                case WinErrors.ERROR_ACCESS_DENIED:
+                case WindowsError.ERROR_ACCESS_DENIED:
                 // Network access doesn't throw UnauthorizedAccess in .NET
-                case WinErrors.ERROR_NETWORK_ACCESS_DENIED:
+                case WindowsError.ERROR_NETWORK_ACCESS_DENIED:
                     return new UnauthorizedAccessException(message);
-                case WinErrors.ERROR_FILENAME_EXCED_RANGE:
+                case WindowsError.ERROR_FILENAME_EXCED_RANGE:
                     return new PathTooLongException(message);
-                case WinErrors.ERROR_INVALID_DRIVE:
+                case WindowsError.ERROR_INVALID_DRIVE:
                     // Not available in Portable libraries
                     // return new DriveNotFoundException(message);
                     goto default;
-                case WinErrors.ERROR_OPERATION_ABORTED:
+                case WindowsError.ERROR_OPERATION_ABORTED:
                     return new OperationCanceledException(message);
-                case WinErrors.ERROR_NOT_READY:
+                case WindowsError.ERROR_NOT_READY:
                     return new DriveNotReadyException(message);
-                case WinErrors.FVE_E_LOCKED_VOLUME:
+                case WindowsError.FVE_E_LOCKED_VOLUME:
                     return new DriveLockedException(message);
-                case WinErrors.ERROR_INVALID_PARAMETER:
+                case WindowsError.ERROR_INVALID_PARAMETER:
                     return new ArgumentException(message);
-                case WinErrors.ERROR_NOT_SUPPORTED:
-                case WinErrors.ERROR_NOT_SUPPORTED_IN_APPCONTAINER:
+                case WindowsError.ERROR_NOT_SUPPORTED:
+                case WindowsError.ERROR_NOT_SUPPORTED_IN_APPCONTAINER:
                     return new NotSupportedException(message);
-                case WinErrors.ERROR_ALREADY_EXISTS:
-                case WinErrors.ERROR_SHARING_VIOLATION:
-                case WinErrors.ERROR_FILE_EXISTS:
+                case WindowsError.ERROR_ALREADY_EXISTS:
+                case WindowsError.ERROR_SHARING_VIOLATION:
+                case WindowsError.ERROR_FILE_EXISTS:
                 default:
                     return new IOException(message, ErrorMacros.HRESULT_FROM_WIN32(error));
             }

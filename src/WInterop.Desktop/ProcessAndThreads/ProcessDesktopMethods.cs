@@ -77,7 +77,7 @@ namespace WInterop.ProcessAndThreads
             return StringBufferCache.BufferInvoke(
                 buffer => Direct.GetEnvironmentVariableW(name, buffer, buffer.CharCapacity),
                 name,
-                error => error != WinErrors.ERROR_ENVVAR_NOT_FOUND);
+                error => error != WindowsError.ERROR_ENVVAR_NOT_FOUND);
         }
 
         /// <summary>

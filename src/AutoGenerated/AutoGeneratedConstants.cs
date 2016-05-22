@@ -34,12 +34,12 @@ namespace WInterop
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const int CurrentHour = 15;
+            public const int CurrentHour = 19;
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const int CurrentMinute = 12;
+            public const int CurrentMinute = 54;
         }
 
         public static class Strings
@@ -72,22 +72,22 @@ namespace WInterop
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const string CurrentHour = "15";
+            public const string CurrentHour = "19";
 
             /// <summary>
             /// Current two digit hour from 00..23
             /// </summary>
-            public const string CurrentTwoDigitHour = "15";
+            public const string CurrentTwoDigitHour = "19";
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const string CurrentMinute = "12";
+            public const string CurrentMinute = "54";
 
             /// <summary>
             /// Current two digit hour from 00..59
             /// </summary>
-            public const string CurrentTwoDigitMinute = "12";
+            public const string CurrentTwoDigitMinute = "54";
         }
     }
 }

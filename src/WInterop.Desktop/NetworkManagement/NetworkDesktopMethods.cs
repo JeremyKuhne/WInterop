@@ -30,7 +30,7 @@ namespace WInterop.NetworkManagement
             // NET_API_STATUS is a DWORD (uint)
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370304.aspx
             [DllImport(Libraries.Netapi32, ExactSpelling = true)]
-            public static extern uint NetApiBufferFree(
+            public static extern WindowsError NetApiBufferFree(
                 IntPtr Buffer);
 
             // Local Group Functions
@@ -38,7 +38,7 @@ namespace WInterop.NetworkManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370434.aspx
             [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern uint NetLocalGroupAdd(
+            public unsafe static extern WindowsError NetLocalGroupAdd(
                 string servername,
                 uint level,
                 void* buf,
@@ -58,7 +58,7 @@ namespace WInterop.NetworkManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370440.aspx
             [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern uint NetLocalGroupEnum(
+            public static extern WindowsError NetLocalGroupEnum(
                 string servername,
                 uint level,
                 out SafeNetApiBufferHandle bufptr,
@@ -77,7 +77,7 @@ namespace WInterop.NetworkManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370601.aspx
             [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern uint NetLocalGroupGetMembers(
+            public static extern WindowsError NetLocalGroupGetMembers(
                 string servername,
                 string localgroupname,
                 uint level,
@@ -116,8 +116,8 @@ namespace WInterop.NetworkManagement
 
         public static void NetApiBufferFree(IntPtr buffer)
         {
-            uint result = Direct.NetApiBufferFree(buffer);
-            if (result != WinErrors.NERR_Success)
+            WindowsError result = Direct.NetApiBufferFree(buffer);
+            if (result != WindowsError.NERR_Success)
                 throw ErrorHelper.GetIoExceptionForError(result);
         }
 
@@ -132,13 +132,13 @@ namespace WInterop.NetworkManagement
                 char*[] data = new char*[] { fixedName, fixedComment };
                 fixed (void* buffer = data)
                 {
-                    uint result = Direct.NetLocalGroupAdd(
+                    WindowsError result = Direct.NetLocalGroupAdd(
                         servername: server,
                         level: level,
                         buf: buffer,
                         parm_err: out parameter);
 
-                    if (result != WinErrors.NERR_Success)
+                    if (result != WindowsError.NERR_Success)
                         throw ErrorHelper.GetIoExceptionForError(result, groupName);
                 }
             }
@@ -152,7 +152,7 @@ namespace WInterop.NetworkManagement
             uint entriesRead;
             uint totalEntries;
 
-            uint result = Direct.NetLocalGroupEnum(
+            WindowsError result = Direct.NetLocalGroupEnum(
                 servername: server,
                 level: 0,
                 bufptr: out buffer,
@@ -161,7 +161,7 @@ namespace WInterop.NetworkManagement
                 totalentries: out totalEntries,
                 resumehandle: IntPtr.Zero);
 
-            if (result != WinErrors.NERR_Success)
+            if (result != WindowsError.NERR_Success)
                 throw ErrorHelper.GetIoExceptionForError(result, server);
 
             foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
@@ -180,7 +180,7 @@ namespace WInterop.NetworkManagement
             uint entriesRead;
             uint totalEntries;
 
-            uint result = Direct.NetLocalGroupGetMembers(
+            WindowsError result = Direct.NetLocalGroupGetMembers(
                 servername: server,
                 localgroupname: groupName,
                 level: 1,
@@ -190,7 +190,7 @@ namespace WInterop.NetworkManagement
                 totalentries: out totalEntries,
                 resumehandle: IntPtr.Zero);
 
-            if (result != WinErrors.NERR_Success)
+            if (result != WindowsError.NERR_Success)
                 throw ErrorHelper.GetIoExceptionForError(result, server);
 
             foreach (Direct.LOCALGROUP_MEMBERS_INFO_1 info in ReadStructsFromBuffer<Direct.LOCALGROUP_MEMBERS_INFO_1>(buffer, entriesRead))

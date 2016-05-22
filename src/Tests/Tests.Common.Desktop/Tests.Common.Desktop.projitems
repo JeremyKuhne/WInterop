@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Backup\Methods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clipboard\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicLinkLibrary\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />

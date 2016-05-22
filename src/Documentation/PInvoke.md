@@ -123,6 +123,7 @@ Variable size types (essentially all pointers)
 
 |Windows         |C (x32/x64)                |C#
 |-------         |-----------                |---
+|HWND            |long/__int64               |IntPtr
 |LPARAM          |long/__int64               |IntPtr
 |LRESULT         |long/__int64               |IntPtr
 |LONG_PTR        |long/__int64               |IntPtr

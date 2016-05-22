@@ -54,13 +54,13 @@ namespace Tests.Support
             if (!data.HasValue)
             {
                 // Nothing found
-                throw ErrorHelper.GetIoExceptionForError(WinErrors.ERROR_PATH_NOT_FOUND, path);
+                throw ErrorHelper.GetIoExceptionForError(WindowsError.ERROR_PATH_NOT_FOUND, path);
             }
 
             if ((data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) != FileAttributes.FILE_ATTRIBUTE_DIRECTORY)
             {
                 // Not a directory, a file
-                throw ErrorHelper.GetIoExceptionForError(WinErrors.ERROR_FILE_EXISTS, path);
+                throw ErrorHelper.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, path);
             }
 
             if ((data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_READONLY) == FileAttributes.FILE_ATTRIBUTE_READONLY)

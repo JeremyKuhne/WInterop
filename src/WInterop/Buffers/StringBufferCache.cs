@@ -94,7 +94,7 @@ namespace WInterop.Buffers
         /// <summary>
         /// Uses the stringbuilder cache and increases the buffer size if needed.
         /// </summary>
-        public static string BufferInvoke(Func<StringBuffer, uint> invoker, string value = null, Func<uint, bool> shouldThrow = null)
+        public static string BufferInvoke(Func<StringBuffer, uint> invoker, string value = null, Func<WindowsError, bool> shouldThrow = null)
         {
             return CachedBufferInvoke(minCapacity: 260u, func: (buffer) =>
             {
@@ -107,7 +107,7 @@ namespace WInterop.Buffers
                 if (returnValue == 0)
                 {
                     // Failed
-                    uint error = (uint)Marshal.GetLastWin32Error();
+                    WindowsError error = ErrorHelper.GetLastError();
 
                     if (shouldThrow != null && !shouldThrow(error))
                         return null;

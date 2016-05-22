@@ -104,8 +104,8 @@ namespace WInterop.FileManagement
             if (_findHandle == (IntPtr)(-1))
             {
                 _findHandle = IntPtr.Zero;
-                uint error = (uint)Marshal.GetLastWin32Error();
-                if (error == WinErrors.ERROR_FILE_NOT_FOUND)
+                WindowsError error = ErrorHelper.GetLastError();
+                if (error == WindowsError.ERROR_FILE_NOT_FOUND)
                     return null;
 
                 throw ErrorHelper.GetIoExceptionForLastError(OriginalPath);
@@ -119,8 +119,8 @@ namespace WInterop.FileManagement
             WIN32_FIND_DATA findData;
             if (!FileMethods.Direct.FindNextFileW(_findHandle, out findData))
             {
-                uint error = (uint)Marshal.GetLastWin32Error();
-                if (error == WinErrors.ERROR_NO_MORE_FILES)
+                WindowsError error = ErrorHelper.GetLastError();
+                if (error == WindowsError.ERROR_NO_MORE_FILES)
                     return null;
                 throw ErrorHelper.GetIoExceptionForLastError(OriginalPath);
             }

@@ -201,7 +201,7 @@ namespace DesktopTests.FileManagementTests
                 else
                 {
                     // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
-                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be(ErrorMacros.HRESULT_FROM_WIN32(WinErrors.ERROR_PRIVILEGE_NOT_HELD));
+                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be(ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }
@@ -226,7 +226,7 @@ namespace DesktopTests.FileManagementTests
                 }
                 else
                 {
-                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be(ErrorMacros.HRESULT_FROM_WIN32(WinErrors.ERROR_PRIVILEGE_NOT_HELD));
+                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be(ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }

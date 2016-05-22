@@ -46,5 +46,14 @@ namespace WInterop.Buffers
 
             return strings;
         }
+
+        public static unsafe void CopyUintArray(uint* source, uint[] destination)
+        {
+            long bytesToCopy = destination.Length * sizeof(uint);
+            fixed (uint* destinationPointer = destination)
+            {
+                Buffer.MemoryCopy(source, destinationPointer, bytesToCopy, bytesToCopy);
+            }
+        }
     }
 }

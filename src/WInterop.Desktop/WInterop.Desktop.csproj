@@ -54,9 +54,12 @@
     <Compile Include="Backup\Desktop\StreamAttributes.cs" />
     <Compile Include="Backup\Desktop\BackupStreamInformation.cs" />
     <Compile Include="Backup\Desktop\WIN32_STREAM_ID.cs" />
+    <Compile Include="Clipboard\ClipboardDesktopMethods.cs" />
     <Compile Include="Console\ConsoleDesktopMethods.cs" />
     <Compile Include="Console\Desktop\StandardHandleType.cs" />
     <Compile Include="Cryptography\CryptoDesktopMethods.cs" />
+    <Compile Include="Clipboard\Desktop\ClipboardFormat.cs" />
+    <Compile Include="Clipboard\Desktop\ClipboardSession.cs" />
     <Compile Include="DeviceManagement\Desktop\ControlCodeAccess.cs" />
     <Compile Include="DeviceManagement\Desktop\ControlCodeDeviceType.cs" />
     <Compile Include="DeviceManagement\Desktop\ControlCodeMethod.cs" />

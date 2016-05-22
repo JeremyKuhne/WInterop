@@ -36,14 +36,14 @@ namespace WInterop.Utility
                     uint bufferSize = buffer.CharCapacity;
                     try
                     {
-                        uint result = WindowsStore.Query.NativeMethods.Direct.GetCurrentApplicationUserModelId(ref bufferSize, buffer);
+                        WindowsError result = WindowsStore.Query.NativeMethods.Direct.GetCurrentApplicationUserModelId(ref bufferSize, buffer);
                         switch (result)
                         {
-                            case WinErrors.APPMODEL_ERROR_NO_APPLICATION:
+                            case WindowsError.APPMODEL_ERROR_NO_APPLICATION:
                                 s_isWinRT = false;
                                 break;
-                            case WinErrors.ERROR_SUCCESS:
-                            case WinErrors.ERROR_INSUFFICIENT_BUFFER:
+                            case WindowsError.ERROR_SUCCESS:
+                            case WindowsError.ERROR_INSUFFICIENT_BUFFER:
                                 s_isWinRT = true;
                                 break;
                             default:

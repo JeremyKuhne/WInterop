@@ -110,14 +110,14 @@ namespace WInterop.VolumeManagement
                 // QueryDosDevicePrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
                 while ((result = Direct.QueryDosDeviceW(deviceName, buffer, buffer.CharCapacity)) == 0)
                 {
-                    uint lastError = (uint)Marshal.GetLastWin32Error();
-                    switch (lastError)
+                    WindowsError error = ErrorHelper.GetLastError();
+                    switch (error)
                     {
-                        case WinErrors.ERROR_INSUFFICIENT_BUFFER:
+                        case WindowsError.ERROR_INSUFFICIENT_BUFFER:
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(lastError, deviceName);
+                            throw ErrorHelper.GetIoExceptionForError(error, deviceName);
                     }
                 }
 
@@ -165,14 +165,14 @@ namespace WInterop.VolumeManagement
             {
                 while (!Direct.GetVolumePathNameW(path, volumePathName, volumePathName.CharCapacity))
                 {
-                    uint lastError = (uint)Marshal.GetLastWin32Error();
-                    switch (lastError)
+                    WindowsError error = ErrorHelper.GetLastError();
+                    switch (error)
                     {
-                        case WinErrors.ERROR_FILENAME_EXCED_RANGE:
+                        case WindowsError.ERROR_FILENAME_EXCED_RANGE:
                             volumePathName.EnsureCharCapacity(volumePathName.CharCapacity * 2);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(lastError, path);
+                            throw ErrorHelper.GetIoExceptionForError(error, path);
                     }
                 }
 
@@ -195,14 +195,14 @@ namespace WInterop.VolumeManagement
             // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
             while (!Direct.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
                 {
-                    uint lastError = (uint)Marshal.GetLastWin32Error();
-                    switch (lastError)
+                    WindowsError error = ErrorHelper.GetLastError();
+                    switch (error)
                     {
-                        case WinErrors.ERROR_MORE_DATA:
+                        case WindowsError.ERROR_MORE_DATA:
                             buffer.EnsureCharCapacity(returnLength);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(lastError, volumeName);
+                            throw ErrorHelper.GetIoExceptionForError(error, volumeName);
                     }
                 }
 

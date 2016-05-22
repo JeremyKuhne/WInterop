@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using WInterop.ErrorHandling;
 
 namespace WInterop.WindowsStore.Query
 {
@@ -27,7 +28,7 @@ namespace WInterop.WindowsStore.Query
             // https://msdn.microsoft.com/en-us/library/windows/desktop/hh920918.aspx
             // Technically returns an int, but being compatable with error lookup
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern uint GetCurrentApplicationUserModelId(
+            public static extern WindowsError GetCurrentApplicationUserModelId(
                 ref uint applicationUserModelIdLength,
                 SafeHandle applicationUserModelId);
         }

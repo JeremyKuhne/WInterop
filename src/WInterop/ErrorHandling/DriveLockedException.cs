@@ -13,13 +13,13 @@ namespace WInterop.ErrorHandling
     public class DriveLockedException : IOException
     {
         public DriveLockedException()
-            : base() { HResult = unchecked((int)WinErrors.FVE_E_LOCKED_VOLUME); }
+            : base() { HResult = unchecked((int)WindowsError.FVE_E_LOCKED_VOLUME); }
 
         public DriveLockedException(string message)
-            : base(message) { HResult = unchecked((int)WinErrors.FVE_E_LOCKED_VOLUME); }
+            : base(message) { HResult = unchecked((int)WindowsError.FVE_E_LOCKED_VOLUME); }
 
         public DriveLockedException(string message, Exception innerException)
-            : base(message, innerException) { HResult = unchecked((int)WinErrors.FVE_E_LOCKED_VOLUME); }
+            : base(message, innerException) { HResult = unchecked((int)WindowsError.FVE_E_LOCKED_VOLUME); }
 
         public DriveLockedException(string message, int hresult)
             : base(message, hresult) { }

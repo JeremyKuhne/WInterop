@@ -81,7 +81,7 @@
     <Compile Include="ErrorHandling\FormatMessageFlags.cs" />
     <Compile Include="ErrorHandling\ErrorMethods.cs" />
     <Compile Include="ErrorHandling\NTSTATUS.cs" />
-    <Compile Include="ErrorHandling\WinErrors.cs" />
+    <Compile Include="ErrorHandling\WindowsError.cs" />
     <Compile Include="FileManagement\CopyFile2\ChunkFinished.cs" />
     <Compile Include="FileManagement\CopyFile2\ChunkStarted.cs" />
     <Compile Include="FileManagement\CopyFile2\CopyFile2ProgressRoutine.cs" />
@@ -142,6 +142,7 @@
     <Compile Include="Handles\SafeProcessHandle.cs" />
     <Compile Include="Handles\SafeHandleStreamWrapper.cs" />
     <Compile Include="Handles\SafeThreadHandle.cs" />
+    <Compile Include="Handles\WindowHandle.cs" />
     <Compile Include="Heap\HeapMethods.cs" />
     <Compile Include="Libraries.cs" />
     <Compile Include="NetworkManagement\SID_NAME_USE.cs" />

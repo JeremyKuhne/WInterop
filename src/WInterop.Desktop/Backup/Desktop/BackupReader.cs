@@ -74,8 +74,8 @@ namespace WInterop.Backup.Desktop
                     lpdwHighByteSeeked: out high,
                     context: ref _context))
                 {
-                    uint error = (uint)Marshal.GetLastWin32Error();
-                    if (error != WinErrors.ERROR_SEEK)
+                    WindowsError error = ErrorHelper.GetLastError();
+                    if (error != WindowsError.ERROR_SEEK)
                     {
                         throw ErrorHelper.GetIoExceptionForError(error);
                     }

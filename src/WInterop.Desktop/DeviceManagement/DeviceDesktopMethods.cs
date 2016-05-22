@@ -77,10 +77,10 @@ namespace WInterop.DeviceManagement
                         lpBytesReturned: out bytesReturned,
                         lpOverlapped: IntPtr.Zero))
                     {
-                        uint error = (uint)Marshal.GetLastWin32Error();
+                        WindowsError error = ErrorHelper.GetLastError();
                         switch (error)
                         {
-                            case WinErrors.ERROR_MORE_DATA:
+                            case WindowsError.ERROR_MORE_DATA:
                                 outBuffer.EnsureByteCapacity(checked(outBuffer.ByteCapacity * 2));
                                 break;
                             default:

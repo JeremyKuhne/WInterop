@@ -9,7 +9,6 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security;
 using WInterop.Buffers;
 
 namespace WInterop.ErrorHandling
@@ -36,10 +35,13 @@ namespace WInterop.ErrorHandling
         // Using NTSTATUS Values
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff565436.aspx
 
-        // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
-#if DESKTOP
-        [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
-#endif
+        /// <summary>
+        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// </summary>
+        /// <remarks>
+        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
+        /// </remarks>
+
         public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
@@ -60,23 +62,6 @@ namespace WInterop.ErrorHandling
                 string[] Arguments);
         }
 
-        /// <summary>
-        /// Try to get the error message for GetLastError result
-        /// </summary>
-        public static string LastErrorToString(uint error)
-        {
-            string message = FormatMessage(
-                messageId: error,
-                source: IntPtr.Zero,
-                flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
-
-            return string.Format(
-                CultureInfo.CurrentUICulture,
-                "Error {0}: {1}",
-                error,
-                message);
-        }
-
         // .NET's Win32Exception impements the error code lookup on FormatMessage using FORMAT_MESSAGE_FROM_SYSTEM.
         // It won't handle Network Errors (NERR_BASE..MAX_NERR), which come from NETMSG.DLL.
 
@@ -92,11 +77,11 @@ namespace WInterop.ErrorHandling
                 flags |=  FormatMessageFlags.FORMAT_MESSAGE_MAX_WIDTH_MASK;
                 if (args == null && args.Length > 0) flags |= FormatMessageFlags.FORMAT_MESSAGE_IGNORE_INSERTS;
 
-                uint lastError = WinErrors.ERROR_INSUFFICIENT_BUFFER;
+                WindowsError lastError = WindowsError.ERROR_INSUFFICIENT_BUFFER;
                 uint capacity = byte.MaxValue;
                 uint result = 0;
 
-                while (lastError == WinErrors.ERROR_INSUFFICIENT_BUFFER && capacity <= short.MaxValue)
+                while (lastError == WindowsError.ERROR_INSUFFICIENT_BUFFER && capacity <= short.MaxValue)
                 {
                     buffer.EnsureCharCapacity(capacity);
                     result = Direct.FormatMessageW(
@@ -111,7 +96,7 @@ namespace WInterop.ErrorHandling
 
                     if (result == 0)
                     {
-                        lastError = (uint)Marshal.GetLastWin32Error();
+                        lastError = ErrorHelper.GetLastError();
                         capacity = (uint)Math.Min(capacity * 2, short.MaxValue);
                     }
                     else
@@ -125,9 +110,9 @@ namespace WInterop.ErrorHandling
             }
         }
 
-        public static uint NtStatusToWinError(NTSTATUS status)
+        public static WindowsError NtStatusToWinError(NTSTATUS status)
         {
-            return Direct.LsaNtStatusToWinError(status);
+            return (WindowsError)Direct.LsaNtStatusToWinError(status);
         }
     }
 }

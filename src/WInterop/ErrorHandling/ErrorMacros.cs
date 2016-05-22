@@ -39,11 +39,11 @@ namespace WInterop.ErrorHandling
             return (((hr) >> 31) & 0x1);
         }
 
-        public static int HRESULT_FROM_WIN32(uint error)
+        public static int HRESULT_FROM_WIN32(WindowsError error)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680746.aspx
             // return (HRESULT)(x) <= 0 ? (HRESULT)(x) : (HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
-            return (int)(error <= 0 ? error : ((error & 0x0000FFFF) | ((int)Facility.WIN32 << 16) | 0x80000000));
+            return (int)((uint)error <= 0 ? (uint)error : (((uint)error & 0x0000FFFF) | ((int)Facility.WIN32 << 16) | 0x80000000));
         }
 
         public static bool SUCCEEDED(int hr)
