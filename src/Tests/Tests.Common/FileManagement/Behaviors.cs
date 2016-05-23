@@ -156,10 +156,12 @@ namespace Tests.FileManagementTests
             // InlineData(@"/??/", @"D:\??\")
             InlineData(@"//./", @"\\.\")
 
-            // Device behavior
+            // Legacy device behavior
             InlineData(@"CON", @"\\.\CON")
             InlineData(@"CON:Alt", @"\\.\CON")
             InlineData(@"LPT9", @"\\.\LPT9")
+            InlineData(@"C:\CON", @"\\.\CON")
+            InlineData(@"\\.\C:\CON", @"\\.\C:\CON")
 
             InlineData(@"C:\A\B\.\..\C", @"C:\A\C")
             ]
