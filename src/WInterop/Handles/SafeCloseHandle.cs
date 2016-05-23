@@ -23,7 +23,7 @@ namespace WInterop.Handles
 
         protected override bool ReleaseHandle()
         {
-            NativeMethods.CloseHandle(handle);
+            HandleMethods.CloseHandle(handle);
             return true;
         }
     }
