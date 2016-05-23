@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using WInterop.Buffers;
 using WInterop.Clipboard.Desktop;
 using WInterop.ErrorHandling;
-using WInterop.Handles;
+using WInterop.Handles.Desktop;
 
 namespace WInterop.Clipboard
 {

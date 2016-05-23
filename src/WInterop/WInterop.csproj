@@ -142,7 +142,6 @@
     <Compile Include="Handles\SafeProcessHandle.cs" />
     <Compile Include="Handles\SafeHandleStreamWrapper.cs" />
     <Compile Include="Handles\SafeThreadHandle.cs" />
-    <Compile Include="Handles\WindowHandle.cs" />
     <Compile Include="Heap\HeapMethods.cs" />
     <Compile Include="Libraries.cs" />
     <Compile Include="NetworkManagement\SID_NAME_USE.cs" />

@@ -6,13 +6,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using DesktopHandles = WInterop.Handles.Desktop;
 using System;
 using System.Runtime.InteropServices;
+using Tests.Support;
 using WInterop.DynamicLinkLibrary;
 using WInterop.DynamicLinkLibrary.Desktop;
 using WInterop.FileManagement;
-using WInterop.Strings;
-using Tests.Support;
+using WInterop.Resources;
 using WInterop.Utility;
 using Xunit;
 
@@ -67,7 +68,7 @@ namespace DesktopTests.DllTests
             using (var handle = DllDesktopMethods.LoadLibrary(GetNativeTestLibraryLocation(),
                 LoadLibraryFlags.LOAD_LIBRARY_AS_IMAGE_RESOURCE | LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE))
             {
-                string resource = StringDesktopMethods.LoadString(handle, 101);
+                string resource = ResourceDesktopMethods.LoadString(handle, 101);
                 resource.Should().Be("Test");
             }
         }
@@ -85,7 +86,7 @@ namespace DesktopTests.DllTests
                 using (var handle = DllDesktopMethods.LoadLibrary(longPathLibrary,
                     LoadLibraryFlags.LOAD_LIBRARY_AS_IMAGE_RESOURCE | LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE))
                 {
-                    string resource = StringDesktopMethods.LoadString(handle, 101);
+                    string resource = ResourceDesktopMethods.LoadString(handle, 101);
                     resource.Should().Be("Test");
                 }
             }
@@ -146,6 +147,24 @@ namespace DesktopTests.DllTests
                     doubler(2).Should().Be(4);
                 }
             }
+        }
+
+        [Fact]
+        public void GetEntryModuleFileName()
+        {
+            string path = DllDesktopMethods.GetModuleFileName(DesktopHandles.ModuleHandle.NullModuleHandle);
+            path.Should().NotBeNullOrWhiteSpace();
+        }
+
+        [Fact]
+        public void GetEntryModuleHandle()
+        {
+            var module = DllDesktopMethods.GetModuleHandle(null);
+            module.Should().NotBe(DesktopHandles.ModuleHandle.NullModuleHandle);
+            string pathByHandle = DllDesktopMethods.GetModuleFileName(module);
+            pathByHandle.Should().NotBeNullOrWhiteSpace();
+            string pathByDefault = DllDesktopMethods.GetModuleFileName(DesktopHandles.ModuleHandle.NullModuleHandle);
+            pathByHandle.Should().Be(pathByDefault);
         }
     }
 }

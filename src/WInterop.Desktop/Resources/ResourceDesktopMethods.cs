@@ -9,12 +9,12 @@ using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.Handles.Desktop;
 
-namespace WInterop.Strings
+namespace WInterop.Resources
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class StringDesktopMethods
+    public static class ResourceDesktopMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -27,7 +27,7 @@ namespace WInterop.Strings
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647486.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             unsafe public static extern int LoadStringW(
-                SafeLibraryHandle hInstance,
+                ModuleHandle hInstance,
                 int uID,
                 out char* lpBuffer,
                 int nBufferMax);
@@ -36,7 +36,7 @@ namespace WInterop.Strings
         /// <summary>
         /// Get the specified string resource from the given library.
         /// </summary>
-        unsafe public static string LoadString(SafeLibraryHandle library, int identifier)
+        unsafe public static string LoadString(ModuleHandle library, int identifier)
         {
             // A string resource is mapped in with the dll, there is no need to allocate
             // or free a buffer.

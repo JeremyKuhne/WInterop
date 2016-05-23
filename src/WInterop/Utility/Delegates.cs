@@ -8,6 +8,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace WInterop.Utility
 {
@@ -16,6 +17,9 @@ namespace WInterop.Utility
         public static string DesktopLibrary = "WInterop.Desktop, " + AssemblyInformation.FullyQualifiedVersion;
         public static string BaseLibrary = "WInterop, " + AssemblyInformation.FullyQualifiedVersion;
 
+        /// <summary>
+        /// Creates a delegate for the given type and method name.
+        /// </summary>
         public static T CreateDelegate<T>(string typeName, string methodName) where T : class
         {
             Type type = Type.GetType(typeName);
@@ -27,6 +31,9 @@ namespace WInterop.Utility
             return (T)(object)method.CreateDelegate(typeof(T));
         }
 
+        /// <summary>
+        /// Gets the parameter types for the given delegate type.
+        /// </summary>
         public static Type[] GetDelegateParameters<T>() where T : class
         {
             Type delegateType = typeof(T);

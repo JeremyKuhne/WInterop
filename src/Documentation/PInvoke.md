@@ -107,6 +107,7 @@ Common Windows Data Types
 |CSHORT         |short              |short
 |USHORT         |unsigned short     |ushort
 |WORD           |unsigned short     |ushort
+|ATOM           |unsigned short     |ushort
 |INT            |int                |int
 |LONG           |long               |int
 |ULONG          |unsigned long      |uint
@@ -116,21 +117,24 @@ Common Windows Data Types
 |ULONGLONG      |unsigned __int64   |ulong
 |ULARGE_INTEGER |unsigned __int64   |ulong
 |UCHAR          |unsigned char      |byte
-|HANDLE         |void*              |IntPtr
-|HRESULT        |long               | int  
+|HRESULT        |long               |int
 
-Variable size types (essentially all pointers)
 
-|Windows         |C (x32/x64)                |C#
-|-------         |-----------                |---
-|HWND            |long/__int64               |IntPtr
-|LPARAM          |long/__int64               |IntPtr
-|LRESULT         |long/__int64               |IntPtr
-|LONG_PTR        |long/__int64               |IntPtr
-|ULONG_PTR       |unsigned long/__int64      |UIntPtr
-|INT_PTR         |int/__int64                |IntPtr
-|UINT_PTR        |unsigned int/__int64       |UIntPtr
-|WPARAM          |unsigned int/__int64       |UIntPtr
+**Signed Pointer Types (IntPtr)**
+
+- HANDLE
+- HWND
+- HINSTANCE
+- LPARAM
+- LRESULT
+- LONG_PTR
+- INT_PTR
+
+**Unsigned Pointer Types (IntPtr)**
+
+- WPARAM
+- UINT_PTR
+- ULONG_PTR
 
 [Windows Data Types](http://msdn.microsoft.com/en-us/library/aa383751.aspx "MSDN")  
 [Data Type Ranges](http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx "MSDN")

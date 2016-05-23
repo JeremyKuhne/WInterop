@@ -9,10 +9,15 @@ using System;
 
 namespace WInterop.Handles.Desktop
 {
-    public class SafeLibraryHandle : SafeHandleZeroIsInvalid
+    public class SafeModuleHandle : SafeHandleZeroIsInvalid
     {
-        public SafeLibraryHandle() : base(ownsHandle: true)
+        public SafeModuleHandle() : base(ownsHandle: true)
         {
+        }
+
+        public SafeModuleHandle(IntPtr handle, bool ownsHandle) : base(ownsHandle)
+        {
+            this.handle = handle;
         }
 
         protected override bool ReleaseHandle()
@@ -20,6 +25,11 @@ namespace WInterop.Handles.Desktop
             DynamicLinkLibrary.DllDesktopMethods.FreeLibrary(handle);
             handle = IntPtr.Zero;
             return true;
+        }
+
+        static public implicit operator ModuleHandle(SafeModuleHandle handle)
+        {
+            return new ModuleHandle(handle.handle);
         }
     }
 }

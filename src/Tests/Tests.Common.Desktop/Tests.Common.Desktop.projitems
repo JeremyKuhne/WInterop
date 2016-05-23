@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreadTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\Methods.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Cryptography\" />
