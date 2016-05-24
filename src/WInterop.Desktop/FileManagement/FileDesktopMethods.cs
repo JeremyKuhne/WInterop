@@ -152,7 +152,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetLongPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetLongPathNameW(path, buffer, buffer.CharCapacity));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetLongPathNameW(path, buffer, buffer.CharCapacity), path);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetShortPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetShortPathNameW(path, buffer, buffer.CharCapacity));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetShortPathNameW(path, buffer, buffer.CharCapacity), path);
         }
 
         /// <summary>

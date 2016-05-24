@@ -22,7 +22,7 @@ namespace WInterop.ProcessAndThreads
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683179.aspx
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern SafeProcessHandle GetCurrentProcess();
+            public static extern ProcessHandle GetCurrentProcess();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683180.aspx
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
@@ -31,6 +31,16 @@ namespace WInterop.ProcessAndThreads
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683156.aspx
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
             public static extern string GetCommandLineW();
+        }
+
+        public static ProcessHandle GetCurrentProcess()
+        {
+            return Direct.GetCurrentProcess();
+        }
+
+        public static uint GetCurrentProcessId()
+        {
+            return Direct.GetCurrentProcessId();
         }
     }
 }

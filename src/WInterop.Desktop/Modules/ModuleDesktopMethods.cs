@@ -7,18 +7,21 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.DynamicLinkLibrary.DataTypes;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.Modules.DataTypes;
+using WInterop.ProcessAndThreads;
 using WInterop.Support.Buffers;
 
-namespace WInterop.DynamicLinkLibrary
+namespace WInterop.Modules
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class DllDesktopMethods
+    /// <remarks>
+    /// This is an amalgamation of "Dynamic-Link Libraries" and "Process Status" APIs.
+    /// </remarks>
+    public static class ModuleDesktopMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -45,7 +48,7 @@ namespace WInterop.DynamicLinkLibrary
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683212.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true, BestFitMapping = false)]
             public static extern IntPtr GetProcAddress(
-                ModuleHandle hModule,
+                SafeModuleHandle hModule,
                 [MarshalAs(UnmanagedType.LPStr)] string methodName);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200.aspx
@@ -56,14 +59,51 @@ namespace WInterop.DynamicLinkLibrary
                 IntPtr lpModuleName,
                 out ModuleHandle moduleHandle);
 
+            // The non-ex version is more performant for the current process.
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683197.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern uint GetModuleFileNameW(
                 ModuleHandle hModule,
                 SafeHandle lpFileName,
                 uint nSize);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683198.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint K32GetModuleFileNameExW(
+                SafeProcessHandle hProcess,
+                SafeModuleHandle hModule,
+                SafeHandle lpFileName,
+                uint nSize);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683201.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool K32GetModuleInformation(
+                SafeProcessHandle hProcess,
+                SafeModuleHandle hModule,
+                out MODULEINFO lpmodinfo,
+                uint cb);
         }
 
+        /// <summary>
+        /// Gets the module handle for the specified memory address without increasing the refcount.
+        /// </summary>
+        public static ModuleHandle GetModuleHandle(IntPtr address)
+        {
+            ModuleHandle handle;
+
+            if (!Direct.GetModuleHandleExW(
+                GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                address,
+                out handle))
+                throw ErrorHelper.GetIoExceptionForLastError();
+
+            return handle;
+        }
+
+        /// <summary>
+        /// Gets the specified module handle without increasing the ref count.
+        /// </summary>
         public static ModuleHandle GetModuleHandle(string moduleName)
         {
             return GetModuleHandleHelper(moduleName, GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT);
@@ -77,6 +117,9 @@ namespace WInterop.DynamicLinkLibrary
             return GetModuleHandleHelper(moduleName, GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_PIN);
         }
 
+        /// <summary>
+        /// Gets a ref counted module handle for the specified module.
+        /// </summary>
         public static SafeModuleHandle GetRefCountedModuleHandle(string moduleName)
         {
             ModuleHandle handle = GetModuleHandleHelper(moduleName, 0);
@@ -102,26 +145,27 @@ namespace WInterop.DynamicLinkLibrary
             }
         }
 
-        public static string GetModuleFileName(ModuleHandle moduleHandle)
+        public static MODULEINFO GetModuleInfo(SafeModuleHandle module, SafeProcessHandle process = null)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
-            {
-                realloc:
-                uint result = Direct.GetModuleFileNameW(moduleHandle, buffer, buffer.CharCapacity);
+            if (process == null) process = ProcessMethods.GetCurrentProcess();
 
-                if (result == 0 || result >= buffer.CharCapacity)
-                {
-                    WindowsError error = ErrorHelper.GetLastError();
-                    if (error != WindowsError.ERROR_INSUFFICIENT_BUFFER)
-                        throw ErrorHelper.GetIoExceptionForError(error);
+            MODULEINFO info;
 
-                    buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
-                    goto realloc;
-                }
+            if (!Direct.K32GetModuleInformation(process, module, out info, (uint)Marshal.SizeOf<MODULEINFO>()))
+                throw ErrorHelper.GetIoExceptionForLastError();
 
-                buffer.Length = result;
-                return buffer.ToString();
-            });
+            return info;
+        }
+
+        /// <summary>
+        /// Gets the file name (path) for the given module handle.
+        /// </summary>
+        public static string GetModuleFileName(SafeModuleHandle module, SafeProcessHandle process = null)
+        {
+            if (process == null)
+                return BufferHelper.CachedTruncatingApiInvoke((buffer) => Direct.GetModuleFileNameW(module, buffer, buffer.CharCapacity));
+            else
+                return BufferHelper.CachedTruncatingApiInvoke((buffer) => Direct.K32GetModuleFileNameExW(process, module, buffer, buffer.CharCapacity));
         }
 
         /// <summary>
@@ -158,7 +202,7 @@ namespace WInterop.DynamicLinkLibrary
         /// 
         ///     extern "C" __declspec (dllexport) int Double(int);
         /// </remarks>
-        public static DelegateType GetFunctionDelegate<DelegateType>(ModuleHandle library, string methodName)
+        public static DelegateType GetFunctionDelegate<DelegateType>(SafeModuleHandle library, string methodName)
         {
             IntPtr method = Direct.GetProcAddress(library, methodName);
             if (method == IntPtr.Zero)

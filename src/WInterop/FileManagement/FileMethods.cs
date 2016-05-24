@@ -197,7 +197,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetFullPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero), path);
         }
 
         /// <summary>

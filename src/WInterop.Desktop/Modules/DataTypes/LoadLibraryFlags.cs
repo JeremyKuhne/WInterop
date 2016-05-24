@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.DynamicLinkLibrary.DataTypes
+namespace WInterop.Modules.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684179.aspx
     [Flags]

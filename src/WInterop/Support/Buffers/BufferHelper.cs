@@ -79,7 +79,14 @@ namespace WInterop.Support.Buffers
             // For safer use it's better to ensure we always have at least some capacity in the buffer.
             // This allows consumers not to worry about making sure there is some capacity or trying to
             // multiply a buffer capacity of 0 for recursive invocations.
-            var buffer = StringBufferCache.Instance.Acquire(minCapacity: 50);
+#if DEBUG
+            // Set relatively small in debug to exercise code.
+            const uint MinBufferSize = 32;
+#else
+            const uint MinBufferSize = 128;
+#endif
+
+            var buffer = StringBufferCache.Instance.Acquire(minCapacity: MinBufferSize);
             try
             {
                 action(buffer as BufferType);
@@ -91,21 +98,63 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Uses the stringbuilder cache and increases the buffer size if needed. This is for APIs that follow the standard pattern of
-        /// returning required capacity + null or actual characters copied.
+        /// Uses the StringBuffer cache and increases the buffer size if needed. This is for APIs that follow the standard pattern of
+        /// returning required capacity + null or actual characters copied, and error with a return value of 0.
         /// </summary>
+        /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
+        /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
         /// <example>
         /// BufferHelper.CachedApiInvoke((buffer) => Direct.GetCurrentDirectoryW(buffer.CharCapacity, buffer));
         /// </example>
-        public static string CachedApiInvoke(Func<StringBuffer, uint> invoker, string value = null, Func<WindowsError, bool> shouldThrow = null)
+        public static string CachedApiInvoke(Func<StringBuffer, uint> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
         {
-            return CachedInvoke<string, StringBuffer>((buffer) =>
+            return CachedApiInvokeHelper((buffer) =>
             {
                 uint returnValue = 0;
 
                 // Ensure enough room for the output string
                 while ((returnValue = invoker(buffer)) > buffer.CharCapacity)
                     buffer.EnsureCharCapacity(returnValue);
+
+                return returnValue;
+            },
+            detailForError,
+            shouldThrow);
+        }
+
+        /// <summary>
+        /// Uses the StringBuffer cache and increases the buffer size if needed. This is for APIs that follow the somewhat unfortunate pattern
+        /// of truncating the return string to fit the passed in buffer.
+        /// </summary>
+        /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
+        /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
+        /// <example>
+        /// BufferHelper.CachedTruncatingApiInvoke((buffer) => Direct.GetModuleFileNameW(module, buffer, buffer.CharCapacity));
+        /// </example>
+        public static string CachedTruncatingApiInvoke(Func<StringBuffer, uint> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
+        {
+            return CachedApiInvokeHelper((buffer) =>
+            {
+                uint returnValue = 0;
+
+                // Ensure enough room for the output string- some return the size with the null, some don't.
+                // We'll make sure we have enough for both cases.
+                while ((returnValue = invoker(buffer)) + 2 > buffer.CharCapacity)
+                {
+                    buffer.EnsureCharCapacity(buffer.CharCapacity < 256 ? 256 : checked(buffer.CharCapacity * 2));
+                }
+
+                return returnValue;
+            },
+            detailForError,
+            shouldThrow);
+        }
+
+        private static string CachedApiInvokeHelper(Func<StringBuffer, uint> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
+        {
+            return CachedInvoke<string, StringBuffer>((buffer) =>
+            {
+                uint returnValue = invoker(buffer);
 
                 if (returnValue == 0)
                 {
@@ -115,7 +164,7 @@ namespace WInterop.Support.Buffers
                     if (shouldThrow != null && !shouldThrow(error))
                         return null;
 
-                    throw ErrorHelper.GetIoExceptionForError(error, value);
+                    throw ErrorHelper.GetIoExceptionForError(error, detailForError);
                 }
 
                 buffer.Length = returnValue;

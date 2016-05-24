@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Modules;
 
 namespace WInterop.Handles.DataTypes
 {
@@ -22,7 +23,7 @@ namespace WInterop.Handles.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            DynamicLinkLibrary.DllDesktopMethods.FreeLibrary(handle);
+            ModuleDesktopMethods.FreeLibrary(handle);
             handle = IntPtr.Zero;
             return true;
         }

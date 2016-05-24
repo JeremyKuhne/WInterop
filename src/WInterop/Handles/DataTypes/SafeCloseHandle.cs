@@ -16,7 +16,7 @@ namespace WInterop.Handles.DataTypes
     {
         public SafeCloseHandle() : base(ownsHandle: true) { }
 
-        public SafeCloseHandle(IntPtr handle) : base(ownsHandle: true)
+        public SafeCloseHandle(IntPtr handle, bool ownsHandle = true) : base(ownsHandle)
         {
             SetHandle(handle);
         }

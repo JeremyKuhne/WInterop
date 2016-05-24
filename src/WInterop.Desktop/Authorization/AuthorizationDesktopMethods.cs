@@ -277,7 +277,7 @@ namespace WInterop.Authorization
         public static SafeTokenHandle OpenProcessToken(TokenRights desiredAccess)
         {
             SafeTokenHandle processToken;
-            if (!Direct.OpenProcessToken(ProcessMethods.Direct.GetCurrentProcess().DangerousGetHandle(), desiredAccess, out processToken))
+            if (!Direct.OpenProcessToken(ProcessMethods.GetCurrentProcess(), desiredAccess, out processToken))
                 throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;

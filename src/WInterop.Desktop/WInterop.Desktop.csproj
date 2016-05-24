@@ -67,9 +67,10 @@
     <Compile Include="DeviceManagement\DeviceDesktopMethods.cs" />
     <Compile Include="DiskManagement\DataTypes\DiskFreeSpace.cs" />
     <Compile Include="DiskManagement\DiskDesktopMethods.cs" />
-    <Compile Include="DynamicLinkLibrary\DataTypes\GetModuleFlags.cs" />
-    <Compile Include="DynamicLinkLibrary\DataTypes\LoadLibraryFlags.cs" />
-    <Compile Include="DynamicLinkLibrary\DllDesktopMethods.cs" />
+    <Compile Include="Modules\DataTypes\GetModuleFlags.cs" />
+    <Compile Include="Modules\DataTypes\LoadLibraryFlags.cs" />
+    <Compile Include="Modules\DataTypes\MODULEINFO.cs" />
+    <Compile Include="Modules\ModuleDesktopMethods.cs" />
     <Compile Include="ErrorHandling\DataTypes\ErrorMode.cs" />
     <Compile Include="ErrorHandling\DataTypes\MessageBeepType.cs" />
     <Compile Include="ErrorHandling\ErrorDesktopMethods.cs" />
