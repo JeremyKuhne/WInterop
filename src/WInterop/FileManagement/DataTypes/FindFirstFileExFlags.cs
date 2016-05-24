@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement
+namespace WInterop.FileManagement.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx
     [Flags]

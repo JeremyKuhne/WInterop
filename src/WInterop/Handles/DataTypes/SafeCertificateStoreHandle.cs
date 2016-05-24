@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.DataTypes
 {
     /// <summary>
     /// Wrapper for a native certificate store handle.

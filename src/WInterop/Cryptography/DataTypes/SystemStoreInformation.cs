@@ -7,7 +7,7 @@
 
 using System.Diagnostics;
 
-namespace WInterop.Cryptography
+namespace WInterop.Cryptography.DataTypes
 {
     [DebuggerDisplay("{Name}")]
     public struct SystemStoreInformation

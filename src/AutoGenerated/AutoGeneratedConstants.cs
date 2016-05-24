@@ -29,17 +29,17 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const int CurrentDayOfMonth =  21;
+            public const int CurrentDayOfMonth =  23;
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const int CurrentHour = 19;
+            public const int CurrentHour = 17;
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const int CurrentMinute = 54;
+            public const int CurrentMinute = 42;
         }
 
         public static class Strings
@@ -62,32 +62,32 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const string CurrentDayOfMonth =  "21";
+            public const string CurrentDayOfMonth =  "23";
 
             /// <summary>
             /// Current two digit day of the month 01..31
             /// </summary>
-            public const string CurrentTwoDigitDayOfMonth =  "21";
+            public const string CurrentTwoDigitDayOfMonth =  "23";
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const string CurrentHour = "19";
+            public const string CurrentHour = "17";
 
             /// <summary>
             /// Current two digit hour from 00..23
             /// </summary>
-            public const string CurrentTwoDigitHour = "19";
+            public const string CurrentTwoDigitHour = "17";
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const string CurrentMinute = "54";
+            public const string CurrentMinute = "42";
 
             /// <summary>
             /// Current two digit hour from 00..59
             /// </summary>
-            public const string CurrentTwoDigitMinute = "54";
+            public const string CurrentTwoDigitMinute = "42";
         }
     }
 }

@@ -7,11 +7,13 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Backup.DataTypes;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
-using WInterop.Handles;
+using WInterop.ErrorHandling.DataTypes;
+using WInterop.Handles.DataTypes;
 
-namespace WInterop.Backup.Desktop
+namespace WInterop.Backup
 {
     public class BackupReader : IDisposable
     {

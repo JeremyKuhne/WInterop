@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff564586.aspx
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff547804.aspx

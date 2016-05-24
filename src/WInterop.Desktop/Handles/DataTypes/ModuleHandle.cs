@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Handles.Desktop
+namespace WInterop.Handles.DataTypes
 {
     /// <summary>
     /// Simple struct to encapsulate a module handle (HMODULE). Use this for APIs that do NOT

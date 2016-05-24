@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.DataTypes
 {
     public sealed class EmptySafeHandle : SafeHandle
     {

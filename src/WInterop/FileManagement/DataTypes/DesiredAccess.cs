@@ -6,11 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using WInterop.Authorization;
+using WInterop.Authorization.DataTypes;
 
-namespace WInterop.FileManagement
+namespace WInterop.FileManagement.DataTypes
 {
     /// <summary>
     /// System.IO.FileAccess looks up these values when creating handles

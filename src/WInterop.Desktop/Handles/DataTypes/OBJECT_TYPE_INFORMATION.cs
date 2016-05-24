@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.Authentication;
+using WInterop.Authentication.DataTypes;
 
-namespace WInterop.Handles.Desktop
+namespace WInterop.Handles.DataTypes
 {
     // The full struct isn't officially documented, names may be wrong.
     //

@@ -9,6 +9,7 @@ using FluentAssertions;
 using System;
 using System.IO;
 using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
 using Xunit;
 
 namespace Tests

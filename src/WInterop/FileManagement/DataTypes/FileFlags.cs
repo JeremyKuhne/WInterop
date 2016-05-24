@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement
+namespace WInterop.FileManagement.DataTypes
 {
     [Flags]
     public enum FileFlags : uint

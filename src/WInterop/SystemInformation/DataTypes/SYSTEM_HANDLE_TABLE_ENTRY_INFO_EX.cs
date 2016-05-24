@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization;
+using WInterop.Authorization.DataTypes;
 
-namespace WInterop.SystemInformation
+namespace WInterop.SystemInformation.DataTypes
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX

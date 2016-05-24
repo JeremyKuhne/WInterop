@@ -5,14 +5,12 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Win32;
-using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Security;
+using WInterop.Cryptography.DataTypes;
 using WInterop.ErrorHandling;
-using WInterop.Handles;
+using WInterop.Handles.DataTypes;
 
 namespace WInterop.Cryptography
 {
@@ -24,9 +22,6 @@ namespace WInterop.Cryptography
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-#if DESKTOP
-        [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
-#endif
         public static class Direct
         {
             public const uint CERT_SYSTEM_STORE_RELOCATE_FLAG = 0x80000000;

@@ -5,22 +5,19 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.ErrorHandling
+namespace WInterop.ErrorHandling.DataTypes
 {
     /// <summary>
     /// Windows error facility codes
     /// </summary>
     public enum Facility : int
     {
-#if !(COMPACT)
         NULL = 0,
         RPC = 1,
         DISPATCH = 2,
         STORAGE = 3,
         ITF = 4,
-#endif
         WIN32 = 7,
-#if !(COMPACT)
         WINDOWS = 8,
         SSPI = 9,
         SECURITY = 9,
@@ -142,6 +139,5 @@ namespace WInterop.ErrorHandling
         USERMODE_SDBUS = 2305,
         JSCRIPT = 2306,
         PIDGENX = 2561,
-#endif
     }
 }

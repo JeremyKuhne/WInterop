@@ -8,6 +8,7 @@
 using System;
 using WInterop.Collections;
 using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
 
 namespace WInterop.Buffers
 {

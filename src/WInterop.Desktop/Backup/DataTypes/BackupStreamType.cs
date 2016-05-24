@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Backup.Desktop
+namespace WInterop.Backup.DataTypes
 {
     /// <summary>
     /// The types returned in WIN32_STREAM_ID dwStreamId. Defines taken from winnt.h.

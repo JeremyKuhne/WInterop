@@ -10,6 +10,7 @@ using System;
 using Tests.Support;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
+using WInterop.FileManagement.DataTypes;
 using Xunit;
 
 namespace Tests

@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.FileManagement.CopyFile2
+namespace WInterop.FileManagement.DataTypes.CopyFile2
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct COPYFILE2_EXTENDED_PARAMETERS

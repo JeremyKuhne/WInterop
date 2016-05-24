@@ -13,6 +13,7 @@ using WInterop.FileManagement;
 using Tests.Support;
 using WInterop.Utility;
 using Xunit;
+using WInterop.FileManagement.DataTypes;
 
 namespace Tests.FileManagementTests
 {

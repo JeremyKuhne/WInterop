@@ -59,11 +59,11 @@
     <Compile Include="Console\DataTypes\StandardHandleType.cs" />
     <Compile Include="Cryptography\CryptoDesktopMethods.cs" />
     <Compile Include="Clipboard\DataTypes\ClipboardFormat.cs" />
-    <Compile Include="Clipboard\DataTypes\ClipboardSession.cs" />
+    <Compile Include="Clipboard\ClipboardSession.cs" />
     <Compile Include="DeviceManagement\DataTypes\ControlCodeAccess.cs" />
     <Compile Include="DeviceManagement\DataTypes\ControlCodeDeviceType.cs" />
     <Compile Include="DeviceManagement\DataTypes\ControlCodeMethod.cs" />
-    <Compile Include="DeviceManagement\DataTypes\DeviceMacros.cs" />
+    <Compile Include="DeviceManagement\DeviceMacros.cs" />
     <Compile Include="DeviceManagement\DeviceDesktopMethods.cs" />
     <Compile Include="DiskManagement\DataTypes\DiskFreeSpace.cs" />
     <Compile Include="DiskManagement\DiskDesktopMethods.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="NetworkManagement\NetworkDesktopMethods.cs" />
     <Compile Include="ProcessAndThreads\ProcessDesktopMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\DataTypes\ResourceMacros.cs" />
+    <Compile Include="Resources\ResourceMacros.cs" />
     <Compile Include="SecurityManagement\SecurityDesktopMethods.cs" />
     <Compile Include="Resources\ResourceDesktopMethods.cs" />
     <Compile Include="VolumeManagement\DataTypes\DriveType.cs" />
@@ -133,6 +133,7 @@
   <ItemGroup>
     <Folder Include="Cryptography\DataTypes\" />
     <Folder Include="ProcessAndThreads\DataTypes\" />
+    <Folder Include="Resources\DataTypes\" />
     <Folder Include="SecurityManagement\DataTypes\" />
   </ItemGroup>
   <!-- CommonSharedDirectory is set by Common.projitems -->

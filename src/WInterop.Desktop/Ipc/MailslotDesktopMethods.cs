@@ -7,10 +7,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authentication;
+using WInterop.Authentication.DataTypes;
 using WInterop.ErrorHandling;
-using WInterop.Handles.Desktop;
-using WInterop.Ipc.Desktop;
+using WInterop.Handles.DataTypes;
+using WInterop.Ipc.DataTypes;
 
 namespace WInterop.Ipc
 {

@@ -8,7 +8,7 @@
 using System;
 using System.IO;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.ErrorHandling.DataTypes
 {
     public class DriveLockedException : IOException
     {

@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authentication;
+using WInterop.Authentication.DataTypes;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
-using WInterop.FileManagement.Desktop;
-using WInterop.Handles;
+using WInterop.FileManagement.DataTypes;
+using WInterop.Handles.DataTypes;
 
 namespace WInterop.FileManagement
 {

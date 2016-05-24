@@ -8,13 +8,14 @@
 using FluentAssertions;
 using System;
 using WInterop.Authorization;
-using WInterop.Authorization.Desktop;
+using WInterop.Authorization.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.FileManagement;
-using WInterop.FileManagement.Desktop;
+using WInterop.FileManagement.DataTypes;
 using Tests.Support;
 using WInterop.Utility;
 using Xunit;
+using WInterop.ErrorHandling.DataTypes;
 
 namespace DesktopTests.FileManagementTests
 {

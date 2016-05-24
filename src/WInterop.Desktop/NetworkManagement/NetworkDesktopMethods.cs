@@ -8,9 +8,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using WInterop.Authorization.DataTypes;
 using WInterop.ErrorHandling;
-using WInterop.Handles.Desktop;
-using WInterop.NetworkManagement.Desktop;
+using WInterop.ErrorHandling.DataTypes;
+using WInterop.Handles.DataTypes;
+using WInterop.NetworkManagement.DataTypes;
 
 namespace WInterop.NetworkManagement
 {

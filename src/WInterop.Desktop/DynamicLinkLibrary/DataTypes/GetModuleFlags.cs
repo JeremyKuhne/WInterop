@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.DynamicLinkLibrary.Desktop
+namespace WInterop.DynamicLinkLibrary.DataTypes
 {
     [Flags]
     public enum GetModuleFlags : uint

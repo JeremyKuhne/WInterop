@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.DataTypes
 {
     /// <summary>
     /// Handle for heap memory

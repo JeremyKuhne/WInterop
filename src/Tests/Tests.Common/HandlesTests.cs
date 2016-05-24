@@ -6,10 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System.Collections.Generic;
-using WInterop.FileManagement;
 using Tests.Support;
-using WInterop.Utility;
+using WInterop.FileManagement;
+using WInterop.FileManagement.DataTypes;
 using Xunit;
 
 namespace Tests

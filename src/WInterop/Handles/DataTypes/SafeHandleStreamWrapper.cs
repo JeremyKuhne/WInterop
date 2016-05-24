@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.DataTypes
 {
     /// <summary>
     /// Use to tie lifetime of a stream to a handle.

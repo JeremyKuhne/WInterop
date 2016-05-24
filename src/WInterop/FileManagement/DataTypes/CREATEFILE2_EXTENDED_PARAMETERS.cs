@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authentication;
+using WInterop.Authentication.DataTypes;
 
-namespace WInterop.FileManagement
+namespace WInterop.FileManagement.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449426.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using WInterop.Clipboard;
-using WInterop.Clipboard.Desktop;
+using WInterop.Clipboard.DataTypes;
 using Xunit;
 
 namespace DesktopTests.ClipboardTests

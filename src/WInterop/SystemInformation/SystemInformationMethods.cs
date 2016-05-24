@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Security;
+using WInterop.SystemInformation.DataTypes;
 
 namespace WInterop.SystemInformation
 {
@@ -19,9 +19,6 @@ namespace WInterop.SystemInformation
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-#if DESKTOP
-        [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
-#endif
         public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724509.aspx

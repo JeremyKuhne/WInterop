@@ -9,11 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Authentication;
-using WInterop.Authorization;
+using WInterop.Authentication.DataTypes;
+using WInterop.Authorization.DataTypes;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
-using WInterop.Handles.Desktop;
+using WInterop.ErrorHandling.DataTypes;
+using WInterop.Handles.DataTypes;
 
 namespace WInterop.Handles
 {

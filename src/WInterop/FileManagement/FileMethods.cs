@@ -11,9 +11,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
-using WInterop.FileManagement.CopyFile2;
-using WInterop.Handles;
-using WInterop.Synchronization;
+using WInterop.ErrorHandling.DataTypes;
+using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.DataTypes.CopyFile2;
+using WInterop.Handles.DataTypes;
+using WInterop.Synchronization.DataTypes;
 using WInterop.Utility;
 
 namespace WInterop.FileManagement

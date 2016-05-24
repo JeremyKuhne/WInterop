@@ -6,12 +6,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using DesktopHandles = WInterop.Handles.Desktop;
+using DesktopHandles = WInterop.Handles.DataTypes;
 using System;
 using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop.DynamicLinkLibrary;
-using WInterop.DynamicLinkLibrary.Desktop;
+using WInterop.DynamicLinkLibrary.DataTypes;
 using WInterop.FileManagement;
 using WInterop.Resources;
 using WInterop.Utility;

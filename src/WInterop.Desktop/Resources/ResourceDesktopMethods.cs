@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.Handles.Desktop;
+using WInterop.Handles.DataTypes;
 
 namespace WInterop.Resources
 {

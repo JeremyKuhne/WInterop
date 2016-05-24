@@ -11,8 +11,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
 using WInterop.Utility;
-using WInterop.VolumeManagement.Desktop;
+using WInterop.VolumeManagement.DataTypes;
 
 namespace WInterop.VolumeManagement
 {

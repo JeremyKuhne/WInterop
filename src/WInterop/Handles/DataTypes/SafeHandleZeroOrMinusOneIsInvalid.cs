@@ -8,14 +8,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.DataTypes
 {
-    public abstract class SafeHandleZeroIsInvalid : SafeHandle
+    public abstract class SafeHandleZeroOrMinusOneIsInvalid : SafeHandle
     {
         // Why are HANDLE return values so inconsistent?
         // https://blogs.msdn.microsoft.com/oldnewthing/20040302-00/?p=40443
 
-        protected SafeHandleZeroIsInvalid(bool ownsHandle)
+        protected SafeHandleZeroOrMinusOneIsInvalid(bool ownsHandle)
             : base(invalidHandleValue: IntPtr.Zero, ownsHandle: ownsHandle)
         {
         }
@@ -24,7 +24,7 @@ namespace WInterop.Handles
         {
             get
             {
-                return handle == IntPtr.Zero;
+                return handle == IntPtr.Zero || handle == new IntPtr(-1);
             }
         }
     }

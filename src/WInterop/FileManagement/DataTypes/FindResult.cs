@@ -8,7 +8,7 @@
 using System;
 using WInterop.Utility;
 
-namespace WInterop.FileManagement
+namespace WInterop.FileManagement.DataTypes
 {
     public class FindResult
     {

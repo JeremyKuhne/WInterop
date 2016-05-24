@@ -11,11 +11,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using WInterop.Authorization.Desktop;
+using WInterop.Authorization.DataTypes;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
-using WInterop.Handles;
-using WInterop.Handles.Desktop;
+using WInterop.ErrorHandling.DataTypes;
+using WInterop.Handles.DataTypes;
 using WInterop.ProcessAndThreads;
 
 namespace WInterop.Authorization

@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Security;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
 

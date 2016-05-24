@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Cryptography
+namespace WInterop.Cryptography.DataTypes
 {
     /// <summary>
     /// From wincrypt.h

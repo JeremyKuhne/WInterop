@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.ErrorHandling.Desktop
+namespace WInterop.ErrorHandling.DataTypes
 {
     /// <summary>
     /// Simple helper class to temporarily enable thread error flag modes if necessary.

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Windows.Desktop
+namespace WInterop.Windows.DataTypes
 {
     /// <summary>
     /// Simple wrapper for an ATOM

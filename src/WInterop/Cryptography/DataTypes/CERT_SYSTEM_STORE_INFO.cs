@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Cryptography
+namespace WInterop.Cryptography.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa377568.aspx
     [StructLayout(LayoutKind.Sequential)]

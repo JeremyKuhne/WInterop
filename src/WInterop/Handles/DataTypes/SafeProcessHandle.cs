@@ -5,13 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Handles
+namespace WInterop.Handles.DataTypes
 {
     /// <summary>
-    /// Safe handle for a thread.
+    /// Safe handle for a process.
     /// </summary>
-    public class SafeThreadHandle : SafeCloseHandle
+    public class SafeProcessHandle : SafeCloseHandle
     {
-        public SafeThreadHandle() : base() { }
+        public SafeProcessHandle() : base() { }
     }
 }

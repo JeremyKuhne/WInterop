@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Handles.Desktop
+namespace WInterop.Handles.DataTypes
 {
     public class SafeModuleHandle : SafeHandleZeroIsInvalid
     {

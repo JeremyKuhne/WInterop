@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WInterop.Clipboard.Desktop
+namespace WInterop.Clipboard
 {
     public class ClipboardSession : IDisposable
     {

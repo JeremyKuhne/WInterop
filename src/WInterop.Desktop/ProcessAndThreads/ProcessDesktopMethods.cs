@@ -11,7 +11,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Buffers;
 using WInterop.ErrorHandling;
-using WInterop.Handles.Desktop;
+using WInterop.ErrorHandling.DataTypes;
+using WInterop.Handles.DataTypes;
 
 namespace WInterop.ProcessAndThreads
 {

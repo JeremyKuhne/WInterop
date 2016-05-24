@@ -7,8 +7,9 @@
 
 using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
+using WInterop.FileManagement.DataTypes;
 using WInterop.Utility;
 
 namespace WInterop.FileManagement

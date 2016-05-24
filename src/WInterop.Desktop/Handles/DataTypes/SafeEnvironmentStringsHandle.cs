@@ -8,7 +8,7 @@
 using System;
 using WInterop.ProcessAndThreads;
 
-namespace WInterop.Handles.Desktop
+namespace WInterop.Handles.DataTypes
 {
     /// <summary>
     /// Safe handle for a block of memory returned by GetEnvironmentStrings.

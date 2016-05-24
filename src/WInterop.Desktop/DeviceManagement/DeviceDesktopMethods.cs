@@ -8,9 +8,10 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Buffers;
-using WInterop.DeviceManagement.Desktop;
+using WInterop.DeviceManagement.DataTypes;
 using WInterop.ErrorHandling;
-using WInterop.FileManagement;
+using WInterop.ErrorHandling.DataTypes;
+using WInterop.FileManagement.DataTypes;
 
 namespace WInterop.DeviceManagement
 {
@@ -45,7 +46,7 @@ namespace WInterop.DeviceManagement
         public static string QueryDosVolumePath(string volume)
         {
             var mountManager = FileManagement.FileMethods.CreateFile(
-                @"\\?\MountPointManager", 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, WInterop.FileManagement.FileAttributes.FILE_ATTRIBUTE_NORMAL);
+                @"\\?\MountPointManager", 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, FileAttributes.FILE_ATTRIBUTE_NORMAL);
 
             uint controlCode = DeviceMacros.CTL_CODE(ControlCodeDeviceType.MOUNTMGRCONTROLTYPE, 12, ControlCodeMethod.METHOD_BUFFERED, ControlCodeAccess.FILE_ANY_ACCESS);
 

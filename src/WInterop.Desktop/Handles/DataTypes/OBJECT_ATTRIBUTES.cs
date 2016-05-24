@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles.Desktop
+namespace WInterop.Handles.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff557749.aspx
     [StructLayout(LayoutKind.Sequential)]

@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
 using WInterop.VolumeManagement;
 using Xunit;
 

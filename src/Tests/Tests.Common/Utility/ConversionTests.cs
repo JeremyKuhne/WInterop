@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using System.Runtime.InteropServices.ComTypes;
-using WInterop.FileManagement;
+using WInterop.FileManagement.DataTypes;
 using WInterop.Utility;
 using Xunit;
 

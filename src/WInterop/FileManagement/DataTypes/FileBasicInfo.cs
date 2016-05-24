@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement
+namespace WInterop.FileManagement.DataTypes
 {
     public struct FileBasicInfo
     {

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using WInterop.FileManagement;
+using WInterop.FileManagement.DataTypes;
 
 namespace Tests.Support
 {

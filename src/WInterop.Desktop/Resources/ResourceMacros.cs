@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Resources.Desktop
+namespace WInterop.Resources
 {
     public static class ResourceMacros
     {
