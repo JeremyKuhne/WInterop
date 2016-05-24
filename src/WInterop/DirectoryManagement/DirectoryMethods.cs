@@ -7,8 +7,8 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Buffers;
 using WInterop.ErrorHandling;
+using WInterop.Support.Buffers;
 
 namespace WInterop.DirectoryManagement
 {

@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace WInterop.Buffers
+namespace WInterop.Support.Buffers
 {
     /// <summary>
     /// Native buffer that deals in char size increments. Dispose to free memory. Allows buffers larger

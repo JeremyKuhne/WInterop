@@ -8,8 +8,7 @@
 using FluentAssertions;
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
-using WInterop.Buffers;
+using WInterop.Support.Buffers;
 using Xunit;
 
 namespace Tests.Buffers

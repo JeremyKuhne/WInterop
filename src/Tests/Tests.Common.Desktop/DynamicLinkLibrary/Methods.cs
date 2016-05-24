@@ -14,7 +14,7 @@ using WInterop.DynamicLinkLibrary;
 using WInterop.DynamicLinkLibrary.DataTypes;
 using WInterop.FileManagement;
 using WInterop.Resources;
-using WInterop.Utility;
+using WInterop.Support;
 using Xunit;
 
 namespace DesktopTests.DllTests

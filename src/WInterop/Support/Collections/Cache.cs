@@ -8,7 +8,7 @@
 using System;
 using System.Threading;
 
-namespace WInterop.Collections
+namespace WInterop.Support.Collections
 {
     /// <summary>
     /// Light weight multithreaded fixed size cache class.
@@ -23,7 +23,7 @@ namespace WInterop.Collections
         /// </summary>
         public Cache(int cacheSpace)
         {
-            if (cacheSpace < 1) cacheSpace = Environment.ProcessorCount * 4;
+            if (cacheSpace < 1) cacheSpace = System.Environment.ProcessorCount * 4;
             _itemsCache = new T[cacheSpace];
         }
 

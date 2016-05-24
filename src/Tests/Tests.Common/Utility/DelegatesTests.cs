@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.Utility;
+using WInterop.Support;
 using Xunit;
 
 namespace WInterop.UtilityTests
@@ -18,7 +18,7 @@ namespace WInterop.UtilityTests
         [Fact]
         public void SimpleGetDelegate()
         {
-            var endsInDirectorySeparator = Delegates.CreateDelegate<StringToBool>(@"WInterop.Utility.Paths, " + Delegates.BaseLibrary, "EndsInDirectorySeparator");
+            var endsInDirectorySeparator = Delegates.CreateDelegate<StringToBool>(@"WInterop.Support.Paths, " + Delegates.BaseLibrary, "EndsInDirectorySeparator");
             endsInDirectorySeparator.Should().NotBeNull();
             endsInDirectorySeparator(@"a").Should().BeFalse();
             endsInDirectorySeparator(@"a\").Should().BeTrue();

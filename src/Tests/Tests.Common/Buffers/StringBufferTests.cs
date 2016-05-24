@@ -11,9 +11,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
-using WInterop.Buffers;
+using WInterop.Support.Buffers;
 using Xunit;
 
 namespace Tests.Buffers
@@ -123,7 +122,7 @@ namespace Tests.Buffers
             ]
         public void CharCapacityHasUintMax(uint plusValue)
         {
-            if (WInterop.Utility.Environment.Is64BitProcess)
+            if (WInterop.Support.Environment.Is64BitProcess)
             {
                 using (var buffer = new StringBuffer())
                 {
@@ -172,7 +171,7 @@ namespace Tests.Buffers
             ]
         public void EnsureCharCapacityOver32Bit(uint initialBufferSize)
         {
-            if (!WInterop.Utility.Environment.Is64BitProcess)
+            if (!WInterop.Support.Environment.Is64BitProcess)
             {
                 using (var buffer = new StringBuffer(initialBufferSize))
                 {

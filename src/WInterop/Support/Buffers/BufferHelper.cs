@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WInterop.Buffers
+namespace WInterop.Support.Buffers
 {
     /// <summary>
     /// Avoid using this directly. Create wrappers that can ensure proper length checks.

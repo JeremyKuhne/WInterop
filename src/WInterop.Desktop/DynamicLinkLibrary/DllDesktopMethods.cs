@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Buffers;
 using WInterop.DynamicLinkLibrary.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.Support.Buffers;
 
 namespace WInterop.DynamicLinkLibrary
 {

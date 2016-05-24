@@ -9,7 +9,7 @@ using FluentAssertions;
 using System;
 using System.Runtime.InteropServices.ComTypes;
 using WInterop.FileManagement.DataTypes;
-using WInterop.Utility;
+using WInterop.Support;
 using Xunit;
 
 namespace WInterop.UtilityTests

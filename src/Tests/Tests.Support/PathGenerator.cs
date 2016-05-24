@@ -7,7 +7,7 @@
 
 using System;
 using System.Text;
-using WInterop.Utility;
+using WInterop.Support;
 
 namespace Tests.Support
 {

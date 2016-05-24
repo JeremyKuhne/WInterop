@@ -15,7 +15,7 @@ namespace WInterop.UtilityTests
         [Fact]
         public void IsWindowsStore()
         {
-            bool isWindowsStore = Utility.Environment.IsWindowsStoreApplication();
+            bool isWindowsStore = Support.Environment.IsWindowsStoreApplication();
 #if WINRT
             isWindowsStore.Should().BeTrue();
 #else

@@ -8,8 +8,8 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using WInterop.Buffers;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support.Buffers;
 
 namespace WInterop.ErrorHandling
 {

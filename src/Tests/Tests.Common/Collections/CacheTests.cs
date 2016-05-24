@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using System.Threading.Tasks;
-using WInterop.Collections;
+using WInterop.Support.Collections;
 using Xunit;
 
 namespace Tests.Collections

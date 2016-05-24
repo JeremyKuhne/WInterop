@@ -9,14 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.FileManagement.DataTypes;
 using WInterop.FileManagement.DataTypes.CopyFile2;
 using WInterop.Handles.DataTypes;
+using WInterop.Support;
+using WInterop.Support.Buffers;
 using WInterop.Synchronization.DataTypes;
-using WInterop.Utility;
 
 namespace WInterop.FileManagement
 {

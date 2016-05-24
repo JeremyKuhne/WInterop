@@ -11,10 +11,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Authentication.DataTypes;
 using WInterop.Authorization.DataTypes;
-using WInterop.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.Support.Buffers;
 
 namespace WInterop.Handles
 {

@@ -9,7 +9,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace WInterop.Utility
+namespace WInterop.Support
 {
     /// <summary>
     /// Path related helpers.

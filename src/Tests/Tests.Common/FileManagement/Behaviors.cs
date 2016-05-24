@@ -11,7 +11,7 @@ using System.Linq;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
 using Tests.Support;
-using WInterop.Utility;
+using WInterop.Support;
 using Xunit;
 
 namespace Tests.FileManagementTests

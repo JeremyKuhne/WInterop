@@ -8,10 +8,10 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Authentication.DataTypes;
-using WInterop.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.FileManagement.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement
 {

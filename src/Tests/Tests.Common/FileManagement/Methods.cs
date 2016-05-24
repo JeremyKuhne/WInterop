@@ -11,7 +11,7 @@ using System.Linq;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
 using Tests.Support;
-using WInterop.Utility;
+using WInterop.Support;
 using Xunit;
 using WInterop.FileManagement.DataTypes;
 
@@ -618,7 +618,7 @@ namespace Tests.FileManagementTests
                     fileShare: System.IO.FileShare.ReadWrite,
                     fileMode: System.IO.FileMode.Append,
                     fileAttributes: 0,
-                    securityFlags: WInterop.Utility.Environment.IsWindowsStoreApplication()
+                    securityFlags: WInterop.Support.Environment.IsWindowsStoreApplication()
                         ? SecurityQosFlags.NONE 
                         : SecurityQosFlags.SECURITY_SQOS_PRESENT | SecurityQosFlags.SECURITY_ANONYMOUS ))
                 {

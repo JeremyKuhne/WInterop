@@ -17,11 +17,11 @@ namespace Tests.Support
             try
             {
                 action();
-                WInterop.Utility.Environment.IsWindowsStoreApplication().Should().BeFalse();
+                WInterop.Support.Environment.IsWindowsStoreApplication().Should().BeFalse();
             }
             catch (UnauthorizedAccessException)
             {
-                WInterop.Utility.Environment.IsWindowsStoreApplication().Should().BeTrue();
+                WInterop.Support.Environment.IsWindowsStoreApplication().Should().BeTrue();
             }
         }
     }

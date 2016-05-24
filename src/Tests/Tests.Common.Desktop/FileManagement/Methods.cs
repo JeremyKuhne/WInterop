@@ -13,7 +13,7 @@ using WInterop.ErrorHandling;
 using WInterop.FileManagement;
 using WInterop.FileManagement.DataTypes;
 using Tests.Support;
-using WInterop.Utility;
+using WInterop.Support;
 using Xunit;
 using WInterop.ErrorHandling.DataTypes;
 

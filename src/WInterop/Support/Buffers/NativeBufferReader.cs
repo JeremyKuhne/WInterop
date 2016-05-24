@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Buffers
+namespace WInterop.Support.Buffers
 {
     /// <summary>
     /// Checked helpers for reading data from a NativeBuffer. Use StreamBuffer for more complicated read operations.
@@ -168,7 +168,7 @@ namespace WInterop.Buffers
         /// <exception cref="EndOfStreamException">Thrown if reading a pointer would go past the end of the buffer.</exception>
         public IntPtr ReadIntPtr()
         {
-            if (Utility.Environment.Is64BitProcess)
+            if (Support.Environment.Is64BitProcess)
             {
                 return (IntPtr)ReadUlong();
             }

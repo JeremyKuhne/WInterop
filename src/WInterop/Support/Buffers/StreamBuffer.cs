@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Buffers
+namespace WInterop.Support.Buffers
 {
     /// <summary>
     /// Stream wrapper for access to the native heap that allows for automatic growth when writing.

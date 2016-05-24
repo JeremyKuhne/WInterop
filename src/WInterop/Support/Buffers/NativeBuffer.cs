@@ -12,7 +12,7 @@ using System.Threading;
 using WInterop.Handles;
 using WInterop.Handles.DataTypes;
 
-namespace WInterop.Buffers
+namespace WInterop.Support.Buffers
 {
     /// <summary>
     /// Wrapper for access to the native heap. Dispose to free the memory. Try to use with using statements.

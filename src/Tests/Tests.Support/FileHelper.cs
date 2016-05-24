@@ -10,7 +10,7 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.FileManagement;
 using WInterop.FileManagement.DataTypes;
-using WInterop.Utility;
+using WInterop.Support;
 
 namespace Tests.Support
 {

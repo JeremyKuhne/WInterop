@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Utility
+namespace WInterop.Support
 {
     public static class Delegates
     {

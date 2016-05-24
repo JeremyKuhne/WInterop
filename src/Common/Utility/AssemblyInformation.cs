@@ -8,7 +8,7 @@
 using System.Reflection;
 using System.Resources;
 using WInterop;
-using WInterop.Utility;
+using WInterop.Support;
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
@@ -24,7 +24,7 @@ using WInterop.Utility;
 [assembly: AssemblyFileVersion(AssemblyInformation.AssemblyFileVersionString)]
 [assembly: AssemblyInformationalVersion(AssemblyInformation.AssemblyInformationalVersionString)]
 
-namespace WInterop.Utility
+namespace WInterop.Support
 {
     internal static class AssemblyInformation
     {
