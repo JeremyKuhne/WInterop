@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
 
 namespace WInterop.Support.Buffers
 {
@@ -54,6 +56,71 @@ namespace WInterop.Support.Buffers
             {
                 Buffer.MemoryCopy(source, destinationPointer, bytesToCopy, bytesToCopy);
             }
+        }
+
+        /// <summary>
+        /// Invoke the given action on a cached buffer that returns the given type.
+        /// </summary>
+        /// <example>
+        /// return BufferHelper.CachedInvoke((NativeBuffer buffer) => { return string.Empty; });
+        /// </example>
+        public static T CachedInvoke<T, BufferType>(Func<BufferType, T> func) where BufferType : NativeBuffer
+        {
+            T result = default(T);
+            CachedInvoke<BufferType>(buffer => result = func(buffer));
+            return result;
+        }
+
+        /// <summary>
+        /// Invoke the given action on a cached buffer.
+        /// </summary>
+        public static void CachedInvoke<BufferType>(Action<BufferType> action) where BufferType : NativeBuffer
+        {
+            // For safer use it's better to ensure we always have at least some capacity in the buffer.
+            // This allows consumers not to worry about making sure there is some capacity or trying to
+            // multiply a buffer capacity of 0 for recursive invocations.
+            var buffer = StringBufferCache.Instance.Acquire(minCapacity: 50);
+            try
+            {
+                action(buffer as BufferType);
+            }
+            finally
+            {
+                StringBufferCache.Instance.Release(buffer);
+            }
+        }
+
+        /// <summary>
+        /// Uses the stringbuilder cache and increases the buffer size if needed. This is for APIs that follow the standard pattern of
+        /// returning required capacity + null or actual characters copied.
+        /// </summary>
+        /// <example>
+        /// BufferHelper.CachedApiInvoke((buffer) => Direct.GetCurrentDirectoryW(buffer.CharCapacity, buffer));
+        /// </example>
+        public static string CachedApiInvoke(Func<StringBuffer, uint> invoker, string value = null, Func<WindowsError, bool> shouldThrow = null)
+        {
+            return CachedInvoke<string, StringBuffer>((buffer) =>
+            {
+                uint returnValue = 0;
+
+                // Ensure enough room for the output string
+                while ((returnValue = invoker(buffer)) > buffer.CharCapacity)
+                    buffer.EnsureCharCapacity(returnValue);
+
+                if (returnValue == 0)
+                {
+                    // Failed
+                    WindowsError error = ErrorHelper.GetLastError();
+
+                    if (shouldThrow != null && !shouldThrow(error))
+                        return null;
+
+                    throw ErrorHelper.GetIoExceptionForError(error, value);
+                }
+
+                buffer.Length = returnValue;
+                return buffer.ToString();
+            });
         }
     }
 }

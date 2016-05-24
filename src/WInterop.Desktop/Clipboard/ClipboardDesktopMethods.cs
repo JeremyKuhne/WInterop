@@ -90,7 +90,7 @@ namespace WInterop.Clipboard
         /// <exception cref="ArgumentException">Thrown if passing in a built-in format type.</exception>
         public static string GetClipboardFormatName(uint format)
         {
-            return StringBufferCache.CachedBufferInvoke(buffer =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 realloc:
 

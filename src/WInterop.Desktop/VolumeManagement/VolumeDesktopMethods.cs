@@ -137,12 +137,12 @@ namespace WInterop.VolumeManagement
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
         public static IEnumerable<string> GetLogicalDriveStrings()
         {
-            return StringBufferCache.CachedBufferInvoke((buffer) =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 uint result = 0;
 
-            // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-            while ((result = Direct.GetLogicalDriveStringsW(buffer.CharCapacity, buffer)) > buffer.CharCapacity)
+                // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
+                while ((result = Direct.GetLogicalDriveStringsW(buffer.CharCapacity, buffer)) > buffer.CharCapacity)
                 {
                     buffer.EnsureCharCapacity(result);
                 }
@@ -161,24 +161,23 @@ namespace WInterop.VolumeManagement
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
         public static string GetVolumePathName(string path)
         {
-            // Most paths are mounted at the root, 50 should handle the canonical (guid) root
-            return StringBufferCache.CachedBufferInvoke(50, (volumePathName) =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
-                while (!Direct.GetVolumePathNameW(path, volumePathName, volumePathName.CharCapacity))
+                while (!Direct.GetVolumePathNameW(path, buffer, buffer.CharCapacity))
                 {
                     WindowsError error = ErrorHelper.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_FILENAME_EXCED_RANGE:
-                            volumePathName.EnsureCharCapacity(volumePathName.CharCapacity * 2);
+                            buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
                             throw ErrorHelper.GetIoExceptionForError(error, path);
                     }
                 }
 
-                volumePathName.SetLengthToFirstNull();
-                return volumePathName.ToString();
+                buffer.SetLengthToFirstNull();
+                return buffer.ToString();
             });
         }
 
@@ -189,12 +188,12 @@ namespace WInterop.VolumeManagement
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
         public static IEnumerable<string> GetVolumePathNamesForVolumeName(string volumeName)
         {
-            return StringBufferCache.CachedBufferInvoke((buffer) =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 uint returnLength = 0;
 
-            // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-            while (!Direct.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
+                // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
+                while (!Direct.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
                 {
                     WindowsError error = ErrorHelper.GetLastError();
                     switch (error)
@@ -219,14 +218,16 @@ namespace WInterop.VolumeManagement
         {
             volumeMountPoint = Paths.AddTrailingSeparator(volumeMountPoint);
 
-            // MSDN claims 50 is "reasonable", let's go double.
-            return StringBufferCache.CachedBufferInvoke(100, (volumeName) =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
-                if (!Direct.GetVolumeNameForVolumeMountPointW(volumeMountPoint, volumeName, volumeName.CharCapacity))
+                // MSDN claims 50 is "reasonable", let's go double.
+                buffer.EnsureCharCapacity(100);
+
+                if (!Direct.GetVolumeNameForVolumeMountPointW(volumeMountPoint, buffer, buffer.CharCapacity))
                     throw ErrorHelper.GetIoExceptionForLastError(volumeMountPoint);
 
-                volumeName.SetLengthToFirstNull();
-                return volumeName.ToString();
+                buffer.SetLengthToFirstNull();
+                return buffer.ToString();
             });
         }
 

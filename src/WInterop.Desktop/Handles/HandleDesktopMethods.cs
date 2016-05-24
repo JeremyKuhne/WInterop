@@ -182,7 +182,7 @@ namespace WInterop.Handles
         /// </summary>
         public static string GetSymbolicLinkTarget(SafeSymbolicLinkObjectHandle linkHandle)
         {
-            return StringBufferCache.CachedBufferInvoke((buffer) =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 UNICODE_STRING target = new UNICODE_STRING(buffer);
                 uint returnedLength;
@@ -205,7 +205,7 @@ namespace WInterop.Handles
         {
             List<ObjectInformation> infos = new List<ObjectInformation>();
 
-            StringBufferCache.CachedBufferInvoke((buffer) =>
+            BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(1024);
 
@@ -359,7 +359,7 @@ namespace WInterop.Handles
 
         private static string GetFileInformationString(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass)
         {
-            return StringBufferCache.CachedBufferInvoke((buffer) =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
                 uint nameLength = 260 * sizeof(char);

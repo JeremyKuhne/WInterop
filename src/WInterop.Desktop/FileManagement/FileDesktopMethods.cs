@@ -152,7 +152,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetLongPathName(string path)
         {
-            return StringBufferCache.BufferInvoke((buffer) => Direct.GetLongPathNameW(path, buffer, buffer.CharCapacity));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetLongPathNameW(path, buffer, buffer.CharCapacity));
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetShortPathName(string path)
         {
-            return StringBufferCache.BufferInvoke((buffer) => Direct.GetShortPathNameW(path, buffer, buffer.CharCapacity));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetShortPathNameW(path, buffer, buffer.CharCapacity));
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetFinalPathNameByHandle(SafeFileHandle fileHandle, GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED | GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
         {
-            return StringBufferCache.BufferInvoke((buffer) => Direct.GetFinalPathNameByHandleW(fileHandle, buffer, buffer.CharCapacity, flags));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetFinalPathNameByHandleW(fileHandle, buffer, buffer.CharCapacity, flags));
         }
 
         /// <summary>

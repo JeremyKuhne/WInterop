@@ -75,7 +75,7 @@ namespace WInterop.ProcessAndThreads
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            return StringBufferCache.BufferInvoke(
+            return BufferHelper.CachedApiInvoke(
                 buffer => Direct.GetEnvironmentVariableW(name, buffer, buffer.CharCapacity),
                 name,
                 error => error != WindowsError.ERROR_ENVVAR_NOT_FOUND);

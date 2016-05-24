@@ -71,7 +71,7 @@ namespace WInterop.DirectoryManagement
         /// </summary>
         public static string GetCurrentDirectory()
         {
-            return StringBufferCache.BufferInvoke((buffer) => Direct.GetCurrentDirectoryW(buffer.CharCapacity, buffer));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetCurrentDirectoryW(buffer.CharCapacity, buffer));
         }
 
         /// <summary>

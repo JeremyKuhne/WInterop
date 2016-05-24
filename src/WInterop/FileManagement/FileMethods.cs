@@ -189,7 +189,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetTempPath()
         {
-            return StringBufferCache.BufferInvoke((buffer) => Direct.GetTempPathW(buffer.CharCapacity, buffer));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetTempPathW(buffer.CharCapacity, buffer));
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetFullPathName(string path)
         {
-            return StringBufferCache.BufferInvoke((buffer) => Direct.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero));
+            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero));
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace WInterop.FileManagement
         /// <param name="prefix">Three character prefix for the filename.</param>
         public static string GetTempFileName(string path, string prefix)
         {
-            return StringBufferCache.CachedBufferInvoke((buffer) =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(Paths.MaxPath);
                 uint result = Direct.GetTempFileNameW(
@@ -542,11 +542,14 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetFileNameByHandle(SafeFileHandle fileHandle)
         {
-            return StringBufferCache.CachedBufferInvoke(Paths.MaxPath, (buffer) =>
+            return BufferHelper.CachedInvoke((NativeBuffer buffer) =>
             {
                 unsafe
                 {
-                    while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo, buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
+                    while (!Direct.GetFileInformationByHandleEx(
+                        fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo,
+                        buffer.VoidPointer,
+                        checked((uint)buffer.ByteCapacity)))
                     {
                         WindowsError error = ErrorHelper.GetLastError();
                         if (error != WindowsError.ERROR_MORE_DATA)
@@ -605,8 +608,7 @@ namespace WInterop.FileManagement
             //     WCHAR StreamName[1];
             // } FILE_STREAM_INFO, *PFILE_STREAM_INFO;
 
-            // We'll ensure we have at least 100 characters worth in the buffer to start
-            return StringBufferCache.CachedBufferInvoke(100, (buffer) =>
+            return BufferHelper.CachedInvoke<IEnumerable<StreamInformation>, NativeBuffer>((buffer) =>
             {
                 unsafe
                 {

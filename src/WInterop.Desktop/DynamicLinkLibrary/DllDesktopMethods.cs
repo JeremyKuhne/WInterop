@@ -104,7 +104,7 @@ namespace WInterop.DynamicLinkLibrary
 
         public static string GetModuleFileName(ModuleHandle moduleHandle)
         {
-            return StringBufferCache.CachedBufferInvoke(100, (buffer) =>
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 realloc:
                 uint result = Direct.GetModuleFileNameW(moduleHandle, buffer, buffer.CharCapacity);
