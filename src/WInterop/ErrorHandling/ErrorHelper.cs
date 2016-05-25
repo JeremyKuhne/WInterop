@@ -107,7 +107,7 @@ namespace WInterop.ErrorHandling
         /// Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetIOExceptionForNTStatus(NTSTATUS status, string path = null)
+        public static Exception GetIoExceptionForNTStatus(NTSTATUS status, string path = null)
         {
             switch (status)
             {

@@ -8,6 +8,7 @@
 using FluentAssertions;
 using DesktopHandles = WInterop.Handles.DataTypes;
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop.Modules;
@@ -17,7 +18,7 @@ using WInterop.Resources;
 using WInterop.Support;
 using Xunit;
 
-namespace DesktopTests.DllTests
+namespace DesktopTests.ModuleTests
 {
     public class Methods
     {
@@ -175,6 +176,22 @@ namespace DesktopTests.DllTests
             module.Should().NotBe(DesktopHandles.ModuleHandle.NullModuleHandle);
             var info = ModuleDesktopMethods.GetModuleInfo(module);
             info.lpBaseOfDll.Should().Be(module.HMODULE);
+        }
+
+        [Fact]
+        public void GetProcessModules()
+        {
+            var modules = ModuleDesktopMethods.GetProcessModules();
+            modules.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void GetProcessModulePaths()
+        {
+            var modules = ModuleDesktopMethods.GetProcessModules();
+            var moduleNames = (from module in modules select ModuleDesktopMethods.GetModuleFileName(module)).ToArray();
+            moduleNames.Should().NotBeEmpty();
+            moduleNames.Length.Should().Be(modules.Count());
         }
     }
 }

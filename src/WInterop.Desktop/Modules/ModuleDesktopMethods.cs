@@ -6,8 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
 using WInterop.Modules.DataTypes;
 using WInterop.ProcessAndThreads;
@@ -83,6 +86,24 @@ namespace WInterop.Modules
                 SafeModuleHandle hModule,
                 out MODULEINFO lpmodinfo,
                 uint cb);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683195.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint K32GetMappedFileNameW(
+                SafeProcessHandle hProcess,
+                IntPtr lpv,
+                SafeHandle lpFilename,
+                uint nSize);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682633.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool K32EnumProcessModulesEx(
+                SafeProcessHandle hProcess,
+                SafeHandle lphModule,
+                uint cb,
+                out uint lpcbNeeded,
+                ListModulesOptions dwFilterFlag);
         }
 
         /// <summary>
@@ -145,6 +166,11 @@ namespace WInterop.Modules
             }
         }
 
+        /// <summary>
+        /// Gets info for the given module in the given process.
+        /// </summary>
+        /// <param name="process">The process for the given module or null for the current process.</param>
+        /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         public static MODULEINFO GetModuleInfo(SafeModuleHandle module, SafeProcessHandle process = null)
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
@@ -158,8 +184,10 @@ namespace WInterop.Modules
         }
 
         /// <summary>
-        /// Gets the file name (path) for the given module handle.
+        /// Gets the file name (path) for the given module handle in the given process.
         /// </summary>
+        /// <param name="process">The process for the given module or null for the current process.</param>
+        /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         public static string GetModuleFileName(SafeModuleHandle module, SafeProcessHandle process = null)
         {
             if (process == null)
@@ -209,6 +237,38 @@ namespace WInterop.Modules
                 throw ErrorHelper.GetIoExceptionForLastError(methodName);
 
             return Marshal.GetDelegateForFunctionPointer<DelegateType>(method);
+        }
+
+        /// <summary>
+        /// Gets the module handles for the given process.
+        /// </summary>
+        /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
+        /// <param name="process">The process to get modules for or null for the current process.</param>
+        public static IEnumerable<ModuleHandle> GetProcessModules(SafeProcessHandle process = null)
+        {
+            if (process == null) process = ProcessMethods.GetCurrentProcess();
+
+            List<ModuleHandle> modules = new List<ModuleHandle>();
+            BufferHelper.CachedInvoke<NativeBuffer>(buffer =>
+            {
+                uint sizeNeeded = (uint)buffer.ByteCapacity;
+
+                do
+                {
+                    buffer.EnsureByteCapacity(sizeNeeded);
+                    if (!Direct.K32EnumProcessModulesEx(process, buffer, (uint)buffer.ByteCapacity,
+                        out sizeNeeded, ListModulesOptions.LIST_MODULES_DEFAULT))
+                        throw ErrorHelper.GetIoExceptionForLastError();
+                } while (sizeNeeded > buffer.ByteCapacity);
+
+                NativeBufferReader reader = new NativeBufferReader(buffer);
+                for (int i = 0; i < sizeNeeded; i += Marshal.SizeOf<ModuleHandle>())
+                {
+                    modules.Add(reader.ReadStruct<ModuleHandle>());
+                }
+            });
+
+            return modules;
         }
     }
 }

@@ -135,6 +135,7 @@ Common Windows Data Types
 - WPARAM
 - UINT_PTR
 - ULONG_PTR
+- SIZE_T
 
 [Windows Data Types](http://msdn.microsoft.com/en-us/library/aa383751.aspx "MSDN")  
 [Data Type Ranges](http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx "MSDN")

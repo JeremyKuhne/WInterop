@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.ProcessAndThreads.DataTypes;
 using WInterop.Support.Buffers;
 
 namespace WInterop.ProcessAndThreads
@@ -53,6 +54,14 @@ namespace WInterop.ProcessAndThreads
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool FreeEnvironmentStringsW(
                 IntPtr lpszEnvironmentBlock);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683219.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool K32GetProcessMemoryInfo(
+                SafeProcessHandle process,
+                out PROCESS_MEMORY_COUNTERS_EX ppsmemCounters,
+                uint cb);
         }
 
         /// <summary>
@@ -118,6 +127,21 @@ namespace WInterop.ProcessAndThreads
 
                 return BufferHelper.SplitNullTerminatedStringList(buffer.DangerousGetHandle());
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="process">The process to get memory info for for or null for the current process.</param>
+        public static PROCESS_MEMORY_COUNTERS_EX GetProcessMemoryInfo(SafeProcessHandle process = null)
+        {
+            if (process == null) process = ProcessMethods.GetCurrentProcess();
+
+            PROCESS_MEMORY_COUNTERS_EX info;
+            if (!Direct.K32GetProcessMemoryInfo(process, out info, (uint)Marshal.SizeOf<PROCESS_MEMORY_COUNTERS_EX>()))
+                throw ErrorHelper.GetIoExceptionForLastError();
+
+            return info;
         }
     }
 }

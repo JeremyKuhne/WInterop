@@ -120,7 +120,7 @@ namespace WInterop.Handles
                     ObjectAttributes: ref attributes);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIOExceptionForNTStatus(status, path);
+                    throw ErrorHelper.GetIoExceptionForNTStatus(status, path);
 
                 return directory;
             });
@@ -142,7 +142,7 @@ namespace WInterop.Handles
                     ObjectAttributes: ref attributes);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIOExceptionForNTStatus(status, path);
+                    throw ErrorHelper.GetIoExceptionForNTStatus(status, path);
 
                 return link;
             });
@@ -194,7 +194,7 @@ namespace WInterop.Handles
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIOExceptionForNTStatus(status);
+                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
 
                 buffer.Length = (uint)(target.Length / sizeof(char));
                 return buffer.ToString();
@@ -245,7 +245,7 @@ namespace WInterop.Handles
                 } while (status == NTSTATUS.STATUS_MORE_ENTRIES);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIOExceptionForNTStatus(status);
+                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
             });
 
             return infos.OrderBy(i => i.Name); ;
@@ -287,7 +287,7 @@ namespace WInterop.Handles
                 }
 
                 if (!ErrorMacros.NT_SUCCESS(status))
-                    throw ErrorHelper.GetIOExceptionForNTStatus(status);
+                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
 
                 return new NativeBufferReader(buffer).ReadStruct<UNICODE_STRING>().ToString();
             }
@@ -318,7 +318,7 @@ namespace WInterop.Handles
                 }
 
                 if (!ErrorMacros.NT_SUCCESS(status))
-                    throw ErrorHelper.GetIOExceptionForNTStatus(status);
+                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
 
                 return new NativeBufferReader(buffer).ReadStruct<OBJECT_TYPE_INFORMATION>().TypeName.ToString();
             }
@@ -390,7 +390,7 @@ namespace WInterop.Handles
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIOExceptionForNTStatus(status);
+                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
 
                 // The string isn't null terminated so we have to explicitly pass the size
                 return reader.ReadString(checked((int)nameLength) / sizeof(char));
@@ -409,7 +409,7 @@ namespace WInterop.Handles
                 FileInformationClass: fileInformationClass);
 
             if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorHelper.GetIOExceptionForNTStatus(status);
+                throw ErrorHelper.GetIoExceptionForNTStatus(status);
         }
 
         /// <summary>

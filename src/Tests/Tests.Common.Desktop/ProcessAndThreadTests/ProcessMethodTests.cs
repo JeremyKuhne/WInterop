@@ -10,9 +10,9 @@ using Xunit;
 using FluentAssertions;
 using WInterop.ProcessAndThreads;
 
-namespace DesktopTests
+namespace DesktopTests.ProcessAndThreadTests
 {
-    public class ProcessAndThreadTests
+    public class ProcessMethodTests
     {
         [Fact]
         public void GetNullStringThrows()
@@ -78,6 +78,16 @@ namespace DesktopTests
             ProcessDesktopMethods.GetEnvironmentVariable(name).Should().BeNull();
             variables = ProcessDesktopMethods.GetEnvironmentVariables();
             variables.Should().NotContainKey(name);
+        }
+
+        [Fact]
+        public void BasicGetProcessMemoryInfo()
+        {
+            var info = ProcessDesktopMethods.GetProcessMemoryInfo();
+
+            // PagefileUsage is 0 on Win7, otherwise it is equal to PrivateUsage
+            if (info.PagefileUsage.ToUInt64() != 0)
+                info.PagefileUsage.ToUInt64().Should().Be(info.PrivateUsage.ToUInt64());
         }
     }
 }

@@ -68,8 +68,10 @@
     <Compile Include="DiskManagement\DataTypes\DiskFreeSpace.cs" />
     <Compile Include="DiskManagement\DiskDesktopMethods.cs" />
     <Compile Include="Modules\DataTypes\GetModuleFlags.cs" />
+    <Compile Include="Modules\DataTypes\ListModulesOptions.cs" />
     <Compile Include="Modules\DataTypes\LoadLibraryFlags.cs" />
     <Compile Include="Modules\DataTypes\MODULEINFO.cs" />
+    <Compile Include="ProcessAndThreads\DataTypes\PROCESS_MEMORY_COUNTERS_EX.cs" />
     <Compile Include="Modules\ModuleDesktopMethods.cs" />
     <Compile Include="ErrorHandling\DataTypes\ErrorMode.cs" />
     <Compile Include="ErrorHandling\DataTypes\MessageBeepType.cs" />
@@ -133,7 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cryptography\DataTypes\" />
-    <Folder Include="ProcessAndThreads\DataTypes\" />
     <Folder Include="Resources\DataTypes\" />
     <Folder Include="SecurityManagement\DataTypes\" />
   </ItemGroup>
