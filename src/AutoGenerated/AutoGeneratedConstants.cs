@@ -29,7 +29,7 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const int CurrentDayOfMonth =  23;
+            public const int CurrentDayOfMonth =  25;
 
             /// <summary>
             /// Current hour from 0..23
@@ -39,7 +39,7 @@ namespace WInterop
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const int CurrentMinute = 42;
+            public const int CurrentMinute = 21;
         }
 
         public static class Strings
@@ -62,12 +62,12 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const string CurrentDayOfMonth =  "23";
+            public const string CurrentDayOfMonth =  "25";
 
             /// <summary>
             /// Current two digit day of the month 01..31
             /// </summary>
-            public const string CurrentTwoDigitDayOfMonth =  "23";
+            public const string CurrentTwoDigitDayOfMonth =  "25";
 
             /// <summary>
             /// Current hour from 0..23
@@ -82,12 +82,12 @@ namespace WInterop
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const string CurrentMinute = "42";
+            public const string CurrentMinute = "21";
 
             /// <summary>
             /// Current two digit hour from 00..59
             /// </summary>
-            public const string CurrentTwoDigitMinute = "42";
+            public const string CurrentTwoDigitMinute = "21";
         }
     }
 }

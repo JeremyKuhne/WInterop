@@ -130,7 +130,7 @@
     <Compile Include="Handles\DataTypes\ObjectAttributes.cs" />
     <Compile Include="Handles\DataTypes\SafeCertificateStoreHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeCloseHandle.cs" />
-    <Compile Include="Handles\DataTypes\SafeFileHandle.cs" />
+    <Compile Include="FileManagement\DataTypes\SafeFileHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeHandleZeroIsInvalid.cs" />
     <Compile Include="Handles\DataTypes\SafeHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="Handles\DataTypes\SafeHeapHandle.cs" />

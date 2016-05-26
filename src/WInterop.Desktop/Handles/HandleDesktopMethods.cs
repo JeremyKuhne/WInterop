@@ -86,16 +86,6 @@ namespace WInterop.Handles
                 ref uint Context,
                 out uint ReturnLength);
 
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567052.aspx
-            // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
-            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            unsafe public static extern NTSTATUS NtQueryInformationFile(
-                SafeFileHandle FileHandle,
-                out IO_STATUS_BLOCK IoStatusBlock,
-                void* FileInformation,
-                uint Length,
-                FILE_INFORMATION_CLASS FileInformationClass);
-
             //  typedef struct _OBJECT_TYPES_INFORMATION
             //  {
             //      ULONG NumberOfTypes;
@@ -322,107 +312,6 @@ namespace WInterop.Handles
 
                 return new NativeBufferReader(buffer).ReadStruct<OBJECT_TYPE_INFORMATION>().TypeName.ToString();
             }
-        }
-
-        public static string GetFileName(SafeFileHandle fileHandle)
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545817.aspx
-
-            //  typedef struct _FILE_NAME_INFORMATION
-            //  {
-            //      ULONG FileNameLength;
-            //      WCHAR FileName[1];
-            //  } FILE_NAME_INFORMATION, *PFILE_NAME_INFORMATION;
-
-            return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileNameInformation);
-        }
-
-        public static string GetVolumeName(SafeFileHandle fileHandle)
-        {
-            // Same basic structure as FILE_NAME_INFORMATION
-            return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileVolumeNameInformation);
-        }
-
-        /// <summary>
-        /// This is the short name for the file/directory name, not the path. Available from WindowsStore.
-        /// </summary>
-        public static string GetShortName(SafeFileHandle fileHandle)
-        {
-            // Same basic structure as FILE_NAME_INFORMATION
-            return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileAlternateNameInformation);
-        }
-
-        private static void BufferedGetFileInformation(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass, Func<NativeBufferReader> filledBuffer)
-        {
-            
-        }
-
-        private static string GetFileInformationString(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass)
-        {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
-            {
-                NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
-                uint nameLength = 260 * sizeof(char);
-
-                IO_STATUS_BLOCK ioStatus;
-                var reader = new NativeBufferReader(buffer);
-
-                while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
-                {
-                    // Add space for the FileNameLength
-                    buffer.EnsureByteCapacity(nameLength + sizeof(uint));
-
-                    unsafe
-                    {
-                        status = Direct.NtQueryInformationFile(
-                            FileHandle: fileHandle,
-                            IoStatusBlock: out ioStatus,
-                            FileInformation: buffer.VoidPointer,
-                            Length: checked((uint)buffer.ByteCapacity),
-                            FileInformationClass: fileInformationClass);
-                    }
-
-                    if (status == NTSTATUS.STATUS_SUCCESS || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
-                    {
-                        reader.ByteOffset = 0;
-                        nameLength = reader.ReadUint();
-                    }
-                }
-
-                if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
-
-                // The string isn't null terminated so we have to explicitly pass the size
-                return reader.ReadString(checked((int)nameLength) / sizeof(char));
-            });
-        }
-
-        unsafe private static void GetFileInformation(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass, void* value, uint size)
-        {
-            IO_STATUS_BLOCK ioStatus;
-
-            NTSTATUS status = Direct.NtQueryInformationFile(
-                FileHandle: fileHandle,
-                IoStatusBlock: out ioStatus,
-                FileInformation: value,
-                Length: size,
-                FileInformationClass: fileInformationClass);
-
-            if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorHelper.GetIoExceptionForNTStatus(status);
-        }
-
-        /// <summary>
-        /// Gets the file mode for the given handle.
-        /// </summary>
-        public static FILE_MODE_INFORMATION GetFileMode(SafeFileHandle fileHandle)
-        {
-            FILE_MODE_INFORMATION info;
-            unsafe
-            {
-                GetFileInformation(fileHandle, FILE_INFORMATION_CLASS.FileModeInformation, &info, sizeof(FILE_MODE_INFORMATION));
-            }
-            return info;
         }
     }
 }

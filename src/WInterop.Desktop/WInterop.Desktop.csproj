@@ -82,8 +82,8 @@
     <Compile Include="FileManagement\DataTypes\GetFinalPathNameByHandleFlags.cs" />
     <Compile Include="FileManagement\FileDesktopMethods.cs" />
     <Compile Include="FileManagement\DataTypes\SYMBOLIC_LINK_FLAG.cs" />
-    <Compile Include="Handles\DataTypes\FILE_INFORMATION_CLASS.cs" />
-    <Compile Include="Handles\DataTypes\FILE_MODE_INFORMATION.cs" />
+    <Compile Include="FileManagement\DataTypes\FILE_INFORMATION_CLASS.cs" />
+    <Compile Include="FileManagement\DataTypes\FILE_MODE_INFORMATION.cs" />
     <Compile Include="Handles\DataTypes\IO_STATUS.cs" />
     <Compile Include="Handles\DataTypes\IO_STATUS_BLOCK.cs" />
     <Compile Include="Handles\DataTypes\SafeMailslotHandle.cs" />

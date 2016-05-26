@@ -9,8 +9,6 @@ using FluentAssertions;
 using Tests.Support;
 using WInterop.FileManagement;
 using WInterop.FileManagement.DataTypes;
-using WInterop.Handles;
-using WInterop.Handles.DataTypes;
 using WInterop.Ipc;
 using Xunit;
 
@@ -31,7 +29,7 @@ namespace DesktopTests.Ipc.MailslotTests
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);
-                    var modeInfo = HandleDesktopMethods.GetFileMode(fileHandle);
+                    var modeInfo = FileDesktopMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened synchronously
                     modeInfo.Should().Be(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
@@ -53,7 +51,7 @@ namespace DesktopTests.Ipc.MailslotTests
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);
-                    var modeInfo = HandleDesktopMethods.GetFileMode(fileHandle);
+                    var modeInfo = FileDesktopMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened asynchronously (e.g. no synchronous flag)
                     modeInfo.Should().Be((FILE_MODE_INFORMATION)0);
@@ -114,6 +112,5 @@ namespace DesktopTests.Ipc.MailslotTests
                 message.Should().BeNullOrEmpty();
             }
         }
-
     }
 }

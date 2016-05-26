@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.Backup.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.FileManagement.DataTypes;
 using WInterop.Handles.DataTypes;
 using WInterop.Support.Buffers;
 

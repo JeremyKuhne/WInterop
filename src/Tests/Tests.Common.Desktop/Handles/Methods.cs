@@ -49,69 +49,6 @@ namespace DesktopTests.HandlesTests
         }
 
         [Fact]
-        public void GetFileNameBasic()
-        {
-            string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
-            {
-                // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
-                string name = HandleDesktopMethods.GetFileName(directory);
-
-                tempPath.Should().EndWith(Paths.AddTrailingSeparator(name));
-            }
-        }
-
-        [Fact]
-        public void GetVolumeNameBasic()
-        {
-            string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
-            {
-                // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                try
-                {
-                    string name = HandleDesktopMethods.GetVolumeName(directory);
-                    name.Should().StartWith(@"\Device\");
-                }
-                catch (NotImplementedException)
-                {
-                    // Needs Windows 10
-                    System.Environment.OSVersion.Version.Major.Should().BeLessThan(10);
-                }
-            }
-        }
-
-        [Fact]
-        public void GetShortNameBasic()
-        {
-            string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
-            {
-                // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                string directoryName = HandleDesktopMethods.GetShortName(directory);
-                directoryName.Should().Be("Temp");
-
-                string tempFileName = "ExtraLongName" + System.IO.Path.GetRandomFileName();
-                string tempFilePath = System.IO.Path.Combine(tempPath, tempFileName);
-                try
-                {
-                    using (var file = FileMethods.CreateFile(tempFilePath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
-                    {
-                        string fileName = HandleDesktopMethods.GetShortName(file);
-                        fileName.Length.Should().BeLessOrEqualTo(12);
-                    }
-                }
-                finally
-                {
-                    FileMethods.DeleteFile(tempFilePath);
-                }
-            }
-        }
-
-        [Fact]
         public void OpenDosDeviceDirectory()
         {
             using (var directory = HandleDesktopMethods.OpenDirectoryObject(@"\??"))
@@ -230,39 +167,6 @@ namespace DesktopTests.HandlesTests
             // Not sure why this is- probably the source of why so many other things go wrong
             Action action = () => FileMethods.GetFileNameByHandle(fileHandle);
             action.ShouldThrow<ArgumentException>().And.HResult.Should().Be(unchecked((int)0x80070057));
-        }
-
-        [Fact]
-        public void FileModeSynchronousFile()
-        {
-            using (var cleaner = new TestFileCleaner())
-            {
-                string filePath = cleaner.GetTestPath();
-                using (var file = FileMethods.CreateFile(filePath, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE,
-                    CreationDisposition.CREATE_NEW))
-                {
-                    file.IsInvalid.Should().BeFalse();
-                    var mode = HandleDesktopMethods.GetFileMode(file);
-                    mode.Should().HaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
-                }
-            }
-        }
-
-        [Fact]
-        public void FileModeAsynchronousFile()
-        {
-            using (var cleaner = new TestFileCleaner())
-            {
-                string filePath = cleaner.GetTestPath();
-                using (var file = FileMethods.CreateFile(filePath, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE,
-                    CreationDisposition.CREATE_NEW, FileAttributes.NONE, FileFlags.FILE_FLAG_OVERLAPPED))
-                {
-                    file.IsInvalid.Should().BeFalse();
-                    var mode = HandleDesktopMethods.GetFileMode(file);
-                    mode.Should().NotHaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
-                    mode.Should().NotHaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_ALERT);
-                }
-            }
         }
     }
 }
