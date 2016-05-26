@@ -39,7 +39,7 @@ namespace WInterop
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const int CurrentMinute = 50;
+            public const int CurrentMinute = 51;
         }
 
         public static class Strings
@@ -82,12 +82,12 @@ namespace WInterop
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const string CurrentMinute = "50";
+            public const string CurrentMinute = "51";
 
             /// <summary>
             /// Current two digit hour from 00..59
             /// </summary>
-            public const string CurrentTwoDigitMinute = "50";
+            public const string CurrentTwoDigitMinute = "51";
         }
     }
 }
