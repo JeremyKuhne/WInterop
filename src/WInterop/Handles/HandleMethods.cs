@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.Handles.DataTypes;
+using WInterop.ProcessAndThreads.DataTypes;
 
 namespace WInterop.Handles
 {

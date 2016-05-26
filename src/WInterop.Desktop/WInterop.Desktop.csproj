@@ -96,8 +96,8 @@
     <Compile Include="Handles\DataTypes\OBJECT_INFORMATION_CLASS.cs" />
     <Compile Include="Handles\DataTypes\OBJECT_TYPE_INFORMATION.cs" />
     <Compile Include="Handles\DataTypes\SafeDirectoryObjectHandle.cs" />
-    <Compile Include="Handles\DataTypes\SafeEnvironmentStringsHandle.cs" />
-    <Compile Include="Handles\DataTypes\SafeFindVolumeHandle.cs" />
+    <Compile Include="ProcessAndThreads\DataTypes\SafeEnvironmentStringsHandle.cs" />
+    <Compile Include="VolumeManagement\DataTypes\SafeFindVolumeHandle.cs" />
     <Compile Include="Modules\DataTypes\SafeModuleHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeNetApiBufferHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeSymbolicLinkObjectHandle.cs" />

@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using WInterop.Handles;
 using WInterop.Handles.DataTypes;
+using WInterop.Heap.DataTypes;
 
 namespace WInterop.Support.Buffers
 {

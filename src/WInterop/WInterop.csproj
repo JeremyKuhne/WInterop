@@ -46,7 +46,7 @@
     <Compile Include="Authorization\DataTypes\ACCESS_MASK.cs" />
     <Compile Include="Authorization\DataTypes\GenericAccessRights.cs" />
     <Compile Include="Authorization\DataTypes\SECURITY_IMPERSONATION_LEVEL.cs" />
-    <Compile Include="Handles\DataTypes\ProcessHandle.cs" />
+    <Compile Include="ProcessAndThreads\DataTypes\ProcessHandle.cs" />
     <Compile Include="Support\Collections\Cache.cs" />
     <Compile Include="Cryptography\DataTypes\CertEnumPhysicalStoreCallback.cs" />
     <Compile Include="Cryptography\DataTypes\CertEnumSystemStoreCallback.cs" />
@@ -133,10 +133,10 @@
     <Compile Include="FileManagement\DataTypes\SafeFileHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeHandleZeroIsInvalid.cs" />
     <Compile Include="Handles\DataTypes\SafeHandleZeroOrMinusOneIsInvalid.cs" />
-    <Compile Include="Handles\DataTypes\SafeHeapHandle.cs" />
-    <Compile Include="Handles\DataTypes\SafeProcessHandle.cs" />
-    <Compile Include="Handles\DataTypes\SafeHandleStreamWrapper.cs" />
-    <Compile Include="Handles\DataTypes\SafeThreadHandle.cs" />
+    <Compile Include="Heap\DataTypes\SafeHeapHandle.cs" />
+    <Compile Include="ProcessAndThreads\DataTypes\SafeProcessHandle.cs" />
+    <Compile Include="FileManagement\DataTypes\SafeHandleStreamWrapper.cs" />
+    <Compile Include="ProcessAndThreads\DataTypes\SafeThreadHandle.cs" />
     <Compile Include="Heap\HeapMethods.cs" />
     <Compile Include="Libraries.cs" />
     <Compile Include="ProcessAndThreads\ProcessMethods.cs" />

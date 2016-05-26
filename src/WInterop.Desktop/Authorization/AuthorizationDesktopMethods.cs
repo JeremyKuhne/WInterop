@@ -16,6 +16,7 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
 using WInterop.ProcessAndThreads;
+using WInterop.ProcessAndThreads.DataTypes;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Authorization

@@ -8,9 +8,8 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Security;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.Heap.DataTypes
 {
     /// <summary>
     /// Handle for heap memory

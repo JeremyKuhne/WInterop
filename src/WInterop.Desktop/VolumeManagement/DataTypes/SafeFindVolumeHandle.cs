@@ -7,8 +7,9 @@
 
 using System;
 using WInterop.ErrorHandling;
+using WInterop.Handles.DataTypes;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.VolumeManagement.DataTypes
 {
     /// <summary>
     /// Safe handle for a block of memory returned by GetEnvironmentStrings.
@@ -21,7 +22,7 @@ namespace WInterop.Handles.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            if (!VolumeManagement.VolumeDesktopMethods.Direct.FindVolumeClose(handle))
+            if (!VolumeDesktopMethods.Direct.FindVolumeClose(handle))
             {
                 throw ErrorHelper.GetIoExceptionForLastError();
             }

@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.ProcessAndThreads;
+using WInterop.Handles.DataTypes;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.ProcessAndThreads.DataTypes
 {
     /// <summary>
     /// Safe handle for a block of memory returned by GetEnvironmentStrings.

@@ -7,13 +7,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.Handles.DataTypes;
 using WInterop.Modules.DataTypes;
 using WInterop.ProcessAndThreads;
+using WInterop.ProcessAndThreads.DataTypes;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Modules
