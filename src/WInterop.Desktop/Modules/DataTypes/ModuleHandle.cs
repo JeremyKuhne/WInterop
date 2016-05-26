@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.Modules.DataTypes
 {
     /// <summary>
     /// Simple struct to encapsulate a module handle (HMODULE). Use this for APIs that do NOT

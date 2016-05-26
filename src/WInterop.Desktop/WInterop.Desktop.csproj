@@ -87,7 +87,7 @@
     <Compile Include="Handles\DataTypes\IO_STATUS.cs" />
     <Compile Include="Handles\DataTypes\IO_STATUS_BLOCK.cs" />
     <Compile Include="Handles\DataTypes\SafeMailslotHandle.cs" />
-    <Compile Include="Handles\DataTypes\ModuleHandle.cs" />
+    <Compile Include="Modules\DataTypes\ModuleHandle.cs" />
     <Compile Include="Handles\DataTypes\WindowHandle.cs" />
     <Compile Include="Handles\HandleDesktopMethods.cs" />
     <Compile Include="Handles\DataTypes\ObjectInformation.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="Handles\DataTypes\SafeDirectoryObjectHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeEnvironmentStringsHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeFindVolumeHandle.cs" />
-    <Compile Include="Handles\DataTypes\SafeModuleHandle.cs" />
+    <Compile Include="Modules\DataTypes\SafeModuleHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeNetApiBufferHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeSymbolicLinkObjectHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeTokenHandle.cs" />

@@ -9,8 +9,8 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
-using WInterop.Handles;
 using WInterop.Handles.DataTypes;
+using WInterop.Modules.DataTypes;
 using WInterop.Windows.DataTypes;
 
 namespace WInterop.Windows

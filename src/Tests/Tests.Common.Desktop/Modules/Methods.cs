@@ -6,13 +6,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using DesktopHandles = WInterop.Handles.DataTypes;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop.Modules;
 using WInterop.Modules.DataTypes;
+using ModuleTypes = WInterop.Modules.DataTypes;
 using WInterop.FileManagement;
 using WInterop.Resources;
 using WInterop.Support;
@@ -153,7 +153,7 @@ namespace DesktopTests.ModuleTests
         [Fact]
         public void GetEntryModuleFileName()
         {
-            string path = ModuleDesktopMethods.GetModuleFileName(DesktopHandles.ModuleHandle.NullModuleHandle);
+            string path = ModuleDesktopMethods.GetModuleFileName(ModuleTypes.ModuleHandle.NullModuleHandle);
             path.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -161,10 +161,10 @@ namespace DesktopTests.ModuleTests
         public void GetEntryModuleHandleAndFileName()
         {
             var module = ModuleDesktopMethods.GetModuleHandle(null);
-            module.Should().NotBe(DesktopHandles.ModuleHandle.NullModuleHandle);
+            module.Should().NotBe(ModuleTypes.ModuleHandle.NullModuleHandle);
             string pathByHandle = ModuleDesktopMethods.GetModuleFileName(module);
             pathByHandle.Should().NotBeNullOrWhiteSpace();
-            string pathByDefault = ModuleDesktopMethods.GetModuleFileName(DesktopHandles.ModuleHandle.NullModuleHandle);
+            string pathByDefault = ModuleDesktopMethods.GetModuleFileName(ModuleTypes.ModuleHandle.NullModuleHandle);
             // Strangely the path is cased differently when getting the module file name through GetModuleFileNameEx, but not GetModuleFileName.
             pathByHandle.Should().BeEquivalentTo(pathByDefault);
         }
@@ -173,7 +173,7 @@ namespace DesktopTests.ModuleTests
         public void GetEntryModuleInfo()
         {
             var module = ModuleDesktopMethods.GetModuleHandle(null);
-            module.Should().NotBe(DesktopHandles.ModuleHandle.NullModuleHandle);
+            module.Should().NotBe(ModuleTypes.ModuleHandle.NullModuleHandle);
             var info = ModuleDesktopMethods.GetModuleInfo(module);
             info.lpBaseOfDll.Should().Be(module.HMODULE);
         }
