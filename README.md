@@ -24,5 +24,6 @@ WInterop is in an early stage of development. As it expands expect breaking chan
 - Make it easy to find implemented wrappers
 - Ease writing code that will run against different runtimes on Windows (.NET, .NET Core)
 - Allow targeting Windows 7 and above (including WinRT) without writing separate libraries
+- Allow targeting .NET 4.6 and .NET Core / UWP
 
 

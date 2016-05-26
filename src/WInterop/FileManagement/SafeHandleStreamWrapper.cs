@@ -7,16 +7,11 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.FileManagement.DataTypes
+namespace WInterop.FileManagement
 {
     /// <summary>
     /// Use to tie lifetime of a stream to a handle.
     /// </summary>
-    /// <remarks>
-    /// One particular scenario where this is useful is that  we have our own SafeFileHandle defined in WInterop. This
-    /// class allows using our returned SafeHandles (which own the handle) to create a stream object and tying it's
-    /// lifetime to it (e.g. create a FileStream off our handle and pass it back (rather than our handle).
-    /// </remarks>
     public class SafeHandleStreamWrapper : System.IO.Stream
     {
         private System.IO.Stream _baseStream;

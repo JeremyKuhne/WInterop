@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,6 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.FileManagement.DataTypes;
 using WInterop.FileManagement.DataTypes.CopyFile2;
-using WInterop.Handles.DataTypes;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Synchronization.DataTypes;
@@ -182,6 +182,44 @@ namespace WInterop.FileManagement
                 string lpPrefixString,
                 uint uUnique,
                 SafeHandle lpTempFileName);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363792.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public unsafe static extern bool CancelIoEx(
+                SafeFileHandle hFile,
+                OVERLAPPED* lpOverlapped);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/hh448542.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool GetOverlappedResultEx(
+                SafeFileHandle hFile,
+                [In] ref OVERLAPPED lpOverlapped,
+                out uint lpNumberOfBytesTransferred,
+                uint dwMilliseconds,
+                [MarshalAs(UnmanagedType.Bool)] bool bAlertable);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365716.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool UnlockFileEx(
+                SafeFileHandle hFile,
+                uint dwReserved,
+                uint nNumberOfBytesToUnlockLow,
+                uint nNumberOfBytesToUnlockHigh,
+                ref OVERLAPPED lpOverlapped);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365203.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool LockFileEx(
+                SafeFileHandle hFile,
+                uint dwFlags,
+                uint dwReserved,
+                uint nNumberOfBytesToUnlockLow,
+                uint nNumberOfBytesToUnlockHigh,
+                ref OVERLAPPED lpOverlapped);
         }
 
         /// <summary>
@@ -267,13 +305,13 @@ namespace WInterop.FileManagement
             SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
         {
             var fileHandle = CreateFile(path, desiredAccess, shareMode, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
-            var fileStream = new System.IO.FileStream(
-                handle: new Microsoft.Win32.SafeHandles.SafeFileHandle(fileHandle.DangerousGetHandle(), ownsHandle: false),
+
+            // FileStream will own the lifetime of the handle
+            return new System.IO.FileStream(
+                handle: fileHandle,
                 access: Conversion.DesiredAccessToFileAccess(desiredAccess),
                 bufferSize: 4096,
                 isAsync: (fileFlags & FileFlags.FILE_FLAG_OVERLAPPED) != 0);
-
-            return new SafeHandleStreamWrapper(fileStream, fileHandle);
         }
 
         private delegate SafeFileHandle CreateFileDelegate(

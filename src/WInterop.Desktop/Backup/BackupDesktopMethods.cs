@@ -5,13 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Backup.DataTypes;
 using WInterop.FileManagement;
 using WInterop.FileManagement.DataTypes;
-using WInterop.Handles.DataTypes;
 
 namespace WInterop.Backup
 {

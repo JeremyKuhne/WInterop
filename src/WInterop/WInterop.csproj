@@ -130,12 +130,11 @@
     <Compile Include="Handles\DataTypes\ObjectAttributes.cs" />
     <Compile Include="Handles\DataTypes\SafeCertificateStoreHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeCloseHandle.cs" />
-    <Compile Include="FileManagement\DataTypes\SafeFileHandle.cs" />
     <Compile Include="Handles\DataTypes\SafeHandleZeroIsInvalid.cs" />
     <Compile Include="Handles\DataTypes\SafeHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="Heap\DataTypes\SafeHeapHandle.cs" />
     <Compile Include="ProcessAndThreads\DataTypes\SafeProcessHandle.cs" />
-    <Compile Include="FileManagement\DataTypes\SafeHandleStreamWrapper.cs" />
+    <Compile Include="FileManagement\SafeHandleStreamWrapper.cs" />
     <Compile Include="ProcessAndThreads\DataTypes\SafeThreadHandle.cs" />
     <Compile Include="Heap\HeapMethods.cs" />
     <Compile Include="Libraries.cs" />
