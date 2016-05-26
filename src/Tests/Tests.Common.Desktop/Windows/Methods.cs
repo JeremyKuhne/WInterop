@@ -6,8 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.Handles.DataTypes;
 using WInterop.Windows;
+using WInterop.Windows.DataTypes;
 using Xunit;
 
 namespace DesktopTests.WindowsTests

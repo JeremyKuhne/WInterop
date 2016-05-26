@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 using WInterop.Clipboard.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
-using WInterop.Handles.DataTypes;
 using WInterop.Support.Buffers;
+using WInterop.Windows.DataTypes;
 
 namespace WInterop.Clipboard
 {

@@ -88,7 +88,7 @@
     <Compile Include="Handles\DataTypes\IO_STATUS_BLOCK.cs" />
     <Compile Include="Handles\DataTypes\SafeMailslotHandle.cs" />
     <Compile Include="Modules\DataTypes\ModuleHandle.cs" />
-    <Compile Include="Handles\DataTypes\WindowHandle.cs" />
+    <Compile Include="Windows\DataTypes\WindowHandle.cs" />
     <Compile Include="Handles\HandleDesktopMethods.cs" />
     <Compile Include="Handles\DataTypes\ObjectInformation.cs" />
     <Compile Include="Handles\DataTypes\OBJECT_ATTRIBUTES.cs" />
