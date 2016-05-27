@@ -15,6 +15,8 @@ namespace WInterop.Support.Collections
     /// </summary>
     public class Cache<T> : IDisposable where T : class, new()
     {
+        protected static string s_type = typeof(T).ToString();
+
         // Protected for testing
         protected readonly T[] _itemsCache;
 
@@ -32,6 +34,8 @@ namespace WInterop.Support.Collections
         /// </summary>
         public virtual T Acquire()
         {
+            CacheEventSource.Log.ObjectAquired(s_type);
+
             T item;
 
             for (int i = 0; i < _itemsCache.Length; i++)
@@ -40,6 +44,7 @@ namespace WInterop.Support.Collections
                 if (item != null) return item;
             }
 
+            CacheEventSource.Log.ObjectCreated(s_type);
             return new T();
         }
 
@@ -48,12 +53,15 @@ namespace WInterop.Support.Collections
         /// </summary>
         public virtual void Release(T item)
         {
+            CacheEventSource.Log.ObjectReleased(s_type);
+
             for (int i = 0; i < _itemsCache.Length; i++)
             {
                 item = Interlocked.Exchange(ref _itemsCache[i], item);
                 if (item == null) return;
             }
 
+            CacheEventSource.Log.ObjectDestroyed(s_type, "NoSlot");
             (item as IDisposable)?.Dispose();
         }
 

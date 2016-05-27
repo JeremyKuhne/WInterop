@@ -47,6 +47,7 @@
     <Compile Include="Authorization\DataTypes\GenericAccessRights.cs" />
     <Compile Include="Authorization\DataTypes\SECURITY_IMPERSONATION_LEVEL.cs" />
     <Compile Include="ProcessAndThreads\DataTypes\ProcessHandle.cs" />
+    <Compile Include="Support\Collections\CacheEventSource.cs" />
     <Compile Include="Support\Collections\Cache.cs" />
     <Compile Include="Cryptography\DataTypes\CertEnumPhysicalStoreCallback.cs" />
     <Compile Include="Cryptography\DataTypes\CertEnumSystemStoreCallback.cs" />

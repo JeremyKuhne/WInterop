@@ -43,6 +43,7 @@ namespace WInterop.Support.Buffers
             }
             else
             {
+                CacheEventSource.Log.ObjectDestroyed(s_type, "OverSize");
                 item.Dispose();
             }
         }
