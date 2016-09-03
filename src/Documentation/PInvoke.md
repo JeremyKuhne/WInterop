@@ -23,14 +23,14 @@ Attributes
 | `ref` parameter  | `[In],[Out]`       |
 | return value     | `[Out]`            |
 
-**[`[DllImport()]`] [1] attribute settings:**
+**`[DllImport()]` [1] attribute settings:**
 
 | Setting | Recommendation | Details |
 |---------|----------------|---------|
 | [`PreserveSig`][2]   | keep default       | When this is explicitly set to false (the default is true), failed HRESULT return values will be turned into Exceptions (and the return value in the definition becomes null as a result).|
 | [`SetLastError`][3]  | as per API         | Set this to true (default is false) if the API uses GetLastError and use Marshal.GetLastWin32Error to get the value. If the API sets a condition that says it has an error, get the error before making other calls to avoid inadvertently having it overwritten.|
 | [`ExactSpelling`][4] | `true`             | Set this to true (deafult is false) and gain a slight perf benefit as the framework will avoid looking for an "A" or "W" version. (See NDirectMethodDesc::FindEntryPoint).|
-| [`CharSet`][5]       | `CharSet.Unicode` if strings present in signature | This specifies marshalling behavior of strings and what `ExactSpelling` does when `false`. Be explicit with this one as the docs claim the default is `CharSet.Ansi`.|
+| [`CharSet`][5]       | `CharSet.Unicode` if strings present in signature | This specifies marshalling behavior of strings and what `ExactSpelling` does when `false`. Be explicit with this one as the documented default is `CharSet.Ansi`.|
 
 [1]: https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.dllimportattribute.aspx "MSDN"
 [2]: https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.dllimportattribute.preservesig.aspx "MSDN"
@@ -46,6 +46,8 @@ is passed by value (not `ref` or `out`) the string will be be pinned and used di
 
 For `[Out]` strings the CLR will use `CoTaskMemFree` by default to free strings or `SysStringFree` for strings that are marked
 as `UnmanagedType.BSTR`.
+
+Remember to mark the `[DllImport]` as `Charset.Unicode` unless you explicitly want ANSI treatment of your strings.
 
 **[AVOID]** `StringBuilder` marshalling *always* creates a native buffer copy (see `ILWSTRBufferMarshaler`). As such it can be extremely inefficient. Take the typical
 scenario of calling a Windows API that takes a string:
@@ -93,70 +95,81 @@ COM calls (`UnmanagedType.VariantBool`).
 
 [Default Marshalling for Boolean Types](https://msdn.microsoft.com/en-us/library/t2t3725f.aspx "MSDN")  
 
+Guids
+-----
+
+Guids are usable directly in signatures. When passed by ref, however, they should *not* be marked as `out` or `ref`.
+Instead the parameter should get the `[MarshalAs(UnmanagedType.LPStruct)]` attribute.
+
+| Guid | By ref Guid |
+|------|-------------|
+| `KNOWNFOLDERID` | `REFKNOWNFOLDERID` |
+
+`[MarshalAs(UnmanagedType.LPStruct)]` should _only_ be used for by ref Guids.
+
 Common Windows Data Types
 -------------------------
 
 |Windows        | C                 | C#    | Alternative |
 |---------------|-------------------|-------|-------------|
-|BOOL           |int                |int    |bool
-|BOOLEAN        |unsigned char      |byte   |[MarshalAs(UnmanagedType.U1)] bool
-|BYTE           |unsigned char      |byte
-|CHAR           |char               |sbyte
-|UCHAR          |unsigned char      |byte
-|SHORT          |short              |short
-|CSHORT         |short              |short
-|USHORT         |unsigned short     |ushort
-|WORD           |unsigned short     |ushort
-|ATOM           |unsigned short     |ushort
-|INT            |int                |int
-|LONG           |long               |int
-|ULONG          |unsigned long      |uint
-|DWORD          |unsigned long      |uint
-|LARGE_INTEGER  |__int64            |long
-|LONGLONG       |__int64            |long
-|ULONGLONG      |unsigned __int64   |ulong
-|ULARGE_INTEGER |unsigned __int64   |ulong
-|UCHAR          |unsigned char      |byte
-|HRESULT        |long               |int
+|`BOOL`           |`int`                |`int`    |`bool`
+|`BOOLEAN`        |`unsigned char`      |`byte`   |`[MarshalAs(UnmanagedType.U1)] bool`
+|`BYTE`           |`unsigned char`      |`byte` | |
+|`CHAR`           |`char`               |`sbyte` | |
+|`UCHAR`          |`unsigned char`      |`byte` | |
+|`SHORT`          |`short`              |`short` | |
+|`CSHORT`         |`short`              |`short` | |
+|`USHORT`         |`unsigned short`     |`ushort` | |
+|`WORD`           |`unsigned short`     |`ushort` | |
+|`ATOM`           |`unsigned short`     |`ushort` | |
+|`INT`            |`int`                |`int` | |
+|`LONG`           |`long`               |`int` | |
+|`ULONG`          |`unsigned long`      |`uint` | |
+|`DWORD`          |`unsigned long`      |`uint` | |
+|`LARGE_INTEGER`  |`__int64`            |`long` | |
+|`LONGLONG`       |`__int64`            |`long` | |
+|`ULONGLONG`      |`unsigned __int64`   |`ulong` | |
+|`ULARGE_INTEGER` |`unsigned __int64`   |`ulong` | |
+|`UCHAR`          |`unsigned char`      |`byte` | |
+|`HRESULT`        |`long`               |`int` | |
 
 
-**Signed Pointer Types (IntPtr)**
-
-- HANDLE
-- HWND
-- HINSTANCE
-- LPARAM
-- LRESULT
-- LONG_PTR
-- INT_PTR
-
-**Unsigned Pointer Types (IntPtr)**
-
-- WPARAM
-- UINT_PTR
-- ULONG_PTR
-- SIZE_T
+| Signed Pointer Types (`IntPtr`) | Unsigned Pointer Types (`UIntPtr`) |
+|----------------------------------|-------------------------------------|
+| `HANDLE` | `WPARAM` |
+| `HWND` | `UINT_PTR` |
+| `HINSTANCE` | `ULONG_PTR` |
+| `LPARAM` | `SIZE_T` |
+| `LRESULT` | |
+| `LONG_PTR` | |
+| `INT_PTR` | |
 
 [Windows Data Types](http://msdn.microsoft.com/en-us/library/aa383751.aspx "MSDN")  
 [Data Type Ranges](http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx "MSDN")
 
 Blittable Types
 ---------------
-Blittable types are types that have the same representation for native code.
+Blittable types are types that have the same representation for native code. As such they do not need
+to be converted.
 
 **Blittable types:**
 
-- byte, sbyte, short, ushort, int, uint, long, ulong, single, double
-- IntPtr, UIntPtr
-- one dimensional arrays of blittable types
-- structs that only have blittable types
+- `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `single`, `double`
+- non-nested one dimensional arrays of blittable types (e.g. `int[]`)
+- structs and classes with fixed layout that only have blittable types for instance fields
+  - fixed layout requires `[StructLayout(LayoutKind.Sequential)]` or `[StructLayout(LayoutKind.Explicit)]`
+  - structs are `LayoutKind.Sequential` by default, classes are `LayoutKind.Auto`
 
 **NOT blittable:**
 
- - bool, char, string
+ - `bool`, `char`, `string`
+
+When blittable types are passed by reference they are simply pinned by the marshaller instead of being
+copied to an intermediate buffer. (Classes are inherently passed by reference, structs are passed by reference
+when used with `ref` or `out`.)
 
 [Blittable and Non-Blittable Types](https://msdn.microsoft.com/en-us/library/75dwhxf7.aspx "MSDN")  
-[Default Marshalling for Value Types](https://msdn.microsoft.com/en-us/library/0t2cwe11.aspx "MSDN")
+[Default Marshalling for Value Types](https://msdn.microsoft.com/en-us/library/0t2cwe11(v=vs.100).aspx "MSDN")
 
 Keeping Managed Objects Alive
 -----------------------------
@@ -169,26 +182,47 @@ It can be used instead of `IntPtr` in method signatures.
 
 [`GCHandle`][7] allows pinning a managed object and getting the native pointer to it. Basic pattern is:  
 
- - `var handle = GCHandle.Alloc(obj, GCHandleType.Pinned)`
- - `GCHandle.ToIntPtr(handle)`
- - `handle.Free()`
+``` C#
+var handle = GCHandle.Alloc(obj, GCHandleType.Pinned);
+GCHandle.ToIntPtr(handle);
+handle.Free();
+```
 
 [7]: https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.gchandle.aspx "MSDN"
 
 Pinning is not the default for `GCHandle`. The other major pattern is for passing a reference to a managed
 object through native code back to managed code (via a callback, typically). Here is the pattern:
 
-  - `var handle = GCHandle.Alloc(obj)`
-  - `SomeNativeEnumerator(callbackDelegate, GCHandle.ToIntPtr(handle))`
-    { callback }
-  - `var handle = GCHandle.FromIntPtr(param)`
-  - `object managedObject = handle.Target`
+``` C#
+var handle = GCHandle.Alloc(obj);
+SomeNativeEnumerator(callbackDelegate, GCHandle.ToIntPtr(handle));
+// { callback }
+var handle = GCHandle.FromIntPtr(param);
+object managedObject = handle.Target;
+```
 
 Structs
 -------
 
-Structs are created on the stack and aren't removed until the method returns. By definition they are "pinned". If they're composed entirely of blittable types they can be referenced by
-native code directly. You can also simply take the address in unsafe code blocks if native code won't use the pointer past the end of the current method. 
+Managed structs are created on the stack and aren't removed until the method returns.
+By definition then, they are "pinned" (it won't get moved by the GC). You can also simply take the address
+in unsafe code blocks if native code won't use the pointer past the end of the current method. 
+
+Class fields in structs are marshalled as pointers (`IntPtr`) _unless_ the class has explicit layout
+, in which case the class fields are embedded in the marshalling buffer. For example:
+
+``` C#
+public struct MyStruct
+{
+    public class MyClass;
+}
+```
+
+`Marshal.SizeOf<MyStruct>()` will return `sizeof(IntPtr)` unless `MyClass` has explicit layout
+(via `[StructLayout]`). If `MyClass` has explicit layout `Marshal.SizeOf<MyStruct>()` will return
+`Marshal.SizeOf<MyClass>()` in this case (as `MyStruct` has no other fields).
+
+
 
 Pointers to structs in definitions must be passed by ref, or actually use unsafe and *.
 
