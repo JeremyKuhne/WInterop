@@ -29,7 +29,7 @@ namespace WInterop.Support.Buffers
     /// 
     /// The actual buffer handle / memory location can change when resizing.
     /// </remarks>
-    public class NativeBuffer : IDisposable
+    public class HeapBuffer : SizedBuffer
     {
         private SafeHeapHandle _handle;
 
@@ -43,7 +43,7 @@ namespace WInterop.Support.Buffers
         /// Create a buffer with at least the specified initial capacity in bytes.
         /// </summary>
         /// <exception cref="OverflowException">Thrown if trying to allocate more than a uint on 32bit.</exception>
-        public NativeBuffer(ulong initialMinCapacity = 0)
+        public HeapBuffer(ulong initialMinCapacity = 0)
         {
             _handle = HeapHandleCache.Instance.Acquire(initialMinCapacity);
 
@@ -74,12 +74,12 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Get the handle to the buffer. Prefer using SafeHandle instead of IntPtr for interop (there is an implicit converter).
         /// </summary>
-        public IntPtr DangerousGetHandle()
+        public override IntPtr DangerousGetHandle()
         {
             return _handle?.DangerousGetHandle() ?? IntPtr.Zero;
         }
 
-        public static implicit operator SafeHandle(NativeBuffer buffer)
+        public static implicit operator SafeHandle(HeapBuffer buffer)
         {
             // Marshalling code will throw on null for SafeHandle
             return buffer?._handle ?? EmptySafeHandle.Instance;
@@ -88,7 +88,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// The capacity of the buffer in bytes.
         /// </summary>
-        public ulong ByteCapacity
+        public override ulong ByteCapacity
         {
             // Capacity will never decrease, except after disposal. In addition, using the void* allows reads/writes
             // to capacity to be atomic. As such we shouldn't have to worry about returning a size that is too small.
@@ -184,12 +184,7 @@ namespace WInterop.Support.Buffers
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
-
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
                 ReleaseHandle();

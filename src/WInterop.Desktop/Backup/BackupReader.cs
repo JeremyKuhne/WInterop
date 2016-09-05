@@ -20,7 +20,7 @@ namespace WInterop.Backup
     {
         private IntPtr _context = IntPtr.Zero;
         private SafeFileHandle _fileHandle;
-        private NativeBuffer _buffer = new NativeBuffer(4096);
+        private HeapBuffer _buffer = new HeapBuffer(4096);
         private static uint WIN32_STREAM_ID_SIZE = (uint)Marshal.SizeOf<WIN32_STREAM_ID>();
 
         public BackupReader(SafeFileHandle fileHandle)

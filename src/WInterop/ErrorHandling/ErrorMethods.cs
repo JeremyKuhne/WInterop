@@ -106,7 +106,7 @@ namespace WInterop.ErrorHandling
                     }
                 }
 
-                throw new IOException("Failed to get error string.", ErrorMacros.HRESULT_FROM_WIN32(lastError));
+                throw new IOException("Failed to get error string.", (int)ErrorMacros.HRESULT_FROM_WIN32(lastError));
             }
         }
 

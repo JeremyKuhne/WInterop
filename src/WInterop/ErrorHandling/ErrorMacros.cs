@@ -14,48 +14,48 @@ namespace WInterop.ErrorHandling
         /// <summary>
         /// Extracts the code portion of the specified HRESULT
         /// </summary>
-        public static int HRESULT_CODE(int hr)
+        public static int HRESULT_CODE(HRESULT hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679761.aspx
             // #define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
-            return hr & 0xFFFF;
+            return (int)hr & 0xFFFF;
         }
 
         /// <summary>
         /// Extracts the facility of the specified HRESULT
         /// </summary>
-        public static Facility HRESULT_FACILITY(int hr)
+        public static Facility HRESULT_FACILITY(HRESULT hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680579.aspx
             // #define HRESULT_FACILITY(hr)  (((hr) >> 16) & 0x1fff)
-            return (Facility)((hr >> 16) & 0x1fff);
+            return (Facility)(((int)hr >> 16) & 0x1fff);
         }
 
         /// <summary>
         /// Extracts the severity of the specified result
         /// </summary>
-        public static int HRESULT_SEVERITY(int hr)
+        public static int HRESULT_SEVERITY(HRESULT hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms693761.aspx
             // #define HRESULT_SEVERITY(hr)  (((hr) >> 31) & 0x1)  
-            return (((hr) >> 31) & 0x1);
+            return ((((int)hr) >> 31) & 0x1);
         }
 
-        public static int HRESULT_FROM_WIN32(WindowsError error)
+        public static HRESULT HRESULT_FROM_WIN32(WindowsError error)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680746.aspx
             // return (HRESULT)(x) <= 0 ? (HRESULT)(x) : (HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
-            return (int)((uint)error <= 0 ? (uint)error : (((uint)error & 0x0000FFFF) | ((int)Facility.WIN32 << 16) | 0x80000000));
+            return (HRESULT)((uint)error <= 0 ? (uint)error : (((uint)error & 0x0000FFFF) | ((int)Facility.WIN32 << 16) | 0x80000000));
         }
 
-        public static bool SUCCEEDED(int hr)
+        public static bool SUCCEEDED(HRESULT hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms687197.aspx
             // #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
             return hr >= 0;
         }
 
-        public static bool FAILED(int hr)
+        public static bool FAILED(HRESULT hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms693474.aspx
             // #define FAILED(hr) (((HRESULT)(hr)) < 0)

@@ -20,7 +20,7 @@ namespace Tests.Buffers
         [Fact]
         public void EnsureZeroCapacityDoesNotFreeBuffer()
         {
-            using (var buffer = new NativeBuffer(10))
+            using (var buffer = new HeapBuffer(10))
             {
                 buffer.DangerousGetHandle().Should().NotBe(IntPtr.Zero);
                 buffer.EnsureByteCapacity(0);
@@ -31,7 +31,7 @@ namespace Tests.Buffers
         [Fact]
         public void GetOverIndexThrowsArgumentOutOfRange()
         {
-            using (var buffer = new NativeBuffer())
+            using (var buffer = new HeapBuffer())
             {
                 Action action = () => { byte c = buffer[buffer.ByteCapacity]; };
                 action.ShouldThrow<ArgumentOutOfRangeException>();
@@ -41,7 +41,7 @@ namespace Tests.Buffers
         [Fact]
         public void SetOverIndexThrowsArgumentOutOfRange()
         {
-            using (var buffer = new NativeBuffer())
+            using (var buffer = new HeapBuffer())
             {
                 Action action = () => { buffer[buffer.ByteCapacity] = 0; };
                 action.ShouldThrow<ArgumentOutOfRangeException>();
@@ -51,7 +51,7 @@ namespace Tests.Buffers
         [Fact]
         public void CanGetSetBytes()
         {
-            using (var buffer = new NativeBuffer(1))
+            using (var buffer = new HeapBuffer(1))
             {
                 buffer[0] = 0xA;
                 buffer[0].Should().Be(0xA);
@@ -61,8 +61,8 @@ namespace Tests.Buffers
         [Fact]
         public void NullSafePointerInTest()
         {
-            NativeBuffer buffer;
-            using (buffer = new NativeBuffer(0))
+            HeapBuffer buffer;
+            using (buffer = new HeapBuffer(0))
             {
                 ((SafeHandle)buffer).IsInvalid.Should().BeFalse();
                 buffer.ByteCapacity.Should().BeGreaterOrEqualTo(0);
@@ -78,7 +78,7 @@ namespace Tests.Buffers
         {
             if (!WInterop.Support.Environment.Is64BitProcess)
             {
-                Action action = () => new NativeBuffer(uint.MaxValue + 1ul);
+                Action action = () => new HeapBuffer(uint.MaxValue + 1ul);
                 action.ShouldThrow<OverflowException>();
             }
         }
@@ -91,7 +91,7 @@ namespace Tests.Buffers
         {
             if (!WInterop.Support.Environment.Is64BitProcess)
             {
-                using (var buffer = new NativeBuffer(initialBufferSize))
+                using (var buffer = new HeapBuffer(initialBufferSize))
                 {
                     Action action = () => buffer.EnsureByteCapacity(uint.MaxValue + 1ul);
                     action.ShouldThrow<OverflowException>();
@@ -102,7 +102,7 @@ namespace Tests.Buffers
         [Fact]
         public void MultithreadedSetCapacityIsMax()
         {
-            using (var buffer = new NativeBuffer(0))
+            using (var buffer = new HeapBuffer(0))
             {
                 ulong[] bufferCapacity = new ulong[100];
                 for (ulong i = 0; i < 100; i++)
@@ -122,7 +122,7 @@ namespace Tests.Buffers
         [Fact]
         public void DisposedBufferIsEmpty()
         {
-            var buffer = new NativeBuffer(5);
+            var buffer = new HeapBuffer(5);
             buffer.ByteCapacity.Should().BeGreaterOrEqualTo(5);
             buffer.Dispose();
             buffer.ByteCapacity.Should().Be(0);

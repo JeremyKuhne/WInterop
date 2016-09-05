@@ -20,14 +20,14 @@ namespace WInterop.Support.Buffers
     /// </summary>
     public class StreamBuffer : Stream
     {
-        private NativeBuffer _buffer;
+        private HeapBuffer _buffer;
         private Stream _stream;
         private bool _disposed;
 
         public StreamBuffer(uint initialLength = 0, uint initialCapacity = 0)
         {
             if (initialCapacity < initialLength) initialCapacity = initialLength;
-            _buffer = new NativeBuffer(initialCapacity);
+            _buffer = new HeapBuffer(initialCapacity);
             SetLength(initialLength);
         }
 

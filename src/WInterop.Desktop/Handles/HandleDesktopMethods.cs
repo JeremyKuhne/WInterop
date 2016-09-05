@@ -217,7 +217,7 @@ namespace WInterop.Handles
                     if (status != NTSTATUS.STATUS_SUCCESS && status != NTSTATUS.STATUS_MORE_ENTRIES)
                         break;
 
-                    NativeBufferReader reader = new NativeBufferReader(buffer);
+                    CheckedReader reader = new CheckedReader(buffer);
 
                     do
                     {
@@ -259,7 +259,7 @@ namespace WInterop.Handles
             //
             // The above definition means the API expects a buffer where it can stick a UNICODE_STRING with the buffer immediately following.
 
-            using (NativeBuffer buffer = new NativeBuffer())
+            using (HeapBuffer buffer = new HeapBuffer())
             {
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
                 uint returnLength = 260 * sizeof(char);
@@ -279,7 +279,7 @@ namespace WInterop.Handles
                 if (!ErrorMacros.NT_SUCCESS(status))
                     throw ErrorHelper.GetIoExceptionForNTStatus(status);
 
-                return new NativeBufferReader(buffer).ReadStruct<UNICODE_STRING>().ToString();
+                return new CheckedReader(buffer).ReadStruct<UNICODE_STRING>().ToString();
             }
         }
 
@@ -288,7 +288,7 @@ namespace WInterop.Handles
         /// </summary>
         public static string GetObjectType(SafeHandle handle)
         {
-            using (NativeBuffer buffer = new NativeBuffer())
+            using (HeapBuffer buffer = new HeapBuffer())
             {
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
 
@@ -310,7 +310,7 @@ namespace WInterop.Handles
                 if (!ErrorMacros.NT_SUCCESS(status))
                     throw ErrorHelper.GetIoExceptionForNTStatus(status);
 
-                return new NativeBufferReader(buffer).ReadStruct<OBJECT_TYPE_INFORMATION>().TypeName.ToString();
+                return new CheckedReader(buffer).ReadStruct<OBJECT_TYPE_INFORMATION>().TypeName.ToString();
             }
         }
     }

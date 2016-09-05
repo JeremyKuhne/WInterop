@@ -17,16 +17,16 @@ namespace Tests.Buffers
         [Fact]
         public void NullConstructorThrows()
         {
-            Action action = () => new NativeBufferReader(null);
+            Action action = () => new CheckedReader(null);
             action.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
         public void SetOffsetPastEndOfStreamFails()
         {
-            using (var buffer = new NativeBuffer(0))
+            using (var buffer = new HeapBuffer(0))
             {
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ByteOffset = buffer.ByteCapacity;
 
                 Action action = () => reader.ByteOffset = buffer.ByteCapacity + 1;
@@ -37,9 +37,9 @@ namespace Tests.Buffers
         [Fact]
         public void ReadShortPastCapacityFails()
         {
-            using (var buffer = new NativeBuffer(2))
+            using (var buffer = new HeapBuffer(2))
             {
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
 
                 Action action = () => reader.ReadShort();
 
@@ -54,9 +54,9 @@ namespace Tests.Buffers
         [Fact]
         public void ReadShortInCapacityPasses()
         {
-            using (var buffer = new NativeBuffer(2))
+            using (var buffer = new HeapBuffer(2))
             {
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ByteOffset = buffer.ByteCapacity - 2;
                 reader.ReadShort();
             }
@@ -65,9 +65,9 @@ namespace Tests.Buffers
         [Fact]
         public void ReadIntPastCapacityFails()
         {
-            using (var buffer = new NativeBuffer(4))
+            using (var buffer = new HeapBuffer(4))
             {
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
 
                 Action action = () => reader.ReadInt();
 
@@ -82,9 +82,9 @@ namespace Tests.Buffers
         [Fact]
         public void ReadIntInCapacityPasses()
         {
-            using (var buffer = new NativeBuffer(4))
+            using (var buffer = new HeapBuffer(4))
             {
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ByteOffset = buffer.ByteCapacity - 4;
                 reader.ReadInt();
             }
@@ -93,9 +93,9 @@ namespace Tests.Buffers
         [Fact]
         public void ReadLongPastCapacityFails()
         {
-            using (var buffer = new NativeBuffer(8))
+            using (var buffer = new HeapBuffer(8))
             {
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
 
                 Action action = () => reader.ReadLong();
 
@@ -110,9 +110,9 @@ namespace Tests.Buffers
         [Fact]
         public void ReadLongInCapacityPasses()
         {
-            using (var buffer = new NativeBuffer(8))
+            using (var buffer = new HeapBuffer(8))
             {
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ByteOffset = buffer.ByteCapacity - 8;
                 reader.ReadLong();
             }
@@ -125,14 +125,14 @@ namespace Tests.Buffers
             ]
         public void ReadShort(ulong offset, short expected)
         {
-            using (var buffer = new NativeBuffer(4))
+            using (var buffer = new HeapBuffer(4))
             {
                 for (ulong i = 0; i < 4; i++)
                 {
                     buffer[i] = (byte)(i + 1);
                 }
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ByteOffset = offset;
                 reader.ReadShort().Should().Be(expected, $"offset is {offset}");
             }
@@ -141,14 +141,14 @@ namespace Tests.Buffers
         [Fact]
         public void ReadTwoShorts()
         {
-            using (var buffer = new NativeBuffer(4))
+            using (var buffer = new HeapBuffer(4))
             {
                 for (ulong i = 0; i < 4; i++)
                 {
                     buffer[i] = (byte)(i + 1);
                 }
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ReadShort().Should().Be(0x0201);
                 reader.ReadShort().Should().Be(0x0403);
             }
@@ -163,14 +163,14 @@ namespace Tests.Buffers
             ]
         public void ReadInt(ulong offset, int expected)
         {
-            using (var buffer = new NativeBuffer(8))
+            using (var buffer = new HeapBuffer(8))
             {
                 for (ulong i = 0; i < 8; i++)
                 {
                     buffer[i] = (byte)(i + 1);
                 }
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ByteOffset = offset;
                 reader.ReadInt().Should().Be(expected, $"offset is {offset}");
             }
@@ -179,14 +179,14 @@ namespace Tests.Buffers
         [Fact]
         public void ReadTwoInts()
         {
-            using (var buffer = new NativeBuffer(8))
+            using (var buffer = new HeapBuffer(8))
             {
                 for (ulong i = 0; i < 8; i++)
                 {
                     buffer[i] = (byte)(i + 1);
                 }
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ReadInt().Should().Be(0x04030201);
                 reader.ReadInt().Should().Be(0x08070605);
             }
@@ -205,14 +205,14 @@ namespace Tests.Buffers
             ]
         public void ReadLong(ulong offset, long expected)
         {
-            using (var buffer = new NativeBuffer(16))
+            using (var buffer = new HeapBuffer(16))
             {
                 for (ulong i = 0; i < 16; i++)
                 {
                     buffer[i] = (byte)(i + 1);
                 }
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ByteOffset = offset;
                 reader.ReadLong().Should().Be(expected, $"offset is {offset}");
             }
@@ -221,14 +221,14 @@ namespace Tests.Buffers
         [Fact]
         public void ReadTwoLongs()
         {
-            using (var buffer = new NativeBuffer(16))
+            using (var buffer = new HeapBuffer(16))
             {
                 for (ulong i = 0; i < 16; i++)
                 {
                     buffer[i] = (byte)(i + 1);
                 }
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ReadLong().Should().Be(0x0807060504030201);
                 reader.ReadLong().Should().Be(0x100F0E0D0C0B0A09);
             }
@@ -237,9 +237,9 @@ namespace Tests.Buffers
         [Fact]
         public void ReadStringPastEndFails()
         {
-            using (var buffer = new NativeBuffer(1))
+            using (var buffer = new HeapBuffer(1))
             {
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
 
                 Action action = () => reader.ReadString(1);
 
@@ -251,14 +251,14 @@ namespace Tests.Buffers
         [Fact]
         public void ReadAlignedString()
         {
-            using (var buffer = new NativeBuffer(4))
+            using (var buffer = new HeapBuffer(4))
             {
                 buffer[0] = 65;
                 buffer[1] = 0;
                 buffer[2] = 66;
                 buffer[3] = 0;
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ReadString(1).Should().Be("A");
                 reader.ReadString(1).Should().Be("B");
             }
@@ -267,7 +267,7 @@ namespace Tests.Buffers
         [Fact]
         public void ReadUnalignedString()
         {
-            using (var buffer = new NativeBuffer(5))
+            using (var buffer = new HeapBuffer(5))
             {
                 buffer[0] = 67;
                 buffer[1] = 65;
@@ -275,7 +275,7 @@ namespace Tests.Buffers
                 buffer[3] = 66;
                 buffer[4] = 0;
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 reader.ByteOffset = 1;
                 reader.ReadString(1).Should().Be("A");
                 reader.ReadString(1).Should().Be("B");

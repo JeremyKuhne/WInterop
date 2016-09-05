@@ -21,7 +21,7 @@ namespace WInterop.Support.Buffers
     /// Suggested use through P/Invoke: define DllImport arguments that take a character buffer as IntPtr.
     /// NativeStringBuffer has an implicit conversion to IntPtr.
     /// </remarks>
-    public class StringBuffer : NativeBuffer
+    public class StringBuffer : HeapBuffer
     {
         // While uint (UInt32) isn't CLS compliant it matches up better with interop scenarios. Windows typically
         // uses DWORD in it's interfaces, which is also an unsigned 32 bit integer.

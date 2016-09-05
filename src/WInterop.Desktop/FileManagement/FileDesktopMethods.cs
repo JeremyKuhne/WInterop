@@ -317,7 +317,7 @@ namespace WInterop.FileManagement
                 uint nameLength = 260 * sizeof(char);
 
                 IO_STATUS_BLOCK ioStatus;
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
 
                 while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
                 {

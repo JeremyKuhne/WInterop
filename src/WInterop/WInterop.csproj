@@ -46,7 +46,16 @@
     <Compile Include="Authorization\DataTypes\ACCESS_MASK.cs" />
     <Compile Include="Authorization\DataTypes\GenericAccessRights.cs" />
     <Compile Include="Authorization\DataTypes\SECURITY_IMPERSONATION_LEVEL.cs" />
+    <Compile Include="Com\DataTypes\SafeComHandle.cs" />
+    <Compile Include="Com\DataTypes\VARENUM.cs" />
+    <Compile Include="ErrorHandling\DataTypes\HRESULT.cs" />
     <Compile Include="ProcessAndThreads\DataTypes\ProcessHandle.cs" />
+    <Compile Include="StructuredStorage\DataTypes\PROPVARIANT.cs" />
+    <Compile Include="StructuredStorage\StructuredStorageMethods.cs" />
+    <Compile Include="Support\Buffers\IBuffer.cs" />
+    <Compile Include="Support\Buffers\ISizedBuffer.cs" />
+    <Compile Include="Support\Buffers\Reader.cs" />
+    <Compile Include="Support\Buffers\SizedBuffer.cs" />
     <Compile Include="Support\Collections\CacheEventSource.cs" />
     <Compile Include="Support\Collections\Cache.cs" />
     <Compile Include="Cryptography\DataTypes\CertEnumPhysicalStoreCallback.cs" />
@@ -143,8 +152,8 @@
     <Compile Include="ProcessAndThreads\ThreadMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Support\Buffers\BufferHelper.cs" />
-    <Compile Include="Support\Buffers\NativeBuffer.cs" />
-    <Compile Include="Support\Buffers\NativeBufferReader.cs" />
+    <Compile Include="Support\Buffers\HeapBuffer.cs" />
+    <Compile Include="Support\Buffers\CheckedReader.cs" />
     <Compile Include="Support\Buffers\StreamBuffer.cs" />
     <Compile Include="Support\Buffers\StringBuffer.cs" />
     <Compile Include="Support\Buffers\StringBufferCache.cs" />

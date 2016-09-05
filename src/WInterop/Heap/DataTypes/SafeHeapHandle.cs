@@ -8,6 +8,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using WInterop.Support.Buffers;
 
 namespace WInterop.Heap.DataTypes
 {
@@ -22,7 +23,7 @@ namespace WInterop.Heap.DataTypes
     /// Windows attempts to grab space from the low fragmentation heap if the requested memory is below a platform specific
     /// threshold and certain flags aren't in play (such as NO_SERIALIZE).
     /// </remarks>
-    public class SafeHeapHandle : SafeBuffer
+    public class SafeHeapHandle : SafeBuffer, ISizedBuffer
     {
         /// <summary>
         /// Create an empty heap handle
@@ -46,6 +47,8 @@ namespace WInterop.Heap.DataTypes
                 Initialize(0);
             }
         }
+
+        public ulong ByteCapacity { get { return ByteLength; } }
 
         public override bool IsInvalid
         {

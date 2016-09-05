@@ -15,21 +15,21 @@ namespace DesktopTests.ProcessAndThreadTests
     public class ProcessMethodTests
     {
         [Fact]
-        public void GetNullStringThrows()
+        public void GetEnvironmentVariable_GetNullStringThrows()
         {
             Action action = () => ProcessDesktopMethods.GetEnvironmentVariable(null);
             action.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
-        public void SetNullStringThrows()
+        public void SetEnvironmentVariable_SetNullStringThrows()
         {
             Action action = () => ProcessDesktopMethods.SetEnvironmentVariable(null, "invalid");
             action.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
-        public void SetEmptyStringNotValid()
+        public void SetEnvironmentVariable_SetEmptyStringNotValid()
         {
             Action action = () => ProcessDesktopMethods.SetEnvironmentVariable("", "invalid");
             action.ShouldThrow<ArgumentException>();
@@ -39,7 +39,7 @@ namespace DesktopTests.ProcessAndThreadTests
             InlineData("==")
             InlineData("a=")
             ]
-        public void EqualsNotValidPastFirstCharacter(string name)
+        public void SetEnvironmentVariable_EqualsNotValidPastFirstCharacter(string name)
         {
             // Anything past the first character in the name isn't allowed to be an equals character.
             // If this does change we'd need to change the logic in GetEnvironmentVariables().
@@ -66,7 +66,7 @@ namespace DesktopTests.ProcessAndThreadTests
             // Make the variable hidden (from CMD)
             InlineData("=")
             ]
-        public void BasicListEnvironmentVariables(string prefix)
+        public void ListEnvironmentVariables_Basic(string prefix)
         {
             string name = System.IO.Path.GetRandomFileName();
             ProcessDesktopMethods.SetEnvironmentVariable(name, "test");
@@ -81,7 +81,7 @@ namespace DesktopTests.ProcessAndThreadTests
         }
 
         [Fact]
-        public void BasicGetProcessMemoryInfo()
+        public void GetProcessMemoryInfo_Basic()
         {
             var info = ProcessDesktopMethods.GetProcessMemoryInfo();
 

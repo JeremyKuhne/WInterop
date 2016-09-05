@@ -64,7 +64,7 @@ namespace WInterop.Support.Buffers
         /// <example>
         /// return BufferHelper.CachedInvoke((NativeBuffer buffer) => { return string.Empty; });
         /// </example>
-        public static T CachedInvoke<T, BufferType>(Func<BufferType, T> func) where BufferType : NativeBuffer
+        public static T CachedInvoke<T, BufferType>(Func<BufferType, T> func) where BufferType : HeapBuffer
         {
             T result = default(T);
             CachedInvoke<BufferType>(buffer => result = func(buffer));
@@ -74,7 +74,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Invoke the given action on a cached buffer.
         /// </summary>
-        public static void CachedInvoke<BufferType>(Action<BufferType> action) where BufferType : NativeBuffer
+        public static void CachedInvoke<BufferType>(Action<BufferType> action) where BufferType : HeapBuffer
         {
             // For safer use it's better to ensure we always have at least some capacity in the buffer.
             // This allows consumers not to worry about making sure there is some capacity or trying to

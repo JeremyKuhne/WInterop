@@ -37,6 +37,10 @@ namespace WInterop.VolumeManagement
                 SafeHandle lpTargetPath,
                 uint ucchMax);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364972.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetLogicalDrives();
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364975.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern uint GetLogicalDriveStringsW(

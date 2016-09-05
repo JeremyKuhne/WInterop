@@ -7,10 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Support.Buffers;
 
 namespace WInterop.Handles.DataTypes
 {
-    public abstract class SafeHandleZeroOrMinusOneIsInvalid : SafeHandle
+    public abstract class SafeHandleZeroOrMinusOneIsInvalid : SafeHandle, IBuffer
     {
         // Why are HANDLE return values so inconsistent?
         // https://blogs.msdn.microsoft.com/oldnewthing/20040302-00/?p=40443

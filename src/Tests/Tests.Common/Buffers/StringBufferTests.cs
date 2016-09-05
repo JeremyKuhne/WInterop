@@ -126,7 +126,7 @@ namespace Tests.Buffers
             {
                 using (var buffer = new StringBuffer())
                 {
-                    var length = typeof(NativeBuffer).GetField("_byteCapacity", BindingFlags.NonPublic | BindingFlags.Instance);
+                    var length = typeof(HeapBuffer).GetField("_byteCapacity", BindingFlags.NonPublic | BindingFlags.Instance);
 
                     ulong setValue = (ulong)uint.MaxValue * 2 + plusValue;
                     length.SetValue(buffer, setValue);

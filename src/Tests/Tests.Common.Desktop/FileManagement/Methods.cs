@@ -202,7 +202,7 @@ namespace DesktopTests.FileManagementTests
                 else
                 {
                     // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
-                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be(ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }
@@ -227,7 +227,7 @@ namespace DesktopTests.FileManagementTests
                 }
                 else
                 {
-                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be(ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }
@@ -252,7 +252,7 @@ namespace DesktopTests.FileManagementTests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Need to check for Admin Access")]
         public void CreateFileHarddiskVolume()
         {
             using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\HarddiskVolume1",

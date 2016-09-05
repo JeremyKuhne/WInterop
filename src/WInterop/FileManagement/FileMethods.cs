@@ -44,7 +44,7 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449404.aspx (kernel32)
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern int CopyFile2(
+            public unsafe static extern HRESULT CopyFile2(
                 string pwszExistingFileName,
                 string pwszNewFileName,
                 COPYFILE2_EXTENDED_PARAMETERS* pExtendedParameters);
@@ -467,7 +467,7 @@ namespace WInterop.FileManagement
                 parameters.pfCanel = &cancel;
                 parameters.dwCopyFlags = overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS;
 
-                int hr = Direct.CopyFile2(source, destination, &parameters);
+                HRESULT hr = Direct.CopyFile2(source, destination, &parameters);
                 if (ErrorMacros.FAILED(hr))
                     throw ErrorHelper.GetIoExceptionForHResult(hr, source);
             }
@@ -580,7 +580,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetFileNameByHandle(SafeFileHandle fileHandle)
         {
-            return BufferHelper.CachedInvoke((NativeBuffer buffer) =>
+            return BufferHelper.CachedInvoke((HeapBuffer buffer) =>
             {
                 unsafe
                 {
@@ -596,7 +596,7 @@ namespace WInterop.FileManagement
                     }
                 }
 
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 return reader.ReadString((int)(reader.ReadUint() / 2));
             });
         }
@@ -646,7 +646,7 @@ namespace WInterop.FileManagement
             //     WCHAR StreamName[1];
             // } FILE_STREAM_INFO, *PFILE_STREAM_INFO;
 
-            return BufferHelper.CachedInvoke<IEnumerable<StreamInformation>, NativeBuffer>((buffer) =>
+            return BufferHelper.CachedInvoke<IEnumerable<StreamInformation>, HeapBuffer>((buffer) =>
             {
                 unsafe
                 {
@@ -669,7 +669,7 @@ namespace WInterop.FileManagement
                 }
 
                 var infos = new List<StreamInformation>();
-                var reader = new NativeBufferReader(buffer);
+                var reader = new CheckedReader(buffer);
                 uint offset = 0;
 
                 do

@@ -247,7 +247,7 @@ namespace WInterop.Modules
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
             List<ModuleHandle> modules = new List<ModuleHandle>();
-            BufferHelper.CachedInvoke<NativeBuffer>(buffer =>
+            BufferHelper.CachedInvoke<HeapBuffer>(buffer =>
             {
                 uint sizeNeeded = (uint)buffer.ByteCapacity;
 
@@ -259,7 +259,7 @@ namespace WInterop.Modules
                         throw ErrorHelper.GetIoExceptionForLastError();
                 } while (sizeNeeded > buffer.ByteCapacity);
 
-                NativeBufferReader reader = new NativeBufferReader(buffer);
+                CheckedReader reader = new CheckedReader(buffer);
                 for (int i = 0; i < sizeNeeded; i += Marshal.SizeOf<ModuleHandle>())
                 {
                     modules.Add(reader.ReadStruct<ModuleHandle>());

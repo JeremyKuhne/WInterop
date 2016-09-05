@@ -35,7 +35,7 @@ namespace WInterop.ErrorHandling
         /// <summary>
         /// Try to get the string for an HRESULT
         /// </summary>
-        public static string HResultToString(int hr)
+        public static string HResultToString(HRESULT hr)
         {
             string message;
             if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
@@ -49,11 +49,11 @@ namespace WInterop.ErrorHandling
             else
             {
                 // Hope that we get a rational IErrorInfo
-                Exception exception = Marshal.GetExceptionForHR(hr);
+                Exception exception = Marshal.GetExceptionForHR((int)hr);
                 message = exception.Message;
             }
 
-            return $"HRESULT {hr:D} [0x{hr:X}]: {message}";
+            return $"HRESULT {(int)hr:D} [0x{(int)hr:X}]: {message}";
         }
 
         /// <summary>
@@ -76,16 +76,28 @@ namespace WInterop.ErrorHandling
         /// Turns HRESULT errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetIoExceptionForHResult(int hr, string path = null)
+        public static Exception GetIoExceptionForHResult(HRESULT hr, string path = null)
         {
             string message = path == null
                 ? $"{HResultToString(hr)}"
                 : $"{HResultToString(hr)} '{path}'";
 
-            if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
-                return WindowsErrorToException((WindowsError)ErrorMacros.HRESULT_CODE(hr), message, path);
-            else
-                return new IOException(message, hr);
+            switch (hr)
+            {
+                case HRESULT.E_ACCESSDENIED:
+                    return new UnauthorizedAccessException(message);
+                case HRESULT.E_INVALIDARG:
+                    return new ArgumentException(message);
+                default:
+                    if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
+                    {
+                        return WindowsErrorToException((WindowsError)ErrorMacros.HRESULT_CODE(hr), message, path);
+                    }
+                    else
+                    {
+                        return new IOException(message, (int)hr);
+                    }
+            }
         }
 
         /// <summary>
@@ -151,7 +163,7 @@ namespace WInterop.ErrorHandling
                 case WindowsError.ERROR_SHARING_VIOLATION:
                 case WindowsError.ERROR_FILE_EXISTS:
                 default:
-                    return new IOException(message, ErrorMacros.HRESULT_FROM_WIN32(error));
+                    return new IOException(message, (int)ErrorMacros.HRESULT_FROM_WIN32(error));
             }
         }
 
