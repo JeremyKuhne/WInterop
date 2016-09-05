@@ -53,10 +53,10 @@ Remember to mark the `[DllImport]` as `Charset.Unicode` unless you explicitly wa
 scenario of calling a Windows API that takes a string:
 
 1. Create a SB of the desired capacity (allocates managed capacity) **{1}**
-2. Invoke  
-  a. Allocates a native buffer **{2}**  
-  b. Copies the contents if `[In]` _(the default for a `StringBuilder` parameter)_  
-  c. Copies the native buffer into a newly allocated managed array if `[Out]` **{3}** _(also the default for `StringBuilder`)_  
+2. Invoke
+   1. Allocates a native buffer **{2}**  
+   2. Copies the contents if `[In]` _(the default for a `StringBuilder` parameter)_  
+   3. Copies the native buffer into a newly allocated managed array if `[Out]` **{3}** _(also the default for `StringBuilder`)_  
 3. `ToString()` allocates yet another managed array **{4}**
 
 That is *{4}* allocations to get a string out of native code. The best you can do to limit this is to reuse the `StringBuilder`
@@ -110,6 +110,7 @@ Instead the parameter should get the `[MarshalAs(UnmanagedType.LPStruct)]` attri
 Common Windows Data Types
 -------------------------
 
+
 |Windows        | C                 | C#    | Alternative |
 |---------------|-------------------|-------|-------------|
 |`BOOL`           |`int`                |`int`    |`bool`
@@ -150,7 +151,7 @@ Common Windows Data Types
 Blittable Types
 ---------------
 Blittable types are types that have the same representation for native code. As such they do not need
-to be converted.
+to be converted to another format to be marshalled to and from native code.
 
 **Blittable types:**
 
@@ -162,11 +163,33 @@ to be converted.
 
 **NOT blittable:**
 
- - `bool`, `char`, `string`
+- `bool`
+
+**SOMETIMES blittable:**
+
+- `char`, `string`
 
 When blittable types are passed by reference they are simply pinned by the marshaller instead of being
 copied to an intermediate buffer. (Classes are inherently passed by reference, structs are passed by reference
 when used with `ref` or `out`.)
+
+`char` is blittable in a one dimensional array **or** if it is part of a type that contains it is explicitly
+marked with `[StructLayout]` with `CharSet = CharSet.Unicode`.
+
+```C#
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public struct UnicodeCharStruct
+{
+    public char c;
+}
+```
+
+`string` is blittable if it isn't contained in another type and it's being passed as an argument that
+is marked with `[MarshalAs(UnmanagedType.LPWStr)]` or the `[DllImport]` has `CharSet = CharSet.Unicode` set.
+
+You can see if a type is blittable by attempting to create a pinned `GCHandle`. If the type is not a string or
+considered blittable `GCHandle.Alloc` will throw an `ArgumentException`.
+
 
 [Blittable and Non-Blittable Types](https://msdn.microsoft.com/en-us/library/75dwhxf7.aspx "MSDN")  
 [Default Marshalling for Value Types](https://msdn.microsoft.com/en-us/library/0t2cwe11(v=vs.100).aspx "MSDN")
@@ -183,8 +206,8 @@ It can be used instead of `IntPtr` in method signatures.
 [`GCHandle`][7] allows pinning a managed object and getting the native pointer to it. Basic pattern is:  
 
 ``` C#
-var handle = GCHandle.Alloc(obj, GCHandleType.Pinned);
-GCHandle.ToIntPtr(handle);
+GCHandle handle = GCHandle.Alloc(obj, GCHandleType.Pinned);
+IntPtr ptr = handle.AddrOfPinnedObject();
 handle.Free();
 ```
 
@@ -194,10 +217,11 @@ Pinning is not the default for `GCHandle`. The other major pattern is for passin
 object through native code back to managed code (via a callback, typically). Here is the pattern:
 
 ``` C#
-var handle = GCHandle.Alloc(obj);
+GCHandle handle = GCHandle.Alloc(obj);
 SomeNativeEnumerator(callbackDelegate, GCHandle.ToIntPtr(handle));
-// { callback }
-var handle = GCHandle.FromIntPtr(param);
+
+// In the callback
+GCHandle handle = GCHandle.FromIntPtr(param);
 object managedObject = handle.Target;
 ```
 
