@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreadTests\ProcessMethodTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellMethodTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\Methods.cs" />

@@ -54,7 +54,7 @@ namespace WInterop.UtilityTests
         public void OleTimeToDateTime(double oleTime, long expectedTicks)
         {
             DateTime expected = new DateTime(expectedTicks);
-            DateTime result = Conversion.OleDateToDateTime(oleTime);
+            DateTime result = Conversion.VariantDateToDateTime(oleTime);
             result.Should().Be(expected);
         }
     }

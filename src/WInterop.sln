@@ -32,6 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	ProjectSection(SolutionItems) = preProject
 		..\docs\pinvoke.md = ..\docs\pinvoke.md
 		..\README.md = ..\README.md
+		..\docs\structs.md = ..\docs\structs.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{03801197-72C1-4497-9AF8-51798E2F8EA8}"

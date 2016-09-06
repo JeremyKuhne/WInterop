@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Com\ComRuntimeCompat.cs" />
     <Compile Include="DotNetBehaviors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

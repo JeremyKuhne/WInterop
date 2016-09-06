@@ -46,8 +46,12 @@
     <Compile Include="Authorization\DataTypes\ACCESS_MASK.cs" />
     <Compile Include="Authorization\DataTypes\GenericAccessRights.cs" />
     <Compile Include="Authorization\DataTypes\SECURITY_IMPERSONATION_LEVEL.cs" />
+    <Compile Include="Com\ComMethods.cs" />
+    <Compile Include="Com\DataTypes\DECIMAL.cs" />
+    <Compile Include="Com\DataTypes\FADF.cs" />
     <Compile Include="Com\DataTypes\SafeComHandle.cs" />
     <Compile Include="Com\DataTypes\VARENUM.cs" />
+    <Compile Include="Com\DataTypes\VARIANT.cs" />
     <Compile Include="ErrorHandling\DataTypes\HRESULT.cs" />
     <Compile Include="ProcessAndThreads\DataTypes\ProcessHandle.cs" />
     <Compile Include="StructuredStorage\DataTypes\PROPVARIANT.cs" />
