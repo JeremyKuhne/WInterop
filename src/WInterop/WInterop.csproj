@@ -56,6 +56,8 @@
     <Compile Include="ProcessAndThreads\DataTypes\ProcessHandle.cs" />
     <Compile Include="StructuredStorage\DataTypes\PROPVARIANT.cs" />
     <Compile Include="StructuredStorage\StructuredStorageMethods.cs" />
+    <Compile Include="Support\BOOL.cs" />
+    <Compile Include="Support\BOOLEAN.cs" />
     <Compile Include="Support\Buffers\IBuffer.cs" />
     <Compile Include="Support\Buffers\ISizedBuffer.cs" />
     <Compile Include="Support\Buffers\Reader.cs" />

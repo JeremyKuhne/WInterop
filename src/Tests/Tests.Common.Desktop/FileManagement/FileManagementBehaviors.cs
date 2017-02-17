@@ -14,18 +14,21 @@ using Xunit;
 
 namespace DesktopTests.FileManagementTests
 {
-    public class Behaviors
+    public class FileManagementBehaviors
     {
         [Theory
             Trait("Environment", "CurrentDirectory")
             InlineData(@"C:", @"C:\Users")
-            InlineData(@"C", @"D:\C")
+            InlineData(@"C", @"E:\C")
             ]
         public void ValidateKnownRelativeBehaviors(string value, string expected)
         {
+            // TODO: Need to modify to work with actually present drives and skip if there
+            // isn't more than one.
+
             // Set the current directory to D: and the hidden env for C:'s last current directory
             ProcessDesktopMethods.SetEnvironmentVariable(@"=C:", @"C:\Users");
-            using (new TempCurrentDirectory(@"D:\"))
+            using (new TempCurrentDirectory(@"E:\"))
             {
                 FileMethods.GetFullPathName(value).Should().Be(expected);
             }

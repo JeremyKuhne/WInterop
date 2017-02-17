@@ -24,7 +24,6 @@ namespace WInterop.Support.Buffers
         // https://msdn.microsoft.com/en-us/library/aa290049.aspx
 
         private ulong _byteCapacity;
-        private ulong _byteOffset;
 
         public CheckedReader(ISizedBuffer buffer)
             : base (buffer)
@@ -51,7 +50,7 @@ namespace WInterop.Support.Buffers
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the count of characters would go past the end of the buffer.</exception>
         public override string ReadString(int charCount)
         {
-            if ((uint)charCount * sizeof(char) > _byteCapacity - _byteOffset) throw new ArgumentOutOfRangeException(nameof(charCount));
+            if ((uint)charCount * sizeof(char) > _byteCapacity - ByteOffset) throw new ArgumentOutOfRangeException(nameof(charCount));
             return base.ReadString(charCount);
         }
 
@@ -70,7 +69,7 @@ namespace WInterop.Support.Buffers
         /// <exception cref="EndOfStreamException">Thrown if reading a short would go past the end of the buffer.</exception>
         public override short ReadShort()
         {
-            if (_byteCapacity < sizeof(short) || _byteOffset > _byteCapacity - sizeof(short)) throw new EndOfStreamException();
+            if (_byteCapacity < sizeof(short) || ByteOffset > _byteCapacity - sizeof(short)) throw new EndOfStreamException();
             return base.ReadShort();
         }
 
@@ -89,7 +88,7 @@ namespace WInterop.Support.Buffers
         /// <exception cref="EndOfStreamException">Thrown if reading an int would go past the end of the buffer.</exception>
         public override int ReadInt()
         {
-            if (_byteCapacity < sizeof(int) || _byteOffset > _byteCapacity - sizeof(int)) throw new EndOfStreamException();
+            if (_byteCapacity < sizeof(int) || ByteOffset > _byteCapacity - sizeof(int)) throw new EndOfStreamException();
             return base.ReadInt();
         }
 
@@ -108,7 +107,7 @@ namespace WInterop.Support.Buffers
         /// <exception cref="EndOfStreamException">Thrown if reading a long would go past the end of the buffer.</exception>
         public override long ReadLong()
         {
-            if (_byteCapacity < sizeof(long) || _byteOffset > _byteCapacity - sizeof(long)) throw new EndOfStreamException();
+            if (_byteCapacity < sizeof(long) || ByteOffset > _byteCapacity - sizeof(long)) throw new EndOfStreamException();
             return base.ReadLong();
         }
 
@@ -135,7 +134,7 @@ namespace WInterop.Support.Buffers
         public override T ReadStruct<T>()
         {
             ulong sizeOfStruct = (ulong)Marshal.SizeOf<T>();
-            if (_byteCapacity < sizeOfStruct || _byteOffset > _byteCapacity - sizeOfStruct) throw new EndOfStreamException();
+            if (_byteCapacity < sizeOfStruct || ByteOffset > _byteCapacity - sizeOfStruct) throw new EndOfStreamException();
 
             return base.ReadStruct<T>();
         }

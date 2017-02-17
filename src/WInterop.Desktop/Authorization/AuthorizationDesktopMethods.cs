@@ -48,10 +48,10 @@ namespace WInterop.Authorization
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GetTokenInformation(
+            public unsafe static extern bool GetTokenInformation(
                 SafeTokenHandle TokenHandle,
                 TOKEN_INFORMATION_CLASS TokenInformationClass,
-                SafeHandle TokenInformation,
+                void* TokenInformation,
                 uint TokenInformationLength,
                 out uint ReturnLength);
 
@@ -162,14 +162,14 @@ namespace WInterop.Authorization
         // 
         // https://msdn.microsoft.com/en-us/library/system.security.principal.securityidentifier.aspx
 
-        public static IEnumerable<PrivilegeSetting> GetTokenPrivileges(SafeTokenHandle token)
+        public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(SafeTokenHandle token)
         {
             // Get the buffer size we need
             uint bytesNeeded;
             if (!Direct.GetTokenInformation(
                 token,
                 TOKEN_INFORMATION_CLASS.TokenPrivileges,
-                EmptySafeHandle.Instance,
+                null,
                 0,
                 out bytesNeeded))
             {
@@ -296,20 +296,42 @@ namespace WInterop.Authorization
                 if (error != WindowsError.ERROR_NO_TOKEN)
                     throw ErrorHelper.GetIoExceptionForError(error, desiredAccess.ToString());
 
-                SafeTokenHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE);
-                if (!Direct.DuplicateTokenEx(
-                    processToken,
-                    TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_ADJUST_PRIVILEGES,
-                    IntPtr.Zero,
-                    SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation,
-                    TOKEN_TYPE.TokenImpersonation,
-                    ref threadToken))
+                using (SafeTokenHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE))
                 {
-                    throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
+                    if (!Direct.DuplicateTokenEx(
+                        processToken,
+                        TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_ADJUST_PRIVILEGES,
+                        IntPtr.Zero,
+                        SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation,
+                        TOKEN_TYPE.TokenImpersonation,
+                        ref threadToken))
+                    {
+                        throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
+                    }
                 }
             }
 
             return threadToken;
+        }
+
+        public unsafe static bool IsProcessElevated()
+        {
+            using (SafeTokenHandle token = OpenProcessToken(TokenRights.TOKEN_READ))
+            {
+                uint bytesNeeded;
+                TOKEN_ELEVATION elevation = new TOKEN_ELEVATION();
+                if (!Direct.GetTokenInformation(
+                    token,
+                    TOKEN_INFORMATION_CLASS.TokenElevation,
+                    &elevation,
+                    (uint)sizeof(TOKEN_ELEVATION),
+                    out bytesNeeded))
+                {
+                    throw ErrorHelper.GetIoExceptionForLastError();
+                }
+
+                return elevation.TokenIsElevated;
+            }
         }
     }
 }

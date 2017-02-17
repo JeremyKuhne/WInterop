@@ -17,9 +17,9 @@ using WInterop.Support;
 using Xunit;
 using WInterop.ErrorHandling.DataTypes;
 
-namespace DesktopTests.FileManagementTests
+namespace DesktopTests.FileManagement
 {
-    public class Methods
+    public class FileManagementTests
     {
         [Fact]
         public void GetShortPathBasic()
@@ -252,7 +252,7 @@ namespace DesktopTests.FileManagementTests
             }
         }
 
-        [Fact(Skip = "Need to check for Admin Access")]
+        [Fact]
         public void CreateFileHarddiskVolume()
         {
             using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\HarddiskVolume1",

@@ -37,13 +37,13 @@ namespace Tests.Buffers
         [Fact]
         public void ReadShortPastCapacityFails()
         {
-            using (var buffer = new HeapBuffer(2))
+            using (var buffer = new HeapBuffer(sizeof(short)))
             {
                 var reader = new CheckedReader(buffer);
 
                 Action action = () => reader.ReadShort();
 
-                for (uint i = 1; i < 2; i++)
+                for (uint i = 1; i < sizeof(short); i++)
                 {
                     reader.ByteOffset = buffer.ByteCapacity - i;
                     action.ShouldThrow<System.IO.EndOfStreamException>();
@@ -65,13 +65,13 @@ namespace Tests.Buffers
         [Fact]
         public void ReadIntPastCapacityFails()
         {
-            using (var buffer = new HeapBuffer(4))
+            using (var buffer = new HeapBuffer(sizeof(int)))
             {
                 var reader = new CheckedReader(buffer);
 
                 Action action = () => reader.ReadInt();
 
-                for (uint i = 1; i < 4; i++)
+                for (uint i = 1; i < sizeof(int); i++)
                 {
                     reader.ByteOffset = buffer.ByteCapacity - i;
                     action.ShouldThrow<System.IO.EndOfStreamException>();
@@ -93,13 +93,13 @@ namespace Tests.Buffers
         [Fact]
         public void ReadLongPastCapacityFails()
         {
-            using (var buffer = new HeapBuffer(8))
+            using (var buffer = new HeapBuffer(sizeof(long)))
             {
                 var reader = new CheckedReader(buffer);
 
                 Action action = () => reader.ReadLong();
 
-                for (uint i = 1; i < 8; i++)
+                for (uint i = 1; i < sizeof(long); i++)
                 {
                     reader.ByteOffset = buffer.ByteCapacity - i;
                     action.ShouldThrow<System.IO.EndOfStreamException>();

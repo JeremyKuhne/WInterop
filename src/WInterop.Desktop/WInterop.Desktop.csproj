@@ -45,6 +45,7 @@
     <Compile Include="Authorization\DataTypes\PRIVILEGE_SET.cs" />
     <Compile Include="Authorization\DataTypes\SID_NAME_USE.cs" />
     <Compile Include="Authorization\DataTypes\TokenRights.cs" />
+    <Compile Include="Authorization\DataTypes\TOKEN_ELEVATION.cs" />
     <Compile Include="Authorization\DataTypes\TOKEN_INFORMATION_CLASS.cs" />
     <Compile Include="Authorization\DataTypes\TOKEN_PRIVILEGES.cs" />
     <Compile Include="Authorization\DataTypes\TOKEN_TYPE.cs" />

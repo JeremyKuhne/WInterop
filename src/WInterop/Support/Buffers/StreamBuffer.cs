@@ -70,6 +70,11 @@ namespace WInterop.Support.Buffers
             return buffer._buffer;
         }
 
+        public unsafe static implicit operator void*(StreamBuffer buffer)
+        {
+            return buffer._buffer.VoidPointer;
+        }
+
         public void EnsureLength(long value)
         {
             if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
