@@ -6,16 +6,17 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using WInterop.Support;
 using Xunit;
 
-namespace WInterop.UtilityTests
+namespace Tests.Support
 {
     public class EnvironmentTests
     {
         [Fact]
         public void IsWindowsStore()
         {
-            bool isWindowsStore = Support.Environment.IsWindowsStoreApplication();
+            bool isWindowsStore = Environment.IsWindowsStoreApplication();
 #if WINRT
             isWindowsStore.Should().BeTrue();
 #else

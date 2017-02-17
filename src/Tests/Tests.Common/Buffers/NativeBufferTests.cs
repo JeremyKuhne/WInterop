@@ -83,8 +83,8 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(0)
+        [Theory,
+            InlineData(0),
             InlineData(1)
             ]
         public void ResizeNativeBufferOver32BitCapacity(ulong initialBufferSize)

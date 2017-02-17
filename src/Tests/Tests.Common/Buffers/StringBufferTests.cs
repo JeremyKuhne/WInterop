@@ -21,9 +21,9 @@ namespace Tests.Buffers
     {
         const string testString = "The quick brown fox jumped over the lazy dog.";
 
-        [Theory
-            InlineData(0)
-            InlineData(1)
+        [Theory,
+            InlineData(0),
+            InlineData(1),
             InlineData(10)
             ]
         public void ConstructWithInitialCapacity(uint capacity)
@@ -44,8 +44,8 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("a")
+        [Theory,
+            InlineData("a"),
             InlineData("Test")
             ]
         public unsafe void ConstructFromString(string testString)
@@ -66,8 +66,8 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("a")
+        [Theory,
+            InlineData("a"),
             InlineData("foo")
             ]
         public void ReduceLength(string testString)
@@ -116,9 +116,9 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(0) // 4294967295
-            InlineData(1) // 4294967296
+        [Theory,
+            InlineData(0), // 4294967295
+            InlineData(1)  // 4294967296
             ]
         public void CharCapacityHasUintMax(uint plusValue)
         {
@@ -136,10 +136,10 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(0, 0)
-            InlineData(1, 0)
-            InlineData(2, 1)
+        [Theory,
+            InlineData(0, 0),
+            InlineData(1, 0),
+            InlineData(2, 1),
             InlineData(3, 1)
             ]
         public void CharCapacityFromByte(ulong byteCapacity, uint charCapacity)
@@ -151,9 +151,9 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(0)
-            InlineData(1)
+        [Theory,
+            InlineData(0),
+            InlineData(1),
             InlineData(2)
             ]
         public void EnsureCharCapacity(uint charCapacity)
@@ -165,8 +165,8 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(0)
+        [Theory,
+            InlineData(0),
             InlineData(1)
             ]
         public void EnsureCharCapacityOver32Bit(uint initialBufferSize)
@@ -202,15 +202,15 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(@"Foo", @"Foo", true)
-            InlineData(@"Foo", @"foo", false)
-            InlineData(@"Foobar", @"Foo", true)
-            InlineData(@"Foobar", @"foo", false)
-            InlineData(@"Fo", @"Foo", false)
-            InlineData(@"Fo", @"foo", false)
-            InlineData(@"", @"", true)
-            InlineData(@"", @"f", false)
+        [Theory,
+            InlineData(@"Foo", @"Foo", true),
+            InlineData(@"Foo", @"foo", false),
+            InlineData(@"Foobar", @"Foo", true),
+            InlineData(@"Foobar", @"foo", false),
+            InlineData(@"Fo", @"Foo", false),
+            InlineData(@"Fo", @"foo", false),
+            InlineData(@"", @"", true),
+            InlineData(@"", @"f", false),
             InlineData(@"f", @"", true)
             ]
         public void StartsWithOrdinal(string source, string value, bool expected)
@@ -261,21 +261,21 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(@"", null, 0, 0, false)
-            InlineData(@"", @"", 0, 0, true)
-            InlineData(@"", @"", 0, -1, true)
-            InlineData(@"A", @"", 0, -1, false)
-            InlineData(@"", @"A", 0, -1, false)
-            InlineData(@"Foo", @"Foo", 0, -1, true)
-            InlineData(@"Foo", @"foo", 0, -1, false)
-            InlineData(@"Foo", @"Foo", 1, -1, false)
-            InlineData(@"Foo", @"Food", 0, -1, false)
-            InlineData(@"Food", @"Foo", 0, -1, false)
-            InlineData(@"Food", @"Foo", 0, 3, true)
-            InlineData(@"Food", @"ood", 1, 3, true)
-            InlineData(@"Food", @"ooD", 1, 3, false)
-            InlineData(@"Food", @"ood", 1, 2, false)
+        [Theory,
+            InlineData(@"", null, 0, 0, false),
+            InlineData(@"", @"", 0, 0, true),
+            InlineData(@"", @"", 0, -1, true),
+            InlineData(@"A", @"", 0, -1, false),
+            InlineData(@"", @"A", 0, -1, false),
+            InlineData(@"Foo", @"Foo", 0, -1, true),
+            InlineData(@"Foo", @"foo", 0, -1, false),
+            InlineData(@"Foo", @"Foo", 1, -1, false),
+            InlineData(@"Foo", @"Food", 0, -1, false),
+            InlineData(@"Food", @"Foo", 0, -1, false),
+            InlineData(@"Food", @"Foo", 0, 3, true),
+            InlineData(@"Food", @"ood", 1, 3, true),
+            InlineData(@"Food", @"ooD", 1, 3, false),
+            InlineData(@"Food", @"ood", 1, 2, false),
             InlineData(@"Food", @"Food", 0, 3, false)
         ]
         public void SubStringEquals(string source, string value, int startIndex, int count, bool expected)
@@ -287,44 +287,44 @@ namespace Tests.Buffers
         }
 
         [Theory
-            InlineData(@"", @"", 0, -1, @"")
-            InlineData(@"", @"", 0, 0, @"")
-            InlineData(@"", @"A", 0, -1, @"A")
-            InlineData(@"", @"A", 0, 0, @"")
-            InlineData(@"", @"Aa", 0, -1, @"Aa")
-            InlineData(@"", @"Aa", 0, 0, @"")
-            InlineData(@"", "Aa\0", 0, -1, "Aa\0")
-            InlineData(@"", "Aa\0", 0, 3, "Aa\0")
-            InlineData(@"", @"AB", 0, -1, @"AB")
-            InlineData(@"", @"AB", 0, 1, @"A")
-            InlineData(@"", @"AB", 1, 1, @"B")
-            InlineData(@"", @"AB", 1, -1, @"B")
-            InlineData(@"", @"ABC", 1, -1, @"BC")
-            InlineData(null, @"", 0, -1, @"")
-            InlineData(null, @"", 0, 0, @"")
-            InlineData(null, @"A", 0, -1, @"A")
-            InlineData(null, @"A", 0, 0, @"")
-            InlineData(null, @"Aa", 0, -1, @"Aa")
-            InlineData(null, @"Aa", 0, 0, @"")
-            InlineData(null, "Aa\0", 0, -1, "Aa\0")
-            InlineData(null, "Aa\0", 0, 3, "Aa\0")
-            InlineData(null, @"AB", 0, -1, @"AB")
-            InlineData(null, @"AB", 0, 1, @"A")
-            InlineData(null, @"AB", 1, 1, @"B")
-            InlineData(null, @"AB", 1, -1, @"B")
-            InlineData(null, @"ABC", 1, -1, @"BC")
-            InlineData(@"Q", @"", 0, -1, @"Q")
-            InlineData(@"Q", @"", 0, 0, @"Q")
-            InlineData(@"Q", @"A", 0, -1, @"QA")
-            InlineData(@"Q", @"A", 0, 0, @"Q")
-            InlineData(@"Q", @"Aa", 0, -1, @"QAa")
-            InlineData(@"Q", @"Aa", 0, 0, @"Q")
-            InlineData(@"Q", "Aa\0", 0, -1, "QAa\0")
-            InlineData(@"Q", "Aa\0", 0, 3, "QAa\0")
-            InlineData(@"Q", @"AB", 0, -1, @"QAB")
-            InlineData(@"Q", @"AB", 0, 1, @"QA")
-            InlineData(@"Q", @"AB", 1, 1, @"QB")
-            InlineData(@"Q", @"AB", 1, -1, @"QB")
+            InlineData(@"", @"", 0, -1, @""),
+            InlineData(@"", @"", 0, 0, @""),
+            InlineData(@"", @"A", 0, -1, @"A"),
+            InlineData(@"", @"A", 0, 0, @""),
+            InlineData(@"", @"Aa", 0, -1, @"Aa"),
+            InlineData(@"", @"Aa", 0, 0, @""),
+            InlineData(@"", "Aa\0", 0, -1, "Aa\0"),
+            InlineData(@"", "Aa\0", 0, 3, "Aa\0"),
+            InlineData(@"", @"AB", 0, -1, @"AB"),
+            InlineData(@"", @"AB", 0, 1, @"A"),
+            InlineData(@"", @"AB", 1, 1, @"B"),
+            InlineData(@"", @"AB", 1, -1, @"B"),
+            InlineData(@"", @"ABC", 1, -1, @"BC"),
+            InlineData(null, @"", 0, -1, @""),
+            InlineData(null, @"", 0, 0, @""),
+            InlineData(null, @"A", 0, -1, @"A"),
+            InlineData(null, @"A", 0, 0, @""),
+            InlineData(null, @"Aa", 0, -1, @"Aa"),
+            InlineData(null, @"Aa", 0, 0, @""),
+            InlineData(null, "Aa\0", 0, -1, "Aa\0"),
+            InlineData(null, "Aa\0", 0, 3, "Aa\0"),
+            InlineData(null, @"AB", 0, -1, @"AB"),
+            InlineData(null, @"AB", 0, 1, @"A"),
+            InlineData(null, @"AB", 1, 1, @"B"),
+            InlineData(null, @"AB", 1, -1, @"B"),
+            InlineData(null, @"ABC", 1, -1, @"BC"),
+            InlineData(@"Q", @"", 0, -1, @"Q"),
+            InlineData(@"Q", @"", 0, 0, @"Q"),
+            InlineData(@"Q", @"A", 0, -1, @"QA"),
+            InlineData(@"Q", @"A", 0, 0, @"Q"),
+            InlineData(@"Q", @"Aa", 0, -1, @"QAa"),
+            InlineData(@"Q", @"Aa", 0, 0, @"Q"),
+            InlineData(@"Q", "Aa\0", 0, -1, "QAa\0"),
+            InlineData(@"Q", "Aa\0", 0, 3, "QAa\0"),
+            InlineData(@"Q", @"AB", 0, -1, @"QAB"),
+            InlineData(@"Q", @"AB", 0, 1, @"QA"),
+            InlineData(@"Q", @"AB", 1, 1, @"QB"),
+            InlineData(@"Q", @"AB", 1, -1, @"QB"),
             InlineData(@"Q", @"ABC", 1, -1, @"QBC")
             ]
         public void AppendTests(string source, string value, int startIndex, int count, string expected)
@@ -515,14 +515,14 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(@"", 0, -1, @"")
-            InlineData(@"A", 0, -1, @"A")
-            InlineData(@"AB", 0, -1, @"AB")
-            InlineData(@"AB", 0, 1, @"A")
-            InlineData(@"AB", 1, 1, @"B")
-            InlineData(@"AB", 1, -1, @"B")
-            InlineData(@"", 0, 0, @"")
+        [Theory,
+            InlineData(@"", 0, -1, @""),
+            InlineData(@"A", 0, -1, @"A"),
+            InlineData(@"AB", 0, -1, @"AB"),
+            InlineData(@"AB", 0, 1, @"A"),
+            InlineData(@"AB", 1, 1, @"B"),
+            InlineData(@"AB", 1, -1, @"B"),
+            InlineData(@"", 0, 0, @""),
             InlineData(@"A", 0, 0, @"")
         ]
         public void SubStringTest(string source, int startIndex, int count, string expected)
@@ -568,10 +568,10 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(@"", 0, 0)
-            InlineData(@"Foo", 3, 3)
-            InlineData("\0", 1, 0)
+        [Theory,
+            InlineData(@"", 0, 0),
+            InlineData(@"Foo", 3, 3),
+            InlineData("\0", 1, 0),
             InlineData("Foo\0Bar", 7, 3)
             ]
         public unsafe void SetLengthToFirstNullTests(string content, uint startLength, uint endLength)
@@ -596,16 +596,16 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("foo bar", ' ')
-            InlineData("foo\0bar", '\0')
-            InlineData("foo\0bar", ' ')
-            InlineData("foobar", ' ')
-            InlineData("foo bar ", ' ')
-            InlineData("foobar ", ' ')
-            InlineData("foobar ", 'b')
-            InlineData(" ", ' ')
-            InlineData("", ' ')
+        [Theory,
+            InlineData("foo bar", ' '),
+            InlineData("foo\0bar", '\0'),
+            InlineData("foo\0bar", ' '),
+            InlineData("foobar", ' '),
+            InlineData("foo bar ", ' '),
+            InlineData("foobar ", ' '),
+            InlineData("foobar ", 'b'),
+            InlineData(" ", ' '),
+            InlineData("", ' '),
             InlineData(null, ' ')
             ]
         public void Split(string content, char splitChar)
@@ -657,17 +657,17 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("foo", new char[] { }, "foo")
-            InlineData("foo", null, "foo")
-            InlineData("foo", new char[] { 'b' }, "foo")
-            InlineData("", new char[] { }, "")
-            InlineData("", null, "")
-            InlineData("", new char[] { 'b' }, "")
-            InlineData("foo", new char[] { 'o' }, "f")
-            InlineData("foo", new char[] { 'o', 'f' }, "")
+        [Theory,
+            InlineData("foo", new char[] { }, "foo"),
+            InlineData("foo", null, "foo"),
+            InlineData("foo", new char[] { 'b' }, "foo"),
+            InlineData("", new char[] { }, ""),
+            InlineData("", null, ""),
+            InlineData("", new char[] { 'b' }, ""),
+            InlineData("foo", new char[] { 'o' }, "f"),
+            InlineData("foo", new char[] { 'o', 'f' }, ""),
             // Add a couple cases to try and get the trim to walk off the front of the buffer.
-            InlineData("foo", new char[] { 'o', 'f', '\0' }, "")
+            InlineData("foo", new char[] { 'o', 'f', '\0' }, ""),
             InlineData("foo", new char[] { 'o', 'f', '\u9000' }, "")
             ]
         public void TrimEnd(string content, char[] trimChars, string expected)
@@ -680,18 +680,18 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("foo bar", new char[] { ' ' })
-            InlineData("foo bar", new char[] { })
-            InlineData("foo bar", null)
-            InlineData("foo\0bar", new char[] { '\0' })
-            InlineData("foo\0bar", new char[] { ' ' })
-            InlineData("foobar", new char[] { ' ' })
-            InlineData("foo bar ", new char[] { ' ' })
-            InlineData("foobar ", new char[] { ' ' })
-            InlineData("foobar ", new char[] { ' ', 'b' })
-            InlineData(" ", new char[] { ' ' })
-            InlineData("", new char[] { ' ' })
+        [Theory,
+            InlineData("foo bar", new char[] { ' ' }),
+            InlineData("foo bar", new char[] { }),
+            InlineData("foo bar", null),
+            InlineData("foo\0bar", new char[] { '\0' }),
+            InlineData("foo\0bar", new char[] { ' ' }),
+            InlineData("foobar", new char[] { ' ' }),
+            InlineData("foo bar ", new char[] { ' ' }),
+            InlineData("foobar ", new char[] { ' ' }),
+            InlineData("foobar ", new char[] { ' ', 'b' }),
+            InlineData(" ", new char[] { ' ' }),
+            InlineData("", new char[] { ' ' }),
             InlineData(null, new char[] { ' ' })
             ]
         public void SplitParams(string content, char[] splitChars)
@@ -703,13 +703,13 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(null, ' ', false)
-            InlineData("", ' ', false)
-            InlineData("foo", 'F', false)
-            InlineData("foo", '\0', false)
-            InlineData("foo", 'f', true)
-            InlineData("foo", 'o', true)
+        [Theory,
+            InlineData(null, ' ', false),
+            InlineData("", ' ', false),
+            InlineData("foo", 'F', false),
+            InlineData("foo", '\0', false),
+            InlineData("foo", 'f', true),
+            InlineData("foo", 'o', true),
             InlineData("foo\0", '\0', true)
             ]
         public void ContainsTests(string content, char value, bool expected)
@@ -720,15 +720,15 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(null, null, false)
-            InlineData(null, new char[0], false)
-            InlineData(null, new char[] { ' ' }, false)
-            InlineData("", new char[] { ' ' }, false)
-            InlineData("foo", new char[] { 'F' }, false)
-            InlineData("foo", new char[] { '\0' }, false)
-            InlineData("foo", new char[] { 'f' }, true)
-            InlineData("foo", new char[] { 'o' }, true)
+        [Theory,
+            InlineData(null, null, false),
+            InlineData(null, new char[0], false),
+            InlineData(null, new char[] { ' ' }, false),
+            InlineData("", new char[] { ' ' }, false),
+            InlineData("foo", new char[] { 'F' }, false),
+            InlineData("foo", new char[] { '\0' }, false),
+            InlineData("foo", new char[] { 'f' }, true),
+            InlineData("foo", new char[] { 'o' }, true),
             InlineData("foo\0", new char[] { '\0' }, true)
             ]
         public void ContainsParamsTests(string content, char[] values, bool expected)
@@ -739,12 +739,12 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(@"Foo", @"Bar", 0, 0, 3, "Bar")
-            InlineData(@"Foo", @"Bar", 0, 0, -1, "Bar")
-            InlineData(@"Foo", @"Bar", 3, 0, 3, "FooBar")
-            InlineData(@"", @"Bar", 0, 0, 3, "Bar")
-            InlineData(@"Foo", @"Bar", 1, 0, 3, "FBar")
+        [Theory,
+            InlineData(@"Foo", @"Bar", 0, 0, 3, "Bar"),
+            InlineData(@"Foo", @"Bar", 0, 0, -1, "Bar"),
+            InlineData(@"Foo", @"Bar", 3, 0, 3, "FooBar"),
+            InlineData(@"", @"Bar", 0, 0, 3, "Bar"),
+            InlineData(@"Foo", @"Bar", 1, 0, 3, "FBar"),
             InlineData(@"Foo", @"Bar", 1, 1, 2, "Far")
             ]
         public void CopyFromString(string content, string source, uint bufferIndex, int sourceIndex, int count, string expected)
@@ -776,12 +776,12 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("", 0, 1)
-            InlineData("", 1, 0)
-            InlineData("", 1, -1)
-            InlineData("", 2, 0)
-            InlineData("Foo", 3, 1)
+        [Theory,
+            InlineData("", 0, 1),
+            InlineData("", 1, 0),
+            InlineData("", 1, -1),
+            InlineData("", 2, 0),
+            InlineData("Foo", 3, 1),
             InlineData("Foo", 4, 0)
             ]
         public void CopyFromStringThrowsIndexingBeyondStringLength(string value, int index, int count)
@@ -793,12 +793,12 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(@"Foo", @"Bar", 0, 0, 3, "Bar")
-            InlineData(@"Foo", @"Bar", 0, 0, 0, "Foo")
-            InlineData(@"Foo", @"Bar", 3, 0, 3, "FooBar")
-            InlineData(@"", @"Bar", 0, 0, 3, "Bar")
-            InlineData(@"Foo", @"Bar", 1, 0, 3, "FBar")
+        [Theory,
+            InlineData(@"Foo", @"Bar", 0, 0, 3, "Bar"),
+            InlineData(@"Foo", @"Bar", 0, 0, 0, "Foo"),
+            InlineData(@"Foo", @"Bar", 3, 0, 3, "FooBar"),
+            InlineData(@"", @"Bar", 0, 0, 3, "Bar"),
+            InlineData(@"Foo", @"Bar", 1, 0, 3, "FBar"),
             InlineData(@"Foo", @"Bar", 1, 1, 2, "Far")
             ]
         public void CopyToBufferString(string destination, string content, uint destinationIndex, uint bufferIndex, uint count, string expected)
@@ -832,11 +832,11 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("", 0, 1)
-            InlineData("", 1, 0)
-            InlineData("", 2, 0)
-            InlineData("Foo", 3, 1)
+        [Theory,
+            InlineData("", 0, 1),
+            InlineData("", 1, 0),
+            InlineData("", 2, 0),
+            InlineData("Foo", 3, 1),
             InlineData("Foo", 4, 0)
             ]
         public void CopyToBufferThrowsIndexingBeyondSourceBufferLength(string source, uint index, uint count)
@@ -865,13 +865,13 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("", 'a', 0, 1, false)
-            InlineData("", 'a', 1, 1, false)
-            InlineData("a", 'a', 0, 0, true)
-            InlineData("a", 'a', 1, 2, false)
-            InlineData("aa", 'a', 0, 0, true)
-            InlineData("aa", 'a', 1, 1, true)
+        [Theory,
+            InlineData("", 'a', 0, 1, false),
+            InlineData("", 'a', 1, 1, false),
+            InlineData("a", 'a', 0, 0, true),
+            InlineData("a", 'a', 1, 2, false),
+            InlineData("aa", 'a', 0, 0, true),
+            InlineData("aa", 'a', 1, 1, true),
             InlineData("ab", 'b', 0, 1, true)
             ]
         public void IndexOfTests(string source, char value, uint skip, uint expectedIndex, bool expectedValue)
@@ -884,21 +884,21 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData("", 'z', 0, "")
-            InlineData("", 'a', 1, "a")
-            InlineData("", 'b', 2, "bb")
-            InlineData("", 'c', 3, "ccc")
-            InlineData("", 'd', 4, "dddd")
-            InlineData("", 'e', 5, "eeeee")
-            InlineData("", 'f', 6, "ffffff")
-            InlineData("", 'g', 7, "ggggggg")
-            InlineData("", 'h', 8, "hhhhhhhh")
-            InlineData("", 'i', 9, "iiiiiiiii")
-            InlineData("", 'j', 10, "jjjjjjjjjj")
-            InlineData("", 'k', 11, "kkkkkkkkkkk")
-            InlineData("y", 'z', 0, "y")
-            InlineData("y", 'a', 1, "ya")
+        [Theory,
+            InlineData("", 'z', 0, ""),
+            InlineData("", 'a', 1, "a"),
+            InlineData("", 'b', 2, "bb"),
+            InlineData("", 'c', 3, "ccc"),
+            InlineData("", 'd', 4, "dddd"),
+            InlineData("", 'e', 5, "eeeee"),
+            InlineData("", 'f', 6, "ffffff"),
+            InlineData("", 'g', 7, "ggggggg"),
+            InlineData("", 'h', 8, "hhhhhhhh"),
+            InlineData("", 'i', 9, "iiiiiiiii"),
+            InlineData("", 'j', 10, "jjjjjjjjjj"),
+            InlineData("", 'k', 11, "kkkkkkkkkkk"),
+            InlineData("y", 'z', 0, "y"),
+            InlineData("y", 'a', 1, "ya"),
             InlineData("y", 'b', 2, "ybb")
             ]
         public void AppendCharCountTests(string initialBuffer, char value, uint count, string expected)

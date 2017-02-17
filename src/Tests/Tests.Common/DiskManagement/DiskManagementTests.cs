@@ -11,9 +11,9 @@ using WInterop.DiskManagement;
 using WInterop.FileManagement;
 using Xunit;
 
-namespace Tests.DiskManagementTests
+namespace Tests.DiskManagement
 {
-    public class Methods
+    public class DiskManagementTests
     {
         [Fact]
         public void GetDiskFreeSpaceForCurrentDrive()

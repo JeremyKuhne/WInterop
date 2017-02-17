@@ -118,9 +118,9 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(0, 0x0201)
-            InlineData(1, 0x0302)
+        [Theory,
+            InlineData(0, 0x0201),
+            InlineData(1, 0x0302),
             InlineData(2, 0x0403)
             ]
         public void ReadShort(ulong offset, short expected)
@@ -154,12 +154,12 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(0, 0x04030201)
-            InlineData(1, 0x05040302)
-            InlineData(2, 0x06050403)
-            InlineData(3, 0x07060504)
-            InlineData(4, 0x08070605)
+        [Theory,
+            InlineData(0, 0x04030201),
+            InlineData(1, 0x05040302),
+            InlineData(2, 0x06050403),
+            InlineData(3, 0x07060504),
+            InlineData(4, 0x08070605),
             ]
         public void ReadInt(ulong offset, int expected)
         {
@@ -192,16 +192,16 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
-            InlineData(0, 0x0807060504030201)
-            InlineData(1, 0x0908070605040302)
-            InlineData(2, 0x0A09080706050403)
-            InlineData(3, 0x0B0A090807060504)
-            InlineData(4, 0x0C0B0A0908070605)
-            InlineData(5, 0x0D0C0B0A09080706)
-            InlineData(6, 0x0E0D0C0B0A090807)
-            InlineData(7, 0x0F0E0D0C0B0A0908)
-            InlineData(8, 0x100F0E0D0C0B0A09)
+        [Theory,
+            InlineData(0, 0x0807060504030201),
+            InlineData(1, 0x0908070605040302),
+            InlineData(2, 0x0A09080706050403),
+            InlineData(3, 0x0B0A090807060504),
+            InlineData(4, 0x0C0B0A0908070605),
+            InlineData(5, 0x0D0C0B0A09080706),
+            InlineData(6, 0x0E0D0C0B0A090807),
+            InlineData(7, 0x0F0E0D0C0B0A0908),
+            InlineData(8, 0x100F0E0D0C0B0A09),
             ]
         public void ReadLong(ulong offset, long expected)
         {

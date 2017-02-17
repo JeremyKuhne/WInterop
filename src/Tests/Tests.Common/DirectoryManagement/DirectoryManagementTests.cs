@@ -13,7 +13,7 @@ using WInterop.FileManagement;
 using WInterop.FileManagement.DataTypes;
 using Xunit;
 
-namespace Tests
+namespace Tests.DirectoryManagement
 {
     public class DirectoryManagementTests
     {

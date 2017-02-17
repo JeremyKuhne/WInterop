@@ -17,7 +17,7 @@ using WInterop.FileManagement.DataTypes;
 
 namespace Tests.FileManagementTests
 {
-    public partial class Methods
+    public partial class FileManagementTests
     {
         [Fact]
         public void GetTempPathBasic()

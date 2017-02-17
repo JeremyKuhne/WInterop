@@ -12,12 +12,12 @@ using System.Linq;
 using WInterop.Cryptography;
 using WInterop.Cryptography.DataTypes;
 
-namespace Tests.CryptographyTests
+namespace Tests.Cryptography
 {
-    public class Methods
+    public class CryptographyTests
     {
-        [Theory
-            InlineData(StoreName.TrustedPeople)
+        [Theory,
+            InlineData(StoreName.TrustedPeople),
             InlineData(StoreName.CA)
             ]
         public void OpenSystemStore(StoreName store)

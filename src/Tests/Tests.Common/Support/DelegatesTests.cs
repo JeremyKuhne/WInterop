@@ -9,7 +9,7 @@ using FluentAssertions;
 using WInterop.Support;
 using Xunit;
 
-namespace WInterop.UtilityTests
+namespace Tests.Support
 {
     public class DelegatesTests
     {

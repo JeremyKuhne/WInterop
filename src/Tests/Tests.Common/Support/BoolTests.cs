@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using WInterop.Support;
 using Xunit;
 
-namespace CommonTests.Support
+namespace Tests.Support
 {
     public class BoolTests
     {
