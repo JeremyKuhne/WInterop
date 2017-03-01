@@ -29,12 +29,12 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const int CurrentDayOfMonth =  16;
+            public const int CurrentDayOfMonth =  28;
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const int CurrentHour = 17;
+            public const int CurrentHour = 16;
 
             /// <summary>
             /// Current hour from 0..59
@@ -62,22 +62,22 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const string CurrentDayOfMonth =  "16";
+            public const string CurrentDayOfMonth =  "28";
 
             /// <summary>
             /// Current two digit day of the month 01..31
             /// </summary>
-            public const string CurrentTwoDigitDayOfMonth =  "16";
+            public const string CurrentTwoDigitDayOfMonth =  "28";
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const string CurrentHour = "17";
+            public const string CurrentHour = "16";
 
             /// <summary>
             /// Current two digit hour from 00..23
             /// </summary>
-            public const string CurrentTwoDigitHour = "17";
+            public const string CurrentTwoDigitHour = "16";
 
             /// <summary>
             /// Current hour from 0..59

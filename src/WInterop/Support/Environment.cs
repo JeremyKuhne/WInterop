@@ -15,7 +15,7 @@ namespace WInterop.Support
 {
     public static class Environment
     {
-        private static bool? s_isWinRT;
+        private static int s_isWinRT = -1;
 
         /// <summary>
         /// True if the current process is running in 64 bit.
@@ -30,7 +30,7 @@ namespace WInterop.Support
         /// </summary>
         public static bool IsWindowsStoreApplication()
         {
-            if (!s_isWinRT.HasValue)
+            if (s_isWinRT == -1)
             {
                 BufferHelper.CachedInvoke((StringBuffer buffer) =>
                 {
@@ -41,11 +41,11 @@ namespace WInterop.Support
                         switch (result)
                         {
                             case WindowsError.APPMODEL_ERROR_NO_APPLICATION:
-                                s_isWinRT = false;
+                                s_isWinRT = 0;
                                 break;
                             case WindowsError.ERROR_SUCCESS:
                             case WindowsError.ERROR_INSUFFICIENT_BUFFER:
-                                s_isWinRT = true;
+                                s_isWinRT = 1;
                                 break;
                             default:
                                 throw ErrorHelper.GetIoExceptionForError(result);
@@ -55,14 +55,14 @@ namespace WInterop.Support
                     {
                         if (ErrorHelper.IsEntryPointNotFoundException(e))
                             // API doesn't exist, pre Win8
-                            s_isWinRT = false;
+                            s_isWinRT = 0;
                         else
                             throw;
                     }
                 });
             }
 
-            return s_isWinRT.Value;
+            return s_isWinRT == 1;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace WInterop.WindowsStore.Query
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/hh920918.aspx
             // Technically returns an int, but being compatable with error lookup
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
             public static extern WindowsError GetCurrentApplicationUserModelId(
                 ref uint applicationUserModelIdLength,
                 SafeHandle applicationUserModelId);

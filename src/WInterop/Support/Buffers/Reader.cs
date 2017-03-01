@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Authentication.DataTypes;
 
 namespace WInterop.Support.Buffers
 {
@@ -26,6 +27,8 @@ namespace WInterop.Support.Buffers
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             _buffer = buffer;
         }
+
+        public unsafe byte* BytePointer => (byte*)_buffer.DangerousGetHandle() + _byteOffset;
 
         /// <summary>
         /// Get/set the offset in bytes
@@ -49,8 +52,22 @@ namespace WInterop.Support.Buffers
         {
             if (charCount == 0) return string.Empty;
 
-            string value = new string((char*)((byte*)_buffer.DangerousGetHandle() + _byteOffset), startIndex: 0, length: charCount);
+            string value = new string((char*)BytePointer, startIndex: 0, length: charCount);
             _byteOffset += (ulong)(charCount * sizeof(char));
+            return value;
+        }
+
+        /// <summary>
+        /// Read a UNICODE_STRING from the buffer. Advances the reader offset.
+        /// </summary>
+        /// <remarks>
+        /// LSA_UNICODE_STRING has the same definition as UNICODE_STRING.
+        /// </remarks>
+        unsafe public string ReadUNICODE_STRING()
+        {
+            UNICODE_STRING us = *(UNICODE_STRING*)BytePointer;
+            string value = new string(us.Buffer, 0, us.Length / sizeof(char));
+            ByteOffset += (ulong)sizeof(UNICODE_STRING);
             return value;
         }
 
@@ -67,7 +84,7 @@ namespace WInterop.Support.Buffers
         /// </summary>
         unsafe public virtual short ReadShort()
         {
-            byte* address = (byte*)_buffer.DangerousGetHandle() + _byteOffset;
+            byte* address = BytePointer;
             _byteOffset += sizeof(short);
 
             if (((short)address & (sizeof(short) - 1)) == 0)
@@ -95,7 +112,7 @@ namespace WInterop.Support.Buffers
         /// </summary>
         unsafe public virtual int ReadInt()
         {
-            byte* address = (byte*)_buffer.DangerousGetHandle() + _byteOffset;
+            byte* address = BytePointer;
             _byteOffset += sizeof(int);
 
             if (((int)address & (sizeof(int) - 1)) == 0)
@@ -123,7 +140,7 @@ namespace WInterop.Support.Buffers
         /// </summary>
         unsafe public virtual long ReadLong()
         {
-            byte* address = (byte*)_buffer.DangerousGetHandle() + _byteOffset;
+            byte* address = BytePointer;
             _byteOffset += sizeof(long);
 
             if (((long)address & (sizeof(long) - 1)) == 0)
@@ -145,7 +162,7 @@ namespace WInterop.Support.Buffers
         /// </summary>
         public virtual IntPtr ReadIntPtr()
         {
-            if (Support.Environment.Is64BitProcess)
+            if (Environment.Is64BitProcess)
             {
                 return (IntPtr)ReadUlong();
             }
@@ -158,7 +175,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Read the given struct type at the current offset.
         /// </summary>
-        public virtual T ReadStruct<T>() where T : struct
+        public unsafe virtual T ReadStruct<T>() where T : struct
         {
             ulong sizeOfStruct = (ulong)Marshal.SizeOf<T>();
 

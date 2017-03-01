@@ -72,6 +72,16 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
+        /// Invoke the given action on a set of cached buffers that returns the given type.
+        /// </summary>
+        public static T CachedInvoke<T, BufferType>(Func<BufferType, BufferType, T> func) where BufferType : HeapBuffer
+        {
+            T result = default(T);
+            CachedInvoke<BufferType>((buffer1, buffer2) => result = func(buffer1, buffer2));
+            return result;
+        }
+
+        /// <summary>
         /// Invoke the given action on a cached buffer.
         /// </summary>
         public static void CachedInvoke<BufferType>(Action<BufferType> action) where BufferType : HeapBuffer
@@ -94,6 +104,34 @@ namespace WInterop.Support.Buffers
             finally
             {
                 StringBufferCache.Instance.Release(buffer);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the given action on a set of cached buffers.
+        /// </summary>
+        public static void CachedInvoke<BufferType>(Action<BufferType, BufferType> action) where BufferType : HeapBuffer
+        {
+            // For safer use it's better to ensure we always have at least some capacity in the buffer.
+            // This allows consumers not to worry about making sure there is some capacity or trying to
+            // multiply a buffer capacity of 0 for recursive invocations.
+#if DEBUG
+            // Set relatively small in debug to exercise code.
+            const uint MinBufferSize = 32;
+#else
+            const uint MinBufferSize = 128;
+#endif
+
+            var buffer1 = StringBufferCache.Instance.Acquire(minCapacity: MinBufferSize);
+            var buffer2 = StringBufferCache.Instance.Acquire(minCapacity: MinBufferSize);
+            try
+            {
+                action(buffer1 as BufferType, buffer2 as BufferType);
+            }
+            finally
+            {
+                StringBufferCache.Instance.Release(buffer1);
+                StringBufferCache.Instance.Release(buffer2);
             }
         }
 

@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
 
-namespace WInterop.Heap.DataTypes
+namespace WInterop.MemoryManagement.DataTypes
 {
     /// <summary>
     /// Handle for heap memory
@@ -67,14 +67,14 @@ namespace WInterop.Heap.DataTypes
 
             if (handle == IntPtr.Zero)
             {
-                handle = Heap.HeapMethods.HeapAllocate(byteLength, zeroMemory);
+                handle = MemoryManagement.MemoryMethods.HeapAllocate(byteLength, zeroMemory);
             }
             else
             {
                 // This may or may not be the same handle, Windows may realloc in place. If the
                 // handle changes Windows will deal with the old handle, trying to free it will
                 // cause an error.
-                handle = Heap.HeapMethods.HeapReallocate(handle, byteLength, zeroMemory);
+                handle = MemoryManagement.MemoryMethods.HeapReallocate(handle, byteLength, zeroMemory);
             }
 
             if (handle == IntPtr.Zero)
@@ -88,10 +88,12 @@ namespace WInterop.Heap.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            bool success = Heap.HeapMethods.HeapFree(handle);
+            bool success = MemoryManagement.MemoryMethods.HeapFree(handle);
             Debug.Assert(success);
             handle = IntPtr.Zero;
             return success;
         }
+
+        public unsafe void* VoidPointer => (void*)handle;
     }
 }

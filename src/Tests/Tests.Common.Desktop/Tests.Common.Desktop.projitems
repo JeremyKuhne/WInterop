@@ -9,6 +9,7 @@
     <Import_RootNamespace>DesktopTests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\AuthenticationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\AuthorizationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clipboard\Methods.cs" />
@@ -21,8 +22,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThread\ProcessTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\SecurityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellMethodTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\Methods.cs" />
   </ItemGroup>

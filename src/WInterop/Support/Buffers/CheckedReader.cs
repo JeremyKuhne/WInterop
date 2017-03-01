@@ -26,9 +26,14 @@ namespace WInterop.Support.Buffers
         private ulong _byteCapacity;
 
         public CheckedReader(ISizedBuffer buffer)
-            : base (buffer)
+            : this(buffer, buffer?.ByteCapacity ?? 0)
         {
-            _byteCapacity = buffer.ByteCapacity;
+        }
+
+        public CheckedReader(IBuffer buffer, ulong byteCapacity)
+            : base(buffer)
+        {
+            _byteCapacity = byteCapacity;
         }
 
         /// <summary>
@@ -117,7 +122,7 @@ namespace WInterop.Support.Buffers
         /// <exception cref="EndOfStreamException">Thrown if reading a pointer would go past the end of the buffer.</exception>
         public override IntPtr ReadIntPtr()
         {
-            if (Support.Environment.Is64BitProcess)
+            if (Environment.Is64BitProcess)
             {
                 return (IntPtr)ReadUlong();
             }

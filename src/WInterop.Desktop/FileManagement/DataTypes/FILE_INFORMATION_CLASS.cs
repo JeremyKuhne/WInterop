@@ -68,7 +68,7 @@ namespace WInterop.FileManagement.DataTypes
         FileNumaNodeInformation = 53,
         FileStandardLinkInformation = 54,
         FileRemoteProtocolInformation = 55,
-        // The following are starting with Windows 10
+        // The following are available starting with Windows 10
         FileRenameInformationBypassAccessCheck = 56,
         FileLinkInformationBypassAccessCheck = 57,
         FileVolumeNameInformation = 58,

@@ -33,7 +33,7 @@ namespace WInterop.Authentication.DataTypes
         public void UpdateFromStringBuffer(StringBuffer buffer)
         {
             Length = checked((ushort)(buffer.Length * sizeof(char)));
-            MaximumLength =checked((ushort)buffer.ByteCapacity);
+            MaximumLength = checked((ushort)buffer.ByteCapacity);
             Buffer = buffer.CharPointer;
         }
 

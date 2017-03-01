@@ -575,9 +575,12 @@ namespace WInterop.FileManagement
         }
 
         /// <summary>
-        /// Gets the file name from the given handle. This uses GetFileInformationByHandleEx, which does not give back the drive
+        /// Gets the file name from the given handle. This uses GetFileInformationByHandleEx, which does not give back the volume
         /// name for the path- but is available from Windows Store apps.
         /// </summary>
+        /// <remarks>
+        /// The exact data that is returned is somewhat complicated and is described in the documentation for ZwQueryInformationFile.
+        /// </remarks>
         public static string GetFileNameByHandle(SafeFileHandle fileHandle)
         {
             return BufferHelper.CachedInvoke((HeapBuffer buffer) =>
@@ -585,7 +588,8 @@ namespace WInterop.FileManagement
                 unsafe
                 {
                     while (!Direct.GetFileInformationByHandleEx(
-                        fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileNameInfo,
+                        fileHandle,
+                        FILE_INFO_BY_HANDLE_CLASS.FileNameInfo,
                         buffer.VoidPointer,
                         checked((uint)buffer.ByteCapacity)))
                     {

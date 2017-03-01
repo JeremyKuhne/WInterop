@@ -12,13 +12,30 @@ namespace WInterop.FileManagement.DataTypes
     // aren't themselves filtered. Some may work that claim they don't.
     public enum FILE_INFO_BY_HANDLE_CLASS : uint
     {
-        // Supported in Store apps, thunks to NtQueryInformationFile
+        /// <summary>
+        /// Returns basic information (timestamps and attributes) for a file in FILE_BASIC_INFO.
+        /// </summary>
+        /// <remarks>
+        /// Supported in Store apps, thunks to NtQueryInformationFile
+        /// </remarks>
         FileBasicInfo = 0,
-        // Supported in Store apps, thunks to NtQueryInformationFile
+
+        /// <summary>
+        /// Returns file size, link count, pending delete status, and if it is a directory in FILE_STANDARD_INFO.
+        /// </summary>
+        /// <remarks>
+        /// Supported in Store apps, thunks to NtQueryInformationFile
+        /// </remarks>
         FileStandardInfo = 1,
-        // Supported in Store apps, thunks to NtQueryInformationFile
+
+        /// <summary>
+        /// Gets the file name in FILE_NAME_INFO.
+        /// </summary>
+        /// <remarks>
+        /// Supported in Store apps, thunks to NtQueryInformationFile
+        /// </remarks>
         FileNameInfo = 2,
-#if !(COMPACT)
+
         // For setting, Desktop only (MoveFileEx is supported)
         FileRenameInfo = 3,
         // For setting, Desktop only (DeleteFile is supported)
@@ -27,10 +44,8 @@ namespace WInterop.FileManagement.DataTypes
         FileAllocationInfo = 5,
         // For setting, Desktop only (SetEndOfFile is supported)
         FileEndOfFileInfo = 6,
-#endif
         // Supported in Store apps, thunks to NtQueryInformationFile
         FileStreamInfo = 7,
-#if !(COMPACT)
         // Supported in Store apps, thunks to NtQueryInformationFile
         FileCompressionInfo = 8,
         // Supported in Store apps, thunks to NtQueryInformationFile
@@ -58,6 +73,5 @@ namespace WInterop.FileManagement.DataTypes
         // Server desktop only, thunks to NtQueryDirectoryFile
         FileIdExtdDirectoryRestartInfo = 20, // 0x14
         MaximumFileInfoByHandlesClass = 21
-#endif
     }
 }

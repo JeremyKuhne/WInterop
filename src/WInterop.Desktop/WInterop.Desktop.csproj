@@ -36,6 +36,8 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\AuthenticationDesktopMethods.cs" />
+    <Compile Include="Authorization\DataTypes\AccountSidInfo.cs" />
     <Compile Include="Authorization\DataTypes\LUID.cs" />
     <Compile Include="Authorization\DataTypes\LUID_AND_ATTRIBUTES.cs" />
     <Compile Include="Authorization\AuthorizationDesktopMethods.cs" />
@@ -43,12 +45,16 @@
     <Compile Include="Authorization\DataTypes\Privileges.cs" />
     <Compile Include="Authorization\DataTypes\PrivilegeSetting.cs" />
     <Compile Include="Authorization\DataTypes\PRIVILEGE_SET.cs" />
+    <Compile Include="Authorization\DataTypes\SID.cs" />
+    <Compile Include="Authorization\DataTypes\SID_AND_ATTRIBUTES.cs" />
+    <Compile Include="Authorization\DataTypes\SID_IDENTIFIER_AUTHORITY.cs" />
     <Compile Include="Authorization\DataTypes\SID_NAME_USE.cs" />
     <Compile Include="Authorization\DataTypes\TokenRights.cs" />
     <Compile Include="Authorization\DataTypes\TOKEN_ELEVATION.cs" />
     <Compile Include="Authorization\DataTypes\TOKEN_INFORMATION_CLASS.cs" />
     <Compile Include="Authorization\DataTypes\TOKEN_PRIVILEGES.cs" />
     <Compile Include="Authorization\DataTypes\TOKEN_TYPE.cs" />
+    <Compile Include="Authorization\DataTypes\WELL_KNOWN_SID_TYPE.cs" />
     <Compile Include="Backup\BackupReader.cs" />
     <Compile Include="Backup\DataTypes\BackupStreamType.cs" />
     <Compile Include="Backup\BackupDesktopMethods.cs" />
@@ -89,6 +95,10 @@
     <Compile Include="Handles\DataTypes\IO_STATUS_BLOCK.cs" />
     <Compile Include="Ipc\DataTypes\SafeMailslotHandle.cs" />
     <Compile Include="Modules\DataTypes\ModuleHandle.cs" />
+    <Compile Include="SecurityManagement\DataTypes\LSA_OBJECT_ATTRIBUTES.cs" />
+    <Compile Include="SecurityManagement\DataTypes\PolicyAccessRights.cs" />
+    <Compile Include="SecurityManagement\DataTypes\SafeLsaHandle.cs" />
+    <Compile Include="SecurityManagement\DataTypes\SafeLsaMemoryHandle.cs" />
     <Compile Include="Shell\ClassIds.cs" />
     <Compile Include="Shell\DataTypes\FFFP_MODE.cs" />
     <Compile Include="Shell\DataTypes\FOLDERTYPEID.cs" />
@@ -112,6 +122,7 @@
     <Compile Include="Shell\DataTypes\SIGDN.cs" />
     <Compile Include="Shell\InterfaceIds.cs" />
     <Compile Include="Shell\ShellDesktopMethods.cs" />
+    <Compile Include="SystemInformation\SystemInformationDesktopMethods.cs" />
     <Compile Include="Windows\DataTypes\WindowHandle.cs" />
     <Compile Include="Handles\HandleDesktopMethods.cs" />
     <Compile Include="Handles\DataTypes\ObjectInformation.cs" />
@@ -160,7 +171,6 @@
   <ItemGroup>
     <Folder Include="Cryptography\DataTypes\" />
     <Folder Include="Resources\DataTypes\" />
-    <Folder Include="SecurityManagement\DataTypes\" />
   </ItemGroup>
   <!-- CommonSharedDirectory is set by Common.projitems -->
   <Import Project="..\Common\Common.projitems" Label="Shared" />

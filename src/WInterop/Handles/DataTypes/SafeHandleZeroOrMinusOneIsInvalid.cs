@@ -21,12 +21,8 @@ namespace WInterop.Handles.DataTypes
         {
         }
 
-        public override bool IsInvalid
-        {
-            get
-            {
-                return handle == IntPtr.Zero || handle == new IntPtr(-1);
-            }
-        }
+        public override bool IsInvalid => handle == IntPtr.Zero || handle == new IntPtr(-1);
+
+        public unsafe void* VoidPointer => (void*)handle;
     }
 }

@@ -7,11 +7,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Security;
+using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
 
-namespace WInterop.Heap
+namespace WInterop.MemoryManagement
 {
-    public static partial class HeapMethods
+    public static partial class MemoryMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -69,6 +70,10 @@ namespace WInterop.Heap
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern IntPtr GetProcessHeap();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366730.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern IntPtr LocalFree(IntPtr hMem);
         }
 
         /// <summary>
@@ -133,12 +138,22 @@ namespace WInterop.Heap
         /// Free the specified memory on the given heap.
         /// </summary>
         /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
-        public static bool HeapFree(IntPtr memory, IntPtr heap) 
+        public static bool HeapFree(IntPtr memory, IntPtr heap)
         {
             return Direct.HeapFree(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
                 dwFlags: 0,
                 lpMem: memory);
+        }
+
+        public static void LocalFree(IntPtr memory)
+        {
+            if (Direct.LocalFree(memory) != null)
+            {
+                var error = ErrorHelper.GetLastError();
+                if (error != WindowsError.ERROR_SUCCESS)
+                    throw ErrorHelper.GetIoExceptionForError(error);
+            }
         }
     }
 }

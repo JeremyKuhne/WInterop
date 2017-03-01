@@ -19,6 +19,9 @@ namespace WInterop.Authorization.DataTypes
         SeAssignPrimaryTokenPrivilege,
         SeAuditPrivilege,
         SeBackupPrivilege,
+
+        // The Bypass Traverse Checking (or is it the Change Notify?) Privilege
+        // https://blogs.technet.microsoft.com/markrussinovich/2005/10/19/the-bypass-traverse-checking-or-is-it-the-change-notify-privilege/
         SeChangeNotifyPrivilege,
         SeCreateGlobalPrivilege,
         SeCreatePagefilePrivilege,

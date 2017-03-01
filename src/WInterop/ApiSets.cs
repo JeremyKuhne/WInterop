@@ -21,7 +21,6 @@ namespace WInterop
 
         // A number of these were dropped on Win7 through a variety of updates.
 
-#if !(COMPACT)
         // COM API sets not available on Win7
         // Windows 8.0
         public const string api_ms_win_core_com_l1_1_0 = "api-ms-win-core-com-l1-1-0.dll";
@@ -65,7 +64,6 @@ namespace WInterop
 
         // Not on Win7? Adds IsThreadAFiber
         public const string api_ms_win_core_fibers_l1_1_1 = "api-ms-win-core-fibers-l1-1-1.dll";
-#endif
 
         // V1.0 is available on Win7
         public const string api_ms_win_core_file_l1_1_0 = "api-ms-win-core-file-l1-1-0.dll";
@@ -81,7 +79,7 @@ namespace WInterop
 
         // Windows 8.1 V1.1 adds OpenFileById
         public const string api_ms_win_core_file_l2_1_1 = "api-ms-win-core-file-l2-1-1.dll";
-#if !(COMPACT)
+
         // Not on Win7?
         public const string api_ms_win_core_firmware_l1_1_0 = "api-ms-win-core-firmware-l1-1-0.dll";
 
@@ -126,6 +124,8 @@ namespace WInterop
         public const string api_ms_win_core_util_l1_1_0 = "api-ms-win-core-util-l1-1-0.dll";
         public const string api_ms_win_core_version_l1_1_0 = "api-ms-win-core-version-l1-1-0.dll";
         public const string api_ms_win_core_xstate_l1_1_1 = "api-ms-win-core-xstate-l1-1-1.dll";
-#endif
+
+        // Available on Windows 7
+        public const string api_ms_win_security_lsalookup_l1_1_0 = "api-ms-win-security-lsalookup-l1-1-0.dll";
     }
 }

@@ -7,14 +7,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using WInterop.Authorization.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.MemoryManagement.DataTypes;
 using WInterop.ProcessAndThreads;
 using WInterop.ProcessAndThreads.DataTypes;
 using WInterop.Support.Buffers;
@@ -112,7 +111,7 @@ namespace WInterop.Authorization
                 out SafeTokenHandle TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
-            [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool OpenThreadToken(
                 SafeThreadHandle ThreadHandle,
@@ -123,106 +122,128 @@ namespace WInterop.Authorization
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379166.aspx
             // LookupAccountSid
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/mt779143.aspx
+            // The docs claim that it is in Advapi.dll, but it actually lives in sechost.dll
+            [DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool LookupAccountSidLocalW(
+                ref SID lpSid,
+                SafeHandle lpName,
+                ref uint cchName,
+                SafeHandle lpReferencedDomainName,
+                ref uint cchReferencedDomainName,
+                out SID_NAME_USE peUse);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379159.aspx
             // LookupAccountName
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446585.aspx
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public unsafe static extern bool CreateWellKnownSid(
+                WELL_KNOWN_SID_TYPE WellKnownSidType,
+                SID* DomainSid,
+                SID* pSid,
+                ref uint cbSid);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379151.aspx
+            [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public unsafe static extern bool IsValidSid(
+                ref SID pSid);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379154.aspx
+            [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public unsafe static extern bool IsWellKnownSid(
+                ref SID pSid,
+                WELL_KNOWN_SID_TYPE WellKnownSidType);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376399.aspx
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool ConvertSidToStringSidW(
+                ref SID Sid,
+                out SafeLocalHandle StringSid);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446658.aspx
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern byte* GetSidSubAuthorityCount(
+                ref SID pSid);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446657.aspx
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern uint* GetSidSubAuthority(
+                ref SID pSid,
+                uint nSubAuthority);
+
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern bool CopySid(
+                uint nDestinationSidLength,
+                out SID pDestinationSid,
+                SID* pSourceSid);
         }
 
         // In winnt.h
         private const uint PRIVILEGE_SET_ALL_NECESSARY = 1;
 
-        // From winnt.h:
-        //
-        //         1   1   1   1   1   1
-        //         5   4   3   2   1   0   9   8   7   6   5   4   3   2   1   0
-        //      +---------------------------------------------------------------+
-        //      |      SubAuthorityCount        |Reserved1 (SBZ)|   Revision    |
-        //      +---------------------------------------------------------------+
-        //      |                   IdentifierAuthority[0]                      |
-        //      +---------------------------------------------------------------+
-        //      |                   IdentifierAuthority[1]                      |
-        //      +---------------------------------------------------------------+
-        //      |                   IdentifierAuthority[2]                      |
-        //      +---------------------------------------------------------------+
-        //      |                                                               |
-        //      +- -  -  -  -  -  -  -  SubAuthority[]  -  -  -  -  -  -  -  - -+
-        //      |                                                               |
-        //      +---------------------------------------------------------------+
-        //
-        //
-        //      typedef struct _SID
-        //      {
-        //          BYTE Revision;
-        //          BYTE SubAuthorityCount;
-        //          SID_IDENTIFIER_AUTHORITY IdentifierAuthority;
-        //          DWORD SubAuthority[ANYSIZE_ARRAY];
-        //      } SID, *PISID;
-        //
-        // As a SID is variable in length it is a little more complicated to wrap. Using a flat buffer makes the most sense.
-        // System.Security.Principal.SecurityIdentifier allows copying to/from a byte array.
-        // 
-        // https://msdn.microsoft.com/en-us/library/system.security.principal.securityidentifier.aspx
+        private unsafe static void TokenInformationInvoke(
+            SafeTokenHandle token,
+            TOKEN_INFORMATION_CLASS info,
+            Action<Reader> action)
+        {
+            BufferHelper.CachedInvoke<HeapBuffer>(buffer =>
+            {
+                uint bytesNeeded;
+                while (!Direct.GetTokenInformation(
+                    token,
+                    info,
+                    buffer.VoidPointer,
+                    (uint)buffer.ByteCapacity,
+                    out bytesNeeded))
+                {
+                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    buffer.EnsureByteCapacity(bytesNeeded);
+                }
+
+                action(new CheckedReader(buffer));
+            });
+        }
 
         public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(SafeTokenHandle token)
         {
-            // Get the buffer size we need
-            uint bytesNeeded;
-            if (!Direct.GetTokenInformation(
-                token,
-                TOKEN_INFORMATION_CLASS.TokenPrivileges,
-                null,
-                0,
-                out bytesNeeded))
-            {
-                WindowsError error = ErrorHelper.GetLastError();
-                if (error != WindowsError.ERROR_INSUFFICIENT_BUFFER)
-                    throw ErrorHelper.GetIoExceptionForError(error);
-            }
-            else
-            {
-                // Didn't need any space for output, let's assume there are no privileges
-                return Enumerable.Empty<PrivilegeSetting>();
-            }
-
-            // Initialize the buffer and get the data
-            var streamBuffer = new StreamBuffer(bytesNeeded);
-            if (!Direct.GetTokenInformation(
-                token,
-                TOKEN_INFORMATION_CLASS.TokenPrivileges,
-                streamBuffer,
-                (uint)streamBuffer.Length,
-                out bytesNeeded))
-            {
-                throw ErrorHelper.GetIoExceptionForLastError();
-            }
-
-            // Loop through and get our privileges
-            BinaryReader reader = new BinaryReader(streamBuffer, Encoding.Unicode, leaveOpen: true);
-            uint count = reader.ReadUInt32();
-
             var privileges = new List<PrivilegeSetting>();
-            StringBuffer nameBuffer = StringBufferCache.Instance.Acquire(256);
 
-            for (int i = 0; i < count; i++)
+            TokenInformationInvoke(token, TOKEN_INFORMATION_CLASS.TokenPrivileges,
+            reader =>
             {
-                LUID luid = new LUID
+                // Loop through and get our privileges
+                uint count = reader.ReadUint();
+
+                BufferHelper.CachedInvoke((StringBuffer buffer) =>
                 {
-                    LowPart = reader.ReadUInt32(),
-                    HighPart = reader.ReadUInt32(),
-                };
+                    for (int i = 0; i < count; i++)
+                    {
+                        LUID luid = new LUID
+                        {
+                            LowPart = reader.ReadUint(),
+                            HighPart = reader.ReadUint(),
+                        };
 
-                uint length = nameBuffer.CharCapacity;
+                        uint length = buffer.CharCapacity;
 
-                if (!Direct.LookupPrivilegeNameW(IntPtr.Zero, ref luid, nameBuffer, ref length))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                        if (!Direct.LookupPrivilegeNameW(IntPtr.Zero, ref luid, buffer, ref length))
+                            throw ErrorHelper.GetIoExceptionForLastError();
 
-                nameBuffer.Length = length;
+                        buffer.Length = length;
 
-                PrivilegeAttributes attributes = (PrivilegeAttributes)reader.ReadUInt32();
-                privileges.Add(new PrivilegeSetting(nameBuffer.ToString(), attributes));
-                nameBuffer.Length = 0;
-            }
+                        PrivilegeAttributes attributes = (PrivilegeAttributes)reader.ReadUint();
+                        privileges.Add(new PrivilegeSetting(buffer.ToString(), attributes));
+                        buffer.Length = 0;
+                    }
+                });
+            });
 
-            StringBufferCache.Instance.Release(nameBuffer);
             return privileges;
         }
 
@@ -263,7 +284,6 @@ namespace WInterop.Authorization
                 PrivilegeCount = 1,
                 Privilege = new[] { luidAttributes }
             };
-
 
             bool result;
             if (!Direct.PrivilegeCheck(token, ref set, out result))
@@ -314,6 +334,9 @@ namespace WInterop.Authorization
             return threadToken;
         }
 
+        /// <summary>
+        /// Returns true if the current process is elevated.
+        /// </summary>
         public unsafe static bool IsProcessElevated()
         {
             using (SafeTokenHandle token = OpenProcessToken(TokenRights.TOKEN_READ))
@@ -332,6 +355,140 @@ namespace WInterop.Authorization
 
                 return elevation.TokenIsElevated;
             }
+        }
+
+        /// <summary>
+        /// Get the SID for the given token.
+        /// </summary>
+        public unsafe static SID GetTokenSid(SafeTokenHandle token)
+        {
+            SID sid = new SID();
+            TokenInformationInvoke(token, TOKEN_INFORMATION_CLASS.TokenUser,
+            reader =>
+            {
+                var sa = reader.ReadStruct<SID_AND_ATTRIBUTES>();
+                if (!Direct.CopySid((uint)sizeof(SID), out sid, sa.Sid))
+                {
+                    throw ErrorHelper.GetIoExceptionForLastError();
+                }
+            });
+
+            return sid;
+        }
+
+        /// <summary>
+        /// Returns true if the given SID is valid.
+        /// </summary>
+        public static bool IsValidSid(ref SID sid)
+        {
+            return Direct.IsValidSid(ref sid);
+        }
+
+        /// <summary>
+        /// Get the specified "well known" SID. Note that not all well known SIDs are available on all OSes.
+        /// </summary>
+        public static SID CreateWellKnownSid(WELL_KNOWN_SID_TYPE sidType)
+        {
+            SID sid = new SID();
+
+            unsafe
+            {
+                uint size = (uint)sizeof(SID);
+                if (!Direct.CreateWellKnownSid(sidType, null, &sid, ref size))
+                    throw ErrorHelper.GetIoExceptionForLastError();
+            }
+
+            return sid;
+        }
+
+        /// <summary>
+        /// Returns true if the given SID is the specified "well known" SID type.
+        /// </summary>
+        public static bool IsWellKnownSid(ref SID sid, WELL_KNOWN_SID_TYPE sidType)
+        {
+            return Direct.IsWellKnownSid(ref sid, sidType);
+        }
+
+        /// <summary>
+        /// Returns the S-n-n-n... string version of the given SID.
+        /// </summary>
+        public static string ConvertSidToString(ref SID sid)
+        {
+            SafeLocalHandle handle;
+            if (!Direct.ConvertSidToStringSidW(ref sid, out handle))
+                throw ErrorHelper.GetIoExceptionForLastError();
+
+            unsafe
+            {
+                return new string((char*)handle.DangerousGetHandle());
+            }
+        }
+
+        /// <summary>
+        /// Returns the count of sub authorities for the given SID.
+        /// </summary>
+        public static byte GetSidSubAuthorityCount(ref SID sid)
+        {
+            unsafe
+            {
+                byte* b = Direct.GetSidSubAuthorityCount(ref sid);
+                if (b == null)
+                    throw ErrorHelper.GetIoExceptionForLastError();
+
+                return *b;
+            }
+        }
+
+        /// <summary>
+        /// Get the sub authority at the specified index for the given SID.
+        /// </summary>
+        public static uint GetSidSubAuthority(ref SID sid, uint nSubAuthority)
+        {
+            unsafe
+            {
+                uint* u = Direct.GetSidSubAuthority(ref sid, nSubAuthority);
+                if (u == null)
+                    throw ErrorHelper.GetIoExceptionForLastError();
+
+                return *u;
+            }
+        }
+
+        /// <summary>
+        /// Gets the info (name, domain name, usage) for the given SID.
+        /// </summary>
+        public static AccountSidInfo LookupAccountSidLocal(ref SID sid)
+        {
+            SID localSid = sid;
+            return BufferHelper.CachedInvoke((StringBuffer nameBuffer, StringBuffer domainNameBuffer) =>
+            {
+                SID_NAME_USE usage;
+                uint nameCharCapacity = nameBuffer.CharCapacity;
+                uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
+
+                while (!Direct.LookupAccountSidLocalW(
+                    ref localSid,
+                    nameBuffer,
+                    ref nameCharCapacity,
+                    domainNameBuffer,
+                    ref domainNameCharCapacity,
+                    out usage))
+                {
+                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    nameBuffer.EnsureCharCapacity(nameCharCapacity);
+                    domainNameBuffer.EnsureCharCapacity(domainNameCharCapacity);
+                }
+
+                nameBuffer.SetLengthToFirstNull();
+                domainNameBuffer.SetLengthToFirstNull();
+
+                return new AccountSidInfo
+                {
+                    Name = nameBuffer.ToString(),
+                    DomainName = domainNameBuffer.ToString(),
+                    Usage = usage
+                };
+            });
         }
     }
 }

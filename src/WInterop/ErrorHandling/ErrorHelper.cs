@@ -21,6 +21,13 @@ namespace WInterop.ErrorHandling
             return (WindowsError)Marshal.GetLastWin32Error();
         }
 
+        public static void ThrowIfLastErrorNot(WindowsError error)
+        {
+            WindowsError lastError = GetLastError();
+            if (lastError != error)
+                throw GetIoExceptionForError(error);
+        }
+
         /// <summary>
         /// Turns the last Windows error into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.

@@ -151,6 +151,7 @@ namespace WInterop.ErrorHandling.DataTypes
         ERROR_ENVVAR_NOT_FOUND = 203,
         ERROR_FILENAME_EXCED_RANGE = 206,
         ERROR_MORE_DATA = 234,
+        ERROR_MR_MID_NOT_FOUND = 317,
         ERROR_OPERATION_ABORTED = 995,
         ERROR_NO_TOKEN = 1008,
         ERROR_NOT_FOUND = 1168,
