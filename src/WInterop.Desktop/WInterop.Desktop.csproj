@@ -122,6 +122,7 @@
     <Compile Include="Shell\DataTypes\SIGDN.cs" />
     <Compile Include="Shell\InterfaceIds.cs" />
     <Compile Include="Shell\ShellDesktopMethods.cs" />
+    <Compile Include="SystemInformation\DataTypes\SuiteMask.cs" />
     <Compile Include="SystemInformation\SystemInformationDesktopMethods.cs" />
     <Compile Include="Windows\DataTypes\WindowHandle.cs" />
     <Compile Include="Handles\HandleDesktopMethods.cs" />

@@ -7,6 +7,7 @@
 
 using FluentAssertions;
 using WInterop.SystemInformation;
+using WInterop.SystemInformation.DataTypes;
 using Xunit;
 
 namespace DesktopTests.SystemInformation
@@ -17,6 +18,12 @@ namespace DesktopTests.SystemInformation
         public void GetCurrentUserName()
         {
             SystemInformationDesktopMethods.GetUserName().Should().NotBeNullOrWhiteSpace();
+        }
+
+        [Fact]
+        public void GetSuiteMask()
+        {
+            SystemInformationDesktopMethods.GetSuiteMask().Should().HaveFlag(SuiteMask.VER_SUITE_SINGLEUSERTS);
         }
     }
 }
