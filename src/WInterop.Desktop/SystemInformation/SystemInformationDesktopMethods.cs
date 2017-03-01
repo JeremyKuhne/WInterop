@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
@@ -32,6 +33,14 @@ namespace WInterop.SystemInformation
             // https://msdn.microsoft.com/en-us/library/windows/desktop/mt668928.aspx
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             public static extern SuiteMask RtlGetSuiteMask();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724509.aspx
+            [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+            public static extern int NtQuerySystemInformation(
+                SYSTEM_INFORMATION_CLASS SystemInformationClass,
+                IntPtr SystemInformation,
+                uint SystemInformationLength,
+                out uint ReturnLength);
         }
 
         /// <summary>

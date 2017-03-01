@@ -21,21 +21,15 @@ namespace WInterop.SystemInformation
         /// </remarks>
         public static partial class Direct
         {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724509.aspx
-            [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-            public static extern int NtQuerySystemInformation(
-                SYSTEM_INFORMATION_CLASS SystemInformationClass,
-                IntPtr SystemInformation,
-                uint SystemInformationLength,
-                out uint ReturnLength);
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724482.aspx
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+            public static extern bool IsProcessorFeaturePresent(
+                ProcessorFeature ProcessorFeature);
+        }
 
-            // typedef struct _SYSTEM_HANDLE_INFORMATION_EX
-            // {
-            //     ULONG_PTR NumberOfHandles;
-            //     ULONG_PTR Reserved;
-            //     SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX Handles[1];
-            // } SYSTEM_HANDLE_INFORMATION_EX, *PSYSTEM_HANDLE_INFORMATION_EX;
-
+        public static bool IsProcessorFeaturePresent(ProcessorFeature feature)
+        {
+            return Direct.IsProcessorFeaturePresent(feature);
         }
     }
 }

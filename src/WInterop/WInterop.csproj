@@ -167,9 +167,8 @@
     <Compile Include="Support\Buffers\StringBuffer.cs" />
     <Compile Include="Support\Buffers\StringBufferCache.cs" />
     <Compile Include="Synchronization\DataTypes\OVERLAPPED.cs" />
+    <Compile Include="SystemInformation\DataTypes\ProcessorFeature.cs" />
     <Compile Include="SystemInformation\SystemInformationMethods.cs" />
-    <Compile Include="SystemInformation\DataTypes\SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX.cs" />
-    <Compile Include="SystemInformation\DataTypes\SYSTEM_INFORMATION_CLASS.cs" />
     <Compile Include="Support\Conversion.cs" />
     <Compile Include="Support\Delegates.cs" />
     <Compile Include="Support\Environment.cs" />
@@ -181,5 +180,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
