@@ -11,6 +11,10 @@ using WInterop.SystemInformation;
 using WInterop.SystemInformation.DataTypes;
 using Xunit;
 using System.Diagnostics;
+using WInterop.Authorization;
+using WInterop.Authentication;
+using WInterop.SecurityManagement;
+using WInterop.Authorization.DataTypes;
 
 namespace DesktopTests.SystemInformation
 {
@@ -87,6 +91,38 @@ namespace DesktopTests.SystemInformation
                     Debug.WriteLine($"{format}: FAILED- {e.Message}");
                 }
             }
+        }
+
+        [Fact]
+        public void ExpandEnvironmentVariables_Existing()
+        {
+            SystemInformationDesktopMethods.ExpandEnvironmentVariables(@"%COMPUTERNAME%").
+                Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
+        }
+
+        [Fact]
+        public void ExpandEnvironmentVariables_Long()
+        {
+            string longValue = new string('a', 100);
+            try
+            {
+                Environment.SetEnvironmentVariable("ExpandEnvironmentVariables_Long", longValue);
+                SystemInformationDesktopMethods.ExpandEnvironmentVariables(@"%ExpandEnvironmentVariables_Long%").
+                    Should().Be(longValue);
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("ExpandEnvironmentVariables_Long", null);
+            }
+        }
+
+        [Fact]
+        public void ExpandEnvironmentVariablesForUser()
+        {
+            SystemInformationDesktopMethods.ExpandEnvironmentVariablesForUser(
+                AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_DUPLICATE),
+                @"%USERNAME%").
+                Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
         }
     }
 }

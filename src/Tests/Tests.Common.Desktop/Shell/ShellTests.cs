@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace DesktopTests.ShellTests
 {
-    public class ShellMethodsTests
+    public class ShellTests
     {
         [Fact]
         public void GetKnownFolderPath_Basic()
@@ -175,6 +175,13 @@ namespace DesktopTests.ShellTests
             {
                 manager.GetFolder(id).Should().NotBeNull();
             }
+        }
+
+        [Fact]
+        public void UnexpandEnvironmentVariables()
+        {
+            ShellDesktopMethods.UnexpandEnvironmentStrings(Environment.GetEnvironmentVariable("USERPROFILE"))
+                .Should().Be("%USERPROFILE%");
         }
     }
 }

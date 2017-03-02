@@ -25,11 +25,27 @@ namespace WInterop.SystemInformation
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
             public static extern bool IsProcessorFeaturePresent(
                 ProcessorFeature ProcessorFeature);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/dn482415.aspx
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+            public static extern bool CeipIsOptedIn();
         }
 
+        /// <summary>
+        /// Returns true if the specified processor feature is present.
+        /// </summary>
         public static bool IsProcessorFeaturePresent(ProcessorFeature feature)
         {
             return Direct.IsProcessorFeaturePresent(feature);
+        }
+
+        /// <summary>
+        /// Returns true if the user is currently opted in for the Customer Experience
+        /// Improvement Program.
+        /// </summary>
+        public static bool CeipIsOptedIn()
+        {
+            return Direct.CeipIsOptedIn();
         }
     }
 }

@@ -23,6 +23,8 @@ namespace WInterop
         public const string OleAut32 = "oleaut32.dll";
         public const string Secur32 = "secur32.dll";
         public const string Shell32 = "shell32.dll";
+        public const string Shlwapi = "shlwapi.dll";
         public const string User32 = "user32.dll";
+        public const string Userenv = "userenv.dll";
     }
 }

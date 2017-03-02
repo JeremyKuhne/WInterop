@@ -13,6 +13,7 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
 using WInterop.Shell.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Shell
@@ -50,8 +51,17 @@ namespace WInterop.Shell
                 ItemIdList pidl,
                 SIGDN sigdnName,
                 out string ppszName);
+
+            [DllImport(Libraries.Shlwapi, CharSet = CharSet.Unicode, SetLastError = false, ExactSpelling = true)]
+            public static extern bool PathUnExpandEnvStringsW(
+                string pszPath,
+                SafeHandle pszBuf,
+                uint cchBuf);
         }
 
+        /// <summary>
+        /// Get the path for the given known folder Guid.
+        /// </summary>
         public static string GetKnownFolderPath(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
         {
             string path;
@@ -62,6 +72,9 @@ namespace WInterop.Shell
             return path;
         }
 
+        /// <summary>
+        /// Get the Shell item id for the given known folder Guid.
+        /// </summary>
         public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
         {
             ItemIdList id;
@@ -72,6 +85,9 @@ namespace WInterop.Shell
             return id;
         }
 
+        /// <summary>
+        /// Get the name for a given Shell item ID.
+        /// </summary>
         public static string GetNameFromId(ItemIdList id, SIGDN form = SIGDN.NORMALDISPLAY)
         {
             string name;
@@ -82,11 +98,17 @@ namespace WInterop.Shell
             return name;
         }
 
+        /// <summary>
+        /// Get the IKnownFolderManager.
+        /// </summary>
         public static IKnownFolderManager GetKnownFolderManager()
         {
             return (IKnownFolderManager)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid(ClassIds.CLSID_KnownFolderManager)));
         }
 
+        /// <summary>
+        /// Get the Guid identifiers for all known folders.
+        /// </summary>
         public static IEnumerable<Guid> GetKnownFolderIds()
         {
             List<Guid> ids = new List<Guid>();
@@ -102,6 +124,23 @@ namespace WInterop.Shell
             }
 
             return ids;
+        }
+
+        /// <summary>
+        /// Collapses common path segments into the equivalent environment string.
+        /// Returns null if unsuccessful.
+        /// </summary>
+        public static string UnexpandEnvironmentStrings(string path)
+        {
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            {
+                buffer.EnsureCharCapacity(Paths.MaxPath);
+                if (!Direct.PathUnExpandEnvStringsW(path, buffer, buffer.CharCapacity))
+                    return null;
+
+                buffer.SetLengthToFirstNull();
+                return buffer.ToString();
+            });
         }
     }
 }

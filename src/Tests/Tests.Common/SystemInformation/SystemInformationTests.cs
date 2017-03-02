@@ -34,5 +34,12 @@ namespace Tests.SystemInformation
                 Debug.WriteLine($"{feature}: {SystemInformationMethods.IsProcessorFeaturePresent(feature)}");
             }
         }
+
+        [Fact]
+        public void CeipIsOptedIn()
+        {
+            // Can't really validate this, just make sure it doesn't blow up.
+            SystemInformationMethods.CeipIsOptedIn();
+        }
     }
 }

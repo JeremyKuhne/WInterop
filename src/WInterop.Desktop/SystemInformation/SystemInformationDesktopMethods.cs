@@ -9,6 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Handles.DataTypes;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation.DataTypes;
@@ -62,6 +63,21 @@ namespace WInterop.SystemInformation
                 IntPtr SystemInformation,
                 uint SystemInformationLength,
                 out uint ReturnLength);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724265.aspx
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern uint ExpandEnvironmentStringsW(
+                string lpSrc,
+                SafeHandle lpDst,
+                uint nSize);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762275.aspx
+            [DllImport(Libraries.Userenv, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool ExpandEnvironmentStringsForUserW(
+                SafeTokenHandle hToken,
+                string lpSrc,
+                SafeHandle lpDst,
+                uint dwSize);
         }
 
         /// <summary>
@@ -152,6 +168,46 @@ namespace WInterop.SystemInformation
                     buffer.EnsureCharCapacity(size);
                 }
                 buffer.Length = size;
+                return buffer.ToString();
+            });
+        }
+
+        /// <summary>
+        /// Expand environment variables in the given string.
+        /// </summary>
+        public static string ExpandEnvironmentVariables(string value)
+        {
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            {
+                uint size;
+                while ((size = Direct.ExpandEnvironmentStringsW(value, buffer, buffer.CharCapacity)) > buffer.CharCapacity)
+                {
+                    buffer.EnsureCharCapacity(size);
+                }
+
+                if (size == 0)
+                    throw ErrorHelper.GetIoExceptionForLastError();
+
+                buffer.Length = size - 1;
+                return buffer.ToString();
+            });
+        }
+
+        /// <summary>
+        /// Expands environment variables for the given user token. If the token is
+        /// null, returns the system variables.
+        /// </summary>
+        public static string ExpandEnvironmentVariablesForUser(SafeTokenHandle token, string value)
+        {
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            {
+                while (!Direct.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
+                {
+                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
+                }
+
+                buffer.SetLengthToFirstNull();
                 return buffer.ToString();
             });
         }
