@@ -5,16 +5,12 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using FluentAssertions;
+using System;
+using System.Diagnostics;
 using WInterop.SystemInformation;
 using WInterop.SystemInformation.DataTypes;
 using Xunit;
-using System.Diagnostics;
-using WInterop.Authorization;
-using WInterop.Authentication;
-using WInterop.SecurityManagement;
-using WInterop.Authorization.DataTypes;
 
 namespace DesktopTests.SystemInformation
 {
@@ -114,15 +110,6 @@ namespace DesktopTests.SystemInformation
             {
                 Environment.SetEnvironmentVariable("ExpandEnvironmentVariables_Long", null);
             }
-        }
-
-        [Fact]
-        public void ExpandEnvironmentVariablesForUser()
-        {
-            SystemInformationDesktopMethods.ExpandEnvironmentVariablesForUser(
-                AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_DUPLICATE),
-                @"%USERNAME%").
-                Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
         }
     }
 }

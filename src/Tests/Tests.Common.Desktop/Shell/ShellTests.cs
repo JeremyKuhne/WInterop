@@ -11,6 +11,9 @@ using FluentAssertions;
 using WInterop.Shell;
 using WInterop.Shell.DataTypes;
 using System.Linq;
+using WInterop.SystemInformation;
+using WInterop.Authorization;
+using WInterop.Authorization.DataTypes;
 
 namespace DesktopTests.ShellTests
 {
@@ -182,6 +185,16 @@ namespace DesktopTests.ShellTests
         {
             ShellDesktopMethods.UnexpandEnvironmentStrings(Environment.GetEnvironmentVariable("USERPROFILE"))
                 .Should().Be("%USERPROFILE%");
+        }
+
+
+        [Fact]
+        public void ExpandEnvironmentVariablesForUser()
+        {
+            ShellDesktopMethods.ExpandEnvironmentVariablesForUser(
+                AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_DUPLICATE),
+                @"%USERNAME%").
+                Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
         }
     }
 }
