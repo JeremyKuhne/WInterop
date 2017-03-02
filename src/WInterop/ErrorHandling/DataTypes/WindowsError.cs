@@ -158,6 +158,7 @@ namespace WInterop.ErrorHandling.DataTypes
         ERROR_REQUEST_ABORTED = 1235,
         ERROR_CONNECTION_ABORTED = 1236,
         ERROR_PRIVILEGE_NOT_HELD = 1314,
+        ERROR_NONE_MAPPED = 1332,
         ERROR_DISK_CORRUPT = 1393,
 
         // From lmerr.h

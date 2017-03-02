@@ -25,7 +25,7 @@ namespace WInterop.ErrorHandling
         {
             WindowsError lastError = GetLastError();
             if (lastError != error)
-                throw GetIoExceptionForError(error);
+                throw GetIoExceptionForError(lastError);
         }
 
         /// <summary>

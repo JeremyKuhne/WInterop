@@ -122,6 +122,8 @@
     <Compile Include="Shell\DataTypes\SIGDN.cs" />
     <Compile Include="Shell\InterfaceIds.cs" />
     <Compile Include="Shell\ShellDesktopMethods.cs" />
+    <Compile Include="SystemInformation\DataTypes\COMPUTER_NAME_FORMAT.cs" />
+    <Compile Include="SystemInformation\DataTypes\EXTENDED_NAME_FORMAT.cs" />
     <Compile Include="SystemInformation\DataTypes\SuiteMask.cs" />
     <Compile Include="SystemInformation\DataTypes\SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX.cs" />
     <Compile Include="SystemInformation\DataTypes\SYSTEM_INFORMATION_CLASS.cs" />

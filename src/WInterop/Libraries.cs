@@ -21,6 +21,7 @@ namespace WInterop
         public const string Netapi32 = "netapi32.dll";
         public const string Ole32 = "ole32.dll";
         public const string OleAut32 = "oleaut32.dll";
+        public const string Secur32 = "secur32.dll";
         public const string Shell32 = "shell32.dll";
         public const string User32 = "user32.dll";
     }
