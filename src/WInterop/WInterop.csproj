@@ -166,6 +166,7 @@
     <Compile Include="Support\Buffers\StreamBuffer.cs" />
     <Compile Include="Support\Buffers\StringBuffer.cs" />
     <Compile Include="Support\Buffers\StringBufferCache.cs" />
+    <Compile Include="Support\Strings.cs" />
     <Compile Include="Synchronization\DataTypes\OVERLAPPED.cs" />
     <Compile Include="SystemInformation\DataTypes\ProcessorFeature.cs" />
     <Compile Include="SystemInformation\SystemInformationMethods.cs" />

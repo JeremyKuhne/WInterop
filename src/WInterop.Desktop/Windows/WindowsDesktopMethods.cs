@@ -9,7 +9,6 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
-using WInterop.Handles.DataTypes;
 using WInterop.Modules.DataTypes;
 using WInterop.Windows.DataTypes;
 
@@ -18,7 +17,7 @@ namespace WInterop.Windows
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class WindowsDesktopMethods
+    public static partial class WindowsDesktopMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -70,28 +69,25 @@ namespace WInterop.Windows
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633528.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool IsWindow(WindowHandle hWnd);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633529.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool IsWindowUnicode(
                 WindowHandle hWnd);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633530.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool IsWindowVisible(
                 WindowHandle hWnd);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633524.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool IsChild(
                 WindowHandle hWndParent,
                 WindowHandle hWnd);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633525.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern int IsGUIThread(
                 bool bConvert);
@@ -108,10 +104,14 @@ namespace WInterop.Windows
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644899.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool UnregisterClass(
                 IntPtr lpClassName,
                 ModuleHandle hInstance);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724385.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern int GetSystemMetrics(
+                SystemMetric nIndex);
         }
 
         public static WindowHandle GetShellWindow()
@@ -144,6 +144,10 @@ namespace WInterop.Windows
             return Direct.GetTopWindow(handle);
         }
 
+        /// <summary>
+        /// Returns true if the current thread is a GUI thread.
+        /// </summary>
+        /// <param name="convertToGuiIfFalse">Tries to convert the thread to a GUI thread if it isn't already.</param>
         public static bool IsGuiThread(bool convertToGuiIfFalse = false)
         {
             int result = Direct.IsGUIThread(convertToGuiIfFalse);
@@ -154,14 +158,23 @@ namespace WInterop.Windows
                 return true;
         }
 
+        /// <summary>
+        /// Unregisters the given class Atom.
+        /// </summary>
         public static void UnregisterClass(Atom atom, ModuleHandle module)
         {
             if (!Direct.UnregisterClass(atom, module))
                 throw ErrorHelper.GetIoExceptionForLastError();
         }
 
+        /// <summary>
+        /// Unregisters the given class name.
+        /// </summary>
         public static void UnregisterClass(string className, ModuleHandle module)
         {
+            if (className == null)
+                throw new ArgumentNullException(nameof(className));
+
             unsafe
             {
                 fixed (char* name = className)
@@ -170,6 +183,14 @@ namespace WInterop.Windows
                         throw ErrorHelper.GetIoExceptionForLastError();
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the value for the given system metric.
+        /// </summary>
+        public static int GetSystemMetrics(SystemMetric metric)
+        {
+            return Direct.GetSystemMetrics(metric);
         }
     }
 }

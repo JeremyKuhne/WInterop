@@ -21,24 +21,24 @@ namespace WInterop.Shell.DataTypes
             int nCsidl);
 
         int FolderIdToCsidl(
-            Guid rfid);
+            [In, MarshalAs(UnmanagedType.LPStruct)] Guid rfid);
 
         uint GetFolderIds(
             out SafeComHandle ppKFId);
 
         [return: MarshalAs(UnmanagedType.Interface)]
         IKnownFolder GetFolder(
-            Guid rfid);
+            [In, MarshalAs(UnmanagedType.LPStruct)] Guid rfid);
 
         IKnownFolder GetFolderByName(
             [MarshalAs(UnmanagedType.LPWStr)] string pszCanonicalName);
 
         void RegisterFolder(
-            Guid rfid,
+            [In, MarshalAs(UnmanagedType.LPStruct)] Guid rfid,
             KNOWNFOLDER_DEFINITION pKFD);
 
         void UnregisterFolder(
-            Guid rfid);
+            [In, MarshalAs(UnmanagedType.LPStruct)] Guid rfid);
 
         IKnownFolder FindFolderFromPath(
             [MarshalAs(UnmanagedType.LPWStr)] string pszPath,
@@ -49,7 +49,7 @@ namespace WInterop.Shell.DataTypes
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string Redirect(
-            Guid rfid,
+            [In, MarshalAs(UnmanagedType.LPStruct)] Guid rfid,
             WindowHandle hwnd,
             KF_REDIRECT_FLAGS flags,
             [MarshalAs(UnmanagedType.LPWStr)] string pszTargetPath,

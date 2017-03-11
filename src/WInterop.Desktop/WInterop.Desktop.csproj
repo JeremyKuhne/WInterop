@@ -30,6 +30,13 @@
   <ItemGroup>
     <None Include="project.json" />
     <None Include="..\WInterop.snk" />
+    <Compile Include="Gdi\DataTypes\BrushHandle.cs" />
+    <Compile Include="Gdi\DataTypes\COLORREF.cs" />
+    <Compile Include="Gdi\DataTypes\GdiObject.cs" />
+    <Compile Include="Gdi\DataTypes\StockObject.cs" />
+    <Compile Include="Gdi\GdiDesktopMethods.cs" />
+    <Compile Include="Gdi\DataTypes\DeviceTechnology.cs" />
+    <Compile Include="Gdi\GdiDesktopMethods.Defines.cs" />
     <None Include="WInterop.Desktop.nuspec">
       <SubType>Designer</SubType>
     </None>
@@ -128,6 +135,14 @@
     <Compile Include="SystemInformation\DataTypes\SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX.cs" />
     <Compile Include="SystemInformation\DataTypes\SYSTEM_INFORMATION_CLASS.cs" />
     <Compile Include="SystemInformation\SystemInformationDesktopMethods.cs" />
+    <Compile Include="Gdi\DataTypes\DeviceCapability.cs" />
+    <Compile Include="Gdi\DataTypes\DeviceState.cs" />
+    <Compile Include="Gdi\DataTypes\DEVMODE.cs" />
+    <Compile Include="Gdi\DataTypes\DISPLAY_DEVICE.cs" />
+    <Compile Include="Gdi\DataTypes\DeviceContext.cs" />
+    <Compile Include="Windows\DataTypes\POINT.cs" />
+    <Compile Include="Windows\DataTypes\POINTL.cs" />
+    <Compile Include="Windows\DataTypes\SystemMetric.cs" />
     <Compile Include="Windows\DataTypes\WindowHandle.cs" />
     <Compile Include="Handles\HandleDesktopMethods.cs" />
     <Compile Include="Handles\DataTypes\ObjectInformation.cs" />

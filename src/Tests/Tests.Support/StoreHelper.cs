@@ -5,7 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using FluentAssertions;
 using System;
 
 namespace Tests.Support
@@ -17,11 +16,13 @@ namespace Tests.Support
             try
             {
                 action();
-                WInterop.Support.Environment.IsWindowsStoreApplication().Should().BeFalse();
+                if (WInterop.Support.Environment.IsWindowsStoreApplication())
+                    throw new InvalidOperationException("Should not succeed if Windows Store app");
             }
             catch (UnauthorizedAccessException)
             {
-                WInterop.Support.Environment.IsWindowsStoreApplication().Should().BeTrue();
+                if (!WInterop.Support.Environment.IsWindowsStoreApplication())
+                    throw new InvalidOperationException("Should succeed if not Windows Store app");
             }
         }
     }

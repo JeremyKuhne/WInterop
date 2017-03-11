@@ -6,13 +6,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System.Linq;
 using WInterop.Windows;
 using WInterop.Windows.DataTypes;
 using Xunit;
 
-namespace DesktopTests.WindowsTests
+namespace DesktopTests.Windows
 {
-    public class Methods
+    public class WindowsTests
     {
         [Fact]
         public void BasicGetDesktopWindow()

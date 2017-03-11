@@ -5,15 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using Xunit;
 using FluentAssertions;
-using WInterop.Shell;
-using WInterop.Shell.DataTypes;
+using System;
 using System.Linq;
-using WInterop.SystemInformation;
 using WInterop.Authorization;
 using WInterop.Authorization.DataTypes;
+using WInterop.Shell;
+using WInterop.Shell.DataTypes;
+using Xunit;
 
 namespace DesktopTests.ShellTests
 {
