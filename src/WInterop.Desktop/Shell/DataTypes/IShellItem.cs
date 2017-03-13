@@ -12,8 +12,8 @@ using System.Runtime.InteropServices.ComTypes;
 namespace WInterop.Shell.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761144.aspx
-    [ComImport
-        Guid(InterfaceIds.IID_IShellItem)
+    [ComImport,
+        Guid(InterfaceIds.IID_IShellItem),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IShellItem
     {

@@ -35,8 +35,8 @@ namespace DesktopTests.ProcessAndThread
             action.ShouldThrow<ArgumentException>();
         }
 
-        [Theory
-            InlineData("==")
+        [Theory,
+            InlineData("=="),
             InlineData("a=")
             ]
         public void SetEnvironmentVariable_EqualsNotValidPastFirstCharacter(string name)
@@ -47,10 +47,10 @@ namespace DesktopTests.ProcessAndThread
             action.ShouldThrow<ArgumentException>();
         }
 
-        [Theory
-            InlineData("")
+        [Theory,
+            InlineData(""),
             // Make the variable hidden (from CMD)
-            InlineData("=")
+            InlineData("="),
             ]
         public void BasicGetSetEnvironmentVariable(string prefix)
         {
@@ -61,10 +61,10 @@ namespace DesktopTests.ProcessAndThread
             ProcessDesktopMethods.GetEnvironmentVariable(name).Should().BeNull();
         }
 
-        [Theory
-            InlineData("")
+        [Theory,
+            InlineData(""),
             // Make the variable hidden (from CMD)
-            InlineData("=")
+            InlineData("="),
             ]
         public void ListEnvironmentVariables_Basic(string prefix)
         {

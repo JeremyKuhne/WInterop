@@ -20,8 +20,8 @@ namespace Tests.Desktop.Com
     /// </summary>
     public class ComRuntimeCompat
     {
-        [Theory
-            InlineData(1.0d)
+        [Theory,
+            InlineData(1.0d),
             InlineData(-1.0d)
             ]
         public unsafe void DecimalRoundTrip(double value)
@@ -41,10 +41,10 @@ namespace Tests.Desktop.Com
             }
         }
 
-        [Theory
-            InlineData(0.0d)
-            InlineData(1.0d)
-            InlineData(-1.0d)
+        [Theory,
+            InlineData(0.0d),
+            InlineData(1.0d),
+            InlineData(-1.0d),
             InlineData(2131.7089891d)
             ]
         public unsafe void DoubleRoundTrip(double value)
@@ -62,10 +62,10 @@ namespace Tests.Desktop.Com
             }
         }
 
-        [Theory
-            InlineData("Foo")
-            InlineData("FooBar")
-            InlineData("")
+        [Theory,
+            InlineData("Foo"),
+            InlineData("FooBar"),
+            InlineData(""),
             ]
         public unsafe void StringRoundTrip(string value)
         {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WInterop", "Winterop\WInterop.csproj", "{8031257A-B9C2-473F-A4DD-690BD6263FEB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -38,6 +38,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{03801197-72C1-4497-9AF8-51798E2F8EA8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests\Tests.csproj", "{C17F4110-A1D1-4FAC-83F6-19B49A36F075}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8031257A-B9C2-473F-A4DD-690BD6263FEB} = {8031257A-B9C2-473F-A4DD-690BD6263FEB}
+		{EA2CE4EF-05B6-458C-AEEC-986F62D0E5AF} = {EA2CE4EF-05B6-458C-AEEC-986F62D0E5AF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Support", "Tests\Tests.Support\Tests.Support.csproj", "{EA2CE4EF-05B6-458C-AEEC-986F62D0E5AF}"
 EndProject

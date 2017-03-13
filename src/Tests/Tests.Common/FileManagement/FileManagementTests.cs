@@ -354,7 +354,7 @@ namespace Tests.FileManagementTests
             }
         }
 
-        [Theory
+        [Theory,
             InlineData(new byte[] { 0xDE })
             ]
         public void WriteFileBasic(byte[] data)
@@ -381,8 +381,8 @@ namespace Tests.FileManagementTests
             }
         }
 
-        [Theory
-            InlineData(new byte[] { 0xDE })
+        [Theory,
+            InlineData(new byte[] { 0xDE }),
             InlineData(new byte[] { 0xDE, 0xAD, 0xBE, 0xEF })
             ]
         public void ReadWriteFileBasic(byte[] data)
@@ -424,10 +424,10 @@ namespace Tests.FileManagementTests
             }
         }
 
-        [Theory
+        [Theory,
             // InlineData(@" "),  // 5 Access is denied (UnauthorizedAccess)
             // InlineData(@"...") // 5 
-            InlineData(@"A ")
+            InlineData(@"A "),
             InlineData(@"A.")
             ]
         public void CreateFileUnextendedTests(string fileName)
@@ -443,10 +443,10 @@ namespace Tests.FileManagementTests
             }
         }
 
-        [Theory
+        [Theory,
             InlineData(@" "),
-            InlineData(@"...")
-            InlineData(@"A ")
+            InlineData(@"..."),
+            InlineData(@"A "),
             InlineData(@"A.")
             ]
         public void CreateFileExtendedTests(string fileName)
@@ -573,8 +573,8 @@ namespace Tests.FileManagementTests
             }
         }
 
-        [Theory
-            InlineData(@"C:\")
+        [Theory,
+            InlineData(@"C:\"),
             InlineData(@"\\?\C:\")
             ]
         public void FindFirstFileHandlesRoots(string path)
@@ -627,7 +627,7 @@ namespace Tests.FileManagementTests
             }
         }
 
-        [Theory
+        [Theory,
             InlineData("")]
         public void FullPathErrorCases(string value)
         {

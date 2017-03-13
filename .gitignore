@@ -60,9 +60,9 @@ ipch/
 *.vspx
 /AppPackages/Tests.UniversalWindows_1.0.0.0_Test
 /BundleArtifacts
-/src/.vs/config
 *.nupkg
 
 # C++ database files
 *.vc.opendb
 *.vc.db
+/src/.vs/

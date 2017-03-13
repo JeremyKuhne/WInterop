@@ -13,8 +13,8 @@ using WInterop.StructuredStorage.DataTypes;
 namespace WInterop.Shell.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761130.aspx
-    [ComImport
-        Guid(InterfaceIds.IID_IShellItem2)
+    [ComImport,
+        Guid(InterfaceIds.IID_IShellItem2),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IShellItem2 : IShellItem
     {

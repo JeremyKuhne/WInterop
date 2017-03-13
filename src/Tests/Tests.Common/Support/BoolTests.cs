@@ -15,6 +15,7 @@ namespace Tests.Support
 {
     public class BoolTests
     {
+#pragma warning disable CS0649
         private struct BOOLTest
         {
             public int Foo;
@@ -32,6 +33,7 @@ namespace Tests.Support
             public int Foo;
             public bool Bar;
         }
+#pragma warning restore CS0649
 
         [Fact]
         public void BOOLIsBlittable()

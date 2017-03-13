@@ -75,7 +75,7 @@ namespace WInterop.ErrorHandling
             {
                 // Don't use line breaks
                 flags |=  FormatMessageFlags.FORMAT_MESSAGE_MAX_WIDTH_MASK;
-                if (args == null && args.Length > 0) flags |= FormatMessageFlags.FORMAT_MESSAGE_IGNORE_INSERTS;
+                if (args == null || args.Length == 0) flags |= FormatMessageFlags.FORMAT_MESSAGE_IGNORE_INSERTS;
 
                 WindowsError lastError = WindowsError.ERROR_INSUFFICIENT_BUFFER;
                 uint capacity = byte.MaxValue;

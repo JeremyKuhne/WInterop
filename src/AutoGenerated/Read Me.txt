@@ -6,3 +6,6 @@ Updating or rebuilding this project will force update the time stamp constants a
 
 Note that this project has to be portable to allow for the resx generation to work correctly for other portable projects.
 (Due to the need for GetType extensions)
+
+Note that we still need to fix templating to build correctly from the command line. This functionality was removed on moving to VS2017 as
+the existing nuget package automation was busted.

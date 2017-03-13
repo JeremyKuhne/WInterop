@@ -127,6 +127,7 @@ namespace DesktopTests.ModuleTests
         {
             using (var handle = ModuleDesktopMethods.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH))
             {
+                handle.IsInvalid.Should().BeFalse();
                 var doubler = ModuleDesktopMethods.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
                 doubler(2).Should().Be(4);
             }
@@ -144,6 +145,7 @@ namespace DesktopTests.ModuleTests
 
                 using (var handle = ModuleDesktopMethods.LoadLibrary(longPathLibrary, 0))
                 {
+                    handle.IsInvalid.Should().BeFalse();
                     var doubler = ModuleDesktopMethods.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
                     doubler(2).Should().Be(4);
                 }

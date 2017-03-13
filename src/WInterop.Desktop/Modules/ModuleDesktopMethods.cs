@@ -36,7 +36,7 @@ namespace WInterop.Modules
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern SafeModuleHandle LoadLibraryExW(
                 string lpFileName,
-                IntPtr hReservedNull,
+                IntPtr hFile,
                 LoadLibraryFlags dwFlags);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683152.aspx

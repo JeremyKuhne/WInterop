@@ -12,8 +12,8 @@ using WInterop.Windows.DataTypes;
 
 namespace WInterop.Shell.DataTypes
 {
-    [ComImport
-        Guid(InterfaceIds.IID_IKnownFolderManager)
+    [ComImport,
+        Guid(InterfaceIds.IID_IKnownFolderManager),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IKnownFolderManager
     {

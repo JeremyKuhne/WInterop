@@ -20,12 +20,12 @@ namespace DesktopTests
             ErrorDesktopMethods.Beep(frequency: 262, duration: 500);
         }
 
-        [Theory
-            InlineData(MessageBeepType.SimpleBeep)
-            InlineData(MessageBeepType.MB_OK)
-            InlineData(MessageBeepType.MB_ICONQUESTION)
-            InlineData(MessageBeepType.MB_ICONWARNING)
-            InlineData(MessageBeepType.MB_ICONASTERISK)
+        [Theory,
+            InlineData(MessageBeepType.SimpleBeep),
+            InlineData(MessageBeepType.MB_OK),
+            InlineData(MessageBeepType.MB_ICONQUESTION),
+            InlineData(MessageBeepType.MB_ICONWARNING),
+            InlineData(MessageBeepType.MB_ICONASTERISK),
             InlineData(MessageBeepType.MB_ICONERROR)
             ]
         public void BasicMessageBeep(MessageBeepType type)

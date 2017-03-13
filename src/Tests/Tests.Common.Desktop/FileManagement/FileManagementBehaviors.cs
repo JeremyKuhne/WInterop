@@ -16,9 +16,9 @@ namespace DesktopTests.FileManagementTests
 {
     public class FileManagementBehaviors
     {
-        [Theory
-            Trait("Environment", "CurrentDirectory")
-            InlineData(@"C:", @"C:\Users")
+        [Theory,
+            Trait("Environment", "CurrentDirectory"),
+            InlineData(@"C:", @"C:\Users"),
             InlineData(@"C", @"E:\C")
             ]
         public void ValidateKnownRelativeBehaviors(string value, string expected)
@@ -34,9 +34,9 @@ namespace DesktopTests.FileManagementTests
             }
         }
 
-        [Theory
-            InlineData(@"C:\PROGRA~1", @"C:\Program Files")
-            InlineData(@"C:\.\PROGRA~1", @"C:\.\Program Files")
+        [Theory,
+            InlineData(@"C:\PROGRA~1", @"C:\Program Files"),
+            InlineData(@"C:\.\PROGRA~1", @"C:\.\Program Files"),
             ]
         public void ValidateLongPathNameBehaviors(string value, string expected)
         {

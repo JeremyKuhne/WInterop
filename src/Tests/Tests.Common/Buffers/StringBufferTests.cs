@@ -286,7 +286,7 @@ namespace Tests.Buffers
             }
         }
 
-        [Theory
+        [Theory,
             InlineData(@"", @"", 0, -1, @""),
             InlineData(@"", @"", 0, 0, @""),
             InlineData(@"", @"A", 0, -1, @"A"),
