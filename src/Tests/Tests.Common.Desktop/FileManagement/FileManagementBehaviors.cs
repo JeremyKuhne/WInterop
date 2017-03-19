@@ -6,9 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using Microsoft.Win32.SafeHandles;
 using System;
 using Tests.Support;
 using WInterop.FileManagement;
+using WInterop.FileManagement.DataTypes;
 using WInterop.ProcessAndThreads;
 using Xunit;
 
@@ -52,6 +54,28 @@ namespace DesktopTests.FileManagementTests
             string path = System.IO.Path.GetRandomFileName();
             Action action = () => FileDesktopMethods.GetLongPathName(path);
             action.ShouldThrow<System.IO.FileNotFoundException>();
+        }
+
+        [Theory,
+            InlineData(@"C:"),
+            InlineData(@"C:\"),
+            InlineData(@"C:\."),
+            InlineData(@"\\.\C:\"),
+            InlineData(@"\\?\C:\"),
+            InlineData(@"\\.\C:"),
+            InlineData(@"\\?\C:"),
+            ]
+        public void CreateFileOnDriveRoot(string path)
+        {
+            SafeFileHandle handle = FileDesktopMethods.CreateFile(
+                path,
+                0,
+                ShareMode.FILE_SHARE_READWRITE,
+                CreationDisposition.OPEN_EXISTING,
+                FileAttributes.NONE,
+                FileFlags.FILE_FLAG_BACKUP_SEMANTICS);
+
+            handle.IsInvalid.Should().BeFalse();
         }
     }
 }
