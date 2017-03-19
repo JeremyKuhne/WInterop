@@ -109,12 +109,10 @@ namespace WInterop.Modules
         /// </summary>
         public static ModuleHandle GetModuleHandle(IntPtr address)
         {
-            ModuleHandle handle;
-
             if (!Direct.GetModuleHandleExW(
                 GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                 address,
-                out handle))
+                out var handle))
                 throw ErrorHelper.GetIoExceptionForLastError();
 
             return handle;
@@ -149,8 +147,7 @@ namespace WInterop.Modules
         {
             Func<IntPtr, GetModuleFlags, ModuleHandle> getHandle = (IntPtr n, GetModuleFlags f) =>
             {
-                ModuleHandle handle;
-                if (!Direct.GetModuleHandleExW(f, n, out handle))
+                if (!Direct.GetModuleHandleExW(f, n, out var handle))
                     throw ErrorHelper.GetIoExceptionForLastError();
                 return handle;
             };
@@ -173,9 +170,7 @@ namespace WInterop.Modules
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
-            MODULEINFO info;
-
-            if (!Direct.K32GetModuleInformation(process, module, out info, (uint)Marshal.SizeOf<MODULEINFO>()))
+            if (!Direct.K32GetModuleInformation(process, module, out var info, (uint)Marshal.SizeOf<MODULEINFO>()))
                 throw ErrorHelper.GetIoExceptionForLastError();
 
             return info;

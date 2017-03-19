@@ -316,7 +316,6 @@ namespace WInterop.FileManagement
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
                 uint nameLength = 260 * sizeof(char);
 
-                IO_STATUS_BLOCK ioStatus;
                 var reader = new CheckedReader(buffer);
 
                 while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
@@ -328,7 +327,7 @@ namespace WInterop.FileManagement
                     {
                         status = Direct.NtQueryInformationFile(
                             FileHandle: fileHandle,
-                            IoStatusBlock: out ioStatus,
+                            IoStatusBlock: out _,
                             FileInformation: buffer.VoidPointer,
                             Length: checked((uint)buffer.ByteCapacity),
                             FileInformationClass: fileInformationClass);
@@ -351,11 +350,9 @@ namespace WInterop.FileManagement
 
         unsafe private static void GetFileInformation(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass, void* value, uint size)
         {
-            IO_STATUS_BLOCK ioStatus;
-
             NTSTATUS status = Direct.NtQueryInformationFile(
                 FileHandle: fileHandle,
-                IoStatusBlock: out ioStatus,
+                IoStatusBlock: out _,
                 FileInformation: value,
                 Length: size,
                 FileInformationClass: fileInformationClass);

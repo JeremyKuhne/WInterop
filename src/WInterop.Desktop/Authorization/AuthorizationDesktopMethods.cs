@@ -285,8 +285,7 @@ namespace WInterop.Authorization
                 Privilege = new[] { luidAttributes }
             };
 
-            bool result;
-            if (!Direct.PrivilegeCheck(token, ref set, out result))
+            if (!Direct.PrivilegeCheck(token, ref set, out bool result))
                 throw ErrorHelper.GetIoExceptionForLastError(privilege.ToString());
 
             return result;
@@ -297,8 +296,7 @@ namespace WInterop.Authorization
         /// </summary>
         public static SafeTokenHandle OpenProcessToken(TokenRights desiredAccess)
         {
-            SafeTokenHandle processToken;
-            if (!Direct.OpenProcessToken(ProcessMethods.GetCurrentProcess(), desiredAccess, out processToken))
+            if (!Direct.OpenProcessToken(ProcessMethods.GetCurrentProcess(), desiredAccess, out var processToken))
                 throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
@@ -309,8 +307,7 @@ namespace WInterop.Authorization
         /// </summary>
         public static SafeTokenHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
         {
-            SafeTokenHandle threadToken;
-            if (!Direct.OpenThreadToken(ThreadMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out threadToken))
+            if (!Direct.OpenThreadToken(ThreadMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
                 WindowsError error = ErrorHelper.GetLastError();
                 if (error != WindowsError.ERROR_NO_TOKEN)
@@ -341,14 +338,13 @@ namespace WInterop.Authorization
         {
             using (SafeTokenHandle token = OpenProcessToken(TokenRights.TOKEN_READ))
             {
-                uint bytesNeeded;
                 TOKEN_ELEVATION elevation = new TOKEN_ELEVATION();
                 if (!Direct.GetTokenInformation(
                     token,
                     TOKEN_INFORMATION_CLASS.TokenElevation,
                     &elevation,
                     (uint)sizeof(TOKEN_ELEVATION),
-                    out bytesNeeded))
+                    out _))
                 {
                     throw ErrorHelper.GetIoExceptionForLastError();
                 }
@@ -414,8 +410,7 @@ namespace WInterop.Authorization
         /// </summary>
         public static string ConvertSidToString(ref SID sid)
         {
-            SafeLocalHandle handle;
-            if (!Direct.ConvertSidToStringSidW(ref sid, out handle))
+            if (!Direct.ConvertSidToStringSidW(ref sid, out var handle))
                 throw ErrorHelper.GetIoExceptionForLastError();
 
             unsafe

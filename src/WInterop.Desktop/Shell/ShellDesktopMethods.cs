@@ -73,8 +73,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetKnownFolderPath(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
         {
-            string path;
-            HRESULT hr = Direct.SHGetKnownFolderPath(folderIdentifier, flags, EmptySafeHandle.Instance, out path);
+            HRESULT hr = Direct.SHGetKnownFolderPath(folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
             if (hr != HRESULT.S_OK)
                 throw ErrorHelper.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
@@ -86,8 +85,7 @@ namespace WInterop.Shell
         /// </summary>
         public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
         {
-            ItemIdList id;
-            HRESULT hr = Direct.SHGetKnownFolderIDList(folderIdentifier, flags, EmptySafeHandle.Instance, out id);
+            HRESULT hr = Direct.SHGetKnownFolderIDList(folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
             if (hr != HRESULT.S_OK)
                 throw ErrorHelper.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
@@ -99,8 +97,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetNameFromId(ItemIdList id, SIGDN form = SIGDN.NORMALDISPLAY)
         {
-            string name;
-            HRESULT hr = Direct.SHGetNameFromIDList(id, form, out name);
+            HRESULT hr = Direct.SHGetNameFromIDList(id, form, out string name);
             if (hr != HRESULT.S_OK)
                 throw ErrorHelper.GetIoExceptionForHResult(hr);
 
@@ -123,8 +120,8 @@ namespace WInterop.Shell
             List<Guid> ids = new List<Guid>();
 
             IKnownFolderManager manager = GetKnownFolderManager();
-            SafeComHandle buffer;
-            uint count = manager.GetFolderIds(out buffer);
+            uint count = manager.GetFolderIds(out SafeComHandle buffer);
+
             using (buffer)
             {
                 Reader reader = new Reader(buffer);

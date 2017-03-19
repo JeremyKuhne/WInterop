@@ -15,12 +15,9 @@ namespace WInterop.Authorization.DataTypes
     {
         public PrivilegeSetting(string privilege, PrivilegeAttributes attributes)
         {
-            Privileges p;
-            if (!Enum.TryParse(privilege, out p))
-            {
-                p = Privileges.UnknownPrivilege;
-            }
-            Privilege = p;
+            if (!Enum.TryParse(privilege, out Privilege))
+                Privilege = Privileges.UnknownPrivilege;
+
             Attributes = attributes;
         }
 

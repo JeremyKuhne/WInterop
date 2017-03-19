@@ -126,7 +126,6 @@ namespace WInterop.NetworkManagement
         public unsafe static void AddLocalGroup(string groupName, string comment = null, string server = null)
         {
             uint level = string.IsNullOrEmpty(comment) ? 0u : 1;
-            uint parameter;
 
             fixed (char* fixedName = groupName)
             fixed (char* fixedComment = level == 0 ? null : comment)
@@ -138,7 +137,7 @@ namespace WInterop.NetworkManagement
                         servername: server,
                         level: level,
                         buf: buffer,
-                        parm_err: out parameter);
+                        parm_err: out uint parameter);
 
                     if (result != WindowsError.NERR_Success)
                         throw ErrorHelper.GetIoExceptionForError(result, groupName);
@@ -150,17 +149,13 @@ namespace WInterop.NetworkManagement
         {
             var groups = new List<string>();
 
-            SafeNetApiBufferHandle buffer;
-            uint entriesRead;
-            uint totalEntries;
-
             WindowsError result = Direct.NetLocalGroupEnum(
                 servername: server,
                 level: 0,
-                bufptr: out buffer,
+                bufptr: out var buffer,
                 prefmaxlen: Direct.MAX_PREFERRED_LENGTH,
-                entriesread: out entriesRead,
-                totalentries: out totalEntries,
+                entriesread: out uint entriesRead,
+                totalentries: out uint totalEntries,
                 resumehandle: IntPtr.Zero);
 
             if (result != WindowsError.NERR_Success)
@@ -178,18 +173,14 @@ namespace WInterop.NetworkManagement
         {
             var members = new List<MemberInfo>();
 
-            SafeNetApiBufferHandle buffer;
-            uint entriesRead;
-            uint totalEntries;
-
             WindowsError result = Direct.NetLocalGroupGetMembers(
                 servername: server,
                 localgroupname: groupName,
                 level: 1,
-                bufptr: out buffer,
+                bufptr: out var buffer,
                 prefmaxlen: Direct.MAX_PREFERRED_LENGTH,
-                entriesread: out entriesRead,
-                totalentries: out totalEntries,
+                entriesread: out uint entriesRead,
+                totalentries: out uint totalEntries,
                 resumehandle: IntPtr.Zero);
 
             if (result != WindowsError.NERR_Success)

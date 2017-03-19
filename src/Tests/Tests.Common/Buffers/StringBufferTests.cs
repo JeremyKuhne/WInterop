@@ -878,8 +878,7 @@ namespace Tests.Buffers
         {
             using (var buffer = new StringBuffer(source))
             {
-                uint index;
-                buffer.IndexOf(value, out index, skip).Should().Be(expectedValue);
+                buffer.IndexOf(value, out uint index, skip).Should().Be(expectedValue);
                 index.Should().Be(expectedIndex);
             }
         }

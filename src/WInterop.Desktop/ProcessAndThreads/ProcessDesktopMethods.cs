@@ -137,8 +137,7 @@ namespace WInterop.ProcessAndThreads
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
-            PROCESS_MEMORY_COUNTERS_EX info;
-            if (!Direct.K32GetProcessMemoryInfo(process, out info, (uint)Marshal.SizeOf<PROCESS_MEMORY_COUNTERS_EX>()))
+            if (!Direct.K32GetProcessMemoryInfo(process, out var info, (uint)Marshal.SizeOf<PROCESS_MEMORY_COUNTERS_EX>()))
                 throw ErrorHelper.GetIoExceptionForLastError();
 
             return info;

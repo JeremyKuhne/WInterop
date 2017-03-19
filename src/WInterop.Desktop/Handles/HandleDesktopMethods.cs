@@ -102,10 +102,8 @@ namespace WInterop.Handles
         {
             return (SafeDirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
-                SafeDirectoryObjectHandle directory;
-
                 NTSTATUS status = Direct.NtOpenDirectoryObject(
-                    DirectoryHandle: out directory,
+                    DirectoryHandle: out var directory,
                     DesiredAccess: desiredAccess,
                     ObjectAttributes: ref attributes);
 
@@ -125,9 +123,8 @@ namespace WInterop.Handles
         {
             return (SafeSymbolicLinkObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
-                SafeSymbolicLinkObjectHandle link;
                 NTSTATUS status = Direct.NtOpenSymbolicLinkObject(
-                    LinkHandle: out link,
+                    LinkHandle: out var link,
                     DesiredAccess: desiredAccess,
                     ObjectAttributes: ref attributes);
 
@@ -175,9 +172,8 @@ namespace WInterop.Handles
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 UNICODE_STRING target = new UNICODE_STRING(buffer);
-                uint returnedLength;
                 NTSTATUS status;
-                while ((status = Direct.NtQuerySymbolicLinkObject(linkHandle, ref target, out returnedLength)) == NTSTATUS.STATUS_BUFFER_TOO_SMALL)
+                while ((status = Direct.NtQuerySymbolicLinkObject(linkHandle, ref target, out uint returnedLength)) == NTSTATUS.STATUS_BUFFER_TOO_SMALL)
                 {
                     buffer.EnsureByteCapacity(returnedLength);
                     target.UpdateFromStringBuffer(buffer);
@@ -200,7 +196,6 @@ namespace WInterop.Handles
                 buffer.EnsureCharCapacity(1024);
 
                 uint context = 0;
-                uint returnLength;
                 NTSTATUS status;
 
                 do
@@ -212,7 +207,7 @@ namespace WInterop.Handles
                         ReturnSingleEntry: false,
                         RestartScan: false,
                         Context: ref context,
-                        ReturnLength: out returnLength);
+                        ReturnLength: out uint returnLength);
 
                     if (status != NTSTATUS.STATUS_SUCCESS && status != NTSTATUS.STATUS_MORE_ENTRIES)
                         break;

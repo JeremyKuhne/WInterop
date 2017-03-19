@@ -249,15 +249,21 @@ namespace WInterop.VolumeManagement
                 // set the error mode to prevent it. I can't replicate this behavior or find any documentation on when it might have
                 // changed. I'm guessing this changed in Windows 7 when they added support for setting the thread's error mode (as
                 // opposed to the entire process).
-                uint serialNumber, maxComponentLength;
-                FileSystemFeature flags;
-                if (!Direct.GetVolumeInformationW(rootPath, volumeName, volumeName.CharCapacity, out serialNumber, out maxComponentLength, out flags, fileSystemName, fileSystemName.CharCapacity))
+                if (!Direct.GetVolumeInformationW(
+                    rootPath,
+                    volumeName,
+                    volumeName.CharCapacity,
+                    out uint serialNumber,
+                    out uint maxComponentLength,
+                    out FileSystemFeature flags,
+                    fileSystemName,
+                    fileSystemName.CharCapacity))
                     throw ErrorHelper.GetIoExceptionForLastError(rootPath);
 
                 volumeName.SetLengthToFirstNull();
                 fileSystemName.SetLengthToFirstNull();
 
-                VolumeInformation info = new VolumeInformation
+                return new VolumeInformation
                 {
                     RootPathName = rootPath,
                     VolumeName = volumeName.ToString(),
@@ -266,8 +272,6 @@ namespace WInterop.VolumeManagement
                     FileSystemFlags = flags,
                     FileSystemName = fileSystemName.ToString()
                 };
-
-                return info;
             }
         }
 

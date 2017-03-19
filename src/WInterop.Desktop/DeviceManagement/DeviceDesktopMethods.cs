@@ -66,8 +66,6 @@ namespace WInterop.DeviceManagement
                     // Give enough for roughly 50 characters for a start
                     outBuffer.EnsureCharCapacity(50);
 
-                    uint bytesReturned;
-
                     while (!Direct.DeviceIoControl(
                         hDevice: mountManager.DangerousGetHandle(),
                         dwIoControlCode: controlCode,
@@ -75,7 +73,7 @@ namespace WInterop.DeviceManagement
                         nInBufferSize: checked((uint)inBuffer.ByteCapacity),
                         lpOutBuffer: outBuffer.DangerousGetHandle(),
                         nOutBufferSize: checked((uint)outBuffer.ByteCapacity),
-                        lpBytesReturned: out bytesReturned,
+                        lpBytesReturned: out _,
                         lpOverlapped: IntPtr.Zero))
                     {
                         WindowsError error = ErrorHelper.GetLastError();

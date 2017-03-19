@@ -42,8 +42,7 @@ namespace WInterop.Resources
             // or free a buffer.
 
             // Passing 0 will give us a read only handle to the string resource
-            char* buffer;
-            int result = Direct.LoadStringW(library, identifier, out buffer, 0);
+            int result = Direct.LoadStringW(library, identifier, out char* buffer, 0);
             if (result <= 0)
                 throw ErrorHelper.GetIoExceptionForLastError(identifier.ToString());
 

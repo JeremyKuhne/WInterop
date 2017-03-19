@@ -81,9 +81,7 @@ namespace WInterop.SecurityManagement
         /// </summary>
         public static IEnumerable<string> LsaEnumerateAccountRights(SafeLsaHandle policyHandle, ref SID sid)
         {
-            SafeLsaMemoryHandle rightsBuffer;
-            uint rightsCount;
-            NTSTATUS status = Direct.LsaEnumerateAccountRights(policyHandle, ref sid, out rightsBuffer, out rightsCount);
+            NTSTATUS status = Direct.LsaEnumerateAccountRights(policyHandle, ref sid, out var rightsBuffer, out uint rightsCount);
             switch (status)
             {
                 case NTSTATUS.STATUS_OBJECT_NAME_NOT_FOUND:

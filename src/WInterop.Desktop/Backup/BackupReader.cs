@@ -30,12 +30,11 @@ namespace WInterop.Backup
 
         public BackupStreamInformation? GetNextInfo()
         {
-            uint bytesRead;
             if (!BackupDesktopMethods.Direct.BackupRead(
                 hFile: _fileHandle,
                 lpBuffer: _buffer,
                 nNumberOfBytesToRead: WIN32_STREAM_ID_SIZE,
-                lpNumberOfBytesRead: out bytesRead,
+                lpNumberOfBytesRead: out uint bytesRead,
                 bAbort: false,
                 bProcessSecurity: true,
                 context: ref _context))
@@ -68,13 +67,12 @@ namespace WInterop.Backup
             if (streamId.Size > 0)
             {
                 // Move to the next header, if any
-                uint low, high;
                 if (!BackupDesktopMethods.Direct.BackupSeek(
                     hFile: _fileHandle,
                     dwLowBytesToSeek: uint.MaxValue,
                     dwHighBytesToSeek: int.MaxValue,
-                    lpdwLowByteSeeked: out low,
-                    lpdwHighByteSeeked: out high,
+                    lpdwLowByteSeeked: out _,
+                    lpdwHighByteSeeked: out _,
                     context: ref _context))
                 {
                     WindowsError error = ErrorHelper.GetLastError();
@@ -106,12 +104,11 @@ namespace WInterop.Backup
 
             if (_context != IntPtr.Zero)
             {
-                uint bytesRead;
                 if (!BackupDesktopMethods.Direct.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: EmptySafeHandle.Instance,
                     nNumberOfBytesToRead: 0,
-                    lpNumberOfBytesRead: out bytesRead,
+                    lpNumberOfBytesRead: out _,
                     bAbort: true,
                     bProcessSecurity: false,
                     context: ref _context))
