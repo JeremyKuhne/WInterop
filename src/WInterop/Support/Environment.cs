@@ -23,7 +23,7 @@ namespace WInterop.Support
         /// <remarks>
         /// This isn't defined in Portable so we need our own.
         /// </remarks>
-        public static bool Is64BitProcess = Marshal.SizeOf<IntPtr>() == sizeof(ulong);
+        public static bool Is64BitProcess = IntPtr.Size == sizeof(ulong);
 
         /// <summary>
         /// Returns true if the current process is a Windows Store application (WinRT).

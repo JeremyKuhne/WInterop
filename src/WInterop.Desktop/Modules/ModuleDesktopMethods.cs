@@ -166,11 +166,11 @@ namespace WInterop.Modules
         /// </summary>
         /// <param name="process">The process for the given module or null for the current process.</param>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
-        public static MODULEINFO GetModuleInfo(SafeModuleHandle module, SafeProcessHandle process = null)
+        public unsafe static MODULEINFO GetModuleInfo(SafeModuleHandle module, SafeProcessHandle process = null)
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
-            if (!Direct.K32GetModuleInformation(process, module, out var info, (uint)Marshal.SizeOf<MODULEINFO>()))
+            if (!Direct.K32GetModuleInformation(process, module, out var info, (uint)sizeof(MODULEINFO)))
                 throw ErrorHelper.GetIoExceptionForLastError();
 
             return info;
@@ -237,7 +237,7 @@ namespace WInterop.Modules
         /// </summary>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         /// <param name="process">The process to get modules for or null for the current process.</param>
-        public static IEnumerable<ModuleHandle> GetProcessModules(SafeProcessHandle process = null)
+        public unsafe static IEnumerable<ModuleHandle> GetProcessModules(SafeProcessHandle process = null)
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
@@ -255,7 +255,7 @@ namespace WInterop.Modules
                 } while (sizeNeeded > buffer.ByteCapacity);
 
                 CheckedReader reader = new CheckedReader(buffer);
-                for (int i = 0; i < sizeNeeded; i += Marshal.SizeOf<ModuleHandle>())
+                for (int i = 0; i < sizeNeeded; i += sizeof(ModuleHandle))
                 {
                     modules.Add(reader.ReadStruct<ModuleHandle>());
                 }

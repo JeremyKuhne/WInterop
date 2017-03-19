@@ -151,7 +151,7 @@ namespace WInterop.Handles
 
                     OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES
                     {
-                        Length = (uint)Marshal.SizeOf<OBJECT_ATTRIBUTES>(),
+                        Length = (uint)sizeof(OBJECT_ATTRIBUTES),
                         RootDirectory = IntPtr.Zero,
                         ObjectName = (IntPtr)(&objectName),
                         SecurityDescriptor = IntPtr.Zero,
@@ -281,14 +281,14 @@ namespace WInterop.Handles
         /// <summary>
         /// Get the type name of the given object.
         /// </summary>
-        public static string GetObjectType(SafeHandle handle)
+        public unsafe static string GetObjectType(SafeHandle handle)
         {
             using (HeapBuffer buffer = new HeapBuffer())
             {
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
 
                 // We'll initially give room for 50 characters for the type name
-                uint returnLength = (uint)Marshal.SizeOf<OBJECT_TYPE_INFORMATION>() + 50 * sizeof(char);
+                uint returnLength = (uint)sizeof(OBJECT_TYPE_INFORMATION) + 50 * sizeof(char);
 
                 while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW || status == NTSTATUS.STATUS_BUFFER_TOO_SMALL || status == NTSTATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {

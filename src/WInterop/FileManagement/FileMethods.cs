@@ -385,7 +385,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// CreateFile2 wrapper. Only available on Windows 8 and above.
         /// </summary>
-        public static SafeFileHandle CreateFile2(
+        public static unsafe SafeFileHandle CreateFile2(
             string path,
             DesiredAccess desiredAccess,
             ShareMode shareMode,
@@ -394,16 +394,13 @@ namespace WInterop.FileManagement
             FileFlags fileFlags = FileFlags.NONE,
             SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
         {
-            CREATEFILE2_EXTENDED_PARAMETERS extended = new CREATEFILE2_EXTENDED_PARAMETERS();
-            extended.dwSize = (uint)Marshal.SizeOf<CREATEFILE2_EXTENDED_PARAMETERS>();
-            extended.dwFileAttributes = fileAttributes;
-            extended.dwFileFlags = fileFlags;
-            extended.dwSecurityQosFlags = securityQosFlags;
-            unsafe
+            CREATEFILE2_EXTENDED_PARAMETERS extended = new CREATEFILE2_EXTENDED_PARAMETERS()
             {
-                extended.lpSecurityAttributes = null;
-            }
-            extended.hTemplateFile = IntPtr.Zero;
+                dwSize = (uint)sizeof(CREATEFILE2_EXTENDED_PARAMETERS),
+                dwFileAttributes = fileAttributes,
+                dwFileFlags = fileFlags,
+                dwSecurityQosFlags = securityQosFlags
+            };
 
             SafeFileHandle handle = Direct.CreateFile2(
                 lpFileName: path,
@@ -462,10 +459,12 @@ namespace WInterop.FileManagement
             unsafe
             {
                 int cancel = 0;
-                COPYFILE2_EXTENDED_PARAMETERS parameters = new COPYFILE2_EXTENDED_PARAMETERS();
-                parameters.dwSize = (uint)Marshal.SizeOf<COPYFILE2_EXTENDED_PARAMETERS>();
-                parameters.pfCanel = &cancel;
-                parameters.dwCopyFlags = overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS;
+                COPYFILE2_EXTENDED_PARAMETERS parameters = new COPYFILE2_EXTENDED_PARAMETERS()
+                {
+                    dwSize = (uint)sizeof(COPYFILE2_EXTENDED_PARAMETERS),
+                    pfCanel = &cancel,
+                    dwCopyFlags = overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS
+                };
 
                 HRESULT hr = Direct.CopyFile2(source, destination, &parameters);
                 if (ErrorMacros.FAILED(hr))
@@ -613,7 +612,11 @@ namespace WInterop.FileManagement
             FILE_STANDARD_INFO info;
             unsafe
             {
-                if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo, &info, (uint)Marshal.SizeOf<FILE_STANDARD_INFO>()))
+                if (!Direct.GetFileInformationByHandleEx(
+                    fileHandle,
+                    FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo,
+                    &info,
+                    (uint)sizeof(FILE_STANDARD_INFO)))
                     throw ErrorHelper.GetIoExceptionForLastError();
             }
 
@@ -628,7 +631,11 @@ namespace WInterop.FileManagement
             FILE_BASIC_INFO info;
             unsafe
             {
-                if (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo, &info, (uint)Marshal.SizeOf<FILE_BASIC_INFO>()))
+                if (!Direct.GetFileInformationByHandleEx(
+                    fileHandle,
+                    FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo,
+                    &info,
+                    (uint)sizeof(FILE_BASIC_INFO)))
                     throw ErrorHelper.GetIoExceptionForLastError();
             }
             return new FileBasicInfo(info);

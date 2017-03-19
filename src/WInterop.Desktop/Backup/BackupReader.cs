@@ -21,19 +21,18 @@ namespace WInterop.Backup
         private IntPtr _context = IntPtr.Zero;
         private SafeFileHandle _fileHandle;
         private HeapBuffer _buffer = new HeapBuffer(4096);
-        private static uint WIN32_STREAM_ID_SIZE = (uint)Marshal.SizeOf<WIN32_STREAM_ID>();
 
         public BackupReader(SafeFileHandle fileHandle)
         {
             _fileHandle = fileHandle;
         }
 
-        public BackupStreamInformation? GetNextInfo()
+        public unsafe BackupStreamInformation? GetNextInfo()
         {
             if (!BackupDesktopMethods.Direct.BackupRead(
                 hFile: _fileHandle,
                 lpBuffer: _buffer,
-                nNumberOfBytesToRead: WIN32_STREAM_ID_SIZE,
+                nNumberOfBytesToRead: (uint)sizeof(WIN32_STREAM_ID),
                 lpNumberOfBytesRead: out uint bytesRead,
                 bAbort: false,
                 bProcessSecurity: true,
@@ -45,7 +44,7 @@ namespace WInterop.Backup
             // Exit if at the end
             if (bytesRead == 0) return null;
 
-            WIN32_STREAM_ID streamId = Marshal.PtrToStructure<WIN32_STREAM_ID>(_buffer.DangerousGetHandle());
+            WIN32_STREAM_ID streamId = *((WIN32_STREAM_ID*)_buffer.DangerousGetHandle());
             string name = null;
             if (streamId.dwStreamNameSize > 0)
             {
