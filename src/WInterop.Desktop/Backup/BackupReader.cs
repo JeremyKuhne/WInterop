@@ -7,6 +7,7 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WInterop.Backup.DataTypes;
 using WInterop.ErrorHandling;
@@ -74,11 +75,7 @@ namespace WInterop.Backup
                     lpdwHighByteSeeked: out _,
                     context: ref _context))
                 {
-                    WindowsError error = ErrorHelper.GetLastError();
-                    if (error != WindowsError.ERROR_SEEK)
-                    {
-                        throw ErrorHelper.GetIoExceptionForError(error);
-                    }
+                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
                 }
             }
 
@@ -98,11 +95,15 @@ namespace WInterop.Backup
 
         private void Dispose(bool disposing)
         {
-            _buffer.Dispose();
+            if (disposing)
+            {
+                _buffer?.Dispose();
+            }
             _buffer = null;
 
             if (_context != IntPtr.Zero)
             {
+                // Free the context memory
                 if (!BackupDesktopMethods.Direct.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: EmptySafeHandle.Instance,
@@ -112,8 +113,12 @@ namespace WInterop.Backup
                     bProcessSecurity: false,
                     context: ref _context))
                 {
+#if DEBUG
                     throw ErrorHelper.GetIoExceptionForLastError();
+#endif
                 }
+
+                Debug.Assert(_context == IntPtr.Zero);
             }
         }
 
