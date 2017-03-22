@@ -92,20 +92,11 @@ namespace WInterop.Clipboard
         {
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
-                realloc:
-
-                int count = Direct.GetClipboardFormatNameW(format, buffer, (int)buffer.CharCapacity);
-                if (count == 0)
+                int count;
+                while ((count = Direct.GetClipboardFormatNameW(format, buffer, (int)buffer.CharCapacity)) == 0)
                 {
-                    WindowsError error = ErrorHelper.GetLastError();
-                    switch (error)
-                    {
-                        case WindowsError.ERROR_INSUFFICIENT_BUFFER:
-                            buffer.EnsureCharCapacity(buffer.CharCapacity + 50);
-                            goto realloc;
-                        default:
-                            throw ErrorHelper.GetIoExceptionForError(error);
-                    }
+                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    buffer.EnsureCharCapacity(buffer.CharCapacity + 50);
                 }
 
                 buffer.Length = (uint)count;
@@ -128,15 +119,9 @@ namespace WInterop.Clipboard
                 array = alloc;
                 if (!Direct.GetUpdatedClipboardFormats(array, countIn, &countOut))
                 {
-                    WindowsError error = ErrorHelper.GetLastError();
-                    switch (error)
-                    {
-                        case WindowsError.ERROR_INSUFFICIENT_BUFFER:
-                            countIn = countOut;
-                            goto realloc;
-                        default:
-                            throw ErrorHelper.GetIoExceptionForError(error);
-                    }
+                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    countIn = countOut;
+                    goto realloc;
                 }
             }
 
