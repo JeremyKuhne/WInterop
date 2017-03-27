@@ -14,6 +14,9 @@ using Tests.Support;
 using WInterop.Support;
 using Xunit;
 using WInterop.FileManagement.DataTypes;
+using WInterop.Support.Buffers;
+using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.DataTypes;
 
 namespace Tests.FileManagementTests
 {
@@ -105,19 +108,16 @@ namespace Tests.FileManagementTests
         [Fact]
         public void CreateFileCreateTempFile()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
-            try
+            using (var cleaner = new TestFileCleaner())
             {
+                string tempPath = cleaner.TempFolder;
+                string tempFileName = cleaner.GetTestPath();
+
                 using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     file.IsInvalid.Should().BeFalse();
                     System.IO.File.Exists(tempFileName).Should().BeTrue();
                 }
-            }
-            finally
-            {
-                FileMethods.DeleteFile(tempFileName);
             }
         }
 
@@ -132,47 +132,42 @@ namespace Tests.FileManagementTests
         [Fact]
         public void FlushFileBuffersBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
-            try
+            using (var cleaner = new TestFileCleaner())
             {
+                string tempPath = cleaner.TempFolder;
+                string tempFileName = cleaner.GetTestPath();
+
                 using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     FileMethods.FlushFileBuffers(file);
                 }
-            }
-            finally
-            {
-                FileMethods.DeleteFile(tempFileName);
             }
         }
 
         [Fact]
         public void GetFileNameByHandleBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
-            try
+            using (var cleaner = new TestFileCleaner())
             {
+                string tempPath = cleaner.TempFolder;
+                string tempFileName = cleaner.GetTestPath();
+
                 using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     string fileName = FileMethods.GetFileNameByHandle(file);
                     tempFileName.Should().EndWith(fileName);
                 }
             }
-            finally
-            {
-                FileMethods.DeleteFile(tempFileName);
-            }
         }
 
         [Fact]
         public void GetStandardInfoByHandleBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
-            try
+            using (var cleaner = new TestFileCleaner())
             {
+                string tempPath = cleaner.TempFolder;
+                string tempFileName = cleaner.GetTestPath();
+
                 using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
@@ -190,19 +185,16 @@ namespace Tests.FileManagementTests
                     info.EndOfFile.Should().Be(0);
                 }
             }
-            finally
-            {
-                FileMethods.DeleteFile(tempFileName);
-            }
         }
 
         [Fact]
         public void GetBasicInfoByHandleBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
-            try
+            using (var cleaner = new TestFileCleaner())
             {
+                string tempPath = cleaner.TempFolder;
+                string tempFileName = cleaner.GetTestPath();
+
                 using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
@@ -217,19 +209,16 @@ namespace Tests.FileManagementTests
                     }
                 }
             }
-            finally
-            {
-                FileMethods.DeleteFile(tempFileName);
-            }
         }
 
         [Fact]
         public void GetStreamInfoByHandleBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = System.IO.Path.Combine(tempPath, System.IO.Path.GetRandomFileName());
-            try
+            using (var cleaner = new TestFileCleaner())
             {
+                string tempPath = cleaner.TempFolder;
+                string tempFileName = cleaner.GetTestPath();
+
                 using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
@@ -246,10 +235,6 @@ namespace Tests.FileManagementTests
                         info.AllocationSize.Should().Be(0);
                     }
                 }
-            }
-            finally
-            {
-                FileMethods.DeleteFile(tempFileName);
             }
         }
 
@@ -619,8 +604,8 @@ namespace Tests.FileManagementTests
                     fileMode: System.IO.FileMode.Append,
                     fileAttributes: 0,
                     securityFlags: WInterop.Support.Environment.IsWindowsStoreApplication()
-                        ? SecurityQosFlags.NONE 
-                        : SecurityQosFlags.SECURITY_SQOS_PRESENT | SecurityQosFlags.SECURITY_ANONYMOUS ))
+                        ? SecurityQosFlags.NONE
+                        : SecurityQosFlags.SECURITY_SQOS_PRESENT | SecurityQosFlags.SECURITY_ANONYMOUS))
                 {
                     stream.Should().NotBeNull();
                 }
@@ -633,6 +618,37 @@ namespace Tests.FileManagementTests
         {
             Action action = () => FileMethods.GetFullPathName(value);
             action.ShouldThrow<System.IO.IOException>();
+        }
+
+        [Fact]
+        public unsafe void GetDirectoryFilenamesFromHandle()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string tempDirectory = cleaner.GetTestPath();
+
+                DirectoryMethods.CreateDirectory(tempDirectory);
+                FileHelper.WriteAllText(Paths.Combine(tempDirectory, "GetDirectoryFilenamesFromHandle"), "GetDirectoryFilenamesFromHandle");
+                using (var handle = DirectoryMethods.CreateDirectoryHandle(tempDirectory))
+                {
+                    FileMethods.GetDirectoryFilenamesFromHandle(handle).Should().Contain(new string[] { ".", "..", "GetDirectoryFilenamesFromHandle" });
+                }
+            }
+        }
+
+        [Fact]
+        public unsafe void GetDirectoryFilenamesFromHandle_EmptyDirectory()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string tempDirectory = cleaner.GetTestPath();
+
+                DirectoryMethods.CreateDirectory(tempDirectory);
+                using (var handle = DirectoryMethods.CreateDirectoryHandle(tempDirectory))
+                {
+                    FileMethods.GetDirectoryFilenamesFromHandle(handle).Should().Contain(new string[] { ".", ".." });
+                }
+            }
         }
     }
 }

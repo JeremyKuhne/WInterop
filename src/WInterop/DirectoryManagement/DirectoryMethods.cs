@@ -5,9 +5,12 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
+using WInterop.FileManagement;
+using WInterop.FileManagement.DataTypes;
 using WInterop.Support.Buffers;
 
 namespace WInterop.DirectoryManagement
@@ -64,6 +67,20 @@ namespace WInterop.DirectoryManagement
         {
             if (!Direct.CreateDirectoryW(path, IntPtr.Zero))
                 throw ErrorHelper.GetIoExceptionForLastError(path);
+        }
+
+        /// <summary>
+        /// Simple wrapper to allow creating a file handle for an existing directory.
+        /// </summary>
+        public static SafeFileHandle CreateDirectoryHandle(string directoryPath)
+        {
+            return FileMethods.CreateFile(
+                directoryPath,
+                DesiredAccess.GENERIC_READ,
+                ShareMode.FILE_SHARE_READWRITE,
+                CreationDisposition.OPEN_EXISTING,
+                FileAttributes.NONE,
+                FileFlags.FILE_FLAG_BACKUP_SEMANTICS);
         }
 
         /// <summary>

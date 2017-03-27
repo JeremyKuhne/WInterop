@@ -8,6 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
@@ -24,6 +25,9 @@ namespace WInterop.FileManagement
     {
         // Asynchronous Disk I/O Appears as Synchronous on Windows
         // https://support.microsoft.com/en-us/kb/156932
+        //
+        // NTFS File Attributes
+        // https://blogs.technet.microsoft.com/askcore/2010/08/25/ntfs-file-attributes/
 
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -33,6 +37,9 @@ namespace WInterop.FileManagement
         /// </remarks>
         public static class Direct
         {
+            // NTFS Technical Reference
+            // https://technet.microsoft.com/en-us/library/cc758691.aspx
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449422.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern SafeFileHandle CreateFile2(
@@ -495,8 +502,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static FileInfo GetFileAttributesEx(string path)
         {
-            WIN32_FILE_ATTRIBUTE_DATA data;
-            if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out data))
+            if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
                 throw ErrorHelper.GetIoExceptionForLastError(path);
 
             return new FileInfo(data);
@@ -537,8 +543,7 @@ namespace WInterop.FileManagement
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
         public static FileInfo? TryGetFileInfo(string path)
         {
-            WIN32_FILE_ATTRIBUTE_DATA data;
-            if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out data))
+            if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
             {
                 WindowsError error = ErrorHelper.GetLastError();
                 switch (error)
@@ -869,9 +874,7 @@ namespace WInterop.FileManagement
         /// <returns>The new pointer position.</returns>
         public static long SetFilePointer(SafeFileHandle fileHandle, long distance, MoveMethod moveMethod)
         {
-            long position;
-
-            if (!Direct.SetFilePointerEx(fileHandle, distance, out position, moveMethod))
+            if (!Direct.SetFilePointerEx(fileHandle, distance, out long position, moveMethod))
                 throw ErrorHelper.GetIoExceptionForLastError();
 
             return position;
@@ -890,8 +893,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static long GetFileSize(SafeFileHandle fileHandle)
         {
-            long size;
-            if (!Direct.GetFileSizeEx(fileHandle, out size))
+            if (!Direct.GetFileSizeEx(fileHandle, out long size))
                 throw ErrorHelper.GetIoExceptionForLastError();
 
             return size;
@@ -904,13 +906,100 @@ namespace WInterop.FileManagement
         {
             FileType fileType = Direct.GetFileType(fileHandle);
             if (fileType == FileType.FILE_TYPE_UNKNOWN)
-            {
-                WindowsError error = ErrorHelper.GetLastError();
-                if (error != WindowsError.NO_ERROR)
-                    throw ErrorHelper.GetIoExceptionForLastError();
-            }
+                ErrorHelper.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
             return fileType;
+        }
+
+        /// <summary>
+        /// Gets the filenames in the specified directory. Includes "." and "..".
+        /// </summary>
+        public unsafe static IEnumerable<string> GetDirectoryFilenamesFromHandle(SafeFileHandle directoryHandle)
+        {
+            List<string> filenames = new List<string>();
+            GetFullDirectoryInfoHelper(directoryHandle, buffer =>
+            {
+                FILE_FULL_DIR_INFO* info = (FILE_FULL_DIR_INFO*)buffer.BytePointer;
+                do
+                {
+                    filenames.Add(FILE_FULL_DIR_INFO.GetFileName(info));
+                    info = FILE_FULL_DIR_INFO.GetNextInfo(info);
+                } while (info != null);
+            });
+            return filenames;
+        }
+
+        /// <summary>
+        /// Gets all of the info for files within the given directory handle.
+        /// </summary>
+        public unsafe static IEnumerable<FileFullDirInfo> GetDirectoryInfoFromHandle(SafeFileHandle directoryHandle)
+        {
+            List<FileFullDirInfo> infos = new List<FileFullDirInfo>();
+            GetFullDirectoryInfoHelper(directoryHandle, buffer =>
+            {
+                FILE_FULL_DIR_INFO* info = (FILE_FULL_DIR_INFO*)buffer.BytePointer;
+                do
+                {
+                    infos.Add(new FileFullDirInfo(info));
+                    info = FILE_FULL_DIR_INFO.GetNextInfo(info);
+                } while (info != null);
+            });
+            return infos;
+        }
+
+        private unsafe static void GetFullDirectoryInfoHelper(SafeFileHandle directoryHandle, Action<HeapBuffer> action)
+        {
+            BufferHelper.CachedInvoke((HeapBuffer buffer) =>
+            {
+                // Make sure we have at least enough for the normal "." and ".."
+                buffer.EnsureByteCapacity((ulong)sizeof(FILE_FULL_DIR_INFO) * 2);
+
+                do
+                {
+                    while (!Direct.GetFileInformationByHandleEx(
+                        directoryHandle,
+                        FILE_INFO_BY_HANDLE_CLASS.FileFullDirectoryInfo,
+                        buffer.VoidPointer,
+                        (uint)buffer.ByteCapacity))
+                    {
+                        var error = ErrorHelper.GetLastError();
+                        switch (error)
+                        {
+                            case WindowsError.ERROR_BAD_LENGTH:
+                                // Not enough space for the struct data
+                                Debug.Fail("Should have properly set a minimum buffer");
+                                goto case WindowsError.ERROR_MORE_DATA;
+                            case WindowsError.ERROR_MORE_DATA:
+                                // Buffer isn't big enough for a filename
+                                buffer.EnsureByteCapacity(buffer.ByteCapacity + 512);
+                                break;
+                            case WindowsError.ERROR_NO_MORE_FILES:
+                                // Nothing left to get
+                                return;
+                            default:
+                                throw ErrorHelper.GetIoExceptionForError(error);
+                        }
+                    }
+
+                    action(buffer);
+                } while (true);
+            });
+        }
+
+        /// <summary>
+        /// Returns true if the given tag is owned by Microsoft.
+        /// </summary>
+        public static bool IsReparseTagMicrosoft(ReparseTag reparseTag)
+        {
+            return ((uint)reparseTag & 0x80000000) != 0;
+        }
+
+        /// <summary>
+        /// Returns true if the given tag is a name surrogate.
+        /// </summary>
+        public static bool IsReparseTagNameSurrogate(ReparseTag reparseTag)
+        {
+            return ((uint)reparseTag & 0x20000000) != 0;
         }
     }
 }

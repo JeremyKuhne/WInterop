@@ -117,6 +117,7 @@ Common Windows Data Types
 |`BOOLEAN`        |`unsigned char`      |`byte`   |`[MarshalAs(UnmanagedType.U1)] bool`
 |`BYTE`           |`unsigned char`      |`byte` | |
 |`CHAR`           |`char`               |`sbyte` | |
+|`CCHAR`          |`char`               |`sbyte` | |
 |`UCHAR`          |`unsigned char`      |`byte` | |
 |`SHORT`          |`short`              |`short` | |
 |`CSHORT`         |`short`              |`short` | |

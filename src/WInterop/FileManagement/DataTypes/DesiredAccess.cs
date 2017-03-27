@@ -18,6 +18,8 @@ namespace WInterop.FileManagement.DataTypes
     {
         NONE = 0,
 
+        DELETE = AccessTypes.DELETE,
+
         // File Security and Access Rights
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364399.aspx
 

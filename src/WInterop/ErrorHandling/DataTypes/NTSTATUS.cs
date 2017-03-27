@@ -99,6 +99,12 @@ namespace WInterop.ErrorHandling.DataTypes
         /// <summary>
         /// Insufficient system resources exist to complete the API.
         /// </summary>
-        STATUS_INSUFFICIENT_RESOURCES = unchecked((int)0xC000009A)
+        STATUS_INSUFFICIENT_RESOURCES = unchecked((int)0xC000009A),
+
+        /// <summary>
+        /// The operation did not complete successfully because it would cause an oplock
+        /// to be broken. The caller has requested that existing oplocks not be broken.
+        /// </summary>
+        STATUS_CANNOT_BREAK_OPLOCK = unchecked((int)0xC0000909L)
     }
 }
