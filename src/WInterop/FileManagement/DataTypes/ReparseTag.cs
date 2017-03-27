@@ -41,7 +41,17 @@ namespace WInterop.FileManagement.DataTypes
         /// </summary>
         IO_REPARSE_TAG_SIS = 0x80000007,
 
+        /// <summary>
+        /// Mount point for a Windows Imaging File Format image (WIM).
+        /// </summary>
+        /// <remarks>
+        /// https://msdn.microsoft.com/en-us/windows/hardware/commercialize/manufacture/desktop/mount-and-modify-a-windows-image-using-dism
+        /// </remarks>
         IO_REPARSE_TAG_WIM = 0x80000008,
+
+        /// <summary>
+        /// Used with Cluster Shared Volumes (CSV).
+        /// </summary>
         IO_REPARSE_TAG_CSV = 0x80000009,
 
         /// <summary>
@@ -66,9 +76,43 @@ namespace WInterop.FileManagement.DataTypes
         /// </summary>
         IO_REPARSE_TAG_SYMLINK = 0xA000000C,
 
+        /// <summary>
+        /// Data deduplication reparse point.
+        /// </summary>
+        /// <remarks>
+        /// https://technet.microsoft.com/en-us/library/hh831700.aspx
+        /// https://blogs.technet.microsoft.com/filecab/2012/05/20/introduction-to-data-deduplication-in-windows-server-2012/
+        /// </remarks>
         IO_REPARSE_TAG_DEDUP = 0x80000013,
+
+        /// <summary>
+        /// Network File System (NFS) reparse point.
+        /// </summary>
+        /// <remarks>
+        /// Can be a block or character device, a socket, a fifo, or
+        /// a symbolic link.
+        /// 
+        /// https://msdn.microsoft.com/en-us/library/dn617178.aspx
+        /// </remarks>
         IO_REPARSE_TAG_NFS = 0x80000014,
+
+        /// <summary>
+        /// A OneDrive (previously SkyDrive) placeholder file.
+        /// </summary>
+        /// <remarks>
+        /// Introduced in Windows 8.1, removed in Windows 10.
+        /// https://msdn.microsoft.com/en-us/windows/compatibility/placeholder-files
+        /// </remarks>
         IO_REPARSE_TAG_FILE_PLACEHOLDER = 0x80000015,
+
+        /// <summary>
+        /// Windows Overlay Filter reparse tag.
+        /// </summary>
+        /// <remarks>
+        /// Introduced in Windows 8.1 update 1 specifically to support Wimboot.
+        /// https://blogs.windows.com/itpro/2014/04/10/what-is-windows-image-boot-wimboot
+        /// https://technet.microsoft.com/en-us/library/dn594399.aspx
+        /// </remarks>
         IO_REPARSE_TAG_WOF = 0x80000017
     }
 }
