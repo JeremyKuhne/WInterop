@@ -33,11 +33,11 @@ namespace WInterop.Support
             switch (fileAccess)
             {
                 case System.IO.FileAccess.Read:
-                    return DesiredAccess.GENERIC_READ;
+                    return DesiredAccess.FILE_GENERIC_READ;
                 case System.IO.FileAccess.Write:
-                    return DesiredAccess.GENERIC_WRITE;
+                    return DesiredAccess.FILE_GENERIC_WRITE;
                 case System.IO.FileAccess.ReadWrite:
-                    return DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE;
+                    return DesiredAccess.FILE_GENERIC_READ | DesiredAccess.FILE_GENERIC_WRITE;
                 default:
                     return 0;
             }
@@ -46,10 +46,10 @@ namespace WInterop.Support
         public static System.IO.FileAccess DesiredAccessToFileAccess(DesiredAccess desiredAccess)
         {
             System.IO.FileAccess fileAccess = 0;
-            if ((desiredAccess & (DesiredAccess.GENERIC_READ | DesiredAccess.FILE_READ_DATA)) > 0)
+            if ((desiredAccess & (DesiredAccess.FILE_GENERIC_READ | DesiredAccess.FILE_READ_DATA)) > 0)
                 fileAccess = System.IO.FileAccess.Read;
 
-            if ((desiredAccess & (DesiredAccess.GENERIC_WRITE | DesiredAccess.FILE_WRITE_DATA)) > 0)
+            if ((desiredAccess & (DesiredAccess.FILE_GENERIC_WRITE | DesiredAccess.FILE_WRITE_DATA)) > 0)
                 fileAccess = fileAccess == System.IO.FileAccess.Read ? System.IO.FileAccess.ReadWrite : System.IO.FileAccess.Write;
 
             return fileAccess;

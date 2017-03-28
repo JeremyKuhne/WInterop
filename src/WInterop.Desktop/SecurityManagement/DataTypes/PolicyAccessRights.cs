@@ -28,7 +28,7 @@ namespace WInterop.SecurityManagement.DataTypes
         POLICY_SERVER_ADMIN                       = 0x00000400,
         POLICY_LOOKUP_NAMES                       = 0x00000800,
         POLICY_NOTIFICATION                       = 0x00001000,
-        POLICY_ALL_ACCESS = ACCESS_MASK.STANDARD_RIGHTS_REQUIRED
+        POLICY_ALL_ACCESS = StandardAccessRights.STANDARD_RIGHTS_REQUIRED
             | POLICY_VIEW_LOCAL_INFORMATION
             | POLICY_VIEW_AUDIT_INFORMATION
             | POLICY_GET_PRIVATE_INFORMATION
@@ -41,10 +41,10 @@ namespace WInterop.SecurityManagement.DataTypes
             | POLICY_AUDIT_LOG_ADMIN
             | POLICY_SERVER_ADMIN
             | POLICY_LOOKUP_NAMES,
-        POLICY_READ = ACCESS_MASK.STANDARD_RIGHTS_READ
+        POLICY_READ = StandardAccessRights.STANDARD_RIGHTS_READ
             | POLICY_VIEW_AUDIT_INFORMATION
             | POLICY_GET_PRIVATE_INFORMATION,
-        POLICY_WRITE = ACCESS_MASK.STANDARD_RIGHTS_WRITE
+        POLICY_WRITE = StandardAccessRights.STANDARD_RIGHTS_WRITE
             | POLICY_TRUST_ADMIN
             | POLICY_CREATE_ACCOUNT
             | POLICY_CREATE_SECRET
@@ -53,7 +53,7 @@ namespace WInterop.SecurityManagement.DataTypes
             | POLICY_SET_AUDIT_REQUIREMENTS
             | POLICY_AUDIT_LOG_ADMIN
             | POLICY_SERVER_ADMIN,
-        POLICY_EXECUTE = ACCESS_MASK.STANDARD_RIGHTS_EXECUTE
+        POLICY_EXECUTE = StandardAccessRights.STANDARD_RIGHTS_EXECUTE
             | POLICY_VIEW_LOCAL_INFORMATION
             | POLICY_LOOKUP_NAMES
     }

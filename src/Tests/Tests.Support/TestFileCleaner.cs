@@ -43,7 +43,7 @@ namespace Tests.Support
 
                 // Create a flag file and leave it open- this way we can track and clean abandoned (crashed/terminated) processes
                 _flagFile = FileMethods.CreateFileStream(flagFile,
-                    DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW);
+                    DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW);
 
                 var writer = new StreamWriter(_flagFile);
                 writer.WriteLine("Temporary Flag File");

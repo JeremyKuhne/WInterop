@@ -11,6 +11,8 @@ namespace WInterop.Authorization.DataTypes
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa446632.aspx">Generic access rights</a>.
+    /// These are rights flags that are internally mapped to standard and specific rights by the relevant object
+    /// manager provider.
     /// </summary>
     [Flags]
     public enum GenericAccessRights : uint

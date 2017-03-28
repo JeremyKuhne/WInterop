@@ -31,7 +31,7 @@ namespace Tests.Support
         public static string ReadAllText(string path)
         {
             using (var stream = FileMethods.CreateFileStream(path,
-                DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
             {
                 using (var reader = new System.IO.StreamReader(stream))
                 {

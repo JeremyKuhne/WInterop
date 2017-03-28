@@ -81,7 +81,7 @@ namespace Tests.FileManagementTests
             string tempFileName = FileMethods.GetTempFileName(tempPath, "tfn");
             try
             {
-                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -113,7 +113,7 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     file.IsInvalid.Should().BeFalse();
                     System.IO.File.Exists(tempFileName).Should().BeTrue();
@@ -137,7 +137,7 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     FileMethods.FlushFileBuffers(file);
                 }
@@ -152,7 +152,7 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     string fileName = FileMethods.GetFileNameByHandle(file);
                     tempFileName.Should().EndWith(fileName);
@@ -168,14 +168,14 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     var info = FileMethods.GetFileStandardInfoByHandle(directory);
                     info.Directory.Should().BeTrue();
                 }
 
-                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     var info = FileMethods.GetFileStandardInfoByHandle(file);
                     info.Directory.Should().BeFalse();
@@ -195,13 +195,13 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     var directoryInfo = FileMethods.GetFileBasicInfoByHandle(directory);
                     directoryInfo.Attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
 
-                    using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                    using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                     {
                         var fileInfo = FileMethods.GetFileBasicInfoByHandle(file);
                         fileInfo.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
@@ -219,13 +219,13 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                     FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     var directoryInfo = FileMethods.GetStreamInformationByHandle(directory);
                     directoryInfo.Should().BeEmpty();
 
-                    using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                    using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                     {
                         var fileInfo = FileMethods.GetStreamInformationByHandle(file);
                         fileInfo.Should().HaveCount(1);
@@ -244,7 +244,7 @@ namespace Tests.FileManagementTests
             using (var temp = new TestFileCleaner())
             {
                 string source = temp.GetTestPath();
-                using (var file = FileMethods.CreateFile(source, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                using (var file = FileMethods.CreateFile(source, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -255,7 +255,7 @@ namespace Tests.FileManagementTests
                 string alternateStream = destination + @":Foo:$DATA";
                 FileMethods.CopyFile(source, alternateStream);
 
-                using (var file = FileMethods.CreateFile(destination, DesiredAccess.GENERIC_READ | DesiredAccess.GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                using (var file = FileMethods.CreateFile(destination, DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     var fileInfo = FileMethods.GetStreamInformationByHandle(file);
                     fileInfo.Should().BeEquivalentTo(new StreamInformation[]
@@ -295,7 +295,7 @@ namespace Tests.FileManagementTests
             using (var temp = new TestFileCleaner())
             {
                 string source = temp.GetTestPath();
-                using (var file = FileMethods.CreateFile(source, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                using (var file = FileMethods.CreateFile(source, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -346,7 +346,7 @@ namespace Tests.FileManagementTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
+                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
                     FileMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
                     FileMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
@@ -359,7 +359,7 @@ namespace Tests.FileManagementTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
+                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
                     FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.FILE_CURRENT).Should().Be(0);
                 }
@@ -374,7 +374,7 @@ namespace Tests.FileManagementTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
+                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
                     FileMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
                     FileMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
@@ -391,7 +391,7 @@ namespace Tests.FileManagementTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
+                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW))
                 {
                     FileMethods.GetFileSize(fileHandle).Should().Be(0);
                 }
@@ -402,7 +402,7 @@ namespace Tests.FileManagementTests
         public void GetFileTypeDisk()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 FileMethods.GetFileType(directory).Should().Be(FileType.FILE_TYPE_DISK);

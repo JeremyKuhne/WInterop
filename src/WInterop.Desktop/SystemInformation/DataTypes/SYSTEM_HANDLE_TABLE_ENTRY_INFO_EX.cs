@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.DataTypes;
 
 namespace WInterop.SystemInformation.DataTypes
 {
@@ -17,7 +16,9 @@ namespace WInterop.SystemInformation.DataTypes
         public IntPtr Object;
         public UIntPtr UniqueProcessId;
         public UIntPtr HandleValue;
-        public ACCESS_MASK GrantedAccess;
+
+        // ACCESS_MASK
+        public uint GrantedAccess;
         public ushort CreatorBackTraceIndex;
         public ushort ObjectTypeIndex;
         public uint HandleAttributes;

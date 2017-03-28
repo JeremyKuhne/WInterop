@@ -44,7 +44,7 @@ namespace DesktopTests.FileManagement
                 string filePath = cleaner.CreateTestFile("FinalPathNameVolumeNameBehavior");
 
                 using (var handle = FileMethods.CreateFile(filePath.ToLower(),
-                     DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                     DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
@@ -122,7 +122,7 @@ namespace DesktopTests.FileManagement
                 string filePath = cleaner.CreateTestFile("FinalPathNameBehavior");
 
                 using (var handle = FileMethods.CreateFile(filePath.ToLower(),
-                    DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                    DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
@@ -155,7 +155,7 @@ namespace DesktopTests.FileManagement
                 FileHelper.WriteAllText(filePath, "FinalPathNameLongPathPrefixRoundTripBehavior");
 
                 using (var handle = FileMethods.CreateFile(filePath,
-                    DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                    DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
@@ -256,7 +256,7 @@ namespace DesktopTests.FileManagement
         public void CreateFileHarddiskVolume()
         {
             using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\HarddiskVolume1",
-                DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
             {
                 file.IsInvalid.Should().BeFalse();
                 FileMethods.GetFileType(file).Should().Be(FileType.FILE_TYPE_DISK);
@@ -267,7 +267,7 @@ namespace DesktopTests.FileManagement
         public void GetFileNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
@@ -281,7 +281,7 @@ namespace DesktopTests.FileManagement
         public void GetVolumeNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
@@ -302,7 +302,7 @@ namespace DesktopTests.FileManagement
         public void GetShortNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
@@ -313,7 +313,7 @@ namespace DesktopTests.FileManagement
                 string tempFilePath = System.IO.Path.Combine(tempPath, tempFileName);
                 try
                 {
-                    using (var file = FileMethods.CreateFile(tempFilePath, DesiredAccess.GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                    using (var file = FileMethods.CreateFile(tempFilePath, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                     {
                         string fileName = FileDesktopMethods.GetShortName(file);
                         fileName.Length.Should().BeLessOrEqualTo(12);

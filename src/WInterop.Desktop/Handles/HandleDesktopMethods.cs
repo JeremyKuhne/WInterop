@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Authentication.DataTypes;
-using WInterop.Authorization.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
@@ -56,7 +55,7 @@ namespace WInterop.Handles
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             public static extern NTSTATUS NtOpenDirectoryObject(
                 out SafeDirectoryObjectHandle DirectoryHandle,
-                ACCESS_MASK DesiredAccess,
+                DirectoryObjectRights DesiredAccess,
                 ref OBJECT_ATTRIBUTES ObjectAttributes);
 
             // https://msdn.microsoft.com/en-us/library/bb470236.aspx
@@ -64,7 +63,7 @@ namespace WInterop.Handles
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             unsafe public static extern NTSTATUS NtOpenSymbolicLinkObject(
                 out SafeSymbolicLinkObjectHandle LinkHandle,
-                ACCESS_MASK DesiredAccess,
+                SymbolicLinkObjectRights DesiredAccess,
                 ref OBJECT_ATTRIBUTES ObjectAttributes);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567068.aspx
@@ -98,7 +97,7 @@ namespace WInterop.Handles
         /// </summary>
         public static SafeDirectoryObjectHandle OpenDirectoryObject(
             string path,
-            ACCESS_MASK desiredAccess = ACCESS_MASK.DIRECTORY_QUERY)
+            DirectoryObjectRights desiredAccess = DirectoryObjectRights.DIRECTORY_QUERY)
         {
             return (SafeDirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
@@ -119,7 +118,7 @@ namespace WInterop.Handles
         /// </summary>
         public static SafeSymbolicLinkObjectHandle OpenSymbolicLinkObject(
             string path,
-            ACCESS_MASK desiredAccess = ACCESS_MASK.GENERIC_READ)
+            SymbolicLinkObjectRights desiredAccess = SymbolicLinkObjectRights.GENERIC_READ)
         {
             return (SafeSymbolicLinkObjectHandle)OpenObjectHelper(path, (attributes) =>
             {

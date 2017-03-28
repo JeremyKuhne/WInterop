@@ -12,7 +12,7 @@ namespace WInterop.FileManagement.DataTypes
     public enum ReparseTag : uint
     {
         /// <summary>
-        /// Reparse point is a mounted folder.
+        /// Reparse point is a mounted folder ("junction" or "soft link").
         /// </summary>
         /// <remarks>
         /// Mounted Folders:
@@ -21,7 +21,7 @@ namespace WInterop.FileManagement.DataTypes
         IO_REPARSE_TAG_MOUNT_POINT = 0xA0000003,
 
         /// <summary>
-        /// Obsolete. Used by legacy Hierarchical Storage Manager Product.
+        /// Obsolete. Used by legacy Hierarchical Storage Manager product.
         /// </summary>
         IO_REPARSE_TAG_HSM = 0xC0000004,
 
@@ -31,7 +31,7 @@ namespace WInterop.FileManagement.DataTypes
         IO_REPARSE_TAG_DRIVER_EXTENDER = 0x80000005,
 
         /// <summary>
-        /// Obsolete. Used by legacy Hierarchical Storage Manager Product.
+        /// Obsolete. Used by legacy Hierarchical Storage Manager product.
         /// </summary>
         IO_REPARSE_TAG_HSM2 = 0x80000006,
 
@@ -39,6 +39,9 @@ namespace WInterop.FileManagement.DataTypes
         /// Used by Single-Instance Storage filter driver. Server-side interpretation
         /// only, not meaningful over the wire.
         /// </summary>
+        /// <remarks>
+        /// https://en.wikipedia.org/wiki/Single-instance_storage
+        /// </remarks>
         IO_REPARSE_TAG_SIS = 0x80000007,
 
         /// <summary>

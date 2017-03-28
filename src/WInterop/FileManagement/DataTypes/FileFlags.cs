@@ -30,7 +30,7 @@ namespace WInterop.FileManagement.DataTypes
         /// Documentation on Opportunistic Locks:
         /// https://msdn.microsoft.com/en-us/library/windows/desktop/aa365433.aspx
         /// 
-        /// This flag is functionally to NtCreateFile's FILE_OPEN_REQUIRING_OPLOCK.
+        /// This flag is functionally equivalent to NtCreateFile's FILE_OPEN_REQUIRING_OPLOCK.
         /// </remarks>
         FILE_FLAG_OPEN_REQUIRING_OPLOCK = 0x00040000,
 
@@ -46,7 +46,7 @@ namespace WInterop.FileManagement.DataTypes
         /// file local)
         /// </summary>
         /// <remarks>
-        /// This flag is functionally to NtCreateFile's FILE_OPEN_NO_RECALL.
+        /// This flag is functionally equivalent to NtCreateFile's FILE_OPEN_NO_RECALL.
         /// </remarks>
         FILE_FLAG_OPEN_NO_RECALL = 0x00100000,
 
@@ -57,12 +57,12 @@ namespace WInterop.FileManagement.DataTypes
         /// Reparse points:
         /// https://msdn.microsoft.com/en-us/library/windows/desktop/aa365503.aspx
         /// 
-        /// This flag is functionally to NtCreateFile's FILE_OPEN_REPARSE_POINT.
+        /// This flag is functionally equivalent to NtCreateFile's FILE_OPEN_REPARSE_POINT.
         /// </remarks>
         FILE_FLAG_OPEN_REPARSE_POINT = 0x00200000,
 
         /// <remarks>
-        /// This flag is functionally to NtCreateFile's FILE_SESSION_AWARE.
+        /// This flag is functionally equivalent to NtCreateFile's FILE_SESSION_AWARE.
         /// </remarks>
         FILE_FLAG_SESSION_AWARE = 0x00800000,
 
@@ -71,10 +71,13 @@ namespace WInterop.FileManagement.DataTypes
         /// </summary>
         FILE_FLAG_POSIX_SEMANTICS = 0x01000000,
 
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>
         /// If this isn't set the call to NtCreateFile will include FILE_NON_DIRECTORY_FILE.
         /// 
-        /// This flag is functionally to NtCreateFile's FILE_OPEN_FOR_BACKUP_INTENT.
+        /// This flag is functionally equivalent to NtCreateFile's FILE_OPEN_FOR_BACKUP_INTENT.
         /// </remarks>
         FILE_FLAG_BACKUP_SEMANTICS = 0x02000000,
 
@@ -83,7 +86,7 @@ namespace WInterop.FileManagement.DataTypes
         /// this flag will implicitly set DELETE for DesiredAccess.
         /// </summary>
         /// <remarks>
-        /// This flag is functionally to NtCreateFile's FILE_DELETE_ON_CLOSE.
+        /// This flag is functionally equivalent to NtCreateFile's FILE_DELETE_ON_CLOSE.
         /// </remarks>
         FILE_FLAG_DELETE_ON_CLOSE = 0x04000000,
 
@@ -91,7 +94,7 @@ namespace WInterop.FileManagement.DataTypes
         /// Hints that the access for a file will be mostly sequential to optimize caching behavior.
         /// </summary>
         /// <remarks>
-        /// This flag is functionally to NtCreateFile's FILE_SEQUENTIAL_ONLY.
+        /// This flag is functionally equivalent to NtCreateFile's FILE_SEQUENTIAL_ONLY.
         /// </remarks>
         FILE_FLAG_SEQUENTIAL_SCAN = 0x08000000,
 
@@ -144,7 +147,7 @@ namespace WInterop.FileManagement.DataTypes
         /// https://msdn.microsoft.com/en-us/library/windows/desktop/aa364218.aspx
         /// </summary>
         /// <remarks>
-        /// This flag is functionally to NtCreateFile's FILE_WRITE_THROUGH.
+        /// This flag is functionally equivalent to NtCreateFile's FILE_WRITE_THROUGH.
         /// </remarks>
         FILE_FLAG_WRITE_THROUGH = 0x80000000
     }
