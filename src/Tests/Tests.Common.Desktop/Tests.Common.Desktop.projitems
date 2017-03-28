@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThread\ProcessTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\SecurityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
