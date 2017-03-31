@@ -73,7 +73,6 @@ namespace WInterop.ErrorHandling
                 source: IntPtr.Zero,
                 flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
 
-            
             return Enum.IsDefined(typeof(WindowsError), error)
                 ? $"{error} ({(uint)error}): {message}"
                 : $"Error {error}: {message}";

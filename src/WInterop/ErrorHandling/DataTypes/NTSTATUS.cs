@@ -27,6 +27,11 @@ namespace WInterop.ErrorHandling.DataTypes
         STATUS_BUFFER_OVERFLOW = unchecked((int)0x80000005),
 
         /// <summary>
+        /// {No More Entries} No more entries are available from an enumeration operation.
+        /// </summary>
+        STATUS_NO_MORE_ENTRIES = unchecked((int)0x8000001A),
+
+        /// <summary>
         /// {Operation Failed} The requested operation was unsuccessful.
         /// </summary>
         STATUS_UNSUCCESSFUL = unchecked((int)0xC0000001),

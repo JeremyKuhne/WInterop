@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\AuthorizationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clipboard\Methods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DEVMODE_Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DISPLAY_DEVICE_Tests.cs" />
@@ -25,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThread\ProcessTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Registry\RegistryTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\SecurityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellTests.cs" />

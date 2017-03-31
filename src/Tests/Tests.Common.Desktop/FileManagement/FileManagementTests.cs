@@ -17,7 +17,7 @@ using WInterop.Support;
 using Xunit;
 using WInterop.ErrorHandling.DataTypes;
 
-namespace DesktopTests.FileManagement
+namespace DesktopTests.FileManagementMethods
 {
     public class FileManagementTests
     {

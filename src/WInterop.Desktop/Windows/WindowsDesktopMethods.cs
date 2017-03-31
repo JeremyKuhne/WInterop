@@ -139,9 +139,18 @@ namespace WInterop.Windows
             return Direct.IsWindowUnicode(handle);
         }
 
+        /// <summary>
+        /// Get the top child window in the specified window. If passed a null window
+        /// finds the window at the top of the Z order.
+        /// </summary>
         public static WindowHandle GetTopWindow(WindowHandle handle)
         {
             return Direct.GetTopWindow(handle);
+        }
+
+        public static WindowHandle GetForegroundWindow()
+        {
+            return Direct.GetForegroundWindow();
         }
 
         /// <summary>
