@@ -45,5 +45,16 @@ namespace Tests.ErrorHandling
         {
             ErrorHelper.LastErrorToString((WindowsError)error).Should().Be(expected);
         }
+
+        [Theory,
+            InlineData(WindowsError.ERROR_ACCESS_DENIED, HRESULT.E_ACCESSDENIED),
+            // This GetLastError() is already an HRESULT
+            InlineData(WindowsError.FVE_E_LOCKED_VOLUME, unchecked((HRESULT)WindowsError.FVE_E_LOCKED_VOLUME))
+            ]
+        public void WindowsErrorToHresultMappings(WindowsError error, HRESULT expected)
+        {
+            HRESULT result = ErrorMacros.HRESULT_FROM_WIN32(error);
+            result.Should().Be(expected);
+        }
     }
 }

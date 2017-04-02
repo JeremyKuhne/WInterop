@@ -7,6 +7,7 @@
 
 namespace WInterop.ErrorHandling.DataTypes
 {
+    // https://msdn.microsoft.com/en-us/library/cc231198.aspx
     public enum HRESULT : int
     {
         S_OK = 0,

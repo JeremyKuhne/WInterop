@@ -155,6 +155,7 @@ namespace WInterop.ErrorHandling
                     // return new DriveNotFoundException(message);
                     goto default;
                 case WindowsError.ERROR_OPERATION_ABORTED:
+                case WindowsError.ERROR_CANCELLED:
                     return new OperationCanceledException(message);
                 case WindowsError.ERROR_NOT_READY:
                     return new DriveNotReadyException(message);

@@ -6,22 +6,29 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.IO;
 
 namespace WInterop.ErrorHandling.DataTypes
 {
-    public class DriveNotReadyException : IOException
+    public class DriveNotReadyException : WInteropIOException
     {
+        private const WindowsError DefaultError = WindowsError.ERROR_NOT_READY;
+
         public DriveNotReadyException()
-            : base() { HResult = (int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_NOT_READY); }
+            : base(DefaultError) { }
 
-        public DriveNotReadyException(string message)
-            : base(message) { HResult = (int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_NOT_READY); }
+        public DriveNotReadyException(string message, Exception innerException = null)
+            : base(message, ErrorMacros.HRESULT_FROM_WIN32(DefaultError), innerException) { }
 
-        public DriveNotReadyException(string message, Exception innerException)
-            : base(message, innerException) { HResult = (int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_NOT_READY); }
+        public DriveNotReadyException(string message, HRESULT hresult, Exception innerException = null)
+            : base(message, hresult, innerException) { }
 
-        public DriveNotReadyException(string message, int hresult)
-            : base(message, hresult) { }
+        public DriveNotReadyException(HRESULT result)
+            : base(result) { }
+
+        public DriveNotReadyException(WindowsError error)
+            : base(error) { }
+
+        public DriveNotReadyException(NTSTATUS status)
+            : base(status) { }
     }
 }

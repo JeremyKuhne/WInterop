@@ -11,6 +11,13 @@ namespace WInterop.ErrorHandling
 {
     public static class ErrorMacros
     {
+        private const int STATUS_SEVERITY_SUCCESS = 0x0;
+        private const int STATUS_SEVERITY_INFORMATIONAL = 0x1;
+        private const int STATUS_SEVERITY_WARNING = 0x2;
+        private const int STATUS_SEVERITY_ERROR = 0x3;
+
+        private const int FACILITY_NT_BIT = 0x10000000;
+
         /// <summary>
         /// Extracts the code portion of the specified HRESULT
         /// </summary>
@@ -45,7 +52,12 @@ namespace WInterop.ErrorHandling
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680746.aspx
             // return (HRESULT)(x) <= 0 ? (HRESULT)(x) : (HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
-            return (HRESULT)((uint)error <= 0 ? (uint)error : (((uint)error & 0x0000FFFF) | ((int)Facility.WIN32 << 16) | 0x80000000));
+            return (HRESULT)((int)error <= 0 ? (int)error : (((int)error & 0x0000FFFF) | ((int)Facility.WIN32 << 16) | 0x80000000));
+        }
+
+        public static HRESULT HRESULT_FROM_NT(NTSTATUS status)
+        {
+            return (HRESULT)((int)status | FACILITY_NT_BIT);
         }
 
         public static bool SUCCEEDED(HRESULT hr)
@@ -64,10 +76,6 @@ namespace WInterop.ErrorHandling
 
         // [MS-ERREF] NTSTATUS
         // https://msdn.microsoft.com/en-us/library/cc231200.aspx
-        private const int STATUS_SEVERITY_SUCCESS = 0x0;
-        private const int STATUS_SEVERITY_INFORMATIONAL = 0x1;
-        private const int STATUS_SEVERITY_WARNING = 0x2;
-        private const int STATUS_SEVERITY_ERROR = 0x3;
 
         public static bool NT_SUCCESS(NTSTATUS NTSTATUS)
         {

@@ -137,6 +137,10 @@ namespace WInterop.Desktop.Communications
             return config;
         }
 
+        /// <summary>
+        /// Pops the COM port configuration dialog and returns the selected settings.
+        /// </summary>
+        /// <exception cref="OperationCanceledException">Thrown if the dialog is cancelled.</exception>
         public unsafe static COMMCONFIG CommConfigDialog(string port, WindowHandle parent)
         {
             COMMCONFIG config = GetDefaultCommConfig(port);
