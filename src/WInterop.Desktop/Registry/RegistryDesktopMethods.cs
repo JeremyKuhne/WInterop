@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using WInterop.Desktop.Registry.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
@@ -53,7 +52,8 @@ namespace WInterop.Desktop.Registry
                 uint* lpcbData);
 
             // Performance for RegEnumValueW is suboptimal as it has to allocate an additional buffer
-            // to call NtEnumerateValueKey. NtEnumerateValueKey is documented, 
+            // to call NtEnumerateValueKey. NtEnumerateValueKey is documented, but does not support
+            // performance keys and automatic redirection of HKCR values to user overrides.
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724865.aspx
             [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -77,6 +77,13 @@ namespace WInterop.Desktop.Registry
                 out uint ResultLength);
         }
 
+        /// <summary>
+        /// Open the specified subkey.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="subKeyName"></param>
+        /// <param name="rights"></param>
+        /// <returns></returns>
         public static RegistryKeyHandle OpenKey(
             RegistryKeyHandle key,
             string subKeyName,
@@ -89,6 +96,9 @@ namespace WInterop.Desktop.Registry
             return subKey;
         }
 
+        /// <summary>
+        /// Returns true if the given value exists.
+        /// </summary>
         public unsafe static bool QueryValueExists(RegistryKeyHandle key, string valueName)
         {
             WindowsError result = Direct.RegQueryValueExW(key, valueName, null, null, null, null);
@@ -103,6 +113,9 @@ namespace WInterop.Desktop.Registry
             }
         }
 
+        /// <summary>
+        /// Returns the type of the given value, or REG_NONE if it doesn't exist.
+        /// </summary>
         public unsafe static RegistryValueType QueryValueType(RegistryKeyHandle key, string valueName)
         {
             RegistryValueType valueType = new RegistryValueType();
@@ -118,6 +131,19 @@ namespace WInterop.Desktop.Registry
             }
         }
 
+        /// <summary>
+        /// Gets the key's value names directly from NtEnumerateValueKey. This is slightly faster
+        /// and uses less memory, but only works for keys in the local machine registry and does
+        /// not work with performance keys (such as HKEY_PERFORMANCE_DATA).
+        /// 
+        /// This also doesn't give the same results for "special" (HKCR) keys that are normally
+        /// redirected to user specific settings by RegEnumValue.
+        /// </summary>
+        /// <remarks>
+        /// RegEnumValue doesn't map directly to NtEnumerateValueKey and requires allocating a
+        /// temporary buffer for *each* invocation- making the direct call here avoids this extra
+        /// buffer.
+        /// </remarks>
         public unsafe static IEnumerable<string> GetValueNamesDirect(RegistryKeyHandle key)
         {
             List<string> names = new List<string>();
@@ -126,17 +152,15 @@ namespace WInterop.Desktop.Registry
             {
                 uint index = 0;
 
-                NTSTATUS status = NTSTATUS.STATUS_SUCCESS;
-                do
+                NTSTATUS status;
+                while((status = Direct.NtEnumerateValueKey(
+                    key,
+                    index,
+                    KEY_VALUE_INFORMATION_CLASS.KeyValueBasicInformation,
+                    buffer.VoidPointer,
+                    checked((uint)buffer.ByteCapacity),
+                    out uint resultLength)) != NTSTATUS.STATUS_NO_MORE_ENTRIES)
                 {
-                    status = Direct.NtEnumerateValueKey(
-                        key,
-                        index,
-                        KEY_VALUE_INFORMATION_CLASS.KeyValueBasicInformation,
-                        buffer.VoidPointer,
-                        checked((uint)buffer.ByteCapacity),
-                        out uint resultLength);
-
                     switch (status)
                     {
                         case NTSTATUS.STATUS_SUCCESS:
@@ -148,12 +172,10 @@ namespace WInterop.Desktop.Registry
                         case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
                             buffer.EnsureByteCapacity(resultLength);
                             break;
-                        case NTSTATUS.STATUS_NO_MORE_ENTRIES:
-                            break;
                         default:
                             throw ErrorHelper.GetIoExceptionForNTStatus(status);
                     }
-                } while (status != NTSTATUS.STATUS_NO_MORE_ENTRIES);
+                }
             });
 
             return names;
@@ -167,11 +189,11 @@ namespace WInterop.Desktop.Registry
             {
                 uint index = 0;
                 uint bufferSize = buffer.CharCapacity;
-                WindowsError result = WindowsError.ERROR_SUCCESS;
 
-                do
+                WindowsError result;
+                while ((result = Direct.RegEnumValueW(key, index, buffer.VoidPointer, ref bufferSize, null, null, null, null))
+                    != WindowsError.ERROR_NO_MORE_ITEMS)
                 {
-                    result = Direct.RegEnumValueW(key, index, buffer.VoidPointer, ref bufferSize, null, null, null, null);
                     switch (result)
                     {
                         case WindowsError.ERROR_SUCCESS:
@@ -185,12 +207,10 @@ namespace WInterop.Desktop.Registry
                             buffer.EnsureCharCapacity(bufferSize + 100);
                             bufferSize = buffer.CharCapacity;
                             break;
-                        case WindowsError.ERROR_NO_MORE_ITEMS:
-                            break;
                         default:
                             throw ErrorHelper.GetIoExceptionForError(result);
                     }
-                } while (result != WindowsError.ERROR_NO_MORE_ITEMS);
+                }
             });
 
             return names;

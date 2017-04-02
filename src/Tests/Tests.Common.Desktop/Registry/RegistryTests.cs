@@ -35,6 +35,25 @@ namespace DesktopTests.Registry
         }
 
         [Fact]
+        public void IsLocalHandle()
+        {
+            using (var key = RegistryDesktopMethods.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
+            {
+                key.IsLocalKey.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void IsSpecialKey()
+        {
+            using (var key = RegistryDesktopMethods.OpenKey(RegistryKeyHandle.HKEY_CLASSES_ROOT, null))
+            {
+                key.IsInvalid.Should().BeFalse();
+                key.IsSpecialKey.Should().BeTrue("the key should be special");
+            }
+        }
+
+        [Fact]
         public void QueryValueExists()
         {
             using (var key = RegistryDesktopMethods.OpenKey(
