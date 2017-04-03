@@ -59,24 +59,24 @@ namespace WInterop.Desktop.Registry.DataTypes
         /// <summary>
         /// The right to delete the object.
         /// </summary>
-        DELETE = 0x00010000,
+        DELETE = StandardAccessRights.DELETE,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
         /// Doesn't include system access control list info (SACL).
         /// </summary>
-        READ_CONTROL = 0x00020000,
+        READ_CONTROL = StandardAccessRights.READ_CONTROL,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
         /// object's security descriptor.
         /// </summary>
-        WRITE_DAC = 0x00040000,
+        WRITE_DAC = StandardAccessRights.WRITE_DAC,
 
         /// <summary>
         /// The right to change the owner in the object's security descriptor.
         /// </summary>
-        WRITE_OWNER = 0x00080000,
+        WRITE_OWNER = StandardAccessRights.WRITE_OWNER,
 
         /// <summary>
         /// Internally maps to KEY_READ.
