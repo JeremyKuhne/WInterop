@@ -6,11 +6,16 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Win32.SafeHandles;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Desktop.Communications.DataTypes;
+using WInterop.Desktop.Registry;
+using WInterop.Desktop.Registry.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.FileManagement;
 using WInterop.FileManagement.DataTypes;
+using WInterop.Synchronization.DataTypes;
 using WInterop.Windows.DataTypes;
 
 namespace WInterop.Desktop.Communications
@@ -72,6 +77,18 @@ namespace WInterop.Desktop.Communications
                 string lpszName,
                 WindowHandle hWnd,
                 ref COMMCONFIG lpCC);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363473.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool TransmitCommChar(
+                SafeFileHandle hFile,
+                sbyte cChar);
+
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern bool WaitCommEvent(
+                SafeFileHandle hFile,
+                out EventMask lpEvtMask,
+                OVERLAPPED* lpOverlapped);
         }
 
         public unsafe static DCB GetCommState(SafeFileHandle fileHandle)
@@ -166,6 +183,15 @@ namespace WInterop.Desktop.Communications
                 CreationDisposition.OPEN_EXISTING,
                 fileAttributes,
                 fileFlags);
+        }
+
+        public static IEnumerable<string> GetAvailableComPorts()
+        {
+            using (var key = RegistryDesktopMethods.OpenKey(
+                RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"HARDWARE\DEVICEMAP\SERIALCOMM"))
+            {
+                return RegistryDesktopMethods.GetValueDataDirect(key, RegistryValueType.REG_SZ).OfType<string>().ToArray();
+            }
         }
     }
 }
