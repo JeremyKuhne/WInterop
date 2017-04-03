@@ -104,5 +104,39 @@ namespace DesktopTests.Registry
                 names.Should().Contain("BuildNumber");
             }
         }
+
+        [Fact]
+        public void GetValueDataDirect()
+        {
+            using (var key = RegistryDesktopMethods.OpenKey(
+                RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+            {
+                var data = RegistryDesktopMethods.GetValueDataDirect(key);
+                data.Should().NotBeEmpty();
+            }
+        }
+
+        [Fact]
+        public void QueryValue_Uint()
+        {
+            using (var key = RegistryDesktopMethods.OpenKey(
+                RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
+            {
+                var buildNumber = RegistryDesktopMethods.QueryValue(key, "BuildNumber");
+                buildNumber.Should().BeOfType<uint>();
+            }
+        }
+
+        [Fact]
+        public void QueryValue_String()
+        {
+            using (var key = RegistryDesktopMethods.OpenKey(
+                RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+            {
+                var productName = RegistryDesktopMethods.QueryValue(key, "ProductName");
+                productName.Should().BeOfType<string>();
+                ((string)productName).Should().StartWith("Windows");
+            }
+        }
     }
 }
