@@ -30,7 +30,7 @@ namespace WInterop.Cryptography
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-            public static extern SafeCertificateStoreHandle CertOpenStore(
+            public static extern CertificateStoreHandle CertOpenStore(
                 IntPtr lpszStoreProvider,
                 uint dwMsgAndCertEncodingType,
                 IntPtr hCryptProv,
@@ -83,7 +83,7 @@ namespace WInterop.Cryptography
                 throw ErrorHelper.GetIoExceptionForLastError();
         }
 
-        unsafe private static SafeCertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)
+        unsafe private static CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)
         {
             uint flags = (uint)StoreOpenFlags.CERT_STORE_NO_CRYPT_RELEASE_FLAG;
             if (storeName == StoreName.SPC)
@@ -93,7 +93,7 @@ namespace WInterop.Cryptography
 
             fixed (char* name = storeName.ToString())
             {
-                SafeCertificateStoreHandle store = Direct.CertOpenStore(
+                CertificateStoreHandle store = Direct.CertOpenStore(
                     lpszStoreProvider: (IntPtr)StoreProvider.CERT_STORE_PROV_SYSTEM,
                     dwMsgAndCertEncodingType: 0,
                     hCryptProv: IntPtr.Zero,
@@ -104,7 +104,7 @@ namespace WInterop.Cryptography
             }
         }
 
-        public static SafeCertificateStoreHandle OpenSystemStore(StoreName storeName)
+        public static CertificateStoreHandle OpenSystemStore(StoreName storeName)
         {
             return OpenSystemStoreWrapper(storeName);
         }

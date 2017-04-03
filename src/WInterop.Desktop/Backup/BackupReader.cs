@@ -118,7 +118,7 @@ namespace WInterop.Backup
 #endif
                 }
 
-                Debug.Assert(_context == IntPtr.Zero);
+                _context = IntPtr.Zero;
             }
         }
 

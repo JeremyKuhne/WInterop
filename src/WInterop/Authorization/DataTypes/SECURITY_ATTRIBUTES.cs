@@ -7,15 +7,16 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Support;
 
-namespace WInterop.Authentication.DataTypes
+namespace WInterop.Authorization.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379560.aspx
     [StructLayout(LayoutKind.Sequential)]
     public struct SECURITY_ATTRIBUTES
     {
         public uint nLength;
-        public IntPtr lpSecurityDescriptor;
-        byte bInheritHandle;
+        public unsafe SECURITY_DESCRIPTOR* lpSecurityDescriptor;
+        public BOOL bInheritHandle;
     }
 }

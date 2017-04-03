@@ -29,7 +29,7 @@ namespace WInterop.Cryptography
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376560.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern SafeCertificateStoreHandle CertOpenSystemStoreW(
+            public static extern CertificateStoreHandle CertOpenSystemStoreW(
                 IntPtr hprov,
                 string szSubsystemProtocol);
 
