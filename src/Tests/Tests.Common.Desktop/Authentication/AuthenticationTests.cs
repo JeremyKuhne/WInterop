@@ -16,7 +16,7 @@ namespace DesktopTests.Authentication
 {
     public class AuthenticationTests
     {
-        [Fact]
+        [Fact(Skip = "Need to conditionalize on admin access")]
         public void LsaOpenPolicy_StandardRead()
         {
             SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);

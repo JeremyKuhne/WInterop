@@ -18,7 +18,7 @@ namespace DesktopTests.SecurityManagement
 {
     public class SecurityTests
     {
-        [Fact]
+        [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_UserGroup()
         {
             SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_EXECUTE);
@@ -28,7 +28,7 @@ namespace DesktopTests.SecurityManagement
             rights.Should().Contain("SeChangeNotifyPrivilege");
         }
 
-        [Fact]
+        [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_ReadRightsFails()
         {
             SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
@@ -37,7 +37,7 @@ namespace DesktopTests.SecurityManagement
             action.ShouldThrow<UnauthorizedAccessException>();
         }
 
-        [Fact]
+        [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_BadSidFails()
         {
             SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
@@ -46,7 +46,7 @@ namespace DesktopTests.SecurityManagement
             action.ShouldThrow<ArgumentException>();
         }
 
-        [Fact]
+        [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_NoRightsFails()
         {
             SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
