@@ -7,7 +7,6 @@
 
 using System.Runtime.InteropServices;
 using WInterop.Handles.DataTypes;
-using WInterop.Support.Buffers;
 
 namespace WInterop.Com.DataTypes
 {

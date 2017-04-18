@@ -17,6 +17,6 @@ namespace WInterop.Desktop.Communications.DataTypes
         public ProviderSubType dwProviderSubType;
         public uint dwProviderOffset;
         public uint dwProviderSize;
-        private char wcProviderData;
+        public char wcProviderData;
     }
 }

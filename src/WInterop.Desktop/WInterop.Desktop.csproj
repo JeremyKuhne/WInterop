@@ -25,6 +25,8 @@
     <ProjectReference Include="..\Winterop\WInterop.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Authorization\DataTypes\" />
+    <Folder Include="Backup\DataTypes\" />
+    <Folder Include="Clipboard\DataTypes\" />
+    <Folder Include="Communications\DataTypes\" />
   </ItemGroup>
 </Project>

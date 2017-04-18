@@ -19,7 +19,14 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Authentication\DataTypes\" />
     <Folder Include="Authorization\DataTypes\" />
+    <Folder Include="Com\DataTypes\" />
+    <Folder Include="ErrorHandling\DataTypes\" />
+    <Folder Include="FileManagement\DataTypes\" />
+    <Folder Include="MemoryManagement\DataTypes\" />
+    <Folder Include="Support\Buffers\" />
+    <Folder Include="Support\Collections\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WInterop.Types\WInterop.Types.csproj" />
