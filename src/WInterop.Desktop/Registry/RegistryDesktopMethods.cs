@@ -80,10 +80,6 @@ namespace WInterop.Desktop.Registry
         /// <summary>
         /// Open the specified subkey.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="subKeyName"></param>
-        /// <param name="rights"></param>
-        /// <returns></returns>
         public static RegistryKeyHandle OpenKey(
             RegistryKeyHandle key,
             string subKeyName,
@@ -188,12 +184,10 @@ namespace WInterop.Desktop.Registry
 
             BufferHelper.CachedInvoke((HeapBuffer buffer) =>
             {
-                uint index = 0;
-
                 NTSTATUS status;
                 while((status = Direct.NtEnumerateValueKey(
                     key,
-                    index,
+                    (uint)names.Count,
                     KEY_VALUE_INFORMATION_CLASS.KeyValueBasicInformation,
                     buffer.VoidPointer,
                     checked((uint)buffer.ByteCapacity),
@@ -205,7 +199,6 @@ namespace WInterop.Desktop.Registry
                             KEY_VALUE_BASIC_INFORMATION* info = (KEY_VALUE_BASIC_INFORMATION*)buffer.VoidPointer;
                             if (filterTo == RegistryValueType.REG_NONE || (*info).Type == filterTo)
                                 names.Add(new string(&(*info).Name, 0, (int)(*info).NameLength / sizeof(char)));
-                            index++;
                             break;
                         case NTSTATUS.STATUS_BUFFER_OVERFLOW:
                         case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
@@ -242,12 +235,10 @@ namespace WInterop.Desktop.Registry
 
             BufferHelper.CachedInvoke((HeapBuffer buffer) =>
             {
-                uint index = 0;
-
                 NTSTATUS status;
                 while ((status = Direct.NtEnumerateValueKey(
                     key,
-                    index,
+                    (uint)data.Count,
                     KEY_VALUE_INFORMATION_CLASS.KeyValuePartialInformation,
                     buffer.VoidPointer,
                     checked((uint)buffer.ByteCapacity),
@@ -259,7 +250,6 @@ namespace WInterop.Desktop.Registry
                             KEY_VALUE_PARTIAL_INFORMATION* info = (KEY_VALUE_PARTIAL_INFORMATION*)buffer.VoidPointer;
                             if (filterTo == RegistryValueType.REG_NONE || (*info).Type == filterTo)
                                 data.Add(ReadValue(&(*info).Data, (*info).DataLength, (*info).Type));
-                            index++;
                             break;
                         case NTSTATUS.STATUS_BUFFER_OVERFLOW:
                         case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
@@ -283,11 +273,12 @@ namespace WInterop.Desktop.Registry
 
             BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
-                uint index = 0;
+                // Ensure we have enough space to hold the perf key values
+                buffer.EnsureCharCapacity(10);
                 uint bufferSize = buffer.CharCapacity;
 
                 WindowsError result;
-                while ((result = Direct.RegEnumValueW(key, index, buffer.VoidPointer, ref bufferSize, null, null, null, null))
+                while ((result = Direct.RegEnumValueW(key, (uint)names.Count, buffer.VoidPointer, ref bufferSize, null, null, null, null))
                     != WindowsError.ERROR_NO_MORE_ITEMS)
                 {
                     switch (result)
@@ -295,13 +286,23 @@ namespace WInterop.Desktop.Registry
                         case WindowsError.ERROR_SUCCESS:
                             buffer.Length = bufferSize;
                             names.Add(buffer.ToString());
-                            index++;
                             break;
                         case WindowsError.ERROR_MORE_DATA:
-                            // For some reason the name size isn't reported back,
-                            // even though it is known. Why would they not do this?
-                            buffer.EnsureCharCapacity(bufferSize + 100);
-                            bufferSize = buffer.CharCapacity;
+                            if (key.IsPerfKey)
+                            {
+                                // Perf keys always report back ERROR_MORE_DATA,
+                                // and also does not report the size of the string.
+                                buffer.SetLengthToFirstNull();
+                                names.Add(buffer.ToString());
+                                bufferSize = buffer.CharCapacity;
+                            }
+                            else
+                            {
+                                // For some reason the name size isn't reported back,
+                                // even though it is known. Why would they not do this?
+                                buffer.EnsureCharCapacity(bufferSize + 100);
+                                bufferSize = buffer.CharCapacity;
+                            }
                             break;
                         default:
                             throw ErrorHelper.GetIoExceptionForError(result);

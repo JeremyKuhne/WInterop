@@ -20,9 +20,9 @@ namespace WInterop.Desktop.Registry.DataTypes
         public static RegistryKeyHandle HKEY_CURRENT_USER = new RegistryKeyHandle(0x80000001);
         public static RegistryKeyHandle HKEY_LOCAL_MACHINE = new RegistryKeyHandle(0x80000002);
         public static RegistryKeyHandle HKEY_USERS = new RegistryKeyHandle(0x80000003);
-        public static RegistryKeyHandle HKEY_PERFORMANCE_DATA = new RegistryKeyHandle(0x80000004);
-        public static RegistryKeyHandle HKEY_PERFORMANCE_TEXT = new RegistryKeyHandle(0x80000050);
-        public static RegistryKeyHandle HKEY_PERFORMANCE_NLSTEXT = new RegistryKeyHandle(0x80000060);
+        public static RegistryKeyHandle HKEY_PERFORMANCE_DATA = new RegistryKeyHandle(0x80000004, isPerfKey: true);
+        public static RegistryKeyHandle HKEY_PERFORMANCE_TEXT = new RegistryKeyHandle(0x80000050, isPerfKey: true);
+        public static RegistryKeyHandle HKEY_PERFORMANCE_NLSTEXT = new RegistryKeyHandle(0x80000060, isPerfKey: true);
         public static RegistryKeyHandle HKEY_CURRENT_CONFIG = new RegistryKeyHandle(0x80000005);
         public static RegistryKeyHandle HKEY_DYN_DATA = new RegistryKeyHandle(0x80000006);
         public static RegistryKeyHandle HKEY_CURRENT_USER_LOCAL_SETTINGS = new RegistryKeyHandle(0x80000007);
@@ -35,10 +35,13 @@ namespace WInterop.Desktop.Registry.DataTypes
         {
         }
 
-        private RegistryKeyHandle(uint predefined) : this(ownsHandle: false)
+        private RegistryKeyHandle(uint predefined, bool isPerfKey = false) : this(ownsHandle: false)
         {
             handle = (IntPtr)predefined;
+            IsPerfKey = isPerfKey;
         }
+
+        public bool IsPerfKey { get; private set; }
 
         /// <summary>
         /// Returns true if the key is from the local machine.

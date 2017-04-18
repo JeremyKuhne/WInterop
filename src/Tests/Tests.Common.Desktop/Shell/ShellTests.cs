@@ -22,7 +22,7 @@ namespace DesktopTests.ShellTests
         public void GetKnownFolderPath_Basic()
         {
             string windowsFolder = ShellDesktopMethods.GetKnownFolderPath(KNOWNFOLDERID.Windows);
-            windowsFolder.Should().EndWith("Windows");
+            windowsFolder.Should().EndWithEquivalent("Windows");
         }
 
         [Fact]
@@ -102,11 +102,11 @@ namespace DesktopTests.ShellTests
             using (var id = ShellDesktopMethods.GetKnownFolderId(KNOWNFOLDERID.Windows))
             {
                 id.IsInvalid.Should().BeFalse();
-                ShellDesktopMethods.GetNameFromId(id, SIGDN.PARENTRELATIVE).Should().Be("Windows");
+                ShellDesktopMethods.GetNameFromId(id, SIGDN.PARENTRELATIVE).Should().BeEquivalentTo("Windows");
 
                 IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
                 IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Windows);
-                folder.GetPath(0).Should().Be(ShellDesktopMethods.GetNameFromId(id, SIGDN.FILESYSPATH));
+                folder.GetPath(0).Should().BeEquivalentTo(ShellDesktopMethods.GetNameFromId(id, SIGDN.FILESYSPATH));
             }
         }
 

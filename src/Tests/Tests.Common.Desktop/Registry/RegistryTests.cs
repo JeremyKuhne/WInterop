@@ -95,6 +95,27 @@ namespace DesktopTests.Registry
         }
 
         [Fact]
+        public void GetValueNames_PerformanceData()
+        {
+            var names = RegistryDesktopMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_DATA);
+            names.Should().ContainInOrder("Global", "Costly");
+        }
+
+        [Fact]
+        public void GetValueNames_PerformanceText()
+        {
+            var names = RegistryDesktopMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_TEXT);
+            names.Should().ContainInOrder("Counter", "Help");
+        }
+
+        [Fact]
+        public void GetValueNames_PerformanceNlsText()
+        {
+            var names = RegistryDesktopMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_NLSTEXT);
+            names.Should().ContainInOrder("Counter", "Help");
+        }
+
+        [Fact]
         public void GetValueNamesDirect()
         {
             using (var key = RegistryDesktopMethods.OpenKey(
