@@ -24,10 +24,6 @@ namespace WInterop.Cryptography
         /// </remarks>
         public static class Direct
         {
-            public const uint CERT_SYSTEM_STORE_RELOCATE_FLAG = 0x80000000;
-            public const uint CERT_SYSTEM_STORE_LOCATION_MASK = 0x00FF0000;
-            public const int CERT_SYSTEM_STORE_LOCATION_SHIFT = 16;
-
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
             public static extern CertificateStoreHandle CertOpenStore(
@@ -234,7 +230,7 @@ namespace WInterop.Cryptography
         {
             SystemStoreInformation info = new SystemStoreInformation();
 
-            if ((dwFlags & Direct.CERT_SYSTEM_STORE_RELOCATE_FLAG) == Direct.CERT_SYSTEM_STORE_RELOCATE_FLAG)
+            if ((dwFlags & CryptoDefines.CERT_SYSTEM_STORE_RELOCATE_FLAG) == CryptoDefines.CERT_SYSTEM_STORE_RELOCATE_FLAG)
             {
 #if DESKTOP
                 var relocate = Marshal.PtrToStructure<CERT_SYSTEM_STORE_RELOCATE_PARA>(pvSystemStore);
@@ -255,7 +251,7 @@ namespace WInterop.Cryptography
                 info.Name = Marshal.PtrToStringUni(pvSystemStore);
             }
 
-            info.Location = (SystemStoreLocation)(dwFlags & Direct.CERT_SYSTEM_STORE_LOCATION_MASK);
+            info.Location = (SystemStoreLocation)(dwFlags & CryptoDefines.CERT_SYSTEM_STORE_LOCATION_MASK);
             return info;
         }
     }
