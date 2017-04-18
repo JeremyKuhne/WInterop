@@ -24,7 +24,7 @@ namespace WInterop.MemoryManagement.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            MemoryMethods.LocalFree(handle);
+            Support.Internal.Imports.LocalFree(handle);
             return true;
         }
     }

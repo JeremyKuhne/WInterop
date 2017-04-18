@@ -9,6 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support.Internal;
 
 namespace WInterop.MemoryManagement
 {
@@ -29,11 +30,6 @@ namespace WInterop.MemoryManagement
             // --------------
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366711.aspx
 
-            //internal const uint HEAP_NO_SERIALIZE = 0x00000001;
-            //internal const uint HEAP_GENERATE_EXCEPTIONS = 0x00000004;
-            public const uint HEAP_ZERO_MEMORY = 0x00000008;
-            //internal const uint HEAP_REALLOC_IN_PLACE_ONLY = 0x00000010;
-
             // HeapAlloc/Realloc take a SIZE_T for their count of bytes. This is ultimately an
             // unsigned __int3264 which is platform specific (uint on 32bit and ulong on 64bit).
             // UIntPtr can encapsulate this as it wraps void* and has unsigned constructors.
@@ -43,16 +39,13 @@ namespace WInterop.MemoryManagement
             // https://msdn.microsoft.com/en-us/library/cc441980.aspx
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366597.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = false, ExactSpelling = true)]
-            public static extern IntPtr HeapAlloc(IntPtr hHeap, uint dwFlags, UIntPtr dwBytes);
+            public static IntPtr HeapAlloc(IntPtr hHeap, uint dwFlags, UIntPtr dwBytes) => Imports.HeapAlloc(hHeap, dwFlags, dwBytes);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366704.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = false, ExactSpelling = true)]
-            public static extern IntPtr HeapReAlloc(IntPtr hHeap, uint dwFlags, IntPtr lpMem, UIntPtr dwBytes);
+            public static IntPtr HeapReAlloc(IntPtr hHeap, uint dwFlags, IntPtr lpMem, UIntPtr dwBytes) => Imports.HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366701.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool HeapFree(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
+            public static bool HeapFree(IntPtr hHeap, uint dwFlags, IntPtr lpMem) => Imports.HeapFree(hHeap, dwFlags, lpMem);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366706.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -68,18 +61,16 @@ namespace WInterop.MemoryManagement
 
             // This is safe to cache as it will never change for a process once started
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern IntPtr GetProcessHeap();
+            public static IntPtr GetProcessHeap() => Imports.GetProcessHeap();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366730.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern IntPtr LocalFree(IntPtr hMem);
+            public static IntPtr LocalFree(IntPtr hMem) => Imports.LocalFree(hMem);
         }
 
         /// <summary>
         /// The handle for the process heap.
         /// </summary>
-        public static IntPtr ProcessHeap = Direct.GetProcessHeap();
+        public static IntPtr ProcessHeap = Imports.ProcessHeap;
 
         /// <summary>
         /// Allocate memory on the process heap.
@@ -99,7 +90,7 @@ namespace WInterop.MemoryManagement
         {
             return Direct.HeapAlloc(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
-                dwFlags: zeroMemory ? Direct.HEAP_ZERO_MEMORY : 0,
+                dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
                 dwBytes: (UIntPtr)byteLength);
         }
 
@@ -121,7 +112,7 @@ namespace WInterop.MemoryManagement
         {
             return Direct.HeapReAlloc(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
-                dwFlags: zeroMemory ? Direct.HEAP_ZERO_MEMORY : 0,
+                dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
                 lpMem: memory,
                 dwBytes: (UIntPtr)byteLength);
         }

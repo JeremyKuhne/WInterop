@@ -18,7 +18,7 @@ namespace Tests.Support
         [Fact]
         public void SimpleGetDelegate()
         {
-            var endsInDirectorySeparator = Delegates.CreateDelegate<StringToBool>(@"WInterop.Support.Paths, " + Delegates.BaseLibrary, "EndsInDirectorySeparator");
+            var endsInDirectorySeparator = Delegates.CreateDelegate<StringToBool>(@"WInterop.Support.Paths, " + Delegates.TypesLibrary, "EndsInDirectorySeparator");
             endsInDirectorySeparator.Should().NotBeNull();
             endsInDirectorySeparator(@"a").Should().BeFalse();
             endsInDirectorySeparator(@"a\").Should().BeTrue();

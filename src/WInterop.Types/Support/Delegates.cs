@@ -15,6 +15,7 @@ namespace WInterop.Support
     {
         public static string DesktopLibrary = "WInterop.Desktop, " + AssemblyInformation.FullyQualifiedVersion;
         public static string BaseLibrary = "WInterop, " + AssemblyInformation.FullyQualifiedVersion;
+        public static string TypesLibrary = "WInterop.Types, " + AssemblyInformation.FullyQualifiedVersion;
 
         /// <summary>
         /// Creates a delegate for the given type and method name.

@@ -48,5 +48,39 @@ namespace WInterop.Support.Internal
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern bool FreeLibrary(
             IntPtr hModule);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366597.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = false, ExactSpelling = true)]
+        public static extern IntPtr HeapAlloc(
+            IntPtr hHeap,
+            uint dwFlags,
+            UIntPtr dwBytes);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366704.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = false, ExactSpelling = true)]
+        public static extern IntPtr HeapReAlloc(
+            IntPtr hHeap,
+            uint dwFlags,
+            IntPtr lpMem,
+            UIntPtr dwBytes);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366701.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern bool HeapFree(
+            IntPtr hHeap,
+            uint dwFlags,
+            IntPtr lpMem);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366730.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern IntPtr LocalFree(
+            IntPtr hMem);
+
+        // This is safe to cache as it will never change for a process once started
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern IntPtr GetProcessHeap();
+
+        public static IntPtr ProcessHeap = GetProcessHeap();
     }
 }

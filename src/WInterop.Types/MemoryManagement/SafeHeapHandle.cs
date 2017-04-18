@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
+using WInterop.Support.Internal;
 
 namespace WInterop.MemoryManagement.DataTypes
 {
@@ -67,14 +67,21 @@ namespace WInterop.MemoryManagement.DataTypes
 
             if (handle == IntPtr.Zero)
             {
-                handle = MemoryMethods.HeapAllocate(byteLength, zeroMemory);
+                handle = Imports.HeapAlloc(
+                    hHeap: Imports.ProcessHeap,
+                    dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
+                    dwBytes: (UIntPtr)byteLength);
             }
             else
             {
                 // This may or may not be the same handle, Windows may realloc in place. If the
                 // handle changes Windows will deal with the old handle, trying to free it will
                 // cause an error.
-                handle = MemoryMethods.HeapReallocate(handle, byteLength, zeroMemory);
+                handle = Imports.HeapReAlloc(
+                    hHeap: Imports.ProcessHeap,
+                    dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
+                    lpMem: handle,
+                    dwBytes: (UIntPtr)byteLength);
             }
 
             if (handle == IntPtr.Zero)
@@ -88,10 +95,7 @@ namespace WInterop.MemoryManagement.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            bool success = MemoryManagement.MemoryMethods.HeapFree(handle);
-            Debug.Assert(success);
-            handle = IntPtr.Zero;
-            return success;
+            return Imports.HeapFree(Imports.ProcessHeap, dwFlags: 0, lpMem: handle);
         }
 
         public unsafe void* VoidPointer => (void*)handle;
