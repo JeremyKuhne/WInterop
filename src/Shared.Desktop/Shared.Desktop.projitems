@@ -9,5 +9,46 @@
     <Import_RootNamespace>Shared.Desktop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\AuthenticationDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\AuthorizationDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clipboard\ClipboardDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communications\CommunicationsDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceMacros.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DataTypes\TemporaryErrorMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\DataTypes\BrushHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\DataTypes\DeviceContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\DataTypes\GdiObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiDesktopMethods.Defines.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Ipc\MailslotDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modules\ModuleDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\DataTypes\SafeNetApiBufferHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\NetworkDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\DataTypes\SafeEnvironmentStringsHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Registry\DataTypes\RegistryKeyHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Registry\RegistryDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceMacros.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\DataTypes\SafeLsaHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\DataTypes\SafeLsaMemoryHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\SecurityDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shell\ClassIds.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\DataTypes\INTERFACE_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\DataTypes\SafeFindVolumeHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\VolumeDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsDesktopMethods.cs" />
   </ItemGroup>
 </Project>

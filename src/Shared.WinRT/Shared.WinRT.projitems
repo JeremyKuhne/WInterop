@@ -9,5 +9,22 @@
     <Import_RootNamespace>Shared.WinRT</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\SafeHandleStreamWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MemoryManagement\MemoryMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ThreadMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StructuredStorage\StructuredStorageMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Synchronization\SynchronizationMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
   </ItemGroup>
 </Project>
