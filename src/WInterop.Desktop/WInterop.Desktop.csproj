@@ -25,10 +25,6 @@
     <ProjectReference Include="..\Winterop\WInterop.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Console\DataTypes\" />
-    <Folder Include="DeviceManagement\DataTypes\" />
-    <Folder Include="DiskManagement\DataTypes\" />
-    <Folder Include="FileManagement\DataTypes\" />
     <Folder Include="Windows\DataTypes\" />
   </ItemGroup>
 </Project>

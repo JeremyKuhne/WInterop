@@ -21,9 +21,7 @@ namespace WInterop.StructuredStorage
         /// </remarks>
         public static partial class Direct
         {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380073.aspx
-            [DllImport(Libraries.Ole32)]
-            internal static extern HRESULT PropVariantClear(IntPtr pvar);
+            public static HRESULT PropVariantClear(IntPtr pvar) => Support.Internal.Imports.PropVariantClear(pvar);
         }
     }
 }

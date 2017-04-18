@@ -28,11 +28,25 @@ namespace WInterop.Support.Internal
         public static extern HRESULT VariantClear(
             IntPtr pvarg);
 
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380073.aspx
+        [DllImport(Libraries.Ole32)]
+        public static extern HRESULT PropVariantClear(IntPtr pvar);
+
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376026.aspx
         [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool CertCloseStore(
             IntPtr hCertStore,
             uint dwFlags);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/hh920918.aspx
+        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+        public static extern WindowsError GetCurrentApplicationUserModelId(
+            ref uint applicationUserModelIdLength,
+            SafeHandle applicationUserModelId);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683152.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern bool FreeLibrary(
+            IntPtr hModule);
     }
 }

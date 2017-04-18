@@ -115,7 +115,7 @@ namespace WInterop.StructuredStorage.DataTypes
 
             IntPtr handle = Interlocked.Exchange(ref this.handle, IntPtr.Zero);
             if (handle != IntPtr.Zero)
-                StructuredStorageMethods.Direct.PropVariantClear(handle);
+                Support.Internal.Imports.PropVariantClear(handle);
 
             return true;
         }

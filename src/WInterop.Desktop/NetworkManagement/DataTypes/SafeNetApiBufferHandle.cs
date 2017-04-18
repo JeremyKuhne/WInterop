@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.NetworkManagement.DataTypes
 {
     public class SafeNetApiBufferHandle : SafeBuffer
     {
@@ -23,7 +23,7 @@ namespace WInterop.Handles.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            NetworkManagement.NetworkDesktopMethods.NetApiBufferFree(handle);
+            NetworkDesktopMethods.NetApiBufferFree(handle);
             handle = IntPtr.Zero;
             return true;
         }

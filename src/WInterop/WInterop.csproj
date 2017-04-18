@@ -19,15 +19,6 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="DiskManagement\DataTypes\" />
-    <Folder Include="Handles\DataTypes\" />
-    <Folder Include="ProcessAndThreads\DataTypes\" />
-    <Folder Include="Support\Buffers\" />
-    <Folder Include="Support\Collections\" />
-    <Folder Include="Synchronization\DataTypes\" />
-    <Folder Include="SystemInformation\DataTypes\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\WInterop.Types\WInterop.Types.csproj" />
   </ItemGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />

@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Support.Buffers;
@@ -37,7 +36,7 @@ namespace WInterop.Support
                     uint bufferSize = buffer.CharCapacity;
                     try
                     {
-                        WindowsError result = WindowsStore.Query.NativeMethods.Direct.GetCurrentApplicationUserModelId(ref bufferSize, buffer);
+                        WindowsError result = Internal.Imports.GetCurrentApplicationUserModelId(ref bufferSize, buffer);
                         switch (result)
                         {
                             case WindowsError.APPMODEL_ERROR_NO_APPLICATION:

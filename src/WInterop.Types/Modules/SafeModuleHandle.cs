@@ -7,7 +7,6 @@
 
 using System;
 using WInterop.Handles.DataTypes;
-using WInterop.Modules;
 
 namespace WInterop.Modules.DataTypes
 {
@@ -24,7 +23,7 @@ namespace WInterop.Modules.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            ModuleDesktopMethods.FreeLibrary(handle);
+            Support.Internal.Imports.FreeLibrary(handle);
             handle = IntPtr.Zero;
             return true;
         }
