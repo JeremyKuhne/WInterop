@@ -155,7 +155,7 @@ namespace WInterop.Com.DataTypes
         protected override bool ReleaseHandle()
         {
             IntPtr handle = Interlocked.Exchange(ref this.handle, IntPtr.Zero);
-            if (handle != IntPtr.Zero) ComMethods.Direct.VariantClear(handle);
+            if (handle != IntPtr.Zero) Support.Internal.Imports.VariantClear(handle);
 
             return true;
         }

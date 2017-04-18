@@ -33,12 +33,9 @@ namespace WInterop.Cryptography
                 uint dwFlags,
                 IntPtr pvPara);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376026.aspx
-            [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool CertCloseStore(
+            public static bool CertCloseStore(
                 IntPtr hCertStore,
-                uint dwFlags);
+                uint dwFlags) => Support.Internal.Imports.CertCloseStore(hCertStore, dwFlags);
 
             // Example C Program: Listing System and Physical Stores
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa382362.aspx

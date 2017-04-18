@@ -21,8 +21,7 @@ namespace WInterop.Com
         /// </remarks>
         public static partial class Direct
         {
-            [DllImport(Libraries.OleAut32)]
-            internal static extern HRESULT VariantClear(IntPtr pvarg);
+            public static HRESULT VariantClear(IntPtr pvarg) => Support.Internal.Imports.VariantClear(pvarg);
         }
     }
 }

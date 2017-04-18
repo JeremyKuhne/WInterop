@@ -19,6 +19,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Cryptography\Methods\" />
+    <Folder Include="Handles\Methods\" />
+    <Folder Include="ProcessAndThreads\Methods\" />
+  </ItemGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

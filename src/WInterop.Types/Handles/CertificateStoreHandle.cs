@@ -24,9 +24,7 @@ namespace WInterop.Handles.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            Cryptography.CryptoMethods.CloseStore(handle);
-            handle = IntPtr.Zero;
-            return true;
+            return Support.Internal.Imports.CertCloseStore(handle, dwFlags: 0);
         }
     }
 }

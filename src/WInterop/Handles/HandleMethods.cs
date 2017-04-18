@@ -22,11 +22,8 @@ namespace WInterop.Handles
         /// </remarks>
         public static class Direct
         {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724211.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool CloseHandle(
-                IntPtr handle);
+            public static bool CloseHandle(
+                IntPtr handle) => Support.Internal.Imports.CloseHandle(handle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724251.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

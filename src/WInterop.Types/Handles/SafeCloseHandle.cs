@@ -23,7 +23,7 @@ namespace WInterop.Handles.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            HandleMethods.CloseHandle(handle);
+            Support.Internal.Imports.CloseHandle(handle);
             return true;
         }
     }

@@ -19,7 +19,6 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Cryptography\DataTypes\" />
     <Folder Include="DiskManagement\DataTypes\" />
     <Folder Include="Handles\DataTypes\" />
     <Folder Include="ProcessAndThreads\DataTypes\" />

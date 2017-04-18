@@ -67,14 +67,14 @@ namespace WInterop.MemoryManagement.DataTypes
 
             if (handle == IntPtr.Zero)
             {
-                handle = MemoryManagement.MemoryMethods.HeapAllocate(byteLength, zeroMemory);
+                handle = MemoryMethods.HeapAllocate(byteLength, zeroMemory);
             }
             else
             {
                 // This may or may not be the same handle, Windows may realloc in place. If the
                 // handle changes Windows will deal with the old handle, trying to free it will
                 // cause an error.
-                handle = MemoryManagement.MemoryMethods.HeapReallocate(handle, byteLength, zeroMemory);
+                handle = MemoryMethods.HeapReallocate(handle, byteLength, zeroMemory);
             }
 
             if (handle == IntPtr.Zero)
