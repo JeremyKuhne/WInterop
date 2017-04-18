@@ -18,6 +18,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Authorization\DataTypes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WInterop.Types\WInterop.Types.csproj" />
+  </ItemGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
