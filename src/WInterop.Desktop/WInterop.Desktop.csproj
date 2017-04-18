@@ -24,7 +24,4 @@
     <ProjectReference Include="..\WInterop.Types\WInterop.Types.csproj" />
     <ProjectReference Include="..\Winterop\WInterop.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Windows\DataTypes\" />
-  </ItemGroup>
 </Project>
