@@ -13,7 +13,7 @@ namespace WInterop.Console
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class ConsoleDesktopMethods
+    public static partial class ConsoleMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -21,7 +21,7 @@ namespace WInterop.Console
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681952.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

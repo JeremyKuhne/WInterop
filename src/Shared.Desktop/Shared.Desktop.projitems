@@ -45,7 +45,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\SecurityDesktopMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ClassIds.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellDesktopMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\DataTypes\INTERFACE_TYPE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationDesktopMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\DataTypes\SafeFindVolumeHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\VolumeDesktopMethods.cs" />

@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.Clipboard.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Windows.DataTypes;
 
@@ -18,7 +19,7 @@ namespace WInterop.Clipboard
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class ClipboardDesktopMethods
+    public static partial class ClipboardMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -26,7 +27,7 @@ namespace WInterop.Clipboard
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649048.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -95,7 +96,7 @@ namespace WInterop.Clipboard
                 int count;
                 while ((count = Direct.GetClipboardFormatNameW(format, buffer, (int)buffer.CharCapacity)) == 0)
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(buffer.CharCapacity + 50);
                 }
 
@@ -119,7 +120,7 @@ namespace WInterop.Clipboard
                 array = alloc;
                 if (!Direct.GetUpdatedClipboardFormats(array, countIn, &countOut))
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     countIn = countOut;
                     goto realloc;
                 }

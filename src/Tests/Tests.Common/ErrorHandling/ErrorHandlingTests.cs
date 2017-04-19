@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support;
 using Xunit;
 
 namespace Tests.ErrorHandling
@@ -32,7 +33,7 @@ namespace Tests.ErrorHandling
             ]
         public void ErrorsMapToExceptions(WindowsError error, Type exceptionType)
         {
-            ErrorHelper.GetIoExceptionForError(error).Should().BeOfType(exceptionType);
+            Errors.GetIoExceptionForError(error).Should().BeOfType(exceptionType);
         }
 
         [Theory,
@@ -43,7 +44,7 @@ namespace Tests.ErrorHandling
             ]
         public void WindowsErrorTextIsAsExpected(uint error, string expected)
         {
-            ErrorHelper.LastErrorToString((WindowsError)error).Should().Be(expected);
+            Errors.LastErrorToString((WindowsError)error).Should().Be(expected);
         }
 
         [Theory,

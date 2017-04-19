@@ -11,6 +11,7 @@ using WInterop.DeviceManagement.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.FileManagement.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.DeviceManagement
@@ -18,7 +19,7 @@ namespace WInterop.DeviceManagement
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class DeviceDesktopMethods
+    public static partial class DeviceMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -26,7 +27,7 @@ namespace WInterop.DeviceManagement
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363216.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -76,14 +77,14 @@ namespace WInterop.DeviceManagement
                         lpBytesReturned: out _,
                         lpOverlapped: IntPtr.Zero))
                     {
-                        WindowsError error = ErrorHelper.GetLastError();
+                        WindowsError error = Errors.GetLastError();
                         switch (error)
                         {
                             case WindowsError.ERROR_MORE_DATA:
                                 outBuffer.EnsureByteCapacity(checked(outBuffer.ByteCapacity * 2));
                                 break;
                             default:
-                                throw ErrorHelper.GetIoExceptionForError(error, volume);
+                                throw Errors.GetIoExceptionForError(error, volume);
                         }
                     }
 

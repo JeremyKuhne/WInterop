@@ -8,13 +8,14 @@
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.Modules.DataTypes;
+using WInterop.Support;
 
 namespace WInterop.Resources
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class ResourceDesktopMethods
+    public static partial class ResourceMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -22,7 +23,7 @@ namespace WInterop.Resources
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647486.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -44,7 +45,7 @@ namespace WInterop.Resources
             // Passing 0 will give us a read only handle to the string resource
             int result = Direct.LoadStringW(library, identifier, out char* buffer, 0);
             if (result <= 0)
-                throw ErrorHelper.GetIoExceptionForLastError(identifier.ToString());
+                throw Errors.GetIoExceptionForLastError(identifier.ToString());
 
             // Null is not included in the result
             return new string(buffer, 0, result);

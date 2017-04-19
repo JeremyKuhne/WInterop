@@ -21,14 +21,14 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void GetKnownFolderPath_Basic()
         {
-            string windowsFolder = ShellDesktopMethods.GetKnownFolderPath(KNOWNFOLDERID.Windows);
+            string windowsFolder = ShellMethods.GetKnownFolderPath(KNOWNFOLDERID.Windows);
             windowsFolder.Should().EndWithEquivalent("Windows");
         }
 
         [Fact]
         public void GetKnownFolderId_Basic()
         {
-            using (var id = ShellDesktopMethods.GetKnownFolderId(KNOWNFOLDERID.ProgramData))
+            using (var id = ShellMethods.GetKnownFolderId(KNOWNFOLDERID.ProgramData))
             {
                 id.IsInvalid.Should().BeFalse();
             }
@@ -37,24 +37,24 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void GetIdName_Basic()
         {
-            using (var id = ShellDesktopMethods.GetKnownFolderId(KNOWNFOLDERID.Windows))
+            using (var id = ShellMethods.GetKnownFolderId(KNOWNFOLDERID.Windows))
             {
                 id.IsInvalid.Should().BeFalse();
-                ShellDesktopMethods.GetNameFromId(id, SIGDN.PARENTRELATIVE).Should().Be("Windows");
+                ShellMethods.GetNameFromId(id, SIGDN.PARENTRELATIVE).Should().Be("Windows");
             }
         }
 
         [Fact]
         public void KnownFolderManager_Create()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             manager.Should().NotBeNull();
         }
 
         [Fact]
         public void KnownFolderManager_RoundTripId()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             int csidl = manager.FolderIdToCsidl(KNOWNFOLDERID.Windows);
             csidl.Should().Be(36);
             Guid id = manager.FolderIdFromCsidl(csidl);
@@ -64,7 +64,7 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void KnownFolderManager_GetKnownFolder()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Windows);
             folder.Should().NotBeNull();
         }
@@ -72,7 +72,7 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void KnownFolder_GetId()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Windows);
             folder.GetId().Should().Be(KNOWNFOLDERID.Windows);
         }
@@ -80,7 +80,7 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void KnownFolder_GetCategory()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Windows);
             folder.GetCategory().Should().Be(KF_CATEGORY.FIXED);
         }
@@ -88,7 +88,7 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void KnownFolder_GetIShellItem()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Windows);
             IShellItem item = folder.GetShellItem(0, new Guid(InterfaceIds.IID_IShellItem));
             item.Should().NotBeNull();
@@ -99,26 +99,26 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void KnownFolder_GetPath()
         {
-            using (var id = ShellDesktopMethods.GetKnownFolderId(KNOWNFOLDERID.Windows))
+            using (var id = ShellMethods.GetKnownFolderId(KNOWNFOLDERID.Windows))
             {
                 id.IsInvalid.Should().BeFalse();
-                ShellDesktopMethods.GetNameFromId(id, SIGDN.PARENTRELATIVE).Should().BeEquivalentTo("Windows");
+                ShellMethods.GetNameFromId(id, SIGDN.PARENTRELATIVE).Should().BeEquivalentTo("Windows");
 
-                IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+                IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
                 IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Windows);
-                folder.GetPath(0).Should().BeEquivalentTo(ShellDesktopMethods.GetNameFromId(id, SIGDN.FILESYSPATH));
+                folder.GetPath(0).Should().BeEquivalentTo(ShellMethods.GetNameFromId(id, SIGDN.FILESYSPATH));
             }
         }
 
         [Fact]
         public void KnownFolder_GetIdList()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Windows);
             using (var id = folder.GetIDList(0))
             {
                 id.IsInvalid.Should().BeFalse();
-                ShellDesktopMethods.GetNameFromId(id, SIGDN.PARENTRELATIVE).Should().Be("Windows");
+                ShellMethods.GetNameFromId(id, SIGDN.PARENTRELATIVE).Should().Be("Windows");
             }
         }
 
@@ -126,7 +126,7 @@ namespace DesktopTests.ShellTests
         public void KnownFolder_GetFolderType()
         {
             // Most known folders don't have a FolderType associated and will throw a COMException with E_FAIL.
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Contacts);
             folder.GetFolderType().Should().Be(FOLDERTYPEID.Contacts);
         }
@@ -134,7 +134,7 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void KnownFolder_GetRedirectionCaps()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Libraries);
             folder.GetRedirectionCapabilities().Should().Be(KF_REDIRECTION_CAPABILITIES.REDIRECTABLE);
         }
@@ -142,7 +142,7 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void KnownFolder_GetDefinition()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.LocalAppData);
             using (KNOWNFOLDER_DEFINITION definition = new KNOWNFOLDER_DEFINITION())
             {
@@ -158,7 +158,7 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void ShellItem_GetDisplayName()
         {
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
             IKnownFolder folder = manager.GetFolder(KNOWNFOLDERID.Windows);
             IShellItem item = folder.GetShellItem(0, new Guid(InterfaceIds.IID_IShellItem));
             item.GetDisplayName(SIGDN.NORMALDISPLAY).Should().Be("Windows");
@@ -167,10 +167,10 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void GetKnownFolderIds_Basic()
         {
-            var ids = ShellDesktopMethods.GetKnownFolderIds();
+            var ids = ShellMethods.GetKnownFolderIds();
             ids.Should().NotBeEmpty();
 
-            IKnownFolderManager manager = ShellDesktopMethods.GetKnownFolderManager();
+            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
 
             // Check a few 
             foreach (var id in ids.Take(5))
@@ -182,7 +182,7 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void UnexpandEnvironmentVariables()
         {
-            ShellDesktopMethods.UnexpandEnvironmentStrings(Environment.GetEnvironmentVariable("USERPROFILE"))
+            ShellMethods.UnexpandEnvironmentStrings(Environment.GetEnvironmentVariable("USERPROFILE"))
                 .Should().Be("%USERPROFILE%");
         }
 
@@ -190,8 +190,8 @@ namespace DesktopTests.ShellTests
         [Fact]
         public void ExpandEnvironmentVariablesForUser()
         {
-            ShellDesktopMethods.ExpandEnvironmentVariablesForUser(
-                AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_DUPLICATE),
+            ShellMethods.ExpandEnvironmentVariablesForUser(
+                AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_DUPLICATE),
                 @"%USERNAME%").
                 Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
         }

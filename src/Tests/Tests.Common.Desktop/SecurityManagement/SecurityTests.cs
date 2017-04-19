@@ -21,9 +21,9 @@ namespace DesktopTests.SecurityManagement
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_UserGroup()
         {
-            SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_EXECUTE);
-            SID sid = AuthorizationDesktopMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinUsersSid);
-            var rights = SecurityDesktopMethods.LsaEnumerateAccountRights(handle, ref sid);
+            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_EXECUTE);
+            SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinUsersSid);
+            var rights = SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
             rights.Should().NotBeEmpty();
             rights.Should().Contain("SeChangeNotifyPrivilege");
         }
@@ -31,27 +31,27 @@ namespace DesktopTests.SecurityManagement
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_ReadRightsFails()
         {
-            SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
-            SID sid = AuthorizationDesktopMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinUsersSid);
-            Action action = () => SecurityDesktopMethods.LsaEnumerateAccountRights(handle, ref sid);
+            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinUsersSid);
+            Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
             action.ShouldThrow<UnauthorizedAccessException>();
         }
 
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_BadSidFails()
         {
-            SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             SID sid = new SID();
-            Action action = () => SecurityDesktopMethods.LsaEnumerateAccountRights(handle, ref sid);
+            Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
             action.ShouldThrow<ArgumentException>();
         }
 
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_NoRightsFails()
         {
-            SafeLsaHandle handle = AuthenticationDesktopMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
-            SID sid = AuthorizationDesktopMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinAnyPackageSid);
-            SecurityDesktopMethods.LsaEnumerateAccountRights(handle, ref sid).Should().BeEmpty();
+            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinAnyPackageSid);
+            SecurityMethods.LsaEnumerateAccountRights(handle, ref sid).Should().BeEmpty();
         }
     }
 }

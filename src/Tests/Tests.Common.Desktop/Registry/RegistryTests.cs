@@ -18,7 +18,7 @@ namespace DesktopTests.Registry
         [Fact]
         public void OpenUserKey()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
+            using (var key = RegistryMethods.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
             {
                 key.IsInvalid.Should().BeFalse();
             }
@@ -27,7 +27,7 @@ namespace DesktopTests.Registry
         [Fact]
         public void OpenUserSubKey()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
             {
                 key.IsInvalid.Should().BeFalse();
@@ -37,7 +37,7 @@ namespace DesktopTests.Registry
         [Fact]
         public void IsLocalHandle()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
+            using (var key = RegistryMethods.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
             {
                 key.IsLocalKey.Should().BeTrue();
             }
@@ -46,7 +46,7 @@ namespace DesktopTests.Registry
         [Fact]
         public void IsSpecialKey()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(RegistryKeyHandle.HKEY_CLASSES_ROOT, null))
+            using (var key = RegistryMethods.OpenKey(RegistryKeyHandle.HKEY_CLASSES_ROOT, null))
             {
                 key.IsInvalid.Should().BeFalse();
                 key.IsSpecialKey.Should().BeTrue("the key should be special");
@@ -56,40 +56,40 @@ namespace DesktopTests.Registry
         [Fact]
         public void QueryValueExists()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
             {
-                RegistryDesktopMethods.QueryValueExists(key, "BuildNumber").Should().BeTrue();
+                RegistryMethods.QueryValueExists(key, "BuildNumber").Should().BeTrue();
             }
         }
 
         [Fact]
         public void QueryValueExists_False()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
             {
-                RegistryDesktopMethods.QueryValueExists(key, "Fizzlewig").Should().BeFalse();
+                RegistryMethods.QueryValueExists(key, "Fizzlewig").Should().BeFalse();
             }
         }
 
         [Fact]
         public void QueryValueType()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
             {
-                RegistryDesktopMethods.QueryValueType(key, "BuildNumber").Should().Be(RegistryValueType.REG_DWORD);
+                RegistryMethods.QueryValueType(key, "BuildNumber").Should().Be(RegistryValueType.REG_DWORD);
             }
         }
 
         [Fact]
         public void GetValueNames()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
             {
-                var names = RegistryDesktopMethods.GetValueNames(key);
+                var names = RegistryMethods.GetValueNames(key);
                 names.Should().Contain("BuildNumber");
             }
         }
@@ -97,31 +97,31 @@ namespace DesktopTests.Registry
         [Fact]
         public void GetValueNames_PerformanceData()
         {
-            var names = RegistryDesktopMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_DATA);
+            var names = RegistryMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_DATA);
             names.Should().ContainInOrder("Global", "Costly");
         }
 
         [Fact]
         public void GetValueNames_PerformanceText()
         {
-            var names = RegistryDesktopMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_TEXT);
+            var names = RegistryMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_TEXT);
             names.Should().ContainInOrder("Counter", "Help");
         }
 
         [Fact]
         public void GetValueNames_PerformanceNlsText()
         {
-            var names = RegistryDesktopMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_NLSTEXT);
+            var names = RegistryMethods.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_NLSTEXT);
             names.Should().ContainInOrder("Counter", "Help");
         }
 
         [Fact]
         public void GetValueNamesDirect()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
             {
-                var names = RegistryDesktopMethods.GetValueNamesDirect(key);
+                var names = RegistryMethods.GetValueNamesDirect(key);
                 names.Should().Contain("BuildNumber");
             }
         }
@@ -129,10 +129,10 @@ namespace DesktopTests.Registry
         [Fact]
         public void GetValueDataDirect()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
             {
-                var data = RegistryDesktopMethods.GetValueDataDirect(key);
+                var data = RegistryMethods.GetValueDataDirect(key);
                 data.Should().NotBeEmpty();
             }
         }
@@ -140,10 +140,10 @@ namespace DesktopTests.Registry
         [Fact]
         public void QueryValue_Uint()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
             {
-                var buildNumber = RegistryDesktopMethods.QueryValue(key, "BuildNumber");
+                var buildNumber = RegistryMethods.QueryValue(key, "BuildNumber");
                 buildNumber.Should().BeOfType<uint>();
             }
         }
@@ -151,10 +151,10 @@ namespace DesktopTests.Registry
         [Fact]
         public void QueryValue_String()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
             {
-                var productName = RegistryDesktopMethods.QueryValue(key, "ProductName");
+                var productName = RegistryMethods.QueryValue(key, "ProductName");
                 productName.Should().BeOfType<string>();
                 ((string)productName).Should().StartWith("Windows");
             }

@@ -28,7 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Winterop\WInterop.csproj" />
-    <ProjectReference Include="..\Tests.Support\Tests.Support.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
@@ -39,5 +38,6 @@
     </None>
   </ItemGroup>
   <Import Project="..\Tests.Common\Tests.Common.projitems" Label="Shared" />
+  <Import Project="..\Tests.Shared.Support\Tests.Shared.Support.projitems" Label="Shared" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

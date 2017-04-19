@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.FileManagement;
 using WInterop.FileManagement.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.DirectoryManagement
@@ -57,7 +58,7 @@ namespace WInterop.DirectoryManagement
         public static void RemoveDirectory(string path)
         {
             if (!Direct.RemoveDirectoryW(path))
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path);
         }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace WInterop.DirectoryManagement
         public static void CreateDirectory(string path)
         {
             if (!Direct.CreateDirectoryW(path, IntPtr.Zero))
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path);
         }
 
         /// <summary>
@@ -97,7 +98,7 @@ namespace WInterop.DirectoryManagement
         public static void SetCurrentDirectory(string path)
         {
             if (!Direct.SetCurrentDirectoryW(path))
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path);
         }
     }
 }

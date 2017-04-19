@@ -20,7 +20,7 @@ namespace WInterop.VolumeManagement
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static partial class VolumeDesktopMethods
+    public static partial class VolumeMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -28,7 +28,7 @@ namespace WInterop.VolumeManagement
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365461.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -115,14 +115,14 @@ namespace WInterop.VolumeManagement
                 // QueryDosDevicePrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
                 while ((result = Direct.QueryDosDeviceW(deviceName, buffer, buffer.CharCapacity)) == 0)
                 {
-                    WindowsError error = ErrorHelper.GetLastError();
+                    WindowsError error = Errors.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_INSUFFICIENT_BUFFER:
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(error, deviceName);
+                            throw Errors.GetIoExceptionForError(error, deviceName);
                     }
                 }
 
@@ -152,7 +152,7 @@ namespace WInterop.VolumeManagement
                 }
 
                 if (result == 0)
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
 
                 buffer.Length = result;
                 return buffer.Split('\0', removeEmptyStrings: true);
@@ -169,14 +169,14 @@ namespace WInterop.VolumeManagement
             {
                 while (!Direct.GetVolumePathNameW(path, buffer, buffer.CharCapacity))
                 {
-                    WindowsError error = ErrorHelper.GetLastError();
+                    WindowsError error = Errors.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_FILENAME_EXCED_RANGE:
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(error, path);
+                            throw Errors.GetIoExceptionForError(error, path);
                     }
                 }
 
@@ -199,14 +199,14 @@ namespace WInterop.VolumeManagement
                 // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
                 while (!Direct.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
                 {
-                    WindowsError error = ErrorHelper.GetLastError();
+                    WindowsError error = Errors.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_MORE_DATA:
                             buffer.EnsureCharCapacity(returnLength);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(error, volumeName);
+                            throw Errors.GetIoExceptionForError(error, volumeName);
                     }
                 }
 
@@ -228,7 +228,7 @@ namespace WInterop.VolumeManagement
                 buffer.EnsureCharCapacity(100);
 
                 if (!Direct.GetVolumeNameForVolumeMountPointW(volumeMountPoint, buffer, buffer.CharCapacity))
-                    throw ErrorHelper.GetIoExceptionForLastError(volumeMountPoint);
+                    throw Errors.GetIoExceptionForLastError(volumeMountPoint);
 
                 buffer.SetLengthToFirstNull();
                 return buffer.ToString();
@@ -258,7 +258,7 @@ namespace WInterop.VolumeManagement
                     out FileSystemFeature flags,
                     fileSystemName,
                     fileSystemName.CharCapacity))
-                    throw ErrorHelper.GetIoExceptionForLastError(rootPath);
+                    throw Errors.GetIoExceptionForLastError(rootPath);
 
                 volumeName.SetLengthToFirstNull();
                 fileSystemName.SetLengthToFirstNull();

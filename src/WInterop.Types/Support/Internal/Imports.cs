@@ -82,5 +82,18 @@ namespace WInterop.Support.Internal
         public static extern IntPtr GetProcessHeap();
 
         public static IntPtr ProcessHeap = GetProcessHeap();
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679351.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern uint FormatMessageW(
+            FormatMessageFlags dwFlags,
+            IntPtr lpSource,
+            uint dwMessageId,
+            // LANGID or 0 for auto lookup
+            uint dwLanguageId,
+            IntPtr lpBuffer,
+            // Size is in chars
+            uint nSize,
+            string[] Arguments);
     }
 }

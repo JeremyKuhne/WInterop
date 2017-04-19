@@ -13,11 +13,12 @@ using WInterop.Authentication.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Handles
 {
-    public static class HandleDesktopMethods
+    public static partial class HandleMethods
     {
         // Windows Kernel Architecture Internals
         // http://research.microsoft.com/en-us/um/redmond/events/wincore2010/Dave_Probert_1.pdf
@@ -35,7 +36,7 @@ namespace WInterop.Handles
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // http://forum.sysinternals.com/howto-enumerate-handles_topic18892.html
 
@@ -107,7 +108,7 @@ namespace WInterop.Handles
                     ObjectAttributes: ref attributes);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status, path);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status, path);
 
                 return directory;
             });
@@ -128,7 +129,7 @@ namespace WInterop.Handles
                     ObjectAttributes: ref attributes);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status, path);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status, path);
 
                 return link;
             });
@@ -179,7 +180,7 @@ namespace WInterop.Handles
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
                 buffer.Length = (uint)(target.Length / sizeof(char));
                 return buffer.ToString();
@@ -229,7 +230,7 @@ namespace WInterop.Handles
                 } while (status == NTSTATUS.STATUS_MORE_ENTRIES);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
             });
 
             return infos.OrderBy(i => i.Name); ;
@@ -271,7 +272,7 @@ namespace WInterop.Handles
                 }
 
                 if (!ErrorMacros.NT_SUCCESS(status))
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
                 return new CheckedReader(buffer).ReadStruct<UNICODE_STRING>().ToString();
             }
@@ -302,7 +303,7 @@ namespace WInterop.Handles
                 }
 
                 if (!ErrorMacros.NT_SUCCESS(status))
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
                 return new CheckedReader(buffer).ReadStruct<OBJECT_TYPE_INFORMATION>().TypeName.ToString();
             }

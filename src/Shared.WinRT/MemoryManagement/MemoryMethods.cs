@@ -9,6 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Internal;
 
 namespace WInterop.MemoryManagement
@@ -141,9 +142,9 @@ namespace WInterop.MemoryManagement
         {
             if (Direct.LocalFree(memory) != null)
             {
-                var error = ErrorHelper.GetLastError();
+                var error = Errors.GetLastError();
                 if (error != WindowsError.ERROR_SUCCESS)
-                    throw ErrorHelper.GetIoExceptionForError(error);
+                    throw Errors.GetIoExceptionForError(error);
             }
         }
     }

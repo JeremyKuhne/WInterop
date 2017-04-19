@@ -29,24 +29,24 @@ namespace DesktopTests.Authorization
             bool runningAsAdmin = 
                 new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
-            AuthorizationDesktopMethods.IsProcessElevated().Should().Be(runningAsAdmin);
+            AuthorizationMethods.IsProcessElevated().Should().Be(runningAsAdmin);
         }
 
         [Fact]
         public void CreateWellKnownSid_Everyone()
         {
-            SID sid = AuthorizationDesktopMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinWorldSid);
-            AuthorizationDesktopMethods.IsValidSid(ref sid).Should().BeTrue();
+            SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinWorldSid);
+            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
             sid.Revision.Should().Be(1);
             sid.IdentifierAuthority.Should().Be(SID_IDENTIFIER_AUTHORITY.SECURITY_WORLD_SID_AUTHORITY);
 
-            AuthorizationDesktopMethods.GetSidSubAuthorityCount(ref sid).Should().Be(1);
-            AuthorizationDesktopMethods.GetSidSubAuthority(ref sid, 0).Should().Be(0);
+            AuthorizationMethods.GetSidSubAuthorityCount(ref sid).Should().Be(1);
+            AuthorizationMethods.GetSidSubAuthority(ref sid, 0).Should().Be(0);
 
-            AuthorizationDesktopMethods.IsWellKnownSid(ref sid, WELL_KNOWN_SID_TYPE.WinWorldSid).Should().BeTrue();
-            AuthorizationDesktopMethods.ConvertSidToString(ref sid).Should().Be("S-1-1-0");
+            AuthorizationMethods.IsWellKnownSid(ref sid, WELL_KNOWN_SID_TYPE.WinWorldSid).Should().BeTrue();
+            AuthorizationMethods.ConvertSidToString(ref sid).Should().Be("S-1-1-0");
 
-            AccountSidInfo info = AuthorizationDesktopMethods.LookupAccountSidLocal(ref sid);
+            AccountSidInfo info = AuthorizationMethods.LookupAccountSidLocal(ref sid);
             info.Name.Should().Be("Everyone");
             info.DomainName.Should().Be("");
             info.Usage.Should().Be(SID_NAME_USE.SidTypeWellKnownGroup);
@@ -55,8 +55,8 @@ namespace DesktopTests.Authorization
         [Fact]
         public void IsValidSid_GoodSid()
         {
-            SID sid = AuthorizationDesktopMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinIUsersSid);
-            AuthorizationDesktopMethods.IsValidSid(ref sid).Should().BeTrue();
+            SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinIUsersSid);
+            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
         }
 
         // [Fact]
@@ -67,9 +67,9 @@ namespace DesktopTests.Authorization
                 Debug.WriteLine(@"/// <summary>");
                 try
                 {
-                    SID sid = AuthorizationDesktopMethods.CreateWellKnownSid(type);
-                    AccountSidInfo info = AuthorizationDesktopMethods.LookupAccountSidLocal(ref sid);
-                    Debug.WriteLine($"/// {info.Name} ({AuthorizationDesktopMethods.ConvertSidToString(ref sid)}) [{info.Usage}]");
+                    SID sid = AuthorizationMethods.CreateWellKnownSid(type);
+                    AccountSidInfo info = AuthorizationMethods.LookupAccountSidLocal(ref sid);
+                    Debug.WriteLine($"/// {info.Name} ({AuthorizationMethods.ConvertSidToString(ref sid)}) [{info.Usage}]");
                 }
                 catch
                 {
@@ -85,49 +85,49 @@ namespace DesktopTests.Authorization
         public void IsValidSid_BadSid()
         {
             SID sid = new SID();
-            AuthorizationDesktopMethods.IsValidSid(ref sid).Should().BeFalse();
+            AuthorizationMethods.IsValidSid(ref sid).Should().BeFalse();
         }
 
         [Fact]
         public void GetTokenSid_ForCurrentProcess()
         {
             SID sid;
-            using (var token = AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_READ))
+            using (var token = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_READ))
             {
                 token.IsInvalid.Should().BeFalse();
-                sid = AuthorizationDesktopMethods.GetTokenSid(token);
+                sid = AuthorizationMethods.GetTokenSid(token);
             }
-            AuthorizationDesktopMethods.IsValidSid(ref sid).Should().BeTrue();
+            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
 
-            AccountSidInfo info = AuthorizationDesktopMethods.LookupAccountSidLocal(ref sid);
-            info.Name.Should().Be(SystemInformationDesktopMethods.GetUserName());
+            AccountSidInfo info = AuthorizationMethods.LookupAccountSidLocal(ref sid);
+            info.Name.Should().Be(SystemInformationMethods.GetUserName());
         }
 
         [Fact]
         public void GetTokenPrivileges_ForCurrentProcess()
         {
-            using (var token = AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_READ))
+            using (var token = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_READ))
             {
                 token.IsInvalid.Should().BeFalse();
-                var privileges = AuthorizationDesktopMethods.GetTokenPrivileges(token);
+                var privileges = AuthorizationMethods.GetTokenPrivileges(token);
                 privileges.Should().NotBeEmpty();
 
                 // This Privilege should always exist
                 privileges.Should().Contain(s => s.Privilege == Privileges.SeChangeNotifyPrivilege);
 
                 // Check the helper
-                AuthorizationDesktopMethods.HasPrivilege(token, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
+                AuthorizationMethods.HasPrivilege(token, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
             }
         }
 
         [Fact]
         public void IsPrivilegeEnabled_ForCurrentProcess()
         {
-            using (var token = AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_READ))
+            using (var token = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_READ))
             {
                 token.IsInvalid.Should().BeFalse();
-                AuthorizationDesktopMethods.IsPrivilegeEnabled(token, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
-                AuthorizationDesktopMethods.IsPrivilegeEnabled(token, Privileges.SeBackupPrivilege).Should().BeFalse();
+                AuthorizationMethods.IsPrivilegeEnabled(token, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
+                AuthorizationMethods.IsPrivilegeEnabled(token, Privileges.SeBackupPrivilege).Should().BeFalse();
             }
         }
     }

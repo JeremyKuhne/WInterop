@@ -11,9 +11,8 @@ using System.Security;
 
 namespace WInterop.DeviceManagement
 {
-    public static class DeviceMethods
+    public static partial class DeviceMethods
     {
-
 
         // IOCTL_MOUNTMGR_QUERY_DOS_VOLUME_PATH
     }

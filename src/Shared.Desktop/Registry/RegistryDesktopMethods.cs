@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using WInterop.Desktop.Registry.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Desktop.Registry
@@ -18,7 +19,7 @@ namespace WInterop.Desktop.Registry
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class RegistryDesktopMethods
+    public static partial class RegistryMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -87,7 +88,7 @@ namespace WInterop.Desktop.Registry
         {
             WindowsError result = Direct.RegOpenKeyExW(key, subKeyName, 0, rights, out RegistryKeyHandle subKey);
             if (result != WindowsError.ERROR_SUCCESS)
-                throw ErrorHelper.GetIoExceptionForError(result);
+                throw Errors.GetIoExceptionForError(result);
 
             return subKey;
         }
@@ -105,7 +106,7 @@ namespace WInterop.Desktop.Registry
                 case WindowsError.ERROR_FILE_NOT_FOUND:
                     return false;
                 default:
-                    throw ErrorHelper.GetIoExceptionForError(result);
+                    throw Errors.GetIoExceptionForError(result);
             }
         }
 
@@ -123,7 +124,7 @@ namespace WInterop.Desktop.Registry
                 case WindowsError.ERROR_FILE_NOT_FOUND:
                     return RegistryValueType.REG_NONE;
                 default:
-                    throw ErrorHelper.GetIoExceptionForError(result);
+                    throw Errors.GetIoExceptionForError(result);
             }
         }
 
@@ -154,7 +155,7 @@ namespace WInterop.Desktop.Registry
                         case WindowsError.ERROR_FILE_NOT_FOUND:
                             return null;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(result);
+                            throw Errors.GetIoExceptionForError(result);
                     }
                 }
 
@@ -205,7 +206,7 @@ namespace WInterop.Desktop.Registry
                             buffer.EnsureByteCapacity(resultLength);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                            throw ErrorMethods.GetIoExceptionForNTStatus(status);
                     }
                 }
             });
@@ -256,7 +257,7 @@ namespace WInterop.Desktop.Registry
                             buffer.EnsureByteCapacity(resultLength);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                            throw ErrorMethods.GetIoExceptionForNTStatus(status);
                     }
                 }
             });
@@ -305,7 +306,7 @@ namespace WInterop.Desktop.Registry
                             }
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(result);
+                            throw Errors.GetIoExceptionForError(result);
                     }
                 }
             });

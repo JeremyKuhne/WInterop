@@ -7,6 +7,8 @@
 
 using System;
 using System.IO;
+using WInterop.Support;
+using WInterop.Support.Internal;
 
 namespace WInterop.ErrorHandling.DataTypes
 {
@@ -16,12 +18,12 @@ namespace WInterop.ErrorHandling.DataTypes
             : base(message, innerException) { HResult = (int)hresult; }
 
         public WInteropIOException(HRESULT result)
-            : this(ErrorHelper.HResultToString(result), result) { }
+            : this(Errors.HResultToString(result), result) { }
 
         public WInteropIOException(WindowsError error)
-            : this(ErrorHelper.LastErrorToString(error), ErrorMacros.HRESULT_FROM_WIN32(error)) { }
+            : this(Errors.LastErrorToString(error), Macros.HRESULT_FROM_WIN32(error)) { }
 
         public WInteropIOException(NTSTATUS status)
-            : this(ErrorMacros.HRESULT_FROM_NT(status)) { }
+            : this(Macros.HRESULT_FROM_NT(status)) { }
     }
 }

@@ -17,7 +17,7 @@ namespace DesktopTests
         [Fact]
         public void BasicLogicalDriveStrings()
         {
-            var driveStrings = VolumeDesktopMethods.GetLogicalDriveStrings();
+            var driveStrings = VolumeMethods.GetLogicalDriveStrings();
             driveStrings.Should().NotBeEmpty();
             driveStrings.Should().OnlyContain(t => t.Length == 3 && t[0] >= 'A' && t[0] <= 'Z' && t[1] == ':' && t[2] == '\\');
         }
@@ -25,11 +25,11 @@ namespace DesktopTests
         [Fact]
         public void BasicGetVolumeInformation()
         {
-            foreach (string drive in VolumeDesktopMethods.GetLogicalDriveStrings())
+            foreach (string drive in VolumeMethods.GetLogicalDriveStrings())
             {
                 try
                 {
-                    var info = VolumeDesktopMethods.GetVolumeInformation(drive);
+                    var info = VolumeMethods.GetVolumeInformation(drive);
                     info.RootPathName.Should().Be(drive);
                 }
                 catch (DriveNotReadyException)
@@ -44,9 +44,9 @@ namespace DesktopTests
         [Fact]
         public void BasicGetDriveType()
         {
-            foreach (string drive in VolumeDesktopMethods.GetLogicalDriveStrings())
+            foreach (string drive in VolumeMethods.GetLogicalDriveStrings())
             {
-                var type = VolumeDesktopMethods.GetDriveType(drive);
+                var type = VolumeMethods.GetDriveType(drive);
             }
         }
     }

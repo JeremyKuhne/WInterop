@@ -11,10 +11,11 @@ using System.Runtime.InteropServices;
 using WInterop.Cryptography.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.Handles.DataTypes;
+using WInterop.Support;
 
 namespace WInterop.Cryptography
 {
-    public static class CryptoMethods
+    public static partial class CryptoMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -22,7 +23,7 @@ namespace WInterop.Cryptography
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
@@ -73,7 +74,7 @@ namespace WInterop.Cryptography
         public static void CloseStore(IntPtr handle)
         {
             if (!Direct.CertCloseStore(handle, dwFlags: 0))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
         }
 
         unsafe private static CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)

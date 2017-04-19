@@ -29,7 +29,7 @@ namespace DesktopTests.FileManagementTests
             // isn't more than one.
 
             // Set the current directory to D: and the hidden env for C:'s last current directory
-            ProcessDesktopMethods.SetEnvironmentVariable(@"=C:", @"C:\Users");
+            ProcessMethods.SetEnvironmentVariable(@"=C:", @"C:\Users");
             using (new TempCurrentDirectory(@"E:\"))
             {
                 FileMethods.GetFullPathName(value).Should().Be(expected);
@@ -44,7 +44,7 @@ namespace DesktopTests.FileManagementTests
         {
             using (new TempCurrentDirectory(@"C:\Users"))
             {
-                FileDesktopMethods.GetLongPathName(value).Should().Be(expected);
+                FileMethods.GetLongPathName(value).Should().Be(expected);
             }
         }
 
@@ -52,7 +52,7 @@ namespace DesktopTests.FileManagementTests
         public void LongPathNameThrowsFileNotFound()
         {
             string path = System.IO.Path.GetRandomFileName();
-            Action action = () => FileDesktopMethods.GetLongPathName(path);
+            Action action = () => FileMethods.GetLongPathName(path);
             action.ShouldThrow<System.IO.FileNotFoundException>();
         }
 
@@ -67,7 +67,7 @@ namespace DesktopTests.FileManagementTests
             ]
         public void CreateFileOnDriveRoot(string path)
         {
-            SafeFileHandle handle = FileDesktopMethods.CreateFile(
+            SafeFileHandle handle = FileMethods.CreateFile(
                 path,
                 0,
                 ShareMode.FILE_SHARE_READWRITE,

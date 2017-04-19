@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Modules.DataTypes;
+using WInterop.Support;
 using WInterop.Windows.DataTypes;
 
 namespace WInterop.Windows
@@ -17,7 +18,7 @@ namespace WInterop.Windows
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static partial class WindowsDesktopMethods
+    public static partial class WindowsMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -25,7 +26,7 @@ namespace WInterop.Windows
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633515.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -173,7 +174,7 @@ namespace WInterop.Windows
         public static void UnregisterClass(Atom atom, ModuleHandle module)
         {
             if (!Direct.UnregisterClass(atom, module))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
         }
 
         /// <summary>
@@ -189,7 +190,7 @@ namespace WInterop.Windows
                 fixed (char* name = className)
                 {
                     if (!Direct.UnregisterClass((IntPtr)name, module))
-                        throw ErrorHelper.GetIoExceptionForLastError();
+                        throw Errors.GetIoExceptionForLastError();
                 }
             }
         }

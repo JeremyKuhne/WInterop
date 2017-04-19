@@ -21,7 +21,7 @@ namespace WInterop.ProcessAndThreads.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            ProcessDesktopMethods.Direct.FreeEnvironmentStringsW(handle);
+            ProcessMethods.Direct.FreeEnvironmentStringsW(handle);
             handle = IntPtr.Zero;
             return true;
         }

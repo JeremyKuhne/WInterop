@@ -15,7 +15,7 @@ using WInterop.SystemInformation.DataTypes;
 
 namespace WInterop.SystemInformation
 {
-    public static class SystemInformationDesktopMethods
+    public static partial class SystemInformationMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -81,7 +81,7 @@ namespace WInterop.SystemInformation
                 uint sizeInChars = buffer.CharCapacity;
                 while (!Direct.GetUserNameW(buffer, ref sizeInChars))
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(sizeInChars);
                 }
 
@@ -109,7 +109,7 @@ namespace WInterop.SystemInformation
                 uint size = buffer.CharCapacity;
                 while (!Direct.GetUserNameExW(format, buffer, ref size))
                 {
-                    WindowsError error = ErrorHelper.GetLastError();
+                    WindowsError error = Errors.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_NONE_MAPPED:
@@ -118,7 +118,7 @@ namespace WInterop.SystemInformation
                             buffer.EnsureCharCapacity(size);
                             break;
                         default:
-                            throw ErrorHelper.GetIoExceptionForError(error);
+                            throw Errors.GetIoExceptionForError(error);
                     }
                 }
 
@@ -137,7 +137,7 @@ namespace WInterop.SystemInformation
                 uint size = buffer.CharCapacity;
                 while (!Direct.GetComputerNameW(buffer, ref size))
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_BUFFER_OVERFLOW);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_BUFFER_OVERFLOW);
                     buffer.EnsureCharCapacity(size);
                 }
                 buffer.Length = size;
@@ -155,7 +155,7 @@ namespace WInterop.SystemInformation
                 uint size = buffer.CharCapacity;
                 while (!Direct.GetComputerNameExW(format, buffer, ref size))
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_MORE_DATA);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_MORE_DATA);
                     buffer.EnsureCharCapacity(size);
                 }
                 buffer.Length = size;
@@ -177,7 +177,7 @@ namespace WInterop.SystemInformation
                 }
 
                 if (size == 0)
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
 
                 buffer.Length = size - 1;
                 return buffer.ToString();

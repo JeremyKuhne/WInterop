@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using WInterop.ErrorHandling;
+using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.DataTypes;
 
 namespace WInterop.Support.Buffers
@@ -197,12 +197,12 @@ namespace WInterop.Support.Buffers
                 if (returnValue == 0)
                 {
                     // Failed
-                    WindowsError error = ErrorHelper.GetLastError();
+                    WindowsError error = (WindowsError)Marshal.GetLastWin32Error();
 
                     if (shouldThrow != null && !shouldThrow(error))
                         return null;
 
-                    throw ErrorHelper.GetIoExceptionForError(error, detailForError);
+                    throw Errors.GetIoExceptionForError(error, detailForError);
                 }
 
                 buffer.Length = returnValue;

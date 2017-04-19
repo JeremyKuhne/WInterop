@@ -21,7 +21,7 @@ namespace WInterop.SecurityManagement.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            SecurityDesktopMethods.LsaClose(handle);
+            SecurityMethods.LsaClose(handle);
             return true;
         }
     }

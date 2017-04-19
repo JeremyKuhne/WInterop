@@ -13,7 +13,7 @@ using WInterop.Windows.DataTypes;
 
 namespace WInterop.Gdi
 {
-    public static partial class GdiDesktopMethods
+    public static partial class GdiMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -21,7 +21,7 @@ namespace WInterop.Gdi
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/dd144877.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]

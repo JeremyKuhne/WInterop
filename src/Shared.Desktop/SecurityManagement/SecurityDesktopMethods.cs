@@ -20,7 +20,7 @@ namespace WInterop.SecurityManagement
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class SecurityDesktopMethods
+    public static partial class SecurityMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -28,7 +28,7 @@ namespace WInterop.SecurityManagement
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
@@ -65,14 +65,14 @@ namespace WInterop.SecurityManagement
         {
             NTSTATUS status = Direct.LsaClose(handle);
             if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                throw ErrorMethods.GetIoExceptionForNTStatus(status);
         }
 
         public static void LsaFreeMemory(IntPtr handle)
         {
             NTSTATUS status = Direct.LsaFreeMemory(handle);
             if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                throw ErrorMethods.GetIoExceptionForNTStatus(status);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace WInterop.SecurityManagement
                 case NTSTATUS.STATUS_SUCCESS:
                     break;
                 default:
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
             }
 
             List<string> rights = new List<string>();

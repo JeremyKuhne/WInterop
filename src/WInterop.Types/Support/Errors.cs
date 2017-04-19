@@ -10,10 +10,12 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support.Buffers;
+using WInterop.Support.Internal;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.Support
 {
-    public static class ErrorHelper
+    public static class Errors
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // Want to try and force the get last error inline
         public static WindowsError GetLastError()
@@ -45,11 +47,11 @@ namespace WInterop.ErrorHandling
         public static string HResultToString(HRESULT hr)
         {
             string message;
-            if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
+            if (Macros.HRESULT_FACILITY(hr) == Facility.WIN32)
             {
                 // Win32 Error, extract the code
-                message = ErrorMethods.FormatMessage(
-                    messageId: (uint)ErrorMacros.HRESULT_CODE(hr),
+                message = FormatMessage(
+                    messageId: (uint)Macros.HRESULT_CODE(hr),
                     source: IntPtr.Zero,
                     flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
             }
@@ -61,21 +63,6 @@ namespace WInterop.ErrorHandling
             }
 
             return $"HRESULT {(int)hr:D} [0x{(int)hr:X}]: {message}";
-        }
-
-        /// <summary>
-        /// Try to get the error message for GetLastError result
-        /// </summary>
-        public static string LastErrorToString(WindowsError error)
-        {
-            string message = ErrorMethods.FormatMessage(
-                messageId: (uint)error,
-                source: IntPtr.Zero,
-                flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
-
-            return Enum.IsDefined(typeof(WindowsError), error)
-                ? $"{error} ({(uint)error}): {message}"
-                : $"Error {error}: {message}";
         }
 
         /// <summary>
@@ -95,15 +82,25 @@ namespace WInterop.ErrorHandling
                 case HRESULT.E_INVALIDARG:
                     return new ArgumentException(message);
                 default:
-                    if (ErrorMacros.HRESULT_FACILITY(hr) == Facility.WIN32)
-                    {
-                        return WindowsErrorToException((WindowsError)ErrorMacros.HRESULT_CODE(hr), message, path);
-                    }
-                    else
-                    {
-                        return new IOException(message, (int)hr);
-                    }
+                    return Macros.HRESULT_FACILITY(hr) == Facility.WIN32
+                        ? WindowsErrorToException((WindowsError)Macros.HRESULT_CODE(hr), message, path)
+                        : new IOException(message, (int)hr);
             }
+        }
+
+        /// <summary>
+        /// Try to get the error message for GetLastError result
+        /// </summary>
+        public static string LastErrorToString(WindowsError error)
+        {
+            string message = FormatMessage(
+                messageId: (uint)error,
+                source: IntPtr.Zero,
+                flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
+
+            return Enum.IsDefined(typeof(WindowsError), error)
+                ? $"{error} ({(uint)error}): {message}"
+                : $"Error {error}: {message}";
         }
 
         /// <summary>
@@ -121,20 +118,51 @@ namespace WInterop.ErrorHandling
             return WindowsErrorToException(error, message, path);
         }
 
-        /// <summary>
-        /// Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
-        /// There are additional IOException derived errors for ease of client error handling.
-        /// </summary>
-        public static Exception GetIoExceptionForNTStatus(NTSTATUS status, string path = null)
+        public static string FormatMessage(
+            uint messageId,
+            IntPtr source,
+            FormatMessageFlags flags,
+            params string[] args)
         {
-            switch (status)
+            using (StringBuffer buffer = new StringBuffer())
             {
-                case NTSTATUS.STATUS_NOT_IMPLEMENTED:
-                    return new NotImplementedException(path ?? WInteropStrings.NoValue);
-            }
+                // Don't use line breaks
+                flags |= FormatMessageFlags.FORMAT_MESSAGE_MAX_WIDTH_MASK;
+                if (args == null || args.Length == 0) flags |= FormatMessageFlags.FORMAT_MESSAGE_IGNORE_INSERTS;
 
-            return GetIoExceptionForError(ErrorMethods.NtStatusToWinError(status), path);
+                WindowsError lastError = WindowsError.ERROR_INSUFFICIENT_BUFFER;
+                uint capacity = byte.MaxValue;
+                uint result = 0;
+
+                while (lastError == WindowsError.ERROR_INSUFFICIENT_BUFFER && capacity <= short.MaxValue)
+                {
+                    buffer.EnsureCharCapacity(capacity);
+                    result = Imports.FormatMessageW(
+                        dwFlags: flags,
+                        lpSource: source,
+                        dwMessageId: messageId,
+                        // Do the default language lookup
+                        dwLanguageId: 0,
+                        lpBuffer: buffer.DangerousGetHandle(),
+                        nSize: buffer.CharCapacity,
+                        Arguments: args);
+
+                    if (result == 0)
+                    {
+                        lastError = (WindowsError)Marshal.GetLastWin32Error();
+                        capacity = (uint)Math.Min(capacity * 2, short.MaxValue);
+                    }
+                    else
+                    {
+                        buffer.Length = result;
+                        return buffer.ToString();
+                    }
+                }
+
+                throw new IOException("Failed to get error string.", (int)Macros.HRESULT_FROM_WIN32(lastError));
+            }
         }
+
 
         private static Exception WindowsErrorToException(WindowsError error, string message, string path)
         {
@@ -170,7 +198,7 @@ namespace WInterop.ErrorHandling
                 case WindowsError.ERROR_SHARING_VIOLATION:
                 case WindowsError.ERROR_FILE_EXISTS:
                 default:
-                    return new IOException(message, (int)ErrorMacros.HRESULT_FROM_WIN32(error));
+                    return new IOException(message, (int)Macros.HRESULT_FROM_WIN32(error));
             }
         }
 

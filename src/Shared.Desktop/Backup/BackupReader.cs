@@ -13,6 +13,7 @@ using WInterop.Backup.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Backup
@@ -30,7 +31,7 @@ namespace WInterop.Backup
 
         public unsafe BackupStreamInformation? GetNextInfo()
         {
-            if (!BackupDesktopMethods.Direct.BackupRead(
+            if (!BackupMethods.Direct.BackupRead(
                 hFile: _fileHandle,
                 lpBuffer: _buffer,
                 nNumberOfBytesToRead: (uint)sizeof(WIN32_STREAM_ID),
@@ -39,7 +40,7 @@ namespace WInterop.Backup
                 bProcessSecurity: true,
                 context: ref _context))
             {
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
             }
 
             // Exit if at the end
@@ -50,7 +51,7 @@ namespace WInterop.Backup
             if (streamId.dwStreamNameSize > 0)
             {
                 _buffer.EnsureByteCapacity(streamId.dwStreamNameSize);
-                if (!BackupDesktopMethods.Direct.BackupRead(
+                if (!BackupMethods.Direct.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: _buffer,
                     nNumberOfBytesToRead: streamId.dwStreamNameSize,
@@ -59,7 +60,7 @@ namespace WInterop.Backup
                     bProcessSecurity: true,
                     context: ref _context))
                 {
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
                 }
                 name = Marshal.PtrToStringUni(_buffer.DangerousGetHandle(), (int)bytesRead / 2);
             }
@@ -67,7 +68,7 @@ namespace WInterop.Backup
             if (streamId.Size > 0)
             {
                 // Move to the next header, if any
-                if (!BackupDesktopMethods.Direct.BackupSeek(
+                if (!BackupMethods.Direct.BackupSeek(
                     hFile: _fileHandle,
                     dwLowBytesToSeek: uint.MaxValue,
                     dwHighBytesToSeek: int.MaxValue,
@@ -75,7 +76,7 @@ namespace WInterop.Backup
                     lpdwHighByteSeeked: out _,
                     context: ref _context))
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
                 }
             }
 
@@ -104,7 +105,7 @@ namespace WInterop.Backup
             if (_context != IntPtr.Zero)
             {
                 // Free the context memory
-                if (!BackupDesktopMethods.Direct.BackupRead(
+                if (!BackupMethods.Direct.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: EmptySafeHandle.Instance,
                     nNumberOfBytesToRead: 0,
@@ -114,7 +115,7 @@ namespace WInterop.Backup
                     context: ref _context))
                 {
 #if DEBUG
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
 #endif
                 }
 

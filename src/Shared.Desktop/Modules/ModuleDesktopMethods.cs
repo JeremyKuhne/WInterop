@@ -12,6 +12,7 @@ using WInterop.ErrorHandling;
 using WInterop.Modules.DataTypes;
 using WInterop.ProcessAndThreads;
 using WInterop.ProcessAndThreads.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Modules
@@ -22,7 +23,7 @@ namespace WInterop.Modules
     /// <remarks>
     /// This is an amalgamation of "Dynamic-Link Libraries" and "Process Status" APIs.
     /// </remarks>
-    public static class ModuleDesktopMethods
+    public static partial class ModuleMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -30,7 +31,7 @@ namespace WInterop.Modules
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684179.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -113,7 +114,7 @@ namespace WInterop.Modules
                 GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                 address,
                 out var handle))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return handle;
         }
@@ -148,7 +149,7 @@ namespace WInterop.Modules
             Func<IntPtr, GetModuleFlags, ModuleHandle> getHandle = (IntPtr n, GetModuleFlags f) =>
             {
                 if (!Direct.GetModuleHandleExW(f, n, out var handle))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
                 return handle;
             };
 
@@ -171,7 +172,7 @@ namespace WInterop.Modules
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
             if (!Direct.K32GetModuleInformation(process, module, out var info, (uint)sizeof(MODULEINFO)))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return info;
         }
@@ -195,7 +196,7 @@ namespace WInterop.Modules
         public static void FreeLibrary(IntPtr handle)
         {
             if (!Direct.FreeLibrary(handle))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
         }
 
         /// <summary>
@@ -205,7 +206,7 @@ namespace WInterop.Modules
         {
             SafeModuleHandle handle = Direct.LoadLibraryExW(path, IntPtr.Zero, flags);
             if (handle.IsInvalid)
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path);
 
             return handle;
         }
@@ -227,7 +228,7 @@ namespace WInterop.Modules
         {
             IntPtr method = Direct.GetProcAddress(library, methodName);
             if (method == IntPtr.Zero)
-                throw ErrorHelper.GetIoExceptionForLastError(methodName);
+                throw Errors.GetIoExceptionForLastError(methodName);
 
             return Marshal.GetDelegateForFunctionPointer<DelegateType>(method);
         }
@@ -251,7 +252,7 @@ namespace WInterop.Modules
                     buffer.EnsureByteCapacity(sizeNeeded);
                     if (!Direct.K32EnumProcessModulesEx(process, buffer, (uint)buffer.ByteCapacity,
                         out sizeNeeded, ListModulesOptions.LIST_MODULES_DEFAULT))
-                        throw ErrorHelper.GetIoExceptionForLastError();
+                        throw Errors.GetIoExceptionForLastError();
                 } while (sizeNeeded > buffer.ByteCapacity);
 
                 CheckedReader reader = new CheckedReader(buffer);

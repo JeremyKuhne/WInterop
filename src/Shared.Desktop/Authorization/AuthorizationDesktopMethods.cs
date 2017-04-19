@@ -16,6 +16,7 @@ using WInterop.Handles.DataTypes;
 using WInterop.MemoryManagement.DataTypes;
 using WInterop.ProcessAndThreads;
 using WInterop.ProcessAndThreads.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Authorization
@@ -23,7 +24,7 @@ namespace WInterop.Authorization
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static partial class AuthorizationDesktopMethods
+    public static partial class AuthorizationMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -31,7 +32,7 @@ namespace WInterop.Authorization
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -202,7 +203,7 @@ namespace WInterop.Authorization
                     (uint)buffer.ByteCapacity,
                     out bytesNeeded))
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureByteCapacity(bytesNeeded);
                 }
 
@@ -233,7 +234,7 @@ namespace WInterop.Authorization
                         uint length = buffer.CharCapacity;
 
                         if (!Direct.LookupPrivilegeNameW(IntPtr.Zero, ref luid, buffer, ref length))
-                            throw ErrorHelper.GetIoExceptionForLastError();
+                            throw Errors.GetIoExceptionForLastError();
 
                         buffer.Length = length;
 
@@ -259,7 +260,7 @@ namespace WInterop.Authorization
         {
             LUID luid = new LUID();
             if (!Direct.LookupPrivilegeValueW(null, name, ref luid))
-                throw ErrorHelper.GetIoExceptionForLastError(name);
+                throw Errors.GetIoExceptionForLastError(name);
 
             return luid;
         }
@@ -286,7 +287,7 @@ namespace WInterop.Authorization
             };
 
             if (!Direct.PrivilegeCheck(token, ref set, out bool result))
-                throw ErrorHelper.GetIoExceptionForLastError(privilege.ToString());
+                throw Errors.GetIoExceptionForLastError(privilege.ToString());
 
             return result;
         }
@@ -297,7 +298,7 @@ namespace WInterop.Authorization
         public static SafeTokenHandle OpenProcessToken(TokenRights desiredAccess)
         {
             if (!Direct.OpenProcessToken(ProcessMethods.GetCurrentProcess(), desiredAccess, out var processToken))
-                throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
+                throw Errors.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
         }
@@ -309,9 +310,9 @@ namespace WInterop.Authorization
         {
             if (!Direct.OpenThreadToken(ThreadMethods.Direct.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
-                WindowsError error = ErrorHelper.GetLastError();
+                WindowsError error = Errors.GetLastError();
                 if (error != WindowsError.ERROR_NO_TOKEN)
-                    throw ErrorHelper.GetIoExceptionForError(error, desiredAccess.ToString());
+                    throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
 
                 using (SafeTokenHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE))
                 {
@@ -323,7 +324,7 @@ namespace WInterop.Authorization
                         TOKEN_TYPE.TokenImpersonation,
                         ref threadToken))
                     {
-                        throw ErrorHelper.GetIoExceptionForLastError(desiredAccess.ToString());
+                        throw Errors.GetIoExceptionForLastError(desiredAccess.ToString());
                     }
                 }
             }
@@ -346,7 +347,7 @@ namespace WInterop.Authorization
                     (uint)sizeof(TOKEN_ELEVATION),
                     out _))
                 {
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
                 }
 
                 return elevation.TokenIsElevated;
@@ -365,7 +366,7 @@ namespace WInterop.Authorization
                 var sa = reader.ReadStruct<SID_AND_ATTRIBUTES>();
                 if (!Direct.CopySid((uint)sizeof(SID), out sid, sa.Sid))
                 {
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
                 }
             });
 
@@ -391,7 +392,7 @@ namespace WInterop.Authorization
             {
                 uint size = (uint)sizeof(SID);
                 if (!Direct.CreateWellKnownSid(sidType, null, &sid, ref size))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
             }
 
             return sid;
@@ -411,7 +412,7 @@ namespace WInterop.Authorization
         public static string ConvertSidToString(ref SID sid)
         {
             if (!Direct.ConvertSidToStringSidW(ref sid, out var handle))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             unsafe
             {
@@ -428,7 +429,7 @@ namespace WInterop.Authorization
             {
                 byte* b = Direct.GetSidSubAuthorityCount(ref sid);
                 if (b == null)
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
 
                 return *b;
             }
@@ -443,7 +444,7 @@ namespace WInterop.Authorization
             {
                 uint* u = Direct.GetSidSubAuthority(ref sid, nSubAuthority);
                 if (u == null)
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
 
                 return *u;
             }
@@ -469,7 +470,7 @@ namespace WInterop.Authorization
                     ref domainNameCharCapacity,
                     out usage))
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     nameBuffer.EnsureCharCapacity(nameCharCapacity);
                     domainNameBuffer.EnsureCharCapacity(domainNameCharCapacity);
                 }

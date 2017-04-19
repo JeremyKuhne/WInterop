@@ -10,13 +10,14 @@ using System.Runtime.InteropServices;
 using WInterop.Authorization.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.Ipc.DataTypes;
+using WInterop.Support;
 
 namespace WInterop.Ipc
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class MailslotDesktopMethods
+    public static partial class MailslotMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -24,7 +25,7 @@ namespace WInterop.Ipc
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365147.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -73,7 +74,7 @@ namespace WInterop.Ipc
             }
 
             if (handle.IsInvalid)
-                throw ErrorHelper.GetIoExceptionForLastError(name);
+                throw Errors.GetIoExceptionForLastError(name);
 
             return handle;
         }
@@ -93,7 +94,7 @@ namespace WInterop.Ipc
                     lpNextSize: &info.NextSize,
                     lpMessageCount: &info.MessageCount,
                     lpReadTimeout: &info.ReadTimeout))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
             }
 
             return info;
@@ -106,7 +107,7 @@ namespace WInterop.Ipc
         public static void SetMailslotTimeout(SafeMailslotHandle mailslotHandle, uint readTimeout)
         {
             if (!Direct.SetMailslotInfo(mailslotHandle, readTimeout))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
         }
     }
 }

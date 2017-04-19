@@ -13,6 +13,7 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
 using WInterop.ProcessAndThreads.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.ProcessAndThreads
@@ -20,7 +21,7 @@ namespace WInterop.ProcessAndThreads
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class ProcessDesktopMethods
+    public static partial class ProcessMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -73,7 +74,7 @@ namespace WInterop.ProcessAndThreads
             if (name == null) throw new ArgumentNullException(nameof(name));
 
             if (!Direct.SetEnvironmentVariableW(name, value))
-                throw ErrorHelper.GetIoExceptionForLastError(name);
+                throw Errors.GetIoExceptionForLastError(name);
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace WInterop.ProcessAndThreads
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
             if (!Direct.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(PROCESS_MEMORY_COUNTERS_EX)))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return info;
         }

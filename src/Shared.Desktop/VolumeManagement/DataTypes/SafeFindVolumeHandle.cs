@@ -8,6 +8,7 @@
 using System;
 using WInterop.ErrorHandling;
 using WInterop.Handles.DataTypes;
+using WInterop.Support;
 
 namespace WInterop.VolumeManagement.DataTypes
 {
@@ -22,9 +23,9 @@ namespace WInterop.VolumeManagement.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            if (!VolumeDesktopMethods.Direct.FindVolumeClose(handle))
+            if (!VolumeMethods.Direct.FindVolumeClose(handle))
             {
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
             }
 
             handle = IntPtr.Zero;

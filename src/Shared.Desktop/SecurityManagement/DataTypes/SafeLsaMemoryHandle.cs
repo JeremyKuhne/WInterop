@@ -21,7 +21,7 @@ namespace WInterop.SecurityManagement.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            SecurityDesktopMethods.LsaFreeMemory(handle);
+            SecurityMethods.LsaFreeMemory(handle);
             return true;
         }
     }

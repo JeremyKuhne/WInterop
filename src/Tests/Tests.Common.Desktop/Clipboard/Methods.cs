@@ -18,7 +18,7 @@ namespace DesktopTests.ClipboardTests
         [Fact]
         public void GetClipboardFormatNameForBuiltIn()
         {
-            Action action = () => ClipboardDesktopMethods.GetClipboardFormatName((uint)ClipboardFormat.CF_TEXT);
+            Action action = () => ClipboardMethods.GetClipboardFormatName((uint)ClipboardFormat.CF_TEXT);
 
             // You can't get the name for built-in types
             action.ShouldThrow<ArgumentException>();
@@ -27,12 +27,12 @@ namespace DesktopTests.ClipboardTests
         [Fact]
         public void GetAvailableClipboardFormatsBasic()
         {
-            uint[] formats = ClipboardDesktopMethods.GetAvailableClipboardFormats();
+            uint[] formats = ClipboardMethods.GetAvailableClipboardFormats();
             foreach (uint format in formats)
             {
                 if (!Enum.IsDefined(typeof(ClipboardFormat), format))
                 {
-                    string name = ClipboardDesktopMethods.GetClipboardFormatName(format);
+                    string name = ClipboardMethods.GetClipboardFormatName(format);
                     name.Should().NotBeNullOrEmpty();
                 }
             }

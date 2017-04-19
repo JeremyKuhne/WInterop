@@ -15,15 +15,13 @@ using WInterop.Desktop.Registry.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.FileManagement;
 using WInterop.FileManagement.DataTypes;
+using WInterop.Support;
 using WInterop.Synchronization.DataTypes;
 using WInterop.Windows.DataTypes;
 
 namespace WInterop.Desktop.Communications
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
-    public static class CommunicationsDesktopMethods
+    public static partial class CommunicationsMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -31,7 +29,7 @@ namespace WInterop.Desktop.Communications
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363260.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -99,7 +97,7 @@ namespace WInterop.Desktop.Communications
             };
 
             if (!Direct.GetCommState(fileHandle, ref dcb))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return dcb;
         }
@@ -109,13 +107,13 @@ namespace WInterop.Desktop.Communications
             dcb.DCBlength = (uint)sizeof(DCB);
 
             if (!Direct.GetCommState(fileHandle, ref dcb))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
         }
 
         public unsafe static DCB BuildCommDCB(string definition)
         {
             if (!Direct.BuildCommDCBW(definition, out DCB dcb))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return dcb;
         }
@@ -123,7 +121,7 @@ namespace WInterop.Desktop.Communications
         public static COMMPROP GetCommProperties(SafeFileHandle fileHandle)
         {
             if (!Direct.GetCommProperties(fileHandle, out COMMPROP properties))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return properties;
         }
@@ -134,7 +132,7 @@ namespace WInterop.Desktop.Communications
             uint size = (uint)sizeof(COMMCONFIG);
 
             if (!Direct.GetCommConfig(fileHandle, ref config, ref size))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return config;
         }
@@ -149,7 +147,7 @@ namespace WInterop.Desktop.Communications
             uint size = (uint)sizeof(COMMCONFIG);
 
             if (!Direct.GetDefaultCommConfigW(port, ref config, ref size))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return config;
         }
@@ -163,7 +161,7 @@ namespace WInterop.Desktop.Communications
             COMMCONFIG config = GetDefaultCommConfig(port);
 
             if (!Direct.CommConfigDialogW(port, parent, ref config))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return config;
         }
@@ -187,10 +185,10 @@ namespace WInterop.Desktop.Communications
 
         public static IEnumerable<string> GetAvailableComPorts()
         {
-            using (var key = RegistryDesktopMethods.OpenKey(
+            using (var key = RegistryMethods.OpenKey(
                 RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"HARDWARE\DEVICEMAP\SERIALCOMM"))
             {
-                return RegistryDesktopMethods.GetValueDataDirect(key, RegistryValueType.REG_SZ).OfType<string>().ToArray();
+                return RegistryMethods.GetValueDataDirect(key, RegistryValueType.REG_SZ).OfType<string>().ToArray();
             }
         }
     }

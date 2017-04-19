@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support.Internal;
 
 namespace WInterop.ErrorHandling
 {
@@ -16,27 +17,15 @@ namespace WInterop.ErrorHandling
         private const int STATUS_SEVERITY_WARNING = 0x2;
         private const int STATUS_SEVERITY_ERROR = 0x3;
 
-        private const int FACILITY_NT_BIT = 0x10000000;
-
         /// <summary>
         /// Extracts the code portion of the specified HRESULT
         /// </summary>
-        public static int HRESULT_CODE(HRESULT hr)
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679761.aspx
-            // #define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
-            return (int)hr & 0xFFFF;
-        }
+        public static int HRESULT_CODE(HRESULT hr) => Macros.HRESULT_CODE(hr);
 
         /// <summary>
         /// Extracts the facility of the specified HRESULT
         /// </summary>
-        public static Facility HRESULT_FACILITY(HRESULT hr)
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680579.aspx
-            // #define HRESULT_FACILITY(hr)  (((hr) >> 16) & 0x1fff)
-            return (Facility)(((int)hr >> 16) & 0x1fff);
-        }
+        public static Facility HRESULT_FACILITY(HRESULT hr) => Macros.HRESULT_FACILITY(hr);
 
         /// <summary>
         /// Extracts the severity of the specified result
@@ -44,21 +33,13 @@ namespace WInterop.ErrorHandling
         public static int HRESULT_SEVERITY(HRESULT hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms693761.aspx
-            // #define HRESULT_SEVERITY(hr)  (((hr) >> 31) & 0x1)  
+            // #define HRESULT_SEVERITY(hr)  (((hr) >> 31) & 0x1)
             return ((((int)hr) >> 31) & 0x1);
         }
 
-        public static HRESULT HRESULT_FROM_WIN32(WindowsError error)
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680746.aspx
-            // return (HRESULT)(x) <= 0 ? (HRESULT)(x) : (HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
-            return (HRESULT)((int)error <= 0 ? (int)error : (((int)error & 0x0000FFFF) | ((int)Facility.WIN32 << 16) | 0x80000000));
-        }
+        public static HRESULT HRESULT_FROM_WIN32(WindowsError error) => Macros.HRESULT_FROM_WIN32(error);
 
-        public static HRESULT HRESULT_FROM_NT(NTSTATUS status)
-        {
-            return (HRESULT)((int)status | FACILITY_NT_BIT);
-        }
+        public static HRESULT HRESULT_FROM_NT(NTSTATUS status) => Macros.HRESULT_FROM_NT(status);
 
         public static bool SUCCEEDED(HRESULT hr)
         {

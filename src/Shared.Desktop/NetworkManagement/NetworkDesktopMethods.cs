@@ -13,13 +13,14 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
 using WInterop.NetworkManagement.DataTypes;
+using WInterop.Support;
 
 namespace WInterop.NetworkManagement
 {
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class NetworkDesktopMethods
+    public static partial class NetworkMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -27,7 +28,7 @@ namespace WInterop.NetworkManagement
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // NET_API_STATUS is a DWORD (uint)
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370304.aspx
@@ -120,7 +121,7 @@ namespace WInterop.NetworkManagement
         {
             WindowsError result = Direct.NetApiBufferFree(buffer);
             if (result != WindowsError.NERR_Success)
-                throw ErrorHelper.GetIoExceptionForError(result);
+                throw Errors.GetIoExceptionForError(result);
         }
 
         public unsafe static void AddLocalGroup(string groupName, string comment = null, string server = null)
@@ -140,7 +141,7 @@ namespace WInterop.NetworkManagement
                         parm_err: out uint parameter);
 
                     if (result != WindowsError.NERR_Success)
-                        throw ErrorHelper.GetIoExceptionForError(result, groupName);
+                        throw Errors.GetIoExceptionForError(result, groupName);
                 }
             }
         }
@@ -159,7 +160,7 @@ namespace WInterop.NetworkManagement
                 resumehandle: IntPtr.Zero);
 
             if (result != WindowsError.NERR_Success)
-                throw ErrorHelper.GetIoExceptionForError(result, server);
+                throw Errors.GetIoExceptionForError(result, server);
 
             foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
             {
@@ -184,7 +185,7 @@ namespace WInterop.NetworkManagement
                 resumehandle: IntPtr.Zero);
 
             if (result != WindowsError.NERR_Success)
-                throw ErrorHelper.GetIoExceptionForError(result, server);
+                throw Errors.GetIoExceptionForError(result, server);
 
             foreach (Direct.LOCALGROUP_MEMBERS_INFO_1 info in ReadStructsFromBuffer<Direct.LOCALGROUP_MEMBERS_INFO_1>(buffer, entriesRead))
             {

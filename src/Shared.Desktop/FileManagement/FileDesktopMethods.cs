@@ -13,6 +13,7 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.FileManagement.DataTypes;
 using WInterop.Handles.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement
@@ -20,7 +21,7 @@ namespace WInterop.FileManagement
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class FileDesktopMethods
+    public static partial class FileMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -28,7 +29,7 @@ namespace WInterop.FileManagement
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -208,9 +209,9 @@ namespace WInterop.FileManagement
         /// </summary>
         public static BY_HANDLE_FILE_INFORMATION GetFileInformationByHandle(SafeFileHandle fileHandle)
         {
-            BY_HANDLE_FILE_INFORMATION fileInformation;
-            if (!Direct.GetFileInformationByHandle(fileHandle, out fileInformation))
-                throw ErrorHelper.GetIoExceptionForLastError();
+            if (!Direct.GetFileInformationByHandle(fileHandle, out BY_HANDLE_FILE_INFORMATION fileInformation))
+                throw Errors.GetIoExceptionForLastError();
+
             return fileInformation;
         }
 
@@ -221,14 +222,14 @@ namespace WInterop.FileManagement
         {
             if (!Direct.CreateSymbolicLinkW(symbolicLinkPath, targetPath,
                 targetIsDirectory ? SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_DIRECTORY : SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_FILE))
-                throw ErrorHelper.GetIoExceptionForLastError(symbolicLinkPath);
+                throw Errors.GetIoExceptionForLastError(symbolicLinkPath);
         }
 
         /// <summary>
         /// CreateFile wrapper. Desktop only. Prefer FileManagement.CreateFile() as it will handle all supported platforms.
         /// </summary>
         /// <remarks>Not available in Windows Store applications.</remarks>
-        public static SafeFileHandle CreateFile(
+        public static SafeFileHandle CreateFileW(
             string path,
             DesiredAccess desiredAccess,
             ShareMode shareMode,
@@ -243,7 +244,7 @@ namespace WInterop.FileManagement
             {
                 SafeFileHandle handle = Direct.CreateFileW(path, desiredAccess, shareMode, null, creationDisposition, flags, IntPtr.Zero);
                 if (handle.IsInvalid)
-                    throw ErrorHelper.GetIoExceptionForLastError(path);
+                    throw Errors.GetIoExceptionForLastError(path);
                 return handle;
             }
         }
@@ -264,7 +265,7 @@ namespace WInterop.FileManagement
                 pbCancel: ref cancel,
                 dwCopyFlags: overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS))
             {
-                throw ErrorHelper.GetIoExceptionForLastError(source);
+                throw Errors.GetIoExceptionForLastError(source);
             }
         }
 
@@ -276,7 +277,7 @@ namespace WInterop.FileManagement
         {
             FileAttributes attributes = Direct.GetFileAttributesW(path);
             if (attributes == FileAttributes.INVALID_FILE_ATTRIBUTES)
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path);
 
             return attributes;
         }
@@ -341,7 +342,7 @@ namespace WInterop.FileManagement
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
                 // The string isn't null terminated so we have to explicitly pass the size
                 return reader.ReadString(checked((int)nameLength) / sizeof(char));
@@ -358,7 +359,7 @@ namespace WInterop.FileManagement
                 FileInformationClass: fileInformationClass);
 
             if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorHelper.GetIoExceptionForNTStatus(status);
+                throw ErrorMethods.GetIoExceptionForNTStatus(status);
         }
 
         /// <summary>

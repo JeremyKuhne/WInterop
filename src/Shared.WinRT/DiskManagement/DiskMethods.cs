@@ -7,11 +7,11 @@
 
 using System.Runtime.InteropServices;
 using WInterop.DiskManagement.DataTypes;
-using WInterop.ErrorHandling;
+using WInterop.Support;
 
 namespace WInterop.DiskManagement
 {
-    public static class DiskMethods
+    public static partial class DiskMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -19,7 +19,7 @@ namespace WInterop.DiskManagement
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
@@ -30,7 +30,7 @@ namespace WInterop.DiskManagement
                 ulong* lpTotalNumberOfFreeBytes);
         }
 
-        public static ExtendedDiskFreeSpace GetDiskFreeSpace(string directory)
+        public static ExtendedDiskFreeSpace GetDiskFreeSpaceExtended(string directory)
         {
             ExtendedDiskFreeSpace freeSpace;
 
@@ -42,7 +42,7 @@ namespace WInterop.DiskManagement
                     lpTotalNumberOfBytes: &freeSpace.TotalNumberOfBytes,
                     lpTotalNumberOfFreeBytes: &freeSpace.TotalNumberOfFreeBytes))
                 {
-                    throw ErrorHelper.GetIoExceptionForLastError(directory);
+                    throw Errors.GetIoExceptionForLastError(directory);
                 }
             }
 

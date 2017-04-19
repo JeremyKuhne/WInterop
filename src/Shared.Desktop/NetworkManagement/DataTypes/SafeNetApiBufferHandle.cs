@@ -23,7 +23,7 @@ namespace WInterop.NetworkManagement.DataTypes
 
         protected override bool ReleaseHandle()
         {
-            NetworkDesktopMethods.NetApiBufferFree(handle);
+            NetworkMethods.NetApiBufferFree(handle);
             handle = IntPtr.Zero;
             return true;
         }

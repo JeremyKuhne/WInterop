@@ -10,7 +10,7 @@ using WInterop.ProcessAndThreads.DataTypes;
 
 namespace WInterop.ProcessAndThreads
 {
-    public static class ProcessMethods
+    public static partial class ProcessMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.

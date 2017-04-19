@@ -21,7 +21,7 @@ namespace WInterop.Shell
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static class ShellDesktopMethods
+    public static partial class ShellMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
@@ -29,7 +29,7 @@ namespace WInterop.Shell
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762188.aspx
             [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, SetLastError = false, ExactSpelling = true)]
@@ -75,7 +75,7 @@ namespace WInterop.Shell
         {
             HRESULT hr = Direct.SHGetKnownFolderPath(folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
             if (hr != HRESULT.S_OK)
-                throw ErrorHelper.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
+                throw Errors.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
             return path;
         }
@@ -87,7 +87,7 @@ namespace WInterop.Shell
         {
             HRESULT hr = Direct.SHGetKnownFolderIDList(folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
             if (hr != HRESULT.S_OK)
-                throw ErrorHelper.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
+                throw Errors.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
             return id;
         }
@@ -99,7 +99,7 @@ namespace WInterop.Shell
         {
             HRESULT hr = Direct.SHGetNameFromIDList(id, form, out string name);
             if (hr != HRESULT.S_OK)
-                throw ErrorHelper.GetIoExceptionForHResult(hr);
+                throw Errors.GetIoExceptionForHResult(hr);
 
             return name;
         }
@@ -159,7 +159,7 @@ namespace WInterop.Shell
             {
                 while (!Direct.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
                 {
-                    ErrorHelper.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                 }
 

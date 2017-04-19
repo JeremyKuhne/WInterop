@@ -20,7 +20,7 @@ namespace DesktopTests.BackupTests
         {
             using (var cleaner = new TestFileCleaner())
             {
-                BackupDesktopMethods.GetAlternateStreamInformation(cleaner.CreateTestFile("NoAlternateStreamData")).Should().BeEmpty();
+                BackupMethods.GetAlternateStreamInformation(cleaner.CreateTestFile("NoAlternateStreamData")).Should().BeEmpty();
             }
         }
 
@@ -33,7 +33,7 @@ namespace DesktopTests.BackupTests
                 string firstStream = testFile + ":First";
                 FileHelper.WriteAllText(firstStream, "First alternate data stream");
 
-                var info = BackupDesktopMethods.GetAlternateStreamInformation(testFile);
+                var info = BackupMethods.GetAlternateStreamInformation(testFile);
                 info.Should().HaveCount(1);
                 info.First().Name.Should().Be(":First:$DATA");
             }

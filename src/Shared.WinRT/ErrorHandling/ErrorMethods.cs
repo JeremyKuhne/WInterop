@@ -9,11 +9,13 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support;
 using WInterop.Support.Buffers;
+using WInterop.Support.Internal;
 
 namespace WInterop.ErrorHandling
 {
-    public static class ErrorMethods
+    public static partial class ErrorMethods
     {
         // All defines referenced in this file are from winerror.h unless otherwise specified
 
@@ -49,8 +51,7 @@ namespace WInterop.ErrorHandling
             public static extern uint LsaNtStatusToWinError(NTSTATUS Status);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679351.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern uint FormatMessageW(
+            public static uint FormatMessageW(
                 FormatMessageFlags dwFlags,
                 IntPtr lpSource,
                 uint dwMessageId,
@@ -59,7 +60,7 @@ namespace WInterop.ErrorHandling
                 IntPtr lpBuffer,
                 // Size is in chars
                 uint nSize,
-                string[] Arguments);
+                string[] Arguments) => Imports.FormatMessageW(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
         }
 
         // .NET's Win32Exception impements the error code lookup on FormatMessage using FORMAT_MESSAGE_FROM_SYSTEM.
@@ -96,7 +97,7 @@ namespace WInterop.ErrorHandling
 
                     if (result == 0)
                     {
-                        lastError = ErrorHelper.GetLastError();
+                        lastError = Errors.GetLastError();
                         capacity = (uint)Math.Min(capacity * 2, short.MaxValue);
                     }
                     else

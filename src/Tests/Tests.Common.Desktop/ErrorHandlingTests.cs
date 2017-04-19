@@ -17,7 +17,7 @@ namespace DesktopTests
         [Fact]
         public void BasicBeep()
         {
-            ErrorDesktopMethods.Beep(frequency: 262, duration: 500);
+            ErrorMethods.Beep(frequency: 262, duration: 500);
         }
 
         [Theory,
@@ -30,29 +30,29 @@ namespace DesktopTests
             ]
         public void BasicMessageBeep(MessageBeepType type)
         {
-            ErrorDesktopMethods.MessageBeep(type);
+            ErrorMethods.MessageBeep(type);
         }
 
         [Fact]
         public void GetProcessErrorMode()
         {
-            ErrorMode mode = ErrorDesktopMethods.GetProcessErrorMode();
+            ErrorMode mode = ErrorMethods.GetProcessErrorMode();
         }
 
         [Fact]
         public void BasicThreadErrorMode()
         {
-            ErrorMode mode = ErrorDesktopMethods.GetThreadErrorMode();
+            ErrorMode mode = ErrorMethods.GetThreadErrorMode();
             ErrorMode newMode = mode ^ ErrorMode.SEM_NOOPENFILEERRORBOX;
-            ErrorMode oldMode = ErrorDesktopMethods.SetThreadErrorMode(newMode);
+            ErrorMode oldMode = ErrorMethods.SetThreadErrorMode(newMode);
             try
             {
                 oldMode.Should().Be(mode);
-                ErrorDesktopMethods.GetThreadErrorMode().Should().Be(newMode);
+                ErrorMethods.GetThreadErrorMode().Should().Be(newMode);
             }
             finally
             {
-                ErrorDesktopMethods.SetThreadErrorMode(mode).Should().Be(newMode);
+                ErrorMethods.SetThreadErrorMode(mode).Should().Be(newMode);
             }
         }
     }

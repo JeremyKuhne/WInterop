@@ -35,7 +35,7 @@ namespace WInterop.FileManagement
         /// <remarks>
         /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
         /// </remarks>
-        public static class Direct
+        public static partial class Direct
         {
             // NTFS Technical Reference
             // https://technet.microsoft.com/en-us/library/cc758691.aspx
@@ -261,7 +261,7 @@ namespace WInterop.FileManagement
                     uUnique: 0,
                     lpTempFileName: buffer);
 
-                if (result == 0) throw ErrorHelper.GetIoExceptionForLastError(path);
+                if (result == 0) throw Errors.GetIoExceptionForLastError(path);
 
                 buffer.SetLengthToFirstNull();
                 return buffer.ToString();
@@ -274,7 +274,7 @@ namespace WInterop.FileManagement
         public static void DeleteFile(string path)
         {
             if (!Direct.DeleteFileW(path))
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path);
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace WInterop.FileManagement
                 catch (Exception exception)
                 {
                     // Any error other than EntryPointNotFound we've found CreateFile2, rethrow
-                    if (!ErrorHelper.IsEntryPointNotFoundException(exception))
+                    if (!Errors.IsEntryPointNotFoundException(exception))
                         throw;
 
                     s_createFileDelegate = Delegates.CreateDelegate<CreateFileDelegate>(
@@ -417,7 +417,7 @@ namespace WInterop.FileManagement
                 pCreateExParams: ref extended);
 
             if (handle.IsInvalid)
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return handle;
         }
@@ -446,7 +446,7 @@ namespace WInterop.FileManagement
                 catch (Exception exception)
                 {
                     // Any error other than EntryPointNotFound we've found CreateFile2, rethrow
-                    if (!ErrorHelper.IsEntryPointNotFoundException(exception))
+                    if (!Errors.IsEntryPointNotFoundException(exception))
                         throw;
 
                     s_copyFileDelegate = Delegates.CreateDelegate<CopyFileDelegate>(
@@ -475,7 +475,7 @@ namespace WInterop.FileManagement
 
                 HRESULT hr = Direct.CopyFile2(source, destination, &parameters);
                 if (ErrorMacros.FAILED(hr))
-                    throw ErrorHelper.GetIoExceptionForHResult(hr, source);
+                    throw Errors.GetIoExceptionForHResult(hr, source);
             }
         }
 
@@ -503,7 +503,7 @@ namespace WInterop.FileManagement
         public static FileInfo GetFileAttributesEx(string path)
         {
             if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path);
 
             return new FileInfo(data);
         }
@@ -545,12 +545,12 @@ namespace WInterop.FileManagement
         {
             if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
             {
-                WindowsError error = ErrorHelper.GetLastError();
+                WindowsError error = Errors.GetLastError();
                 switch (error)
                 {
                     case WindowsError.ERROR_ACCESS_DENIED:
                     case WindowsError.ERROR_NETWORK_ACCESS_DENIED:
-                        throw ErrorHelper.GetIoExceptionForError(error, path);
+                        throw Errors.GetIoExceptionForError(error, path);
                     case WindowsError.ERROR_PATH_NOT_FOUND:
                     default:
                         return null;
@@ -566,7 +566,7 @@ namespace WInterop.FileManagement
         public static void SetFileAttributes(string path, FileAttributes attributes)
         {
             if (!Direct.SetFileAttributesW(path, attributes))
-                throw ErrorHelper.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path);
         }
 
         /// <summary>
@@ -575,7 +575,7 @@ namespace WInterop.FileManagement
         public static void FlushFileBuffers(SafeFileHandle fileHandle)
         {
             if (!Direct.FlushFileBuffers(fileHandle))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
         }
 
         /// <summary>
@@ -597,9 +597,9 @@ namespace WInterop.FileManagement
                         buffer.VoidPointer,
                         checked((uint)buffer.ByteCapacity)))
                     {
-                        WindowsError error = ErrorHelper.GetLastError();
+                        WindowsError error = Errors.GetLastError();
                         if (error != WindowsError.ERROR_MORE_DATA)
-                            throw ErrorHelper.GetIoExceptionForError(error);
+                            throw Errors.GetIoExceptionForError(error);
                         buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                     }
                 }
@@ -622,7 +622,7 @@ namespace WInterop.FileManagement
                     FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo,
                     &info,
                     (uint)sizeof(FILE_STANDARD_INFO)))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
             }
 
             return new FileStandardInfo(info);
@@ -641,7 +641,7 @@ namespace WInterop.FileManagement
                     FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo,
                     &info,
                     (uint)sizeof(FILE_BASIC_INFO)))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
             }
             return new FileBasicInfo(info);
         }
@@ -669,7 +669,7 @@ namespace WInterop.FileManagement
                     while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStreamInfo,
                         buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
                     {
-                        WindowsError error = ErrorHelper.GetLastError();
+                        WindowsError error = Errors.GetLastError();
                         switch (error)
                         {
                             case WindowsError.ERROR_HANDLE_EOF:
@@ -679,7 +679,7 @@ namespace WInterop.FileManagement
                                 buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                                 break;
                             default:
-                                throw ErrorHelper.GetIoExceptionForError(error);
+                                throw Errors.GetIoExceptionForError(error);
                         }
                     }
                 }
@@ -769,12 +769,12 @@ namespace WInterop.FileManagement
             {
                 OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
                 if (!Direct.ReadFile(fileHandle, buffer, numberOfBytes, &numberOfBytesRead, &overlapped))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
             }
             else
             {
                 if (!Direct.ReadFile(fileHandle, buffer, numberOfBytes, &numberOfBytesRead, null))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
             }
 
             return numberOfBytesRead;
@@ -855,12 +855,12 @@ namespace WInterop.FileManagement
             {
                 OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
                 if (!Direct.WriteFile(fileHandle, buffer, numberOfBytes, &numberOfBytesWritten, &overlapped))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
             }
             else
             {
                 if (!Direct.WriteFile(fileHandle, buffer, numberOfBytes, &numberOfBytesWritten, null))
-                    throw ErrorHelper.GetIoExceptionForLastError();
+                    throw Errors.GetIoExceptionForLastError();
             }
 
             return numberOfBytesWritten;
@@ -875,7 +875,7 @@ namespace WInterop.FileManagement
         public static long SetFilePointer(SafeFileHandle fileHandle, long distance, MoveMethod moveMethod)
         {
             if (!Direct.SetFilePointerEx(fileHandle, distance, out long position, moveMethod))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return position;
         }
@@ -894,7 +894,7 @@ namespace WInterop.FileManagement
         public static long GetFileSize(SafeFileHandle fileHandle)
         {
             if (!Direct.GetFileSizeEx(fileHandle, out long size))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return size;
         }
@@ -906,7 +906,7 @@ namespace WInterop.FileManagement
         {
             FileType fileType = Direct.GetFileType(fileHandle);
             if (fileType == FileType.FILE_TYPE_UNKNOWN)
-                ErrorHelper.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
+                Errors.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
             return fileType;
         }
@@ -962,7 +962,7 @@ namespace WInterop.FileManagement
                         buffer.VoidPointer,
                         (uint)buffer.ByteCapacity))
                     {
-                        var error = ErrorHelper.GetLastError();
+                        var error = Errors.GetLastError();
                         switch (error)
                         {
                             case WindowsError.ERROR_BAD_LENGTH:
@@ -977,7 +977,7 @@ namespace WInterop.FileManagement
                                 // Nothing left to get
                                 return;
                             default:
-                                throw ErrorHelper.GetIoExceptionForError(error);
+                                throw Errors.GetIoExceptionForError(error);
                         }
                     }
 

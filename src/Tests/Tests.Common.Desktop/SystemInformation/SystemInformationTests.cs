@@ -19,27 +19,27 @@ namespace DesktopTests.SystemInformation
         [Fact]
         public void GetCurrentUserName()
         {
-            SystemInformationDesktopMethods.GetUserName().Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
+            SystemInformationMethods.GetUserName().Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
         }
 
         [Fact]
         public void GetSuiteMask()
         {
-            SystemInformationDesktopMethods.GetSuiteMask().Should().HaveFlag(SuiteMask.VER_SUITE_SINGLEUSERTS);
+            SystemInformationMethods.GetSuiteMask().Should().HaveFlag(SuiteMask.VER_SUITE_SINGLEUSERTS);
         }
 
         [Fact]
         public void GetUserNameSam()
         {
             // Should be DOMAIN\user or COMPUTER\user
-            SystemInformationDesktopMethods.GetUserName(EXTENDED_NAME_FORMAT.NameSamCompatible)
+            SystemInformationMethods.GetUserName(EXTENDED_NAME_FORMAT.NameSamCompatible)
                 .Should().Be($"{Environment.GetEnvironmentVariable("USERDOMAIN")}\\{Environment.GetEnvironmentVariable("USERNAME")}");
         }
 
         [Fact]
         public void GetUserNameDisplay()
         {
-            SystemInformationDesktopMethods.GetUserName(EXTENDED_NAME_FORMAT.NameDisplay).Should().NotBeNullOrWhiteSpace();
+            SystemInformationMethods.GetUserName(EXTENDED_NAME_FORMAT.NameDisplay).Should().NotBeNullOrWhiteSpace();
         }
 
         // [Fact]
@@ -49,7 +49,7 @@ namespace DesktopTests.SystemInformation
             {
                 try
                 {
-                    string name = SystemInformationDesktopMethods.GetUserName(format) ?? "<null>";
+                    string name = SystemInformationMethods.GetUserName(format) ?? "<null>";
                     Debug.WriteLine($"{format}: '{name}'");
                 }
                 catch (Exception e)
@@ -62,14 +62,14 @@ namespace DesktopTests.SystemInformation
         [Fact]
         public void GetComputerName()
         {
-            SystemInformationDesktopMethods.GetComputerName().Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
+            SystemInformationMethods.GetComputerName().Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
         }
 
         [Fact]
         public void GetComputerName_NetBIOS()
         {
-            SystemInformationDesktopMethods.GetComputerName(COMPUTER_NAME_FORMAT.ComputerNameNetBIOS)
-                .Should().Be(SystemInformationDesktopMethods.GetComputerName());
+            SystemInformationMethods.GetComputerName(COMPUTER_NAME_FORMAT.ComputerNameNetBIOS)
+                .Should().Be(SystemInformationMethods.GetComputerName());
         }
 
         // [Fact]
@@ -79,7 +79,7 @@ namespace DesktopTests.SystemInformation
             {
                 try
                 {
-                    string name = SystemInformationDesktopMethods.GetComputerName(format) ?? "<null>";
+                    string name = SystemInformationMethods.GetComputerName(format) ?? "<null>";
                     Debug.WriteLine($"{format}: '{name}'");
                 }
                 catch (Exception e)
@@ -92,7 +92,7 @@ namespace DesktopTests.SystemInformation
         [Fact]
         public void ExpandEnvironmentVariables_Existing()
         {
-            SystemInformationDesktopMethods.ExpandEnvironmentVariables(@"%COMPUTERNAME%").
+            SystemInformationMethods.ExpandEnvironmentVariables(@"%COMPUTERNAME%").
                 Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
         }
 
@@ -103,7 +103,7 @@ namespace DesktopTests.SystemInformation
             try
             {
                 Environment.SetEnvironmentVariable("ExpandEnvironmentVariables_Long", longValue);
-                SystemInformationDesktopMethods.ExpandEnvironmentVariables(@"%ExpandEnvironmentVariables_Long%").
+                SystemInformationMethods.ExpandEnvironmentVariables(@"%ExpandEnvironmentVariables_Long%").
                     Should().Be(longValue);
             }
             finally

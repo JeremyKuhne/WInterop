@@ -11,7 +11,7 @@ using WInterop.SystemInformation.DataTypes;
 
 namespace WInterop.SystemInformation
 {
-    public static class SystemInformationMethods
+    public static partial class SystemInformationMethods
     {
         /// <summary>
         /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.

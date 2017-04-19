@@ -10,7 +10,7 @@ namespace WInterop.Gdi
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static partial class GdiDesktopMethods
+    public static partial class GdiMethods
     {
         public static class Defines
         {

@@ -18,7 +18,7 @@ namespace DesktopTests
         public void BasicGetLocalGroupNames()
         {
             string[] knownLocalGroups = { "Administrators", "Guests", "Users" };
-            var localGroups = NetworkDesktopMethods.EnumerateLocalGroups();
+            var localGroups = NetworkMethods.EnumerateLocalGroups();
             localGroups.Should().Contain(knownLocalGroups);
             knownLocalGroups.Should().BeSubsetOf(localGroups);
         }
@@ -27,7 +27,7 @@ namespace DesktopTests
         public void BasicGetLocalGroupMembers()
         {
             string[] knownMembers = { "Authenticated Users", "INTERACTIVE" };
-            var members = NetworkDesktopMethods.EnumerateGroupUsers("Users");
+            var members = NetworkMethods.EnumerateGroupUsers("Users");
             members.Select(m => m.Name).Should().Contain(knownMembers);
             knownMembers.Should().BeSubsetOf(members.Select(m => m.Name));
         }
@@ -35,7 +35,7 @@ namespace DesktopTests
         [Fact(Skip = "Need to conditionalize this on admin rights.")]
         public void AddLocalGroup()
         {
-            NetworkDesktopMethods.AddLocalGroup("TestGroup", "This group is for testing");
+            NetworkMethods.AddLocalGroup("TestGroup", "This group is for testing");
         }
     }
 }

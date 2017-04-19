@@ -5,15 +5,23 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Support;
+using WInterop.Support.Internal;
 
 namespace WInterop.ErrorHandling
 {
-    public static class ErrorDesktopMethods
+    public static partial class ErrorMethods
     {
-        // Putting private P/Invokes in a subclass to allow exact matching of signatures for perf on initial call and reduce string count
-        public static class Direct
+        /// <summary>
+        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// </summary>
+        /// <remarks>
+        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
+        /// </remarks>
+        public static partial class Direct
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679355.aspx
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
@@ -57,7 +65,7 @@ namespace WInterop.ErrorHandling
         public static void Beep(uint frequency, uint duration)
         {
             if (!Direct.Beep(frequency, duration))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
         }
 
         /// <summary>
@@ -66,7 +74,7 @@ namespace WInterop.ErrorHandling
         public static void MessageBeep(MessageBeepType type)
         {
             if (!Direct.MessageBeep(type))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
         }
 
         /// <summary>
@@ -93,9 +101,24 @@ namespace WInterop.ErrorHandling
         {
             ErrorMode oldMode;
             if (!Direct.SetThreadErrorMode(mode, out oldMode))
-                throw ErrorHelper.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError();
 
             return oldMode;
+        }
+
+        /// <summary>
+        /// Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
+        /// There are additional IOException derived errors for ease of client error handling.
+        /// </summary>
+        public static Exception GetIoExceptionForNTStatus(NTSTATUS status, string path = null)
+        {
+            switch (status)
+            {
+                case NTSTATUS.STATUS_NOT_IMPLEMENTED:
+                    return new NotImplementedException(path ?? WInteropStrings.NoValue);
+            }
+
+            return Errors.GetIoExceptionForError(ErrorMethods.NtStatusToWinError(status), path);
         }
     }
 }

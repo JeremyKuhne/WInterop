@@ -9,6 +9,7 @@ using System;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Support.Buffers;
+using WInterop.Support.Internal;
 
 namespace WInterop.Support
 {
@@ -47,12 +48,12 @@ namespace WInterop.Support
                                 s_isWinRT = 1;
                                 break;
                             default:
-                                throw ErrorHelper.GetIoExceptionForError(result);
+                                throw Errors.GetIoExceptionForError(result);
                         }
                     }
                     catch (Exception e)
                     {
-                        if (ErrorHelper.IsEntryPointNotFoundException(e))
+                        if (Errors.IsEntryPointNotFoundException(e))
                             // API doesn't exist, pre Win8
                             s_isWinRT = 0;
                         else

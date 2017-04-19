@@ -25,14 +25,14 @@ namespace DesktopTests.FileManagementMethods
         public void GetShortPathBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            FileDesktopMethods.GetShortPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+            FileMethods.GetShortPathName(tempPath).Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void GetLongPathBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            FileDesktopMethods.GetLongPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+            FileMethods.GetLongPathName(tempPath).Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -49,17 +49,17 @@ namespace DesktopTests.FileManagementMethods
                     handle.IsInvalid.Should().BeFalse();
 
                     string extendedPath = @"\\?\" + filePath;
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedPath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedPath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
                         .Should().Be(extendedPath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
                         .Should().StartWith(@"\\?\Volume");
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
                         .Should().StartWith(@"\Device\");
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
                         .Should().Be(filePath.Substring(2));
                 }
             }
@@ -68,9 +68,9 @@ namespace DesktopTests.FileManagementMethods
         private static bool CanCreateSymbolicLinks()
         {
             // Assuming that the current thread can replicate rights from the process
-            using (var processToken = AuthorizationDesktopMethods.OpenProcessToken(TokenRights.TOKEN_QUERY | TokenRights.TOKEN_READ))
+            using (var processToken = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_QUERY | TokenRights.TOKEN_READ))
             {
-                return AuthorizationDesktopMethods.HasPrivilege(processToken, Privileges.SeCreateSymbolicLinkPrivilege);
+                return AuthorizationMethods.HasPrivilege(processToken, Privileges.SeCreateSymbolicLinkPrivilege);
             }
         }
 
@@ -89,16 +89,16 @@ namespace DesktopTests.FileManagementMethods
 
                 string symbolicLink = Paths.Combine(cleaner.TempFolder, "Link");
                 string extendedLink = @"\\?\" + symbolicLink;
-                FileDesktopMethods.CreateSymbolicLink(symbolicLink, filePath);
+                FileMethods.CreateSymbolicLink(symbolicLink, filePath);
                 FileMethods.FileExists(symbolicLink).Should().BeTrue("symbolic link should exist");
 
                 // GetFinalPathName should normalize the casing, pushing ToUpper to validate
                 using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedPath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedPath);
                 }
 
@@ -106,9 +106,9 @@ namespace DesktopTests.FileManagementMethods
                     ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING, FileAttributes.NONE, FileFlags.FILE_FLAG_OPEN_REPARSE_POINT))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedLink);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedLink);
                 }
             }
@@ -127,17 +127,17 @@ namespace DesktopTests.FileManagementMethods
                     handle.IsInvalid.Should().BeFalse();
 
                     string extendedPath = @"\\?\" + filePath;
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedPath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedPath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
                         .Should().Be(extendedPath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
                         .Should().StartWith(@"\\?\Volume");
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
                         .Should().StartWith(@"\Device\");
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
                         .Should().Be(filePath.Substring(2));
                 }
             }
@@ -159,17 +159,17 @@ namespace DesktopTests.FileManagementMethods
                 {
                     handle.IsInvalid.Should().BeFalse();
 
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(filePath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(filePath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
                         .Should().Be(filePath);
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
                         .Should().StartWith(@"\\?\Volume");
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
                         .Should().StartWith(@"\Device\");
-                    FileDesktopMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
                         .Should().Be(filePath.Substring(6));
                 }
             }
@@ -181,7 +181,7 @@ namespace DesktopTests.FileManagementMethods
             string tempPath = FileMethods.GetTempPath();
             string lowerTempPath = tempPath.ToLowerInvariant();
             tempPath.Should().NotBe(lowerTempPath);
-            FileDesktopMethods.GetFinalPathName(lowerTempPath, 0, false).Should().Be(@"\\?\" + Paths.RemoveTrailingSeparators(tempPath));
+            FileMethods.GetFinalPathName(lowerTempPath, 0, false).Should().Be(@"\\?\" + Paths.RemoveTrailingSeparators(tempPath));
         }
 
         [Fact]
@@ -191,12 +191,12 @@ namespace DesktopTests.FileManagementMethods
             {
                 string filePath = cleaner.CreateTestFile("CreateSymbolicLinkToFile");
                 string symbolicLink = cleaner.GetTestPath();
-                Action action = () => FileDesktopMethods.CreateSymbolicLink(symbolicLink, filePath);
+                Action action = () => FileMethods.CreateSymbolicLink(symbolicLink, filePath);
 
                 if (CanCreateSymbolicLinks())
                 {
                     action();
-                    var attributes = FileDesktopMethods.GetFileAttributes(symbolicLink);
+                    var attributes = FileMethods.GetFileAttributes(symbolicLink);
                     attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT);
                 }
                 else
@@ -217,12 +217,12 @@ namespace DesktopTests.FileManagementMethods
                 string filePath = cleaner.CreateTestFile("CreateSymbolicLinkToLongPathFile", longPath);
 
                 string symbolicLink = cleaner.GetTestPath();
-                Action action = () => FileDesktopMethods.CreateSymbolicLink(symbolicLink, filePath);
+                Action action = () => FileMethods.CreateSymbolicLink(symbolicLink, filePath);
 
                 if (CanCreateSymbolicLinks())
                 {
                     action();
-                    var attributes = FileDesktopMethods.GetFileAttributes(symbolicLink);
+                    var attributes = FileMethods.GetFileAttributes(symbolicLink);
                     attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT);
                 }
                 else
@@ -236,7 +236,7 @@ namespace DesktopTests.FileManagementMethods
         public void GetFileAttributesLongPath()
         {
             string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(@"C:\", 300);
-            Action action = () => FileDesktopMethods.GetFileAttributes(longPath);
+            Action action = () => FileMethods.GetFileAttributes(longPath);
             action.ShouldThrow<System.IO.DirectoryNotFoundException>();
         }
 
@@ -271,7 +271,7 @@ namespace DesktopTests.FileManagementMethods
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
-                string name = FileDesktopMethods.GetFileName(directory);
+                string name = FileMethods.GetFileName(directory);
 
                 tempPath.Should().EndWith(Paths.AddTrailingSeparator(name));
             }
@@ -287,7 +287,7 @@ namespace DesktopTests.FileManagementMethods
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
                 try
                 {
-                    string name = FileDesktopMethods.GetVolumeName(directory);
+                    string name = FileMethods.GetVolumeName(directory);
                     name.Should().StartWith(@"\Device\");
                 }
                 catch (NotImplementedException)
@@ -306,7 +306,7 @@ namespace DesktopTests.FileManagementMethods
                 FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
-                string directoryName = FileDesktopMethods.GetShortName(directory);
+                string directoryName = FileMethods.GetShortName(directory);
                 directoryName.Should().Be("Temp");
 
                 string tempFileName = "ExtraLongName" + System.IO.Path.GetRandomFileName();
@@ -315,7 +315,7 @@ namespace DesktopTests.FileManagementMethods
                 {
                     using (var file = FileMethods.CreateFile(tempFilePath, DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
                     {
-                        string fileName = FileDesktopMethods.GetShortName(file);
+                        string fileName = FileMethods.GetShortName(file);
                         fileName.Length.Should().BeLessOrEqualTo(12);
                     }
                 }
@@ -336,7 +336,7 @@ namespace DesktopTests.FileManagementMethods
                     CreationDisposition.CREATE_NEW))
                 {
                     file.IsInvalid.Should().BeFalse();
-                    var mode = FileDesktopMethods.GetFileMode(file);
+                    var mode = FileMethods.GetFileMode(file);
                     mode.Should().HaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
                 }
             }
@@ -352,7 +352,7 @@ namespace DesktopTests.FileManagementMethods
                     CreationDisposition.CREATE_NEW, FileAttributes.NONE, FileFlags.FILE_FLAG_OVERLAPPED))
                 {
                     file.IsInvalid.Should().BeFalse();
-                    var mode = FileDesktopMethods.GetFileMode(file);
+                    var mode = FileMethods.GetFileMode(file);
                     mode.Should().NotHaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
                     mode.Should().NotHaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_ALERT);
                 }
