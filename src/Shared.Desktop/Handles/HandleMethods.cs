@@ -13,7 +13,6 @@ using WInterop.Authentication.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Handles

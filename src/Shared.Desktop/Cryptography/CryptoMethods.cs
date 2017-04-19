@@ -11,9 +11,6 @@ using WInterop.Handles.DataTypes;
 
 namespace WInterop.Cryptography
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class CryptoMethods
     {
         /// <summary>

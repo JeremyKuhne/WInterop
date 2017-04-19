@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -17,9 +16,6 @@ using WInterop.VolumeManagement.DataTypes;
 
 namespace WInterop.VolumeManagement
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class VolumeMethods
     {
         /// <summary>

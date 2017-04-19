@@ -9,7 +9,6 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Support;
-using WInterop.Support.Internal;
 
 namespace WInterop.ErrorHandling
 {

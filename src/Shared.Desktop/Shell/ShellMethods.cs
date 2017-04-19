@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Com.DataTypes;
-using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Handles.DataTypes;
 using WInterop.Shell.DataTypes;
@@ -18,9 +17,6 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Shell
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class ShellMethods
     {
         /// <summary>

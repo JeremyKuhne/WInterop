@@ -125,14 +125,19 @@ namespace WInterop.Gdi
         public static IEnumerable<DISPLAY_DEVICE> EnumerateDisplayDevices(string deviceName)
         {
             uint index = 0;
-            DISPLAY_DEVICE device = new DISPLAY_DEVICE();
-            device.cb = DISPLAY_DEVICE.s_size;
+            DISPLAY_DEVICE device = new DISPLAY_DEVICE()
+            {
+                cb = DISPLAY_DEVICE.s_size
+            };
+
             while (Direct.EnumDisplayDevicesW(deviceName, index, ref device, 0))
             {
                 yield return device;
                 index++;
-                device = new DISPLAY_DEVICE();
-                device.cb = DISPLAY_DEVICE.s_size;
+                device = new DISPLAY_DEVICE()
+                {
+                    cb = DISPLAY_DEVICE.s_size
+                };
             }
 
             yield break;
@@ -140,19 +145,23 @@ namespace WInterop.Gdi
 
         public static IEnumerable<DEVMODE> EnumerateDisplaySettings(string deviceName, uint modeIndex = 0)
         {
-            DEVMODE mode = new DEVMODE();
-            mode.dmSize = DEVMODE.s_size;
+            DEVMODE mode = new DEVMODE()
+            {
+                dmSize = DEVMODE.s_size
+            };
 
             while (Direct.EnumDisplaySettingsW(deviceName, modeIndex, ref mode))
             {
                 yield return mode;
 
-                if (modeIndex == Defines.ENUM_CURRENT_SETTINGS || modeIndex == Defines.ENUM_REGISTRY_SETTINGS)
+                if (modeIndex == GdiDefines.ENUM_CURRENT_SETTINGS || modeIndex == GdiDefines.ENUM_REGISTRY_SETTINGS)
                     break;
 
                 modeIndex++;
-                mode = new DEVMODE();
-                mode.dmSize = DEVMODE.s_size;
+                mode = new DEVMODE()
+                {
+                    dmSize = DEVMODE.s_size
+                };
             }
 
             yield break;

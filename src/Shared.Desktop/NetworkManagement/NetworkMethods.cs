@@ -9,17 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.DataTypes;
-using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
-using WInterop.Handles.DataTypes;
 using WInterop.NetworkManagement.DataTypes;
 using WInterop.Support;
 
 namespace WInterop.NetworkManagement
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class NetworkMethods
     {
         /// <summary>

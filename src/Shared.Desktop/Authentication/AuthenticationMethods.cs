@@ -5,19 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.Runtime.InteropServices;
 using WInterop.Authentication.DataTypes;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.SecurityManagement.DataTypes;
-using WInterop.Support;
 
 namespace WInterop.Authentication
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class AuthenticationMethods
     {
         /// <summary>

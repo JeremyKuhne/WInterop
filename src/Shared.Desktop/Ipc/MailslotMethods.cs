@@ -8,15 +8,11 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.DataTypes;
-using WInterop.ErrorHandling;
 using WInterop.Ipc.DataTypes;
 using WInterop.Support;
 
 namespace WInterop.Ipc
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class MailslotMethods
     {
         /// <summary>

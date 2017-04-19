@@ -16,9 +16,6 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Desktop.Registry
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class RegistryMethods
     {
         /// <summary>

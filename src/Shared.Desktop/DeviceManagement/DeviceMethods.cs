@@ -8,7 +8,6 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.DeviceManagement.DataTypes;
-using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.FileManagement.DataTypes;
 using WInterop.Support;
@@ -16,9 +15,6 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.DeviceManagement
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class DeviceMethods
     {
         /// <summary>

@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.DataTypes;
 using WInterop.Modules.DataTypes;
 using WInterop.Support;
@@ -15,9 +14,6 @@ using WInterop.Windows.DataTypes;
 
 namespace WInterop.Windows
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class WindowsMethods
     {
         /// <summary>

@@ -6,15 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
 using WInterop.Modules.DataTypes;
 using WInterop.Support;
 
 namespace WInterop.Resources
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     public static partial class ResourceMethods
     {
         /// <summary>
