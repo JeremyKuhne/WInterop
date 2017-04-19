@@ -53,7 +53,7 @@ namespace DesktopTests.Gdi
         public void EnumerateDisplaySettings_FirstDevice_CurrentMode()
         {
             var device = GdiMethods.EnumerateDisplayDevices(null).First();
-            var settings = GdiMethods.EnumerateDisplaySettings(device.DeviceName, GdiMethods.Defines.ENUM_CURRENT_SETTINGS).ToArray();
+            var settings = GdiMethods.EnumerateDisplaySettings(device.DeviceName, GdiDefines.ENUM_CURRENT_SETTINGS).ToArray();
             settings.Length.Should().Be(1);
         }
 
