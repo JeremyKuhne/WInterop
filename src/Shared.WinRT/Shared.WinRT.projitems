@@ -6,7 +6,7 @@
     <SharedGUID>2322de30-4c84-4d86-ac36-8e6c0e750c43</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Shared.WinRT</Import_RootNamespace>
+    <Import_RootNamespace>WInterop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />

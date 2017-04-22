@@ -87,6 +87,15 @@ namespace WInterop.Gdi
                 string lpszDeviceName,
                 uint iModeNum,
                 ref DEVMODE lpDevMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd183485.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern BitmapHandle CreateBitmap(
+                int nWidth,
+                int nHeight,
+                uint cPlanes,
+                uint cBitsPerPel,
+                IntPtr lpvBits);
         }
 
         public static int GetDeviceCapability(DeviceContext deviceContext, DeviceCapability capability)

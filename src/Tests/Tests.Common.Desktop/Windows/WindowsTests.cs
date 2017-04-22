@@ -6,7 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System.Linq;
+using System;
+using System.IO;
 using WInterop.Windows;
 using WInterop.Windows.DataTypes;
 using Xunit;
@@ -66,6 +67,28 @@ namespace DesktopTests.Windows
         {
             // Could be either, make sure we don't choke.
             WindowsMethods.IsGuiThread();
+        }
+
+        [Fact]
+        public void GetClassName()
+        {
+            WindowsMethods.GetClassName(WindowsMethods.GetShellWindow()).Should().Be("Progman");
+        }
+
+        [Fact]
+        public void GetClassName_NullWindow()
+        {
+            Action action = () => WindowsMethods.GetClassName(WindowHandle.NullWindowHandle);
+
+            // Invalid window handle. (1400)
+            action.ShouldThrow<IOException>().And.HResult.Should().Be(unchecked((int)0x80070578));
+        }
+
+        [Fact]
+        public void GetOwner_Desktop()
+        {
+            var window = WindowsMethods.GetWindow(WindowsMethods.GetDesktopWindow(), GetWindowOptions.GW_OWNER);
+            window.Should().Be(WindowHandle.NullWindowHandle);
         }
     }
 }

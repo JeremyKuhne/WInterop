@@ -6,7 +6,7 @@
     <SharedGUID>b3ea538a-e777-45bd-974b-dedcea40ca1a</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Shared.Desktop</Import_RootNamespace>
+    <Import_RootNamespace>WInterop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Authentication\AuthenticationMethods.cs" />
@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DataTypes\TemporaryErrorMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\DataTypes\BitmapHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DataTypes\BrushHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DataTypes\DeviceContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DataTypes\GdiObject.cs" />

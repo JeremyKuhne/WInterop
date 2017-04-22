@@ -5,11 +5,16 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Windows.DataTypes
+using System;
+
+namespace WInterop.Gdi.DataTypes
 {
-    public struct POINT
+    public class BitmapHandle : GdiObject
     {
-        public int x;
-        public int y;
+        public BitmapHandle() : base() { }
+
+        public BitmapHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
+        {
+        }
     }
 }

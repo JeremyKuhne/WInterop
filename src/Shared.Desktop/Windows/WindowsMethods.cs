@@ -8,8 +8,10 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.DataTypes;
+using WInterop.Gdi.DataTypes;
 using WInterop.Modules.DataTypes;
 using WInterop.Support;
+using WInterop.Support.Buffers;
 using WInterop.Windows.DataTypes;
 
 namespace WInterop.Windows
@@ -52,9 +54,68 @@ namespace WInterop.Windows
             public static extern WindowHandle GetTopWindow(
                 WindowHandle hWnd);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632673.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool BringWindowToTop(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetWindowPos(
+                WindowHandle hWnd,
+                WindowHandle hWndInsertAfter,
+                int X,
+                int Y,
+                int cx,
+                int cy,
+                WindowPosition uFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646292.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern WindowHandle GetActiveWindow();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646311.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern WindowHandle SetActiveWindow(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632669.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool AnimateWindow(
+                WindowHandle hwnd,
+                uint dwTime,
+                WindowAnimationType dwFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool ShowWindow(
+                WindowHandle hWnd,
+                ShowWindowCommand nCmdShow);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633549.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool ShowWindowAsync(
+                WindowHandle hWnd,
+                ShowWindowCommand nCmdShow);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633505.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern WindowHandle GetForegroundWindow();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632668.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool AllowSetForegroundWindow(
+                uint dwProcessId);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633539.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool SetForegroundWindow(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633532.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool LockSetForegroundWindow(
+                LockCode uLockCode);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633512.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -105,15 +166,88 @@ namespace WInterop.Windows
                 IntPtr lpClassName,
                 ModuleHandle hInstance);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633582.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetClassNameW(
+                WindowHandle hWnd,
+                SafeHandle lpClassName,
+                int nMaxCount);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724385.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern int GetSystemMetrics(
                 SystemMetric nIndex);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633503.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetClientRect(
+                WindowHandle hWnd,
+                out RECT lpRect);
+
+            // Note that AdjustWindowRect simply calls this method with an extended style of 0.
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632667.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool AdjustWindowRectEx(
+                ref RECT lpRect,
+                WindowsStyle dwStyle,
+                bool bMenu,
+                ExtendedWindowsStyle dwExStyle);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648402.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetCaretPos(
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648405.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetCaretPos(
+                int X,
+                int Y);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648406.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool ShowCaret(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648403.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool HideCaret(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648399.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool CreateCaret(
+                WindowHandle hWnd,
+                BitmapHandle hBitmap,
+                int nWidth,
+                int nHeight);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648400.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool DestroyCaret();
+
+            // uint.MaxValue is INFINITE, or doesn't blink
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648401.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetCaretBlinkTime();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648404.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetCaretBlinkTime(uint uMSeconds);
         }
 
         public static WindowHandle GetShellWindow()
         {
             return Direct.GetShellWindow();
+        }
+
+        /// <summary>
+        /// Gets the specified related Window to get given Window if it exists. Otherwise
+        /// returns a null WindowHandle.
+        /// </summary>
+        public static WindowHandle GetWindow(WindowHandle handle, GetWindowOptions option)
+        {
+            return Direct.GetWindow(handle, option);
         }
 
         public static WindowHandle GetDesktopWindow()
@@ -148,6 +282,29 @@ namespace WInterop.Windows
         public static WindowHandle GetForegroundWindow()
         {
             return Direct.GetForegroundWindow();
+        }
+
+        public static string GetClassName(WindowHandle handle)
+        {
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            {
+                int count;
+                while ((count = Direct.GetClassNameW(handle, buffer, (int)buffer.CharCapacity)) != 0)
+                {
+                    if (count == buffer.CharCapacity - 1)
+                    {
+                        // The buffer may not be big enough, this api simply truncates
+                        buffer.EnsureCharCapacity(checked(buffer.CharCapacity * 2));
+                    }
+                    else
+                    {
+                        buffer.Length = (uint)count;
+                        return buffer.ToString();
+                    }
+                }
+
+                throw Errors.GetIoExceptionForLastError();
+            });
         }
 
         /// <summary>
