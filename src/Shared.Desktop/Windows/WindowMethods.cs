@@ -260,6 +260,13 @@ namespace WInterop.Windows
                 WindowHandle hWnd,
                 ScrollBar nBar);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787595.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetScrollInfo(
+                WindowHandle hwind,
+                ScrollBar fnBar,
+                [In] ref SCROLLINFO lpsi);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787599.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool SetScrollRange(
@@ -550,24 +557,49 @@ namespace WInterop.Windows
             return rect;
         }
 
-        public static void SetScrollRange(WindowHandle handle, ScrollBar scrollBar, int min, int max, bool redraw)
+        public static void SetScrollRange(WindowHandle window, ScrollBar scrollBar, int min, int max, bool redraw)
         {
-            if (!Imports.SetScrollRange(handle, scrollBar, min, max, redraw))
+            if (!Imports.SetScrollRange(window, scrollBar, min, max, redraw))
                 throw Errors.GetIoExceptionForLastError();
         }
 
-        public static int SetScrollPosition(WindowHandle handle, ScrollBar scrollBar, int position, bool redraw)
+        public static int SetScrollPosition(WindowHandle window, ScrollBar scrollBar, int position, bool redraw)
         {
-            int result = Imports.SetScrollPos(handle, scrollBar, position, redraw);
+            int result = Imports.SetScrollPos(window, scrollBar, position, redraw);
             if (result == 0)
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
             return result;
         }
 
-        public static int GetScrollPosition(WindowHandle handle, ScrollBar scrollBar)
+        public unsafe static int SetScrollInfo(WindowHandle window, ScrollBar scrollBar, ref SCROLLINFO scrollInfo, bool redraw)
         {
-            int result = Imports.GetScrollPos(handle, scrollBar);
+            scrollInfo.cbSize = (uint)sizeof(SCROLLINFO);
+            int result = Imports.SetScrollInfo(window, scrollBar, ref scrollInfo, redraw);
+
+            return result;
+        }
+
+        public static int GetScrollPosition(WindowHandle window, ScrollBar scrollBar)
+        {
+            int result = Imports.GetScrollPos(window, scrollBar);
+            if (result == 0)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
+        }
+
+        public unsafe static void GetScrollInfo(WindowHandle window, ScrollBar scrollBar, ref SCROLLINFO scrollInfo)
+        {
+            scrollInfo.cbSize = (uint)sizeof(SCROLLINFO);
+            if (!Imports.GetScrollInfo(window, scrollBar, ref scrollInfo))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public unsafe static int ScrollWindow(WindowHandle window, int dx, int dy)
+        {
+            int result = Imports.ScrollWindowEx(window, dx, dy, null, null, IntPtr.Zero, null, ScrollWindowFlags.SW_ERASE | ScrollWindowFlags.SW_INVALIDATE);
+
             if (result == 0)
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
