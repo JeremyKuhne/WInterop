@@ -21,7 +21,7 @@ namespace DesktopTests.SecurityManagement
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_UserGroup()
         {
-            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_EXECUTE);
+            LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_EXECUTE);
             SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinUsersSid);
             var rights = SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
             rights.Should().NotBeEmpty();
@@ -31,7 +31,7 @@ namespace DesktopTests.SecurityManagement
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_ReadRightsFails()
         {
-            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinUsersSid);
             Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
             action.ShouldThrow<UnauthorizedAccessException>();
@@ -40,7 +40,7 @@ namespace DesktopTests.SecurityManagement
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_BadSidFails()
         {
-            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             SID sid = new SID();
             Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
             action.ShouldThrow<ArgumentException>();
@@ -49,7 +49,7 @@ namespace DesktopTests.SecurityManagement
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_NoRightsFails()
         {
-            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinAnyPackageSid);
             SecurityMethods.LsaEnumerateAccountRights(handle, ref sid).Should().BeEmpty();
         }

@@ -48,7 +48,7 @@ namespace WInterop.ProcessAndThreads
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683187.aspx
             // Note that this API does not document that it sets GetLastError
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern SafeEnvironmentStringsHandle GetEnvironmentStringsW();
+            public static extern EnvironmentStringsHandle GetEnvironmentStringsW();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683151.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

@@ -10,9 +10,9 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.NetworkManagement.Types
 {
-    public class SafeNetApiBufferHandle : SafeBuffer
+    public class NetApiBufferHandle : SafeBuffer
     {
-        public SafeNetApiBufferHandle() : base(ownsHandle: true)
+        public NetApiBufferHandle() : base(ownsHandle: true)
         {
         }
 

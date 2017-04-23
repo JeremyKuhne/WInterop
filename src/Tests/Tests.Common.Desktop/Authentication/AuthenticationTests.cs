@@ -19,7 +19,7 @@ namespace DesktopTests.Authentication
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void LsaOpenPolicy_StandardRead()
         {
-            SafeLsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             handle.IsInvalid.Should().BeFalse();
         }
 

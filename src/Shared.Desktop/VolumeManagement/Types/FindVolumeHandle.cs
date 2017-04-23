@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.ErrorHandling;
 using WInterop.Handles.Types;
 using WInterop.Support;
 
@@ -15,9 +14,9 @@ namespace WInterop.VolumeManagement.Types
     /// <summary>
     /// Safe handle for a block of memory returned by GetEnvironmentStrings.
     /// </summary>
-    public class SafeFindVolumeHandle : SafeHandleZeroIsInvalid
+    public class FindVolumeHandle : SafeHandleZeroIsInvalid
     {
-        public SafeFindVolumeHandle() : base(ownsHandle: true)
+        public FindVolumeHandle() : base(ownsHandle: true)
         {
         }
 

@@ -10,11 +10,11 @@ using WInterop.Handles.Types;
 
 namespace WInterop.SecurityManagement.Types
 {
-    public class SafeLsaHandle : SafeHandleZeroIsInvalid
+    public class LsaHandle : SafeHandleZeroIsInvalid
     {
-        public SafeLsaHandle() : base(ownsHandle: true) { }
+        public LsaHandle() : base(ownsHandle: true) { }
 
-        public SafeLsaHandle(IntPtr handle, bool ownsHandle = true) : base(ownsHandle)
+        public LsaHandle(IntPtr handle, bool ownsHandle = true) : base(ownsHandle)
         {
             SetHandle(handle);
         }

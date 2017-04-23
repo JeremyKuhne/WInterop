@@ -59,7 +59,7 @@ namespace WInterop.NetworkManagement
             public static extern WindowsError NetLocalGroupEnum(
                 string servername,
                 uint level,
-                out SafeNetApiBufferHandle bufptr,
+                out NetApiBufferHandle bufptr,
                 uint prefmaxlen,
                 out uint entriesread,
                 out uint totalentries,
@@ -79,7 +79,7 @@ namespace WInterop.NetworkManagement
                 string servername,
                 string localgroupname,
                 uint level,
-                out SafeNetApiBufferHandle bufptr,
+                out NetApiBufferHandle bufptr,
                 uint prefmaxlen,
                 out uint entriesread,
                 out uint totalentries,
@@ -194,7 +194,7 @@ namespace WInterop.NetworkManagement
             return members;
         }
 
-        private static IEnumerable<T> ReadStructsFromBuffer<T>(SafeNetApiBufferHandle buffer, uint count) where T : struct
+        private static IEnumerable<T> ReadStructsFromBuffer<T>(NetApiBufferHandle buffer, uint count) where T : struct
         {
             uint size = (uint)Marshal.SizeOf<T>();
             var items = new List<T>((int)count);

@@ -29,13 +29,13 @@ namespace WInterop.Authentication
                 UNICODE_STRING* SystemName,
                 LSA_OBJECT_ATTRIBUTES* ObjectAttributes,
                 PolicyAccessRights DesiredAccess,
-                out SafeLsaHandle PolicyHandle);
+                out LsaHandle PolicyHandle);
         }
 
-        public static SafeLsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
+        public static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
         {
             LSA_OBJECT_ATTRIBUTES attributes = new LSA_OBJECT_ATTRIBUTES();
-            SafeLsaHandle handle;
+            LsaHandle handle;
             NTSTATUS status;
 
             unsafe
