@@ -7,11 +7,11 @@
 
 using System;
 
-namespace WInterop.Windows
+namespace WInterop.Windows.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600.aspx
     [Flags]
-    public enum WindowsStyle : uint
+    public enum WindowStyle : uint
     {
         WS_OVERLAPPED      = 0x00000000,
         WS_POPUP           = 0x80000000,

@@ -11,7 +11,7 @@ namespace WInterop.Windows.DataTypes
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ff729176.aspx
     [Flags]
-    public enum WindowsClassStyle : uint
+    public enum WindowClassStyle : uint
     {
         /// <summary>
         /// Redraws the entire window if a movement or size adjustment changes the height of the client area.

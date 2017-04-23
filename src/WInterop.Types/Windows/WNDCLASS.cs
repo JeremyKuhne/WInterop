@@ -14,15 +14,20 @@ namespace WInterop.Windows.DataTypes
     [StructLayout(LayoutKind.Sequential)]
     public struct WNDCLASS
     {
-        public WindowsClassStyle style;
+        public WindowClassStyle style;
         public IntPtr lpfnWndProc;
         public int cbClassExtra;
         public int cbWndExtra;
+
+        // SafeHandles can't be marshalled *from* native code
         public IntPtr hInstance;
         public IntPtr hIcon;
         public IntPtr hCursor;
         public IntPtr hbrBackground;
-        public IntPtr lpszMenuName;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string lpszMenuName;
+
         public IntPtr lpszClassName;
      }
 }

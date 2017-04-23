@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.DataTypes;
+using WInterop.Support.Buffers;
 using WInterop.Windows.DataTypes;
 
 namespace WInterop.Gdi
@@ -96,6 +97,37 @@ namespace WInterop.Gdi
                 uint cPlanes,
                 uint cBitsPerPel,
                 IntPtr lpvBits);
+
+            // https://msdn.microsoft.com/en-us/library/dd144925.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern IntPtr GetStockObject(
+                int fnObject);
+
+            // https://msdn.microsoft.com/en-us/library/dd145167.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool UpdateWindow(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/dd183362.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern DeviceContext BeginPaint(
+                WindowHandle hwnd,
+                out PAINTSTRUCT lpPaint);
+
+            // https://msdn.microsoft.com/en-us/library/dd162598.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool EndPaint(
+                WindowHandle hwnd,
+                [In] ref PAINTSTRUCT lpPaint);
+
+            // https://msdn.microsoft.com/en-us/library/dd162498.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern int DrawTextW(
+                DeviceContext hDC,
+                SafeHandle lpchText,
+                int nCount,
+                ref RECT lpRect,
+                TextFormat uFormat);
         }
 
         public static int GetDeviceCapability(DeviceContext deviceContext, DeviceCapability capability)
@@ -174,6 +206,39 @@ namespace WInterop.Gdi
             }
 
             yield break;
+        }
+
+        public static BrushHandle GetStockBrush(StockBrush brush)
+        {
+            IntPtr handle = Direct.GetStockObject((int)brush);
+            return new BrushHandle(handle, ownsHandle: false);
+        }
+
+        public static bool UpdateWindow(WindowHandle window)
+        {
+            return Direct.UpdateWindow(window);
+        }
+
+        public static DeviceContext BeginPaint(WindowHandle window, out PAINTSTRUCT paintStruct)
+        {
+            return Direct.BeginPaint(window, out paintStruct);
+        }
+
+        public static void EndPaint(WindowHandle window, ref PAINTSTRUCT paintStruct)
+        {
+            Direct.EndPaint(window, ref paintStruct);
+        }
+
+        public static int DrawText(DeviceContext deviceContext, string text, RECT rect, TextFormat format)
+        {
+            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            {
+                buffer.Append(text);
+                if ((format & TextFormat.DT_MODIFYSTRING) != 0)
+                    buffer.EnsureCharCapacity(buffer.Length + 5);
+
+                return Direct.DrawTextW(deviceContext, buffer, (int)buffer.Length, ref rect, format);
+            });
         }
     }
 }

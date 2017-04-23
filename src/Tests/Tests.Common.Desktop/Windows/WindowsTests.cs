@@ -19,66 +19,66 @@ namespace DesktopTests.Windows
         [Fact]
         public void BasicGetDesktopWindow()
         {
-            WindowsMethods.GetDesktopWindow().Should().NotBe(WindowHandle.NullWindowHandle);
+            WindowMethods.GetDesktopWindow().Should().NotBe(WindowHandle.NullWindowHandle);
         }
 
         [Fact]
         public void BasicGetShellWindow()
         {
-            WindowsMethods.GetShellWindow().Should().NotBe(WindowHandle.NullWindowHandle);
+            WindowMethods.GetShellWindow().Should().NotBe(WindowHandle.NullWindowHandle);
         }
 
         [Fact]
         public void IsWindowShell()
         {
-            var window = WindowsMethods.GetShellWindow();
-            WindowsMethods.IsWindow(window).Should().BeTrue();
+            var window = WindowMethods.GetShellWindow();
+            WindowMethods.IsWindow(window).Should().BeTrue();
         }
 
         [Fact]
         public void IsWindowUnicodeShell()
         {
-            var window = WindowsMethods.GetShellWindow();
-            WindowsMethods.IsWindowUnicode(window).Should().BeTrue();
+            var window = WindowMethods.GetShellWindow();
+            WindowMethods.IsWindowUnicode(window).Should().BeTrue();
         }
 
         [Fact]
         public void IsWindowVisibleShell()
         {
-            var window = WindowsMethods.GetShellWindow();
-            WindowsMethods.IsWindowVisible(window).Should().BeTrue();
+            var window = WindowMethods.GetShellWindow();
+            WindowMethods.IsWindowVisible(window).Should().BeTrue();
         }
 
         [Fact]
         public void IsWindowVisibleDesktop()
         {
-            var window = WindowsMethods.GetDesktopWindow();
-            WindowsMethods.IsWindowVisible(window).Should().BeTrue();
+            var window = WindowMethods.GetDesktopWindow();
+            WindowMethods.IsWindowVisible(window).Should().BeTrue();
         }
 
         [Fact]
         public void GetTopWindow()
         {
-            WindowsMethods.GetTopWindow(WindowHandle.NullWindowHandle).Should().NotBe(WindowHandle.NullWindowHandle);
+            WindowMethods.GetTopWindow(WindowHandle.NullWindowHandle).Should().NotBe(WindowHandle.NullWindowHandle);
         }
 
         [Fact]
         public void IsGuiThread()
         {
             // Could be either, make sure we don't choke.
-            WindowsMethods.IsGuiThread();
+            WindowMethods.IsGuiThread();
         }
 
         [Fact]
         public void GetClassName()
         {
-            WindowsMethods.GetClassName(WindowsMethods.GetShellWindow()).Should().Be("Progman");
+            WindowMethods.GetClassName(WindowMethods.GetShellWindow()).Should().Be("Progman");
         }
 
         [Fact]
         public void GetClassName_NullWindow()
         {
-            Action action = () => WindowsMethods.GetClassName(WindowHandle.NullWindowHandle);
+            Action action = () => WindowMethods.GetClassName(WindowHandle.NullWindowHandle);
 
             // Invalid window handle. (1400)
             action.ShouldThrow<IOException>().And.HResult.Should().Be(unchecked((int)0x80070578));
@@ -87,7 +87,7 @@ namespace DesktopTests.Windows
         [Fact]
         public void GetOwner_Desktop()
         {
-            var window = WindowsMethods.GetWindow(WindowsMethods.GetDesktopWindow(), GetWindowOptions.GW_OWNER);
+            var window = WindowMethods.GetWindow(WindowMethods.GetDesktopWindow(), GetWindowOptions.GW_OWNER);
             window.Should().Be(WindowHandle.NullWindowHandle);
         }
     }

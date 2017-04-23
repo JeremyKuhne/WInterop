@@ -10,27 +10,32 @@ using WInterop.Handles.DataTypes;
 
 namespace WInterop.Modules.DataTypes
 {
+    /// <summary>
+    /// Module handle. This is synonymous with HINSTANCE and HMODULE.
+    /// </summary>
+    /// <remarks>
+    /// Typically we try to avoid using the safe prefix, in this case
+    /// ModuleHandle is a type that lives in System.
+    /// </remarks>
     public class SafeModuleHandle : SafeHandleZeroIsInvalid
     {
-        public SafeModuleHandle() : base(ownsHandle: true)
-        {
-        }
+        public static SafeModuleHandle NullModuleHandle = new SafeModuleHandle(IntPtr.Zero);
 
-        public SafeModuleHandle(IntPtr handle, bool ownsHandle) : base(ownsHandle)
-        {
-            this.handle = handle;
-        }
+        public SafeModuleHandle() : this(ownsHandle: false) { }
+
+        protected SafeModuleHandle(bool ownsHandle) : base(ownsHandle) { }
+
+        public SafeModuleHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
+
+        static public implicit operator SafeModuleHandle(IntPtr handle) => new SafeModuleHandle(handle);
 
         protected override bool ReleaseHandle()
         {
-            Support.Internal.Imports.FreeLibrary(handle);
-            handle = IntPtr.Zero;
+            // Module handles are ref counted with LoadLibrary/FreeLibrary.
+            // We use a derived class to return a module handle from LoadLibary
+            // that will decrement appropriately.
             return true;
         }
 
-        static public implicit operator ModuleHandle(SafeModuleHandle handle)
-        {
-            return new ModuleHandle(handle.handle);
-        }
     }
 }

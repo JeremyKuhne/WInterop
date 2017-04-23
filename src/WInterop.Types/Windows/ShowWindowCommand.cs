@@ -10,8 +10,17 @@ namespace WInterop.Windows
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548.aspx
     public enum ShowWindowCommand : int
     {
+        /// <summary>
+        /// Hides the window, activating another window.
+        /// </summary>
         SW_HIDE            = 0,
+
+        /// <summary>
+        /// Activates and displays a window, restoring it to its original size and position.
+        /// Use this when displaying a window for the first time.
+        /// </summary>
         SW_SHOWNORMAL      = 1,
+
         SW_SHOWMINIMIZED   = 2,
         SW_SHOWMAXIMIZED   = 3,
         SW_SHOWNOACTIVATE  = 4,

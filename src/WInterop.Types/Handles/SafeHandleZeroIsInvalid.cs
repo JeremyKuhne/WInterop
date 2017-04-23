@@ -21,6 +21,12 @@ namespace WInterop.Handles.DataTypes
         {
         }
 
+        protected SafeHandleZeroIsInvalid(IntPtr handle, bool ownsHandle = false)
+            : this(ownsHandle)
+        {
+            SetHandle(handle);
+        }
+
         public override bool IsInvalid => handle == IntPtr.Zero;
     }
 }

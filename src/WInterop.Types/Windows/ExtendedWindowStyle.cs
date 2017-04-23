@@ -11,12 +11,12 @@ namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ff700543.aspx
     [Flags]
-    public enum ExtendedWindowsStyle : uint
+    public enum ExtendedWindowStyle : uint
     {
         /// <summary>
         /// Not actually defined, for convenience.
         /// </summary>
-        NONE = 0x0,
+        None = 0x0,
         WS_EX_DLGMODALFRAME    = 0x00000001,
         WS_EX_NOPARENTNOTIFY   = 0x00000004,
         WS_EX_TOPMOST          = 0x00000008,

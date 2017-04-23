@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
 using WInterop.Modules.DataTypes;
 using WInterop.ProcessAndThreads;
 using WInterop.ProcessAndThreads.DataTypes;
@@ -35,7 +34,7 @@ namespace WInterop.Modules
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684179.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern SafeModuleHandle LoadLibraryExW(
+            public static extern RefCountedModuleHandle LoadLibraryExW(
                 string lpFileName,
                 IntPtr hFile,
                 LoadLibraryFlags dwFlags);
@@ -59,13 +58,13 @@ namespace WInterop.Modules
             unsafe public static extern bool GetModuleHandleExW(
                 GetModuleFlags dwFlags,
                 IntPtr lpModuleName,
-                out ModuleHandle moduleHandle);
+                out IntPtr moduleHandle);
 
             // The non-ex version is more performant for the current process.
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683197.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern uint GetModuleFileNameW(
-                ModuleHandle hModule,
+                SafeModuleHandle hModule,
                 SafeHandle lpFileName,
                 uint nSize);
 
@@ -108,7 +107,7 @@ namespace WInterop.Modules
         /// <summary>
         /// Gets the module handle for the specified memory address without increasing the refcount.
         /// </summary>
-        public static ModuleHandle GetModuleHandle(IntPtr address)
+        public static SafeModuleHandle GetModuleHandle(IntPtr address)
         {
             if (!Direct.GetModuleHandleExW(
                 GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
@@ -116,23 +115,23 @@ namespace WInterop.Modules
                 out var handle))
                 throw Errors.GetIoExceptionForLastError();
 
-            return handle;
+            return new SafeModuleHandle(handle);
         }
 
         /// <summary>
         /// Gets the specified module handle without increasing the ref count.
         /// </summary>
-        public static ModuleHandle GetModuleHandle(string moduleName)
+        public static SafeModuleHandle GetModuleHandle(string moduleName)
         {
-            return GetModuleHandleHelper(moduleName, GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT);
+            return new SafeModuleHandle(GetModuleHandleHelper(moduleName, GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT));
         }
 
         /// <summary>
         /// Gets a module handle and pins the module so it can't be unloaded until the process exits.
         /// </summary>
-        public static ModuleHandle GetModuleHandleAndPin(string moduleName)
+        public static SafeModuleHandle GetModuleHandleAndPin(string moduleName)
         {
-            return GetModuleHandleHelper(moduleName, GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_PIN);
+            return new SafeModuleHandle(GetModuleHandleHelper(moduleName, GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_PIN));
         }
 
         /// <summary>
@@ -140,13 +139,13 @@ namespace WInterop.Modules
         /// </summary>
         public static SafeModuleHandle GetRefCountedModuleHandle(string moduleName)
         {
-            ModuleHandle handle = GetModuleHandleHelper(moduleName, 0);
-            return new SafeModuleHandle(handle.HMODULE, ownsHandle: true);
+            // Module's reference count is incremented by 
+            return new RefCountedModuleHandle(GetModuleHandleHelper(moduleName, 0));
         }
 
-        private unsafe static ModuleHandle GetModuleHandleHelper(string moduleName, GetModuleFlags flags)
+        private unsafe static IntPtr GetModuleHandleHelper(string moduleName, GetModuleFlags flags)
         {
-            Func<IntPtr, GetModuleFlags, ModuleHandle> getHandle = (IntPtr n, GetModuleFlags f) =>
+            Func<IntPtr, GetModuleFlags, IntPtr> getHandle = (IntPtr n, GetModuleFlags f) =>
             {
                 if (!Direct.GetModuleHandleExW(f, n, out var handle))
                     throw Errors.GetIoExceptionForLastError();
@@ -238,11 +237,11 @@ namespace WInterop.Modules
         /// </summary>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         /// <param name="process">The process to get modules for or null for the current process.</param>
-        public unsafe static IEnumerable<ModuleHandle> GetProcessModules(SafeProcessHandle process = null)
+        public unsafe static IEnumerable<SafeModuleHandle> GetProcessModules(SafeProcessHandle process = null)
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
-            List<ModuleHandle> modules = new List<ModuleHandle>();
+            List<SafeModuleHandle> modules = new List<SafeModuleHandle>();
             BufferHelper.CachedInvoke<HeapBuffer>(buffer =>
             {
                 uint sizeNeeded = (uint)buffer.ByteCapacity;
@@ -256,9 +255,9 @@ namespace WInterop.Modules
                 } while (sizeNeeded > buffer.ByteCapacity);
 
                 CheckedReader reader = new CheckedReader(buffer);
-                for (int i = 0; i < sizeNeeded; i += sizeof(ModuleHandle))
+                for (int i = 0; i < sizeNeeded; i += sizeof(IntPtr))
                 {
-                    modules.Add(reader.ReadStruct<ModuleHandle>());
+                    modules.Add(new SafeModuleHandle(reader.ReadIntPtr()));
                 }
             });
 

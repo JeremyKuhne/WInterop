@@ -17,10 +17,7 @@ namespace WInterop.Gdi.DataTypes
     {
         public GdiObject() : base(ownsHandle: true) { }
 
-        public GdiObject(IntPtr handle, bool ownsHandle = true) : base(ownsHandle)
-        {
-            SetHandle(handle);
-        }
+        public GdiObject(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle) { }
 
         protected override bool ReleaseHandle()
         {

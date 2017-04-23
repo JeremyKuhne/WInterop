@@ -39,6 +39,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Registry\DataTypes\RegistryKeyHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Registry\RegistryMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\DataTypes\CursorHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\DataTypes\IconHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\DataTypes\SharedCursorHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\DataTypes\SharedIconHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceMacros.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\DataTypes\SafeLsaHandle.cs" />
@@ -49,6 +53,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\DataTypes\SafeFindVolumeHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\VolumeMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\DataTypes\WindowClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowMethods.cs" />
   </ItemGroup>
 </Project>

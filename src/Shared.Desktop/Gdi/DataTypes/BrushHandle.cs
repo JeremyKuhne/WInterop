@@ -13,8 +13,11 @@ namespace WInterop.Gdi.DataTypes
     {
         public BrushHandle() : base() { }
 
-        public BrushHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
+        public BrushHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
+
+        static public implicit operator BrushHandle(IntPtr handle)
         {
+            return new BrushHandle(handle);
         }
     }
 }

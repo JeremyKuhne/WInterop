@@ -15,7 +15,7 @@ namespace WInterop.Windows.DataTypes
     public struct WNDCLASSEX
     {
         public uint cbSize;
-        public WindowsClassStyle style;
+        public WindowClassStyle style;
         public IntPtr lpfnWndProc;
         public int cbClassExtra;
         public int cbWndExtra;
