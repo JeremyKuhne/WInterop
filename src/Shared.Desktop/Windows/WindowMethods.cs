@@ -253,6 +253,56 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern void PostQuitMessage(
                 int nExitCode);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787585.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetScrollPos(
+                WindowHandle hWnd,
+                ScrollBar nBar);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787599.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetScrollRange(
+                WindowHandle hWnd,
+                ScrollBar nBar,
+                int nMinPos,
+                int nMaxPos,
+                bool bRedraw);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787597.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int SetScrollPos(
+                WindowHandle hWnd,
+                ScrollBar nBar,
+                int nPos,
+                bool bRedraw);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787595.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern int SetScrollInfo(
+                WindowHandle hwind,
+                ScrollBar fnBar,
+                [In] ref SCROLLINFO lpsi,
+                bool fRedraw);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787601.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool ShowScrollBar(
+                WindowHandle hWnd,
+                ScrollBar wBar,
+                bool bShow);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787593.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern int ScrollWindowEx(
+                WindowHandle hWnd,
+                int dx,
+                int dy,
+                RECT* prcScroll,
+                RECT* prcClip,
+                IntPtr hrgnUpdate,
+                RECT* prcUpdate,
+                ScrollWindowFlags flags);
         }
 
         public static WindowHandle GetShellWindow()
@@ -498,6 +548,30 @@ namespace WInterop.Windows
                 throw Errors.GetIoExceptionForLastError();
 
             return rect;
+        }
+
+        public static void SetScrollRange(WindowHandle handle, ScrollBar scrollBar, int min, int max, bool redraw)
+        {
+            if (!Imports.SetScrollRange(handle, scrollBar, min, max, redraw))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static int SetScrollPosition(WindowHandle handle, ScrollBar scrollBar, int position, bool redraw)
+        {
+            int result = Imports.SetScrollPos(handle, scrollBar, position, redraw);
+            if (result == 0)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
+        }
+
+        public static int GetScrollPosition(WindowHandle handle, ScrollBar scrollBar)
+        {
+            int result = Imports.GetScrollPos(handle, scrollBar);
+            if (result == 0)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
         }
     }
 }

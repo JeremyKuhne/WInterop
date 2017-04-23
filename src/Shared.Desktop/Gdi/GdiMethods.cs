@@ -117,6 +117,13 @@ namespace WInterop.Gdi
                 WindowHandle hwnd,
                 out PAINTSTRUCT lpPaint);
 
+            // https://msdn.microsoft.com/en-us/library/dd145002.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public unsafe static extern bool InvalidateRect(
+                WindowHandle hWnd,
+                RECT* lpRect,
+                bool bErase);
+
             // https://msdn.microsoft.com/en-us/library/dd162598.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool EndPaint(
@@ -298,6 +305,16 @@ namespace WInterop.Gdi
         public static bool GetTextMetrics(DeviceContext deviceContext, out TEXTMETRIC metrics)
         {
             return Imports.GetTextMetricsW(deviceContext, out metrics);
+        }
+
+        public unsafe static bool InvalidateRect(WindowHandle handle, RECT rect, bool erase)
+        {
+            return Imports.InvalidateRect(handle, &rect, erase);
+        }
+
+        public unsafe static bool InvalidateRect(WindowHandle handle, bool erase)
+        {
+            return Imports.InvalidateRect(handle, null, erase);
         }
     }
 }

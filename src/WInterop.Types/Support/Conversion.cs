@@ -22,6 +22,18 @@ namespace WInterop.Support
             return ((ulong)high) << 32 | ((ulong)low & 0xFFFFFFFFL);
         }
 
+        public static ushort HighWord(IntPtr value) => (ushort)(((ulong)value >> 16) & 0xFFFF);
+
+        public static ushort HighWord(UIntPtr value) => (ushort)(((ulong)value >> 16) & 0xFFFF);
+
+        public static ushort HighWord(uint value) => (ushort)((value >> 16) & 0xFFFF);
+
+        public static ushort LowWord(IntPtr value) => (ushort)((ulong)value & 0xFFFF);
+
+        public static ushort LowWord(UIntPtr value) => (ushort)((ulong)value & 0xFFFF);
+
+        public static ushort LowWord(uint value) => (ushort)(value & 0xFFFF);
+
         public static DateTime FileTimeToDateTime(FILETIME fileTime)
         {
             return DateTime.FromFileTime((((long)fileTime.dwHighDateTime) << 32) + (uint)fileTime.dwLowDateTime);
