@@ -9,7 +9,7 @@ using System;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace HelloMsg
+namespace ScrnSize
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.

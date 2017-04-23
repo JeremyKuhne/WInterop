@@ -29,12 +29,12 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd144947.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern DeviceContext GetWindowDC(
+            public static extern IntPtr GetWindowDC(
                 WindowHandle hWnd);
 
             // https://msdn.microsoft.com/en-us/library/dd144871.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern DeviceContext GetDC(
+            public static extern IntPtr GetDC(
                 WindowHandle hWnd);
 
             // https://msdn.microsoft.com/en-us/library/dd183490.aspx
@@ -48,6 +48,12 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd183533.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool DeleteDC(
+                IntPtr hdc);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/dd162920.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool ReleaseDC(
+                WindowHandle hWnd,
                 IntPtr hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd183533.aspx
@@ -107,7 +113,7 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183362.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern DeviceContext BeginPaint(
+            public static extern IntPtr BeginPaint(
                 WindowHandle hwnd,
                 out PAINTSTRUCT lpPaint);
 
@@ -125,6 +131,32 @@ namespace WInterop.Gdi
                 int nCount,
                 ref RECT lpRect,
                 TextFormat uFormat);
+
+            // https://msdn.microsoft.com/en-us/library/dd145133.aspx
+            [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool TextOutW(
+                DeviceContext hdc,
+                int nXStart,
+                int nYStart,
+                string lpString,
+                int cchString);
+
+            // https://msdn.microsoft.com/en-us/library/dd144941.aspx
+            [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool GetTextMetricsW(
+                DeviceContext hdc,
+                out TEXTMETRIC lptm);
+
+            // https://msdn.microsoft.com/en-us/library/dd145091.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern TextAlignment SetTextAlign(
+                DeviceContext hdc,
+                TextAlignment fMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd144932.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern TextAlignment GetTextAlign(
+                DeviceContext hdc);
         }
 
         public static int GetDeviceCapability(DeviceContext deviceContext, DeviceCapability capability)
@@ -143,7 +175,7 @@ namespace WInterop.Gdi
         /// <param name="window">The window handle, or null for the entire screen.</param>
         public static DeviceContext GetDeviceContext(WindowHandle window)
         {
-            return Imports.GetDC(window);
+            return new WindowDeviceContext(window, Imports.GetDC(window));
         }
 
         /// <summary>
@@ -153,7 +185,7 @@ namespace WInterop.Gdi
         /// <returns>Returns a device context for the entire window, not just the client area.</returns>
         public static DeviceContext GetWindowDeviceContext(WindowHandle window)
         {
-            return Imports.GetWindowDC(window);
+            return new WindowDeviceContext(window, Imports.GetWindowDC(window));
         }
 
         /// <summary>
@@ -216,14 +248,27 @@ namespace WInterop.Gdi
             return Imports.UpdateWindow(window);
         }
 
-        public static DeviceContext BeginPaint(WindowHandle window, out PAINTSTRUCT paintStruct)
+        /// <summary>
+        /// Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
+        /// </summary>
+        public static DeviceContext BeginPaint(WindowHandle window)
         {
-            return Imports.BeginPaint(window, out paintStruct);
+            IntPtr handle = Imports.BeginPaint(window, out PAINTSTRUCT paintStruct);
+            return new PaintDeviceContext(window, paintStruct, handle);
         }
 
-        public static void EndPaint(WindowHandle window, ref PAINTSTRUCT paintStruct)
+        /// <summary>
+        /// Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
+        /// </summary>
+        public static DeviceContext BeginPaint(WindowHandle window, out PAINTSTRUCT paintStruct)
         {
-            Imports.EndPaint(window, ref paintStruct);
+            IntPtr handle = Imports.BeginPaint(window, out paintStruct);
+            return new PaintDeviceContext(window, paintStruct, handle);
+        }
+
+        public static bool TextOut(DeviceContext deviceContext, int x, int y, string text)
+        {
+            return Imports.TextOutW(deviceContext, x, y, text, text.Length);
         }
 
         public static unsafe int DrawText(DeviceContext deviceContext, string text, RECT rect, TextFormat format)
@@ -243,6 +288,16 @@ namespace WInterop.Gdi
                 buffer.Append(text);
                 return Imports.DrawTextW(deviceContext, buffer.CharPointer, (int)buffer.Length, ref rect, format);
             });
+        }
+
+        public static TextAlignment SetTextAlignment(DeviceContext deviceContext, TextAlignment alignment)
+        {
+            return Imports.SetTextAlign(deviceContext, alignment);
+        }
+
+        public static bool GetTextMetrics(DeviceContext deviceContext, out TEXTMETRIC metrics)
+        {
+            return Imports.GetTextMetricsW(deviceContext, out metrics);
         }
     }
 }

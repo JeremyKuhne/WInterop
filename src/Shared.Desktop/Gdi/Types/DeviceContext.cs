@@ -17,7 +17,7 @@ namespace WInterop.Gdi.Types
     {
         public DeviceContext() : base(ownsHandle: true) { }
 
-        public DeviceContext(IntPtr handle, bool ownsHandle = true) : base(ownsHandle)
+        public DeviceContext(IntPtr handle, bool ownsHandle) : base(ownsHandle)
         {
             SetHandle(handle);
         }

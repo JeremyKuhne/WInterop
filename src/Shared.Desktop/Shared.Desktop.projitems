@@ -29,6 +29,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\GdiObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiDefines.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\PaintDeviceContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\WindowDeviceContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\MailslotMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\ModuleMethods.cs" />

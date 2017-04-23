@@ -17,7 +17,7 @@ using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace HelloWin
+namespace SysMets1
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.
@@ -41,14 +41,14 @@ namespace HelloWin
                 Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
                 Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
                 MenuName = null,
-                ClassName = "HelloWin"
+                ClassName = "SysMets1"
             };
 
             WindowMethods.RegisterClass(wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
-                "HelloWin",
-                "The Hello Program",
+                "SysMets1",
+                "Get System Metrics No. 1",
                 WindowStyle.WS_OVERLAPPEDWINDOW,
                 ExtendedWindowStyle.None,
                 module);
@@ -64,18 +64,35 @@ namespace HelloWin
             GC.KeepAlive(wndclass);
         }
 
+        static int cxChar, cxCaps, cyChar;
+
         static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
         {
             switch (message)
             {
                 case MessageType.WM_CREATE:
-                    MultimediaMethods.PlaySound(PlaySoundAlias.SND_ALIAS_SYSTEMHAND, PlaySoundOptions.SND_ASYNC | PlaySoundOptions.SND_NODEFAULT);
+
+                    using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                    {
+                        GdiMethods.GetTextMetrics(dc, out TEXTMETRIC tm);
+                        cxChar = tm.tmAveCharWidth;
+                        cxCaps = ((tm.tmPitchAndFamily & PitchAndFamily.TMPF_FIXED_PITCH) != 0 ? 3 : 2) * cxChar / 2;
+                        cyChar = tm.tmHeight + tm.tmExternalLeading;
+                    }
                     return (IntPtr)0;
                 case MessageType.WM_PAINT:
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
-                        RECT rect = WindowMethods.GetClientRect(window);
-                        GdiMethods.DrawText(dc, "Hello, Windows 98!", rect, TextFormat.DT_SINGLELINE | TextFormat.DT_CENTER | TextFormat.DT_VCENTER);
+                        int i = 0;
+                        foreach (SystemMetric metric in SysMets.sysmetrics.Keys)
+                        {
+                            GdiMethods.TextOut(dc, 0, cyChar * i, metric.ToString());
+                            GdiMethods.TextOut(dc, 22 * cxCaps, cyChar * i, SysMets.sysmetrics[metric]);
+                            GdiMethods.SetTextAlignment(dc, TextAlignment.TA_RIGHT | TextAlignment.TA_TOP);
+                            GdiMethods.TextOut(dc, 22 * cxCaps + 40 * cxChar, cyChar * i, WindowMethods.GetSystemMetrics(metric).ToString());
+                            GdiMethods.SetTextAlignment(dc, TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
+                            i++;
+                        }
                     }
                     return (IntPtr)0;
                 case MessageType.WM_DESTROY:
