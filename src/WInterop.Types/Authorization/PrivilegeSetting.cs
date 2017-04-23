@@ -8,7 +8,7 @@
 using System;
 using System.Diagnostics;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     [DebuggerDisplay("{Privilege} : {Attributes}")]
     public struct PrivilegeSetting

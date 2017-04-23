@@ -7,10 +7,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Com.DataTypes;
-using WInterop.Windows.DataTypes;
+using WInterop.Com.Types;
+using WInterop.Windows.Types;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     [ComImport,
         Guid(InterfaceIds.IID_IKnownFolderManager),

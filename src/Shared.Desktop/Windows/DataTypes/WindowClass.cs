@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.DataTypes;
-using WInterop.Modules.DataTypes;
-using WInterop.Resources.DataTypes;
+using WInterop.Gdi.Types;
+using WInterop.Modules.Types;
+using WInterop.Resources.Types;
 
-namespace WInterop.Windows.DataTypes
+namespace WInterop.Windows.Types
 {
     public struct WindowClass
     {

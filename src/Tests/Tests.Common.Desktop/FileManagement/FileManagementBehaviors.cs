@@ -10,7 +10,7 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using Tests.Support;
 using WInterop.FileManagement;
-using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.Types;
 using WInterop.ProcessAndThreads;
 using Xunit;
 

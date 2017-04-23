@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.Handles.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446633.aspx
     // ACCESS_MASK

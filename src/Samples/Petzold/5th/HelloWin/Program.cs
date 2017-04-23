@@ -8,12 +8,12 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
-using WInterop.Gdi.DataTypes;
-using WInterop.Modules.DataTypes;
+using WInterop.Gdi.Types;
+using WInterop.Modules.Types;
 using WInterop.Resources;
-using WInterop.Resources.DataTypes;
+using WInterop.Resources.Types;
 using WInterop.Windows;
-using WInterop.Windows.DataTypes;
+using WInterop.Windows.Types;
 
 namespace HelloMsg
 {

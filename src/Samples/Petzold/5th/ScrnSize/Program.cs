@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Windows;
-using WInterop.Windows.DataTypes;
+using WInterop.Windows.Types;
 
 namespace HelloMsg
 {

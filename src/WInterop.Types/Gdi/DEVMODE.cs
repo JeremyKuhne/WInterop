@@ -8,9 +8,9 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Support;
-using WInterop.Windows.DataTypes;
+using WInterop.Windows.Types;
 
-namespace WInterop.Gdi.DataTypes
+namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd183565.aspx
     public struct DEVMODE

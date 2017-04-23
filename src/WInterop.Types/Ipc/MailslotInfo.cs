@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Ipc.DataTypes
+namespace WInterop.Ipc.Types
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct MailslotInfo

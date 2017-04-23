@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Windows.DataTypes
+namespace WInterop.Windows.Types
 {
     /// <summary>
     /// Simple struct to encapsulate a Window handle (HWND).

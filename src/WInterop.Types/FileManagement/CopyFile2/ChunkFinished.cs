@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.FileManagement.DataTypes.CopyFile2
+namespace WInterop.FileManagement.Types.CopyFile2
 {
     /// <summary>
     /// Indicates the copy of a single chunk of a stream has completed.

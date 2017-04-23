@@ -10,7 +10,7 @@ using System;
 using Xunit;
 using System.Linq;
 using WInterop.Cryptography;
-using WInterop.Cryptography.DataTypes;
+using WInterop.Cryptography.Types;
 
 namespace Tests.Cryptography
 {

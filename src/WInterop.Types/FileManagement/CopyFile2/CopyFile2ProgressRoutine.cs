@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement.DataTypes.CopyFile2
+namespace WInterop.FileManagement.Types.CopyFile2
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh449407.aspx">CopyFile2ProgressRoutine</a> callback used by CopyFile2.

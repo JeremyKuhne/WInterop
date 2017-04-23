@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement.DataTypes
+namespace WInterop.FileManagement.Types
 {
     // It isn't technically an enum, but it is much more usable to call it such
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545809.aspx

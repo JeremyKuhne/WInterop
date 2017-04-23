@@ -9,7 +9,7 @@ using FluentAssertions;
 using Xunit;
 using WInterop.Authorization;
 using System.Security.Principal;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 using System;
 using System.Diagnostics;
 using WInterop.SystemInformation;

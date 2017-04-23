@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.DataTypes;
-using WInterop.Modules.DataTypes;
-using WInterop.Resources.DataTypes;
+using WInterop.Gdi.Types;
+using WInterop.Modules.Types;
+using WInterop.Resources.Types;
 using WInterop.Support;
-using WInterop.Windows.DataTypes;
+using WInterop.Windows.Types;
 
 namespace WInterop.Resources
 {

@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
 
-namespace WInterop.Authentication.DataTypes
+namespace WInterop.Authentication.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380518.aspx
     [StructLayout(LayoutKind.Sequential)]

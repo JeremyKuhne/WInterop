@@ -8,7 +8,7 @@
 using System;
 using FluentAssertions;
 using WInterop.SystemInformation;
-using WInterop.SystemInformation.DataTypes;
+using WInterop.SystemInformation.Types;
 using Xunit;
 using System.Diagnostics;
 

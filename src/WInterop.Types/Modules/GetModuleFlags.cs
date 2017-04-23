@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Modules.DataTypes
+namespace WInterop.Modules.Types
 {
     [Flags]
     public enum GetModuleFlags : uint

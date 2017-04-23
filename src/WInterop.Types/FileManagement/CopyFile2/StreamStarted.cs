@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.FileManagement.DataTypes.CopyFile2
+namespace WInterop.FileManagement.Types.CopyFile2
 {
     /// <summary>
     /// Indicates both source and destination handles for a stream have been opened and the copy of the stream is about to be started.

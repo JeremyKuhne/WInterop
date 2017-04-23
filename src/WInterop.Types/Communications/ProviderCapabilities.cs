@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Desktop.Communications.DataTypes
+namespace WInterop.Desktop.Communications.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363189.aspx
     [Flags]

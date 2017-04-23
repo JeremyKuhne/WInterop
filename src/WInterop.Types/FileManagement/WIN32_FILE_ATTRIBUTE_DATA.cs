@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 
-namespace WInterop.FileManagement.DataTypes
+namespace WInterop.FileManagement.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365739.aspx">WIN32_FILE_ATTRIBUTE_DATA</a> structure.

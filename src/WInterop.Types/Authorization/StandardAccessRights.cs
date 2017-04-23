@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     /// <summary>
     /// Standard rights that apply to most securable objects (in addition to

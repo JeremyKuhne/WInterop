@@ -9,10 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling.DataTypes;
+using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.VolumeManagement.DataTypes;
+using WInterop.VolumeManagement.Types;
 
 namespace WInterop.VolumeManagement
 {

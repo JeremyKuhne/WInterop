@@ -8,9 +8,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.Types;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773325.aspx
     [StructLayout(LayoutKind.Sequential)]

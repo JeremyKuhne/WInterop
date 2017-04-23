@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement.DataTypes
+namespace WInterop.FileManagement.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117.aspx">File attribute constants</a>. This is a superset of what is defined

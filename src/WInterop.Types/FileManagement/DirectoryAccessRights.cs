@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 
-namespace WInterop.FileManagement.DataTypes
+namespace WInterop.FileManagement.Types
 {
     // File Access Rights Constants
     // https://msdn.microsoft.com/en-us/library/windows/desktop/gg258116.aspx

@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 
-namespace WInterop.Desktop.Registry.DataTypes
+namespace WInterop.Desktop.Registry.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724878.aspx
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa384129.aspx

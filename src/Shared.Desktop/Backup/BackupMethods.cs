@@ -9,9 +9,9 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Backup.DataTypes;
+using WInterop.Backup.Types;
 using WInterop.FileManagement;
-using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.Types;
 
 namespace WInterop.Backup
 {

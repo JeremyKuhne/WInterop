@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd378457.aspx
     public static class KNOWNFOLDERID

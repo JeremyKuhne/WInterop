@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.Handles.Types
 {
     // https://msdn.microsoft.com/en-us/library/bb470234.aspx
     [Flags]

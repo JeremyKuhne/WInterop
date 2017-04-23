@@ -8,8 +8,8 @@
 using System;
 using System.Diagnostics;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.FileManagement.DataTypes;
+using WInterop.ErrorHandling.Types;
+using WInterop.FileManagement.Types;
 using WInterop.Support;
 
 namespace WInterop.FileManagement

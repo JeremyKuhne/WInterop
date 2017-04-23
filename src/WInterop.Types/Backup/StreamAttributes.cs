@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Backup.DataTypes
+namespace WInterop.Backup.Types
 {
     /// <summary>
     /// The attributes returned in WIN32_STREAM_ID dwStreamAttributes. Defines taken from winnt.h.

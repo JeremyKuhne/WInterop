@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.SystemInformation.DataTypes;
+using WInterop.SystemInformation.Types;
 
 namespace WInterop.SystemInformation
 {

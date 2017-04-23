@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.DeviceManagement.DataTypes;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.FileManagement.DataTypes;
+using WInterop.DeviceManagement.Types;
+using WInterop.ErrorHandling.Types;
+using WInterop.FileManagement.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

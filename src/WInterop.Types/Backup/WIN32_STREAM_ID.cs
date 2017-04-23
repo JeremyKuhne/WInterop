@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Backup.DataTypes
+namespace WInterop.Backup.Types
 {
     // typedef struct _WIN32_STREAM_ID
     // {

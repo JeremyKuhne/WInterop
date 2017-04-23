@@ -7,8 +7,8 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.DataTypes;
-using WInterop.Handles.DataTypes;
+using WInterop.Authorization.Types;
+using WInterop.Handles.Types;
 
 namespace WInterop.Synchronization
 {

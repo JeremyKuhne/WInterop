@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379630.aspx">TOKEN_PRIVILEGES</a> structure.

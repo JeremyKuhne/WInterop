@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Gdi.DataTypes;
+using WInterop.Gdi.Types;
 
-namespace WInterop.Windows.DataTypes
+namespace WInterop.Windows.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644958.aspx
     public struct MSG

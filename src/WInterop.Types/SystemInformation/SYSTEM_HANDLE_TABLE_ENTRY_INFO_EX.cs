@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.SystemInformation.DataTypes
+namespace WInterop.SystemInformation.Types
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX

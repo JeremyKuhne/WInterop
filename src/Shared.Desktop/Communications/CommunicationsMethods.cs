@@ -9,15 +9,15 @@ using Microsoft.Win32.SafeHandles;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Desktop.Communications.DataTypes;
+using WInterop.Desktop.Communications.Types;
 using WInterop.Desktop.Registry;
-using WInterop.Desktop.Registry.DataTypes;
+using WInterop.Desktop.Registry.Types;
 using WInterop.ErrorHandling;
 using WInterop.FileManagement;
-using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.Types;
 using WInterop.Support;
-using WInterop.Synchronization.DataTypes;
-using WInterop.Windows.DataTypes;
+using WInterop.Synchronization.Types;
+using WInterop.Windows.Types;
 
 namespace WInterop.Desktop.Communications
 {

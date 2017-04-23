@@ -9,12 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.DataTypes;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.Handles.DataTypes;
-using WInterop.MemoryManagement.DataTypes;
+using WInterop.Authorization.Types;
+using WInterop.ErrorHandling.Types;
+using WInterop.Handles.Types;
+using WInterop.MemoryManagement.Types;
 using WInterop.ProcessAndThreads;
-using WInterop.ProcessAndThreads.DataTypes;
+using WInterop.ProcessAndThreads.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

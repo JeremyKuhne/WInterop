@@ -9,7 +9,7 @@ using System;
 using Xunit;
 using FluentAssertions;
 using WInterop.Desktop.Registry;
-using WInterop.Desktop.Registry.DataTypes;
+using WInterop.Desktop.Registry.Types;
 
 namespace DesktopTests.Registry
 {

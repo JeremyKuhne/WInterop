@@ -8,10 +8,10 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using WInterop.Handles.DataTypes;
+using WInterop.Handles.Types;
 using WInterop.Support;
 
-namespace WInterop.Com.DataTypes
+namespace WInterop.Com.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms221627.aspx
     public class VARIANT : SafeHandleZeroOrMinusOneIsInvalid

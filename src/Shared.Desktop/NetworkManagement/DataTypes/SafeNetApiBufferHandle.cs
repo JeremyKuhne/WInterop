@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.NetworkManagement.DataTypes
+namespace WInterop.NetworkManagement.Types
 {
     public class SafeNetApiBufferHandle : SafeBuffer
     {

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.VolumeManagement.DataTypes
+namespace WInterop.VolumeManagement.Types
 {
     [Flags]
     public enum FileSystemFeature : uint

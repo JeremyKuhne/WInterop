@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Gdi.DataTypes
+namespace WInterop.Gdi.Types
 {
     [Flags]
     public enum TextFormat : uint

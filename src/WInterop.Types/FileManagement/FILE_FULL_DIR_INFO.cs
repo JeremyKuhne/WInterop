@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace WInterop.FileManagement.DataTypes
+namespace WInterop.FileManagement.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh447298.aspx
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540310.aspx

@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/aa379307.aspx">PRIVILEGE_SET</a> structure.

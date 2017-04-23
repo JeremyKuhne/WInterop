@@ -12,12 +12,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.FileManagement.DataTypes;
-using WInterop.FileManagement.DataTypes.CopyFile2;
+using WInterop.ErrorHandling.Types;
+using WInterop.FileManagement.Types;
+using WInterop.FileManagement.Types.CopyFile2;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Synchronization.DataTypes;
+using WInterop.Synchronization.Types;
 
 namespace WInterop.FileManagement
 {

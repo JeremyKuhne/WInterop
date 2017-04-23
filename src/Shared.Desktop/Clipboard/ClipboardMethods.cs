@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Clipboard.DataTypes;
-using WInterop.ErrorHandling.DataTypes;
+using WInterop.Clipboard.Types;
+using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Windows.DataTypes;
+using WInterop.Windows.Types;
 
 namespace WInterop.Clipboard
 {

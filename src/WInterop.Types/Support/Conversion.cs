@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices.ComTypes;
-using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.Types;
 
 namespace WInterop.Support
 {

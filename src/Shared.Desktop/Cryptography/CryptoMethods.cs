@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Handles.DataTypes;
+using WInterop.Handles.Types;
 
 namespace WInterop.Cryptography
 {

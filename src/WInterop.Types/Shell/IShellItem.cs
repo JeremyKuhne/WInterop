@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761144.aspx
     [ComImport,

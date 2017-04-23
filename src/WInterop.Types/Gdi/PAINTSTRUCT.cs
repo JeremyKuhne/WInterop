@@ -8,7 +8,7 @@
 using System;
 using WInterop.Support;
 
-namespace WInterop.Gdi.DataTypes
+namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/dd162768.aspx
     public struct PAINTSTRUCT

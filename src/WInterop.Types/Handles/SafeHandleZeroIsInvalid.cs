@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.Handles.Types
 {
     public abstract class SafeHandleZeroIsInvalid : SafeHandle, IBuffer
     {

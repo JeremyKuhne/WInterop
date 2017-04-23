@@ -9,10 +9,10 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using WInterop.Backup.DataTypes;
+using WInterop.Backup.Types;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.Handles.DataTypes;
+using WInterop.ErrorHandling.Types;
+using WInterop.Handles.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

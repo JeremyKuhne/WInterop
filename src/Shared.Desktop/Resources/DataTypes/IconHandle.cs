@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Handles.DataTypes;
+using WInterop.Handles.Types;
 
-namespace WInterop.Resources.DataTypes
+namespace WInterop.Resources.Types
 {
     public class IconHandle : SafeHandleZeroIsInvalid
     {

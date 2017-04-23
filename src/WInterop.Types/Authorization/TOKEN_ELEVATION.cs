@@ -7,7 +7,7 @@
 
 using WInterop.Support;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb530717.aspx
     public struct TOKEN_ELEVATION

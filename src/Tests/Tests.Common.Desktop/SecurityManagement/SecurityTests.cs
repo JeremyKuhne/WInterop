@@ -9,9 +9,9 @@ using FluentAssertions;
 using System;
 using WInterop.Authentication;
 using WInterop.Authorization;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 using WInterop.SecurityManagement;
-using WInterop.SecurityManagement.DataTypes;
+using WInterop.SecurityManagement.Types;
 using Xunit;
 
 namespace DesktopTests.SecurityManagement

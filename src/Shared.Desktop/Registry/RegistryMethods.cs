@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Desktop.Registry.DataTypes;
+using WInterop.Desktop.Registry.Types;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
+using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

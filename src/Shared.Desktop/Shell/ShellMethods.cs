@@ -8,10 +8,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Com.DataTypes;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.Handles.DataTypes;
-using WInterop.Shell.DataTypes;
+using WInterop.Com.Types;
+using WInterop.ErrorHandling.Types;
+using WInterop.Handles.Types;
+using WInterop.Shell.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

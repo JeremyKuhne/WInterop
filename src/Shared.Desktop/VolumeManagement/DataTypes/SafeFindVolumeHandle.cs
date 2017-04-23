@@ -7,10 +7,10 @@
 
 using System;
 using WInterop.ErrorHandling;
-using WInterop.Handles.DataTypes;
+using WInterop.Handles.Types;
 using WInterop.Support;
 
-namespace WInterop.VolumeManagement.DataTypes
+namespace WInterop.VolumeManagement.Types
 {
     /// <summary>
     /// Safe handle for a block of memory returned by GetEnvironmentStrings.

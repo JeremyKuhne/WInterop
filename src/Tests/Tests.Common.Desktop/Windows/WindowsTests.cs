@@ -9,7 +9,7 @@ using FluentAssertions;
 using System;
 using System.IO;
 using WInterop.Windows;
-using WInterop.Windows.DataTypes;
+using WInterop.Windows.Types;
 using Xunit;
 
 namespace DesktopTests.Windows

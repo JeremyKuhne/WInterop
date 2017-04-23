@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authentication.DataTypes;
+using WInterop.Authentication.Types;
 
 namespace WInterop.Support.Buffers
 {

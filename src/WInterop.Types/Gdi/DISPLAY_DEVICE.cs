@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.DataTypes
+namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd183569.aspx
     // Should be 840 bytes

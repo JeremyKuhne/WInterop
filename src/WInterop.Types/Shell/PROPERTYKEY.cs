@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773381.aspx
     [StructLayout(LayoutKind.Sequential)]

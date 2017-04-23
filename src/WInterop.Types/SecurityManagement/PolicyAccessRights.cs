@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 
-namespace WInterop.SecurityManagement.DataTypes
+namespace WInterop.SecurityManagement.Types
 {
     // These live in NTSecAPI.h
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721916.

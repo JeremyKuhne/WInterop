@@ -7,9 +7,9 @@
 
 using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
+using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
-using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.Types;
 using WInterop.Support;
 
 namespace Tests.Support

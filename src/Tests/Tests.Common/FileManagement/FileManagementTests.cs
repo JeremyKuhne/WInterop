@@ -13,10 +13,10 @@ using WInterop.FileManagement;
 using Tests.Support;
 using WInterop.Support;
 using Xunit;
-using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.Types;
 using WInterop.Support.Buffers;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
+using WInterop.ErrorHandling.Types;
 
 namespace Tests.FileManagementTests
 {

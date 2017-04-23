@@ -11,10 +11,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WInterop.Com.DataTypes;
+using WInterop.Com.Types;
 using WInterop.Support.Buffers;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     public class ItemIdList : SafeComHandle
     {

@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.DataTypes;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.NetworkManagement.DataTypes;
+using WInterop.Authorization.Types;
+using WInterop.ErrorHandling.Types;
+using WInterop.NetworkManagement.Types;
 using WInterop.Support;
 
 namespace WInterop.NetworkManagement

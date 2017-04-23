@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Cryptography.DataTypes
+namespace WInterop.Cryptography.Types
 {
     /// <summary>
     /// Specifies a name of a X.509 certificate store. Aligns with System.Security.Cryptography.X509Certificates.StoreName values.

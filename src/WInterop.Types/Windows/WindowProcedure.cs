@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Windows.DataTypes
+namespace WInterop.Windows.Types
 {
     public delegate IntPtr WindowProcedure(
         WindowHandle hwnd,

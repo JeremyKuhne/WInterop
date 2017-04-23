@@ -7,8 +7,8 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.DataTypes;
-using WInterop.Ipc.DataTypes;
+using WInterop.Authorization.Types;
+using WInterop.Ipc.Types;
 using WInterop.Support;
 
 namespace WInterop.Ipc

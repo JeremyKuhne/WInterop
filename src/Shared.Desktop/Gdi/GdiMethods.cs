@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.DataTypes;
+using WInterop.Gdi.Types;
 using WInterop.Support.Buffers;
-using WInterop.Windows.DataTypes;
+using WInterop.Windows.Types;
 
 namespace WInterop.Gdi
 {

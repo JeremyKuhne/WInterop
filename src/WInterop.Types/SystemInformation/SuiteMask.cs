@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.SystemInformation.DataTypes
+namespace WInterop.SystemInformation.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/mt668928.aspx
     [Flags]

@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 
-namespace WInterop.NetworkManagement.DataTypes
+namespace WInterop.NetworkManagement.Types
 {
     [DebuggerDisplay("{Name} {AccountType}")]
     public struct MemberInfo

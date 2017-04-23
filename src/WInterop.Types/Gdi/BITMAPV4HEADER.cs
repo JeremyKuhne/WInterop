@@ -5,9 +5,9 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.ColorSystem.DataTypes;
+using WInterop.ColorSystem.Types;
 
-namespace WInterop.Gdi.DataTypes
+namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/dd183380.aspx
     public struct BITMAPV4HEADER

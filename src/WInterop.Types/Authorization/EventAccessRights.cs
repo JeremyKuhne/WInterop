@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms686670.aspx
     [Flags]

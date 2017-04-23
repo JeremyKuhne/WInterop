@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Support;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379560.aspx
     [StructLayout(LayoutKind.Sequential)]

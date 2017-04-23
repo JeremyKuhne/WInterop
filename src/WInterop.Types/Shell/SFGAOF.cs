@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762589.aspx
     [Flags]

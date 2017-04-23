@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     /// <summary>
     /// Simple holder for SHITEMID.

@@ -9,9 +9,9 @@ using FluentAssertions;
 using System;
 using System.Linq;
 using WInterop.Authorization;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 using WInterop.Shell;
-using WInterop.Shell.DataTypes;
+using WInterop.Shell.Types;
 using Xunit;
 
 namespace DesktopTests.ShellTests

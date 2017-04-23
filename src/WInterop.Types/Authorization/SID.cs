@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
 
     // From winnt.h:

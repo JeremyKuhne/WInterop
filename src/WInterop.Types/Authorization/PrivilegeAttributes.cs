@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     [Flags]
     public enum PrivilegeAttributes : uint

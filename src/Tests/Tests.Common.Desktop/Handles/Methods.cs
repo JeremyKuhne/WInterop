@@ -11,11 +11,11 @@ using System.Collections.Generic;
 using WInterop.DeviceManagement;
 using WInterop.FileManagement;
 using WInterop.Handles;
-using WInterop.Handles.DataTypes;
+using WInterop.Handles.Types;
 using Tests.Support;
 using WInterop.Support;
 using Xunit;
-using WInterop.FileManagement.DataTypes;
+using WInterop.FileManagement.Types;
 
 namespace DesktopTests.HandlesTests
 {

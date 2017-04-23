@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     /// <summary>
     /// Type of display name to get for a shell item.

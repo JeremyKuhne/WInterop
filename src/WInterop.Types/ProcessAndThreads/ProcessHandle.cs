@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.ProcessAndThreads.DataTypes
+namespace WInterop.ProcessAndThreads.Types
 {
     /// <summary>
     /// Simple struct to encapsulate a module handle (Handle). Use this for APIs that do NOT

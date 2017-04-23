@@ -7,7 +7,7 @@
 
 using System.Diagnostics;
 
-namespace WInterop.Handles.DataTypes
+namespace WInterop.Handles.Types
 {
     [DebuggerDisplay("{Name} {TypeName}")]
     public struct ObjectInformation

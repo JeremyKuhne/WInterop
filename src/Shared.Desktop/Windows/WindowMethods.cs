@@ -7,12 +7,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.Gdi.DataTypes;
-using WInterop.Modules.DataTypes;
+using WInterop.ErrorHandling.Types;
+using WInterop.Gdi.Types;
+using WInterop.Modules.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Windows.DataTypes;
+using WInterop.Windows.Types;
 
 namespace WInterop.Windows
 {

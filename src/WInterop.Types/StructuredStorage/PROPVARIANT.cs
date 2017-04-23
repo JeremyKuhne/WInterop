@@ -8,9 +8,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using WInterop.Com.DataTypes;
+using WInterop.Com.Types;
 
-namespace WInterop.StructuredStorage.DataTypes
+namespace WInterop.StructuredStorage.Types
 {
     public class PROPVARIANT : VARIANT
     {

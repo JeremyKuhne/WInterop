@@ -9,10 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.DataTypes;
+using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
-using WInterop.SecurityManagement.DataTypes;
+using WInterop.ErrorHandling.Types;
+using WInterop.SecurityManagement.Types;
 using WInterop.Support.Buffers;
 
 namespace WInterop.SecurityManagement

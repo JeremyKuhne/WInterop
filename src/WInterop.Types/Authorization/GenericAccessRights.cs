@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa446632.aspx">Generic access rights</a>.

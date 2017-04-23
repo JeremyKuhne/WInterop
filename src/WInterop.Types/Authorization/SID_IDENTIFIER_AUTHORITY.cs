@@ -8,7 +8,7 @@
 using System;
 using WInterop.Support;
 
-namespace WInterop.Authorization.DataTypes
+namespace WInterop.Authorization.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379598.aspx
     public struct SID_IDENTIFIER_AUTHORITY

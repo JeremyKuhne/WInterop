@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.DataTypes
+namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/dd183449.aspx
     [StructLayout(LayoutKind.Explicit, Size = 4)]

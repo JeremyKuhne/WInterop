@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Cryptography.DataTypes
+namespace WInterop.Cryptography.Types
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct CERT_PHYSICAL_STORE_INFO

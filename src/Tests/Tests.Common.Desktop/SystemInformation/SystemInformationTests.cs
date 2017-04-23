@@ -9,7 +9,7 @@ using FluentAssertions;
 using System;
 using System.Diagnostics;
 using WInterop.SystemInformation;
-using WInterop.SystemInformation.DataTypes;
+using WInterop.SystemInformation.Types;
 using Xunit;
 
 namespace DesktopTests.SystemInformation

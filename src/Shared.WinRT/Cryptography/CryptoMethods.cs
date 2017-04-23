@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Cryptography.DataTypes;
+using WInterop.Cryptography.Types;
 using WInterop.ErrorHandling;
-using WInterop.Handles.DataTypes;
+using WInterop.Handles.Types;
 using WInterop.Support;
 
 namespace WInterop.Cryptography

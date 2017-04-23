@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Shell.DataTypes
+namespace WInterop.Shell.Types
 {
     [Flags]
     public enum GETPROPERTYSTOREFLAGS : uint

@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WInterop.FileManagement.DataTypes
+namespace WInterop.FileManagement.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
     /// <summary>

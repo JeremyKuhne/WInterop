@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
+using WInterop.ErrorHandling.Types;
 using WInterop.Support.Buffers;
 using WInterop.Support.Internal;
 

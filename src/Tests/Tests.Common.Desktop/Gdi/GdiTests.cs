@@ -8,8 +8,8 @@
 using FluentAssertions;
 using System.Linq;
 using WInterop.Gdi;
-using WInterop.Gdi.DataTypes;
-using WInterop.Windows.DataTypes;
+using WInterop.Gdi.Types;
+using WInterop.Windows.Types;
 using Xunit;
 
 namespace DesktopTests.Gdi

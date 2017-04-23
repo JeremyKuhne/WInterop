@@ -10,8 +10,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using WInterop.Handles;
-using WInterop.Handles.DataTypes;
-using WInterop.MemoryManagement.DataTypes;
+using WInterop.Handles.Types;
+using WInterop.MemoryManagement.Types;
 
 namespace WInterop.Support.Buffers
 {

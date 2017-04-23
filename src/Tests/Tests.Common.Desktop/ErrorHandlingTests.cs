@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.DataTypes;
+using WInterop.ErrorHandling.Types;
 using Xunit;
 
 namespace DesktopTests

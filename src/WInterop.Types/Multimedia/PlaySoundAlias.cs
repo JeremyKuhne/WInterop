@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Multimedia.DataTypes
+namespace WInterop.Multimedia.Types
 {
     public enum PlaySoundAlias : uint
     {
@@ -20,6 +20,5 @@ namespace WInterop.Multimedia.DataTypes
         SND_ALIAS_SYSTEMWELCOME         = 'S' | (((uint)'W') << 8),
         SND_ALIAS_SYSTEMEXCLAMATION     = 'S' | (((uint)'!') << 8),
         SND_ALIAS_SYSTEMDEFAULT         = 'S' | (((uint)'D') << 8),
-
     }
 }
