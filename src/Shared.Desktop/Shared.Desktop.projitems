@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\MailslotMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\ModuleMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Multimedia\MultimediaMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\Types\NetApiBufferHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\NetworkMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Types\EnvironmentStringsHandle.cs" />

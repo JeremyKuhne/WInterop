@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
+using WInterop.Multimedia;
+using WInterop.Multimedia.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
@@ -66,6 +68,9 @@ namespace HelloMsg
         {
             switch (message)
             {
+                case MessageType.WM_CREATE:
+                    MultimediaMethods.PlaySound(PlaySoundAlias.SND_ALIAS_SYSTEMHAND, PlaySoundOptions.SND_ASYNC | PlaySoundOptions.SND_NODEFAULT);
+                    return (IntPtr)0;
                 case MessageType.WM_PAINT:
                     DeviceContext dc = GdiMethods.BeginPaint(window, out PAINTSTRUCT paintStruct);
                     RECT rect = WindowMethods.GetClientRect(window);
