@@ -122,9 +122,9 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd162498.aspx
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern int DrawTextW(
+            public static unsafe extern int DrawTextW(
                 DeviceContext hDC,
-                SafeHandle lpchText,
+                char* lpchText,
                 int nCount,
                 ref RECT lpRect,
                 TextFormat uFormat);
@@ -229,15 +229,22 @@ namespace WInterop.Gdi
             Direct.EndPaint(window, ref paintStruct);
         }
 
-        public static int DrawText(DeviceContext deviceContext, string text, RECT rect, TextFormat format)
+        public static unsafe int DrawText(DeviceContext deviceContext, string text, RECT rect, TextFormat format)
         {
+            if ((format & TextFormat.DT_MODIFYSTRING) == 0)
+            {
+                // The string won't be changed, we can just pin
+                fixed (char* c = text)
+                {
+                    return Direct.DrawTextW(deviceContext, c, text.Length, ref rect, format);
+                }
+            }
+
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
+                buffer.EnsureCharCapacity((uint)(text.Length + 5));
                 buffer.Append(text);
-                if ((format & TextFormat.DT_MODIFYSTRING) != 0)
-                    buffer.EnsureCharCapacity(buffer.Length + 5);
-
-                return Direct.DrawTextW(deviceContext, buffer, (int)buffer.Length, ref rect, format);
+                return Direct.DrawTextW(deviceContext, buffer.CharPointer, (int)buffer.Length, ref rect, format);
             });
         }
     }

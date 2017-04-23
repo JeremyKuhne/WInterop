@@ -125,6 +125,20 @@ namespace WInterop.Resources
             return handle;
         }
 
+        public unsafe static IconHandle LoadIcon(string name, SafeModuleHandle module)
+        {
+            IconHandle handle;
+            fixed (char* n = name)
+            {
+                handle = Direct.LoadIconW(module, (IntPtr)n);
+            }
+
+            if (handle.IsInvalid)
+                throw Errors.GetIoExceptionForLastError();
+
+            return handle;
+        }
+
         public static CursorHandle LoadCursor(CursorId id)
         {
             CursorHandle handle = Direct.LoadCursorW(SafeModuleHandle.NullModuleHandle, (IntPtr)id);
