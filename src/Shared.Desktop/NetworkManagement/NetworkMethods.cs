@@ -18,12 +18,9 @@ namespace WInterop.NetworkManagement
     public static partial class NetworkMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // NET_API_STATUS is a DWORD (uint)
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370304.aspx
@@ -114,7 +111,7 @@ namespace WInterop.NetworkManagement
 
         public static void NetApiBufferFree(IntPtr buffer)
         {
-            WindowsError result = Direct.NetApiBufferFree(buffer);
+            WindowsError result = Imports.NetApiBufferFree(buffer);
             if (result != WindowsError.NERR_Success)
                 throw Errors.GetIoExceptionForError(result);
         }
@@ -129,7 +126,7 @@ namespace WInterop.NetworkManagement
                 char*[] data = new char*[] { fixedName, fixedComment };
                 fixed (void* buffer = data)
                 {
-                    WindowsError result = Direct.NetLocalGroupAdd(
+                    WindowsError result = Imports.NetLocalGroupAdd(
                         servername: server,
                         level: level,
                         buf: buffer,
@@ -145,11 +142,11 @@ namespace WInterop.NetworkManagement
         {
             var groups = new List<string>();
 
-            WindowsError result = Direct.NetLocalGroupEnum(
+            WindowsError result = Imports.NetLocalGroupEnum(
                 servername: server,
                 level: 0,
                 bufptr: out var buffer,
-                prefmaxlen: Direct.MAX_PREFERRED_LENGTH,
+                prefmaxlen: Imports.MAX_PREFERRED_LENGTH,
                 entriesread: out uint entriesRead,
                 totalentries: out uint totalEntries,
                 resumehandle: IntPtr.Zero);
@@ -169,12 +166,12 @@ namespace WInterop.NetworkManagement
         {
             var members = new List<MemberInfo>();
 
-            WindowsError result = Direct.NetLocalGroupGetMembers(
+            WindowsError result = Imports.NetLocalGroupGetMembers(
                 servername: server,
                 localgroupname: groupName,
                 level: 1,
                 bufptr: out var buffer,
-                prefmaxlen: Direct.MAX_PREFERRED_LENGTH,
+                prefmaxlen: Imports.MAX_PREFERRED_LENGTH,
                 entriesread: out uint entriesRead,
                 totalentries: out uint totalEntries,
                 resumehandle: IntPtr.Zero);
@@ -182,7 +179,7 @@ namespace WInterop.NetworkManagement
             if (result != WindowsError.NERR_Success)
                 throw Errors.GetIoExceptionForError(result, server);
 
-            foreach (Direct.LOCALGROUP_MEMBERS_INFO_1 info in ReadStructsFromBuffer<Direct.LOCALGROUP_MEMBERS_INFO_1>(buffer, entriesRead))
+            foreach (Imports.LOCALGROUP_MEMBERS_INFO_1 info in ReadStructsFromBuffer<Imports.LOCALGROUP_MEMBERS_INFO_1>(buffer, entriesRead))
             {
                 members.Add(new MemberInfo
                 {

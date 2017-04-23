@@ -21,12 +21,9 @@ namespace WInterop.FileManagement
     public static partial class FileMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -163,7 +160,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetLongPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetLongPathNameW(path, buffer, buffer.CharCapacity), path);
+            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetLongPathNameW(path, buffer, buffer.CharCapacity), path);
         }
 
         /// <summary>
@@ -171,7 +168,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetShortPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetShortPathNameW(path, buffer, buffer.CharCapacity), path);
+            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetShortPathNameW(path, buffer, buffer.CharCapacity), path);
         }
 
         /// <summary>
@@ -179,7 +176,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetFinalPathNameByHandle(SafeFileHandle fileHandle, GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED | GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetFinalPathNameByHandleW(fileHandle, buffer, buffer.CharCapacity, flags));
+            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetFinalPathNameByHandleW(fileHandle, buffer, buffer.CharCapacity, flags));
         }
 
         /// <summary>
@@ -206,7 +203,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static BY_HANDLE_FILE_INFORMATION GetFileInformationByHandle(SafeFileHandle fileHandle)
         {
-            if (!Direct.GetFileInformationByHandle(fileHandle, out BY_HANDLE_FILE_INFORMATION fileInformation))
+            if (!Imports.GetFileInformationByHandle(fileHandle, out BY_HANDLE_FILE_INFORMATION fileInformation))
                 throw Errors.GetIoExceptionForLastError();
 
             return fileInformation;
@@ -217,7 +214,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static void CreateSymbolicLink(string symbolicLinkPath, string targetPath, bool targetIsDirectory = false)
         {
-            if (!Direct.CreateSymbolicLinkW(symbolicLinkPath, targetPath,
+            if (!Imports.CreateSymbolicLinkW(symbolicLinkPath, targetPath,
                 targetIsDirectory ? SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_DIRECTORY : SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_FILE))
                 throw Errors.GetIoExceptionForLastError(symbolicLinkPath);
         }
@@ -239,7 +236,7 @@ namespace WInterop.FileManagement
 
             unsafe
             {
-                SafeFileHandle handle = Direct.CreateFileW(path, desiredAccess, shareMode, null, creationDisposition, flags, IntPtr.Zero);
+                SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, null, creationDisposition, flags, IntPtr.Zero);
                 if (handle.IsInvalid)
                     throw Errors.GetIoExceptionForLastError(path);
                 return handle;
@@ -254,7 +251,7 @@ namespace WInterop.FileManagement
         {
             bool cancel = false;
 
-            if (!Direct.CopyFileExW(
+            if (!Imports.CopyFileExW(
                 lpExistingFileName: source,
                 lpNewFileName: destination,
                 lpProgressRoutine: null,
@@ -272,7 +269,7 @@ namespace WInterop.FileManagement
         /// <remarks>Not available in Store apps, use FileMethods.GetFileInfo instead.</remarks>
         public static FileAttributes GetFileAttributes(string path)
         {
-            FileAttributes attributes = Direct.GetFileAttributesW(path);
+            FileAttributes attributes = Imports.GetFileAttributesW(path);
             if (attributes == FileAttributes.INVALID_FILE_ATTRIBUTES)
                 throw Errors.GetIoExceptionForLastError(path);
 
@@ -323,7 +320,7 @@ namespace WInterop.FileManagement
 
                     unsafe
                     {
-                        status = Direct.NtQueryInformationFile(
+                        status = Imports.NtQueryInformationFile(
                             FileHandle: fileHandle,
                             IoStatusBlock: out _,
                             FileInformation: buffer.VoidPointer,
@@ -348,7 +345,7 @@ namespace WInterop.FileManagement
 
         unsafe private static void GetFileInformation(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass, void* value, uint size)
         {
-            NTSTATUS status = Direct.NtQueryInformationFile(
+            NTSTATUS status = Imports.NtQueryInformationFile(
                 FileHandle: fileHandle,
                 IoStatusBlock: out _,
                 FileInformation: value,

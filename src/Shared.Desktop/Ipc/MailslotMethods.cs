@@ -16,12 +16,9 @@ namespace WInterop.Ipc
     public static partial class MailslotMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365147.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -66,7 +63,7 @@ namespace WInterop.Ipc
 
             unsafe
             {
-                handle = Direct.CreateMailslotW(name, maxMessageSize, readTimeout, null);
+                handle = Imports.CreateMailslotW(name, maxMessageSize, readTimeout, null);
             }
 
             if (handle.IsInvalid)
@@ -84,7 +81,7 @@ namespace WInterop.Ipc
 
             unsafe
             {
-                if (!Direct.GetMailslotInfo(
+                if (!Imports.GetMailslotInfo(
                     hMailslot: mailslotHandle,
                     lpMaxMessageSize: &info.MaxMessageSize,
                     lpNextSize: &info.NextSize,
@@ -102,7 +99,7 @@ namespace WInterop.Ipc
         /// <param name="readTimeout">Timeout for read operations in milliseconds. Set to uint.MaxValue for infinite timeout.</param>
         public static void SetMailslotTimeout(SafeMailslotHandle mailslotHandle, uint readTimeout)
         {
-            if (!Direct.SetMailslotInfo(mailslotHandle, readTimeout))
+            if (!Imports.SetMailslotInfo(mailslotHandle, readTimeout))
                 throw Errors.GetIoExceptionForLastError();
         }
     }

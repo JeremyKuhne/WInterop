@@ -25,7 +25,7 @@ namespace WInterop.Resources.Types
 
         protected override bool ReleaseHandle()
         {
-            return ResourceMethods.Direct.DestroyCursor(handle);
+            return ResourceMethods.Imports.DestroyCursor(handle);
         }
     }
 }

@@ -18,12 +18,9 @@ namespace WInterop.Resources
     public static partial class ResourceMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647486.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -108,7 +105,7 @@ namespace WInterop.Resources
             // or free a buffer.
 
             // Passing 0 will give us a read only handle to the string resource
-            int result = Direct.LoadStringW(library, identifier, out char* buffer, 0);
+            int result = Imports.LoadStringW(library, identifier, out char* buffer, 0);
             if (result <= 0)
                 throw Errors.GetIoExceptionForLastError(identifier.ToString());
 
@@ -118,7 +115,7 @@ namespace WInterop.Resources
 
         public static IconHandle LoadIcon(IconId id)
         {
-            IconHandle handle = Direct.LoadIconW(SafeModuleHandle.NullModuleHandle, (IntPtr)id);
+            IconHandle handle = Imports.LoadIconW(SafeModuleHandle.NullModuleHandle, (IntPtr)id);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -130,7 +127,7 @@ namespace WInterop.Resources
             IconHandle handle;
             fixed (char* n = name)
             {
-                handle = Direct.LoadIconW(module, (IntPtr)n);
+                handle = Imports.LoadIconW(module, (IntPtr)n);
             }
 
             if (handle.IsInvalid)
@@ -141,7 +138,7 @@ namespace WInterop.Resources
 
         public static CursorHandle LoadCursor(CursorId id)
         {
-            CursorHandle handle = Direct.LoadCursorW(SafeModuleHandle.NullModuleHandle, (IntPtr)id);
+            CursorHandle handle = Imports.LoadCursorW(SafeModuleHandle.NullModuleHandle, (IntPtr)id);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError();
 

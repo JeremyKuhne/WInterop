@@ -13,12 +13,9 @@ namespace WInterop.ProcessAndThreads
     public static class ThreadMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683182.aspx
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]

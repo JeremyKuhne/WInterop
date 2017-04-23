@@ -18,12 +18,9 @@ namespace WInterop.SystemInformation
     public static partial class SystemInformationMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724432.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -79,7 +76,7 @@ namespace WInterop.SystemInformation
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 uint sizeInChars = buffer.CharCapacity;
-                while (!Direct.GetUserNameW(buffer, ref sizeInChars))
+                while (!Imports.GetUserNameW(buffer, ref sizeInChars))
                 {
                     Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(sizeInChars);
@@ -95,7 +92,7 @@ namespace WInterop.SystemInformation
         /// </summary>
         public static SuiteMask GetSuiteMask()
         {
-            return Direct.RtlGetSuiteMask();
+            return Imports.RtlGetSuiteMask();
         }
 
         /// <summary>
@@ -107,7 +104,7 @@ namespace WInterop.SystemInformation
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
-                while (!Direct.GetUserNameExW(format, buffer, ref size))
+                while (!Imports.GetUserNameExW(format, buffer, ref size))
                 {
                     WindowsError error = Errors.GetLastError();
                     switch (error)
@@ -135,7 +132,7 @@ namespace WInterop.SystemInformation
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
-                while (!Direct.GetComputerNameW(buffer, ref size))
+                while (!Imports.GetComputerNameW(buffer, ref size))
                 {
                     Errors.ThrowIfLastErrorNot(WindowsError.ERROR_BUFFER_OVERFLOW);
                     buffer.EnsureCharCapacity(size);
@@ -153,7 +150,7 @@ namespace WInterop.SystemInformation
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
-                while (!Direct.GetComputerNameExW(format, buffer, ref size))
+                while (!Imports.GetComputerNameExW(format, buffer, ref size))
                 {
                     Errors.ThrowIfLastErrorNot(WindowsError.ERROR_MORE_DATA);
                     buffer.EnsureCharCapacity(size);
@@ -171,7 +168,7 @@ namespace WInterop.SystemInformation
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 uint size;
-                while ((size = Direct.ExpandEnvironmentStringsW(value, buffer, buffer.CharCapacity)) > buffer.CharCapacity)
+                while ((size = Imports.ExpandEnvironmentStringsW(value, buffer, buffer.CharCapacity)) > buffer.CharCapacity)
                 {
                     buffer.EnsureCharCapacity(size);
                 }

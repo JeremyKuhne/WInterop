@@ -30,12 +30,9 @@ namespace WInterop.FileManagement
         // https://blogs.technet.microsoft.com/askcore/2010/08/25/ntfs-file-attributes/
 
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // NTFS Technical Reference
             // https://technet.microsoft.com/en-us/library/cc758691.aspx
@@ -234,7 +231,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetTempPath()
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetTempPathW(buffer.CharCapacity, buffer));
+            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetTempPathW(buffer.CharCapacity, buffer));
         }
 
         /// <summary>
@@ -242,7 +239,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetFullPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Direct.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero), path);
+            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero), path);
         }
 
         /// <summary>
@@ -255,7 +252,7 @@ namespace WInterop.FileManagement
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(Paths.MaxPath);
-                uint result = Direct.GetTempFileNameW(
+                uint result = Imports.GetTempFileNameW(
                     lpPathName: path,
                     lpPrefixString: prefix,
                     uUnique: 0,
@@ -273,7 +270,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static void DeleteFile(string path)
         {
-            if (!Direct.DeleteFileW(path))
+            if (!Imports.DeleteFileW(path))
                 throw Errors.GetIoExceptionForLastError(path);
         }
 
@@ -409,7 +406,7 @@ namespace WInterop.FileManagement
                 dwSecurityQosFlags = securityQosFlags
             };
 
-            SafeFileHandle handle = Direct.CreateFile2(
+            SafeFileHandle handle = Imports.CreateFile2(
                 lpFileName: path,
                 dwDesiredAccess: desiredAccess,
                 dwShareMode: shareMode,
@@ -473,7 +470,7 @@ namespace WInterop.FileManagement
                     dwCopyFlags = overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS
                 };
 
-                HRESULT hr = Direct.CopyFile2(source, destination, &parameters);
+                HRESULT hr = Imports.CopyFile2(source, destination, &parameters);
                 if (ErrorMacros.FAILED(hr))
                     throw Errors.GetIoExceptionForHResult(hr, source);
             }
@@ -502,7 +499,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static FileInfo GetFileAttributesEx(string path)
         {
-            if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
+            if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
                 throw Errors.GetIoExceptionForLastError(path);
 
             return new FileInfo(data);
@@ -543,7 +540,7 @@ namespace WInterop.FileManagement
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
         public static FileInfo? TryGetFileInfo(string path)
         {
-            if (!Direct.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
+            if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
             {
                 WindowsError error = Errors.GetLastError();
                 switch (error)
@@ -565,7 +562,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static void SetFileAttributes(string path, FileAttributes attributes)
         {
-            if (!Direct.SetFileAttributesW(path, attributes))
+            if (!Imports.SetFileAttributesW(path, attributes))
                 throw Errors.GetIoExceptionForLastError(path);
         }
 
@@ -574,7 +571,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static void FlushFileBuffers(SafeFileHandle fileHandle)
         {
-            if (!Direct.FlushFileBuffers(fileHandle))
+            if (!Imports.FlushFileBuffers(fileHandle))
                 throw Errors.GetIoExceptionForLastError();
         }
 
@@ -591,7 +588,7 @@ namespace WInterop.FileManagement
             {
                 unsafe
                 {
-                    while (!Direct.GetFileInformationByHandleEx(
+                    while (!Imports.GetFileInformationByHandleEx(
                         fileHandle,
                         FILE_INFO_BY_HANDLE_CLASS.FileNameInfo,
                         buffer.VoidPointer,
@@ -617,7 +614,7 @@ namespace WInterop.FileManagement
             FILE_STANDARD_INFO info;
             unsafe
             {
-                if (!Direct.GetFileInformationByHandleEx(
+                if (!Imports.GetFileInformationByHandleEx(
                     fileHandle,
                     FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo,
                     &info,
@@ -636,7 +633,7 @@ namespace WInterop.FileManagement
             FILE_BASIC_INFO info;
             unsafe
             {
-                if (!Direct.GetFileInformationByHandleEx(
+                if (!Imports.GetFileInformationByHandleEx(
                     fileHandle,
                     FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo,
                     &info,
@@ -666,7 +663,7 @@ namespace WInterop.FileManagement
             {
                 unsafe
                 {
-                    while (!Direct.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStreamInfo,
+                    while (!Imports.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStreamInfo,
                         buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
                     {
                         WindowsError error = Errors.GetLastError();
@@ -768,12 +765,12 @@ namespace WInterop.FileManagement
             if (fileOffset.HasValue)
             {
                 OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
-                if (!Direct.ReadFile(fileHandle, buffer, numberOfBytes, &numberOfBytesRead, &overlapped))
+                if (!Imports.ReadFile(fileHandle, buffer, numberOfBytes, &numberOfBytesRead, &overlapped))
                     throw Errors.GetIoExceptionForLastError();
             }
             else
             {
-                if (!Direct.ReadFile(fileHandle, buffer, numberOfBytes, &numberOfBytesRead, null))
+                if (!Imports.ReadFile(fileHandle, buffer, numberOfBytes, &numberOfBytesRead, null))
                     throw Errors.GetIoExceptionForLastError();
             }
 
@@ -854,12 +851,12 @@ namespace WInterop.FileManagement
             if (fileOffset.HasValue)
             {
                 OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
-                if (!Direct.WriteFile(fileHandle, buffer, numberOfBytes, &numberOfBytesWritten, &overlapped))
+                if (!Imports.WriteFile(fileHandle, buffer, numberOfBytes, &numberOfBytesWritten, &overlapped))
                     throw Errors.GetIoExceptionForLastError();
             }
             else
             {
-                if (!Direct.WriteFile(fileHandle, buffer, numberOfBytes, &numberOfBytesWritten, null))
+                if (!Imports.WriteFile(fileHandle, buffer, numberOfBytes, &numberOfBytesWritten, null))
                     throw Errors.GetIoExceptionForLastError();
             }
 
@@ -874,7 +871,7 @@ namespace WInterop.FileManagement
         /// <returns>The new pointer position.</returns>
         public static long SetFilePointer(SafeFileHandle fileHandle, long distance, MoveMethod moveMethod)
         {
-            if (!Direct.SetFilePointerEx(fileHandle, distance, out long position, moveMethod))
+            if (!Imports.SetFilePointerEx(fileHandle, distance, out long position, moveMethod))
                 throw Errors.GetIoExceptionForLastError();
 
             return position;
@@ -893,7 +890,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static long GetFileSize(SafeFileHandle fileHandle)
         {
-            if (!Direct.GetFileSizeEx(fileHandle, out long size))
+            if (!Imports.GetFileSizeEx(fileHandle, out long size))
                 throw Errors.GetIoExceptionForLastError();
 
             return size;
@@ -904,7 +901,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static FileType GetFileType(SafeFileHandle fileHandle)
         {
-            FileType fileType = Direct.GetFileType(fileHandle);
+            FileType fileType = Imports.GetFileType(fileHandle);
             if (fileType == FileType.FILE_TYPE_UNKNOWN)
                 Errors.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
@@ -956,7 +953,7 @@ namespace WInterop.FileManagement
 
                 do
                 {
-                    while (!Direct.GetFileInformationByHandleEx(
+                    while (!Imports.GetFileInformationByHandleEx(
                         directoryHandle,
                         FILE_INFO_BY_HANDLE_CLASS.FileFullDirectoryInfo,
                         buffer.VoidPointer,

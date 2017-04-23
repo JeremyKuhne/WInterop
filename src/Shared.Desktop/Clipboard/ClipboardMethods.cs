@@ -18,12 +18,9 @@ namespace WInterop.Clipboard
     public static partial class ClipboardMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649048.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -90,7 +87,7 @@ namespace WInterop.Clipboard
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 int count;
-                while ((count = Direct.GetClipboardFormatNameW(format, buffer, (int)buffer.CharCapacity)) == 0)
+                while ((count = Imports.GetClipboardFormatNameW(format, buffer, (int)buffer.CharCapacity)) == 0)
                 {
                     Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(buffer.CharCapacity + 50);
@@ -114,7 +111,7 @@ namespace WInterop.Clipboard
             {
                 uint* alloc = stackalloc uint[(int)countIn];
                 array = alloc;
-                if (!Direct.GetUpdatedClipboardFormats(array, countIn, &countOut))
+                if (!Imports.GetUpdatedClipboardFormats(array, countIn, &countOut))
                 {
                     Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     countIn = countOut;
@@ -132,7 +129,7 @@ namespace WInterop.Clipboard
         /// </summary>
         public static bool IsClipboardFormatAvailable(ClipboardFormat format)
         {
-            return Direct.IsClipboardFormatAvailable((uint)format);
+            return Imports.IsClipboardFormatAvailable((uint)format);
         }
 
         /// <summary>
@@ -140,7 +137,7 @@ namespace WInterop.Clipboard
         /// </summary>
         public static bool IsClipboardFormatAvailable(uint format)
         {
-            return Direct.IsClipboardFormatAvailable(format);
+            return Imports.IsClipboardFormatAvailable(format);
         }
 
         /// <summary>
@@ -153,7 +150,7 @@ namespace WInterop.Clipboard
         /// </returns>
         public static uint GetPriorityClipboardFormat(params uint[] formats)
         {
-            return unchecked((uint)Direct.GetPriorityClipboardFormat(formats, formats.Length));
+            return unchecked((uint)Imports.GetPriorityClipboardFormat(formats, formats.Length));
         }
     }
 }

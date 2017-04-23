@@ -617,7 +617,7 @@ namespace Tests.Buffers
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Slow test (intentional). Run when making StringBuffer changes.")]
         public void SplitWhileWriting()
         {
             using (var buffer = new StringBuffer())

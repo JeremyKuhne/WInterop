@@ -16,21 +16,15 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Modules
 {
-    /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
-    /// </summary>
     /// <remarks>
     /// This is an amalgamation of "Dynamic-Link Libraries" and "Process Status" APIs.
     /// </remarks>
     public static partial class ModuleMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684179.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -109,7 +103,7 @@ namespace WInterop.Modules
         /// </summary>
         public static SafeModuleHandle GetModuleHandle(IntPtr address)
         {
-            if (!Direct.GetModuleHandleExW(
+            if (!Imports.GetModuleHandleExW(
                 GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                 address,
                 out var handle))
@@ -147,7 +141,7 @@ namespace WInterop.Modules
         {
             Func<IntPtr, GetModuleFlags, IntPtr> getHandle = (IntPtr n, GetModuleFlags f) =>
             {
-                if (!Direct.GetModuleHandleExW(f, n, out var handle))
+                if (!Imports.GetModuleHandleExW(f, n, out var handle))
                     throw Errors.GetIoExceptionForLastError();
                 return handle;
             };
@@ -170,7 +164,7 @@ namespace WInterop.Modules
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
-            if (!Direct.K32GetModuleInformation(process, module, out var info, (uint)sizeof(MODULEINFO)))
+            if (!Imports.K32GetModuleInformation(process, module, out var info, (uint)sizeof(MODULEINFO)))
                 throw Errors.GetIoExceptionForLastError();
 
             return info;
@@ -184,9 +178,9 @@ namespace WInterop.Modules
         public static string GetModuleFileName(SafeModuleHandle module, SafeProcessHandle process = null)
         {
             if (process == null)
-                return BufferHelper.CachedTruncatingApiInvoke((buffer) => Direct.GetModuleFileNameW(module, buffer, buffer.CharCapacity));
+                return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetModuleFileNameW(module, buffer, buffer.CharCapacity));
             else
-                return BufferHelper.CachedTruncatingApiInvoke((buffer) => Direct.K32GetModuleFileNameExW(process, module, buffer, buffer.CharCapacity));
+                return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.K32GetModuleFileNameExW(process, module, buffer, buffer.CharCapacity));
         }
 
         /// <summary>
@@ -194,7 +188,7 @@ namespace WInterop.Modules
         /// </summary>
         public static void FreeLibrary(IntPtr handle)
         {
-            if (!Direct.FreeLibrary(handle))
+            if (!Imports.FreeLibrary(handle))
                 throw Errors.GetIoExceptionForLastError();
         }
 
@@ -203,7 +197,7 @@ namespace WInterop.Modules
         /// </summary>
         public static SafeModuleHandle LoadLibrary(string path, LoadLibraryFlags flags)
         {
-            SafeModuleHandle handle = Direct.LoadLibraryExW(path, IntPtr.Zero, flags);
+            SafeModuleHandle handle = Imports.LoadLibraryExW(path, IntPtr.Zero, flags);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError(path);
 
@@ -225,7 +219,7 @@ namespace WInterop.Modules
         /// </remarks>
         public static DelegateType GetFunctionDelegate<DelegateType>(SafeModuleHandle library, string methodName)
         {
-            IntPtr method = Direct.GetProcAddress(library, methodName);
+            IntPtr method = Imports.GetProcAddress(library, methodName);
             if (method == IntPtr.Zero)
                 throw Errors.GetIoExceptionForLastError(methodName);
 
@@ -249,7 +243,7 @@ namespace WInterop.Modules
                 do
                 {
                     buffer.EnsureByteCapacity(sizeNeeded);
-                    if (!Direct.K32EnumProcessModulesEx(process, buffer, (uint)buffer.ByteCapacity,
+                    if (!Imports.K32EnumProcessModulesEx(process, buffer, (uint)buffer.ByteCapacity,
                         out sizeNeeded, ListModulesOptions.LIST_MODULES_DEFAULT))
                         throw Errors.GetIoExceptionForLastError();
                 } while (sizeNeeded > buffer.ByteCapacity);

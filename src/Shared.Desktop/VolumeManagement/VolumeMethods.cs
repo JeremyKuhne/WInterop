@@ -19,12 +19,9 @@ namespace WInterop.VolumeManagement
     public static partial class VolumeMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365461.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -109,7 +106,7 @@ namespace WInterop.VolumeManagement
                 uint result = 0;
 
                 // QueryDosDevicePrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-                while ((result = Direct.QueryDosDeviceW(deviceName, buffer, buffer.CharCapacity)) == 0)
+                while ((result = Imports.QueryDosDeviceW(deviceName, buffer, buffer.CharCapacity)) == 0)
                 {
                     WindowsError error = Errors.GetLastError();
                     switch (error)
@@ -142,7 +139,7 @@ namespace WInterop.VolumeManagement
                 uint result = 0;
 
                 // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-                while ((result = Direct.GetLogicalDriveStringsW(buffer.CharCapacity, buffer)) > buffer.CharCapacity)
+                while ((result = Imports.GetLogicalDriveStringsW(buffer.CharCapacity, buffer)) > buffer.CharCapacity)
                 {
                     buffer.EnsureCharCapacity(result);
                 }
@@ -163,7 +160,7 @@ namespace WInterop.VolumeManagement
         {
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
-                while (!Direct.GetVolumePathNameW(path, buffer, buffer.CharCapacity))
+                while (!Imports.GetVolumePathNameW(path, buffer, buffer.CharCapacity))
                 {
                     WindowsError error = Errors.GetLastError();
                     switch (error)
@@ -193,7 +190,7 @@ namespace WInterop.VolumeManagement
                 uint returnLength = 0;
 
                 // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-                while (!Direct.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
+                while (!Imports.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
                 {
                     WindowsError error = Errors.GetLastError();
                     switch (error)
@@ -223,7 +220,7 @@ namespace WInterop.VolumeManagement
                 // MSDN claims 50 is "reasonable", let's go double.
                 buffer.EnsureCharCapacity(100);
 
-                if (!Direct.GetVolumeNameForVolumeMountPointW(volumeMountPoint, buffer, buffer.CharCapacity))
+                if (!Imports.GetVolumeNameForVolumeMountPointW(volumeMountPoint, buffer, buffer.CharCapacity))
                     throw Errors.GetIoExceptionForLastError(volumeMountPoint);
 
                 buffer.SetLengthToFirstNull();
@@ -245,7 +242,7 @@ namespace WInterop.VolumeManagement
                 // set the error mode to prevent it. I can't replicate this behavior or find any documentation on when it might have
                 // changed. I'm guessing this changed in Windows 7 when they added support for setting the thread's error mode (as
                 // opposed to the entire process).
-                if (!Direct.GetVolumeInformationW(
+                if (!Imports.GetVolumeInformationW(
                     rootPath,
                     volumeName,
                     volumeName.CharCapacity,
@@ -277,7 +274,7 @@ namespace WInterop.VolumeManagement
         public static DriveType GetDriveType(string rootPath)
         {
             if (rootPath != null) rootPath = Paths.AddTrailingSeparator(rootPath);
-            return Direct.GetDriveTypeW(rootPath);
+            return Imports.GetDriveTypeW(rootPath);
         }
     }
 }

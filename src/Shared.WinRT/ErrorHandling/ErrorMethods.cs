@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Support.Internal;
+using Internal = WInterop.Support.Internal;
 
 namespace WInterop.ErrorHandling
 {
@@ -38,13 +38,10 @@ namespace WInterop.ErrorHandling
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff565436.aspx
 
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
 
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -60,7 +57,7 @@ namespace WInterop.ErrorHandling
                 IntPtr lpBuffer,
                 // Size is in chars
                 uint nSize,
-                string[] Arguments) => Imports.FormatMessageW(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
+                string[] Arguments) => Internal.Imports.FormatMessageW(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
         }
 
         // .NET's Win32Exception impements the error code lookup on FormatMessage using FORMAT_MESSAGE_FROM_SYSTEM.
@@ -85,7 +82,7 @@ namespace WInterop.ErrorHandling
                 while (lastError == WindowsError.ERROR_INSUFFICIENT_BUFFER && capacity <= short.MaxValue)
                 {
                     buffer.EnsureCharCapacity(capacity);
-                    result = Direct.FormatMessageW(
+                    result = Imports.FormatMessageW(
                         dwFlags: flags,
                         lpSource: source,
                         dwMessageId: messageId,
@@ -113,7 +110,7 @@ namespace WInterop.ErrorHandling
 
         public static WindowsError NtStatusToWinError(NTSTATUS status)
         {
-            return (WindowsError)Direct.LsaNtStatusToWinError(status);
+            return (WindowsError)Imports.LsaNtStatusToWinError(status);
         }
     }
 }

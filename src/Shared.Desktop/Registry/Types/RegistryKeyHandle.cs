@@ -57,7 +57,7 @@ namespace WInterop.Desktop.Registry.Types
 
         protected override bool ReleaseHandle()
         {
-            return RegistryMethods.Direct.RegCloseKey(handle) != WindowsError.ERROR_SUCCESS;
+            return RegistryMethods.Imports.RegCloseKey(handle) != WindowsError.ERROR_SUCCESS;
         }
     }
 }

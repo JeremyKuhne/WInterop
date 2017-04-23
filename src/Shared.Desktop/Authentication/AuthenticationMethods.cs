@@ -16,12 +16,9 @@ namespace WInterop.Authentication
     public static partial class AuthenticationMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378299.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
@@ -40,7 +37,7 @@ namespace WInterop.Authentication
 
             unsafe
             {
-                status = Direct.LsaOpenPolicy(null, &attributes, access, out handle);
+                status = Imports.LsaOpenPolicy(null, &attributes, access, out handle);
             }
 
             if (status != NTSTATUS.STATUS_SUCCESS)

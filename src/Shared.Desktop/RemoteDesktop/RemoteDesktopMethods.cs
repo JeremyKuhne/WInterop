@@ -13,12 +13,9 @@ namespace WInterop.Desktop.RemoteDesktop
     public static partial class RemoteDesktopMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/aa382990.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -38,7 +35,7 @@ namespace WInterop.Desktop.RemoteDesktop
         /// <returns></returns>
         public static uint ProcessIdToSessionId(uint processId)
         {
-            if (!Direct.ProcessIdToSessionId(processId, out uint sessionId))
+            if (!Imports.ProcessIdToSessionId(processId, out uint sessionId))
                 throw Errors.GetIoExceptionForLastError();
 
             return sessionId;
@@ -50,7 +47,7 @@ namespace WInterop.Desktop.RemoteDesktop
         /// </summary>
         public static uint GetActiveConsoleSessionId()
         {
-            return Direct.WTSGetActiveConsoleSessionId();
+            return Imports.WTSGetActiveConsoleSessionId();
         }
     }
 }

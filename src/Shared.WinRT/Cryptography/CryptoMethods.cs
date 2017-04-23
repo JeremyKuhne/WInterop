@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Cryptography.Types;
-using WInterop.ErrorHandling;
 using WInterop.Handles.Types;
 using WInterop.Support;
 
@@ -18,12 +17,9 @@ namespace WInterop.Cryptography
     public static partial class CryptoMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
@@ -73,7 +69,7 @@ namespace WInterop.Cryptography
         /// </summary>
         public static void CloseStore(IntPtr handle)
         {
-            if (!Direct.CertCloseStore(handle, dwFlags: 0))
+            if (!Imports.CertCloseStore(handle, dwFlags: 0))
                 throw Errors.GetIoExceptionForLastError();
         }
 
@@ -87,7 +83,7 @@ namespace WInterop.Cryptography
 
             fixed (char* name = storeName.ToString())
             {
-                CertificateStoreHandle store = Direct.CertOpenStore(
+                CertificateStoreHandle store = Imports.CertOpenStore(
                     lpszStoreProvider: (IntPtr)StoreProvider.CERT_STORE_PROV_SYSTEM,
                     dwMsgAndCertEncodingType: 0,
                     hCryptProv: IntPtr.Zero,
@@ -123,7 +119,7 @@ namespace WInterop.Cryptography
             try
             {
                 var callBack = new CertEnumSystemStoreLocationCallback(SystemStoreLocationCallback);
-                Direct.CertEnumSystemStoreLocation(
+                Imports.CertEnumSystemStoreLocation(
                     dwFlags: 0,
                     pvArg: GCHandle.ToIntPtr(handle),
                     pfnEnum: callBack);
@@ -161,7 +157,7 @@ namespace WInterop.Cryptography
                     // To lookup system stores in an alternate location you need to set CERT_SYSTEM_STORE_RELOCATE_FLAG
                     // and pass in the name and alternate location (HKEY) in pvSystemStoreLocationPara.
                     var callBack = new CertEnumSystemStoreCallback(SystemStoreEnumeratorCallback);
-                    Direct.CertEnumSystemStore(
+                    Imports.CertEnumSystemStore(
                         dwFlags: (uint)location,
                         pvSystemStoreLocationPara: (IntPtr)namePointer,
                         pvArg: GCHandle.ToIntPtr(infoHandle),
@@ -209,7 +205,7 @@ namespace WInterop.Cryptography
                     // To lookup system stores in an alternate location you need to set CERT_SYSTEM_STORE_RELOCATE_FLAG
                     // and pass in the name and alternate location (HKEY) in pvSystemStoreLocationPara.
                     var callBack = new CertEnumPhysicalStoreCallback(PhysicalStoreEnumeratorCallback);
-                    Direct.CertEnumPhysicalStore(
+                    Imports.CertEnumPhysicalStore(
                         pvSystemStore: (IntPtr)namePointer,
                         dwFlags: (uint)location,
                         pvArg: GCHandle.ToIntPtr(infoHandle),

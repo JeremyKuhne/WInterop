@@ -30,12 +30,9 @@ namespace WInterop.Handles
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff554383.aspx
 
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // http://forum.sysinternals.com/howto-enumerate-handles_topic18892.html
 
@@ -101,7 +98,7 @@ namespace WInterop.Handles
         {
             return (SafeDirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
-                NTSTATUS status = Direct.NtOpenDirectoryObject(
+                NTSTATUS status = Imports.NtOpenDirectoryObject(
                     DirectoryHandle: out var directory,
                     DesiredAccess: desiredAccess,
                     ObjectAttributes: ref attributes);
@@ -122,7 +119,7 @@ namespace WInterop.Handles
         {
             return (SafeSymbolicLinkObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
-                NTSTATUS status = Direct.NtOpenSymbolicLinkObject(
+                NTSTATUS status = Imports.NtOpenSymbolicLinkObject(
                     LinkHandle: out var link,
                     DesiredAccess: desiredAccess,
                     ObjectAttributes: ref attributes);
@@ -172,7 +169,7 @@ namespace WInterop.Handles
             {
                 UNICODE_STRING target = new UNICODE_STRING(buffer);
                 NTSTATUS status;
-                while ((status = Direct.NtQuerySymbolicLinkObject(linkHandle, ref target, out uint returnedLength)) == NTSTATUS.STATUS_BUFFER_TOO_SMALL)
+                while ((status = Imports.NtQuerySymbolicLinkObject(linkHandle, ref target, out uint returnedLength)) == NTSTATUS.STATUS_BUFFER_TOO_SMALL)
                 {
                     buffer.EnsureByteCapacity(returnedLength);
                     target.UpdateFromStringBuffer(buffer);
@@ -199,7 +196,7 @@ namespace WInterop.Handles
 
                 do
                 {
-                    status = Direct.NtQueryDirectoryObject(
+                    status = Imports.NtQueryDirectoryObject(
                         DirectoryHandle: directoryHandle,
                         Buffer: buffer,
                         Length: (uint)buffer.ByteCapacity,
@@ -262,7 +259,7 @@ namespace WInterop.Handles
                 {
                     buffer.EnsureByteCapacity(returnLength);
 
-                    status = Direct.NtQueryObject(
+                    status = Imports.NtQueryObject(
                         Handle: handle,
                         ObjectInformationClass: OBJECT_INFORMATION_CLASS.ObjectNameInformation,
                         ObjectInformation: buffer.DangerousGetHandle(),
@@ -293,7 +290,7 @@ namespace WInterop.Handles
                 {
                     buffer.EnsureByteCapacity(returnLength);
 
-                    status = Direct.NtQueryObject(
+                    status = Imports.NtQueryObject(
                         Handle: handle,
                         ObjectInformationClass: OBJECT_INFORMATION_CLASS.ObjectTypeInformation,
                         ObjectInformation: buffer.DangerousGetHandle(),

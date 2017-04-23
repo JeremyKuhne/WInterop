@@ -7,25 +7,21 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Support;
-using WInterop.Support.Internal;
+using Internal = WInterop.Support.Internal;
 
 namespace WInterop.MemoryManagement
 {
     public static partial class MemoryMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
 #if DESKTOP
         [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
 #endif
-        public static class Direct
+        public static partial class Imports
         {
             // Heap Functions
             // --------------
@@ -62,16 +58,16 @@ namespace WInterop.MemoryManagement
 
             // This is safe to cache as it will never change for a process once started
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569.aspx
-            public static IntPtr GetProcessHeap() => Imports.GetProcessHeap();
+            public static IntPtr GetProcessHeap() => Internal.Imports.GetProcessHeap();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366730.aspx
-            public static IntPtr LocalFree(IntPtr hMem) => Imports.LocalFree(hMem);
+            public static IntPtr LocalFree(IntPtr hMem) => Internal.Imports.LocalFree(hMem);
         }
 
         /// <summary>
         /// The handle for the process heap.
         /// </summary>
-        public static IntPtr ProcessHeap = Imports.ProcessHeap;
+        public static IntPtr ProcessHeap = Internal.Imports.ProcessHeap;
 
         /// <summary>
         /// Allocate memory on the process heap.
@@ -89,7 +85,7 @@ namespace WInterop.MemoryManagement
         /// <exception cref="OverflowException">Thrown if running in 32 bit and byteLength is greater than uint.MaxValue.</exception>
         public static IntPtr HeapAllocate(ulong byteLength, bool zeroMemory, IntPtr heap)
         {
-            return Direct.HeapAlloc(
+            return Imports.HeapAlloc(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
                 dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
                 dwBytes: (UIntPtr)byteLength);
@@ -111,7 +107,7 @@ namespace WInterop.MemoryManagement
         /// <exception cref="OverflowException">Thrown if running in 32 bit and byteLength is greater than uint.MaxValue.</exception>
         public static IntPtr HeapReallocate(IntPtr memory, ulong byteLength, bool zeroMemory, IntPtr heap)
         {
-            return Direct.HeapReAlloc(
+            return Imports.HeapReAlloc(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
                 dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
                 lpMem: memory,
@@ -132,7 +128,7 @@ namespace WInterop.MemoryManagement
         /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
         public static bool HeapFree(IntPtr memory, IntPtr heap)
         {
-            return Direct.HeapFree(
+            return Imports.HeapFree(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
                 dwFlags: 0,
                 lpMem: memory);
@@ -140,7 +136,7 @@ namespace WInterop.MemoryManagement
 
         public static void LocalFree(IntPtr memory)
         {
-            if (Direct.LocalFree(memory) != null)
+            if (Imports.LocalFree(memory) != null)
             {
                 var error = Errors.GetLastError();
                 if (error != WindowsError.ERROR_SUCCESS)

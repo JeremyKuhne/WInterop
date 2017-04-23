@@ -17,12 +17,9 @@ namespace WInterop.Gdi
     public static partial class GdiMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/dd144877.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -132,12 +129,12 @@ namespace WInterop.Gdi
 
         public static int GetDeviceCapability(DeviceContext deviceContext, DeviceCapability capability)
         {
-            return Direct.GetDeviceCaps(deviceContext, capability);
+            return Imports.GetDeviceCaps(deviceContext, capability);
         }
 
         public unsafe static DeviceContext CreateDeviceContext(string driver, string device)
         {
-            return Direct.CreateDC(driver, device, null, null);
+            return Imports.CreateDC(driver, device, null, null);
         }
 
         /// <summary>
@@ -146,7 +143,7 @@ namespace WInterop.Gdi
         /// <param name="window">The window handle, or null for the entire screen.</param>
         public static DeviceContext GetDeviceContext(WindowHandle window)
         {
-            return Direct.GetDC(window);
+            return Imports.GetDC(window);
         }
 
         /// <summary>
@@ -156,7 +153,7 @@ namespace WInterop.Gdi
         /// <returns>Returns a device context for the entire window, not just the client area.</returns>
         public static DeviceContext GetWindowDeviceContext(WindowHandle window)
         {
-            return Direct.GetWindowDC(window);
+            return Imports.GetWindowDC(window);
         }
 
         /// <summary>
@@ -171,7 +168,7 @@ namespace WInterop.Gdi
                 cb = DISPLAY_DEVICE.s_size
             };
 
-            while (Direct.EnumDisplayDevicesW(deviceName, index, ref device, 0))
+            while (Imports.EnumDisplayDevicesW(deviceName, index, ref device, 0))
             {
                 yield return device;
                 index++;
@@ -191,7 +188,7 @@ namespace WInterop.Gdi
                 dmSize = DEVMODE.s_size
             };
 
-            while (Direct.EnumDisplaySettingsW(deviceName, modeIndex, ref mode))
+            while (Imports.EnumDisplaySettingsW(deviceName, modeIndex, ref mode))
             {
                 yield return mode;
 
@@ -210,23 +207,23 @@ namespace WInterop.Gdi
 
         public static BrushHandle GetStockBrush(StockBrush brush)
         {
-            IntPtr handle = Direct.GetStockObject((int)brush);
+            IntPtr handle = Imports.GetStockObject((int)brush);
             return new BrushHandle(handle, ownsHandle: false);
         }
 
         public static bool UpdateWindow(WindowHandle window)
         {
-            return Direct.UpdateWindow(window);
+            return Imports.UpdateWindow(window);
         }
 
         public static DeviceContext BeginPaint(WindowHandle window, out PAINTSTRUCT paintStruct)
         {
-            return Direct.BeginPaint(window, out paintStruct);
+            return Imports.BeginPaint(window, out paintStruct);
         }
 
         public static void EndPaint(WindowHandle window, ref PAINTSTRUCT paintStruct)
         {
-            Direct.EndPaint(window, ref paintStruct);
+            Imports.EndPaint(window, ref paintStruct);
         }
 
         public static unsafe int DrawText(DeviceContext deviceContext, string text, RECT rect, TextFormat format)
@@ -236,7 +233,7 @@ namespace WInterop.Gdi
                 // The string won't be changed, we can just pin
                 fixed (char* c = text)
                 {
-                    return Direct.DrawTextW(deviceContext, c, text.Length, ref rect, format);
+                    return Imports.DrawTextW(deviceContext, c, text.Length, ref rect, format);
                 }
             }
 
@@ -244,7 +241,7 @@ namespace WInterop.Gdi
             {
                 buffer.EnsureCharCapacity((uint)(text.Length + 5));
                 buffer.Append(text);
-                return Direct.DrawTextW(deviceContext, buffer.CharPointer, (int)buffer.Length, ref rect, format);
+                return Imports.DrawTextW(deviceContext, buffer.CharPointer, (int)buffer.Length, ref rect, format);
             });
         }
     }

@@ -22,7 +22,7 @@ namespace WInterop.VolumeManagement.Types
 
         protected override bool ReleaseHandle()
         {
-            if (!VolumeMethods.Direct.FindVolumeClose(handle))
+            if (!VolumeMethods.Imports.FindVolumeClose(handle))
             {
                 throw Errors.GetIoExceptionForLastError();
             }

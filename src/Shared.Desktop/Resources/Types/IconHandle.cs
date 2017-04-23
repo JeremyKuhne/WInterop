@@ -22,7 +22,7 @@ namespace WInterop.Resources.Types
 
         protected override bool ReleaseHandle()
         {
-            return ResourceMethods.Direct.DestroyIcon(handle);
+            return ResourceMethods.Imports.DestroyIcon(handle);
         }
     }
 }

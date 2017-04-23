@@ -142,7 +142,7 @@ namespace WInterop.Support.Buffers
         /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
         /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
         /// <example>
-        /// BufferHelper.CachedApiInvoke((buffer) => Direct.GetCurrentDirectoryW(buffer.CharCapacity, buffer));
+        /// BufferHelper.CachedApiInvoke((buffer) => Imports.GetCurrentDirectoryW(buffer.CharCapacity, buffer));
         /// </example>
         public static string CachedApiInvoke(Func<StringBuffer, uint> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
         {
@@ -167,7 +167,7 @@ namespace WInterop.Support.Buffers
         /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
         /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
         /// <example>
-        /// BufferHelper.CachedTruncatingApiInvoke((buffer) => Direct.GetModuleFileNameW(module, buffer, buffer.CharCapacity));
+        /// BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetModuleFileNameW(module, buffer, buffer.CharCapacity));
         /// </example>
         public static string CachedTruncatingApiInvoke(Func<StringBuffer, uint> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
         {

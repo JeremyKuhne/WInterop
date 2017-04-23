@@ -20,12 +20,9 @@ namespace WInterop.SecurityManagement
     public static partial class SecurityMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
@@ -55,19 +52,19 @@ namespace WInterop.SecurityManagement
         /// </summary>
         public static WindowsError NtStatusToWinError(NTSTATUS status)
         {
-            return Direct.LsaNtStatusToWinError(status);
+            return Imports.LsaNtStatusToWinError(status);
         }
 
         public static void LsaClose(IntPtr handle)
         {
-            NTSTATUS status = Direct.LsaClose(handle);
+            NTSTATUS status = Imports.LsaClose(handle);
             if (status != NTSTATUS.STATUS_SUCCESS)
                 throw ErrorMethods.GetIoExceptionForNTStatus(status);
         }
 
         public static void LsaFreeMemory(IntPtr handle)
         {
-            NTSTATUS status = Direct.LsaFreeMemory(handle);
+            NTSTATUS status = Imports.LsaFreeMemory(handle);
             if (status != NTSTATUS.STATUS_SUCCESS)
                 throw ErrorMethods.GetIoExceptionForNTStatus(status);
         }
@@ -78,7 +75,7 @@ namespace WInterop.SecurityManagement
         /// </summary>
         public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, ref SID sid)
         {
-            NTSTATUS status = Direct.LsaEnumerateAccountRights(policyHandle, ref sid, out var rightsBuffer, out uint rightsCount);
+            NTSTATUS status = Imports.LsaEnumerateAccountRights(policyHandle, ref sid, out var rightsBuffer, out uint rightsCount);
             switch (status)
             {
                 case NTSTATUS.STATUS_OBJECT_NAME_NOT_FOUND:

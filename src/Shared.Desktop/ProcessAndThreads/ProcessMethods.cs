@@ -24,12 +24,9 @@ namespace WInterop.ProcessAndThreads
     public static partial class ProcessMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683188.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -73,7 +70,7 @@ namespace WInterop.ProcessAndThreads
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            if (!Direct.SetEnvironmentVariableW(name, value))
+            if (!Imports.SetEnvironmentVariableW(name, value))
                 throw Errors.GetIoExceptionForLastError(name);
         }
 
@@ -86,7 +83,7 @@ namespace WInterop.ProcessAndThreads
             if (name == null) throw new ArgumentNullException(nameof(name));
 
             return BufferHelper.CachedApiInvoke(
-                buffer => Direct.GetEnvironmentVariableW(name, buffer, buffer.CharCapacity),
+                buffer => Imports.GetEnvironmentVariableW(name, buffer, buffer.CharCapacity),
                 name,
                 error => error != WindowsError.ERROR_ENVVAR_NOT_FOUND);
         }
@@ -97,7 +94,7 @@ namespace WInterop.ProcessAndThreads
         public static IDictionary<string, string> GetEnvironmentVariables()
         {
             var variables = new Dictionary<string, string>();
-            using (var buffer = Direct.GetEnvironmentStringsW())
+            using (var buffer = Imports.GetEnvironmentStringsW())
             {
                 if (buffer.IsInvalid) return variables;
 
@@ -122,7 +119,7 @@ namespace WInterop.ProcessAndThreads
         /// <remarks>Names can have an equals character as the first character. Be cautious when splitting or use GetEnvironmentVariables().</remarks>
         public static IEnumerable<string> GetEnvironmentStrings()
         {
-            using (var buffer = Direct.GetEnvironmentStringsW())
+            using (var buffer = Imports.GetEnvironmentStringsW())
             {
                 if (buffer.IsInvalid) return Enumerable.Empty<string>();
 
@@ -138,7 +135,7 @@ namespace WInterop.ProcessAndThreads
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
-            if (!Direct.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(PROCESS_MEMORY_COUNTERS_EX)))
+            if (!Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(PROCESS_MEMORY_COUNTERS_EX)))
                 throw Errors.GetIoExceptionForLastError();
 
             return info;

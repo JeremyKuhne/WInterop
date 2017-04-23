@@ -19,12 +19,9 @@ namespace WInterop.Windows
     public static partial class WindowMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633515.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -260,7 +257,7 @@ namespace WInterop.Windows
 
         public static WindowHandle GetShellWindow()
         {
-            return Direct.GetShellWindow();
+            return Imports.GetShellWindow();
         }
 
         /// <summary>
@@ -269,27 +266,27 @@ namespace WInterop.Windows
         /// </summary>
         public static WindowHandle GetWindow(WindowHandle window, GetWindowOptions option)
         {
-            return Direct.GetWindow(window, option);
+            return Imports.GetWindow(window, option);
         }
 
         public static WindowHandle GetDesktopWindow()
         {
-            return Direct.GetDesktopWindow();
+            return Imports.GetDesktopWindow();
         }
 
         public static bool IsWindow(WindowHandle window)
         {
-            return Direct.IsWindow(window);
+            return Imports.IsWindow(window);
         }
 
         public static bool IsWindowVisible(WindowHandle window)
         {
-            return Direct.IsWindowVisible(window);
+            return Imports.IsWindowVisible(window);
         }
 
         public static bool IsWindowUnicode(WindowHandle window)
         {
-            return Direct.IsWindowUnicode(window);
+            return Imports.IsWindowUnicode(window);
         }
 
         /// <summary>
@@ -298,12 +295,12 @@ namespace WInterop.Windows
         /// </summary>
         public static WindowHandle GetTopWindow(WindowHandle window)
         {
-            return Direct.GetTopWindow(window);
+            return Imports.GetTopWindow(window);
         }
 
         public static WindowHandle GetForegroundWindow()
         {
-            return Direct.GetForegroundWindow();
+            return Imports.GetForegroundWindow();
         }
 
         public static string GetClassName(WindowHandle window)
@@ -311,7 +308,7 @@ namespace WInterop.Windows
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 int count;
-                while ((count = Direct.GetClassNameW(window, buffer, (int)buffer.CharCapacity)) != 0)
+                while ((count = Imports.GetClassNameW(window, buffer, (int)buffer.CharCapacity)) != 0)
                 {
                     if (count == buffer.CharCapacity - 1)
                     {
@@ -335,7 +332,7 @@ namespace WInterop.Windows
         /// <param name="convertToGuiIfFalse">Tries to convert the thread to a GUI thread if it isn't already.</param>
         public static bool IsGuiThread(bool convertToGuiIfFalse = false)
         {
-            int result = Direct.IsGUIThread(convertToGuiIfFalse);
+            int result = Imports.IsGUIThread(convertToGuiIfFalse);
             if (result == 0
                 || (convertToGuiIfFalse & result == (int)WindowsError.ERROR_NOT_ENOUGH_MEMORY))
                 return false;
@@ -348,7 +345,7 @@ namespace WInterop.Windows
         /// </summary>
         public static void UnregisterClass(Atom atom, SafeModuleHandle module)
         {
-            if (!Direct.UnregisterClassW(atom, module))
+            if (!Imports.UnregisterClassW(atom, module))
                 throw Errors.GetIoExceptionForLastError();
         }
 
@@ -364,7 +361,7 @@ namespace WInterop.Windows
             {
                 fixed (char* name = className)
                 {
-                    if (!Direct.UnregisterClassW((IntPtr)name, module))
+                    if (!Imports.UnregisterClassW((IntPtr)name, module))
                         throw Errors.GetIoExceptionForLastError();
                 }
             }
@@ -375,7 +372,7 @@ namespace WInterop.Windows
         /// </summary>
         public static int GetSystemMetrics(SystemMetric metric)
         {
-            return Direct.GetSystemMetrics(metric);
+            return Imports.GetSystemMetrics(metric);
         }
 
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.MB_OK)
@@ -385,7 +382,7 @@ namespace WInterop.Windows
 
         public static CommandId MessageBox(WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.MB_OK)
         {
-            CommandId result = Direct.MessageBoxExW(owner, text, caption, type, 0);
+            CommandId result = Imports.MessageBoxExW(owner, text, caption, type, 0);
             if (result == CommandId.Error)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -394,7 +391,7 @@ namespace WInterop.Windows
 
         public static Atom RegisterClass(WindowClass windowClass)
         {
-            Atom atom = Direct.RegisterClassW(windowClass);
+            Atom atom = Imports.RegisterClassW(windowClass);
             if (!atom.IsValid)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -403,7 +400,7 @@ namespace WInterop.Windows
 
         public static WindowClass GetClassInfo(SafeModuleHandle instance, Atom atom)
         {
-            if (!Direct.GetClassInfoW(instance, atom, out WNDCLASS windowClass))
+            if (!Imports.GetClassInfoW(instance, atom, out WNDCLASS windowClass))
                 throw Errors.GetIoExceptionForLastError();
 
             return new WindowClass(windowClass);
@@ -440,7 +437,7 @@ namespace WInterop.Windows
             WindowHandle window;
             fixed (char* name = className)
             {
-                window = Direct.CreateWindowExW(
+                window = Imports.CreateWindowExW(
                     extendedStyle,
                     (IntPtr)name,
                     windowName,
@@ -463,12 +460,12 @@ namespace WInterop.Windows
 
         public static bool ShowWindow(WindowHandle window, ShowWindowCommand command)
         {
-            return Direct.ShowWindow(window, command);
+            return Imports.ShowWindow(window, command);
         }
 
         public static bool GetMessage(out MSG message, WindowHandle window, uint minMessage = 0, uint maxMessage = 0)
         {
-            BOOL result = Direct.GetMessageW(out message, window, minMessage, maxMessage);
+            BOOL result = Imports.GetMessageW(out message, window, minMessage, maxMessage);
             if (result.RawValue == unchecked((uint)-1))
                 throw Errors.GetIoExceptionForLastError();
 
@@ -477,27 +474,27 @@ namespace WInterop.Windows
 
         public static bool TranslateMessage(ref MSG message)
         {
-            return Direct.TranslateMessage(ref message);
+            return Imports.TranslateMessage(ref message);
         }
 
         public static bool DispatchMessage(ref MSG message)
         {
-            return Direct.DispatchMessageW(ref message);
+            return Imports.DispatchMessageW(ref message);
         }
 
         public static IntPtr DefaultWindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
         {
-            return Direct.DefWindowProcW(window, message, wParam, lParam);
+            return Imports.DefWindowProcW(window, message, wParam, lParam);
         }
 
         public static void PostQuitMessage(int exitCode)
         {
-            Direct.PostQuitMessage(exitCode);
+            Imports.PostQuitMessage(exitCode);
         }
 
         public static RECT GetClientRect(WindowHandle window)
         {
-            if (!Direct.GetClientRect(window, out RECT rect))
+            if (!Imports.GetClientRect(window, out RECT rect))
                 throw Errors.GetIoExceptionForLastError();
 
             return rect;

@@ -19,12 +19,9 @@ namespace WInterop.Desktop.Registry
     public static partial class RegistryMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static class Direct
+        public static class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724837.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
@@ -83,7 +80,7 @@ namespace WInterop.Desktop.Registry
             string subKeyName,
             RegistryAccessRights rights = RegistryAccessRights.KEY_READ)
         {
-            WindowsError result = Direct.RegOpenKeyExW(key, subKeyName, 0, rights, out RegistryKeyHandle subKey);
+            WindowsError result = Imports.RegOpenKeyExW(key, subKeyName, 0, rights, out RegistryKeyHandle subKey);
             if (result != WindowsError.ERROR_SUCCESS)
                 throw Errors.GetIoExceptionForError(result);
 
@@ -95,7 +92,7 @@ namespace WInterop.Desktop.Registry
         /// </summary>
         public unsafe static bool QueryValueExists(RegistryKeyHandle key, string valueName)
         {
-            WindowsError result = Direct.RegQueryValueExW(key, valueName, null, null, null, null);
+            WindowsError result = Imports.RegQueryValueExW(key, valueName, null, null, null, null);
             switch (result)
             {
                 case WindowsError.ERROR_SUCCESS:
@@ -113,7 +110,7 @@ namespace WInterop.Desktop.Registry
         public unsafe static RegistryValueType QueryValueType(RegistryKeyHandle key, string valueName)
         {
             RegistryValueType valueType = new RegistryValueType();
-            WindowsError result = Direct.RegQueryValueExW(key, valueName, null, &valueType, null, null);
+            WindowsError result = Imports.RegQueryValueExW(key, valueName, null, &valueType, null, null);
             switch (result)
             {
                 case WindowsError.ERROR_SUCCESS:
@@ -133,7 +130,7 @@ namespace WInterop.Desktop.Registry
 
                 WindowsError result;
                 uint byteCapacity = (uint)buffer.ByteCapacity;
-                while ((result = Direct.RegQueryValueExW(
+                while ((result = Imports.RegQueryValueExW(
                     key,
                     valueName,
                     null,
@@ -183,7 +180,7 @@ namespace WInterop.Desktop.Registry
             BufferHelper.CachedInvoke((HeapBuffer buffer) =>
             {
                 NTSTATUS status;
-                while((status = Direct.NtEnumerateValueKey(
+                while((status = Imports.NtEnumerateValueKey(
                     key,
                     (uint)names.Count,
                     KEY_VALUE_INFORMATION_CLASS.KeyValueBasicInformation,
@@ -234,7 +231,7 @@ namespace WInterop.Desktop.Registry
             BufferHelper.CachedInvoke((HeapBuffer buffer) =>
             {
                 NTSTATUS status;
-                while ((status = Direct.NtEnumerateValueKey(
+                while ((status = Imports.NtEnumerateValueKey(
                     key,
                     (uint)data.Count,
                     KEY_VALUE_INFORMATION_CLASS.KeyValuePartialInformation,
@@ -276,7 +273,7 @@ namespace WInterop.Desktop.Registry
                 uint bufferSize = buffer.CharCapacity;
 
                 WindowsError result;
-                while ((result = Direct.RegEnumValueW(key, (uint)names.Count, buffer.VoidPointer, ref bufferSize, null, null, null, null))
+                while ((result = Imports.RegEnumValueW(key, (uint)names.Count, buffer.VoidPointer, ref bufferSize, null, null, null, null))
                     != WindowsError.ERROR_NO_MORE_ITEMS)
                 {
                     switch (result)

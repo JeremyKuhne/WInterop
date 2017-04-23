@@ -31,7 +31,7 @@ namespace WInterop.Backup
 
         public unsafe BackupStreamInformation? GetNextInfo()
         {
-            if (!BackupMethods.Direct.BackupRead(
+            if (!BackupMethods.Imports.BackupRead(
                 hFile: _fileHandle,
                 lpBuffer: _buffer,
                 nNumberOfBytesToRead: (uint)sizeof(WIN32_STREAM_ID),
@@ -51,7 +51,7 @@ namespace WInterop.Backup
             if (streamId.dwStreamNameSize > 0)
             {
                 _buffer.EnsureByteCapacity(streamId.dwStreamNameSize);
-                if (!BackupMethods.Direct.BackupRead(
+                if (!BackupMethods.Imports.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: _buffer,
                     nNumberOfBytesToRead: streamId.dwStreamNameSize,
@@ -68,7 +68,7 @@ namespace WInterop.Backup
             if (streamId.Size > 0)
             {
                 // Move to the next header, if any
-                if (!BackupMethods.Direct.BackupSeek(
+                if (!BackupMethods.Imports.BackupSeek(
                     hFile: _fileHandle,
                     dwLowBytesToSeek: uint.MaxValue,
                     dwHighBytesToSeek: int.MaxValue,
@@ -105,7 +105,7 @@ namespace WInterop.Backup
             if (_context != IntPtr.Zero)
             {
                 // Free the context memory
-                if (!BackupMethods.Direct.BackupRead(
+                if (!BackupMethods.Imports.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: EmptySafeHandle.Instance,
                     nNumberOfBytesToRead: 0,

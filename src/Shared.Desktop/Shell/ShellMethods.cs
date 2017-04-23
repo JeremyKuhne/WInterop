@@ -20,12 +20,9 @@ namespace WInterop.Shell
     public static partial class ShellMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762188.aspx
             [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, SetLastError = false, ExactSpelling = true)]
@@ -69,7 +66,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetKnownFolderPath(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
         {
-            HRESULT hr = Direct.SHGetKnownFolderPath(folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
+            HRESULT hr = Imports.SHGetKnownFolderPath(folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
             if (hr != HRESULT.S_OK)
                 throw Errors.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
@@ -81,7 +78,7 @@ namespace WInterop.Shell
         /// </summary>
         public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
         {
-            HRESULT hr = Direct.SHGetKnownFolderIDList(folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
+            HRESULT hr = Imports.SHGetKnownFolderIDList(folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
             if (hr != HRESULT.S_OK)
                 throw Errors.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
@@ -93,7 +90,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetNameFromId(ItemIdList id, SIGDN form = SIGDN.NORMALDISPLAY)
         {
-            HRESULT hr = Direct.SHGetNameFromIDList(id, form, out string name);
+            HRESULT hr = Imports.SHGetNameFromIDList(id, form, out string name);
             if (hr != HRESULT.S_OK)
                 throw Errors.GetIoExceptionForHResult(hr);
 
@@ -137,7 +134,7 @@ namespace WInterop.Shell
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(Paths.MaxPath);
-                if (!Direct.PathUnExpandEnvStringsW(path, buffer, buffer.CharCapacity))
+                if (!Imports.PathUnExpandEnvStringsW(path, buffer, buffer.CharCapacity))
                     return null;
 
                 buffer.SetLengthToFirstNull();
@@ -153,7 +150,7 @@ namespace WInterop.Shell
         {
             return BufferHelper.CachedInvoke((StringBuffer buffer) =>
             {
-                while (!Direct.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
+                while (!Imports.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
                 {
                     Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(buffer.CharCapacity * 2);

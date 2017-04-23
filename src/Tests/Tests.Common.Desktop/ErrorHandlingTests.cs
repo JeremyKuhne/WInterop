@@ -17,7 +17,7 @@ namespace DesktopTests
         [Fact]
         public void BasicBeep()
         {
-            ErrorMethods.Beep(frequency: 262, duration: 500);
+            ErrorMethods.Beep(frequency: 262, duration: 200);
         }
 
         [Theory,

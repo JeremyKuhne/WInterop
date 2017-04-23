@@ -24,12 +24,9 @@ namespace WInterop.Desktop.Communications
     public static partial class CommunicationsMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363260.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
@@ -96,7 +93,7 @@ namespace WInterop.Desktop.Communications
                 DCBlength = (uint)sizeof(DCB)
             };
 
-            if (!Direct.GetCommState(fileHandle, ref dcb))
+            if (!Imports.GetCommState(fileHandle, ref dcb))
                 throw Errors.GetIoExceptionForLastError();
 
             return dcb;
@@ -106,13 +103,13 @@ namespace WInterop.Desktop.Communications
         {
             dcb.DCBlength = (uint)sizeof(DCB);
 
-            if (!Direct.GetCommState(fileHandle, ref dcb))
+            if (!Imports.GetCommState(fileHandle, ref dcb))
                 throw Errors.GetIoExceptionForLastError();
         }
 
         public unsafe static DCB BuildCommDCB(string definition)
         {
-            if (!Direct.BuildCommDCBW(definition, out DCB dcb))
+            if (!Imports.BuildCommDCBW(definition, out DCB dcb))
                 throw Errors.GetIoExceptionForLastError();
 
             return dcb;
@@ -120,7 +117,7 @@ namespace WInterop.Desktop.Communications
 
         public static COMMPROP GetCommProperties(SafeFileHandle fileHandle)
         {
-            if (!Direct.GetCommProperties(fileHandle, out COMMPROP properties))
+            if (!Imports.GetCommProperties(fileHandle, out COMMPROP properties))
                 throw Errors.GetIoExceptionForLastError();
 
             return properties;
@@ -131,7 +128,7 @@ namespace WInterop.Desktop.Communications
             COMMCONFIG config = new COMMCONFIG();
             uint size = (uint)sizeof(COMMCONFIG);
 
-            if (!Direct.GetCommConfig(fileHandle, ref config, ref size))
+            if (!Imports.GetCommConfig(fileHandle, ref config, ref size))
                 throw Errors.GetIoExceptionForLastError();
 
             return config;
@@ -146,7 +143,7 @@ namespace WInterop.Desktop.Communications
             COMMCONFIG config = new COMMCONFIG();
             uint size = (uint)sizeof(COMMCONFIG);
 
-            if (!Direct.GetDefaultCommConfigW(port, ref config, ref size))
+            if (!Imports.GetDefaultCommConfigW(port, ref config, ref size))
                 throw Errors.GetIoExceptionForLastError();
 
             return config;
@@ -160,7 +157,7 @@ namespace WInterop.Desktop.Communications
         {
             COMMCONFIG config = GetDefaultCommConfig(port);
 
-            if (!Direct.CommConfigDialogW(port, parent, ref config))
+            if (!Imports.CommConfigDialogW(port, parent, ref config))
                 throw Errors.GetIoExceptionForLastError();
 
             return config;

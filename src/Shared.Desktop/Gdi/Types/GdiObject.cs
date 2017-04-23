@@ -21,7 +21,7 @@ namespace WInterop.Gdi.Types
 
         protected override bool ReleaseHandle()
         {
-            return GdiMethods.Direct.DeleteObject(handle);
+            return GdiMethods.Imports.DeleteObject(handle);
         }
     }
 }

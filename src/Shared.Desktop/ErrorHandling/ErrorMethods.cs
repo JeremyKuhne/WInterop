@@ -15,12 +15,9 @@ namespace WInterop.ErrorHandling
     public static partial class ErrorMethods
     {
         /// <summary>
-        /// Direct P/Invokes aren't recommended. Use the wrappers that do the heavy lifting for you.
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-        /// <remarks>
-        /// By keeping the names exactly as they are defined we can reduce string count and make the initial P/Invoke call slightly faster.
-        /// </remarks>
-        public static partial class Direct
+        public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679355.aspx
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
@@ -63,7 +60,7 @@ namespace WInterop.ErrorHandling
         /// <param name="duration">Duration in milliseconds.</param>
         public static void Beep(uint frequency, uint duration)
         {
-            if (!Direct.Beep(frequency, duration))
+            if (!Imports.Beep(frequency, duration))
                 throw Errors.GetIoExceptionForLastError();
         }
 
@@ -72,7 +69,7 @@ namespace WInterop.ErrorHandling
         /// </summary>
         public static void MessageBeep(MessageBeepType type)
         {
-            if (!Direct.MessageBeep(type))
+            if (!Imports.MessageBeep(type))
                 throw Errors.GetIoExceptionForLastError();
         }
 
@@ -81,7 +78,7 @@ namespace WInterop.ErrorHandling
         /// </summary>
         public static ErrorMode GetProcessErrorMode()
         {
-            return Direct.GetErrorMode();
+            return Imports.GetErrorMode();
         }
 
         /// <summary>
@@ -89,7 +86,7 @@ namespace WInterop.ErrorHandling
         /// </summary>
         public static ErrorMode GetThreadErrorMode()
         {
-            return Direct.GetThreadErrorMode();
+            return Imports.GetThreadErrorMode();
         }
 
         /// <summary>
@@ -99,7 +96,7 @@ namespace WInterop.ErrorHandling
         public static ErrorMode SetThreadErrorMode(ErrorMode mode)
         {
             ErrorMode oldMode;
-            if (!Direct.SetThreadErrorMode(mode, out oldMode))
+            if (!Imports.SetThreadErrorMode(mode, out oldMode))
                 throw Errors.GetIoExceptionForLastError();
 
             return oldMode;
