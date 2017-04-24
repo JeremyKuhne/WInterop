@@ -109,7 +109,7 @@ namespace SysMets2
                     if (iVscrollPos != WindowMethods.GetScrollPosition(window, ScrollBar.SB_VERT))
                     {
                         WindowMethods.SetScrollPosition(window, ScrollBar.SB_VERT, iVscrollPos, true);
-                        GdiMethods.InvalidateRect(window, true);
+                        GdiMethods.InvalidateRectangle(window, true);
                     }
                     return (IntPtr)0;
                 case MessageType.WM_PAINT:

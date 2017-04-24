@@ -503,14 +503,14 @@ namespace WInterop.Gdi
             return Imports.GetTextMetricsW(deviceContext, out metrics);
         }
 
-        public unsafe static bool InvalidateRect(WindowHandle handle, RECT rect, bool erase)
+        public unsafe static bool InvalidateRectangle(WindowHandle window, RECT rect, bool erase)
         {
-            return Imports.InvalidateRect(handle, &rect, erase);
+            return Imports.InvalidateRect(window, &rect, erase);
         }
 
-        public unsafe static bool InvalidateRect(WindowHandle handle, bool erase)
+        public unsafe static bool InvalidateRectangle(WindowHandle window, bool erase)
         {
-            return Imports.InvalidateRect(handle, null, erase);
+            return Imports.InvalidateRect(window, null, erase);
         }
 
         public unsafe static bool MoveTo(DeviceContext deviceContext, int x, int y)
@@ -526,6 +526,21 @@ namespace WInterop.Gdi
         public static bool Polyline(DeviceContext deviceContext, params POINT[] points)
         {
             return Imports.Polyline(deviceContext, points, points.Length);
+        }
+
+        public static bool Rectangle(DeviceContext deviceContext, int left, int top, int right, int bottom)
+        {
+            return Imports.Rectangle(deviceContext, left, top, right, bottom);
+        }
+
+        public static bool Ellipse(DeviceContext deviceContext, int left, int top, int right, int bottom)
+        {
+            return Imports.Ellipse(deviceContext, left, top, right, bottom);
+        }
+
+        public static bool RoundRectangle(DeviceContext deviceContext, int left, int top, int right, int bottom, int cornerWidth, int cornerHeight)
+        {
+            return Imports.RoundRect(deviceContext, left, top, right, bottom, cornerWidth, cornerHeight);
         }
     }
 }
