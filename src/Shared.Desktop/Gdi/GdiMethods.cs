@@ -270,6 +270,96 @@ namespace WInterop.Gdi
             public static extern ArcDirection SetArcDirection(
                 DeviceContext hdc,
                 ArcDirection ArcDirection);
+
+            // https://msdn.microsoft.com/en-us/library/dd183428.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool Chord(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect,
+                int nXRadial1,
+                int nYRadial1,
+                int nXRadial2,
+                int nYRadial2);
+
+            // https://msdn.microsoft.com/en-us/library/dd162510(v=vs.85).aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool Ellipse(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect);
+
+            // https://msdn.microsoft.com/en-us/library/dd162719.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool FillRect(
+                DeviceContext hDC,
+                [In] ref RECT lprc,
+                BrushHandle hbr);
+
+            // https://msdn.microsoft.com/en-us/library/dd144838.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool FrameRect(
+                DeviceContext hDC,
+                [In] ref RECT lprc,
+                BrushHandle hbr);
+
+            // https://msdn.microsoft.com/en-us/library/dd145007.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool InvertRect(
+                DeviceContext hDC,
+                [In] ref RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd162799.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool Pie(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect,
+                int nXRadial1,
+                int nYRadial1,
+                int nXRadial2,
+                int nYRadial2);
+
+            // https://msdn.microsoft.com/en-us/library/dd162814.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool Polygon(
+                DeviceContext hdc,
+                POINT[] lpPoints,
+                int nCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd162818.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool PolyPolygon(
+                DeviceContext hdc,
+                POINT[] lpPoints,
+                int[] lpPolyCounts,
+                int nCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd162898.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool Rectangle(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect);
+
+            // https://msdn.microsoft.com/en-us/library/dd162944.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool RoundRect(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect,
+                int nWidth,
+                int nHeight);
         }
 
         public static int GetDeviceCapability(DeviceContext deviceContext, DeviceCapability capability)
