@@ -47,11 +47,10 @@ namespace HelloWin
             WindowMethods.RegisterClass(wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
+                module,
                 "HelloWin",
                 "The Hello Program",
-                WindowStyle.WS_OVERLAPPEDWINDOW,
-                ExtendedWindowStyle.None,
-                module);
+                WindowStyle.WS_OVERLAPPEDWINDOW);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
 

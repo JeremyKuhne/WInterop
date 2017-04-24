@@ -134,6 +134,7 @@ Common Windows Data Types
 |`ULARGE_INTEGER` |`unsigned __int64`   |`ulong` | |
 |`UCHAR`          |`unsigned char`      |`byte` | |
 |`HRESULT`        |`long`               |`int` | |
+|`FLOAT`          |`float`              |`float` | |
 
 
 | Signed Pointer Types (`IntPtr`) | Unsigned Pointer Types (`UIntPtr`) |

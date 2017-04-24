@@ -164,6 +164,112 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern TextAlignment GetTextAlign(
                 DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd183354.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool AngleArc(
+                DeviceContext hdc,
+                int X,
+                int Y,
+                uint dwRadius,
+                float eStartAngle,
+                float eSweepAngle);
+
+            // https://msdn.microsoft.com/en-us/library/dd183357.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool Arc(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect,
+                int nXStartArc,
+                int nYStartArc,
+                int nXEndArc,
+                int nYEndArc);
+
+            // https://msdn.microsoft.com/en-us/library/dd183358.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool ArcTo(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect,
+                int nXRadial1,
+                int nYRadial1,
+                int nXRadial2,
+                int nYRadial2);
+
+            // https://msdn.microsoft.com/en-us/library/dd144848.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern ArcDirection GetArcDirection(
+                DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd145029.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool LineTo(
+                DeviceContext hdc,
+                int nXEnd,
+                int nYEnd);
+
+            // https://msdn.microsoft.com/en-us/library/dd145069.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public unsafe static extern bool MoveToEx(
+                DeviceContext hdc,
+                int X,
+                int Y,
+                POINT* lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dd162811.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool PolyBezier(
+                DeviceContext hdc,
+                POINT[] lppt,
+                uint cPoints);
+
+            // https://msdn.microsoft.com/en-us/library/dd162812.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool PolyBezierTo(
+                DeviceContext hdc,
+                POINT[] lppt,
+                uint cCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd162813.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool PolyDraw(
+                DeviceContext hdc,
+                POINT[] lppt,
+                PointType[] lpbTypes,
+                int cCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd162815.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool Polyline(
+                DeviceContext hdc,
+                POINT[] lppt,
+                int cPoints);
+
+            // https://msdn.microsoft.com/en-us/library/dd162816.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool PolylineTo(
+                DeviceContext hdc,
+                POINT[] lppt,
+                uint cCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd162819.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool PolyPolyline(
+                DeviceContext hdc,
+                POINT[] lppt,
+                uint[] lpdwPolyPoints,
+                uint cCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd162961.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern ArcDirection SetArcDirection(
+                DeviceContext hdc,
+                ArcDirection ArcDirection);
         }
 
         public static int GetDeviceCapability(DeviceContext deviceContext, DeviceCapability capability)
@@ -315,6 +421,21 @@ namespace WInterop.Gdi
         public unsafe static bool InvalidateRect(WindowHandle handle, bool erase)
         {
             return Imports.InvalidateRect(handle, null, erase);
+        }
+
+        public unsafe static bool MoveTo(DeviceContext deviceContext, int x, int y)
+        {
+            return Imports.MoveToEx(deviceContext, x, y, null);
+        }
+
+        public static bool LineTo(DeviceContext deviceContext, int x, int y)
+        {
+            return Imports.LineTo(deviceContext, x, y);
+        }
+
+        public static bool Polyline(DeviceContext deviceContext, params POINT[] points)
+        {
+            return Imports.Polyline(deviceContext, points, points.Length);
         }
     }
 }

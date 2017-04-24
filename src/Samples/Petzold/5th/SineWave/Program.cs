@@ -12,15 +12,16 @@ using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
+using WInterop.Support;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace SysMets1
+namespace SineWave
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.
     /// Original (c) Charles Petzold, 1998
-    /// Figure 4-5, Pages 91-93.
+    /// Figure 5-6, Pages 147-148.
     /// </summary>
     static class Program
     {
@@ -39,15 +40,15 @@ namespace SysMets1
                 Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
                 Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
                 MenuName = null,
-                ClassName = "SysMets1"
+                ClassName = "SineWave"
             };
 
             WindowMethods.RegisterClass(wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
                 module,
-                "SysMets1",
-                "Get System Metrics No. 1",
+                "SineWave",
+                "Sine Wave Using PolyLine",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
@@ -61,35 +62,29 @@ namespace SysMets1
             GC.KeepAlive(wndclass);
         }
 
-        static int cxChar, cxCaps, cyChar;
+        static int cxClient, cyClient;
 
         static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
-
-                    using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
-                    {
-                        GdiMethods.GetTextMetrics(dc, out TEXTMETRIC tm);
-                        cxChar = tm.tmAveCharWidth;
-                        cxCaps = ((tm.tmPitchAndFamily & PitchAndFamily.TMPF_FIXED_PITCH) != 0 ? 3 : 2) * cxChar / 2;
-                        cyChar = tm.tmHeight + tm.tmExternalLeading;
-                    }
+                case MessageType.WM_SIZE:
+                    cxClient = Conversion.LowWord(lParam);
+                    cyClient = Conversion.HighWord(lParam);
                     return (IntPtr)0;
                 case MessageType.WM_PAINT:
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
-                        int i = 0;
-                        foreach (SystemMetric metric in SysMets.sysmetrics.Keys)
+                        GdiMethods.MoveTo(dc, 0, cyClient / 2);
+                        GdiMethods.LineTo(dc, cxClient, cyClient / 2);
+
+                        POINT[] apt = new POINT[1000];
+                        for (int i = 0; i < apt.Length; i++)
                         {
-                            GdiMethods.TextOut(dc, 0, cyChar * i, metric.ToString());
-                            GdiMethods.TextOut(dc, 22 * cxCaps, cyChar * i, SysMets.sysmetrics[metric]);
-                            GdiMethods.SetTextAlignment(dc, TextAlignment.TA_RIGHT | TextAlignment.TA_TOP);
-                            GdiMethods.TextOut(dc, 22 * cxCaps + 40 * cxChar, cyChar * i, WindowMethods.GetSystemMetrics(metric).ToString());
-                            GdiMethods.SetTextAlignment(dc, TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
-                            i++;
+                            apt[i].x = i * cxClient / apt.Length;
+                            apt[i].y = (int)(cyClient / 2 * (1 - Math.Sin(Math.PI * 2 * i / apt.Length)));
                         }
+                        GdiMethods.Polyline(dc, apt);
                     }
                     return (IntPtr)0;
                 case MessageType.WM_DESTROY:

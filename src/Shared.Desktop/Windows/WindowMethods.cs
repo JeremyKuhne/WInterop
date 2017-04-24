@@ -464,25 +464,25 @@ namespace WInterop.Windows
         }
 
         public static WindowHandle CreateWindow(
+            SafeModuleHandle instance,
             string className,
             string windowName,
             WindowStyle style,
-            ExtendedWindowStyle extendedStyle,
-            SafeModuleHandle instance,
+            ExtendedWindowStyle extendedStyle = ExtendedWindowStyle.None,
             int x = WindowDefines.CW_USEDEFAULT,
             int y = WindowDefines.CW_USEDEFAULT,
             int width = WindowDefines.CW_USEDEFAULT,
             int height = WindowDefines.CW_USEDEFAULT)
         {
-            return CreateWindow(className, windowName, style, extendedStyle, instance, x, y, width, height, WindowHandle.NullWindowHandle, IntPtr.Zero, IntPtr.Zero);
+            return CreateWindow(instance, className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.NullWindowHandle, IntPtr.Zero, IntPtr.Zero);
         }
 
         public unsafe static WindowHandle CreateWindow(
+            SafeModuleHandle instance,
             string className,
             string windowName,
             WindowStyle style,
             ExtendedWindowStyle extendedStyle,
-            SafeModuleHandle instance,
             int x,
             int y,
             int width,

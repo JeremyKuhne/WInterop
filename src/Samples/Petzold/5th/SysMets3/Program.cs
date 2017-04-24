@@ -22,7 +22,7 @@ namespace SysMets3
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.
     /// Original (c) Charles Petzold, 1998
-    /// Figure 4-10, Pages 103-106.
+    /// Figure 4-11, Pages 112-117.
     /// </summary>
     static class Program
     {
@@ -47,11 +47,10 @@ namespace SysMets3
             WindowMethods.RegisterClass(wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
+                module,
                 "SysMets3",
                 "Get System Metrics No. 3",
-                WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL | WindowStyle.WS_HSCROLL,
-                ExtendedWindowStyle.None,
-                module);
+                WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL | WindowStyle.WS_HSCROLL);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
 

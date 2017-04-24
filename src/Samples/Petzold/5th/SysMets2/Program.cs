@@ -46,11 +46,10 @@ namespace SysMets2
             WindowMethods.RegisterClass(wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
+                module,
                 "SysMets2",
                 "Get System Metrics No. 2",
-                WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL,
-                ExtendedWindowStyle.None,
-                module);
+                WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
 
