@@ -227,6 +227,17 @@ namespace WInterop.Gdi
                 int Y,
                 POINT* lpPoint);
 
+            // https://msdn.microsoft.com/en-us/library/dd144910.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern PolyFillMode GetPolyFillMode(
+                DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd145080.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern PolyFillMode SetPolyFillMode(
+                DeviceContext hdc,
+                PolyFillMode iPolyFillMode);
+
             // https://msdn.microsoft.com/en-us/library/dd162811.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool PolyBezier(
@@ -558,6 +569,21 @@ namespace WInterop.Gdi
         public static bool LineTo(DeviceContext deviceContext, int x, int y)
         {
             return Imports.LineTo(deviceContext, x, y);
+        }
+
+        public static PolyFillMode GetPolyFillMode(DeviceContext deviceContext)
+        {
+            return Imports.GetPolyFillMode(deviceContext);
+        }
+
+        public static PolyFillMode SetPolyFillMode(DeviceContext deviceContext, PolyFillMode fillMode)
+        {
+            return Imports.SetPolyFillMode(deviceContext, fillMode);
+        }
+
+        public static bool Polygon(DeviceContext deviceContext, params POINT[] points)
+        {
+            return Imports.Polygon(deviceContext, points, points.Length);
         }
 
         public static bool Polyline(DeviceContext deviceContext, params POINT[] points)

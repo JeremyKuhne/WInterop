@@ -16,12 +16,12 @@ using WInterop.Support;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace Bezier
+namespace AltWind
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.
     /// Original (c) Charles Petzold, 1998
-    /// Figure 5-16, Pages 156-159.
+    /// Figure 5-21, Pages 171-173.
     /// </summary>
     static class Program
     {
@@ -40,15 +40,15 @@ namespace Bezier
                 Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
                 Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
                 MenuName = null,
-                ClassName = "Bezier"
+                ClassName = "AltWind"
             };
 
             WindowMethods.RegisterClass(wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
                 module,
-                "Bezier",
-                "Bezier Splines",
+                "AltWind",
+                "Alternate and Winding Fill Modes",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
@@ -62,70 +62,52 @@ namespace Bezier
             GC.KeepAlive(wndclass);
         }
 
-        static void DrawBezier(DeviceContext dc, POINT[] apt)
+        static POINT[] aptFigure = new POINT[]
         {
-            GdiMethods.PolyBezier(dc, apt);
-            GdiMethods.MoveTo(dc, apt[0].x, apt[0].y);
-            GdiMethods.LineTo(dc, apt[1].x, apt[1].y);
-            GdiMethods.MoveTo(dc, apt[2].x, apt[2].y);
-            GdiMethods.LineTo(dc, apt[3].x, apt[3].y);
-        }
+            new POINT(10, 70),
+            new POINT(50, 70),
+            new POINT(50, 10),
+            new POINT(90, 10),
+            new POINT(90, 50),
+            new POINT(30, 50),
+            new POINT(30, 90),
+            new POINT(70, 90),
+            new POINT(70, 30),
+            new POINT(10, 30)
+        };
 
-        static POINT[] apt = new POINT[4];
+        static int cxClient, cyClient;
 
         static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
         {
             switch (message)
             {
                 case MessageType.WM_SIZE:
-                    int cxClient = Conversion.LowWord(lParam);
-                    int cyClient = Conversion.HighWord(lParam);
-
-                    apt[0].x = cxClient / 4;
-                    apt[0].y = cyClient / 2;
-                    apt[1].x = cxClient / 2;
-                    apt[1].y = cyClient / 4;
-                    apt[2].x = cxClient / 2;
-                    apt[2].y = 3 * cyClient / 4;
-                    apt[3].x = 3 * cxClient / 4;
-                    apt[3].y = cyClient / 2;
-
-                    return (IntPtr)0;
-
-                case MessageType.WM_LBUTTONDOWN:
-                case MessageType.WM_RBUTTONDOWN:
-                case MessageType.WM_MOUSEMOVE:
-                    MouseKeyState mk = (MouseKeyState)Conversion.LowWord(wParam);
-                    if ((mk & (MouseKeyState.MK_LBUTTON | MouseKeyState.MK_RBUTTON)) != 0)
-                    {
-                        using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
-                        {
-                            GdiMethods.SelectObject(dc, GdiMethods.GetStockPen(StockPen.WHITE_PEN));
-                            DrawBezier(dc, apt);
-
-                            if ((mk & MouseKeyState.MK_LBUTTON) != 0)
-                            {
-                                apt[1].x = Conversion.LowWord(lParam);
-                                apt[1].y = Conversion.HighWord(lParam);
-                            }
-
-                            if ((mk & MouseKeyState.MK_RBUTTON) != 0)
-                            {
-                                apt[2].x = Conversion.LowWord(lParam);
-                                apt[2].y = Conversion.HighWord(lParam);
-                            }
-
-                            GdiMethods.SelectObject(dc, GdiMethods.GetStockPen(StockPen.BLACK_PEN));
-                            DrawBezier(dc, apt);
-                        }
-                    }
+                    cxClient = Conversion.LowWord(lParam);
+                    cyClient = Conversion.HighWord(lParam);
                     return (IntPtr)0;
                 case MessageType.WM_PAINT:
-                    GdiMethods.InvalidateRectangle(window, true);
+                    POINT[] apt = new POINT[10];
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
-                        DrawBezier(dc, apt);
+                        GdiMethods.SelectObject(dc, GdiMethods.GetStockBrush(StockBrush.GRAY_BRUSH));
+                        for (int i = 0; i < 10; i++)
+                        {
+                            apt[i].x = cxClient * aptFigure[i].x / 200;
+                            apt[i].y = cyClient * aptFigure[i].y / 100;
+                        }
+
+                        GdiMethods.SetPolyFillMode(dc, PolyFillMode.ALTERNATE);
+                        GdiMethods.Polygon(dc, apt);
+
+                        for (int i = 0; i < 10; i++)
+                        {
+                            apt[i].x += cxClient / 2;
+                        }
+                        GdiMethods.SetPolyFillMode(dc, PolyFillMode.WINDING);
+                        GdiMethods.Polygon(dc, apt);
                     }
+
                     return (IntPtr)0;
                 case MessageType.WM_DESTROY:
                     WindowMethods.PostQuitMessage(0);

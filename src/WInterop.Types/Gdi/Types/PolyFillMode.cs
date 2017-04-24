@@ -7,16 +7,9 @@
 
 namespace WInterop.Gdi.Types
 {
-    // https://msdn.microsoft.com/en-us/library/dd162805.aspx
-    public struct POINT
+    public enum PolyFillMode : int
     {
-        public int x;
-        public int y;
-
-        public POINT(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
+        ALTERNATE      = 1,
+        WINDING        = 2,
     }
 }

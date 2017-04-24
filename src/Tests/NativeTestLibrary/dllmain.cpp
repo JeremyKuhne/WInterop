@@ -14,7 +14,7 @@ BOOL APIENTRY DllMain(
         case DLL_PROCESS_DETACH:
             break;
     }
-
+    ALTERNATE
     return TRUE;
 }
 
