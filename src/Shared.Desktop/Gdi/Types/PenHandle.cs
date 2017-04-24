@@ -9,12 +9,15 @@ using System;
 
 namespace WInterop.Gdi.Types
 {
-    public class BitmapHandle : GdiObjectHandle
+    public class PenHandle : GdiObjectHandle
     {
-        public BitmapHandle() : base() { }
+        public PenHandle() : base() { }
 
-        public BitmapHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
+        public PenHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
+
+        static public implicit operator PenHandle(IntPtr handle)
         {
+            return new PenHandle(handle);
         }
     }
 }

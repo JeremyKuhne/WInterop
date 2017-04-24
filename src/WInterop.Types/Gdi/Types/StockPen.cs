@@ -5,16 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
 namespace WInterop.Gdi.Types
 {
-    public class BitmapHandle : GdiObjectHandle
+    // https://msdn.microsoft.com/en-us/library/dd183533.aspx
+    public enum StockPen : int
     {
-        public BitmapHandle() : base() { }
-
-        public BitmapHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
-        {
-        }
+        WHITE_PEN = 6,
+        BLACK_PEN = 7,
+        NULL_PEN = 8,
+        DC_PEN = 19
     }
 }

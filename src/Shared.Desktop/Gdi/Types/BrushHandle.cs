@@ -9,7 +9,7 @@ using System;
 
 namespace WInterop.Gdi.Types
 {
-    public class BrushHandle : GdiObject
+    public class BrushHandle : GdiObjectHandle
     {
         public BrushHandle() : base() { }
 

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 using WInterop.Support.Buffers;
@@ -58,7 +59,7 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183533.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern GdiObject GetStockObject(
+            public static extern GdiObjectHandle GetStockObject(
                 StockObject stockObject);
 
             // https://msdn.microsoft.com/en-us/library/dd183518.aspx
@@ -70,7 +71,7 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern IntPtr SelectObject(
                 DeviceContext hdc,
-                GdiObject hgdiobj);
+                GdiObjectHandle hgdiobj);
 
             // https://msdn.microsoft.com/en-us/library/dd183539.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -100,6 +101,11 @@ namespace WInterop.Gdi
                 uint cPlanes,
                 uint cBitsPerPel,
                 IntPtr lpvBits);
+
+            // https://msdn.microsoft.com/en-us/library/dd144905.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern ObjectType GetObjectType(
+                IntPtr h);
 
             // https://msdn.microsoft.com/en-us/library/dd144925.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -440,10 +446,41 @@ namespace WInterop.Gdi
             yield break;
         }
 
+        /// <summary>
+        /// Selects the given object into the specified device context.
+        /// </summary>
+        /// <returns>The previous object or null if failed OR null if the given object was a region.</returns>
+        public static GdiObjectHandle SelectObject(DeviceContext deviceContext, GdiObjectHandle @object)
+        {
+            IntPtr handle = Imports.SelectObject(deviceContext, @object);
+            if (handle == IntPtr.Zero)
+                return null;
+
+            ObjectType type = Imports.GetObjectType(@object.DangerousGetHandle());
+            if (type == ObjectType.OBJ_REGION)
+            {
+                return null;
+            }
+
+            return GdiObjectHandle.Create(handle, ownsHandle: false);
+        }
+
+        public static GdiObjectHandle GetStockObject(StockObject @object)
+        {
+            IntPtr handle = Imports.GetStockObject((int)@object);
+            return GdiObjectHandle.Create(handle, ownsHandle: false);
+        }
+
         public static BrushHandle GetStockBrush(StockBrush brush)
         {
             IntPtr handle = Imports.GetStockObject((int)brush);
             return new BrushHandle(handle, ownsHandle: false);
+        }
+
+        public static PenHandle GetStockPen(StockPen pen)
+        {
+            IntPtr handle = Imports.GetStockObject((int)pen);
+            return new PenHandle(handle, ownsHandle: false);
         }
 
         public static bool UpdateWindow(WindowHandle window)
@@ -541,6 +578,11 @@ namespace WInterop.Gdi
         public static bool RoundRectangle(DeviceContext deviceContext, int left, int top, int right, int bottom, int cornerWidth, int cornerHeight)
         {
             return Imports.RoundRect(deviceContext, left, top, right, bottom, cornerWidth, cornerHeight);
+        }
+
+        public static bool PolyBezier(DeviceContext deviceContext, params POINT[] points)
+        {
+            return Imports.PolyBezier(deviceContext, points, (uint)points.Length);
         }
     }
 }

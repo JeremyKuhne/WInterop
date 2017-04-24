@@ -7,6 +7,7 @@
 
 namespace WInterop.Gdi.Types
 {
+    // https://msdn.microsoft.com/en-us/library/dd183533.aspx
     public enum StockBrush : int
     {
         WHITE_BRUSH        = 0,
@@ -15,6 +16,7 @@ namespace WInterop.Gdi.Types
         DKGRAY_BRUSH       = 3,
         BLACK_BRUSH        = 4,
         NULL_BRUSH         = 5,
-        HOLLOW_BRUSH       = NULL_BRUSH
+        HOLLOW_BRUSH       = NULL_BRUSH,
+        DC_BRUSH = 18
     }
 }

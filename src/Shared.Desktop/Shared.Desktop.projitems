@@ -24,9 +24,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\BitmapHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\PenHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\BrushHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\DeviceContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\GdiObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\GdiObjectHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiDefines.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\PaintDeviceContext.cs" />
