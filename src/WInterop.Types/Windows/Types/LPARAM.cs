@@ -6,12 +6,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Support;
 
 namespace WInterop.Windows.Types
 {
-    public delegate LRESULT WindowProcedure(
-        WindowHandle hwnd,
-        MessageType uMsg,
-        WPARAM wParam,
-        LPARAM lParam);
+    public struct LPARAM
+    {
+        public IntPtr RawValue;
+
+        public ushort LowWord => Conversion.LowWord(RawValue);
+        public ushort HighWord => Conversion.HighWord(RawValue);
+    }
 }

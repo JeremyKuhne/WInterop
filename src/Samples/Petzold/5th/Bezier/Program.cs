@@ -12,7 +12,6 @@ using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
-using WInterop.Support;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
@@ -73,13 +72,13 @@ namespace Bezier
 
         static POINT[] apt = new POINT[4];
 
-        static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case MessageType.WM_SIZE:
-                    int cxClient = Conversion.LowWord(lParam);
-                    int cyClient = Conversion.HighWord(lParam);
+                    int cxClient = lParam.LowWord;
+                    int cyClient = lParam.HighWord;
 
                     apt[0].x = cxClient / 4;
                     apt[0].y = cyClient / 2;
@@ -90,12 +89,12 @@ namespace Bezier
                     apt[3].x = 3 * cxClient / 4;
                     apt[3].y = cyClient / 2;
 
-                    return (IntPtr)0;
+                    return 0;
 
                 case MessageType.WM_LBUTTONDOWN:
                 case MessageType.WM_RBUTTONDOWN:
                 case MessageType.WM_MOUSEMOVE:
-                    MouseKeyState mk = (MouseKeyState)Conversion.LowWord(wParam);
+                    MouseKeyState mk = (MouseKeyState)wParam.LowWord;
                     if ((mk & (MouseKeyState.MK_LBUTTON | MouseKeyState.MK_RBUTTON)) != 0)
                     {
                         using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
@@ -105,31 +104,31 @@ namespace Bezier
 
                             if ((mk & MouseKeyState.MK_LBUTTON) != 0)
                             {
-                                apt[1].x = Conversion.LowWord(lParam);
-                                apt[1].y = Conversion.HighWord(lParam);
+                                apt[1].x = lParam.LowWord;
+                                apt[1].y = lParam.HighWord;
                             }
 
                             if ((mk & MouseKeyState.MK_RBUTTON) != 0)
                             {
-                                apt[2].x = Conversion.LowWord(lParam);
-                                apt[2].y = Conversion.HighWord(lParam);
+                                apt[2].x = lParam.LowWord;
+                                apt[2].y = lParam.HighWord;
                             }
 
                             GdiMethods.SelectObject(dc, GdiMethods.GetStockPen(StockPen.BLACK_PEN));
                             DrawBezier(dc, apt);
                         }
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_PAINT:
                     GdiMethods.InvalidateRectangle(window, true);
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
                         DrawBezier(dc, apt);
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_DESTROY:
                     WindowMethods.PostQuitMessage(0);
-                    return (IntPtr)0;
+                    return 0;
             }
 
             return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);

@@ -192,7 +192,7 @@ namespace WInterop.Gdi
             return Imports.InvalidateRect(window, &rect, erase);
         }
 
-        public unsafe static bool InvalidateRectangle(WindowHandle window, bool erase)
+        public unsafe static bool InvalidateRectangle(WindowHandle window, bool erase = true)
         {
             return Imports.InvalidateRect(window, null, erase);
         }

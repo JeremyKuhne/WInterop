@@ -12,7 +12,6 @@ using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
-using WInterop.Support;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
@@ -64,7 +63,7 @@ namespace SysMets2
 
         static int cxChar, cxCaps, cyChar, cyClient, iVscrollPos;
 
-        static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -80,12 +79,12 @@ namespace SysMets2
                     WindowMethods.SetScrollRange(window, ScrollBar.SB_VERT, 0, SysMets.sysmetrics.Count - 1, false);
                     WindowMethods.SetScrollPosition(window, ScrollBar.SB_VERT, iVscrollPos, true);
 
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_SIZE:
-                    cyClient = Conversion.HighWord(lParam);
-                    return (IntPtr)0;
+                    cyClient = lParam.HighWord;
+                    return 0;
                 case MessageType.WM_VSCROLL:
-                    switch ((ScrollBarCommand)Conversion.LowWord(wParam))
+                    switch ((ScrollBarCommand)wParam.LowWord)
                     {
                         case ScrollBarCommand.SB_LINEUP:
                             iVscrollPos -= 1;
@@ -100,7 +99,7 @@ namespace SysMets2
                             iVscrollPos += cyClient / cyChar;
                             break;
                         case ScrollBarCommand.SB_THUMBPOSITION:
-                            iVscrollPos = Conversion.HighWord(wParam);
+                            iVscrollPos = wParam.HighWord;
                             break;
                     }
 
@@ -111,7 +110,7 @@ namespace SysMets2
                         WindowMethods.SetScrollPosition(window, ScrollBar.SB_VERT, iVscrollPos, true);
                         GdiMethods.InvalidateRectangle(window, true);
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_PAINT:
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
@@ -128,10 +127,10 @@ namespace SysMets2
                             i++;
                         }
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_DESTROY:
                     WindowMethods.PostQuitMessage(0);
-                    return (IntPtr)0;
+                    return 0;
             }
 
             return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);

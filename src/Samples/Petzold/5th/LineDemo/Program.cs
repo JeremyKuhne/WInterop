@@ -7,12 +7,12 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Extensions.DeviceContextExtensions;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
-using WInterop.Support;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
@@ -64,30 +64,30 @@ namespace LineDemo
 
         static int cxClient, cyClient;
 
-        static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case MessageType.WM_SIZE:
-                    cxClient = Conversion.LowWord(lParam);
-                    cyClient = Conversion.HighWord(lParam);
-                    return (IntPtr)0;
+                    cxClient = lParam.LowWord;
+                    cyClient = lParam.HighWord;
+                    return 0;
                 case MessageType.WM_PAINT:
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
-                        GdiMethods.Rectangle(dc, cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
-                        GdiMethods.MoveTo(dc, 0, 0);
-                        GdiMethods.LineTo(dc, cxClient, cyClient);
-                        GdiMethods.MoveTo(dc, 0, cyClient);
-                        GdiMethods.LineTo(dc, cxClient, 0);
-                        GdiMethods.Ellipse(dc, cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
-                        GdiMethods.RoundRectangle(dc, cxClient / 4, cyClient / 4, 3 * cxClient / 4, 3 * cyClient / 4,
+                        dc.Rectangle(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
+                        dc.MoveTo(0, 0);
+                        dc.LineTo(cxClient, cyClient);
+                        dc.MoveTo(0, cyClient);
+                        dc.LineTo(cxClient, 0);
+                        dc.Ellipse(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
+                        dc.RoundRectangle(cxClient / 4, cyClient / 4, 3 * cxClient / 4, 3 * cyClient / 4,
                             cxClient / 4, cyClient / 4);
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_DESTROY:
                     WindowMethods.PostQuitMessage(0);
-                    return (IntPtr)0;
+                    return 0;
             }
 
             return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);

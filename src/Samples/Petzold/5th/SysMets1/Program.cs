@@ -63,7 +63,7 @@ namespace SysMets1
 
         static int cxChar, cxCaps, cyChar;
 
-        static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -76,7 +76,7 @@ namespace SysMets1
                         cxCaps = ((tm.tmPitchAndFamily & PitchAndFamily.TMPF_FIXED_PITCH) != 0 ? 3 : 2) * cxChar / 2;
                         cyChar = tm.tmHeight + tm.tmExternalLeading;
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_PAINT:
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
@@ -91,10 +91,10 @@ namespace SysMets1
                             i++;
                         }
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_DESTROY:
                     WindowMethods.PostQuitMessage(0);
-                    return (IntPtr)0;
+                    return 0;
             }
 
             return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);

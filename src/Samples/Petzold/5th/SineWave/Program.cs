@@ -12,7 +12,6 @@ using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
-using WInterop.Support;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
@@ -64,14 +63,14 @@ namespace SineWave
 
         static int cxClient, cyClient;
 
-        static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case MessageType.WM_SIZE:
-                    cxClient = Conversion.LowWord(lParam);
-                    cyClient = Conversion.HighWord(lParam);
-                    return (IntPtr)0;
+                    cxClient = lParam.LowWord;
+                    cyClient = lParam.HighWord;
+                    return 0;
                 case MessageType.WM_PAINT:
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
@@ -86,10 +85,10 @@ namespace SineWave
                         }
                         GdiMethods.Polyline(dc, apt);
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_DESTROY:
                     WindowMethods.PostQuitMessage(0);
-                    return (IntPtr)0;
+                    return 0;
             }
 
             return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);

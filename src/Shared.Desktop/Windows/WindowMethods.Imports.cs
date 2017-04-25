@@ -25,13 +25,13 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern WindowHandle GetWindow(
                 WindowHandle hWnd,
-                GetWindowOptions uCmd);
+                GetWindowOption uCmd);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633509.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern WindowHandle GetNextWindow(
                 WindowHandle hWnd,
-                GetWindowOptions uCmd);
+                GetWindowOption uCmd);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633510.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -42,7 +42,7 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern WindowHandle GetAncestor(
                 WindowHandle hWnd,
-                GetWindowOptions gaFlags);
+                GetWindowOption gaFlags);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633514.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -250,11 +250,11 @@ namespace WInterop.Windows
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633572.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern IntPtr DefWindowProcW(
+            public static extern LRESULT DefWindowProcW(
                 WindowHandle hWnd,
                 MessageType Msg,
-                UIntPtr wParam,
-                IntPtr lParam);
+                WPARAM wParam,
+                LPARAM lParam);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644945.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]

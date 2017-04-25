@@ -6,16 +6,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
-using WInterop.Support;
 using WInterop.Windows;
 using WInterop.Windows.Types;
-using System.Linq;
 
 namespace SysMets3
 {
@@ -65,7 +64,7 @@ namespace SysMets3
 
         static int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
 
-        static IntPtr WindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             SCROLLINFO si;
 
@@ -83,10 +82,10 @@ namespace SysMets3
                     // Save the width of the three columns
                     iMaxWidth = 40 * cxChar + 22 * cxCaps;
 
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_SIZE:
-                    cxClient = Conversion.LowWord(lParam);
-                    cyClient = Conversion.HighWord(lParam);
+                    cxClient = lParam.LowWord;
+                    cyClient = lParam.HighWord;
 
                     // Set vertical scroll bar range and page size
                     si = new SCROLLINFO
@@ -103,7 +102,7 @@ namespace SysMets3
                     si.nPage = (uint)(cxClient / cxChar);
                     WindowMethods.SetScrollInfo(window, ScrollBar.SB_HORZ, ref si, true);
 
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_VSCROLL:
                     // Get all the vertical scroll bar information
                     si = new SCROLLINFO
@@ -115,7 +114,7 @@ namespace SysMets3
                     // Save the position for comparison later on
                     int iVertPos = si.nPos;
 
-                    switch ((ScrollBarCommand)Conversion.LowWord(wParam))
+                    switch ((ScrollBarCommand)wParam.LowWord)
                     {
                         case ScrollBarCommand.SB_TOP:
                             si.nPos = si.nMin;
@@ -152,7 +151,7 @@ namespace SysMets3
                         WindowMethods.ScrollWindow(window, 0, cyChar * (iVertPos - si.nPos));
                         GdiMethods.UpdateWindow(window);
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_HSCROLL:
                     // Get all the horizontal scroll bar information
                     si = new SCROLLINFO
@@ -163,7 +162,7 @@ namespace SysMets3
 
                     // Save the position for comparison later on
                     int iHorzPos = si.nPos;
-                    switch ((ScrollBarCommand)Conversion.LowWord(wParam))
+                    switch ((ScrollBarCommand)wParam.LowWord)
                     {
                         case ScrollBarCommand.SB_LINELEFT:
                             si.nPos -= 1;
@@ -193,7 +192,7 @@ namespace SysMets3
                     {
                         WindowMethods.ScrollWindow(window, cxChar * (iHorzPos - si.nPos), 0);
                     }
-                    return (IntPtr)0;
+                    return 0;
 
                 case MessageType.WM_PAINT:
                     PAINTSTRUCT ps;
@@ -229,10 +228,10 @@ namespace SysMets3
                             GdiMethods.SetTextAlignment(dc, TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
                         }
                     }
-                    return (IntPtr)0;
+                    return 0;
                 case MessageType.WM_DESTROY:
                     WindowMethods.PostQuitMessage(0);
-                    return (IntPtr)0;
+                    return 0;
             }
 
             return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);

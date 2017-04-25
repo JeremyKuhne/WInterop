@@ -26,7 +26,7 @@ namespace WInterop.Windows
         /// Gets the specified related Window to get given Window if it exists. Otherwise
         /// returns a null WindowHandle.
         /// </summary>
-        public static WindowHandle GetWindow(WindowHandle window, GetWindowOptions option)
+        public static WindowHandle GetWindow(WindowHandle window, GetWindowOption option)
         {
             return Imports.GetWindow(window, option);
         }
@@ -244,7 +244,7 @@ namespace WInterop.Windows
             return Imports.DispatchMessageW(ref message);
         }
 
-        public static IntPtr DefaultWindowProcedure(WindowHandle window, MessageType message, UIntPtr wParam, IntPtr lParam)
+        public static LRESULT DefaultWindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             return Imports.DefWindowProcW(window, message, wParam, lParam);
         }

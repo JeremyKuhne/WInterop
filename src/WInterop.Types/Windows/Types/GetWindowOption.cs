@@ -7,7 +7,7 @@
 
 namespace WInterop.Windows.Types
 {
-    public enum GetWindowOptions : uint
+    public enum GetWindowOption : uint
     {
         /// <summary>
         /// The retrieved handle identifies the window of the same type that is highest in the Z order.
