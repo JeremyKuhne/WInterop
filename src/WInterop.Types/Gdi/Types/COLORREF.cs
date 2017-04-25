@@ -13,12 +13,12 @@ namespace WInterop.Gdi.Types
     [StructLayout(LayoutKind.Explicit, Size = 4)]
     public struct COLORREF
     {
-        public COLORREF(byte r, byte g, byte b)
+        public COLORREF(byte red, byte green, byte blue)
         {
             Value = 0;
-            R = r;
-            G = g;
-            B = b;
+            R = red;
+            G = green;
+            B = blue;
         }
 
         public COLORREF(uint value)

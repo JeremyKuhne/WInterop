@@ -22,7 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Types\TemporaryErrorMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DeviceContext\DeviceContextExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Window\DeviceContextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Window\WindowExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiMethods.Imports.cs" />

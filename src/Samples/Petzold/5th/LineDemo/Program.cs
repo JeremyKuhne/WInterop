@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Extensions.DeviceContextExtensions;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;

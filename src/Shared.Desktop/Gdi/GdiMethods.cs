@@ -22,7 +22,7 @@ namespace WInterop.Gdi
 
         public unsafe static DeviceContext CreateDeviceContext(string driver, string device)
         {
-            return Imports.CreateDC(driver, device, null, null);
+            return Imports.CreateDCW(driver, device, null, null);
         }
 
         /// <summary>
@@ -130,6 +130,16 @@ namespace WInterop.Gdi
             return new PenHandle(handle, ownsHandle: false);
         }
 
+        public static BrushHandle CreateSolidBrush(COLORREF color)
+        {
+            return Imports.CreateSolidBrush(color);
+        }
+
+        public static BrushHandle CreateSolidBrush(byte red, byte green, byte blue)
+        {
+            return Imports.CreateSolidBrush(new COLORREF(red, green, blue));
+        }
+
         public static bool UpdateWindow(WindowHandle window)
         {
             return Imports.UpdateWindow(window);
@@ -235,14 +245,29 @@ namespace WInterop.Gdi
             return Imports.Rectangle(deviceContext, left, top, right, bottom);
         }
 
+        public static bool Rectangle(DeviceContext deviceContext, RECT rectangle)
+        {
+            return Imports.Rectangle(deviceContext, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom);
+        }
+
         public static bool Ellipse(DeviceContext deviceContext, int left, int top, int right, int bottom)
         {
             return Imports.Ellipse(deviceContext, left, top, right, bottom);
         }
 
+        public static bool RoundRectangle(DeviceContext deviceContext, RECT rectangle, int cornerWidth, int cornerHeight)
+        {
+            return Imports.RoundRect(deviceContext, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom, cornerWidth, cornerHeight);
+        }
+
         public static bool RoundRectangle(DeviceContext deviceContext, int left, int top, int right, int bottom, int cornerWidth, int cornerHeight)
         {
             return Imports.RoundRect(deviceContext, left, top, right, bottom, cornerWidth, cornerHeight);
+        }
+
+        public static bool FillRectangle(DeviceContext deviceContext, RECT rectangle, BrushHandle brush)
+        {
+            return Imports.FillRect(deviceContext, ref rectangle, brush);
         }
 
         public unsafe static bool PolyBezier(DeviceContext deviceContext, params POINT[] points)

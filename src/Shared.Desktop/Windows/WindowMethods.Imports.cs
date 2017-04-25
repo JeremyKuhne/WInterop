@@ -236,7 +236,7 @@ namespace WInterop.Windows
                 WindowHandle hWnd,
                 uint wMsgFilterMin,
                 uint wMsgFilterMax,
-                ProcessMessage wRemoveMsg);
+                PeekMessageOptions wRemoveMsg);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]

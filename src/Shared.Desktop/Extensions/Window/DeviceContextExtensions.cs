@@ -10,7 +10,7 @@ using WInterop.Gdi.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace WInterop.Extensions.DeviceContextExtensions
+namespace WInterop.Extensions.WindowExtensions
 {
     public static partial class DeviceContextExtensions
     {

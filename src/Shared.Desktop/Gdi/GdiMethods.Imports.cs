@@ -37,7 +37,7 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183490.aspx
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern DeviceContext CreateDC(
+            public unsafe static extern DeviceContext CreateDCW(
                 string lpszDriver,
                 string lpszDevice,
                 string lpszOutput,
@@ -308,21 +308,21 @@ namespace WInterop.Gdi
                 int nBottomRect);
 
             // https://msdn.microsoft.com/en-us/library/dd162719.aspx
-            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool FillRect(
                 DeviceContext hDC,
                 [In] ref RECT lprc,
                 BrushHandle hbr);
 
             // https://msdn.microsoft.com/en-us/library/dd144838.aspx
-            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool FrameRect(
                 DeviceContext hDC,
                 [In] ref RECT lprc,
                 BrushHandle hbr);
 
             // https://msdn.microsoft.com/en-us/library/dd145007.aspx
-            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool InvertRect(
                 DeviceContext hDC,
                 [In] ref RECT lprc);
@@ -564,6 +564,78 @@ namespace WInterop.Gdi
             public static extern bool SetWorldTransform(
                 DeviceContext hdc,
                 [In] ref XFORM lpXform);
+
+            // https://msdn.microsoft.com/en-us/library/dd183481.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool CopyRect(
+                out RECT lprcDst,
+                [In] ref RECT lprcSrc);
+
+            // https://msdn.microsoft.com/en-us/library/dd162699.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool EqualRect(
+                [In] ref RECT lprc1,
+                [In] ref RECT lprc2);
+
+            // https://msdn.microsoft.com/en-us/library/dd144994.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool InflateRect(
+                ref RECT lprc,
+                int dx,
+                int dy);
+
+            // https://msdn.microsoft.com/en-us/library/dd145001.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool IntersectRect(
+                out RECT lprcDst,
+                [In] ref RECT lprcSrc1,
+                [In] ref RECT lprcSrc2);
+
+            // https://msdn.microsoft.com/en-us/library/dd145017.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool IsRectEmpty(
+                [In] ref RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd162746.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool OffsetRect(
+                ref RECT lprc,
+                int dx,
+                int dy);
+
+            // https://msdn.microsoft.com/en-us/library/dd162882.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool PtInRect(
+                [In] ref RECT lprc,
+                POINT pt);
+
+            // https://msdn.microsoft.com/en-us/library/dd145085.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool SetRect(
+                out RECT lprc,
+                int xLeft,
+                int yTop,
+                int xRight,
+                int yBottom);
+
+            // https://msdn.microsoft.com/en-us/library/dd145086.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool SetRectEmpty(
+                out RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd145125.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool SubtractRect(
+                out RECT lprcDst,
+                [In] ref RECT lprcSrc1,
+                [In] ref RECT lprcSrc2);
+
+            // https://msdn.microsoft.com/en-us/library/dd145163.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool UnionRect(
+                out RECT lprcDst,
+                [In] ref RECT lprcSrc1,
+                [In] ref RECT lprcSrc2);
         }
     }
 }
