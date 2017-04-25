@@ -17,6 +17,7 @@ using WInterop.FileManagement;
 using WInterop.Resources;
 using WInterop.Support;
 using Xunit;
+using WInterop.Gdi.Types;
 
 namespace DesktopTests.ModuleTests
 {
@@ -149,6 +150,107 @@ namespace DesktopTests.ModuleTests
                     var doubler = ModuleMethods.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
                     doubler(2).Should().Be(4);
                 }
+            }
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate int DoubleDelegateStandard(int value);
+
+        [Fact]
+        public void LoadFunctionStandard()
+        {
+            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH))
+            {
+                handle.IsInvalid.Should().BeFalse();
+                var doubler = ModuleMethods.GetFunctionDelegate<DoubleDelegateStandard>(handle, "DoubleStdCall");
+                doubler(2).Should().Be(4);
+            }
+        }
+
+        [DllImport(NativeTestLibrary, ExactSpelling = true)]
+        public static extern int DoubleStdCall(int value);
+
+        [Fact]
+        public void StdCallViaDllImport()
+        {
+            DoubleStdCall(2).Should().Be(4);
+        }
+
+        [DllImport(NativeTestLibrary, EntryPoint = "IntPointerCheck")]
+        public static extern IntPtr CheckIntAsArray(int[] values);
+
+        [Fact]
+        public unsafe void AsIntArrayInvoke()
+        {
+            int[] values = { 3, 4 };
+
+            fixed (int* v = values)
+            {
+                IntPtr current = (IntPtr)v;
+                IntPtr result = CheckIntAsArray(values);
+
+                // Simple array declaration creates a copy in
+                current.Should().Be(result);
+            }
+        }
+
+        [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
+        public static extern IntPtr CheckStructAsArray(POINT[] points);
+
+        [Fact]
+        public unsafe void AsArrayInvoke()
+        {
+            POINT[] points = { new POINT(1, 2), new POINT(3, 4) };
+
+            fixed(void* p = &points[0])
+            {
+                IntPtr current = (IntPtr)p;
+                IntPtr result = CheckStructAsArray(points);
+
+                // Simple struct array declaration creates a copy in
+                // (even though it is blittable)
+                current.Should().NotBe(result);
+                points[0].x.Should().Be(1);
+            }
+        }
+
+        [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
+        public static extern IntPtr CheckStructAsInOutArray([In, Out]POINT[] points);
+
+        [Fact]
+        public unsafe void AsInOutArrayInvoke()
+        {
+            POINT[] points = { new POINT(1, 2), new POINT(3, 4) };
+
+            fixed (void* p = &points[0])
+            {
+                IntPtr current = (IntPtr)p;
+                IntPtr result = CheckStructAsInOutArray(points);
+
+                // Simple struct array declaration creates a copy both ways
+                // (even though it is blittable)
+                current.Should().NotBe(result);
+                points[0].x.Should().Be(3);
+            }
+        }
+
+        [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
+        public unsafe static extern IntPtr CheckStructAsPointerArray(POINT* points);
+
+        [Fact]
+        public unsafe void AsPointerArrayInvoke()
+        {
+            POINT[] points = { new POINT(1, 2), new POINT(3, 4) };
+
+            fixed (POINT* p = &points[0])
+            {
+                IntPtr current = (IntPtr)p;
+                IntPtr result = CheckStructAsPointerArray(p);
+
+                // No copy for simple struct array when we send a pointer, modification
+                // is as expected
+                current.Should().Be(result);
+                points[0].x.Should().Be(3);
             }
         }
 

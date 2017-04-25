@@ -240,45 +240,45 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd162811.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool PolyBezier(
+            public unsafe static extern bool PolyBezier(
                 DeviceContext hdc,
-                POINT[] lppt,
+                POINT* lppt,
                 uint cPoints);
 
             // https://msdn.microsoft.com/en-us/library/dd162812.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool PolyBezierTo(
+            public unsafe static extern bool PolyBezierTo(
                 DeviceContext hdc,
-                POINT[] lppt,
+                POINT* lppt,
                 uint cCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162813.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool PolyDraw(
+            public unsafe static extern bool PolyDraw(
                 DeviceContext hdc,
-                POINT[] lppt,
-                PointType[] lpbTypes,
+                POINT* lppt,
+                PointType* lpbTypes,
                 int cCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162815.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool Polyline(
+            public unsafe static extern bool Polyline(
                 DeviceContext hdc,
                 POINT[] lppt,
                 int cPoints);
 
             // https://msdn.microsoft.com/en-us/library/dd162816.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool PolylineTo(
+            public unsafe static extern bool PolylineTo(
                 DeviceContext hdc,
-                POINT[] lppt,
+                POINT* lppt,
                 uint cCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162819.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool PolyPolyline(
+            public unsafe static extern bool PolyPolyline(
                 DeviceContext hdc,
-                POINT[] lppt,
+                POINT* lppt,
                 uint[] lpdwPolyPoints,
                 uint cCount);
 
@@ -345,16 +345,16 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd162814.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool Polygon(
+            public unsafe static extern bool Polygon(
                 DeviceContext hdc,
-                POINT[] lpPoints,
+                POINT* lpPoints,
                 int nCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162818.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool PolyPolygon(
+            public unsafe static extern bool PolyPolygon(
                 DeviceContext hdc,
-                POINT[] lpPoints,
+                POINT* lpPoints,
                 int[] lpPolyCounts,
                 int nCount);
 
@@ -377,6 +377,196 @@ namespace WInterop.Gdi
                 int nBottomRect,
                 int nWidth,
                 int nHeight);
+
+            // https://msdn.microsoft.com/en-us/library/dd183434.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool ClientToScreen(
+                WindowHandle hWnd,
+                ref POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dd183466.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool CombineTransform(
+                out XFORM lpxformResult,
+                [In] ref XFORM lpxform1,
+                [In] ref XFORM lpxform2);
+
+            // https://msdn.microsoft.com/en-us/library/dd162474.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public unsafe static extern bool DPtoLP(
+                DeviceContext hdc,
+                POINT* lpPoints,
+                int nCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd144870.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool GetCurrentPositionEx(
+                DeviceContext hdc,
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dn376360.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool GetDisplayAutoRotationPreferences(
+                out ORIENTATION_PREFERENCE pOrientation);
+
+            // https://msdn.microsoft.com/en-us/library/dd144892.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern GraphicsMode GetGraphicsMode(
+                DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd144897.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern MapMode GetMapMode(
+                DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd144945.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool GetViewportExtEx(
+                DeviceContext hdc,
+                out SIZE lpSize);
+
+            // https://msdn.microsoft.com/en-us/library/dd144946.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool GetViewportOrgEx(
+                DeviceContext hdc,
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dd144948.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool GetWindowExtEx(
+                DeviceContext hdc,
+                out SIZE lpSize);
+
+            // https://msdn.microsoft.com/en-us/library/dd144949.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool GetWindowOrgEx(
+                DeviceContext hdc,
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dd144953.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool GetWorldTransform(
+                DeviceContext hdc,
+                out XFORM lpXform);
+
+            // https://msdn.microsoft.com/en-us/library/dd145042.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public unsafe static extern bool LPtoDP(
+                DeviceContext hdc,
+                POINT* lpPoints,
+                int nCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd145046.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public unsafe static extern int MapWindowPoints(
+                WindowHandle hWndFrom,
+                WindowHandle hWndTo,
+                POINT* lpPoints,
+                uint cPoints);
+
+            // https://msdn.microsoft.com/en-us/library/dd145060.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool ModifyWorldTransform(
+                DeviceContext hdc,
+                [In] ref XFORM lpXform,
+                WorldTransformMode iMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd162748.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool OffsetViewportOrgEx(
+                DeviceContext hdc,
+                int nXOffset,
+                int nYOffset,
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dd162749.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool OffsetWindowOrgEx(
+                DeviceContext hdc,
+                int nXOffset,
+                int nYOffset,
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dd162947.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool ScaleViewportExtEx(
+                DeviceContext hdc,
+                int Xnum,
+                int Xdenom,
+                int Ynum,
+                int Ydenom,
+                out SIZE lpSize);
+
+            // https://msdn.microsoft.com/en-us/library/dd162948.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool ScaleWindowExtEx(
+                DeviceContext hdc,
+                int Xnum,
+                int Xdenom,
+                int Ynum,
+                int Ydenom,
+                out SIZE lpSize);
+
+            // https://msdn.microsoft.com/en-us/library/dd162952.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool ScreenToClient(
+                WindowHandle hWnd,
+                ref POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dn376361.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool SetDisplayAutoRotationPreferences(
+                ORIENTATION_PREFERENCE orientation);
+
+            // https://msdn.microsoft.com/en-us/library/dd162977.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetGraphicsMode(
+                DeviceContext hdc,
+                GraphicsMode iMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd162980.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern MapMode SetMapMode(
+                DeviceContext hdc,
+                MapMode fnMapMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd145098.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetViewportExtEx(
+                DeviceContext hdc,
+                int nXExtent,
+                int nYExtent,
+                out SIZE lpSize);
+
+            // https://msdn.microsoft.com/en-us/library/dd145099.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetViewportOrgEx(
+                DeviceContext hdc,
+                int nXExtent,
+                int nYExtent,
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dd145100.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetWindowExtEx(
+                DeviceContext hdc,
+                int nXExtent,
+                int nYExtent,
+                out SIZE lpSize);
+
+            // https://msdn.microsoft.com/en-us/library/dd145101.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetWindowOrgEx(
+                DeviceContext hdc,
+                int nXExtent,
+                int nYExtent,
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/dd145104.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetWorldTransform(
+                DeviceContext hdc,
+                [In] ref XFORM lpXform);
         }
 
         public static int GetDeviceCapability(DeviceContext deviceContext, DeviceCapability capability)
@@ -581,9 +771,12 @@ namespace WInterop.Gdi
             return Imports.SetPolyFillMode(deviceContext, fillMode);
         }
 
-        public static bool Polygon(DeviceContext deviceContext, params POINT[] points)
+        public unsafe static bool Polygon(DeviceContext deviceContext, params POINT[] points)
         {
-            return Imports.Polygon(deviceContext, points, points.Length);
+            fixed (POINT* p = points)
+            {
+                return Imports.Polygon(deviceContext, p, points.Length);
+            }
         }
 
         public static bool Polyline(DeviceContext deviceContext, params POINT[] points)
@@ -606,9 +799,12 @@ namespace WInterop.Gdi
             return Imports.RoundRect(deviceContext, left, top, right, bottom, cornerWidth, cornerHeight);
         }
 
-        public static bool PolyBezier(DeviceContext deviceContext, params POINT[] points)
+        public unsafe static bool PolyBezier(DeviceContext deviceContext, params POINT[] points)
         {
-            return Imports.PolyBezier(deviceContext, points, (uint)points.Length);
+            fixed (POINT* p = points)
+            {
+                return Imports.PolyBezier(deviceContext, p, (uint)points.Length);
+            }
         }
     }
 }
