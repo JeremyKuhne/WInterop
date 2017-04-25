@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Types\TemporaryErrorMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\BitmapHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\PenHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\BrushHandle.cs" />
