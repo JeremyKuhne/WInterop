@@ -60,5 +60,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\VolumeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\Types\WindowClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowMethods.Imports.cs" />
   </ItemGroup>
 </Project>
