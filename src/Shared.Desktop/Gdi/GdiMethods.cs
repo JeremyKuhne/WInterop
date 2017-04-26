@@ -277,5 +277,30 @@ namespace WInterop.Gdi
                 return Imports.PolyBezier(deviceContext, p, (uint)points.Length);
             }
         }
+
+        public static RegionHandle CreateEllipticRegion(int left, int top, int right, int bottom)
+        {
+            return Imports.CreateEllipticRgn(left, top, right, bottom);
+        }
+
+        public static RegionHandle CreateRectangleRegion(int left, int top, int right, int bottom)
+        {
+            return Imports.CreateRectRgn(left, top, right, bottom);
+        }
+
+        public static RegionType CombineRegion(RegionHandle destination, RegionHandle sourceOne, RegionHandle sourceTwo, CombineRegionMode mode)
+        {
+            return Imports.CombineRgn(destination, sourceOne, sourceTwo, mode);
+        }
+
+        public static RegionType SelectClippingRegion(DeviceContext deviceContext, RegionHandle region)
+        {
+            return Imports.SelectClipRgn(deviceContext, region);
+        }
+
+        public static unsafe void SetViewportOrigin(DeviceContext deviceContext, int x, int y)
+        {
+            Imports.SetViewportOrgEx(deviceContext, x, y, null);
+        }
     }
 }

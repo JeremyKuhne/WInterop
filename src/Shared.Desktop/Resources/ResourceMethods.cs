@@ -84,16 +84,26 @@ namespace WInterop.Resources
             public static extern bool DestroyIcon(
                 IntPtr hIcon);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648386.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool DestroyCursor(
+                IntPtr hCursor);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648391.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern SharedCursorHandle LoadCursorW(
                 SafeModuleHandle hInstance,
                 IntPtr lpCursorName);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648386.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool DestroyCursor(
-                IntPtr hCursor);
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648393.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern IntPtr SetCursor(
+                CursorHandle hCursor);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648396.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern int ShowCursor(
+                bool bShow);
         }
 
         /// <summary>
@@ -143,6 +153,16 @@ namespace WInterop.Resources
                 throw Errors.GetIoExceptionForLastError();
 
             return handle;
+        }
+
+        public static CursorHandle SetCursor(CursorHandle cursor)
+        {
+            return Imports.SetCursor(cursor);
+        }
+
+        public static int ShowCursor(bool show)
+        {
+            return Imports.ShowCursor(show);
         }
     }
 }

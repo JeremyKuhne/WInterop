@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
+using WInterop.Support;
 using WInterop.Windows.Types;
 
 namespace WInterop.Gdi
@@ -537,11 +538,11 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd145099.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool SetViewportOrgEx(
+            public unsafe static extern bool SetViewportOrgEx(
                 DeviceContext hdc,
                 int nXExtent,
                 int nYExtent,
-                out POINT lpPoint);
+                POINT* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd145100.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -636,6 +637,235 @@ namespace WInterop.Gdi
                 out RECT lprcDst,
                 [In] ref RECT lprcSrc1,
                 [In] ref RECT lprcSrc2);
+
+            // https://msdn.microsoft.com/en-us/library/dd183465.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType CombineRgn(
+                RegionHandle hrgnDest,
+                RegionHandle hrgnSrc1,
+                RegionHandle hrgnSrc2,
+                CombineRegionMode fnCombineMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd183496.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionHandle CreateEllipticRgn(
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect);
+
+            // https://msdn.microsoft.com/en-us/library/dd183497.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionHandle CreateEllipticRgnIndirect(
+                [In] ref RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd183511.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public unsafe static extern RegionHandle CreatePolygonRgn(
+                POINT* lppt,
+                int cPoints,
+                PolyFillMode fnPolyFillMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd183512.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public unsafe static extern RegionHandle CreatePolyPolygonRgn(
+                POINT* lppt,
+                int[] lpPolyCounts,
+                int nCount,
+                PolyFillMode fnPolyFillMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd183514.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionHandle CreateRectRgn(
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect);
+
+            // https://msdn.microsoft.com/en-us/library/dd183515.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionHandle CreateRectRgnIndirect(
+                [In] ref RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd183516.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionHandle CreateRoundRectRgn(
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect,
+                int nWidthEllipse,
+                int nHeightEllipse);
+
+            // https://msdn.microsoft.com/en-us/library/dd162700.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool EqualRgn(
+                RegionHandle hSrcRgn1,
+                RegionHandle hSrcRgn2);
+
+            // https://msdn.microsoft.com/en-us/library/dd162706.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public unsafe static extern RegionHandle ExtCreateRegion(
+                [In] ref XFORM lpXform,
+                uint nCount,
+                RGNDATA* lpRgnData);
+
+            // https://msdn.microsoft.com/en-us/library/dd162720.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool FillRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn,
+                BrushHandle hbr);
+
+            // https://msdn.microsoft.com/en-us/library/dd144839.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool FrameRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn,
+                BrushHandle hbr,
+                int nWidth,
+                int nHeight);
+
+            // https://msdn.microsoft.com/en-us/library/dd144920.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern uint GetRegionData(
+                RegionHandle hRgn,
+                uint dwCount,
+                IntPtr lpRgnData);
+
+            // https://msdn.microsoft.com/en-us/library/dd144921.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType GetRgnBox(
+                RegionHandle hrgn,
+                out RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd145008.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool InvertRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn);
+
+            // https://msdn.microsoft.com/en-us/library/dd162747.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType OffsetRgn(
+                RegionHandle hrgn,
+                int nXOffset,
+                int nYOffset);
+
+            // https://msdn.microsoft.com/en-us/library/dd162767.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool PaintRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn);
+
+            // https://msdn.microsoft.com/en-us/library/dd162883.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool PtInRegion(
+                RegionHandle hrgn,
+                int X,
+                int Y);
+
+            // https://msdn.microsoft.com/en-us/library/dd162906.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool RectInRegion(
+                RegionHandle hrgn,
+                [In] ref RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd145087.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetRectRgn(
+                RegionHandle hrgn,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect);
+
+            // https://msdn.microsoft.com/en-us/library/dd162702.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType ExcludeClipRect(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect);
+
+            // https://msdn.microsoft.com/en-us/library/dd162712.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType ExtSelectClipRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn,
+                CombineRegionMode fnMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd144865.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType GetClipBox(
+                DeviceContext hdc,
+                [In] ref RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd144866.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern int GetClipRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn);
+
+            // https://msdn.microsoft.com/en-us/library/dd144899.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern int GetMetaRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn);
+
+            // https://msdn.microsoft.com/en-us/library/dd144918.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern int GetRandomRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn,
+                int iNum);
+
+            // https://msdn.microsoft.com/en-us/library/dd144998.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType IntersectClipRect(
+                DeviceContext hdc,
+                int nLeftRect,
+                int nTopRect,
+                int nRightRect,
+                int nBottomRect);
+
+            // https://msdn.microsoft.com/en-us/library/dd162745.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType OffsetClipRgn(
+                DeviceContext hdc,
+                int nXOffset,
+                int nYOffset);
+
+            // https://msdn.microsoft.com/en-us/library/dd162890.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern BOOL PtVisible(
+                DeviceContext hdc,
+                int X,
+                int Y);
+
+            // https://msdn.microsoft.com/en-us/library/dd162908.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern BOOL RectVisible(
+                DeviceContext hdc,
+                [In] ref RECT lprc);
+
+            // https://msdn.microsoft.com/en-us/library/dd162954(v=vs.85).aspx
+            [DllImport(Libraries.Gdi32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SelectClipPath(
+                DeviceContext hdc,
+                CombineRegionMode iMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd162955.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType SelectClipRgn(
+                DeviceContext hdc,
+                RegionHandle hrgn);
+
+            // https://msdn.microsoft.com/en-us/library/dd145075.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RegionType SetMetaRgn(
+                DeviceContext hdc);
         }
     }
 }
