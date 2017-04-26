@@ -7,14 +7,10 @@
 
 namespace WInterop.Resources.Types
 {
-    public class SharedCursorHandle : CursorHandle
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648381.aspx
+    public enum CursorState : uint
     {
-        public SharedCursorHandle() : base(ownsHandle: false) { }
-
-        protected override bool ReleaseHandle()
-        {
-            // Shared handles shouldn't be destroyed
-            return true;
-        }
+        CURSOR_SHOWING    = 0x00000001,
+        CURSOR_SUPPRESSED = 0x00000002
     }
 }

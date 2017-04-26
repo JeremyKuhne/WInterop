@@ -84,10 +84,55 @@ namespace WInterop.Resources
             public static extern bool DestroyIcon(
                 IntPtr hIcon);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648383.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static unsafe extern bool ClipCursor(
+                RECT* lpRect);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648384.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern CursorHandle CopyCursor(
+                CursorHandle pcur);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648385.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern CursorHandle CreateCursor(
+                SafeModuleHandle hInst,
+                int xHotSpot,
+                int yHotSpot,
+                int nWidth,
+                int nHeight,
+                byte[] pvANDPlane,
+                byte[] pvXORPlane);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648386.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool DestroyCursor(
                 IntPtr hCursor);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648387.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetClipCursor(
+                out RECT lpRect);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648388.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern SharedCursorHandle GetCursor();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648389.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetCursorInfo(
+                ref CURSORINFO pci);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648390.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetCursorPos(
+                out POINT lpPoint);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa969464.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetPhysicalCursorPos(
+                out POINT lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648391.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -95,10 +140,33 @@ namespace WInterop.Resources
                 SafeModuleHandle hInstance,
                 IntPtr lpCursorName);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648392.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern SharedCursorHandle LoadCursorFromFileW(
+                IntPtr lpFileName);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648393.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern IntPtr SetCursor(
+            public static extern SharedCursorHandle SetCursor(
                 CursorHandle hCursor);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648394.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetCursorPos(
+                int X,
+                int Y);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa969465.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetPhysicalCursorPos(
+                int X,
+                int Y);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648395.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetSystemCursor(
+                CursorHandle hcur,
+                SystemCursor id);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648396.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -160,9 +228,60 @@ namespace WInterop.Resources
             return Imports.SetCursor(cursor);
         }
 
+        /// <summary>
+        /// Replaces the specified system cursor with the given cursor. The cursor will
+        /// be destroyed and as such must not be loaded from a resource. Use CopyCursor
+        /// on cursors loaded from resources before calling this method.
+        /// </summary>
+        public static void SetSystemCursor(CursorHandle cursor, SystemCursor id)
+        {
+            if (!Imports.SetSystemCursor(cursor, id))
+                throw Errors.GetIoExceptionForLastError();
+
+            // SetSystemCursor destroys passed in cursors
+            cursor.SetHandleAsInvalid();
+        }
+
         public static int ShowCursor(bool show)
         {
             return Imports.ShowCursor(show);
+        }
+
+        public static CursorHandle CopyCursor(CursorHandle cursor)
+        {
+            CursorHandle copy = Imports.CopyCursor(cursor);
+            if (copy.IsInvalid)
+                throw Errors.GetIoExceptionForLastError();
+
+            return copy;
+        }
+
+        public static POINT GetCursorPosition()
+        {
+            if (!Imports.GetCursorPos(out POINT point))
+                throw Errors.GetIoExceptionForLastError();
+
+            return point;
+        }
+
+        public static POINT GetPhysicalCursorPosition()
+        {
+            if (!Imports.GetPhysicalCursorPos(out POINT point))
+                throw Errors.GetIoExceptionForLastError();
+
+            return point;
+        }
+
+        public static void SetCursorPosition(int x, int y)
+        {
+            if (!Imports.SetCursorPos(x, y))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static void SetPhysicalCursorPosition(int x, int y)
+        {
+            if (!Imports.SetPhysicalCursorPos(x, y))
+                throw Errors.GetIoExceptionForLastError();
         }
     }
 }

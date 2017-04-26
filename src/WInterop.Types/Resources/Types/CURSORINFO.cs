@@ -5,16 +5,17 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using WInterop.Gdi.Types;
+
 namespace WInterop.Resources.Types
 {
-    public class SharedCursorHandle : CursorHandle
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648381.aspx
+    public struct CURSORINFO
     {
-        public SharedCursorHandle() : base(ownsHandle: false) { }
-
-        protected override bool ReleaseHandle()
-        {
-            // Shared handles shouldn't be destroyed
-            return true;
-        }
+        public uint cbSize;
+        public CursorState flags;
+        public IntPtr hCursor;
+        public POINT ptScreenPos;
     }
 }
