@@ -7,7 +7,7 @@
 
 namespace WInterop.Windows.Types
 {
-    public enum VirtualKey : ushort
+    public enum VirtualKey : int
     {
         VK_LBUTTON        = 0x01,
         VK_RBUTTON        = 0x02,

@@ -134,6 +134,17 @@ namespace WInterop.Windows
             public static extern bool IsWindowVisible(
                 WindowHandle hWnd);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646303.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool IsWindowEnabled(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646291.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool EnableWindow(
+                WindowHandle hWnd,
+                bool bEnable);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633524.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool IsChild(
@@ -325,6 +336,32 @@ namespace WInterop.Windows
                 IntPtr hrgnUpdate,
                 RECT* prcUpdate,
                 ScrollWindowFlags flags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646293.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern short GetAsyncKeyState(
+                VirtualKey vKey);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646294.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern WindowHandle GetFocus();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646300.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetKeyNameTextW(
+                int lParam,
+                IntPtr lpString,
+                int cchSize);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646301.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern short GetKeyState(
+                VirtualKey vKey);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646302.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool GetLastInputInfo(
+                ref LASTINPUTINFO plii);
         }
     }
 }
