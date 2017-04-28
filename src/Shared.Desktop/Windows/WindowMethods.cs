@@ -239,6 +239,11 @@ namespace WInterop.Windows
             return Imports.PeekMessageW(out message, window, minMessage, maxMessage, options);
         }
 
+        public static LRESULT SendMessage(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        {
+            return Imports.SendMessageW(window, message, wParam, lParam);
+        }
+
         public static bool TranslateMessage(ref MSG message)
         {
             return Imports.TranslateMessage(ref message);

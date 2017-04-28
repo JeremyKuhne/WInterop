@@ -16,5 +16,25 @@ namespace WInterop.Windows.Types
 
         public ushort LowWord => Conversion.LowWord(RawValue);
         public ushort HighWord => Conversion.HighWord(RawValue);
+
+        public WPARAM(UIntPtr value)
+        {
+            RawValue = value;
+        }
+
+        public static implicit operator uint(WPARAM value)
+        {
+            return value.RawValue.ToUInt32();
+        }
+
+        public static implicit operator WPARAM(uint value)
+        {
+            return new WPARAM((UIntPtr)value);
+        }
+
+        public static explicit operator VirtualKey(WPARAM value)
+        {
+            return (VirtualKey)value.RawValue.ToUInt32();
+        }
     }
 }

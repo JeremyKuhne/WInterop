@@ -238,6 +238,14 @@ namespace WInterop.Windows
                 uint wMsgFilterMax,
                 PeekMessageOptions wRemoveMsg);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644950.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern LRESULT SendMessageW(
+                WindowHandle hWnd,
+                MessageType Msg,
+                WPARAM wParam,
+                LPARAM lParam);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool TranslateMessage(

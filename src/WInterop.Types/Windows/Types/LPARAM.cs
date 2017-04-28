@@ -16,5 +16,20 @@ namespace WInterop.Windows.Types
 
         public ushort LowWord => Conversion.LowWord(RawValue);
         public ushort HighWord => Conversion.HighWord(RawValue);
+
+        public LPARAM(IntPtr value)
+        {
+            RawValue = value;
+        }
+
+        public static implicit operator int(LPARAM value)
+        {
+            return value.RawValue.ToInt32();
+        }
+
+        public static implicit operator LPARAM(uint value)
+        {
+            return new LPARAM((IntPtr)value);
+        }
     }
 }
