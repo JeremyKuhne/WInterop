@@ -24,12 +24,17 @@ namespace WInterop.Windows.Types
 
         public static implicit operator int(LPARAM value)
         {
-            return value.RawValue.ToInt32();
+            return (int)value.RawValue.ToInt64();
         }
 
         public static implicit operator LPARAM(uint value)
         {
             return new LPARAM((IntPtr)value);
+        }
+
+        public override string ToString()
+        {
+            return RawValue.ToString();
         }
     }
 }

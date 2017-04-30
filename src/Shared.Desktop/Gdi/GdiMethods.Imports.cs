@@ -866,6 +866,28 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType SetMetaRgn(
                 DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd144853.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern BackgroundMode GetBkMode(
+                DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd162965.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern BackgroundMode SetBkMode(
+                DeviceContext hdc,
+                BackgroundMode iBkMode);
+
+            // https://msdn.microsoft.com/en-us/library/dd144852.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern COLORREF GetBkColor(
+                DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd162964.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern COLORREF SetBkColor(
+                DeviceContext hdc,
+                COLORREF crColor);
         }
     }
 }

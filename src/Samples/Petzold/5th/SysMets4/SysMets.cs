@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using WInterop.Windows.Types;
 
-namespace SysMets3
+namespace SysMets4
 {
     public static class SysMets
     {

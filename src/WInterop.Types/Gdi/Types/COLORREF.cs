@@ -38,5 +38,7 @@ namespace WInterop.Gdi.Types
 
         [FieldOffset(0)]
         public uint Value;
+
+        public bool IsInvalid => Value == 0xFFFFFFFF;
     }
 }

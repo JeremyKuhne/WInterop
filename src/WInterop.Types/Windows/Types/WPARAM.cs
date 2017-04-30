@@ -24,7 +24,7 @@ namespace WInterop.Windows.Types
 
         public static implicit operator uint(WPARAM value)
         {
-            return value.RawValue.ToUInt32();
+            return (uint)value.RawValue.ToUInt64();
         }
 
         public static implicit operator WPARAM(uint value)
@@ -35,6 +35,11 @@ namespace WInterop.Windows.Types
         public static explicit operator VirtualKey(WPARAM value)
         {
             return (VirtualKey)value.RawValue.ToUInt32();
+        }
+
+        public override string ToString()
+        {
+            return RawValue.ToString();
         }
     }
 }

@@ -41,6 +41,8 @@ namespace WInterop.Gdi.Types
                     return new PenHandle(handle, ownsHandle);
                 case ObjectType.OBJ_BITMAP:
                     return new BitmapHandle(handle, ownsHandle);
+                case ObjectType.OBJ_FONT:
+                    return new FontHandle(handle, ownsHandle);
                 default:
                     Debug.Fail($"Object type {type} not handled yet.");
                     return new GdiObjectHandle(handle, ownsHandle);

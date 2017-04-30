@@ -16,7 +16,7 @@ using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace SysMets3
+namespace SysMets4
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.

@@ -67,25 +67,7 @@ namespace WInterop.Windows
 
         public static string GetClassName(WindowHandle window)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
-            {
-                int count;
-                while ((count = Imports.GetClassNameW(window, buffer, (int)buffer.CharCapacity)) != 0)
-                {
-                    if (count == buffer.CharCapacity - 1)
-                    {
-                        // The buffer may not be big enough, this api simply truncates
-                        buffer.EnsureCharCapacity(checked(buffer.CharCapacity * 2));
-                    }
-                    else
-                    {
-                        buffer.Length = (uint)count;
-                        return buffer.ToString();
-                    }
-                }
-
-                throw Errors.GetIoExceptionForLastError();
-            });
+            return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetClassNameW(window, buffer, (int)buffer.CharCapacity));
         }
 
         /// <summary>
@@ -319,6 +301,21 @@ namespace WInterop.Windows
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
             return result;
+        }
+
+        public unsafe static int ScrollWindow(WindowHandle window, int dx, int dy, RECT scroll, RECT clip)
+        {
+            int result = Imports.ScrollWindowEx(window, dx, dy, &scroll, &clip, IntPtr.Zero, null, ScrollWindowFlags.SW_ERASE | ScrollWindowFlags.SW_INVALIDATE);
+
+            if (result == 0)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
+        }
+
+        public static string GetKeyNameText(LPARAM lParam)
+        {
+            return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetKeyNameTextW(lParam, buffer, (int)buffer.CharCapacity));
         }
     }
 }

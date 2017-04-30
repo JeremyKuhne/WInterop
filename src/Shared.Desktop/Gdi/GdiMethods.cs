@@ -105,9 +105,7 @@ namespace WInterop.Gdi
 
             ObjectType type = Imports.GetObjectType(@object.DangerousGetHandle());
             if (type == ObjectType.OBJ_REGION)
-            {
                 return null;
-            }
 
             return GdiObjectHandle.Create(handle, ownsHandle: false);
         }
@@ -120,14 +118,17 @@ namespace WInterop.Gdi
 
         public static BrushHandle GetStockBrush(StockBrush brush)
         {
-            IntPtr handle = Imports.GetStockObject((int)brush);
-            return new BrushHandle(handle, ownsHandle: false);
+            return Imports.GetStockObject((int)brush);
         }
 
         public static PenHandle GetStockPen(StockPen pen)
         {
-            IntPtr handle = Imports.GetStockObject((int)pen);
-            return new PenHandle(handle, ownsHandle: false);
+            return Imports.GetStockObject((int)pen);
+        }
+
+        public static FontHandle GetStockFont(StockFont font)
+        {
+            return Imports.GetStockObject((int)font);
         }
 
         public static BrushHandle CreateSolidBrush(COLORREF color)
@@ -301,6 +302,16 @@ namespace WInterop.Gdi
         public static unsafe void SetViewportOrigin(DeviceContext deviceContext, int x, int y)
         {
             Imports.SetViewportOrgEx(deviceContext, x, y, null);
+        }
+
+        public static BackgroundMode SetBackgroundMode(DeviceContext deviceContext, BackgroundMode mode)
+        {
+            return Imports.SetBkMode(deviceContext, mode);
+        }
+
+        public static BackgroundMode GetBackgroundMode(DeviceContext deviceContext)
+        {
+            return Imports.GetBkMode(deviceContext);
         }
     }
 }

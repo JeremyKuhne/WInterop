@@ -350,7 +350,7 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern int GetKeyNameTextW(
                 int lParam,
-                IntPtr lpString,
+                SafeHandle lpString,
                 int cchSize);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646301.aspx
