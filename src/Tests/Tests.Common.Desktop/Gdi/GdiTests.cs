@@ -7,8 +7,10 @@
 
 using FluentAssertions;
 using System.Linq;
+using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
+using WInterop.Windows;
 using WInterop.Windows.Types;
 using Xunit;
 
@@ -61,7 +63,7 @@ namespace DesktopTests.Gdi
         public void GetDeviceContext_NullWindow()
         {
             // Null here should be the entire screen
-            DeviceContext context = GdiMethods.GetDeviceContext(WindowHandle.NullWindowHandle);
+            DeviceContext context = GdiMethods.GetDeviceContext(WindowHandle.Null);
             context.IsInvalid.Should().BeFalse();
             int pixelWidth = GdiMethods.GetDeviceCapability(context, DeviceCapability.HORZRES);
             int pixelHeight = GdiMethods.GetDeviceCapability(context, DeviceCapability.VERTRES);
@@ -71,10 +73,107 @@ namespace DesktopTests.Gdi
         public void GetWindowDeviceContext_NullWindow()
         {
             // Null here should be the entire screen
-            DeviceContext context = GdiMethods.GetWindowDeviceContext(WindowHandle.NullWindowHandle);
+            DeviceContext context = GdiMethods.GetWindowDeviceContext(WindowHandle.Null);
             context.IsInvalid.Should().BeFalse();
             int pixelWidth = GdiMethods.GetDeviceCapability(context, DeviceCapability.HORZRES);
             int pixelHeight = GdiMethods.GetDeviceCapability(context, DeviceCapability.VERTRES);
+        }
+
+        [Fact]
+        public unsafe void AXISINFO_Size()
+        {
+            sizeof(AXISINFO).Should().Be(40);
+        }
+
+        [Fact]
+        public unsafe void AXISINFO_Blittable()
+        {
+            GCHandle.Alloc(new AXISINFO(), GCHandleType.Pinned).Free();
+        }
+
+        [Fact]
+        public unsafe void ENUMLOGFONTEXDV_Size()
+        {
+            sizeof(ENUMLOGFONTEXDV).Should().Be(420);
+        }
+
+        [Fact]
+        public unsafe void ENUMLOGFONTEXDV_Blittable()
+        {
+            GCHandle.Alloc(new ENUMLOGFONTEXDV(), GCHandleType.Pinned).Free();
+        }
+
+        [Fact]
+        public unsafe void DESIGNVECTOR_Size()
+        {
+            sizeof(DESIGNVECTOR).Should().Be(72);
+        }
+
+        [Fact]
+        public unsafe void ENUMLOGFONTEX_Size()
+        {
+            sizeof(ENUMLOGFONTEX).Should().Be(348);
+        }
+
+        [Fact]
+        public unsafe void LOGFONT_Size()
+        {
+            sizeof(LOGFONT).Should().Be(92);
+        }
+
+        [Fact]
+        public unsafe void NEWTEXTMETRIC_Size()
+        {
+            sizeof(NEWTEXTMETRIC).Should().Be(76);
+        }
+
+        [Fact]
+        public unsafe void NEWTEXTMETRICEX_Size()
+        {
+            sizeof(NEWTEXTMETRICEX).Should().Be(100);
+        }
+
+        [Fact]
+        public unsafe void FONTSIGNATURE_Size()
+        {
+            sizeof(FONTSIGNATURE).Should().Be(24);
+        }
+
+        [Fact]
+        public unsafe void EnumFont_Arial()
+        {
+            using (var context = GdiMethods.GetDeviceContext(WindowMethods.GetDesktopWindow()))
+            {
+                var info = GdiMethods.EnumerateFontFamilies(context, CharacterSet.ANSI_CHARSET, "Arial");
+                info.Count().Should().Be(4);
+                var regular = info.First();
+                regular.FontAttributes.elfEnumLogfontEx.FullName.Should().Be("Arial");
+                regular.FontAttributes.elfEnumLogfontEx.Style.Should().Be("Regular");
+                regular.FontAttributes.elfEnumLogfontEx.Script.Should().Be("Western");
+                regular.TextMetrics.ntmTm.ntmFlags.Should().Be(TextMetricFlags.NTM_REGULAR | TextMetricFlags.NTM_TT_OPENTYPE | TextMetricFlags.NTM_DSIG);
+                regular.TextMetrics.ntmTm.tmPitchAndFamily.Should().Be(PitchAndFamily.TMPF_FIXED_PITCH | PitchAndFamily.TMPF_TRUETYPE |
+                    PitchAndFamily.TMPF_VECTOR | PitchAndFamily.FF_SWISS);
+                regular.TextMetrics.ntmFontSig.UnicodeSubsetsOne.Should().Be(
+                    UnicodeSubsetsOne.BasicLatin | UnicodeSubsetsOne.Latin1Supplement | UnicodeSubsetsOne.LatinExtendedA | UnicodeSubsetsOne.LatinExtendedB
+                    | UnicodeSubsetsOne.IPAPhoneticExtensions | UnicodeSubsetsOne.SpacingToneModifier | UnicodeSubsetsOne.CombiningDiacriticalMarks
+                    | UnicodeSubsetsOne.GreekAndCoptic | UnicodeSubsetsOne.Cyrillic | UnicodeSubsetsOne.Armenian | UnicodeSubsetsOne.Hebrew
+                    | UnicodeSubsetsOne.Arabic | UnicodeSubsetsOne.LatinExtendedAdditionalCD | UnicodeSubsetsOne.GreekExtended | UnicodeSubsetsOne.Punctuation);
+                regular.TextMetrics.ntmFontSig.UnicodeSubsetsFour.Should().Be((UnicodeSubsetsFour)0);
+                regular.TextMetrics.ntmFontSig.CodePagesOem.Should().Be(CodePagesOem.ModernGreek | CodePagesOem.Russian | CodePagesOem.Nordic
+                    | CodePagesOem.Arabic | CodePagesOem.CanadianFrench | CodePagesOem.Hebrew | CodePagesOem.Icelandic | CodePagesOem.Portugese
+                    | CodePagesOem.Turkish | CodePagesOem.Cyrillic | CodePagesOem.Latin2 | CodePagesOem.Baltic | CodePagesOem.Greek
+                    | CodePagesOem.ArabicAsmo | CodePagesOem.MuiltilingualLatin | CodePagesOem.US);
+            }
+        }
+
+        [Fact]
+        public unsafe void EnumFont_All()
+        {
+            // Just making sure we don't fall over
+            using (var context = GdiMethods.GetDeviceContext(WindowMethods.GetDesktopWindow()))
+            {
+                GdiMethods.EnumerateFontFamilies(context, CharacterSet.DEFAULT_CHARSET, null).Should().NotBeEmpty();
+            }
         }
     }
 }

@@ -11,6 +11,8 @@ namespace WInterop.Gdi.Types
 {
     public class PenHandle : GdiObjectHandle
     {
+        public new static FontHandle Null = new FontHandle(IntPtr.Zero);
+
         public PenHandle() : base() { }
 
         public PenHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }

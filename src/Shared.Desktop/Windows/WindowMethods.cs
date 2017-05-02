@@ -70,6 +70,11 @@ namespace WInterop.Windows
             return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetClassNameW(window, buffer, (int)buffer.CharCapacity));
         }
 
+        public static WindowHandle GetFocus()
+        {
+            return Imports.GetFocus();
+        }
+
         /// <summary>
         /// Returns true if the current thread is a GUI thread.
         /// </summary>
@@ -121,7 +126,7 @@ namespace WInterop.Windows
 
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.MB_OK)
         {
-            return MessageBox(WindowHandle.NullWindowHandle, text, caption, type);
+            return MessageBox(WindowHandle.Null, text, caption, type);
         }
 
         public static CommandId MessageBox(WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.MB_OK)
@@ -161,7 +166,7 @@ namespace WInterop.Windows
             int width = WindowDefines.CW_USEDEFAULT,
             int height = WindowDefines.CW_USEDEFAULT)
         {
-            return CreateWindow(instance, className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.NullWindowHandle, IntPtr.Zero, IntPtr.Zero);
+            return CreateWindow(instance, className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.Null, IntPtr.Zero, IntPtr.Zero);
         }
 
         public unsafe static WindowHandle CreateWindow(
@@ -196,7 +201,7 @@ namespace WInterop.Windows
                     parameters);
             }
 
-            if (window == WindowHandle.NullWindowHandle)
+            if (window == WindowHandle.Null)
                 throw Errors.GetIoExceptionForLastError();
 
             return window;

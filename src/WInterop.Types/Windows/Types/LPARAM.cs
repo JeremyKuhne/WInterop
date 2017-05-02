@@ -32,6 +32,16 @@ namespace WInterop.Windows.Types
             return new LPARAM((IntPtr)value);
         }
 
+        public static implicit operator LPARAM(IntPtr value)
+        {
+            return new LPARAM(value);
+        }
+
+        public static implicit operator IntPtr(LPARAM value)
+        {
+            return value.RawValue;
+        }
+
         public override string ToString()
         {
             return RawValue.ToString();

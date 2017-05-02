@@ -11,12 +11,15 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Runtime.InteropServices;
+
 namespace WInterop.FileManagement.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364226.aspx
     /// <summary>
     /// Used with GetFileInformationByHandleEx and FileIdBothDirectoryInfo/RestartInfo.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct FILE_ID_BOTH_DIR_INFO
     {
         /// <summary>
@@ -38,7 +41,7 @@ namespace WInterop.FileManagement.Types
         public uint FileNameLength;
         public uint EaSize;
         public sbyte ShortNameLength;
-        public unsafe fixed byte ShortName[12 * sizeof(char)];
+        public unsafe fixed char ShortName[12];
         public long FileId;
         // This is a variable length string
         // WCHAR FileName[1];

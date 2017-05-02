@@ -37,5 +37,10 @@ namespace WInterop.Support
         public static implicit operator bool(BOOL b) => b.IsTrue;
 
         public static implicit operator BOOL(bool b) => new BOOL(b);
+
+        public override string ToString()
+        {
+            return IsTrue.ToString();
+        }
     }
 }

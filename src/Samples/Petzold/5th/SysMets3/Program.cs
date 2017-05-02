@@ -53,7 +53,7 @@ namespace SysMets3
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.NullWindowHandle, 0, 0))
+            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
             {
                 WindowMethods.TranslateMessage(ref message);
                 WindowMethods.DispatchMessage(ref message);

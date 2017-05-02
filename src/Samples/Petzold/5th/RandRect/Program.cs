@@ -58,7 +58,7 @@ namespace RandRect
 
             while (true)
             {
-                if (WindowMethods.PeekMessage(out MSG message, WindowHandle.NullWindowHandle, 0, 0, PeekMessageOptions.PM_REMOVE))
+                if (WindowMethods.PeekMessage(out MSG message, WindowHandle.Null, 0, 0, PeekMessageOptions.PM_REMOVE))
                 {
                     if (message.message == MessageType.WM_QUIT)
                         break;

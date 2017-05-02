@@ -257,7 +257,7 @@ namespace DesktopTests.ModuleTests
         [Fact]
         public void GetEntryModuleFileName()
         {
-            string path = ModuleMethods.GetModuleFileName(ModuleTypes.SafeModuleHandle.NullModuleHandle);
+            string path = ModuleMethods.GetModuleFileName(ModuleTypes.SafeModuleHandle.Null);
             path.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -265,10 +265,10 @@ namespace DesktopTests.ModuleTests
         public void GetEntryModuleHandleAndFileName()
         {
             var module = ModuleMethods.GetModuleHandle(null);
-            module.Should().NotBe(ModuleTypes.SafeModuleHandle.NullModuleHandle);
+            module.Should().NotBe(ModuleTypes.SafeModuleHandle.Null);
             string pathByHandle = ModuleMethods.GetModuleFileName(module);
             pathByHandle.Should().NotBeNullOrWhiteSpace();
-            string pathByDefault = ModuleMethods.GetModuleFileName(ModuleTypes.SafeModuleHandle.NullModuleHandle);
+            string pathByDefault = ModuleMethods.GetModuleFileName(ModuleTypes.SafeModuleHandle.Null);
             // Strangely the path is cased differently when getting the module file name through GetModuleFileNameEx, but not GetModuleFileName.
             pathByHandle.Should().BeEquivalentTo(pathByDefault);
         }
@@ -277,7 +277,7 @@ namespace DesktopTests.ModuleTests
         public void GetEntryModuleInfo()
         {
             var module = ModuleMethods.GetModuleHandle(null);
-            module.Should().NotBe(ModuleTypes.SafeModuleHandle.NullModuleHandle);
+            module.Should().NotBe(ModuleTypes.SafeModuleHandle.Null);
             var info = ModuleMethods.GetModuleInfo(module);
             info.lpBaseOfDll.Should().Be(module.DangerousGetHandle());
         }

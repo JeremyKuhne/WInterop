@@ -29,7 +29,7 @@ namespace WInterop.Multimedia
         public static bool PlaySound(PlaySoundAlias alias, PlaySoundOptions options)
         {
             options |= PlaySoundOptions.SND_ALIAS_ID;
-            return Imports.PlaySoundW((IntPtr)alias, SafeModuleHandle.NullModuleHandle, options);
+            return Imports.PlaySoundW((IntPtr)alias, SafeModuleHandle.Null, options);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace WInterop.Windows.Types
     {
         public IntPtr HWND;
 
-        public static WindowHandle NullWindowHandle = new WindowHandle(IntPtr.Zero);
+        public static WindowHandle Null = new WindowHandle(IntPtr.Zero);
 
         // Special handles for setting position
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545.aspx

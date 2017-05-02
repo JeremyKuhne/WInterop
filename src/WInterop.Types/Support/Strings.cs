@@ -22,9 +22,14 @@ namespace WInterop.Support
         public unsafe static void StringToBuffer(string value, char* destination, int maxCharacters, bool nullTerminate = true)
         {
             int count = maxCharacters;
-            if (count == 0)
+            if (count == 0 || value == null || value.Length == 0)
+            {
+                if (nullTerminate)
+                    *destination = '\0';
                 return;
-            else if (count < 0)
+            }
+
+            if (count < 0)
                 count = value.Length;
             else if (value.Length < count)
                 count = value.Length;

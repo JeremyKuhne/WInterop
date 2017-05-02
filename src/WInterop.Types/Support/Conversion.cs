@@ -112,5 +112,66 @@ namespace WInterop.Support
 
             return new DateTime(OleBaseDate.Ticks + dayOffsetInTicks + fractionalDayTicks);
         }
+
+        /// <summary>
+        /// Endian swaps an unsigned short.
+        /// </summary>
+        /// <param name="source">The unsigned short to swap.</param>
+        /// <returns>The swapped unsigned short.</returns>
+        public static ushort EndianSwap(ushort source)
+        {
+            return (ushort)(((uint)source << 8) | ((uint)source >> 8));
+        }
+
+        /// <summary>
+        /// Endian swaps a short.
+        /// </summary>
+        /// <param name="source">The short to swap.</param>
+        /// <returns>The swapped  short.</returns>
+        public static short EndianSwap(short source) => (short)EndianSwap((ushort)source);
+
+        /// <summary>
+        /// Endian swaps an unsigned int.
+        /// </summary>
+        /// <param name="source">The unsigned int to swap.</param>
+        /// <returns>The swapped unsigned int.</returns>
+        public static uint EndianSwap(uint source)
+        {
+            return ((source << 24)
+                | ((source & 0x0000FF00) << 8)
+                | ((source & 0x00FF0000) >> 8)
+                | (source >> 24));
+        }
+
+        /// <summary>
+        /// Endian swaps an int.
+        /// </summary>
+        /// <param name="source">The int to swap.</param>
+        /// <returns>The swapped int.</returns>
+        public static int EndianSwap(int source) => (int)EndianSwap((uint)source);
+
+        /// <summary>
+        /// Endian swaps an unsigned long.
+        /// </summary>
+        /// <param name="source">The unsigned long to swap.</param>
+        /// <returns>The swapped unsigned long.</returns>
+        public static ulong EndianSwap(ulong source)
+        {
+            return ((source << 56)
+                | ((source & 0x000000000000FF00) << 40)
+                | ((source & 0x0000000000FF0000) << 24)
+                | ((source & 0x00000000FF000000) << 8)
+                | ((source & 0x000000FF00000000) >> 8)
+                | ((source & 0x0000FF0000000000) >> 24)
+                | ((source & 0x00FF000000000000) >> 40)
+                | (source >> 56));
+        }
+
+        /// <summary>
+        /// Endian swaps a long.
+        /// </summary>
+        /// <param name="source">The long to swap.</param>
+        /// <returns>The swapped long.</returns>
+        public static long EndianSwap(long source) => (long)EndianSwap((ulong)source);
     }
 }

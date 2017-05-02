@@ -193,7 +193,7 @@ namespace WInterop.Resources
 
         public static IconHandle LoadIcon(IconId id)
         {
-            IconHandle handle = Imports.LoadIconW(SafeModuleHandle.NullModuleHandle, (IntPtr)id);
+            IconHandle handle = Imports.LoadIconW(SafeModuleHandle.Null, (IntPtr)id);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -216,7 +216,7 @@ namespace WInterop.Resources
 
         public static CursorHandle LoadCursor(CursorId id)
         {
-            CursorHandle handle = Imports.LoadCursorW(SafeModuleHandle.NullModuleHandle, (IntPtr)id);
+            CursorHandle handle = Imports.LoadCursorW(SafeModuleHandle.Null, (IntPtr)id);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -281,6 +281,36 @@ namespace WInterop.Resources
         public static void SetPhysicalCursorPosition(int x, int y)
         {
             if (!Imports.SetPhysicalCursorPos(x, y))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static void CreateCaret(WindowHandle window, BitmapHandle bitmap, int width, int height)
+        {
+            if (!Imports.CreateCaret(window, bitmap ?? BitmapHandle.Null, width, height))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static void DestroyCaret()
+        {
+            if (!Imports.DestroyCaret())
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static void SetCaretPosition(int x, int y)
+        {
+            if (!Imports.SetCaretPos(x, y))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static void ShowCaret(WindowHandle window)
+        {
+            if (!Imports.ShowCaret(window))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static void HideCaret(WindowHandle window)
+        {
+            if (!Imports.HideCaret(window))
                 throw Errors.GetIoExceptionForLastError();
         }
     }

@@ -8,11 +8,11 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Support;
-using WInterop.Windows.Types;
 
 namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd183565.aspx
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct DEVMODE
     {
         public unsafe static ushort s_size = (ushort)sizeof(DEVMODE);
@@ -20,13 +20,7 @@ namespace WInterop.Gdi.Types
         private const int CCHDEVICENAME = 32;
         private const int CCHFORMNAME = 32;
 
-        // If we want to make the struct unblittable we could turn this into a string by using:
-        //
-        // [MarshalAs(UnmanagedType.LPWStr, SizeConst = CCHDEVICENAME)]
-        //
-        // For some reason fixed char makes this struct unblittable and increases it's size by
-        // two bytes.
-        public unsafe fixed byte dmDeviceName[CCHDEVICENAME * sizeof(char)];
+        public unsafe fixed char dmDeviceName[CCHDEVICENAME];
         public ushort dmSpecVersion;
         public ushort dmDriverVersion;
         public ushort dmSize;
@@ -38,9 +32,7 @@ namespace WInterop.Gdi.Types
         public short dmYResolution;
         public short dmTTOption;
         public short dmCollate;
-
-        // [MarshalAs(UnmanagedType.LPWStr, SizeConst = CCHFORMNAME)]
-        public unsafe fixed byte dmFormName[CCHFORMNAME * sizeof(char)];
+        public unsafe fixed char dmFormName[CCHFORMNAME];
         public ushort dmLogPixels;
         public uint dmBitsPerPel;
         public uint dmPelsWidth;
@@ -162,13 +154,13 @@ namespace WInterop.Gdi.Types
         {
             get
             {
-                fixed (byte* dn = dmDeviceName)
-                    return new string((char*)dn);
+                fixed (char* c = dmDeviceName)
+                    return new string(c);
             }
             set
             {
-                fixed (byte* dn = dmDeviceName)
-                    Strings.StringToBuffer(value, (char*)dn, CCHDEVICENAME - 1);
+                fixed (char* c = dmDeviceName)
+                    Strings.StringToBuffer(value, c, CCHDEVICENAME - 1);
             }
         }
 
@@ -176,13 +168,13 @@ namespace WInterop.Gdi.Types
         {
             get
             {
-                fixed (byte* dm = dmFormName)
-                    return new string((char*)dm);
+                fixed (char* c = dmFormName)
+                    return new string(c);
             }
             set
             {
-                fixed (byte* dm = dmFormName)
-                    Strings.StringToBuffer(value, (char*)dm, CCHFORMNAME - 1);
+                fixed (char* c = dmFormName)
+                    Strings.StringToBuffer(value, c, CCHFORMNAME - 1);
             }
         }
     }

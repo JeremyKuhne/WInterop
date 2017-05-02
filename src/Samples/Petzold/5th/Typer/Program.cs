@@ -15,7 +15,7 @@ using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace KeyView1
+namespace Typer
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.
@@ -27,7 +27,7 @@ namespace KeyView1
         [STAThread]
         static void Main()
         {
-            const string szAppName = "KeyView1";
+            const string szAppName = "Typer";
 
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
@@ -49,12 +49,12 @@ namespace KeyView1
             WindowHandle window = WindowMethods.CreateWindow(
                 module,
                 szAppName,
-                "Keyboard Message Viewer #1",
+                "Typing Program",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.NullWindowHandle, 0, 0))
+            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
             {
                 WindowMethods.TranslateMessage(ref message);
                 WindowMethods.DispatchMessage(ref message);
@@ -63,108 +63,198 @@ namespace KeyView1
             GC.KeepAlive(wndclass);
         }
 
-        static int cxClientMax, cyClientMax, cxClient, cyClient, cxChar, cyChar;
-        static int cLinesMax, cLines;
-        static RECT rectScroll;
-        static MSG[] pmsg;
+        static int cxChar, cyChar, cxClient, cyClient, cxBuffer, cyBuffer, xCaret, yCaret;
+        static CharacterSet dwCharSet = CharacterSet.DEFAULT_CHARSET;
+        static char[,] pBuffer;
 
         static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
+                case MessageType.WM_INPUTLANGCHANGE:
+                    dwCharSet = (CharacterSet)(uint)wParam;
+                    goto case MessageType.WM_CREATE;
                 case MessageType.WM_CREATE:
-                case MessageType.WM_DISPLAYCHANGE:
-                    // Get maximum size of client area
-                    cxClientMax = WindowMethods.GetSystemMetrics(SystemMetric.SM_CXMAXIMIZED);
-                    cyClientMax = WindowMethods.GetSystemMetrics(SystemMetric.SM_CYMAXIMIZED);
-
-                    // Get character size for fixed-pitch font
                     using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
                     {
-                        GdiMethods.SelectObject(dc, GdiMethods.GetStockObject(StockObject.SYSTEM_FIXED_FONT));
-                        GdiMethods.GetTextMetrics(dc, out TEXTMETRIC tm);
-                        cxChar = tm.tmAveCharWidth;
-                        cyChar = tm.tmHeight;
+                        using (FontHandle font = GdiMethods.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
+                            OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
+                        {
+                            GdiMethods.SelectObject(dc, font);
+                            GdiMethods.GetTextMetrics(dc, out TEXTMETRIC tm);
+                            cxChar = tm.tmAveCharWidth;
+                            cyChar = tm.tmHeight;
+                            GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FONT));
+                        }
                     }
-
-                    cLinesMax = cyClientMax / cyChar;
-                    pmsg = new MSG[cLinesMax];
-                    cLines = 0;
-                    goto CalculateScroll;
+                    goto CalculateSize;
                 case MessageType.WM_SIZE:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
-                    CalculateScroll:
+                    CalculateSize:
 
-                    rectScroll.left = 0;
-                    rectScroll.right = cxClient;
-                    rectScroll.top = cyChar;
-                    rectScroll.bottom = cyChar * (cyClient / cyChar);
+                    // calculate window size in characters
+                    cxBuffer = Math.Max(1, cxClient / cxChar);
+                    cyBuffer = Math.Max(1, cyClient / cyChar);
+
+                    // allocate memory for buffer and clear it
+                    pBuffer = new char[cxBuffer, cyBuffer];
+
+                    // set caret to upper left corner
+                    xCaret = 0;
+                    yCaret = 0;
+
+                    if (window == WindowMethods.GetFocus())
+                        ResourceMethods.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+
                     GdiMethods.InvalidateRectangle(window, true);
-
+                    return 0;
+                case MessageType.WM_SETFOCUS:
+                    // create and show the caret
+                    ResourceMethods.CreateCaret(window, null, cxChar, cyChar);
+                    ResourceMethods.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    ResourceMethods.ShowCaret(window);
+                    return 0;
+                case MessageType.WM_KILLFOCUS:
+                    // hide and destroy the caret
+                    ResourceMethods.HideCaret(window);
+                    ResourceMethods.DestroyCaret();
                     return 0;
                 case MessageType.WM_KEYDOWN:
-                case MessageType.WM_KEYUP:
-                case MessageType.WM_CHAR:
-                case MessageType.WM_DEADCHAR:
-                case MessageType.WM_SYSKEYDOWN:
-                case MessageType.WM_SYSKEYUP:
-                case MessageType.WM_SYSCHAR:
-                case MessageType.WM_SYSDEADCHAR:
-                    // Rearrange storage array
-                    for (int i = cLinesMax - 1; i > 0; i--)
+                    switch ((VirtualKey)wParam)
                     {
-                        pmsg[i] = pmsg[i - 1];
-                    }
-                    // Store new message
-                    pmsg[0].hwnd = window;
-                    pmsg[0].message = message;
-                    pmsg[0].wParam = wParam;
-                    pmsg[0].lParam = lParam;
-                    cLines = Math.Min(cLines + 1, cLinesMax);
+                        case VirtualKey.VK_HOME:
+                            xCaret = 0;
+                            break;
+                        case VirtualKey.VK_END:
+                            xCaret = cxBuffer - 1;
+                            break;
+                        case VirtualKey.VK_PRIOR:
+                            yCaret = 0;
+                            break;
+                        case VirtualKey.VK_NEXT:
+                            yCaret = cyBuffer - 1;
+                            break;
+                        case VirtualKey.VK_LEFT:
+                            xCaret = Math.Max(xCaret - 1, 0);
+                            break;
+                        case VirtualKey.VK_RIGHT:
+                            xCaret = Math.Min(xCaret + 1, cxBuffer - 1);
+                            break;
+                        case VirtualKey.VK_UP:
+                            yCaret = Math.Max(yCaret - 1, 0);
+                            break;
+                        case VirtualKey.VK_DOWN:
+                            yCaret = Math.Min(yCaret + 1, cyBuffer - 1);
+                            break;
+                        case VirtualKey.VK_DELETE:
+                            for (int x = xCaret; x < cxBuffer - 1; x++)
+                                pBuffer[x, yCaret] = pBuffer[x + 1, yCaret];
 
-                    // Scroll up the display
-                    WindowMethods.ScrollWindow(window, 0, -cyChar, rectScroll, rectScroll);
-                    break; // i.e., call DefWindowProc so Sys messages work
+                            pBuffer[cxBuffer - 1, yCaret] = ' ';
+                            ResourceMethods.HideCaret(window);
+                            using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                            {
+                                using (FontHandle font = GdiMethods.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
+                                    OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
+                                {
+                                    GdiMethods.SelectObject(dc, font);
+                                    unsafe
+                                    {
+                                        fixed (char* c = &pBuffer[xCaret, yCaret])
+                                            GdiMethods.TextOut(dc, xCaret * cxChar, yCaret * cyChar, c, cxBuffer - xCaret);
+                                    }
+                                    GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FONT));
+                                }
+
+                                ResourceMethods.ShowCaret(window);
+                            }
+                            break;
+                    }
+                    ResourceMethods.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    return 0;
+
+                case MessageType.WM_CHAR:
+                    for (int i = 0; i < lParam.LowWord; i++)
+                    {
+                        switch ((char)wParam)
+                        {
+                            case '\b': // backspace
+                                if (xCaret > 0)
+                                {
+                                    xCaret--;
+                                    WindowMethods.SendMessage(window, MessageType.WM_KEYDOWN, (uint)VirtualKey.VK_DELETE, 1);
+                                }
+                                break;
+                            case '\t': // tab
+                                do
+                                {
+                                    WindowMethods.SendMessage(window, MessageType.WM_CHAR, ' ', 1);
+                                } while (xCaret % 8 != 0);
+                                break;
+                            case '\n': // line feed
+                                if (++yCaret == cyBuffer)
+                                    yCaret = 0;
+                                break;
+                            case '\r': // carriage return
+                                xCaret = 0;
+                                if (++yCaret == cyBuffer)
+                                    yCaret = 0;
+                                break;
+                            case '\x1B': // escape
+                                for (int y = 0; y < cyBuffer; y++)
+                                    for (int x = 0; x < cxBuffer; x++)
+                                        pBuffer[x, y] = ' ';
+                                xCaret = 0;
+                                yCaret = 0;
+                                GdiMethods.InvalidateRectangle(window, false);
+                                break;
+                            default: // character codes
+                                pBuffer[xCaret, yCaret] = (char)wParam;
+                                ResourceMethods.HideCaret(window);
+                                using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                                {
+                                    using (FontHandle font = GdiMethods.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
+                                        OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
+                                    {
+                                        GdiMethods.SelectObject(dc, font);
+                                        unsafe
+                                        {
+                                            fixed (char* c = &pBuffer[xCaret, yCaret])
+                                                GdiMethods.TextOut(dc, xCaret * cxChar, yCaret * cyChar, c, 1);
+                                        }
+                                        GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FONT));
+                                    }
+
+                                    ResourceMethods.ShowCaret(window);
+                                }
+
+                                if (++xCaret == cxBuffer)
+                                {
+                                    xCaret = 0;
+                                    if (++yCaret == cyBuffer)
+                                        yCaret = 0;
+                                }
+                                break;
+                        }
+                    }
+                    ResourceMethods.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    return 0;
                 case MessageType.WM_PAINT:
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
-                        GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FIXED_FONT));
-                        GdiMethods.SetBackgroundMode(dc, BackgroundMode.TRANSPARENT);
-                        GdiMethods.TextOut(dc, 0, 0, "Message        Key       Char     Repeat Scan Ext ALT Prev Tran");
-                        GdiMethods.TextOut(dc, 0, 0, "_______        ___       ____     ______ ____ ___ ___ ____ ____");
-                        for (int i = 0; i < Math.Min(cLines, cyClient / cyChar - 1); i++)
+                        using (FontHandle font = GdiMethods.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
+                            OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
                         {
-                            bool iType;
-                            switch (pmsg[i].message)
+                            GdiMethods.SelectObject(dc, font);
+                            unsafe
                             {
-                                case MessageType.WM_CHAR:
-                                case MessageType.WM_SYSCHAR:
-                                case MessageType.WM_DEADCHAR:
-                                case MessageType.WM_SYSDEADCHAR:
-                                    iType = true;
-                                    break;
-                                default:
-                                    iType = false;
-                                    break;
+                                for (int y = 0; y < cyBuffer; y++)
+                                    fixed (char* c = &pBuffer[0, y])
+                                        GdiMethods.TextOut(dc, 0, y * cyChar, c, cxBuffer);
                             }
-
-                            GdiMethods.TextOut(dc, 0, (cyClient / cyChar - 1 - i) * cyChar,
-                                string.Format(iType
-                                ? "{0,-13} {1,3} {2,15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}"
-                                : "{0,-13} {1,3} {2,-15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}",
-                                    pmsg[i].message,
-                                    pmsg[i].wParam.ToString(),
-                                    iType
-                                        ? $"0x{((uint)pmsg[i].wParam):X4} {(char)(uint)pmsg[i].wParam}"
-                                        : WindowMethods.GetKeyNameText(pmsg[i].lParam),
-                                    pmsg[i].lParam.LowWord,
-                                    pmsg[i].lParam.HighWord & 0xFF,
-                                    (0x01000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
-                                    (0x20000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
-                                    (0x40000000 & pmsg[i].lParam) != 0 ? "Down" : "Up",
-                                    (0x80000000 & pmsg[i].lParam) != 0 ? "Up" : "Down"));
+                            GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FONT));
                         }
                     }
                     return 0;

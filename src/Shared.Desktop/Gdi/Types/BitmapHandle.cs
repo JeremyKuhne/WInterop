@@ -11,10 +11,15 @@ namespace WInterop.Gdi.Types
 {
     public class BitmapHandle : GdiObjectHandle
     {
+        public new static BitmapHandle Null = new BitmapHandle(IntPtr.Zero);
+
         public BitmapHandle() : base() { }
 
-        public BitmapHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
+        public BitmapHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
+
+        static public implicit operator BitmapHandle(IntPtr handle)
         {
+            return new BitmapHandle(handle);
         }
     }
 }

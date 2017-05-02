@@ -19,13 +19,13 @@ namespace DesktopTests.Windows
         [Fact]
         public void BasicGetDesktopWindow()
         {
-            WindowMethods.GetDesktopWindow().Should().NotBe(WindowHandle.NullWindowHandle);
+            WindowMethods.GetDesktopWindow().Should().NotBe(WindowHandle.Null);
         }
 
         [Fact]
         public void BasicGetShellWindow()
         {
-            WindowMethods.GetShellWindow().Should().NotBe(WindowHandle.NullWindowHandle);
+            WindowMethods.GetShellWindow().Should().NotBe(WindowHandle.Null);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace DesktopTests.Windows
         [Fact]
         public void GetTopWindow()
         {
-            WindowMethods.GetTopWindow(WindowHandle.NullWindowHandle).Should().NotBe(WindowHandle.NullWindowHandle);
+            WindowMethods.GetTopWindow(WindowHandle.Null).Should().NotBe(WindowHandle.Null);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace DesktopTests.Windows
         [Fact]
         public void GetClassName_NullWindow()
         {
-            Action action = () => WindowMethods.GetClassName(WindowHandle.NullWindowHandle);
+            Action action = () => WindowMethods.GetClassName(WindowHandle.Null);
 
             // Invalid window handle. (1400)
             action.ShouldThrow<IOException>().And.HResult.Should().Be(unchecked((int)0x80070578));
@@ -88,7 +88,7 @@ namespace DesktopTests.Windows
         public void GetOwner_Desktop()
         {
             var window = WindowMethods.GetWindow(WindowMethods.GetDesktopWindow(), GetWindowOption.GW_OWNER);
-            window.Should().Be(WindowHandle.NullWindowHandle);
+            window.Should().Be(WindowHandle.Null);
         }
     }
 }

@@ -145,12 +145,24 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd145133.aspx
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern bool TextOutW(
+            public unsafe static extern bool TextOutW(
                 DeviceContext hdc,
                 int nXStart,
                 int nYStart,
-                string lpString,
+                char* lpString,
                 int cchString);
+
+            // https://msdn.microsoft.com/en-us/library/dd145129.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern int TabbedTextOutW(
+                DeviceContext hdc,
+                int X,
+                int Y,
+                string lpString,
+                int nCount,
+                int nTabPositions,
+                int[] lpnTabStopPositions,
+                int nTabOrigin);
 
             // https://msdn.microsoft.com/en-us/library/dd144941.aspx
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -168,6 +180,61 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern TextAlignment GetTextAlign(
                 DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd145094.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetTextJustification(
+                DeviceContext hdc,
+                int nBreakExtra,
+                int nBreakCount);
+
+            // https://msdn.microsoft.com/en-us/library/dd145092.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern int SetTextCharacterExtra(
+                DeviceContext hdc,
+                int nCharExtra);
+
+            // https://msdn.microsoft.com/en-us/library/dd144933.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern int GetTextCharacterExtra(
+                DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd145093.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern COLORREF SetTextColor(
+                DeviceContext hdc,
+                COLORREF crColor);
+
+            // https://msdn.microsoft.com/en-us/library/dd144934.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern COLORREF GetTextColor(
+                DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd183499.aspx
+            [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern FontHandle CreateFontW(
+                int nHeight,
+                int nWidth,
+                int nEscapement,
+                int nOrientation,
+                FontWeight fnWeight,
+                bool fdwItalic,
+                bool fdwUnderline,
+                bool fdwStrikeOut,
+                uint fdwCharSet,
+                uint fdwOutputPrecision,
+                uint fdwClipPrecision,
+                uint fdwQuality,
+                uint fdwPitchAndFamily,
+                string lpszFace);
+
+            [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern int EnumFontFamiliesExW(
+                DeviceContext hdc,
+                ref LOGFONT lpLogfont,
+                EnumFontFamExProc lpEnumFonFamExProc,
+                LPARAM lParam,
+                uint dwFlags);
 
             // https://msdn.microsoft.com/en-us/library/dd183354.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]

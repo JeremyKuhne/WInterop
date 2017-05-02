@@ -10,9 +10,9 @@ using WInterop.Support;
 
 namespace WInterop.Gdi.Types
 {
-    // https://msdn.microsoft.com/en-us/library/dd145132.aspx
+    // https://msdn.microsoft.com/en-us/library/dd162741.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct TEXTMETRIC
+    public struct NEWTEXTMETRIC
     {
         public int tmHeight;
         public int tmAscent;
@@ -34,5 +34,9 @@ namespace WInterop.Gdi.Types
         public BOOLEAN tmStruckOut;
         public PitchAndFamily tmPitchAndFamily;
         public CharacterSet tmCharSet;
+        public TextMetricFlags ntmFlags;
+        public uint ntmSizeEM;
+        public uint ntmCellHeight;
+        public uint ntmAvgWidth;
     }
 }

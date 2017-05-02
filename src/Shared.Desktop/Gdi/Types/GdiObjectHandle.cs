@@ -16,6 +16,8 @@ namespace WInterop.Gdi.Types
     /// </summary>
     public class GdiObjectHandle : SafeHandleZeroIsInvalid
     {
+        public static GdiObjectHandle Null = new GdiObjectHandle(IntPtr.Zero);
+
         protected GdiObjectHandle() : base(ownsHandle: true) { }
 
         protected GdiObjectHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle) { }

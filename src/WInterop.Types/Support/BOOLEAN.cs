@@ -32,5 +32,10 @@ namespace WInterop.Support
         public static implicit operator bool(BOOLEAN b) => b.IsTrue;
 
         public static implicit operator BOOLEAN(bool b) => new BOOLEAN(b);
+
+        public override string ToString()
+        {
+            return IsTrue.ToString();
+        }
     }
 }

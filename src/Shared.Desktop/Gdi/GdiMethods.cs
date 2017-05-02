@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 using WInterop.Support.Buffers;
 using WInterop.Windows.Types;
@@ -164,9 +165,15 @@ namespace WInterop.Gdi
             return new PaintDeviceContext(window, paintStruct, handle);
         }
 
-        public static bool TextOut(DeviceContext deviceContext, int x, int y, string text)
+        public static unsafe bool TextOut(DeviceContext deviceContext, int x, int y, string text)
         {
-            return Imports.TextOutW(deviceContext, x, y, text, text.Length);
+            fixed (char* s = text)
+                return Imports.TextOutW(deviceContext, x, y, s, text.Length);
+        }
+
+        public static unsafe bool TextOut(DeviceContext deviceContext, int x, int y, char* text, int length)
+        {
+            return Imports.TextOutW(deviceContext, x, y, text, length);
         }
 
         public static unsafe int DrawText(DeviceContext deviceContext, string text, RECT rect, TextFormat format)
@@ -312,6 +319,59 @@ namespace WInterop.Gdi
         public static BackgroundMode GetBackgroundMode(DeviceContext deviceContext)
         {
             return Imports.GetBkMode(deviceContext);
+        }
+
+        public static FontHandle CreateFont(
+            int height,
+            int width,
+            int escapement,
+            int orientation,
+            FontWeight weight,
+            bool italic,
+            bool underline,
+            bool strikeout,
+            CharacterSet characterSet,
+            OutputPrecision outputPrecision,
+            ClippingPrecision clippingPrecision,
+            Quality quality,
+            PitchAndFamily pitchAndFamily,
+            string typeface)
+        {
+            return Imports.CreateFontW(height, width, escapement, orientation, weight, italic, underline, strikeout, (uint)characterSet,
+                (uint)outputPrecision, (uint)clippingPrecision, (uint)quality, (uint)pitchAndFamily, typeface);
+        }
+
+        private static int EnumerateFontCallback(
+            ref ENUMLOGFONTEXDV fontAttributes,
+            ref NEWTEXTMETRICEX textMetrics,
+            FontTypes fontType,
+            LPARAM lParam)
+        {
+            var info = (List<FontInformation>)GCHandle.FromIntPtr(lParam).Target;
+            info.Add(new FontInformation { FontType = fontType, TextMetrics = textMetrics, FontAttributes = fontAttributes });
+            return 1;
+        }
+
+        public static IEnumerable<FontInformation> EnumerateFontFamilies(DeviceContext deviceContext, CharacterSet characterSet, string faceName)
+        {
+            LOGFONT logFont = new LOGFONT
+            {
+                lfCharSet = characterSet,
+                FaceName = faceName
+            };
+
+            List<FontInformation> info = new List<FontInformation>();
+            GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);
+            try
+            {
+                int result = Imports.EnumFontFamiliesExW(deviceContext, ref logFont, EnumerateFontCallback, GCHandle.ToIntPtr(gch), 0);
+            }
+            finally
+            {
+                gch.Free();
+            }
+
+            return info;
         }
     }
 }

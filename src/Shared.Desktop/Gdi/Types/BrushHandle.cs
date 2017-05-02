@@ -11,6 +11,8 @@ namespace WInterop.Gdi.Types
 {
     public class BrushHandle : GdiObjectHandle
     {
+        public new static BrushHandle Null = new BrushHandle(IntPtr.Zero);
+
         public BrushHandle() : base() { }
 
         public BrushHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }

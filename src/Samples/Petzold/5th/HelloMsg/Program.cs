@@ -21,7 +21,7 @@ namespace HelloMsg
         [STAThread]
         static void Main()
         {
-            WindowMethods.MessageBox(WindowHandle.NullWindowHandle, "Hello, Windows 98!", "HelloMsg", 0);
+            WindowMethods.MessageBox(WindowHandle.Null, "Hello, Windows 98!", "HelloMsg", 0);
         }
     }
 }

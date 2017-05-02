@@ -11,6 +11,8 @@ namespace WInterop.Gdi.Types
 {
     public class RegionHandle : GdiObjectHandle
     {
+        public new static RegionHandle Null = new RegionHandle(IntPtr.Zero);
+
         public RegionHandle() : base() { }
 
         public RegionHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }

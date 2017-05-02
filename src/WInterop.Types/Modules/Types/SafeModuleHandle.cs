@@ -19,7 +19,7 @@ namespace WInterop.Modules.Types
     /// </remarks>
     public class SafeModuleHandle : SafeHandleZeroIsInvalid
     {
-        public static SafeModuleHandle NullModuleHandle = new SafeModuleHandle(IntPtr.Zero);
+        public static SafeModuleHandle Null = new SafeModuleHandle(IntPtr.Zero);
 
         public SafeModuleHandle() : this(ownsHandle: false) { }
 

@@ -18,7 +18,7 @@ namespace WInterop.ProcessAndThreads.Types
     {
         public IntPtr HANDLE;
 
-        public static ProcessHandle NullProcessHandle = new ProcessHandle(IntPtr.Zero);
+        public static ProcessHandle Null = new ProcessHandle(IntPtr.Zero);
 
         public ProcessHandle(IntPtr hprocess)
         {
