@@ -215,6 +215,11 @@ namespace WInterop.Gdi
             return Imports.InvalidateRect(window, null, erase);
         }
 
+        public unsafe static bool SetPixel(DeviceContext deviceContext, int x, int y, COLORREF color)
+        {
+            return Imports.SetPixelV(deviceContext, x, y, color);
+        }
+
         public unsafe static bool MoveTo(DeviceContext deviceContext, int x, int y)
         {
             return Imports.MoveToEx(deviceContext, x, y, null);

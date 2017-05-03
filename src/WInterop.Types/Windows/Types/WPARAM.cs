@@ -37,6 +37,11 @@ namespace WInterop.Windows.Types
             return (VirtualKey)value.RawValue.ToUInt32();
         }
 
+        public static explicit operator MouseKeyState(WPARAM value)
+        {
+            return (MouseKeyState)value.RawValue.ToUInt32();
+        }
+
         public override string ToString()
         {
             return RawValue.ToString();

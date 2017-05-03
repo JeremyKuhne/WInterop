@@ -277,6 +277,22 @@ namespace WInterop.Gdi
             public static extern ArcDirection GetArcDirection(
                 DeviceContext hdc);
 
+            // https://msdn.microsoft.com/en-us/library/dd145078.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern COLORREF SetPixel(
+                DeviceContext hdc,
+                int X,
+                int Y,
+                COLORREF crColor);
+
+            // https://msdn.microsoft.com/en-us/library/dd145079.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool SetPixelV(
+                DeviceContext hdc,
+                int X,
+                int Y,
+                COLORREF crColor);
+
             // https://msdn.microsoft.com/en-us/library/dd145029.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool LineTo(
