@@ -36,13 +36,10 @@ namespace HelloWin
             {
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
-                ClassExtraBytes = 0,
-                WindowExtraBytes = 0,
                 Instance = module,
                 Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
                 Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
                 Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
-                MenuName = null,
                 ClassName = szAppName
             };
 
@@ -55,14 +52,13 @@ namespace HelloWin
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
+            GdiMethods.UpdateWindow(window);
 
             while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
             {
                 WindowMethods.TranslateMessage(ref message);
                 WindowMethods.DispatchMessage(ref message);
             }
-
-            GC.KeepAlive(wndclass);
         }
 
         static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)

@@ -13,7 +13,7 @@ namespace WInterop.Windows.Types
     /// Mouse key states for mouse messages
     /// </summary>
     [Flags]
-    public enum MouseKeyState : ushort
+    public enum MouseKey : ushort
     {
         MK_LBUTTON         = 0x0001,
         MK_RBUTTON         = 0x0002,

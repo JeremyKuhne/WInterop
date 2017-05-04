@@ -58,6 +58,11 @@ namespace WInterop.ErrorHandling
                 // Size is in chars
                 uint nSize,
                 string[] Arguments) => Internal.Imports.FormatMessageW(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680627.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern void SetLastError(
+                WindowsError dwErrCode);
         }
 
         // .NET's Win32Exception impements the error code lookup on FormatMessage using FORMAT_MESSAGE_FROM_SYSTEM.
@@ -111,6 +116,11 @@ namespace WInterop.ErrorHandling
         public static WindowsError NtStatusToWinError(NTSTATUS status)
         {
             return (WindowsError)Imports.LsaNtStatusToWinError(status);
+        }
+
+        public static void SetLastError(WindowsError error)
+        {
+            Imports.SetLastError(error);
         }
     }
 }

@@ -207,9 +207,66 @@ namespace WInterop.Windows
             return window;
         }
 
+        public static IntPtr GetWindowLong(WindowHandle window, WindowLong index)
+        {
+            IntPtr result = Support.Environment.Is64BitProcess
+                ? (IntPtr)Imports.GetWindowLongPtrW(window, index)
+                : (IntPtr)Imports.GetWindowLongW(window, index);
+
+            if (result == IntPtr.Zero)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
+        }
+
+        public static IntPtr SetWindowLong(WindowHandle window, WindowLong index, IntPtr value)
+        {
+            // Unfortunate, but this is necessary to tell if there is really an error
+            ErrorHandling.ErrorMethods.SetLastError(WindowsError.NO_ERROR);
+
+            IntPtr result = Support.Environment.Is64BitProcess
+                ? (IntPtr)Imports.SetWindowLongPtrW(window, index, value.ToInt64())
+                : (IntPtr)Imports.SetWindowLongW(window, index, value.ToInt32());
+
+            if (result == IntPtr.Zero)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
+        }
+
+        public static IntPtr GetClassLong(WindowHandle window, ClassLong index)
+        {
+            IntPtr result = Support.Environment.Is64BitProcess
+                ? (IntPtr)Imports.GetClassLongPtrW(window, index)
+                : (IntPtr)Imports.GetClassLongW(window, index);
+
+            if (result == IntPtr.Zero)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
+        }
+
+        public static IntPtr SetClassLong(WindowHandle window, ClassLong index, IntPtr value)
+        {
+            IntPtr result = Support.Environment.Is64BitProcess
+                ? (IntPtr)Imports.SetClassLongPtrW(window, index, value.ToInt64())
+                : (IntPtr)Imports.SetClassLongW(window, index, value.ToInt32());
+
+            if (result == IntPtr.Zero)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
+        }
+
         public static bool ShowWindow(WindowHandle window, ShowWindowCommand command)
         {
             return Imports.ShowWindow(window, command);
+        }
+
+        public static void MoveWindow(WindowHandle window, int x, int y, int width, int height, bool repaint)
+        {
+            if (!Imports.MoveWindow(window, x, y, width, height, repaint))
+                throw Errors.GetIoExceptionForLastError();
         }
 
         public static bool GetMessage(out MSG message, WindowHandle window, uint minMessage = 0, uint maxMessage = 0)

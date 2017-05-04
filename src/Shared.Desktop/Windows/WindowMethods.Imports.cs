@@ -27,6 +27,58 @@ namespace WInterop.Windows
                 WindowHandle hWnd,
                 GetWindowOption uCmd);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633584.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetWindowLongW(
+                WindowHandle hWnd,
+                WindowLong nIndex);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633585.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern long GetWindowLongPtrW(
+                WindowHandle hWnd,
+                WindowLong nIndex);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int SetWindowLongW(
+                WindowHandle hWnd,
+                WindowLong nIndex,
+                int dwNewLong);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644898.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern long SetWindowLongPtrW(
+                WindowHandle hWnd,
+                WindowLong nIndex,
+                long dwNewLong);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633580.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetClassLongW(
+                WindowHandle hWnd,
+                ClassLong nIndex);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633581.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern long GetClassLongPtrW(
+                WindowHandle hWnd,
+                ClassLong nIndex);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633588.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int SetClassLongW(
+                WindowHandle hWnd,
+                ClassLong nIndex,
+                int dwNewLong);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633589.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern long SetClassLongPtrW(
+                WindowHandle hWnd,
+                ClassLong nIndex,
+                long dwNewLong);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633509.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern WindowHandle GetNextWindow(
@@ -64,6 +116,16 @@ namespace WInterop.Windows
                 int cx,
                 int cy,
                 WindowPosition uFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633534.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool MoveWindow(
+                WindowHandle hWnd,
+                int X,
+                int Y,
+                int nWidth,
+                int nHeight,
+                bool bRepaint);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646292.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]

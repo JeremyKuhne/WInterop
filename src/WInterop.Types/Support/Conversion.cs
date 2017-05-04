@@ -19,7 +19,22 @@ namespace WInterop.Support
 
         public static ulong HighLowToLong(uint high, uint low)
         {
-            return ((ulong)high) << 32 | ((ulong)low & 0xFFFFFFFFL);
+            return ((ulong)high) << 32 | ((ulong)low & 0xFFFFFFFF);
+        }
+
+        public static long HighLowToLong(int high, int low)
+        {
+            return ((long)high) << 32 | low & 0xFFFFFFFF;
+        }
+
+        public static uint HighLowToInt(ushort high, ushort low)
+        {
+            return ((uint)high) << 16 | ((uint)low & 0xFFFF);
+        }
+
+        public static int HighLowToInt(short high, short low)
+        {
+            return high << 16 | low & 0xFFFF;
         }
 
         public static ushort HighWord(IntPtr value) => (ushort)(((ulong)value >> 16) & 0xFFFF);

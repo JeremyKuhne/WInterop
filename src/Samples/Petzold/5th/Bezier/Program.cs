@@ -32,13 +32,10 @@ namespace Bezier
             {
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
-                ClassExtraBytes = 0,
-                WindowExtraBytes = 0,
                 Instance = module,
                 Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
                 Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
                 Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
-                MenuName = null,
                 ClassName = "Bezier"
             };
 
@@ -51,14 +48,13 @@ namespace Bezier
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
+            GdiMethods.UpdateWindow(window);
 
             while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
             {
                 WindowMethods.TranslateMessage(ref message);
                 WindowMethods.DispatchMessage(ref message);
             }
-
-            GC.KeepAlive(wndclass);
         }
 
         static void DrawBezier(DeviceContext dc, POINT[] apt)
@@ -94,21 +90,21 @@ namespace Bezier
                 case MessageType.WM_LBUTTONDOWN:
                 case MessageType.WM_RBUTTONDOWN:
                 case MessageType.WM_MOUSEMOVE:
-                    MouseKeyState mk = (MouseKeyState)wParam.LowWord;
-                    if ((mk & (MouseKeyState.MK_LBUTTON | MouseKeyState.MK_RBUTTON)) != 0)
+                    MouseKey mk = (MouseKey)wParam.LowWord;
+                    if ((mk & (MouseKey.MK_LBUTTON | MouseKey.MK_RBUTTON)) != 0)
                     {
                         using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
                         {
                             GdiMethods.SelectObject(dc, GdiMethods.GetStockPen(StockPen.WHITE_PEN));
                             DrawBezier(dc, apt);
 
-                            if ((mk & MouseKeyState.MK_LBUTTON) != 0)
+                            if ((mk & MouseKey.MK_LBUTTON) != 0)
                             {
                                 apt[1].x = lParam.LowWord;
                                 apt[1].y = lParam.HighWord;
                             }
 
-                            if ((mk & MouseKeyState.MK_RBUTTON) != 0)
+                            if ((mk & MouseKey.MK_RBUTTON) != 0)
                             {
                                 apt[2].x = lParam.LowWord;
                                 apt[2].y = lParam.HighWord;

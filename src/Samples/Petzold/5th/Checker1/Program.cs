@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Extensions.WindowExtensions;
+using WInterop.ErrorHandling;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
@@ -16,18 +16,20 @@ using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace LineDemo
+namespace Checker1
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.
     /// Original (c) Charles Petzold, 1998
-    /// Figure 5-14, Pages 153-155.
+    /// Figure 7-4, Pages 288-290.
     /// </summary>
     static class Program
     {
         [STAThread]
         static void Main()
         {
+            const string szAppName = "Checker1";
+
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
@@ -37,15 +39,15 @@ namespace LineDemo
                 Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
                 Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
                 Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
-                ClassName = "LineDemo"
+                ClassName = szAppName
             };
 
             WindowMethods.RegisterClass(wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
                 module,
-                "LineDemo",
-                "Line Demonstration",
+                szAppName,
+                "Checker1 Mouse Hit-Test Demo",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
@@ -58,27 +60,55 @@ namespace LineDemo
             }
         }
 
-        static int cxClient, cyClient;
+        const int DIVISIONS = 5;
+        static bool[,] fState = new bool[DIVISIONS, DIVISIONS];
+        static int cxBlock, cyBlock;
 
         static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case MessageType.WM_SIZE:
-                    cxClient = lParam.LowWord;
-                    cyClient = lParam.HighWord;
+                    cxBlock = lParam.LowWord / DIVISIONS;
+                    cyBlock = lParam.HighWord / DIVISIONS;
+                    return 0;
+                case MessageType.WM_LBUTTONDOWN:
+                    int x = lParam.LowWord / cxBlock;
+                    int y = lParam.HighWord / cyBlock;
+                    if (x < DIVISIONS && y < DIVISIONS)
+                    {
+                        fState[x, y] ^= true;
+                        RECT rect = new RECT
+                        {
+                            left = x * cxBlock,
+                            top = y * cyBlock,
+                            right = (x + 1) * cxBlock,
+                            bottom = (y + 1) * cyBlock
+                        };
+                        GdiMethods.InvalidateRectangle(window, rect, false);
+                    }
+                    else
+                    {
+                        ErrorMethods.MessageBeep(0);
+                    }
+
                     return 0;
                 case MessageType.WM_PAINT:
                     using (DeviceContext dc = GdiMethods.BeginPaint(window))
                     {
-                        dc.Rectangle(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
-                        dc.MoveTo(0, 0);
-                        dc.LineTo(cxClient, cyClient);
-                        dc.MoveTo(0, cyClient);
-                        dc.LineTo(cxClient, 0);
-                        dc.Ellipse(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
-                        dc.RoundRectangle(cxClient / 4, cyClient / 4, 3 * cxClient / 4, 3 * cyClient / 4,
-                            cxClient / 4, cyClient / 4);
+                        for (x = 0; x < DIVISIONS; x++)
+                            for (y = 0; y < DIVISIONS; y++)
+                            {
+                                GdiMethods.Rectangle(dc, x * cxBlock, y * cyBlock,
+                                    (x + 1) * cxBlock, (y + 1) * cyBlock);
+                                if (fState[x,y])
+                                {
+                                    GdiMethods.MoveTo(dc, x * cxBlock, y * cyBlock);
+                                    GdiMethods.LineTo(dc, (x + 1) * cxBlock, (y + 1) * cyBlock);
+                                    GdiMethods.MoveTo(dc, x * cxBlock, (y + 1) * cyBlock);
+                                    GdiMethods.LineTo(dc, (x + 1) * cxBlock, y * cyBlock);
+                                }
+                            }
                     }
                     return 0;
                 case MessageType.WM_DESTROY:

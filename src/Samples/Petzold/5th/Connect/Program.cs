@@ -34,13 +34,10 @@ namespace Connect
             {
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
-                ClassExtraBytes = 0,
-                WindowExtraBytes = 0,
                 Instance = module,
                 Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
                 Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
                 Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
-                MenuName = null,
                 ClassName = szAppName
             };
 
@@ -60,8 +57,6 @@ namespace Connect
                 WindowMethods.TranslateMessage(ref message);
                 WindowMethods.DispatchMessage(ref message);
             }
-
-            GC.KeepAlive(wndclass);
         }
 
         const int MAXPOINTS = 1000;
@@ -80,7 +75,7 @@ namespace Connect
                     return 0;
                 case MessageType.WM_MOUSEMOVE:
                     // Machines are way to fast to make this look interesting now, adding TakeEvery
-                    if ((MouseKeyState)wParam == MouseKeyState.MK_LBUTTON && iCount < MAXPOINTS && (sampleCount++ % TakeEvery == 0))
+                    if ((MouseKey)wParam == MouseKey.MK_LBUTTON && iCount < MAXPOINTS && (sampleCount++ % TakeEvery == 0))
                     {
                         pt[iCount].x = lParam.LowWord;
                         pt[iCount++].y = lParam.HighWord;

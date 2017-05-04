@@ -378,5 +378,27 @@ namespace WInterop.Gdi
 
             return info;
         }
+
+        public static bool ScreenToClient(WindowHandle window, ref POINT point)
+        {
+            return Imports.ScreenToClient(window, ref point);
+        }
+
+        public static bool ClientToScreen(WindowHandle window, ref POINT point)
+        {
+            return Imports.ClientToScreen(window, ref point);
+        }
+
+        public unsafe static bool DeviceToLogical(DeviceContext deviceContext, params POINT[] points)
+        {
+            fixed (POINT* p = points)
+                return Imports.DPtoLP(deviceContext, p, points.Length);
+        }
+
+        public unsafe static bool LogicalToDevice(DeviceContext deviceContext, params POINT[] points)
+        {
+            fixed (POINT* p = points)
+                return Imports.LPtoDP(deviceContext, p, points.Length);
+        }
     }
 }

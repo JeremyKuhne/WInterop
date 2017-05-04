@@ -33,13 +33,10 @@ namespace SysMets3
             {
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
-                ClassExtraBytes = 0,
-                WindowExtraBytes = 0,
                 Instance = module,
                 Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
                 Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
                 Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
-                MenuName = null,
                 ClassName = "SysMets3"
             };
 
@@ -52,14 +49,13 @@ namespace SysMets3
                 WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL | WindowStyle.WS_HSCROLL);
 
             WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
+            GdiMethods.UpdateWindow(window);
 
             while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
             {
                 WindowMethods.TranslateMessage(ref message);
                 WindowMethods.DispatchMessage(ref message);
             }
-
-            GC.KeepAlive(wndclass);
         }
 
         static int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;

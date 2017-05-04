@@ -22,12 +22,22 @@ namespace WInterop.Windows.Types
             RawValue = value;
         }
 
+        public LPARAM(short high, short low)
+        {
+            RawValue = (IntPtr)Conversion.HighLowToInt(high, low);
+        }
+
+        public LPARAM(int high, int low)
+        {
+            RawValue = (IntPtr)Conversion.HighLowToInt(checked((short)high), checked((short)low));
+        }
+
         public static implicit operator int(LPARAM value)
         {
             return (int)value.RawValue.ToInt64();
         }
 
-        public static implicit operator LPARAM(uint value)
+        public static implicit operator LPARAM(int value)
         {
             return new LPARAM((IntPtr)value);
         }

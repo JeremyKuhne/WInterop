@@ -22,6 +22,11 @@ namespace WInterop.Windows.Types
             RawValue = value;
         }
 
+        public WPARAM(ushort high, ushort low)
+        {
+            RawValue = (UIntPtr)Conversion.HighLowToInt(high, low);
+        }
+
         public static implicit operator uint(WPARAM value)
         {
             return (uint)value.RawValue.ToUInt64();
@@ -37,9 +42,19 @@ namespace WInterop.Windows.Types
             return (VirtualKey)value.RawValue.ToUInt32();
         }
 
-        public static explicit operator MouseKeyState(WPARAM value)
+        public static explicit operator WPARAM(VirtualKey value)
         {
-            return (MouseKeyState)value.RawValue.ToUInt32();
+            return (uint)value;
+        }
+
+        public static explicit operator MouseKey(WPARAM value)
+        {
+            return (MouseKey)value.RawValue.ToUInt32();
+        }
+
+        public static explicit operator WPARAM(MouseKey value)
+        {
+            return (uint)value;
         }
 
         public override string ToString()
