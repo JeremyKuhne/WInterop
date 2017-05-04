@@ -23,10 +23,10 @@ namespace ScrnSize
         {
             int cxScreen, cyScreen;
 
-            cxScreen = WindowMethods.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
-            cyScreen = WindowMethods.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
+            cxScreen = Windows.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
+            cyScreen = Windows.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
 
-            WindowMethods.MessageBox($"The screen is {cxScreen} pixels wide by {cyScreen} pixels high.", "ScrnSize");
+            Windows.MessageBox($"The screen is {cxScreen} pixels wide by {cyScreen} pixels high.", "ScrnSize");
         }
     }
 }

@@ -32,6 +32,10 @@ namespace WInterop.Gdi.Types
             return GdiMethods.Imports.GetObjectType(handle);
         }
 
+        public static implicit operator GdiObjectHandle(StockFont font) => font;
+        public static implicit operator GdiObjectHandle(StockPen pen) => pen;
+        public static implicit operator GdiObjectHandle(StockBrush brush) => brush;
+
         public static GdiObjectHandle Create(IntPtr handle, bool ownsHandle = false)
         {
             ObjectType type = GdiMethods.Imports.GetObjectType(handle);

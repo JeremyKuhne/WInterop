@@ -8,10 +8,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using WInterop.Gdi;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -36,31 +35,31 @@ namespace RandRect
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = szAppName
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 szAppName,
                 "Random Rectangles",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
             while (true)
             {
-                if (WindowMethods.PeekMessage(out MSG message, WindowHandle.Null, 0, 0, PeekMessageOptions.PM_REMOVE))
+                if (Windows.PeekMessage(out MSG message, 0, 0, PeekMessageOptions.PM_REMOVE))
                 {
                     if (message.message == MessageType.WM_QUIT)
                         break;
-                    WindowMethods.TranslateMessage(ref message);
-                    WindowMethods.DispatchMessage(ref message);
+                    Windows.TranslateMessage(ref message);
+                    Windows.DispatchMessage(ref message);
                 }
 
                 // We're crazy fast 20 years past the source sample,
@@ -82,11 +81,11 @@ namespace RandRect
                     cyClient = lParam.HighWord;
                     return 0;
                 case MessageType.WM_DESTROY:
-                    WindowMethods.PostQuitMessage(0);
+                    Windows.PostQuitMessage(0);
                     return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
 
         static void DrawRectangle(WindowHandle window)
@@ -96,12 +95,11 @@ namespace RandRect
 
             RECT rect = new RECT(rand.Next() % cxClient, rand.Next() % cyClient,
                 rand.Next() % cxClient, rand.Next() % cyClient);
-            using (BrushHandle brush = GdiMethods.CreateSolidBrush(
-                (byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256)))
+            using (BrushHandle brush = Windows.CreateSolidBrush((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256)))
             {
-                using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                using (DeviceContext dc = window.GetDeviceContext())
                 {
-                    GdiMethods.FillRectangle(dc, rect, brush);
+                    dc.FillRectangle(rect, brush);
                 }
             }
         }

@@ -17,9 +17,8 @@ namespace WInterop.Gdi.Types
 
         public FontHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
 
-        static public implicit operator FontHandle(IntPtr handle)
-        {
-            return new FontHandle(handle);
-        }
+        public static implicit operator FontHandle(IntPtr handle) => new FontHandle(handle);
+
+        public static implicit operator FontHandle(StockFont font) => GdiMethods.GetStockFont(font);
     }
 }

@@ -18,10 +18,9 @@ namespace WInterop.Resources.Types
 
         public CursorHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
 
-        static public implicit operator CursorHandle(IntPtr handle)
-        {
-            return new CursorHandle(handle);
-        }
+        public static implicit operator CursorHandle(IntPtr handle) => new CursorHandle(handle);
+
+        public static implicit operator CursorHandle(CursorId id) => ResourceMethods.LoadCursor(id);
 
         protected override bool ReleaseHandle()
         {

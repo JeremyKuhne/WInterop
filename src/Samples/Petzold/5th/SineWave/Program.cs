@@ -7,10 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -33,27 +32,27 @@ namespace SineWave
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = "SineWave"
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 "SineWave",
                 "Sine Wave Using PolyLine",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
+            while (Windows.GetMessage(out MSG message))
             {
-                WindowMethods.TranslateMessage(ref message);
-                WindowMethods.DispatchMessage(ref message);
+                Windows.TranslateMessage(ref message);
+                Windows.DispatchMessage(ref message);
             }
         }
 
@@ -68,10 +67,10 @@ namespace SineWave
                     cyClient = lParam.HighWord;
                     return 0;
                 case MessageType.WM_PAINT:
-                    using (DeviceContext dc = GdiMethods.BeginPaint(window))
+                    using (DeviceContext dc = window.BeginPaint())
                     {
-                        GdiMethods.MoveTo(dc, 0, cyClient / 2);
-                        GdiMethods.LineTo(dc, cxClient, cyClient / 2);
+                        dc.MoveTo(0, cyClient / 2);
+                        dc.LineTo(cxClient, cyClient / 2);
 
                         POINT[] apt = new POINT[1000];
                         for (int i = 0; i < apt.Length; i++)
@@ -79,15 +78,15 @@ namespace SineWave
                             apt[i].x = i * cxClient / apt.Length;
                             apt[i].y = (int)(cyClient / 2 * (1 - Math.Sin(Math.PI * 2 * i / apt.Length)));
                         }
-                        GdiMethods.Polyline(dc, apt);
+                        dc.Polyline(apt);
                     }
                     return 0;
                 case MessageType.WM_DESTROY:
-                    WindowMethods.PostQuitMessage(0);
+                    Windows.PostQuitMessage(0);
                     return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
     }
 }

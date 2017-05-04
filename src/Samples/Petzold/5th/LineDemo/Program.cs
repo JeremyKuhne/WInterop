@@ -8,10 +8,8 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
-using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -34,13 +32,13 @@ namespace LineDemo
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = "LineDemo"
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
                 module,
@@ -48,13 +46,13 @@ namespace LineDemo
                 "Line Demonstration",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
+            while (Windows.GetMessage(out MSG message))
             {
-                WindowMethods.TranslateMessage(ref message);
-                WindowMethods.DispatchMessage(ref message);
+                Windows.TranslateMessage(ref message);
+                Windows.DispatchMessage(ref message);
             }
         }
 
@@ -69,7 +67,7 @@ namespace LineDemo
                     cyClient = lParam.HighWord;
                     return 0;
                 case MessageType.WM_PAINT:
-                    using (DeviceContext dc = GdiMethods.BeginPaint(window))
+                    using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.Rectangle(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
                         dc.MoveTo(0, 0);
@@ -82,11 +80,11 @@ namespace LineDemo
                     }
                     return 0;
                 case MessageType.WM_DESTROY:
-                    WindowMethods.PostQuitMessage(0);
+                    Windows.PostQuitMessage(0);
                     return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
     }
 }

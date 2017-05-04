@@ -15,6 +15,8 @@ using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
+using WInterop.Extensions.WindowExtensions;
+
 namespace Typer
 {
     /// <summary>
@@ -35,27 +37,27 @@ namespace Typer
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = szAppName
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 szAppName,
                 "Typing Program",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
+            while (Windows.GetMessage(out MSG message))
             {
-                WindowMethods.TranslateMessage(ref message);
-                WindowMethods.DispatchMessage(ref message);
+                Windows.TranslateMessage(ref message);
+                Windows.DispatchMessage(ref message);
             }
         }
 
@@ -71,16 +73,16 @@ namespace Typer
                     dwCharSet = (CharacterSet)(uint)wParam;
                     goto case MessageType.WM_CREATE;
                 case MessageType.WM_CREATE:
-                    using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                    using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        using (FontHandle font = GdiMethods.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
+                        using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
                             OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
                         {
-                            GdiMethods.SelectObject(dc, font);
-                            GdiMethods.GetTextMetrics(dc, out TEXTMETRIC tm);
+                            dc.SelectObject(font);
+                            dc.GetTextMetrics(out TEXTMETRIC tm);
                             cxChar = tm.tmAveCharWidth;
                             cyChar = tm.tmHeight;
-                            GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FONT));
+                            dc.SelectObject(StockFont.SYSTEM_FONT);
                         }
                     }
                     goto CalculateSize;
@@ -101,21 +103,21 @@ namespace Typer
                     xCaret = 0;
                     yCaret = 0;
 
-                    if (window == WindowMethods.GetFocus())
-                        ResourceMethods.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    if (window == Windows.GetFocus())
+                        Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
 
-                    GdiMethods.InvalidateRectangle(window, true);
+                    window.Invalidate(true);
                     return 0;
                 case MessageType.WM_SETFOCUS:
                     // create and show the caret
-                    ResourceMethods.CreateCaret(window, null, cxChar, cyChar);
-                    ResourceMethods.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
-                    ResourceMethods.ShowCaret(window);
+                    window.CreateCaret(null, cxChar, cyChar);
+                    Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    window.ShowCaret();
                     return 0;
                 case MessageType.WM_KILLFOCUS:
                     // hide and destroy the caret
-                    ResourceMethods.HideCaret(window);
-                    ResourceMethods.DestroyCaret();
+                    window.HideCaret();
+                    Windows.DestroyCaret();
                     return 0;
                 case MessageType.WM_KEYDOWN:
                     switch ((VirtualKey)wParam)
@@ -149,26 +151,26 @@ namespace Typer
                                 pBuffer[x, yCaret] = pBuffer[x + 1, yCaret];
 
                             pBuffer[cxBuffer - 1, yCaret] = ' ';
-                            ResourceMethods.HideCaret(window);
-                            using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                            window.HideCaret();
+                            using (DeviceContext dc = window.GetDeviceContext())
                             {
-                                using (FontHandle font = GdiMethods.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
+                                using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
                                     OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
                                 {
-                                    GdiMethods.SelectObject(dc, font);
+                                    dc.SelectObject(font);
                                     unsafe
                                     {
                                         fixed (char* c = &pBuffer[xCaret, yCaret])
-                                            GdiMethods.TextOut(dc, xCaret * cxChar, yCaret * cyChar, c, cxBuffer - xCaret);
+                                            dc.TextOut(xCaret * cxChar, yCaret * cyChar, c, cxBuffer - xCaret);
                                     }
-                                    GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FONT));
+                                    dc.SelectObject(StockFont.SYSTEM_FONT);
                                 }
 
-                                ResourceMethods.ShowCaret(window);
+                                window.ShowCaret();
                             }
                             break;
                     }
-                    ResourceMethods.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
                     return 0;
 
                 case MessageType.WM_CHAR:
@@ -180,13 +182,13 @@ namespace Typer
                                 if (xCaret > 0)
                                 {
                                     xCaret--;
-                                    WindowMethods.SendMessage(window, MessageType.WM_KEYDOWN, (uint)VirtualKey.VK_DELETE, 1);
+                                    window.SendMessage(MessageType.WM_KEYDOWN, (uint)VirtualKey.VK_DELETE, 1);
                                 }
                                 break;
                             case '\t': // tab
                                 do
                                 {
-                                    WindowMethods.SendMessage(window, MessageType.WM_CHAR, ' ', 1);
+                                    window.SendMessage(MessageType.WM_CHAR, ' ', 1);
                                 } while (xCaret % 8 != 0);
                                 break;
                             case '\n': // line feed
@@ -204,26 +206,26 @@ namespace Typer
                                         pBuffer[x, y] = ' ';
                                 xCaret = 0;
                                 yCaret = 0;
-                                GdiMethods.InvalidateRectangle(window, false);
+                                window.Invalidate(false);
                                 break;
                             default: // character codes
                                 pBuffer[xCaret, yCaret] = (char)wParam;
-                                ResourceMethods.HideCaret(window);
-                                using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                                window.HideCaret();
+                                using (DeviceContext dc = window.GetDeviceContext())
                                 {
-                                    using (FontHandle font = GdiMethods.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
+                                    using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
                                         OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
                                     {
-                                        GdiMethods.SelectObject(dc, font);
+                                        dc.SelectObject(font);
                                         unsafe
                                         {
                                             fixed (char* c = &pBuffer[xCaret, yCaret])
-                                                GdiMethods.TextOut(dc, xCaret * cxChar, yCaret * cyChar, c, 1);
+                                                dc.TextOut(xCaret * cxChar, yCaret * cyChar, c, 1);
                                         }
-                                        GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FONT));
+                                        dc.SelectObject(StockFont.SYSTEM_FONT);
                                     }
 
-                                    ResourceMethods.ShowCaret(window);
+                                    window.ShowCaret();
                                 }
 
                                 if (++xCaret == cxBuffer)
@@ -235,31 +237,31 @@ namespace Typer
                                 break;
                         }
                     }
-                    ResourceMethods.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
                     return 0;
                 case MessageType.WM_PAINT:
-                    using (DeviceContext dc = GdiMethods.BeginPaint(window))
+                    using (DeviceContext dc = window.BeginPaint())
                     {
-                        using (FontHandle font = GdiMethods.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
+                        using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
                             OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
                         {
-                            GdiMethods.SelectObject(dc, font);
+                            dc.SelectObject(font);
                             unsafe
                             {
                                 for (int y = 0; y < cyBuffer; y++)
                                     fixed (char* c = &pBuffer[0, y])
-                                        GdiMethods.TextOut(dc, 0, y * cyChar, c, cxBuffer);
+                                        dc.TextOut(0, y * cyChar, c, cxBuffer);
                             }
-                            GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FONT));
+                            dc.SelectObject(StockFont.SYSTEM_FONT);
                         }
                     }
                     return 0;
                 case MessageType.WM_DESTROY:
-                    WindowMethods.PostQuitMessage(0);
+                    Windows.PostQuitMessage(0);
                     return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
     }
 }

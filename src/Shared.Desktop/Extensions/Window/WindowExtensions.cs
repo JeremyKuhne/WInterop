@@ -5,8 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
+using WInterop.Resources;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
@@ -38,11 +40,25 @@ namespace WInterop.Extensions.WindowExtensions
         public static void GetScrollInfo(this WindowHandle window, ScrollBar scrollBar, ref SCROLLINFO scrollInfo)
             => WindowMethods.GetScrollInfo(window, scrollBar, ref scrollInfo);
         public static int ScrollWindow(this WindowHandle window, int dx, int dy) => WindowMethods.ScrollWindow(window, dx, dy);
+        public static int ScrollWindow(this WindowHandle window, int dx, int dy, RECT scroll, RECT clip) => WindowMethods.ScrollWindow(window, dx, dy, scroll, clip);
         public static DeviceContext GetDeviceContext(this WindowHandle window) => GdiMethods.GetDeviceContext(window);
         public static DeviceContext GetWindowDeviceContext(this WindowHandle window) => GdiMethods.GetWindowDeviceContext(window);
         public static DeviceContext BeginPaint(this WindowHandle window) => GdiMethods.BeginPaint(window);
         public static DeviceContext BeginPaint(this WindowHandle window, out PAINTSTRUCT paintStruct) => GdiMethods.BeginPaint(window, out paintStruct);
-        public static bool Invalidate(this WindowHandle window, bool erase = true) => GdiMethods.InvalidateRectangle(window, erase);
+        public static bool Invalidate(this WindowHandle window, bool erase = true) => GdiMethods.Invalidate(window, erase);
         public static bool InvalidateRectangle(this WindowHandle window, RECT rect, bool erase = true) => GdiMethods.InvalidateRectangle(window, rect, erase);
+        public static bool UpdateWindow(this WindowHandle window) => GdiMethods.UpdateWindow(window);
+        public static void MoveWindow(this WindowHandle window, int x, int y, int width, int height, bool repaint) => WindowMethods.MoveWindow(window, x, y, width, height, repaint);
+
+        public static IntPtr GetWindowLong(this WindowHandle window, WindowLong index) => WindowMethods.GetWindowLong(window, index);
+        public static IntPtr SetWindowLong(this WindowHandle window, WindowLong index, IntPtr value) => WindowMethods.SetWindowLong(window, index, value);
+        public static bool GetMessage(this WindowHandle window, out MSG message, uint minMessage = 0, uint maxMessage = 0) => WindowMethods.GetMessage(out message, window, minMessage, maxMessage);
+        public static LRESULT SendMessage(this WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam) => WindowMethods.SendMessage(window, message, wParam, lParam);
+        public static bool ScreenToClient(this WindowHandle window, ref POINT point) => GdiMethods.ScreenToClient(window, ref point);
+        public static bool ClientToScreen(this WindowHandle window, ref POINT point) => GdiMethods.ClientToScreen(window, ref point);
+        public static void CreateCaret(this WindowHandle window, BitmapHandle bitmap, int width, int height) =>
+            ResourceMethods.CreateCaret(window, bitmap, width, height);
+        public static void ShowCaret(this WindowHandle window) => ResourceMethods.ShowCaret(window);
+        public static void HideCaret(this WindowHandle window) => ResourceMethods.HideCaret(window);
     }
 }

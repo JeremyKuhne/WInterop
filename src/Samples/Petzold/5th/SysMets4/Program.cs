@@ -8,10 +8,9 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Gdi;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -36,27 +35,27 @@ namespace SysMets4
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = szAppName
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 szAppName,
                 "Get System Metrics No. 4",
                 WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL | WindowStyle.WS_HSCROLL);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
+            while (Windows.GetMessage(out MSG message))
             {
-                WindowMethods.TranslateMessage(ref message);
-                WindowMethods.DispatchMessage(ref message);
+                Windows.TranslateMessage(ref message);
+                Windows.DispatchMessage(ref message);
             }
         }
 
@@ -69,9 +68,9 @@ namespace SysMets4
             switch (message)
             {
                 case MessageType.WM_CREATE:
-                    using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                    using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        GdiMethods.GetTextMetrics(dc, out TEXTMETRIC tm);
+                        dc.GetTextMetrics(out TEXTMETRIC tm);
                         cxChar = tm.tmAveCharWidth;
                         cxCaps = ((tm.tmPitchAndFamily & PitchAndFamily.TMPF_FIXED_PITCH) != 0 ? 3 : 2) * cxChar / 2;
                         cyChar = tm.tmHeight + tm.tmExternalLeading;
@@ -93,12 +92,12 @@ namespace SysMets4
                         nMax = SysMets.sysmetrics.Count - 1,
                         nPage = (uint)(cyClient / cyChar),
                     };
-                    WindowMethods.SetScrollInfo(window, ScrollBar.SB_VERT, ref si, true);
+                    window.SetScrollInfo(ScrollBar.SB_VERT, ref si, true);
 
                     // Set horizontal scroll bar range and page size
                     si.nMax = 2 + iMaxWidth / cxChar;
                     si.nPage = (uint)(cxClient / cxChar);
-                    WindowMethods.SetScrollInfo(window, ScrollBar.SB_HORZ, ref si, true);
+                    window.SetScrollInfo(ScrollBar.SB_HORZ, ref si, true);
 
                     return 0;
                 case MessageType.WM_VSCROLL:
@@ -107,7 +106,7 @@ namespace SysMets4
                     {
                         fMask = ScrollInfoMask.SIF_ALL
                     };
-                    WindowMethods.GetScrollInfo(window, ScrollBar.SB_VERT, ref si);
+                    window.GetScrollInfo(ScrollBar.SB_VERT, ref si);
 
                     // Save the position for comparison later on
                     int iVertPos = si.nPos;
@@ -140,14 +139,14 @@ namespace SysMets4
                     // Set the position and then retrieve it. Due to adjustments
                     // by Windows it may not be the same as the value set.
                     si.fMask = ScrollInfoMask.SIF_POS;
-                    WindowMethods.SetScrollInfo(window, ScrollBar.SB_VERT, ref si, true);
-                    WindowMethods.GetScrollInfo(window, ScrollBar.SB_VERT, ref si);
+                    window.SetScrollInfo(ScrollBar.SB_VERT, ref si, true);
+                    window.GetScrollInfo(ScrollBar.SB_VERT, ref si);
 
                     // If the position has changed, scroll the window and update it
                     if (si.nPos != iVertPos)
                     {
-                        WindowMethods.ScrollWindow(window, 0, cyChar * (iVertPos - si.nPos));
-                        GdiMethods.UpdateWindow(window);
+                        window.ScrollWindow(0, cyChar * (iVertPos - si.nPos));
+                        window.UpdateWindow();
                     }
                     return 0;
                 case MessageType.WM_HSCROLL:
@@ -156,7 +155,7 @@ namespace SysMets4
                     {
                         fMask = ScrollInfoMask.SIF_ALL
                     };
-                    WindowMethods.GetScrollInfo(window, ScrollBar.SB_HORZ, ref si);
+                    window.GetScrollInfo(ScrollBar.SB_HORZ, ref si);
 
                     // Save the position for comparison later on
                     int iHorzPos = si.nPos;
@@ -182,58 +181,58 @@ namespace SysMets4
                     // Set the position and then retrieve it. Due to adjustments
                     // by Windows it may not be the same as the value set.
                     si.fMask = ScrollInfoMask.SIF_POS;
-                    WindowMethods.SetScrollInfo(window, ScrollBar.SB_HORZ, ref si, true);
-                    WindowMethods.GetScrollInfo(window, ScrollBar.SB_HORZ, ref si);
+                    window.SetScrollInfo(ScrollBar.SB_HORZ, ref si, true);
+                    window.GetScrollInfo(ScrollBar.SB_HORZ, ref si);
 
                     // If the position has changed, scroll the window
                     if (si.nPos != iHorzPos)
                     {
-                        WindowMethods.ScrollWindow(window, cxChar * (iHorzPos - si.nPos), 0);
+                        window.ScrollWindow(cxChar * (iHorzPos - si.nPos), 0);
                     }
                     return 0;
                 case MessageType.WM_KEYDOWN:
                     switch ((VirtualKey)wParam)
                     {
                         case VirtualKey.VK_HOME:
-                            WindowMethods.SendMessage(window, MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_TOP, 0);
+                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_TOP, 0);
                             break;
                         case VirtualKey.VK_END:
-                            WindowMethods.SendMessage(window, MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_BOTTOM, 0);
+                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_BOTTOM, 0);
                             break;
                         case VirtualKey.VK_PRIOR:
-                            WindowMethods.SendMessage(window, MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_PAGEUP, 0);
+                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_PAGEUP, 0);
                             break;
                         case VirtualKey.VK_NEXT:
-                            WindowMethods.SendMessage(window, MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
+                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
                             break;
                         case VirtualKey.VK_UP:
-                            WindowMethods.SendMessage(window, MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_LINEUP, 0);
+                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_LINEUP, 0);
                             break;
                         case VirtualKey.VK_DOWN:
-                            WindowMethods.SendMessage(window, MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_LINEDOWN, 0);
+                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_LINEDOWN, 0);
                             break;
                         case VirtualKey.VK_LEFT:
-                            WindowMethods.SendMessage(window, MessageType.WM_HSCROLL, (uint)ScrollBarCommand.SB_PAGEUP, 0);
+                            window.SendMessage(MessageType.WM_HSCROLL, (uint)ScrollBarCommand.SB_PAGEUP, 0);
                             break;
                         case VirtualKey.VK_RIGHT:
-                            WindowMethods.SendMessage(window, MessageType.WM_HSCROLL, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
+                            window.SendMessage(MessageType.WM_HSCROLL, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
                             break;
                     }
                     return 0;
                 case MessageType.WM_PAINT:
                     PAINTSTRUCT ps;
-                    using (DeviceContext dc = GdiMethods.BeginPaint(window, out ps))
+                    using (DeviceContext dc = window.BeginPaint(out ps))
                     {
                         // Get vertical scroll bar position
                         si = new SCROLLINFO
                         {
                             fMask = ScrollInfoMask.SIF_POS
                         };
-                        WindowMethods.GetScrollInfo(window, ScrollBar.SB_VERT, ref si);
+                        window.GetScrollInfo(ScrollBar.SB_VERT, ref si);
                         iVertPos = si.nPos;
 
                         // Get horizontal scroll bar position
-                        WindowMethods.GetScrollInfo(window, ScrollBar.SB_HORZ, ref si);
+                        window.GetScrollInfo(ScrollBar.SB_HORZ, ref si);
                         iHorzPos = si.nPos;
 
                         // Find painting limits
@@ -247,20 +246,20 @@ namespace SysMets4
                             int x = cxChar * (1 - iHorzPos);
                             int y = cyChar * (i - iVertPos);
 
-                            GdiMethods.TextOut(dc, x, y, metric.ToString());
-                            GdiMethods.TextOut(dc, x + 22 * cxCaps, y, SysMets.sysmetrics[metric]);
-                            GdiMethods.SetTextAlignment(dc, TextAlignment.TA_RIGHT | TextAlignment.TA_TOP);
-                            GdiMethods.TextOut(dc, x + 22 * cxCaps + 40 * cxChar, y, WindowMethods.GetSystemMetrics(metric).ToString());
-                            GdiMethods.SetTextAlignment(dc, TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
+                            dc.TextOut(x, y, metric.ToString());
+                            dc.TextOut(x + 22 * cxCaps, y, SysMets.sysmetrics[metric]);
+                            dc.SetTextAlignment(TextAlignment.TA_RIGHT | TextAlignment.TA_TOP);
+                            dc.TextOut(x + 22 * cxCaps + 40 * cxChar, y, WindowMethods.GetSystemMetrics(metric).ToString());
+                            dc.SetTextAlignment(TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
                         }
                     }
                     return 0;
                 case MessageType.WM_DESTROY:
-                    WindowMethods.PostQuitMessage(0);
+                    Windows.PostQuitMessage(0);
                     return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
     }
 }

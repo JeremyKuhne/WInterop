@@ -17,9 +17,8 @@ namespace WInterop.Gdi.Types
 
         public BrushHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
 
-        static public implicit operator BrushHandle(IntPtr handle)
-        {
-            return new BrushHandle(handle);
-        }
+        public static implicit operator BrushHandle(IntPtr handle) => new BrushHandle(handle);
+
+        public static implicit operator BrushHandle(StockBrush brush) => GdiMethods.GetStockBrush(brush);
     }
 }

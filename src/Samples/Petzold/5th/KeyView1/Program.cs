@@ -7,10 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -35,27 +34,27 @@ namespace KeyView1
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = szAppName
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 szAppName,
                 "Keyboard Message Viewer #1",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
+            while (Windows.GetMessage(out MSG message))
             {
-                WindowMethods.TranslateMessage(ref message);
-                WindowMethods.DispatchMessage(ref message);
+                Windows.TranslateMessage(ref message);
+                Windows.DispatchMessage(ref message);
             }
         }
 
@@ -71,14 +70,14 @@ namespace KeyView1
                 case MessageType.WM_CREATE:
                 case MessageType.WM_DISPLAYCHANGE:
                     // Get maximum size of client area
-                    cxClientMax = WindowMethods.GetSystemMetrics(SystemMetric.SM_CXMAXIMIZED);
-                    cyClientMax = WindowMethods.GetSystemMetrics(SystemMetric.SM_CYMAXIMIZED);
+                    cxClientMax = Windows.GetSystemMetrics(SystemMetric.SM_CXMAXIMIZED);
+                    cyClientMax = Windows.GetSystemMetrics(SystemMetric.SM_CYMAXIMIZED);
 
                     // Get character size for fixed-pitch font
-                    using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                    using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        GdiMethods.SelectObject(dc, GdiMethods.GetStockObject(StockObject.SYSTEM_FIXED_FONT));
-                        GdiMethods.GetTextMetrics(dc, out TEXTMETRIC tm);
+                        dc.SelectObject(StockFont.SYSTEM_FIXED_FONT);
+                        dc.GetTextMetrics(out TEXTMETRIC tm);
                         cxChar = tm.tmAveCharWidth;
                         cyChar = tm.tmHeight;
                     }
@@ -97,7 +96,7 @@ namespace KeyView1
                     rectScroll.right = cxClient;
                     rectScroll.top = cyChar;
                     rectScroll.bottom = cyChar * (cyClient / cyChar);
-                    GdiMethods.InvalidateRectangle(window, true);
+                    window.Invalidate(true);
 
                     return 0;
                 case MessageType.WM_KEYDOWN:
@@ -121,15 +120,15 @@ namespace KeyView1
                     cLines = Math.Min(cLines + 1, cLinesMax);
 
                     // Scroll up the display
-                    WindowMethods.ScrollWindow(window, 0, -cyChar, rectScroll, rectScroll);
+                    window.ScrollWindow(0, -cyChar, rectScroll, rectScroll);
                     break; // i.e., call DefWindowProc so Sys messages work
                 case MessageType.WM_PAINT:
-                    using (DeviceContext dc = GdiMethods.BeginPaint(window))
+                    using (DeviceContext dc = window.BeginPaint())
                     {
-                        GdiMethods.SelectObject(dc, GdiMethods.GetStockFont(StockFont.SYSTEM_FIXED_FONT));
-                        GdiMethods.SetBackgroundMode(dc, BackgroundMode.TRANSPARENT);
-                        GdiMethods.TextOut(dc, 0, 0, "Message        Key       Char     Repeat Scan Ext ALT Prev Tran");
-                        GdiMethods.TextOut(dc, 0, 0, "_______        ___       ____     ______ ____ ___ ___ ____ ____");
+                        dc.SelectObject(StockFont.SYSTEM_FIXED_FONT);
+                        dc.SetBackgroundMode(BackgroundMode.TRANSPARENT);
+                        dc.TextOut(0, 0, "Message        Key       Char     Repeat Scan Ext ALT Prev Tran");
+                        dc.TextOut(0, 0, "_______        ___       ____     ______ ____ ___ ___ ____ ____");
                         for (int i = 0; i < Math.Min(cLines, cyClient / cyChar - 1); i++)
                         {
                             bool iType;
@@ -146,7 +145,7 @@ namespace KeyView1
                                     break;
                             }
 
-                            GdiMethods.TextOut(dc, 0, (cyClient / cyChar - 1 - i) * cyChar,
+                            dc.TextOut(0, (cyClient / cyChar - 1 - i) * cyChar,
                                 string.Format(iType
                                 ? "{0,-13} {1,3} {2,15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}"
                                 : "{0,-13} {1,3} {2,-15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}",
@@ -154,7 +153,7 @@ namespace KeyView1
                                     pmsg[i].wParam.ToString(),
                                     iType
                                         ? $"0x{((uint)pmsg[i].wParam):X4} {(char)(uint)pmsg[i].wParam}"
-                                        : WindowMethods.GetKeyNameText(pmsg[i].lParam),
+                                        : Windows.GetKeyNameText(pmsg[i].lParam),
                                     pmsg[i].lParam.LowWord,
                                     pmsg[i].lParam.HighWord & 0xFF,
                                     (0x01000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
@@ -165,11 +164,11 @@ namespace KeyView1
                     }
                     return 0;
                 case MessageType.WM_DESTROY:
-                    WindowMethods.PostQuitMessage(0);
+                    Windows.PostQuitMessage(0);
                     return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
     }
 }

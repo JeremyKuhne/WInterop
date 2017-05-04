@@ -9,10 +9,9 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.Gdi;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -39,33 +38,33 @@ namespace Checker3
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = szAppName
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
             wndclass.WindowProcedure = ChildWindowProcedure;
             wndclass.WindowExtraBytes = IntPtr.Size;
             wndclass.ClassName = szChildClass;
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 szAppName,
                 "Checker3 Mouse Hit-Test Demo",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
+            while (Windows.GetMessage(out MSG message))
             {
-                WindowMethods.TranslateMessage(ref message);
-                WindowMethods.DispatchMessage(ref message);
+                Windows.TranslateMessage(ref message);
+                Windows.DispatchMessage(ref message);
             }
         }
 
@@ -80,8 +79,8 @@ namespace Checker3
                 case MessageType.WM_CREATE:
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
-                            hwndChild[x, y] = WindowMethods.CreateWindow(
-                                WindowMethods.GetWindowLong(window, WindowLong.GWL_HINSTANCE),
+                            hwndChild[x, y] = Windows.CreateWindow(
+                                window.GetWindowLong(WindowLong.GWL_HINSTANCE),
                                 szChildClass,
                                 null,
                                 WindowStyle.WS_CHILDWINDOW | WindowStyle.WS_VISIBLE,
@@ -96,19 +95,22 @@ namespace Checker3
                     cyBlock = lParam.HighWord / DIVISIONS;
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
-                            WindowMethods.MoveWindow(hwndChild[x,y],
-                                x * cxBlock, y * cyBlock,
-                                cxBlock, cyBlock, true);
+                            hwndChild[x, y].MoveWindow(
+                                x * cxBlock,
+                                y * cyBlock,
+                                cxBlock,
+                                cyBlock,
+                                true);
                     return 0;
                 case MessageType.WM_LBUTTONDOWN:
                     ErrorMethods.MessageBeep(MessageBeepType.MB_OK);
                     return 0;
                 case MessageType.WM_DESTROY:
-                    WindowMethods.PostQuitMessage(0);
+                    Windows.PostQuitMessage(0);
                     return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
 
         static LRESULT ChildWindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
@@ -116,29 +118,29 @@ namespace Checker3
             switch (message)
             {
                 case MessageType.WM_CREATE:
-                    WindowMethods.SetWindowLong(window, 0, IntPtr.Zero); // on/off flag
+                    window.SetWindowLong(0, IntPtr.Zero); // on/off flag
                     return 0;
                 case MessageType.WM_LBUTTONDOWN:
-                    WindowMethods.SetWindowLong(window, 0, (IntPtr)(1 ^ (int)WindowMethods.GetWindowLong(window, 0)));
-                    GdiMethods.InvalidateRectangle(window, false);
+                    window.SetWindowLong(0, (IntPtr)(1 ^ (int)window.GetWindowLong( 0)));
+                    window.Invalidate(false);
                     return 0;
                 case MessageType.WM_PAINT:
-                    using (DeviceContext dc = GdiMethods.BeginPaint(window))
+                    using (DeviceContext dc = window.BeginPaint())
                     {
-                        RECT rect = WindowMethods.GetClientRect(window);
-                        GdiMethods.Rectangle(dc, rect);
+                        RECT rect = window.GetClientRect();
+                        dc.Rectangle(rect);
 
-                        if (WindowMethods.GetWindowLong(window, 0) != IntPtr.Zero)
+                        if (window.GetWindowLong(0) != IntPtr.Zero)
                         {
-                            GdiMethods.MoveTo(dc, 0, 0);
-                            GdiMethods.LineTo(dc, rect.right, rect.bottom);
-                            GdiMethods.MoveTo(dc, 0, rect.bottom);
-                            GdiMethods.LineTo(dc, rect.right, 0);
+                            dc.MoveTo(0, 0);
+                            dc.LineTo(rect.right, rect.bottom);
+                            dc.MoveTo(0, rect.bottom);
+                            dc.LineTo(rect.right, 0);
                         }
                     }
                     return 0;
             }
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
     }
 }

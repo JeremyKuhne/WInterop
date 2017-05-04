@@ -7,10 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -33,27 +32,27 @@ namespace SysMets1
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = "SysMets1"
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 "SysMets1",
                 "Get System Metrics No. 1",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
+            while (Windows.GetMessage(out MSG message))
             {
-                WindowMethods.TranslateMessage(ref message);
-                WindowMethods.DispatchMessage(ref message);
+                Windows.TranslateMessage(ref message);
+                Windows.DispatchMessage(ref message);
             }
         }
 
@@ -64,36 +63,35 @@ namespace SysMets1
             switch (message)
             {
                 case MessageType.WM_CREATE:
-
-                    using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                    using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        GdiMethods.GetTextMetrics(dc, out TEXTMETRIC tm);
+                        dc.GetTextMetrics(out TEXTMETRIC tm);
                         cxChar = tm.tmAveCharWidth;
                         cxCaps = ((tm.tmPitchAndFamily & PitchAndFamily.TMPF_FIXED_PITCH) != 0 ? 3 : 2) * cxChar / 2;
                         cyChar = tm.tmHeight + tm.tmExternalLeading;
                     }
                     return 0;
                 case MessageType.WM_PAINT:
-                    using (DeviceContext dc = GdiMethods.BeginPaint(window))
+                    using (DeviceContext dc = window.BeginPaint())
                     {
                         int i = 0;
                         foreach (SystemMetric metric in SysMets.sysmetrics.Keys)
                         {
-                            GdiMethods.TextOut(dc, 0, cyChar * i, metric.ToString());
-                            GdiMethods.TextOut(dc, 22 * cxCaps, cyChar * i, SysMets.sysmetrics[metric]);
-                            GdiMethods.SetTextAlignment(dc, TextAlignment.TA_RIGHT | TextAlignment.TA_TOP);
-                            GdiMethods.TextOut(dc, 22 * cxCaps + 40 * cxChar, cyChar * i, WindowMethods.GetSystemMetrics(metric).ToString());
-                            GdiMethods.SetTextAlignment(dc, TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
+                            dc.TextOut(0, cyChar * i, metric.ToString());
+                            dc.TextOut(22 * cxCaps, cyChar * i, SysMets.sysmetrics[metric]);
+                            dc.SetTextAlignment(TextAlignment.TA_RIGHT | TextAlignment.TA_TOP);
+                            dc.TextOut(22 * cxCaps + 40 * cxChar, cyChar * i, Windows.GetSystemMetrics(metric).ToString());
+                            dc.SetTextAlignment(TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
                             i++;
                         }
                     }
                     return 0;
                 case MessageType.WM_DESTROY:
-                    WindowMethods.PostQuitMessage(0);
+                    Windows.PostQuitMessage(0);
                     return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
     }
 }

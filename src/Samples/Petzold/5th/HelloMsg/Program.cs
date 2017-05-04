@@ -7,7 +7,6 @@
 
 using System;
 using WInterop.Windows;
-using WInterop.Windows.Types;
 
 namespace HelloMsg
 {
@@ -21,7 +20,7 @@ namespace HelloMsg
         [STAThread]
         static void Main()
         {
-            WindowMethods.MessageBox(WindowHandle.Null, "Hello, Windows 98!", "HelloMsg", 0);
+            Windows.MessageBox("Hello, Windows 98!", "HelloMsg", 0);
         }
     }
 }

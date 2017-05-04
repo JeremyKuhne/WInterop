@@ -7,10 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -33,37 +32,37 @@ namespace Bezier
                 Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = ResourceMethods.LoadIcon(IconId.IDI_APPLICATION),
-                Cursor = ResourceMethods.LoadCursor(CursorId.IDC_ARROW),
-                Background = GdiMethods.GetStockBrush(StockBrush.WHITE_BRUSH),
+                Icon = IconId.IDI_APPLICATION,
+                Cursor = CursorId.IDC_ARROW,
+                Background = StockBrush.WHITE_BRUSH,
                 ClassName = "Bezier"
             };
 
-            WindowMethods.RegisterClass(wndclass);
+            Windows.RegisterClass(wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 "Bezier",
                 "Bezier Splines",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
-            WindowMethods.ShowWindow(window, ShowWindowCommand.SW_SHOWNORMAL);
-            GdiMethods.UpdateWindow(window);
+            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.UpdateWindow();
 
-            while (WindowMethods.GetMessage(out MSG message, WindowHandle.Null, 0, 0))
+            while (Windows.GetMessage(out MSG message))
             {
-                WindowMethods.TranslateMessage(ref message);
-                WindowMethods.DispatchMessage(ref message);
+                Windows.TranslateMessage(ref message);
+                Windows.DispatchMessage(ref message);
             }
         }
 
         static void DrawBezier(DeviceContext dc, POINT[] apt)
         {
-            GdiMethods.PolyBezier(dc, apt);
-            GdiMethods.MoveTo(dc, apt[0].x, apt[0].y);
-            GdiMethods.LineTo(dc, apt[1].x, apt[1].y);
-            GdiMethods.MoveTo(dc, apt[2].x, apt[2].y);
-            GdiMethods.LineTo(dc, apt[3].x, apt[3].y);
+            dc.PolyBezier(apt);
+            dc.MoveTo(apt[0].x, apt[0].y);
+            dc.LineTo(apt[1].x, apt[1].y);
+            dc.MoveTo(apt[2].x, apt[2].y);
+            dc.LineTo(apt[3].x, apt[3].y);
         }
 
         static POINT[] apt = new POINT[4];
@@ -93,9 +92,9 @@ namespace Bezier
                     MouseKey mk = (MouseKey)wParam.LowWord;
                     if ((mk & (MouseKey.MK_LBUTTON | MouseKey.MK_RBUTTON)) != 0)
                     {
-                        using (DeviceContext dc = GdiMethods.GetDeviceContext(window))
+                        using (DeviceContext dc = window.GetDeviceContext())
                         {
-                            GdiMethods.SelectObject(dc, GdiMethods.GetStockPen(StockPen.WHITE_PEN));
+                            dc.SelectObject(StockPen.WHITE_PEN);
                             DrawBezier(dc, apt);
 
                             if ((mk & MouseKey.MK_LBUTTON) != 0)
@@ -110,14 +109,14 @@ namespace Bezier
                                 apt[2].y = lParam.HighWord;
                             }
 
-                            GdiMethods.SelectObject(dc, GdiMethods.GetStockPen(StockPen.BLACK_PEN));
+                            dc.SelectObject(StockPen.BLACK_PEN);
                             DrawBezier(dc, apt);
                         }
                     }
                     return 0;
                 case MessageType.WM_PAINT:
-                    GdiMethods.InvalidateRectangle(window, true);
-                    using (DeviceContext dc = GdiMethods.BeginPaint(window))
+                    window.Invalidate(true);
+                    using (DeviceContext dc = window.BeginPaint())
                     {
                         DrawBezier(dc, apt);
                     }

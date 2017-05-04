@@ -18,7 +18,9 @@ namespace WInterop.Resources.Types
 
         public IconHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
 
-        static public implicit operator IconHandle(IntPtr handle) => new IconHandle(handle);
+        public static implicit operator IconHandle(IntPtr handle) => new IconHandle(handle);
+
+        public static implicit operator IconHandle(IconId id) => ResourceMethods.LoadIcon(id);
 
         protected override bool ReleaseHandle()
         {
