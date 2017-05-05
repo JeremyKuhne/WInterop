@@ -36,6 +36,15 @@ namespace WInterop.Windows
             return Imports.GetDesktopWindow();
         }
 
+        public static WindowHandle GetParent(WindowHandle window)
+        {
+            WindowHandle parent = Imports.GetParent(window);
+            if (!parent.IsValid)
+                throw Errors.GetIoExceptionForLastError();
+
+            return parent;
+        }
+
         public static bool IsWindow(WindowHandle window)
         {
             return Imports.IsWindow(window);
@@ -73,6 +82,15 @@ namespace WInterop.Windows
         public static WindowHandle GetFocus()
         {
             return Imports.GetFocus();
+        }
+
+        public static WindowHandle SetFocus(WindowHandle window)
+        {
+            WindowHandle prior = Imports.SetFocus(window);
+            if (!prior.IsValid)
+                throw Errors.GetIoExceptionForLastError();
+
+            return prior;
         }
 
         /// <summary>
@@ -378,6 +396,14 @@ namespace WInterop.Windows
         public static string GetKeyNameText(LPARAM lParam)
         {
             return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetKeyNameTextW(lParam, buffer, (int)buffer.CharCapacity));
+        }
+
+        public static WindowHandle GetDialogItem(WindowHandle window, int id)
+        {
+            WindowHandle control = Imports.GetDlgItem(window, id);
+            if (!control.IsValid)
+                throw Errors.GetIoExceptionForLastError();
+            return control;
         }
     }
 }

@@ -17,9 +17,8 @@ namespace WInterop.Gdi.Types
 
         public PenHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
 
-        static public implicit operator PenHandle(IntPtr handle)
-        {
-            return new PenHandle(handle);
-        }
+        public static implicit operator PenHandle(IntPtr handle) => new PenHandle(handle);
+
+        public static implicit operator PenHandle(StockPen pen) => GdiMethods.GetStockPen(pen);
     }
 }

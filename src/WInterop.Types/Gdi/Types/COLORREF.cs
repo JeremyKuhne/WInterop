@@ -45,6 +45,10 @@ namespace WInterop.Gdi.Types
             return new COLORREF(value);
         }
 
+
+        public static COLORREF DIB_RGB_COLORS => 0;
+        public static COLORREF DIB_PAL_COLORS => 1;
+
         public bool IsInvalid => Value == 0xFFFFFFFF;
     }
 }

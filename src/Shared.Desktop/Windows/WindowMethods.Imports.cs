@@ -408,6 +408,11 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern WindowHandle GetFocus();
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646312.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern WindowHandle SetFocus(
+                WindowHandle hWnd);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646300.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern int GetKeyNameTextW(
@@ -424,6 +429,142 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool GetLastInputInfo(
                 ref LASTINPUTINFO plii);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645441.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern WindowHandle CreateDialogIndirectParamW(
+                SafeModuleHandle hInstance,
+                SafeHandle lpTemplate,
+                WindowHandle hWndParent,
+                DialogProcedure lpDialogFunc,
+                LPARAM lParamInit);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645445.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern WindowHandle CreateDialogParamW(
+                SafeModuleHandle hInstance,
+                string lpTemplateName,
+                WindowHandle hWndParent,
+                DialogProcedure lpDialogFunc,
+                LPARAM dwInitParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645450.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern LRESULT DefDlgProcW(
+                WindowHandle hDlg,
+                MessageType Msg,
+                WPARAM wParam,
+                LPARAM lParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645461.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern IntPtr DialogBoxIndirectParamW(
+                SafeModuleHandle hInstance,
+                SafeHandle hDialogTemplate,
+                WindowHandle hWndParent,
+                DialogProcedure lpDialogFunc,
+                LPARAM dwInitParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645465.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern IntPtr DialogBoxParamW(
+                SafeModuleHandle hInstance,
+                string lpTemplateName,
+                WindowHandle hWndParent,
+                DialogProcedure lpDialogFunc,
+                LPARAM dwInitParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645472.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool EndDialog(
+                WindowHandle hDlg,
+                IntPtr nResult);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645475.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern int GetDialogBaseUnits();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645478.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetDlgCtrlID(
+                WindowHandle hwndCtl);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645481.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern WindowHandle GetDlgItem(
+                WindowHandle hDlg,
+                int nIDDlgItem);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645485.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetDlgItemInt(
+                WindowHandle hDlg,
+                int nIDDlgItem,
+                ref bool lpTranslated,
+                bool bSigned);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645489.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetDlgItemTextW(
+                WindowHandle hDlg,
+                int nIDDlgItem,
+                SafeHandle lpString,
+                int nMaxCount);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645492.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern WindowHandle GetNextDlgGroupItem(
+                WindowHandle hDlg,
+                WindowHandle hCtl,
+                bool bPrevious);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645495.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern WindowHandle GetNextDlgTabItem(
+                WindowHandle hDlg,
+                WindowHandle hCtl,
+                bool bPrevious);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645498.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool IsDialogMessageW(
+                WindowHandle hDlg,
+                [In] ref MSG lpMsg);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645502.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool MapDialogRect(
+                WindowHandle hDlg,
+                ref RECT lpRect);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/dn910915.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern string MB_GetString(
+                uint wBtn);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645515.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern LRESULT SendDlgItemMessageW(
+                WindowHandle hDlg,
+                int nIDDlgItem,
+                MessageType Msg,
+                WPARAM wParam,
+                LPARAM lParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645518.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetDlgItemInt(
+                WindowHandle hDlg,
+                int nIDDlgItem,
+                uint uValue,
+                bool bSigned);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645521.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetDlgItemTextW(
+                WindowHandle hDlg,
+                int nIDDlgItem,
+                string lpString);
         }
     }
 }

@@ -70,5 +70,7 @@ namespace WInterop.Windows.Types
         {
             return x.HWND != y.HWND;
         }
+
+        public bool IsValid => HWND != IntPtr.Zero && HWND != (IntPtr)(-1);
     }
 }

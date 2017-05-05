@@ -22,6 +22,7 @@ namespace WInterop.Extensions.WindowExtensions
         public static bool ShowWindow(this WindowHandle window, ShowWindowCommand command) => WindowMethods.ShowWindow(window, command);
         public static WindowHandle GetWindow(this WindowHandle window, GetWindowOption option) => WindowMethods.GetWindow(window, option);
         public static WindowHandle GetTopWindow(this WindowHandle window) => WindowMethods.GetTopWindow(window);
+        public static WindowHandle GetParent(this WindowHandle window) => WindowMethods.GetParent(window);
         public static string GetClassName(this WindowHandle window) => WindowMethods.GetClassName(window);
         public static bool IsWindow(this WindowHandle window) => WindowMethods.IsWindow(window);
         public static bool IsWindowVisible(this WindowHandle window) => WindowMethods.IsWindowVisible(window);
@@ -60,5 +61,7 @@ namespace WInterop.Extensions.WindowExtensions
             ResourceMethods.CreateCaret(window, bitmap, width, height);
         public static void ShowCaret(this WindowHandle window) => ResourceMethods.ShowCaret(window);
         public static void HideCaret(this WindowHandle window) => ResourceMethods.HideCaret(window);
+        public static WindowHandle GetDialogItem(this WindowHandle window, int id) => WindowMethods.GetDialogItem(window, id);
+        public static WindowHandle SetFocus(this WindowHandle window) => WindowMethods.SetFocus(window);
     }
 }

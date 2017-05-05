@@ -61,6 +61,10 @@ namespace WInterop.Windows
         public static int GetSystemMetrics(SystemMetric metric) => WindowMethods.GetSystemMetrics(metric);
         public static string GetKeyNameText(LPARAM lParam) => WindowMethods.GetKeyNameText(lParam);
         public static BrushHandle CreateSolidBrush(byte red, byte green, byte blue) => GdiMethods.CreateSolidBrush(red, green, blue);
+        public static PenHandle CreatePen(PenStyle style, int width, COLORREF color) => GdiMethods.CreatePen(style, width, color);
+
+        public static PenHandle CreatePen(PenStyleExtended style, uint width, COLORREF color, PenEndCap endCap = PenEndCap.PS_ENDCAP_ROUND, PenJoin join = PenJoin.PS_JOIN_ROUND)
+            => GdiMethods.CreatePen(style, width, color, endCap, join);
 
         public static FontHandle CreateFont(
             int height,

@@ -971,6 +971,22 @@ namespace WInterop.Gdi
             public static extern COLORREF SetBkColor(
                 DeviceContext hdc,
                 COLORREF crColor);
+
+            // https://msdn.microsoft.com/en-us/library/dd183509.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern PenHandle CreatePen(
+                PenStyle fnPenStyle,
+                int nWidth,
+                COLORREF crColor);
+
+            // https://msdn.microsoft.com/en-us/library/dd162705.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern PenHandle ExtCreatePen(
+                uint dwPenStyle,
+                uint dwWidth,
+                [In] ref LOGBRUSH lplb,
+                uint dwStyleCount,
+                uint[] lpStyle);
         }
     }
 }

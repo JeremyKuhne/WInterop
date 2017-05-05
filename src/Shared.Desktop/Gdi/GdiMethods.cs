@@ -127,6 +127,27 @@ namespace WInterop.Gdi
             return Imports.GetStockObject((int)pen);
         }
 
+        public static PenHandle CreatePen(PenStyle style, int width, COLORREF color)
+        {
+            return Imports.CreatePen(style, width, color);
+        }
+
+        public static PenHandle CreatePen(PenStyleExtended style, uint width, COLORREF color, PenEndCap endCap = PenEndCap.PS_ENDCAP_ROUND, PenJoin join = PenJoin.PS_JOIN_ROUND)
+        {
+            LOGBRUSH brush = new LOGBRUSH
+            {
+                lbColor = color,
+                lpStyle = BrushStyle.BS_SOLID
+            };
+
+            return Imports.ExtCreatePen(
+                (uint)style | (uint)PenType.PS_GEOMETRIC | (uint)endCap | (uint)join,
+                width,
+                ref brush,
+                0,
+                null);
+        }
+
         public static FontHandle GetStockFont(StockFont font)
         {
             return Imports.GetStockObject((int)font);
