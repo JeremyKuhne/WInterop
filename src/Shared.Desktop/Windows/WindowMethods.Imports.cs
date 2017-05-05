@@ -565,6 +565,53 @@ namespace WInterop.Windows
                 WindowHandle hDlg,
                 int nIDDlgItem,
                 string lpString);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646256.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool DragDetect(
+                WindowHandle hwnd,
+                POINT pt);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646257.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern WindowHandle GetCapture();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646261.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool ReleaseCapture();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646262.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern WindowHandle SetCapture(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646258.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern uint GetDoubleClickTime();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646263.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetDoubleClickTime(
+                uint uInterval);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646264.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool SwapMouseButton(
+                bool fSwap);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646259.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetMouseMovePointsEx(
+                uint cbSize,
+                [In] ref MOUSEMOVEPOINT lppt,
+                MOUSEMOVEPOINT[] lpptBuf,
+                int nBufPoints,
+                uint resolution);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646265.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool TrackMouseEvent(
+                ref TRACKMOUSEEVENT lpEventTrack);
         }
     }
 }

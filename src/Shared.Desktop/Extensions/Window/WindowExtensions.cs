@@ -50,7 +50,6 @@ namespace WInterop.Extensions.WindowExtensions
         public static bool InvalidateRectangle(this WindowHandle window, RECT rect, bool erase = true) => GdiMethods.InvalidateRectangle(window, rect, erase);
         public static bool UpdateWindow(this WindowHandle window) => GdiMethods.UpdateWindow(window);
         public static void MoveWindow(this WindowHandle window, int x, int y, int width, int height, bool repaint) => WindowMethods.MoveWindow(window, x, y, width, height, repaint);
-
         public static IntPtr GetWindowLong(this WindowHandle window, WindowLong index) => WindowMethods.GetWindowLong(window, index);
         public static IntPtr SetWindowLong(this WindowHandle window, WindowLong index, IntPtr value) => WindowMethods.SetWindowLong(window, index, value);
         public static bool GetMessage(this WindowHandle window, out MSG message, uint minMessage = 0, uint maxMessage = 0) => WindowMethods.GetMessage(out message, window, minMessage, maxMessage);
@@ -63,5 +62,6 @@ namespace WInterop.Extensions.WindowExtensions
         public static void HideCaret(this WindowHandle window) => ResourceMethods.HideCaret(window);
         public static WindowHandle GetDialogItem(this WindowHandle window, int id) => WindowMethods.GetDialogItem(window, id);
         public static WindowHandle SetFocus(this WindowHandle window) => WindowMethods.SetFocus(window);
+        public static WindowHandle SetCapture(this WindowHandle window) => WindowMethods.SetCapture(window);
     }
 }

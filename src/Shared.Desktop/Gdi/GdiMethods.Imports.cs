@@ -961,6 +961,16 @@ namespace WInterop.Gdi
                 DeviceContext hdc,
                 BackgroundMode iBkMode);
 
+            // https://msdn.microsoft.com/en-us/library/dd144922.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RasterOperation GetROP2(
+                DeviceContext hdc);
+
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern RasterOperation SetROP2(
+                DeviceContext hdc,
+                RasterOperation fnDrawMode);
+
             // https://msdn.microsoft.com/en-us/library/dd144852.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF GetBkColor(

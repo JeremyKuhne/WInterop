@@ -86,5 +86,6 @@ namespace WInterop.Windows
         public static void SetCaretPosition(int x, int y) => ResourceMethods.SetCaretPosition(x, y);
         public static void DestroyCaret() => ResourceMethods.DestroyCaret();
         public static WindowHandle GetFocus() => WindowMethods.GetFocus();
+        public static void ReleaseCapture() => WindowMethods.ReleaseCapture();
     }
 }

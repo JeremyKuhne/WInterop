@@ -405,5 +405,16 @@ namespace WInterop.Windows
                 throw Errors.GetIoExceptionForLastError();
             return control;
         }
+
+        public static WindowHandle SetCapture(WindowHandle window)
+        {
+            return Imports.SetCapture(window);
+        }
+
+        public static void ReleaseCapture()
+        {
+            if (!Imports.ReleaseCapture())
+                throw Errors.GetIoExceptionForLastError();
+        }
     }
 }

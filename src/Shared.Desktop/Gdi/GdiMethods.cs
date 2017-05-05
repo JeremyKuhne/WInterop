@@ -347,6 +347,16 @@ namespace WInterop.Gdi
             return Imports.GetBkMode(deviceContext);
         }
 
+        public static RasterOperation SetRasterOperation(DeviceContext deviceContext, RasterOperation foregroundMixMode)
+        {
+            return Imports.SetROP2(deviceContext, foregroundMixMode);
+        }
+
+        public static RasterOperation GetRasterOperation(DeviceContext deviceContext)
+        {
+            return Imports.GetROP2(deviceContext);
+        }
+
         public static FontHandle CreateFont(
             int height,
             int width,
