@@ -270,6 +270,14 @@ namespace WInterop.Windows
             public static extern int GetSystemMetrics(
                 SystemMetric nIndex);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724947.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public unsafe static extern bool SystemParametersInfoW(
+                SystemParameterType uiAction,
+                uint uiParam,
+                void* pvParam,
+                SystemParameterOptions fWinIni);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633503.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetClientRect(

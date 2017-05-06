@@ -87,5 +87,7 @@ namespace WInterop.Windows
         public static void DestroyCaret() => ResourceMethods.DestroyCaret();
         public static WindowHandle GetFocus() => WindowMethods.GetFocus();
         public static void ReleaseCapture() => WindowMethods.ReleaseCapture();
+
+        public static SystemParameters SystemParameters => SystemParameters.Instance;
     }
 }

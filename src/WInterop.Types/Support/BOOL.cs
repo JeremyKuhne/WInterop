@@ -38,6 +38,10 @@ namespace WInterop.Support
 
         public static implicit operator BOOL(bool b) => new BOOL(b);
 
+        public static implicit operator uint(BOOL b) => b.RawValue;
+
+        public static implicit operator BOOL(uint b) => new BOOL(b);
+
         public override string ToString()
         {
             return IsTrue.ToString();
