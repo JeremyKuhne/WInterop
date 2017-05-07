@@ -620,6 +620,29 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool TrackMouseEvent(
                 ref TRACKMOUSEEVENT lpEventTrack);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644906.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern TimerId SetTimer(
+                WindowHandle hWnd,
+                TimerId nIDEvent,
+                uint uElapse,
+                TimerProcedure lpTimerFunc);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644903.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool KillTimer(
+                WindowHandle hWnd,
+                TimerId uIDEvent);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/hh405404.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern TimerId SetCoalescableTimer(
+                WindowHandle hWnd,
+                TimerId nIdEvent,
+                uint uElapse,
+                TimerProcedure lpTimerFunc,
+                uint uToleranceDelay);
         }
     }
 }

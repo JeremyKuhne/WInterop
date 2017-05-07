@@ -46,30 +46,22 @@ namespace WInterop.Windows.Types
             HWND = hwnd;
         }
 
-        static public implicit operator IntPtr(WindowHandle handle)
-        {
-            return handle.HWND;
-        }
+        static public implicit operator IntPtr(WindowHandle handle) => handle.HWND;
 
-        public override int GetHashCode()
-        {
-            return HWND.GetHashCode();
-        }
+        public override int GetHashCode() => HWND.GetHashCode();
 
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
+            return obj is WindowHandle other
+                ? other.HWND == HWND
+                : false;
         }
 
-        public static bool operator ==(WindowHandle x, WindowHandle y)
-        {
-            return x.HWND == y.HWND;
-        }
+        public bool Equals(WindowHandle other) => other.HWND == HWND;
 
-        public static bool operator !=(WindowHandle x, WindowHandle y)
-        {
-            return x.HWND != y.HWND;
-        }
+        public static bool operator ==(WindowHandle a, WindowHandle b) => a.HWND == b.HWND;
+
+        public static bool operator !=(WindowHandle a, WindowHandle b) => a.HWND != b.HWND;
 
         public bool IsValid => HWND != IntPtr.Zero && HWND != (IntPtr)(-1);
     }

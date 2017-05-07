@@ -416,5 +416,20 @@ namespace WInterop.Windows
             if (!Imports.ReleaseCapture())
                 throw Errors.GetIoExceptionForLastError();
         }
+
+        public static TimerId SetTimer(WindowHandle window, TimerId id, uint interval, TimerProcedure callback = null, uint delayTolerance = 0)
+        {
+            TimerId result = Imports.SetCoalescableTimer(window, id, interval, callback, delayTolerance);
+            if (result == TimerId.Null)
+                throw Errors.GetIoExceptionForLastError();
+
+            return result;
+        }
+
+        public static void KillTimer(WindowHandle window, TimerId id)
+        {
+            if (!Imports.KillTimer(window, id))
+                throw Errors.GetIoExceptionForLastError();
+        }
     }
 }

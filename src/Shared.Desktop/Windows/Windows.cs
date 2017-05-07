@@ -6,6 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.Types;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
@@ -58,6 +60,7 @@ namespace WInterop.Windows
         public static RegionHandle CreateEllipticRegion(int left, int top, int right, int bottom) => GdiMethods.CreateEllipticRegion(left, top, right, bottom);
         public static RegionHandle CreateRectangleRegion(int left, int top, int right, int bottom) => GdiMethods.CreateRectangleRegion(left, top, right, bottom);
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.MB_OK) => WindowMethods.MessageBox(text, caption, type);
+        public static void MessageBeep(MessageBeepType type = MessageBeepType.SimpleBeep) => ErrorMethods.MessageBeep(type);
         public static int GetSystemMetrics(SystemMetric metric) => WindowMethods.GetSystemMetrics(metric);
         public static string GetKeyNameText(LPARAM lParam) => WindowMethods.GetKeyNameText(lParam);
         public static BrushHandle CreateSolidBrush(byte red, byte green, byte blue) => GdiMethods.CreateSolidBrush(red, green, blue);

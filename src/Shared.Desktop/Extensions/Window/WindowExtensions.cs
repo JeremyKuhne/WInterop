@@ -63,5 +63,8 @@ namespace WInterop.Extensions.WindowExtensions
         public static WindowHandle GetDialogItem(this WindowHandle window, int id) => WindowMethods.GetDialogItem(window, id);
         public static WindowHandle SetFocus(this WindowHandle window) => WindowMethods.SetFocus(window);
         public static WindowHandle SetCapture(this WindowHandle window) => WindowMethods.SetCapture(window);
+        public static TimerId SetTimer(this WindowHandle window, TimerId id, uint interval, TimerProcedure callback = null, uint delayTolerance = 0)
+            => WindowMethods.SetTimer(window, id, interval, callback, delayTolerance);
+        public static void KillTimer(this WindowHandle window, TimerId id) => WindowMethods.KillTimer(window, id);
     }
 }

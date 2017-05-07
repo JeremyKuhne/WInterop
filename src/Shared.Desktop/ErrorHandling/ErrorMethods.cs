@@ -67,7 +67,7 @@ namespace WInterop.ErrorHandling
         /// <summary>
         /// Play the specified sound (as defined in the Sound control panel).
         /// </summary>
-        public static void MessageBeep(MessageBeepType type)
+        public static void MessageBeep(MessageBeepType type = MessageBeepType.SimpleBeep)
         {
             if (!Imports.MessageBeep(type))
                 throw Errors.GetIoExceptionForLastError();
