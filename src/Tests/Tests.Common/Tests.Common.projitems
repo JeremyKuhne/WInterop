@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementBehaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfoTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HandlesTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\BoolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\ConversionTests.cs" />

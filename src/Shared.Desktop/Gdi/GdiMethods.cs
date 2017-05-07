@@ -332,9 +332,14 @@ namespace WInterop.Gdi
             return Imports.SelectClipRgn(deviceContext, region);
         }
 
-        public static unsafe void SetViewportOrigin(DeviceContext deviceContext, int x, int y)
+        public static unsafe bool SetViewportOrigin(DeviceContext deviceContext, int x, int y)
         {
-            Imports.SetViewportOrgEx(deviceContext, x, y, null);
+            return Imports.SetViewportOrgEx(deviceContext, x, y, null);
+        }
+
+        public static unsafe bool SetWindowOrigin(DeviceContext deviceContext, int x, int y)
+        {
+            return Imports.SetWindowOrgEx(deviceContext, x, y, null);
         }
 
         public static BackgroundMode SetBackgroundMode(DeviceContext deviceContext, BackgroundMode mode)
@@ -430,6 +435,31 @@ namespace WInterop.Gdi
         {
             fixed (POINT* p = points)
                 return Imports.LPtoDP(deviceContext, p, points.Length);
+        }
+
+        public unsafe static bool OffsetWindowOrigin(DeviceContext deviceContext, int x, int y)
+        {
+            return Imports.OffsetWindowOrgEx(deviceContext, x, y, null);
+        }
+
+        public unsafe static bool OffsetViewportOrigin(DeviceContext deviceContext, int x, int y)
+        {
+            return Imports.OffsetViewportOrgEx(deviceContext, x, y, null);
+        }
+
+        public unsafe static bool SetWindowExtents(DeviceContext deviceContext, int x, int y)
+        {
+            return Imports.SetWindowExtEx(deviceContext, x, y, null);
+        }
+
+        public unsafe static bool SetViewportExtents(DeviceContext deviceContext, int x, int y)
+        {
+            return Imports.SetViewportExtEx(deviceContext, x, y, null);
+        }
+
+        public static MapMode SetMapMode(DeviceContext deviceContext, MapMode mapMode)
+        {
+            return Imports.SetMapMode(deviceContext, mapMode);
         }
     }
 }

@@ -39,6 +39,11 @@ namespace WInterop.SystemInformation
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
             public static extern bool QueryPerformanceCounter(
                 out long lpPerformanceCount);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724338.aspx
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+            public static extern void GetLocalTime(
+                out SYSTEMTIME lpSystemTime);
         }
 
         /// <summary>
@@ -74,6 +79,15 @@ namespace WInterop.SystemInformation
         {
             Imports.QueryPerformanceCounter(out long counts);
             return counts;
+        }
+
+        /// <summary>
+        /// Returns the local system time.
+        /// </summary>
+        public static SYSTEMTIME GetLocalTime()
+        {
+            Imports.GetLocalTime(out SYSTEMTIME time);
+            return time;
         }
     }
 }

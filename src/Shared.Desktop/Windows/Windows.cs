@@ -10,9 +10,12 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
+using WInterop.Globalization;
 using WInterop.Modules.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
+using WInterop.SystemInformation;
+using WInterop.SystemInformation.Types;
 using WInterop.Windows.Types;
 
 namespace WInterop.Windows
@@ -92,5 +95,8 @@ namespace WInterop.Windows
         public static void ReleaseCapture() => WindowMethods.ReleaseCapture();
 
         public static SystemParameters SystemParameters => SystemParameters.Instance;
+        public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
+
+        public static SYSTEMTIME GetLocalTime() => SystemInformationMethods.GetLocalTime();
     }
 }

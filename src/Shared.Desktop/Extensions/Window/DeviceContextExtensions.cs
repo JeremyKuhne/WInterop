@@ -54,11 +54,16 @@ namespace WInterop.Extensions.WindowExtensions
             => GdiMethods.RoundRectangle(deviceContext, left, top, right, bottom, cornerWidth, cornerHeight);
         public static bool PolyBezier(this DeviceContext deviceContext, params POINT[] points)
             => GdiMethods.PolyBezier(deviceContext, points);
+        public static bool SetPixel(this DeviceContext deviceContext, int x, int y, COLORREF color) => GdiMethods.SetPixel(deviceContext, x, y, color);
         public static bool DeviceToLogical(this DeviceContext deviceContext, params POINT[] points) => GdiMethods.DeviceToLogical(deviceContext, points);
         public static bool LogicalToDevice(this DeviceContext deviceContext, params POINT[] points) => GdiMethods.LogicalToDevice(deviceContext, points);
-        public static void SetViewportOrigin(this DeviceContext deviceContext, int x, int y) => GdiMethods.SetViewportOrigin(deviceContext, x, y);
-        public static bool SetPixel(this DeviceContext deviceContext, int x, int y, COLORREF color) => GdiMethods.SetPixel(deviceContext, x, y, color);
-
+        public static bool SetViewportOrigin(this DeviceContext deviceContext, int x, int y) => GdiMethods.SetViewportOrigin(deviceContext, x, y);
+        public static bool SetWindowOrigin(this DeviceContext deviceContext, int x, int y) => GdiMethods.SetWindowOrigin(deviceContext, x, y);
+        public static bool OffsetWindowOrigin(this DeviceContext deviceContext, int x, int y) => GdiMethods.OffsetWindowOrigin(deviceContext, x, y);
+        public static bool OffsetViewportOrigin(this DeviceContext deviceContext, int x, int y) => GdiMethods.OffsetViewportOrigin(deviceContext, x, y);
+        public static bool SetWindowExtents(this DeviceContext deviceContext, int x, int y) => GdiMethods.SetWindowExtents(deviceContext, x, y);
+        public static bool SetViewportExtents(this DeviceContext deviceContext, int x, int y) => GdiMethods.SetViewportExtents(deviceContext, x, y);
+        public static MapMode SetMapMode(this DeviceContext deviceContext, MapMode mapMode) => GdiMethods.SetMapMode(deviceContext, mapMode);
 
         public static RegionType SelectClippingRegion(this DeviceContext deviceContext, RegionHandle region) => GdiMethods.SelectClippingRegion(deviceContext, region);
         public static RegionType CombineRegion(this RegionHandle destination, RegionHandle sourceOne, RegionHandle sourceTwo, CombineRegionMode mode) =>

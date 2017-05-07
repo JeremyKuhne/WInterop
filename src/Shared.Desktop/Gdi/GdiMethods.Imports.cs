@@ -554,19 +554,19 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd162748.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool OffsetViewportOrgEx(
+            public unsafe static extern bool OffsetViewportOrgEx(
                 DeviceContext hdc,
                 int nXOffset,
                 int nYOffset,
-                out POINT lpPoint);
+                POINT* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd162749.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool OffsetWindowOrgEx(
+            public unsafe static extern bool OffsetWindowOrgEx(
                 DeviceContext hdc,
                 int nXOffset,
                 int nYOffset,
-                out POINT lpPoint);
+                POINT* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd162947.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -613,11 +613,11 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd145098.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool SetViewportExtEx(
+            public unsafe static extern bool SetViewportExtEx(
                 DeviceContext hdc,
                 int nXExtent,
                 int nYExtent,
-                out SIZE lpSize);
+                SIZE* lpSize);
 
             // https://msdn.microsoft.com/en-us/library/dd145099.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -629,19 +629,19 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd145100.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool SetWindowExtEx(
+            public unsafe static extern bool SetWindowExtEx(
                 DeviceContext hdc,
                 int nXExtent,
                 int nYExtent,
-                out SIZE lpSize);
+                SIZE* lpSize);
 
             // https://msdn.microsoft.com/en-us/library/dd145101.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern bool SetWindowOrgEx(
+            public unsafe static extern bool SetWindowOrgEx(
                 DeviceContext hdc,
                 int nXExtent,
                 int nYExtent,
-                out POINT lpPoint);
+                POINT* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd145104.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]

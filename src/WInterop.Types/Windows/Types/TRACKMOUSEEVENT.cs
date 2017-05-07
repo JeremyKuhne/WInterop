@@ -12,7 +12,7 @@ namespace WInterop.Windows.Types
     {
         public uint cbSize;
         public TrackMouseEvents dwFlags;
-        WindowHandle hwndTrack;
+        public WindowHandle hwndTrack;
         public uint dwHoverTime;
     }
 }
