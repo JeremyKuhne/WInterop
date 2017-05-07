@@ -14,19 +14,19 @@ using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace Beeper1
+namespace Beeper2
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.
     /// Original (c) Charles Petzold, 1998
-    /// Figure 8-1, Pages 331-333.
+    /// Figure 8-2, Pages 335-337.
     /// </summary>
     static class Program
     {
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Beeper1";
+            const string szAppName = "Beeper2";
 
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
@@ -45,7 +45,7 @@ namespace Beeper1
             WindowHandle window = Windows.CreateWindow(
                 module,
                 szAppName,
-                "Beeper1 Timer Demo",
+                "Beeper2 Timer Demo",
                 WindowStyle.WS_OVERLAPPEDWINDOW);
 
             window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
@@ -66,22 +66,7 @@ namespace Beeper1
             switch (message)
             {
                 case MessageType.WM_CREATE:
-                    window.SetTimer(ID_TIMER, 1000);
-                    return 0;
-                case MessageType.WM_TIMER:
-                    Windows.MessageBeep();
-                    fFlipFlop = !fFlipFlop;
-                    window.Invalidate();
-                    return 0;
-                case MessageType.WM_PAINT:
-                    using (DeviceContext dc = window.BeginPaint())
-                    {
-                        RECT rect = window.GetClientRect();
-                        using (BrushHandle brush = fFlipFlop ? Windows.CreateSolidBrush(255, 0, 0) : Windows.CreateSolidBrush(0, 0, 255))
-                        {
-                            dc.FillRectangle(rect, brush);
-                        }
-                    }
+                    window.SetTimer(ID_TIMER, 1000, TimerProcedure);
                     return 0;
                 case MessageType.WM_DESTROY:
                     window.KillTimer(ID_TIMER);
@@ -90,6 +75,20 @@ namespace Beeper1
             }
 
             return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+        }
+
+        static void TimerProcedure(WindowHandle window, MessageType message, TimerId timerId, uint time)
+        {
+            Windows.MessageBeep();
+            fFlipFlop = !fFlipFlop;
+            using (DeviceContext dc = window.GetDeviceContext())
+            {
+                RECT rect = window.GetClientRect();
+                using (BrushHandle brush = fFlipFlop ? Windows.CreateSolidBrush(255, 0, 0) : Windows.CreateSolidBrush(0, 0, 255))
+                {
+                    dc.FillRectangle(rect, brush);
+                }
+            }
         }
     }
 }
