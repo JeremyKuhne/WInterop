@@ -147,13 +147,13 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool ShowWindow(
                 WindowHandle hWnd,
-                ShowWindowCommand nCmdShow);
+                ShowWindow nCmdShow);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633549.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool ShowWindowAsync(
                 WindowHandle hWnd,
-                ShowWindowCommand nCmdShow);
+                ShowWindow nCmdShow);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633505.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -323,7 +323,7 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern LRESULT SendMessageW(
                 WindowHandle hWnd,
-                MessageType Msg,
+                WindowMessage Msg,
                 WPARAM wParam,
                 LPARAM lParam);
 
@@ -341,7 +341,7 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern LRESULT DefWindowProcW(
                 WindowHandle hWnd,
-                MessageType Msg,
+                WindowMessage Msg,
                 WPARAM wParam,
                 LPARAM lParam);
 
@@ -460,7 +460,7 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern LRESULT DefDlgProcW(
                 WindowHandle hDlg,
-                MessageType Msg,
+                WindowMessage Msg,
                 WPARAM wParam,
                 LPARAM lParam);
 
@@ -555,7 +555,7 @@ namespace WInterop.Windows
             public static extern LRESULT SendDlgItemMessageW(
                 WindowHandle hDlg,
                 int nIDDlgItem,
-                MessageType Msg,
+                WindowMessage Msg,
                 WPARAM wParam,
                 LPARAM lParam);
 

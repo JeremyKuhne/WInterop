@@ -30,12 +30,12 @@ namespace SysMets3
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = "SysMets3"
             };
 
@@ -45,9 +45,9 @@ namespace SysMets3
                 module,
                 "SysMets3",
                 "Get System Metrics No. 3",
-                WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL | WindowStyle.WS_HSCROLL);
+                WindowStyle.OverlappedWindow | WindowStyle.VerticalScroll | WindowStyle.HorizontalScroll);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -59,13 +59,13 @@ namespace SysMets3
 
         static int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             SCROLLINFO si;
 
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -78,7 +78,7 @@ namespace SysMets3
                     iMaxWidth = 40 * cxChar + 22 * cxCaps;
 
                     return 0;
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -98,7 +98,7 @@ namespace SysMets3
                     window.SetScrollInfo(ScrollBar.SB_HORZ, ref si, true);
 
                     return 0;
-                case MessageType.WM_VSCROLL:
+                case WindowMessage.VerticalScroll:
                     // Get all the vertical scroll bar information
                     si = new SCROLLINFO
                     {
@@ -147,7 +147,7 @@ namespace SysMets3
                         window.UpdateWindow();
                     }
                     return 0;
-                case MessageType.WM_HSCROLL:
+                case WindowMessage.HorizontalScroll:
                     // Get all the horizontal scroll bar information
                     si = new SCROLLINFO
                     {
@@ -189,7 +189,7 @@ namespace SysMets3
                     }
                     return 0;
 
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     PAINTSTRUCT ps;
                     using (DeviceContext dc = window.BeginPaint(out ps))
                     {
@@ -224,7 +224,7 @@ namespace SysMets3
                         }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

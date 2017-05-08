@@ -19,7 +19,7 @@ namespace WInterop.Extensions.WindowExtensions
     /// </summary>
     public static partial class WindowExtensions
     {
-        public static bool ShowWindow(this WindowHandle window, ShowWindowCommand command) => WindowMethods.ShowWindow(window, command);
+        public static bool ShowWindow(this WindowHandle window, ShowWindow command) => WindowMethods.ShowWindow(window, command);
         public static WindowHandle GetWindow(this WindowHandle window, GetWindowOption option) => WindowMethods.GetWindow(window, option);
         public static WindowHandle GetTopWindow(this WindowHandle window) => WindowMethods.GetTopWindow(window);
         public static WindowHandle GetParent(this WindowHandle window) => WindowMethods.GetParent(window);
@@ -53,7 +53,7 @@ namespace WInterop.Extensions.WindowExtensions
         public static IntPtr GetWindowLong(this WindowHandle window, WindowLong index) => WindowMethods.GetWindowLong(window, index);
         public static IntPtr SetWindowLong(this WindowHandle window, WindowLong index, IntPtr value) => WindowMethods.SetWindowLong(window, index, value);
         public static bool GetMessage(this WindowHandle window, out MSG message, uint minMessage = 0, uint maxMessage = 0) => WindowMethods.GetMessage(out message, window, minMessage, maxMessage);
-        public static LRESULT SendMessage(this WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam) => WindowMethods.SendMessage(window, message, wParam, lParam);
+        public static LRESULT SendMessage(this WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam) => WindowMethods.SendMessage(window, message, wParam, lParam);
         public static bool ScreenToClient(this WindowHandle window, ref POINT point) => GdiMethods.ScreenToClient(window, ref point);
         public static bool ClientToScreen(this WindowHandle window, ref POINT point) => GdiMethods.ClientToScreen(window, ref point);
         public static void CreateCaret(this WindowHandle window, BitmapHandle bitmap, int width, int height) =>

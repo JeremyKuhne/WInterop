@@ -34,12 +34,12 @@ namespace Typer
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -49,9 +49,9 @@ namespace Typer
                 module,
                 szAppName,
                 "Typing Program",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -65,14 +65,14 @@ namespace Typer
         static CharacterSet dwCharSet = CharacterSet.DEFAULT_CHARSET;
         static char[,] pBuffer;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_INPUTLANGCHANGE:
+                case WindowMessage.InputLanguageChange:
                     dwCharSet = (CharacterSet)(uint)wParam;
-                    goto case MessageType.WM_CREATE;
-                case MessageType.WM_CREATE:
+                    goto case WindowMessage.Create;
+                case WindowMessage.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
@@ -86,7 +86,7 @@ namespace Typer
                         }
                     }
                     goto CalculateSize;
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -108,18 +108,18 @@ namespace Typer
 
                     window.Invalidate(true);
                     return 0;
-                case MessageType.WM_SETFOCUS:
+                case WindowMessage.SetFocus:
                     // create and show the caret
                     window.CreateCaret(null, cxChar, cyChar);
                     Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
                     window.ShowCaret();
                     return 0;
-                case MessageType.WM_KILLFOCUS:
+                case WindowMessage.KillFocus:
                     // hide and destroy the caret
                     window.HideCaret();
                     Windows.DestroyCaret();
                     return 0;
-                case MessageType.WM_KEYDOWN:
+                case WindowMessage.KeyDown:
                     switch ((VirtualKey)wParam)
                     {
                         case VirtualKey.VK_HOME:
@@ -173,7 +173,7 @@ namespace Typer
                     Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
                     return 0;
 
-                case MessageType.WM_CHAR:
+                case WindowMessage.Char:
                     for (int i = 0; i < lParam.LowWord; i++)
                     {
                         switch ((char)wParam)
@@ -182,13 +182,13 @@ namespace Typer
                                 if (xCaret > 0)
                                 {
                                     xCaret--;
-                                    window.SendMessage(MessageType.WM_KEYDOWN, (uint)VirtualKey.VK_DELETE, 1);
+                                    window.SendMessage(WindowMessage.KeyDown, (uint)VirtualKey.VK_DELETE, 1);
                                 }
                                 break;
                             case '\t': // tab
                                 do
                                 {
-                                    window.SendMessage(MessageType.WM_CHAR, ' ', 1);
+                                    window.SendMessage(WindowMessage.Char, ' ', 1);
                                 } while (xCaret % 8 != 0);
                                 break;
                             case '\n': // line feed
@@ -239,7 +239,7 @@ namespace Typer
                     }
                     Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
@@ -256,7 +256,7 @@ namespace Typer
                         }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

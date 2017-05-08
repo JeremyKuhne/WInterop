@@ -29,12 +29,12 @@ namespace SysMets1
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = "SysMets1"
             };
 
@@ -44,9 +44,9 @@ namespace SysMets1
                 module,
                 "SysMets1",
                 "Get System Metrics No. 1",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -58,11 +58,11 @@ namespace SysMets1
 
         static int cxChar, cxCaps, cyChar;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -71,7 +71,7 @@ namespace SysMets1
                         cyChar = tm.tmHeight + tm.tmExternalLeading;
                     }
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         int i = 0;
@@ -86,7 +86,7 @@ namespace SysMets1
                         }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

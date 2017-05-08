@@ -37,6 +37,11 @@ namespace WInterop.Windows.Types
             return (int)value.RawValue.ToInt64();
         }
 
+        public static explicit operator uint(LPARAM value)
+        {
+            return (uint)value.RawValue.ToInt64();
+        }
+
         public static implicit operator LPARAM(int value)
         {
             return new LPARAM((IntPtr)value);

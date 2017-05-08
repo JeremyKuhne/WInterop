@@ -26,6 +26,11 @@ namespace WInterop.Gdi
             return Imports.CreateDCW(driver, device, null, null);
         }
 
+        public unsafe static DeviceContext CreateInformationContext(string driver, string device)
+        {
+            return Imports.CreateICW(driver, device, null, null);
+        }
+
         /// <summary>
         /// Get the device context for the client area of the specified window.
         /// </summary>
@@ -236,7 +241,12 @@ namespace WInterop.Gdi
             return Imports.InvalidateRect(window, null, erase);
         }
 
-        public unsafe static bool SetPixel(DeviceContext deviceContext, int x, int y, COLORREF color)
+        public static COLORREF GetPixel(DeviceContext deviceContext, int x, int y)
+        {
+            return Imports.GetPixel(deviceContext, x, y);
+        }
+
+        public static bool SetPixel(DeviceContext deviceContext, int x, int y, COLORREF color)
         {
             return Imports.SetPixelV(deviceContext, x, y, color);
         }

@@ -29,12 +29,12 @@ namespace AltWind
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = "AltWind"
             };
 
@@ -44,9 +44,9 @@ namespace AltWind
                 module,
                 "AltWind",
                 "Alternate and Winding Fill Modes",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -72,19 +72,19 @@ namespace AltWind
 
         static int cxClient, cyClient;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     POINT[] apt = new POINT[10];
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        dc.SelectObject(StockBrush.GRAY_BRUSH);
+                        dc.SelectObject(StockBrush.Gray);
                         for (int i = 0; i < 10; i++)
                         {
                             apt[i].x = cxClient * aptFigure[i].x / 200;
@@ -103,7 +103,7 @@ namespace AltWind
                     }
 
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

@@ -10,15 +10,54 @@ namespace WInterop.Resources.Types
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648072.aspx
     public enum IconId : uint
     {
-        IDI_APPLICATION    = 32512,
-        IDI_HAND           = 32513,
-        IDI_QUESTION       = 32514,
-        IDI_EXCLAMATION    = 32515,
-        IDI_ASTERISK       = 32516,
-        IDI_WINLOGO        = 32517,
-        IDI_SHIELD         = 32518,
-        IDI_WARNING        = IDI_EXCLAMATION,
-        IDI_ERROR          = IDI_HAND,
-        IDI_INFORMATION    = IDI_ASTERISK
+        /// <summary>
+        /// Application icon. (IDI_APPLICATION)
+        /// </summary>
+        Application = 32512,
+
+        /// <summary>
+        /// Error icon (hand). (IDI_HAND)
+        /// </summary>
+        Hand = 32513,
+
+        /// <summary>
+        /// Question mark icon. (IDI_QUESTION)
+        /// </summary>
+        Question = 32514,
+
+        /// <summary>
+        /// Warning icon (exclamation point). (IDI_EXCLAMATION)
+        /// </summary>
+        Exclamation = 32515,
+
+        /// <summary>
+        /// Information icon (asterisk). (IDI_ASTERISK)
+        /// </summary>
+        Asterisk = 32516,
+
+        /// <summary>
+        /// Application icon (Windows logo on Windows 2000). (IDI_WINLOGO)
+        /// </summary>
+        WindowsLogo = 32517,
+
+        /// <summary>
+        /// Security shield icon. (IDI_SHIELD)
+        /// </summary>
+        Shield = 32518,
+
+        /// <summary>
+        /// Warning icon (exclamation point). (IDI_WARNING)
+        /// </summary>
+        Warning = Exclamation,
+
+        /// <summary>
+        /// Error icon (hand). (IDI_ERROR)
+        /// </summary>
+        Error = Hand,
+
+        /// <summary>
+        /// Information icon (asterisk). (IDI_INFORMATION)
+        /// </summary>
+        Information = Asterisk
     }
 }

@@ -31,12 +31,12 @@ namespace KeyView1
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -46,9 +46,9 @@ namespace KeyView1
                 module,
                 szAppName,
                 "Keyboard Message Viewer #1",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -63,12 +63,12 @@ namespace KeyView1
         static RECT rectScroll;
         static MSG[] pmsg;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
-                case MessageType.WM_DISPLAYCHANGE:
+                case WindowMessage.Create:
+                case WindowMessage.DisplayChange:
                     // Get maximum size of client area
                     cxClientMax = Windows.GetSystemMetrics(SystemMetric.SM_CXMAXIMIZED);
                     cyClientMax = Windows.GetSystemMetrics(SystemMetric.SM_CYMAXIMIZED);
@@ -86,7 +86,7 @@ namespace KeyView1
                     pmsg = new MSG[cLinesMax];
                     cLines = 0;
                     goto CalculateScroll;
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -99,14 +99,14 @@ namespace KeyView1
                     window.Invalidate(true);
 
                     return 0;
-                case MessageType.WM_KEYDOWN:
-                case MessageType.WM_KEYUP:
-                case MessageType.WM_CHAR:
-                case MessageType.WM_DEADCHAR:
-                case MessageType.WM_SYSKEYDOWN:
-                case MessageType.WM_SYSKEYUP:
-                case MessageType.WM_SYSCHAR:
-                case MessageType.WM_SYSDEADCHAR:
+                case WindowMessage.KeyDown:
+                case WindowMessage.KeyUp:
+                case WindowMessage.Char:
+                case WindowMessage.DeadChar:
+                case WindowMessage.SystemKeyDown:
+                case WindowMessage.SystemKeyUp:
+                case WindowMessage.SystemChar:
+                case WindowMessage.SystemDeadChar:
                     // Rearrange storage array
                     for (int i = cLinesMax - 1; i > 0; i--)
                     {
@@ -122,7 +122,7 @@ namespace KeyView1
                     // Scroll up the display
                     window.ScrollWindow(0, -cyChar, rectScroll, rectScroll);
                     break; // i.e., call DefWindowProc so Sys messages work
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SelectObject(StockFont.SYSTEM_FIXED_FONT);
@@ -134,10 +134,10 @@ namespace KeyView1
                             bool iType;
                             switch (pmsg[i].message)
                             {
-                                case MessageType.WM_CHAR:
-                                case MessageType.WM_SYSCHAR:
-                                case MessageType.WM_DEADCHAR:
-                                case MessageType.WM_SYSDEADCHAR:
+                                case WindowMessage.Char:
+                                case WindowMessage.SystemChar:
+                                case WindowMessage.DeadChar:
+                                case WindowMessage.SystemDeadChar:
                                     iType = true;
                                     break;
                                 default:
@@ -163,7 +163,7 @@ namespace KeyView1
                         }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

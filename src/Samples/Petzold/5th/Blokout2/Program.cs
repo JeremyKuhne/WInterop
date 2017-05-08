@@ -31,12 +31,12 @@ namespace Blokout2
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -46,9 +46,9 @@ namespace Blokout2
                 module,
                 szAppName,
                 "Mouse Button & Capture Demo",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -63,7 +63,7 @@ namespace Blokout2
             using (DeviceContext dc = window.GetDeviceContext())
             {
                 dc.SetRasterOperation(RasterOperation.R2_NOT);
-                dc.SelectObject(StockBrush.NULL_BRUSH);
+                dc.SelectObject(StockBrush.Null);
                 dc.Rectangle(ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y);
             }
         }
@@ -71,29 +71,29 @@ namespace Blokout2
         static bool fBlocking, fValidBox;
         static POINT ptBeg, ptEnd, ptBoxBeg, ptBoxEnd;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_LBUTTONDOWN:
+                case WindowMessage.LeftButtonDown:
                     ptBeg.x = ptEnd.x = lParam.LowWord;
                     ptBeg.y = ptEnd.y = lParam.HighWord;
                     DrawBoxOutline(window, ptBeg, ptEnd);
                     window.SetCapture();
-                    Windows.SetCursor(CursorId.IDC_CROSS);
+                    Windows.SetCursor(CursorId.Cross);
                     fBlocking = true;
                     return 0;
-                case MessageType.WM_MOUSEMOVE:
+                case WindowMessage.MouseMove:
                     if (fBlocking)
                     {
-                        Windows.SetCursor(CursorId.IDC_CROSS);
+                        Windows.SetCursor(CursorId.Cross);
                         DrawBoxOutline(window, ptBeg, ptEnd);
                         ptEnd.x = lParam.LowWord;
                         ptEnd.y = lParam.HighWord;
                         DrawBoxOutline(window, ptBeg, ptEnd);
                     }
                     return 0;
-                case MessageType.WM_LBUTTONUP:
+                case WindowMessage.LeftButtonUp:
                     if (fBlocking)
                     {
                         DrawBoxOutline(window, ptBeg, ptEnd);
@@ -101,30 +101,30 @@ namespace Blokout2
                         ptBoxEnd.x = lParam.LowWord;
                         ptBoxEnd.y = lParam.HighWord;
                         Windows.ReleaseCapture();
-                        Windows.SetCursor(CursorId.IDC_ARROW);
+                        Windows.SetCursor(CursorId.Arrow);
                         fBlocking = false;
                         fValidBox = true;
                         window.Invalidate(true);
                     }
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         if (fValidBox)
                         {
-                            dc.SelectObject(StockBrush.BLACK_BRUSH);
+                            dc.SelectObject(StockBrush.Black);
                             dc.Rectangle(ptBoxBeg.x, ptBoxBeg.y,
                                 ptBoxEnd.x, ptBoxEnd.y);
                         }
                         if (fBlocking)
                         {
                             dc.SetRasterOperation(RasterOperation.R2_NOT);
-                            dc.SelectObject(StockBrush.NULL_BRUSH);
+                            dc.SelectObject(StockBrush.Null);
                             dc.Rectangle(ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y);
                         }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

@@ -10,23 +10,25 @@ using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
+using WInterop.Multimedia;
+using WInterop.Multimedia.Types;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace Beeper2
+namespace WhatClr
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.
     /// Original (c) Charles Petzold, 1998
-    /// Figure 8-2, Pages 335-337.
+    /// Figure 3-1, Pages 44-46.
     /// </summary>
     static class Program
     {
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Beeper2";
+            const string szAppName = "WhatClr";
 
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
@@ -45,8 +47,8 @@ namespace Beeper2
             WindowHandle window = Windows.CreateWindow(
                 module,
                 szAppName,
-                "Beeper2 Timer Demo",
-                WindowStyle.OverlappedWindow);
+                "What Color",
+                WindowStyle.Overlapped | WindowStyle.Caption | WindowStyle.SystemMenu | WindowStyle.Border);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
@@ -58,7 +60,20 @@ namespace Beeper2
             }
         }
 
-        static bool fFlipFlop = false;
+        static void FindWindowSize(ref int cxWindow, ref int cyWindow)
+        {
+            TEXTMETRIC tm;
+            using (DeviceContext dcScreen = Windows.CreateInformationContext("DISPLAY", null))
+            {
+                dcScreen.GetTextMetrics(out tm);
+            }
+
+            cxWindow = 2 * Windows.GetSystemMetrics(SystemMetric.SM_CXBORDER) + 12 * tm.tmAveCharWidth;
+            cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.SM_CYBORDER) + Windows.GetSystemMetrics(SystemMetric.SM_CYCAPTION) + 2 * tm.tmHeight;
+        }
+
+        static DeviceContext dcScreen;
+        static COLORREF cr, crLast;
         const int ID_TIMER = 1;
 
         static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
@@ -66,29 +81,37 @@ namespace Beeper2
             switch (message)
             {
                 case WindowMessage.Create:
-                    window.SetTimer(ID_TIMER, 1000, TimerProcedure);
+                    dcScreen = Windows.CreateDeviceContext("DISPLAY", null);
+                    window.SetTimer(ID_TIMER, 100);
+                    return 0;
+                case WindowMessage.Timer:
+                    POINT pt = Windows.GetCursorPosition();
+                    cr = dcScreen.GetPixel(pt);
+                    // Not sure why the sample did this
+                    // dcScreen.SetPixel(pt, 0);
+                    if (cr != crLast)
+                    {
+                        crLast = cr;
+                        window.Invalidate(false);
+                    }
+                    return 0;
+                case WindowMessage.Paint:
+                    using (DeviceContext dc = window.BeginPaint())
+                    {
+                        dc.SelectObject(StockFont.SYSTEM_FIXED_FONT);
+                        RECT rc = window.GetClientRect();
+                        dc.DrawText($"0x{cr.R:X2} 0x{cr.G:X2} 0x{cr.B:X2}", rc,
+                            TextFormat.DT_SINGLELINE | TextFormat.DT_CENTER | TextFormat.DT_VCENTER);
+                    }
                     return 0;
                 case WindowMessage.Destroy:
+                    dcScreen.Dispose();
                     window.KillTimer(ID_TIMER);
                     Windows.PostQuitMessage(0);
                     return 0;
             }
 
             return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
-        }
-
-        static void TimerProcedure(WindowHandle window, WindowMessage message, TimerId timerId, uint time)
-        {
-            Windows.MessageBeep();
-            fFlipFlop = !fFlipFlop;
-            using (DeviceContext dc = window.GetDeviceContext())
-            {
-                RECT rect = window.GetClientRect();
-                using (BrushHandle brush = fFlipFlop ? Windows.CreateSolidBrush(255, 0, 0) : Windows.CreateSolidBrush(0, 0, 255))
-                {
-                    dc.FillRectangle(rect, brush);
-                }
-            }
         }
     }
 }

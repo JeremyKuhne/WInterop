@@ -276,7 +276,7 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static bool ShowWindow(WindowHandle window, ShowWindowCommand command)
+        public static bool ShowWindow(WindowHandle window, ShowWindow command)
         {
             return Imports.ShowWindow(window, command);
         }
@@ -301,7 +301,7 @@ namespace WInterop.Windows
             return Imports.PeekMessageW(out message, window, minMessage, maxMessage, options);
         }
 
-        public static LRESULT SendMessage(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        public static LRESULT SendMessage(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             return Imports.SendMessageW(window, message, wParam, lParam);
         }
@@ -316,7 +316,7 @@ namespace WInterop.Windows
             return Imports.DispatchMessageW(ref message);
         }
 
-        public static LRESULT DefaultWindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        public static LRESULT DefaultWindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             return Imports.DefWindowProcW(window, message, wParam, lParam);
         }

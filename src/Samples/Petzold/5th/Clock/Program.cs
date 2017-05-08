@@ -33,12 +33,12 @@ namespace Clock
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -48,9 +48,9 @@ namespace Clock
                 module,
                 szAppName,
                 "Analog Clock",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -95,7 +95,7 @@ namespace Clock
                 pt[0].y -= pt[2].y / 2;
                 pt[1].x = pt[0].x + pt[2].x;
                 pt[1].y = pt[0].y + pt[2].y;
-                hdc.SelectObject(StockBrush.BLACK_BRUSH);
+                hdc.SelectObject(StockBrush.Black);
                 hdc.Ellipse(pt[0].x, pt[0].y, pt[1].x, pt[1].y);
             }
         }
@@ -128,19 +128,19 @@ namespace Clock
         static int cxClient, cyClient;
         static SYSTEMTIME stPrevious;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     window.SetTimer(ID_TIMER, 1000);
                     stPrevious = Windows.GetLocalTime();
                     return 0;
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
                     return 0;
-                case MessageType.WM_TIMER:
+                case WindowMessage.Timer:
                     SYSTEMTIME st = Windows.GetLocalTime();
                     bool fChange = st.wHour != stPrevious.wHour ||
                         st.wMinute != stPrevious.wMinute;
@@ -154,7 +154,7 @@ namespace Clock
                     }
                     stPrevious = st;
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         SetIsotropic(dc, cxClient, cyClient);
@@ -162,7 +162,7 @@ namespace Clock
                         DrawHands(dc, stPrevious, true);
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     window.KillTimer(ID_TIMER);
                     Windows.PostQuitMessage(0);
                     return 0;

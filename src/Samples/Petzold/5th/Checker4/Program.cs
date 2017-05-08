@@ -35,12 +35,12 @@ namespace Checker4
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -56,9 +56,9 @@ namespace Checker4
                 module,
                 szAppName,
                 "Checker4 Mouse Hit-Test Demo",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -73,26 +73,26 @@ namespace Checker4
         static int cxBlock, cyBlock;
         static int idFocus = 0;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             int x, y;
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     for (x = 0; x < DIVISIONS; x++)
                         for (y = 0; y < DIVISIONS; y++)
                             hwndChild[x, y] = Windows.CreateWindow(
                                 window.GetWindowLong(WindowLong.GWL_HINSTANCE),
                                 szChildClass,
                                 null,
-                                WindowStyle.WS_CHILDWINDOW | WindowStyle.WS_VISIBLE,
+                                WindowStyle.ChildWindow | WindowStyle.Visible,
                                 ExtendedWindowStyle.None,
                                 0, 0, 0, 0,
                                 window,
                                 (IntPtr)(y << 8 | x),
                                 IntPtr.Zero);
                     return 0;
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxBlock = lParam.LowWord / DIVISIONS;
                     cyBlock = lParam.HighWord / DIVISIONS;
                     for (x = 0; x < DIVISIONS; x++)
@@ -104,15 +104,15 @@ namespace Checker4
                                 cyBlock,
                                 true);
                     return 0;
-                case MessageType.WM_LBUTTONDOWN:
+                case WindowMessage.LeftButtonDown:
                     ErrorMethods.MessageBeep(MessageBeepType.MB_OK);
                     return 0;
                 // On set-focus message, set focus to child window
-                case MessageType.WM_SETFOCUS:
+                case WindowMessage.SetFocus:
                     window.GetDialogItem(idFocus).SetFocus();
                     return 0;
                 // On key-down message, possibly change the focus window
-                case MessageType.WM_KEYDOWN:
+                case WindowMessage.KeyDown:
                     x = idFocus & 0xFF;
                     y = idFocus >> 8;
                     switch ((VirtualKey)wParam)
@@ -130,7 +130,7 @@ namespace Checker4
                     idFocus = y << 8 | x;
                     window.GetDialogItem(idFocus).SetFocus();
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }
@@ -138,14 +138,14 @@ namespace Checker4
             return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
 
-        static LRESULT ChildWindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT ChildWindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     window.SetWindowLong(0, IntPtr.Zero); // on/off flag
                     return 0;
-                case MessageType.WM_KEYDOWN:
+                case WindowMessage.KeyDown:
                     // Send most key presses to the parent window
                     if ((VirtualKey)wParam != VirtualKey.VK_RETURN && (VirtualKey)wParam != VirtualKey.VK_SPACE)
                     {
@@ -154,21 +154,21 @@ namespace Checker4
                     }
 
                     // For Return and Space, fall through to toggle the square
-                    goto case MessageType.WM_LBUTTONDOWN;
-                case MessageType.WM_LBUTTONDOWN:
+                    goto case WindowMessage.LeftButtonDown;
+                case WindowMessage.LeftButtonDown:
                     window.SetWindowLong(0, (IntPtr)(1 ^ (int)window.GetWindowLong(0)));
                     window.SetFocus();
                     window.Invalidate(false);
                     return 0;
                 // For focus messages, invalidate the window for repaint
-                case MessageType.WM_SETFOCUS:
+                case WindowMessage.SetFocus:
                     idFocus = (int)window.GetWindowLong(WindowLong.GWL_ID);
                     // Fall through
-                    goto case MessageType.WM_KILLFOCUS;
-                case MessageType.WM_KILLFOCUS:
+                    goto case WindowMessage.KillFocus;
+                case WindowMessage.KillFocus:
                     window.Invalidate();
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         RECT rect = window.GetClientRect();
@@ -189,7 +189,7 @@ namespace Checker4
                             rect.right -= rect.left;
                             rect.top += rect.bottom / 10;
                             rect.bottom -= rect.top;
-                            dc.SelectObject(StockBrush.NULL_BRUSH);
+                            dc.SelectObject(StockBrush.Null);
                             using (PenHandle pen = Windows.CreatePen(PenStyle.PS_DASH, 0, 0))
                             {
                                 dc.SelectObject(pen);

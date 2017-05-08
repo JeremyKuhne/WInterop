@@ -32,12 +32,12 @@ namespace Checker2
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -47,9 +47,9 @@ namespace Checker2
                 module,
                 szAppName,
                 "Checker2 Mouse Hit-Test Demo",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -63,21 +63,21 @@ namespace Checker2
         static bool[,] fState = new bool[DIVISIONS, DIVISIONS];
         static int cxBlock, cyBlock;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxBlock = lParam.LowWord / DIVISIONS;
                     cyBlock = lParam.HighWord / DIVISIONS;
                     return 0;
-                case MessageType.WM_SETFOCUS:
+                case WindowMessage.SetFocus:
                     Windows.ShowCursor(true);
                     return 0;
-                case MessageType.WM_KILLFOCUS:
+                case WindowMessage.KillFocus:
                     Windows.ShowCursor(false);
                     return 0;
-                case MessageType.WM_KEYDOWN:
+                case WindowMessage.KeyDown:
                     POINT point = Windows.GetCursorPosition();
                     window.ScreenToClient(ref point);
                     int x = Math.Max(0, Math.Min(DIVISIONS - 1, point.x / cxBlock));
@@ -104,7 +104,7 @@ namespace Checker2
                             break;
                         case VirtualKey.VK_RETURN:
                         case VirtualKey.VK_SPACE:
-                            window.SendMessage(MessageType.WM_LBUTTONDOWN, (WPARAM)MouseKey.MK_LBUTTON,
+                            window.SendMessage(WindowMessage.LeftButtonDown, (WPARAM)MouseKey.LeftButton,
                                 new LPARAM(y * cyBlock, x * cxBlock));
                             break;
                     }
@@ -115,7 +115,7 @@ namespace Checker2
                     window.ClientToScreen(ref point);
                     Windows.SetCursorPosition(point.x, point.y);
                     return 0;
-                case MessageType.WM_LBUTTONDOWN:
+                case WindowMessage.LeftButtonDown:
                     x = lParam.LowWord / cxBlock;
                     y = lParam.HighWord / cyBlock;
                     if (x < DIVISIONS && y < DIVISIONS)
@@ -136,7 +136,7 @@ namespace Checker2
                     }
 
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         for (x = 0; x < DIVISIONS; x++)
@@ -154,7 +154,7 @@ namespace Checker2
                             }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

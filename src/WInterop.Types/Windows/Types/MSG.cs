@@ -13,7 +13,7 @@ namespace WInterop.Windows.Types
     public struct MSG
     {
         public WindowHandle hwnd;
-        public MessageType message;
+        public WindowMessage message;
         public WPARAM wParam;
         public LPARAM lParam;
         public uint time;

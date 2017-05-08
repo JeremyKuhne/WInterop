@@ -50,5 +50,16 @@ namespace WInterop.Gdi.Types
         public static COLORREF DIB_PAL_COLORS => 1;
 
         public bool IsInvalid => Value == 0xFFFFFFFF;
+
+        public override bool Equals(object obj)
+        {
+            return obj is COLORREF other
+                ? Equals(other)
+                : false;
+        }
+
+        public bool Equals(COLORREF other) => other.Value == Value;
+        public static bool operator ==(COLORREF a, COLORREF b) => a.Value == b.Value;
+        public static bool operator !=(COLORREF a, COLORREF b) => a.Value != b.Value;
     }
 }

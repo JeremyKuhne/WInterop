@@ -12,7 +12,7 @@ namespace WInterop.Windows.Types
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644907.aspx
     public delegate void TimerProcedure(
         WindowHandle hwnd,
-        MessageType uMsg,
+        WindowMessage uMsg,
         TimerId idEvent,
         uint dwTime);
 }

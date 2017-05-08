@@ -32,12 +32,12 @@ namespace SysMets4
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -47,9 +47,9 @@ namespace SysMets4
                 module,
                 szAppName,
                 "Get System Metrics No. 4",
-                WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL | WindowStyle.WS_HSCROLL);
+                WindowStyle.OverlappedWindow | WindowStyle.VerticalScroll | WindowStyle.HorizontalScroll);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -61,13 +61,13 @@ namespace SysMets4
 
         static int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             SCROLLINFO si;
 
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -80,7 +80,7 @@ namespace SysMets4
                     iMaxWidth = 40 * cxChar + 22 * cxCaps;
 
                     return 0;
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -100,7 +100,7 @@ namespace SysMets4
                     window.SetScrollInfo(ScrollBar.SB_HORZ, ref si, true);
 
                     return 0;
-                case MessageType.WM_VSCROLL:
+                case WindowMessage.VerticalScroll:
                     // Get all the vertical scroll bar information
                     si = new SCROLLINFO
                     {
@@ -149,7 +149,7 @@ namespace SysMets4
                         window.UpdateWindow();
                     }
                     return 0;
-                case MessageType.WM_HSCROLL:
+                case WindowMessage.HorizontalScroll:
                     // Get all the horizontal scroll bar information
                     si = new SCROLLINFO
                     {
@@ -190,36 +190,36 @@ namespace SysMets4
                         window.ScrollWindow(cxChar * (iHorzPos - si.nPos), 0);
                     }
                     return 0;
-                case MessageType.WM_KEYDOWN:
+                case WindowMessage.KeyDown:
                     switch ((VirtualKey)wParam)
                     {
                         case VirtualKey.VK_HOME:
-                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_TOP, 0);
+                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_TOP, 0);
                             break;
                         case VirtualKey.VK_END:
-                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_BOTTOM, 0);
+                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_BOTTOM, 0);
                             break;
                         case VirtualKey.VK_PRIOR:
-                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_PAGEUP, 0);
+                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_PAGEUP, 0);
                             break;
                         case VirtualKey.VK_NEXT:
-                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
+                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
                             break;
                         case VirtualKey.VK_UP:
-                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_LINEUP, 0);
+                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_LINEUP, 0);
                             break;
                         case VirtualKey.VK_DOWN:
-                            window.SendMessage(MessageType.WM_VSCROLL, (uint)ScrollBarCommand.SB_LINEDOWN, 0);
+                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_LINEDOWN, 0);
                             break;
                         case VirtualKey.VK_LEFT:
-                            window.SendMessage(MessageType.WM_HSCROLL, (uint)ScrollBarCommand.SB_PAGEUP, 0);
+                            window.SendMessage(WindowMessage.HorizontalScroll, (uint)ScrollBarCommand.SB_PAGEUP, 0);
                             break;
                         case VirtualKey.VK_RIGHT:
-                            window.SendMessage(MessageType.WM_HSCROLL, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
+                            window.SendMessage(WindowMessage.HorizontalScroll, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
                             break;
                     }
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     PAINTSTRUCT ps;
                     using (DeviceContext dc = window.BeginPaint(out ps))
                     {
@@ -254,7 +254,7 @@ namespace SysMets4
                         }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

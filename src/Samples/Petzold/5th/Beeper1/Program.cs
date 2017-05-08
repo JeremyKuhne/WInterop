@@ -31,12 +31,12 @@ namespace Beeper1
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -46,9 +46,9 @@ namespace Beeper1
                 module,
                 szAppName,
                 "Beeper1 Timer Demo",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -61,19 +61,19 @@ namespace Beeper1
         static bool fFlipFlop = false;
         const int ID_TIMER = 1;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     window.SetTimer(ID_TIMER, 1000);
                     return 0;
-                case MessageType.WM_TIMER:
+                case WindowMessage.Timer:
                     Windows.MessageBeep();
                     fFlipFlop = !fFlipFlop;
                     window.Invalidate();
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         RECT rect = window.GetClientRect();
@@ -83,7 +83,7 @@ namespace Beeper1
                         }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     window.KillTimer(ID_TIMER);
                     Windows.PostQuitMessage(0);
                     return 0;

@@ -44,6 +44,19 @@ namespace WInterop.Gdi
                 string lpszOutput,
                 DEVMODE* lpInitData);
 
+            // https://msdn.microsoft.com/en-us/library/dd183505.aspx
+            [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public unsafe static extern DeviceContext CreateICW(
+                string lpszDriver,
+                string lpszDevice,
+                string lpszOutput,
+                DEVMODE* lpInitData);
+
+            // https://msdn.microsoft.com/en-us/library/dd183489.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern DeviceContext CreateCompatibleDC(
+                DeviceContext hdc);
+
             // https://msdn.microsoft.com/en-us/library/dd183533.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool DeleteDC(
@@ -54,6 +67,11 @@ namespace WInterop.Gdi
             public static extern bool ReleaseDC(
                 WindowHandle hWnd,
                 IntPtr hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd183399.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool CancelDC(
+                DeviceContext hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd183533.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -276,6 +294,13 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern ArcDirection GetArcDirection(
                 DeviceContext hdc);
+
+            // https://msdn.microsoft.com/en-us/library/dd144909.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern COLORREF GetPixel(
+                DeviceContext hdc,
+                int nXPos,
+                int nYPos);
 
             // https://msdn.microsoft.com/en-us/library/dd145078.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -981,6 +1006,17 @@ namespace WInterop.Gdi
             public static extern COLORREF SetBkColor(
                 DeviceContext hdc,
                 COLORREF crColor);
+
+            // https://msdn.microsoft.com/en-us/library/dd162969.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern COLORREF SetDCBrushColor(
+                DeviceContext hdc,
+                COLORREF crColor);
+
+            // https://msdn.microsoft.com/en-us/library/dd144872.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern COLORREF GetDCBrushColor(
+                DeviceContext hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd183509.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]

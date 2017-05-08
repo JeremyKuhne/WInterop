@@ -29,12 +29,12 @@ namespace SysMets2
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = "SysMets2"
             };
 
@@ -44,9 +44,9 @@ namespace SysMets2
                 module,
                 "SysMets2",
                 "Get System Metrics No. 2",
-                WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_VSCROLL);
+                WindowStyle.OverlappedWindow | WindowStyle.VerticalScroll);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -58,11 +58,11 @@ namespace SysMets2
 
         static int cxChar, cxCaps, cyChar, cyClient, iVscrollPos;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -75,10 +75,10 @@ namespace SysMets2
                     window.SetScrollPosition(ScrollBar.SB_VERT, iVscrollPos, true);
 
                     return 0;
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cyClient = lParam.HighWord;
                     return 0;
-                case MessageType.WM_VSCROLL:
+                case WindowMessage.VerticalScroll:
                     switch ((ScrollBarCommand)wParam.LowWord)
                     {
                         case ScrollBarCommand.SB_LINEUP:
@@ -106,7 +106,7 @@ namespace SysMets2
                         window.Invalidate(true);
                     }
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         int i = 0;
@@ -123,7 +123,7 @@ namespace SysMets2
                         }
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

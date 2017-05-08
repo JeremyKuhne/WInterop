@@ -53,7 +53,7 @@ namespace WInterop.Windows
         public static bool TranslateMessage(ref MSG message) => WindowMethods.TranslateMessage(ref message);
         public static bool DispatchMessage(ref MSG message) => WindowMethods.DispatchMessage(ref message);
         public static void PostQuitMessage(int exitCode) => WindowMethods.PostQuitMessage(exitCode);
-        public static LRESULT DefaultWindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        public static LRESULT DefaultWindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
             => WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
         public static int ShowCursor(bool show) => ResourceMethods.ShowCursor(show);
         public static POINT GetCursorPosition() => ResourceMethods.GetCursorPosition();
@@ -98,5 +98,8 @@ namespace WInterop.Windows
         public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
 
         public static SYSTEMTIME GetLocalTime() => SystemInformationMethods.GetLocalTime();
+
+        public static DeviceContext CreateDeviceContext(string driver, string device) => GdiMethods.CreateDeviceContext(driver, device);
+        public static DeviceContext CreateInformationContext(string driver, string device) => GdiMethods.CreateInformationContext(driver, device);
     }
 }

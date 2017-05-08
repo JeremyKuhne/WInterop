@@ -15,7 +15,7 @@ namespace WInterop.Windows.Types
 {
     public struct WindowClass
     {
-        public WindowClassStyle Style;
+        public ClassStyle Style;
         public WindowProcedure WindowProcedure;
         public int ClassExtraBytes;
         public int WindowExtraBytes;

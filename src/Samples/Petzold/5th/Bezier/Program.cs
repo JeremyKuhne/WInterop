@@ -29,12 +29,12 @@ namespace Bezier
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = "Bezier"
             };
 
@@ -44,9 +44,9 @@ namespace Bezier
                 module,
                 "Bezier",
                 "Bezier Splines",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -67,11 +67,11 @@ namespace Bezier
 
         static POINT[] apt = new POINT[4];
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     int cxClient = lParam.LowWord;
                     int cyClient = lParam.HighWord;
 
@@ -86,24 +86,24 @@ namespace Bezier
 
                     return 0;
 
-                case MessageType.WM_LBUTTONDOWN:
-                case MessageType.WM_RBUTTONDOWN:
-                case MessageType.WM_MOUSEMOVE:
+                case WindowMessage.LeftButtonDown:
+                case WindowMessage.RightButtonDown:
+                case WindowMessage.MouseMove:
                     MouseKey mk = (MouseKey)wParam.LowWord;
-                    if ((mk & (MouseKey.MK_LBUTTON | MouseKey.MK_RBUTTON)) != 0)
+                    if ((mk & (MouseKey.LeftButton | MouseKey.RightButton)) != 0)
                     {
                         using (DeviceContext dc = window.GetDeviceContext())
                         {
                             dc.SelectObject(StockPen.WHITE_PEN);
                             DrawBezier(dc, apt);
 
-                            if ((mk & MouseKey.MK_LBUTTON) != 0)
+                            if ((mk & MouseKey.LeftButton) != 0)
                             {
                                 apt[1].x = lParam.LowWord;
                                 apt[1].y = lParam.HighWord;
                             }
 
-                            if ((mk & MouseKey.MK_RBUTTON) != 0)
+                            if ((mk & MouseKey.RightButton) != 0)
                             {
                                 apt[2].x = lParam.LowWord;
                                 apt[2].y = lParam.HighWord;
@@ -114,14 +114,14 @@ namespace Bezier
                         }
                     }
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     window.Invalidate(true);
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         DrawBezier(dc, apt);
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     WindowMethods.PostQuitMessage(0);
                     return 0;
             }

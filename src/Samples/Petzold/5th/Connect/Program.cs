@@ -31,12 +31,12 @@ namespace Connect
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -46,9 +46,9 @@ namespace Connect
                 module,
                 szAppName,
                 "Connect-the-Points Mouse Demo",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -64,17 +64,17 @@ namespace Connect
         static int sampleCount;
         const int TakeEvery = 10;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_LBUTTONDOWN:
+                case WindowMessage.LeftButtonDown:
                     iCount = 0;
                     window.Invalidate(true);
                     return 0;
-                case MessageType.WM_MOUSEMOVE:
+                case WindowMessage.MouseMove:
                     // Machines are way to fast to make this look interesting now, adding TakeEvery
-                    if ((MouseKey)wParam == MouseKey.MK_LBUTTON && iCount < MAXPOINTS && (sampleCount++ % TakeEvery == 0))
+                    if ((MouseKey)wParam == MouseKey.LeftButton && iCount < MAXPOINTS && (sampleCount++ % TakeEvery == 0))
                     {
                         pt[iCount].x = lParam.LowWord;
                         pt[iCount++].y = lParam.HighWord;
@@ -85,13 +85,13 @@ namespace Connect
                         }
                     }
                     return 0;
-                case MessageType.WM_LBUTTONUP:
+                case WindowMessage.LeftButtonUp:
                     window.Invalidate(false);
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        Windows.SetCursor(CursorId.IDC_WAIT);
+                        Windows.SetCursor(CursorId.Wait);
                         Windows.ShowCursor(true);
 
                         for (int i = 0; i < iCount - 1; i++)
@@ -102,10 +102,10 @@ namespace Connect
                             }
 
                         Windows.ShowCursor(false);
-                        Windows.SetCursor(CursorId.IDC_ARROW);
+                        Windows.SetCursor(CursorId.Arrow);
                     }
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

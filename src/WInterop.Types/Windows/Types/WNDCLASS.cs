@@ -14,7 +14,7 @@ namespace WInterop.Windows.Types
     [StructLayout(LayoutKind.Sequential)]
     public struct WNDCLASS
     {
-        public WindowClassStyle style;
+        public ClassStyle style;
         public IntPtr lpfnWndProc;
         public int cbClassExtra;
         public int cbWndExtra;

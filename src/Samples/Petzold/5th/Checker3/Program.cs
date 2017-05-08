@@ -35,12 +35,12 @@ namespace Checker3
             SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
                 Instance = module,
-                Icon = IconId.IDI_APPLICATION,
-                Cursor = CursorId.IDC_ARROW,
-                Background = StockBrush.WHITE_BRUSH,
+                Icon = IconId.Application,
+                Cursor = CursorId.Arrow,
+                Background = StockBrush.White,
                 ClassName = szAppName
             };
 
@@ -56,9 +56,9 @@ namespace Checker3
                 module,
                 szAppName,
                 "Checker3 Mouse Hit-Test Demo",
-                WindowStyle.WS_OVERLAPPEDWINDOW);
+                WindowStyle.OverlappedWindow);
 
-            window.ShowWindow(ShowWindowCommand.SW_SHOWNORMAL);
+            window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -72,25 +72,25 @@ namespace Checker3
         static WindowHandle[,] hwndChild = new WindowHandle[DIVISIONS, DIVISIONS];
         static int cxBlock, cyBlock;
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
                             hwndChild[x, y] = Windows.CreateWindow(
                                 window.GetWindowLong(WindowLong.GWL_HINSTANCE),
                                 szChildClass,
                                 null,
-                                WindowStyle.WS_CHILDWINDOW | WindowStyle.WS_VISIBLE,
+                                WindowStyle.ChildWindow | WindowStyle.Visible,
                                 ExtendedWindowStyle.None,
                                 0, 0, 0, 0,
                                 window,
                                 (IntPtr)(y << 8 | x),
                                 IntPtr.Zero);
                     return 0;
-                case MessageType.WM_SIZE:
+                case WindowMessage.Size:
                     cxBlock = lParam.LowWord / DIVISIONS;
                     cyBlock = lParam.HighWord / DIVISIONS;
                     for (int x = 0; x < DIVISIONS; x++)
@@ -102,10 +102,10 @@ namespace Checker3
                                 cyBlock,
                                 true);
                     return 0;
-                case MessageType.WM_LBUTTONDOWN:
+                case WindowMessage.LeftButtonDown:
                     ErrorMethods.MessageBeep(MessageBeepType.MB_OK);
                     return 0;
-                case MessageType.WM_DESTROY:
+                case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }
@@ -113,18 +113,18 @@ namespace Checker3
             return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
 
-        static LRESULT ChildWindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LRESULT ChildWindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case MessageType.WM_CREATE:
+                case WindowMessage.Create:
                     window.SetWindowLong(0, IntPtr.Zero); // on/off flag
                     return 0;
-                case MessageType.WM_LBUTTONDOWN:
+                case WindowMessage.LeftButtonDown:
                     window.SetWindowLong(0, (IntPtr)(1 ^ (int)window.GetWindowLong( 0)));
                     window.Invalidate(false);
                     return 0;
-                case MessageType.WM_PAINT:
+                case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         RECT rect = window.GetClientRect();

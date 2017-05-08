@@ -54,6 +54,9 @@ namespace WInterop.Extensions.WindowExtensions
             => GdiMethods.RoundRectangle(deviceContext, left, top, right, bottom, cornerWidth, cornerHeight);
         public static bool PolyBezier(this DeviceContext deviceContext, params POINT[] points)
             => GdiMethods.PolyBezier(deviceContext, points);
+        public static COLORREF GetPixel(this DeviceContext deviceContext, int x, int y) => GdiMethods.GetPixel(deviceContext, x, y);
+        public static COLORREF GetPixel(this DeviceContext deviceContext, POINT point) => GdiMethods.GetPixel(deviceContext, point.x, point.y);
+        public static bool SetPixel(this DeviceContext deviceContext, POINT point, COLORREF color) => GdiMethods.SetPixel(deviceContext, point.x, point.y, color);
         public static bool SetPixel(this DeviceContext deviceContext, int x, int y, COLORREF color) => GdiMethods.SetPixel(deviceContext, x, y, color);
         public static bool DeviceToLogical(this DeviceContext deviceContext, params POINT[] points) => GdiMethods.DeviceToLogical(deviceContext, points);
         public static bool LogicalToDevice(this DeviceContext deviceContext, params POINT[] points) => GdiMethods.LogicalToDevice(deviceContext, points);

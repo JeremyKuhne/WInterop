@@ -12,7 +12,7 @@ namespace WInterop.Windows.Types
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645469.aspx
     public delegate IntPtr DialogProcedure(
         WindowHandle hwndDlg,
-        MessageType uMsg,
+        WindowMessage uMsg,
         WPARAM wParam,
         LPARAM lParam);
 }

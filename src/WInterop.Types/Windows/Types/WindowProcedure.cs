@@ -11,7 +11,7 @@ namespace WInterop.Windows.Types
 {
     public delegate LRESULT WindowProcedure(
         WindowHandle hwnd,
-        MessageType uMsg,
+        WindowMessage uMsg,
         WPARAM wParam,
         LPARAM lParam);
 }
