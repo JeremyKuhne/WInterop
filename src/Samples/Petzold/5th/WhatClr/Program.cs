@@ -68,8 +68,8 @@ namespace WhatClr
                 dcScreen.GetTextMetrics(out tm);
             }
 
-            cxWindow = 2 * Windows.GetSystemMetrics(SystemMetric.SM_CXBORDER) + 12 * tm.tmAveCharWidth;
-            cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.SM_CYBORDER) + Windows.GetSystemMetrics(SystemMetric.SM_CYCAPTION) + 2 * tm.tmHeight;
+            cxWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CXBORDER) + 12 * tm.tmAveCharWidth;
+            cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CYBORDER) + Windows.GetSystemMetrics(SystemMetric.CYCAPTION) + 2 * tm.tmHeight;
         }
 
         static DeviceContext dcScreen;

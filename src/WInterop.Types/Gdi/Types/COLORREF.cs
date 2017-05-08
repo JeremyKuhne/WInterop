@@ -23,7 +23,6 @@ namespace WInterop.Gdi.Types
         [FieldOffset(0)]
         public uint Value;
 
-
         public COLORREF(byte red, byte green, byte blue)
         {
             Value = 0;
@@ -45,7 +44,6 @@ namespace WInterop.Gdi.Types
             return new COLORREF(value);
         }
 
-
         public static COLORREF DIB_RGB_COLORS => 0;
         public static COLORREF DIB_PAL_COLORS => 1;
 
@@ -56,6 +54,11 @@ namespace WInterop.Gdi.Types
             return obj is COLORREF other
                 ? Equals(other)
                 : false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
         }
 
         public bool Equals(COLORREF other) => other.Value == Value;
