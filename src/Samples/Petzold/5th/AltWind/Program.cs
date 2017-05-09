@@ -91,14 +91,14 @@ namespace AltWind
                             apt[i].y = cyClient * aptFigure[i].y / 100;
                         }
 
-                        dc.SetPolyFillMode(PolyFillMode.ALTERNATE);
+                        dc.SetPolyFillMode(PolyFillMode.Alternate);
                         dc.Polygon(apt);
 
                         for (int i = 0; i < 10; i++)
                         {
                             apt[i].x += cxClient / 2;
                         }
-                        dc.SetPolyFillMode(PolyFillMode.WINDING);
+                        dc.SetPolyFillMode(PolyFillMode.Winding);
                         dc.Polygon(apt);
                     }
 

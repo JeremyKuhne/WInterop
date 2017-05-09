@@ -94,7 +94,7 @@ namespace Bezier
                     {
                         using (DeviceContext dc = window.GetDeviceContext())
                         {
-                            dc.SelectObject(StockPen.WHITE_PEN);
+                            dc.SelectObject(StockPen.White);
                             DrawBezier(dc, apt);
 
                             if ((mk & MouseKey.LeftButton) != 0)
@@ -109,7 +109,7 @@ namespace Bezier
                                 apt[2].y = lParam.HighWord;
                             }
 
-                            dc.SelectObject(StockPen.BLACK_PEN);
+                            dc.SelectObject(StockPen.Black);
                             DrawBezier(dc, apt);
                         }
                     }

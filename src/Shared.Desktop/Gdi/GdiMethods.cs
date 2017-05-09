@@ -385,11 +385,12 @@ namespace WInterop.Gdi
             OutputPrecision outputPrecision,
             ClippingPrecision clippingPrecision,
             Quality quality,
-            PitchAndFamily pitchAndFamily,
+            FontPitch pitch,
+            FontFamily family,
             string typeface)
         {
             return Imports.CreateFontW(height, width, escapement, orientation, weight, italic, underline, strikeout, (uint)characterSet,
-                (uint)outputPrecision, (uint)clippingPrecision, (uint)quality, (uint)pitchAndFamily, typeface);
+                (uint)outputPrecision, (uint)clippingPrecision, (uint)quality, (uint)((byte)pitch | (byte)family), typeface);
         }
 
         private static int EnumerateFontCallback(

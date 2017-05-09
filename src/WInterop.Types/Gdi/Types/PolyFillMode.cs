@@ -9,7 +9,14 @@ namespace WInterop.Gdi.Types
 {
     public enum PolyFillMode : int
     {
-        ALTERNATE      = 1,
-        WINDING        = 2,
+        /// <summary>
+        /// (ALTERNATE)
+        /// </summary>
+        Alternate      = 1,
+
+        /// <summary>
+        /// (WINDING)
+        /// </summary>
+        Winding        = 2,
     }
 }

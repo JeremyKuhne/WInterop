@@ -85,9 +85,10 @@ namespace WInterop.Windows
             OutputPrecision outputPrecision,
             ClippingPrecision clippingPrecision,
             Quality quality,
-            PitchAndFamily pitchAndFamily,
+            FontPitch pitch,
+            FontFamily family,
             string typeface) => GdiMethods.CreateFont(
-                height, width, escapement, orientation, weight, italic, underline, strikeout, characterSet, outputPrecision, clippingPrecision, quality, pitchAndFamily, typeface);
+                height, width, escapement, orientation, weight, italic, underline, strikeout, characterSet, outputPrecision, clippingPrecision, quality, pitch, family, typeface);
 
         public static void SetCaretPosition(int x, int y) => ResourceMethods.SetCaretPosition(x, y);
         public static void DestroyCaret() => ResourceMethods.DestroyCaret();

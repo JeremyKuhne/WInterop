@@ -147,9 +147,9 @@ namespace Clock
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         SetIsotropic(dc, cxClient, cyClient);
-                        dc.SelectObject(StockPen.WHITE_PEN);
+                        dc.SelectObject(StockPen.White);
                         DrawHands(dc, stPrevious, fChange);
-                        dc.SelectObject(StockPen.BLACK_PEN);
+                        dc.SelectObject(StockPen.Black);
                         DrawHands(dc, st, true);
                     }
                     stPrevious = st;

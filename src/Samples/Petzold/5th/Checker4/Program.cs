@@ -194,7 +194,7 @@ namespace Checker4
                             {
                                 dc.SelectObject(pen);
                                 dc.Rectangle(rect);
-                                dc.SelectObject(StockPen.BLACK_PEN);
+                                dc.SelectObject(StockPen.Black);
                             }
                         }
                     }

@@ -151,8 +151,8 @@ namespace DesktopTests.Gdi
                 regular.FontAttributes.elfEnumLogfontEx.Style.Should().Be("Regular");
                 regular.FontAttributes.elfEnumLogfontEx.Script.Should().Be("Western");
                 regular.TextMetrics.ntmTm.ntmFlags.Should().Be(TextMetricFlags.NTM_REGULAR | TextMetricFlags.NTM_TT_OPENTYPE | TextMetricFlags.NTM_DSIG);
-                regular.TextMetrics.ntmTm.tmPitchAndFamily.Should().Be(PitchAndFamily.TMPF_FIXED_PITCH | PitchAndFamily.TMPF_TRUETYPE |
-                    PitchAndFamily.TMPF_VECTOR | PitchAndFamily.FF_SWISS);
+                regular.TextMetrics.ntmTm.tmPitchAndFamily.PitchTypes.Should().Be(FontPitchTypes.VariablePitch | FontPitchTypes.TrueType | FontPitchTypes.Vector);
+                regular.TextMetrics.ntmTm.tmPitchAndFamily.Family.Should().Be(FontFamily.Swiss);
                 regular.TextMetrics.ntmFontSig.UnicodeSubsetsOne.Should().Be(
                     UnicodeSubsetsOne.BasicLatin | UnicodeSubsetsOne.Latin1Supplement | UnicodeSubsetsOne.LatinExtendedA | UnicodeSubsetsOne.LatinExtendedB
                     | UnicodeSubsetsOne.IPAPhoneticExtensions | UnicodeSubsetsOne.SpacingToneModifier | UnicodeSubsetsOne.CombiningDiacriticalMarks

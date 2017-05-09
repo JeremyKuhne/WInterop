@@ -10,9 +10,24 @@ namespace WInterop.Gdi.Types
     // https://msdn.microsoft.com/en-us/library/dd183533.aspx
     public enum StockPen : int
     {
-        WHITE_PEN = 6,
-        BLACK_PEN = 7,
-        NULL_PEN = 8,
-        DC_PEN = 19
+        /// <summary>
+        /// (WHITE_PEN)
+        /// </summary>
+        White = 6,
+
+        /// <summary>
+        /// (BLACK_PEN)
+        /// </summary>
+        Black = 7,
+
+        /// <summary>
+        /// (NULL_PEN)
+        /// </summary>
+        Null = 8,
+
+        /// <summary>
+        /// (DC_PEN)
+        /// </summary>
+        DeviceContext = 19
     }
 }

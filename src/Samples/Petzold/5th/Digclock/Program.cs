@@ -159,7 +159,7 @@ namespace DigClock
                         dc.SetViewportExtents(cxClient, cyClient);
                         dc.SetWindowOrigin(138, 36);
                         dc.SetViewportOrigin(cxClient / 2, cyClient / 2);
-                        dc.SelectObject(StockPen.NULL_PEN);
+                        dc.SelectObject(StockPen.Null);
                         dc.SelectObject(hBrushRed);
                         DisplayTime(dc, f24Hour, fSuppress);
                     }

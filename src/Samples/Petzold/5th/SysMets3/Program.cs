@@ -70,7 +70,7 @@ namespace SysMets3
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
                         cxChar = tm.tmAveCharWidth;
-                        cxCaps = ((tm.tmPitchAndFamily & PitchAndFamily.TMPF_FIXED_PITCH) != 0 ? 3 : 2) * cxChar / 2;
+                        cxCaps = ((tm.tmPitchAndFamily.PitchTypes & FontPitchTypes.VariablePitch) != 0 ? 3 : 2) * cxChar / 2;
                         cyChar = tm.tmHeight + tm.tmExternalLeading;
                     }
 

@@ -75,8 +75,8 @@ namespace Typer
                 case WindowMessage.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
-                            OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
+                        using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                            OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamily.DoNotCare, null))
                         {
                             dc.SelectObject(font);
                             dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -154,8 +154,8 @@ namespace Typer
                             window.HideCaret();
                             using (DeviceContext dc = window.GetDeviceContext())
                             {
-                                using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
-                                    OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
+                                using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                                    OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamily.DoNotCare, null))
                                 {
                                     dc.SelectObject(font);
                                     unsafe
@@ -213,8 +213,8 @@ namespace Typer
                                 window.HideCaret();
                                 using (DeviceContext dc = window.GetDeviceContext())
                                 {
-                                    using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
-                                        OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
+                                    using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                                        OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamily.DoNotCare, null))
                                     {
                                         dc.SelectObject(font);
                                         unsafe
@@ -242,8 +242,8 @@ namespace Typer
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.FW_DONTCARE, false, false, false, dwCharSet,
-                            OutputPrecision.OUT_DEFAULT_PRECIS, ClippingPrecision.CLIP_DEFAULT_PRECIS, Quality.DEFAULT_QUALITY, PitchAndFamily.TMPF_FIXED_PITCH, null))
+                        using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                            OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamily.DoNotCare, null))
                         {
                             dc.SelectObject(font);
                             unsafe
