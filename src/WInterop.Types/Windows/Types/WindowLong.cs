@@ -10,12 +10,39 @@ namespace WInterop.Windows.Types
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591.aspx
     public enum WindowLong : int
     {
-        GWL_WNDPROC         = -4,
-        GWL_HINSTANCE       = -6,
-        GWL_HWNDPARENT      = -8,
-        GWL_STYLE           = -16,
-        GWL_EXSTYLE         = -20,
-        GWL_USERDATA        = -21,
-        GWL_ID              = -12
+        /// <summary>
+        /// (GWL_WNDPROC)
+        /// </summary>
+        WindowProcedure = -4,
+
+        /// <summary>
+        /// (GWL_HINSTANCE)
+        /// </summary>
+        InstanceHandle = -6,
+
+        /// <summary>
+        /// (GWL_HWNDPARENT)
+        /// </summary>
+        ParentHandle = -8,
+
+        /// <summary>
+        /// (GWL_STYLE)
+        /// </summary>
+        Style = -16,
+
+        /// <summary>
+        /// (GWL_EXSTYLE)
+        /// </summary>
+        ExtendedStyle = -20,
+
+        /// <summary>
+        /// (GWL_USERDATA)
+        /// </summary>
+        UserData = -21,
+
+        /// <summary>
+        /// (GWL_ID)
+        /// </summary>
+        Id = -12
     }
 }

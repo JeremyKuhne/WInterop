@@ -82,7 +82,7 @@ namespace Checker4
                     for (x = 0; x < DIVISIONS; x++)
                         for (y = 0; y < DIVISIONS; y++)
                             hwndChild[x, y] = Windows.CreateWindow(
-                                window.GetWindowLong(WindowLong.GWL_HINSTANCE),
+                                window.GetWindowLong(WindowLong.InstanceHandle),
                                 szChildClass,
                                 null,
                                 WindowStyle.ChildWindow | WindowStyle.Visible,
@@ -162,7 +162,7 @@ namespace Checker4
                     return 0;
                 // For focus messages, invalidate the window for repaint
                 case WindowMessage.SetFocus:
-                    idFocus = (int)window.GetWindowLong(WindowLong.GWL_ID);
+                    idFocus = (int)window.GetWindowLong(WindowLong.Id);
                     // Fall through
                     goto case WindowMessage.KillFocus;
                 case WindowMessage.KillFocus:

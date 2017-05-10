@@ -80,7 +80,7 @@ namespace Checker3
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
                             hwndChild[x, y] = Windows.CreateWindow(
-                                window.GetWindowLong(WindowLong.GWL_HINSTANCE),
+                                window.GetWindowLong(WindowLong.InstanceHandle),
                                 szChildClass,
                                 null,
                                 WindowStyle.ChildWindow | WindowStyle.Visible,
