@@ -190,7 +190,7 @@ namespace Checker4
                             rect.top += rect.bottom / 10;
                             rect.bottom -= rect.top;
                             dc.SelectObject(StockBrush.Null);
-                            using (PenHandle pen = Windows.CreatePen(PenStyle.PS_DASH, 0, 0))
+                            using (PenHandle pen = Windows.CreatePen(PenStyle.Dash, 0, 0))
                             {
                                 dc.SelectObject(pen);
                                 dc.Rectangle(rect);
