@@ -14,7 +14,7 @@ using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace HelloWin
+namespace Clover
 {
     /// <summary>
     /// Sample from Programming Windows, 5th Edition.

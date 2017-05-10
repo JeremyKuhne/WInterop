@@ -62,7 +62,7 @@ namespace Clock
 
         static void SetIsotropic(DeviceContext hdc, int cxClient, int cyClient)
         {
-            hdc.SetMapMode(MapMode.MM_ISOTROPIC);
+            hdc.SetMapMode(MapMode.Isotropic);
             hdc.SetWindowExtents(1000, 1000);
             hdc.SetViewportExtents(cxClient / 2, -cyClient / 2);
             hdc.SetViewportOrigin(cxClient / 2, cyClient / 2);
@@ -100,7 +100,7 @@ namespace Clock
             }
         }
 
-        static void DrawHands(DeviceContext hdc, SYSTEMTIME pst, BOOL fChange)
+        static void DrawHands(DeviceContext hdc, SYSTEMTIME pst, bool fChange)
         {
             int[] iAngle =
             {
