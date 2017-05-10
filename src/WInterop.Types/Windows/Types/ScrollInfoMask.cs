@@ -13,11 +13,34 @@ namespace WInterop.Windows.Types
     [Flags]
     public enum ScrollInfoMask : uint
     {
-        SIF_RANGE           = 0x0001,
-        SIF_PAGE            = 0x0002,
-        SIF_POS             = 0x0004,
-        SIF_DISABLENOSCROLL = 0x0008,
-        SIF_TRACKPOS        = 0x0010,
-        SIF_ALL             = (SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS)
+        /// <summary>
+        /// Get/set the min and max values. (SIF_RANGE)
+        /// </summary>
+        Range = 0x0001,
+
+        /// <summary>
+        /// Get/set the page size. (SIF_PAGE)
+        /// </summary>
+        Page = 0x0002,
+
+        /// <summary>
+        /// Get/set the scroll box position. Does not update while dragging. (SIF_POS)
+        /// </summary>
+        Position = 0x0004,
+
+        /// <summary>
+        /// Disable the scroll bar. (SIF_DISABLENOSCROLL)
+        /// </summary>
+        Disable = 0x0008,
+
+        /// <summary>
+        /// Get/set the current scroll box position. Updates while dragging. (SIF_TRACKPOS)
+        /// </summary>
+        TrackPosition = 0x0010,
+
+        /// <summary>
+        /// (SIF_ALL)
+        /// </summary>
+        All = (Range | Page | Position | TrackPosition)
     }
 }

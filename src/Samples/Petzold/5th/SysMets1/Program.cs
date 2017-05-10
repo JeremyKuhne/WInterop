@@ -79,9 +79,9 @@ namespace SysMets1
                         {
                             dc.TextOut(0, cyChar * i, metric.ToString());
                             dc.TextOut(22 * cxCaps, cyChar * i, SysMets.sysmetrics[metric]);
-                            dc.SetTextAlignment(TextAlignment.TA_RIGHT | TextAlignment.TA_TOP);
+                            dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Right, TextAlignment.Vertical.Top));
                             dc.TextOut(22 * cxCaps + 40 * cxChar, cyChar * i, Windows.GetSystemMetrics(metric).ToString());
-                            dc.SetTextAlignment(TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
+                            dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Left, TextAlignment.Vertical.Top));
                             i++;
                         }
                     }

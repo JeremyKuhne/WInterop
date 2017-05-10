@@ -874,12 +874,12 @@ namespace WInterop.Windows.Types
         Oem102 = 0xE2,
 
         /// <summary>
-        /// Help key on ICO. (VK_ICO_HELP)
+        /// Help key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_HELP)
         /// </summary>
         IcoHelp = 0xE3,
 
         /// <summary>
-        /// 00 key on ICO. (VK_ICO_00)
+        /// 00 key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_00)
         /// </summary>
         Ico00 = 0xE4,
 
@@ -889,7 +889,7 @@ namespace WInterop.Windows.Types
         ProcessKey = 0xE5,
 
         /// <summary>
-        /// (VK_ICO_CLEAR)
+        /// Clear key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_CLEAR)
         /// </summary>
         IcoClear = 0xE6,
 
@@ -898,68 +898,70 @@ namespace WInterop.Windows.Types
         /// </summary>
         Packet = 0xE7,
 
+        // 0xE9 - 0xF5 are for Ericsson keyboards
+
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_RESET)
+        /// Ericsson. (VK_OEM_RESET)
         /// </summary>
         OemReset = 0xE9,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_JUMP)
+        /// Ericsson. (VK_OEM_JUMP)
         /// </summary>
         OemJump = 0xEA,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_PA1)
+        /// Ericsson. (VK_OEM_PA1)
         /// </summary>
         OemPA1 = 0xEB,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_PA2)
+        /// Ericsson. (VK_OEM_PA2)
         /// </summary>
         OemPA2 = 0xEC,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_PA3)
+        /// Ericsson. (VK_OEM_PA3)
         /// </summary>
         OemPA3 = 0xED,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_WSCTRL)
+        /// Ericsson. (VK_OEM_WSCTRL)
         /// </summary>
         OemWSCtrl = 0xEE,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_CUSEL)
+        /// Ericsson. (VK_OEM_CUSEL)
         /// </summary>
         OemCuSel = 0xEF,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_ATTN)
+        /// Ericsson. (VK_OEM_ATTN)
         /// </summary>
         OemAttn = 0xF0,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_FINISH)
+        /// Ericsson. (VK_OEM_FINISH)
         /// </summary>
         OemFinish = 0xF1,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_COPY)
+        /// Ericsson. (VK_OEM_COPY)
         /// </summary>
         OemCopy = 0xF2,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_AUTO)
+        /// Ericsson. (VK_OEM_AUTO)
         /// </summary>
         OemAuto = 0xF3,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_ENLW)
+        /// Ericsson. (VK_OEM_ENLW)
         /// </summary>
         OemEnlw = 0xF4,
 
         /// <summary>
-        /// Nokia/Ericsson. (VK_OEM_BACKTAB)
+        /// Ericsson. (VK_OEM_BACKTAB)
         /// </summary>
         OemBackTab = 0xF5,
 

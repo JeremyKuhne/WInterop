@@ -71,38 +71,38 @@ namespace SysMets2
                         cyChar = tm.tmHeight + tm.tmExternalLeading;
                     }
 
-                    window.SetScrollRange(ScrollBar.SB_VERT, 0, SysMets.sysmetrics.Count - 1, false);
-                    window.SetScrollPosition(ScrollBar.SB_VERT, iVscrollPos, true);
+                    window.SetScrollRange(ScrollBar.Vertical, 0, SysMets.sysmetrics.Count - 1, false);
+                    window.SetScrollPosition(ScrollBar.Vertical, iVscrollPos, true);
 
                     return 0;
                 case WindowMessage.Size:
                     cyClient = lParam.HighWord;
                     return 0;
                 case WindowMessage.VerticalScroll:
-                    switch ((ScrollBarCommand)wParam.LowWord)
+                    switch ((ScrollCommand)wParam.LowWord)
                     {
-                        case ScrollBarCommand.SB_LINEUP:
+                        case ScrollCommand.LineUp:
                             iVscrollPos -= 1;
                             break;
-                        case ScrollBarCommand.SB_LINEDOWN:
+                        case ScrollCommand.LineDown:
                             iVscrollPos += 1;
                             break;
-                        case ScrollBarCommand.SB_PAGEUP:
+                        case ScrollCommand.PageUp:
                             iVscrollPos -= cyClient / cyChar;
                             break;
-                        case ScrollBarCommand.SB_PAGEDOWN:
+                        case ScrollCommand.PageDown:
                             iVscrollPos += cyClient / cyChar;
                             break;
-                        case ScrollBarCommand.SB_THUMBPOSITION:
+                        case ScrollCommand.ThumbPosition:
                             iVscrollPos = wParam.HighWord;
                             break;
                     }
 
                     iVscrollPos = Math.Max(0, Math.Min(iVscrollPos, SysMets.sysmetrics.Count - 1));
 
-                    if (iVscrollPos != window.GetScrollPosition(ScrollBar.SB_VERT))
+                    if (iVscrollPos != window.GetScrollPosition(ScrollBar.Vertical))
                     {
-                        window.SetScrollPosition(ScrollBar.SB_VERT, iVscrollPos, true);
+                        window.SetScrollPosition(ScrollBar.Vertical, iVscrollPos, true);
                         window.Invalidate(true);
                     }
                     return 0;
@@ -116,9 +116,9 @@ namespace SysMets2
 
                             dc.TextOut(0, y, metric.ToString());
                             dc.TextOut(22 * cxCaps, y, SysMets.sysmetrics[metric]);
-                            dc.SetTextAlignment(TextAlignment.TA_RIGHT | TextAlignment.TA_TOP);
+                            dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Right, TextAlignment.Vertical.Top));
                             dc.TextOut(22 * cxCaps + 40 * cxChar, y, Windows.GetSystemMetrics(metric).ToString());
-                            dc.SetTextAlignment(TextAlignment.TA_LEFT | TextAlignment.TA_TOP);
+                            dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Left, TextAlignment.Vertical.Top));
                             i++;
                         }
                     }

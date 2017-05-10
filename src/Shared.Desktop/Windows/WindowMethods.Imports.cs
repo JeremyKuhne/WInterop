@@ -421,6 +421,11 @@ namespace WInterop.Windows
             public static extern WindowHandle SetFocus(
                 WindowHandle hWnd);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724336.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetKeyboardType(
+                int nTypeFlag);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646300.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern int GetKeyNameTextW(

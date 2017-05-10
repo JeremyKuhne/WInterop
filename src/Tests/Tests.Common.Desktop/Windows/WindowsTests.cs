@@ -90,5 +90,25 @@ namespace DesktopTests.Windows
             var window = WindowMethods.GetWindow(WindowMethods.GetDesktopWindow(), GetWindowOption.GW_OWNER);
             window.Should().Be(WindowHandle.Null);
         }
+
+        [Fact]
+        public void GetKeyboardType()
+        {
+            // Don't know that you can ever get something other than Enhanced?
+            WindowMethods.GetKeyboardType().Should().Be(KeyboardType.Enhanced);
+        }
+
+        [Fact]
+        public void GetKeyboardSubtype()
+        {
+            int subType = WindowMethods.GetKeyboardSubType();
+        }
+
+        [Fact]
+        public void GetKeyboardFunctionKeyCount()
+        {
+            int keyCount = WindowMethods.GetKeyboardFunctionKeyCount();
+            keyCount.Should().BeGreaterOrEqualTo(10);
+        }
     }
 }

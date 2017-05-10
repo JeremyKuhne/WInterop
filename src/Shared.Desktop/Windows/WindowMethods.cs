@@ -393,6 +393,33 @@ namespace WInterop.Windows
             return result;
         }
 
+        public static KeyboardType GetKeyboardType()
+        {
+            int result = Imports.GetKeyboardType(0);
+            if (result == 0)
+                throw Errors.GetIoExceptionForLastError();
+
+            return (KeyboardType)result;
+        }
+
+        public static int GetKeyboardSubType()
+        {
+            int result = Imports.GetKeyboardType(1);
+            if (result == 0)
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+
+            return result;
+        }
+
+        public static int GetKeyboardFunctionKeyCount()
+        {
+            int result = Imports.GetKeyboardType(2);
+            if (result == 0)
+                throw Errors.GetIoExceptionForLastError();
+
+            return result;
+        }
+
         public static string GetKeyNameText(LPARAM lParam)
         {
             // It is possible that there may be no name for a key, in which case the api will return 0 with GetLastError of 0.

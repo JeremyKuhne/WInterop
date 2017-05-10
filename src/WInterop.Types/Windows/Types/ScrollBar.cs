@@ -10,9 +10,24 @@ namespace WInterop.Windows.Types
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787599.aspx
     public enum ScrollBar : int
     {
-        SB_HORZ            = 0,
-        SB_VERT            = 1,
-        SB_CTL             = 2,
-        SB_BOTH            = 3
+        /// <summary>
+        /// Window standard horizontal scroll bar. (SB_HORZ)
+        /// </summary>
+        Horizontal = 0,
+
+        /// <summary>
+        /// Window standard vertical scroll bar. (SB_VERT)
+        /// </summary>
+        Vertical = 1,
+
+        /// <summary>
+        /// Scroll bar control. (SB_CTL)
+        /// </summary>
+        Control = 2,
+
+        /// <summary>
+        /// Both window standard scroll bars. (SB_BOTH)
+        /// </summary>
+        Both = 3
     }
 }
