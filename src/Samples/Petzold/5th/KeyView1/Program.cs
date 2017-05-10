@@ -148,7 +148,7 @@ namespace KeyView1
                             dc.TextOut(0, (cyClient / cyChar - 1 - i) * cyChar,
                                 string.Format(iType
                                 ? "{0,-13} {1,3} {2,15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}"
-                                : "{0,-13} {1,3} {2,-15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}",
+                                : "{0,-13} {1,3} {2,-15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}  VirtualKey: {9}",
                                     pmsg[i].message,
                                     pmsg[i].wParam.ToString(),
                                     iType
@@ -159,7 +159,8 @@ namespace KeyView1
                                     (0x01000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
                                     (0x20000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
                                     (0x40000000 & pmsg[i].lParam) != 0 ? "Down" : "Up",
-                                    (0x80000000 & pmsg[i].lParam) != 0 ? "Up" : "Down"));
+                                    (0x80000000 & pmsg[i].lParam) != 0 ? "Up" : "Down",
+                                    (VirtualKey)pmsg[i].wParam));
                         }
                     }
                     return 0;

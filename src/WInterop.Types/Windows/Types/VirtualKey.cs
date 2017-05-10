@@ -41,6 +41,11 @@ namespace WInterop.Windows.Types
         ExtraButton2 = 0x06,
 
         /// <summary>
+        /// Xbox button. (VK_NEXUS)
+        /// </summary>
+        Nexus = 0x07,
+
+        /// <summary>
         /// (VK_BACK)
         /// </summary>
         Back = 0x08,
@@ -146,12 +151,12 @@ namespace WInterop.Windows.Types
         Space = 0x20,
 
         /// <summary>
-        /// (VK_PRIOR)
+        /// Page up. (VK_PRIOR)
         /// </summary>
         Prior = 0x21,
 
         /// <summary>
-        /// (VK_NEXT)
+        /// Page down. (VK_NEXT)
         /// </summary>
         Next = 0x22,
 
@@ -201,7 +206,7 @@ namespace WInterop.Windows.Types
         Execute = 0x2B,
 
         /// <summary>
-        /// (VK_SNAPSHOT)
+        /// Print screen. (VK_SNAPSHOT)
         /// </summary>
         Snapshot = 0x2C,
 

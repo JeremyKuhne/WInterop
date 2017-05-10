@@ -30,6 +30,11 @@ namespace WInterop.Support
                 throw GetIoExceptionForError(lastError);
         }
 
+        public static bool Failed(WindowsError error)
+        {
+            return error != WindowsError.NO_ERROR;
+        }
+
         /// <summary>
         /// Turns the last Windows error into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.

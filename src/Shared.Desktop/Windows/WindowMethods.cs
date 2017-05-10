@@ -395,7 +395,8 @@ namespace WInterop.Windows
 
         public static string GetKeyNameText(LPARAM lParam)
         {
-            return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetKeyNameTextW(lParam, buffer, (int)buffer.CharCapacity));
+            // It is possible that there may be no name for a key, in which case the api will return 0 with GetLastError of 0.
+            return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetKeyNameTextW(lParam, buffer, (int)buffer.CharCapacity), null, Errors.Failed);
         }
 
         public static WindowHandle GetDialogItem(WindowHandle window, int id)
