@@ -84,9 +84,9 @@ namespace HelloWin
                     hRgnTemp[4] = Windows.CreateRectangleRegion(0, 0, 1, 1);
                     hRgnTemp[5] = Windows.CreateRectangleRegion(0, 0, 1, 1);
                     hRgnClip = Windows.CreateRectangleRegion(0, 0, 1, 1);
-                    hRgnTemp[4].CombineRegion(hRgnTemp[0], hRgnTemp[1], CombineRegionMode.RGN_OR);
-                    hRgnTemp[5].CombineRegion(hRgnTemp[2], hRgnTemp[3], CombineRegionMode.RGN_OR);
-                    hRgnClip.CombineRegion(hRgnTemp[4], hRgnTemp[5], CombineRegionMode.RGN_XOR);
+                    hRgnTemp[4].CombineRegion(hRgnTemp[0], hRgnTemp[1], CombineRegionMode.Or);
+                    hRgnTemp[5].CombineRegion(hRgnTemp[2], hRgnTemp[3], CombineRegionMode.Or);
+                    hRgnClip.CombineRegion(hRgnTemp[4], hRgnTemp[5], CombineRegionMode.Xor);
                     for (int i = 0; i < 6; i++)
                         hRgnTemp[i]?.Dispose();
 
