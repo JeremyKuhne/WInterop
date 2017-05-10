@@ -98,7 +98,7 @@ namespace WhatClr
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        dc.SelectObject(StockFont.SYSTEM_FIXED_FONT);
+                        dc.SelectObject(StockFont.SystemFixed);
                         RECT rc = window.GetClientRect();
                         dc.DrawText($"0x{cr.R:X2} 0x{cr.G:X2} 0x{cr.B:X2}", rc,
                             TextFormat.DT_SINGLELINE | TextFormat.DT_CENTER | TextFormat.DT_VCENTER);

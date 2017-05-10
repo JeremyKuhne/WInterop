@@ -7,15 +7,44 @@
 
 namespace WInterop.Gdi.Types
 {
-    // https://msdn.microsoft.com/en-us/library/dd183533.aspx
     public enum StockFont : int
     {
-        OEM_FIXED_FONT = StockObject.OEM_FIXED_FONT,
-        ANSI_FIXED_FONT = StockObject.ANSI_FIXED_FONT,
-        ANSI_VAR_FONT = StockObject.ANSI_VAR_FONT,
-        SYSTEM_FONT = StockObject.SYSTEM_FONT,
-        DEVICE_DEFAULT_FONT = StockObject.DEVICE_DEFAULT_FONT,
-        SYSTEM_FIXED_FONT = StockObject.SYSTEM_FIXED_FONT,
-        DEFAULT_GUI_FONT = StockObject.DEFAULT_GUI_FONT
+        // https://msdn.microsoft.com/en-us/library/cc231191.aspx
+        // https://msdn.microsoft.com/en-us/library/dd183533.aspx
+
+        /// <summary>
+        /// (OEM_FIXED_FONT)
+        /// </summary>
+        OemFixed = StockObject.OEM_FIXED_FONT,
+
+        /// <summary>
+        /// (ANSI_FIXED_FONT)
+        /// </summary>
+        AnsiFixed = StockObject.ANSI_FIXED_FONT,
+
+        /// <summary>
+        /// (ANSI_VAR_FONT)
+        /// </summary>
+        AnsiVariable = StockObject.ANSI_VAR_FONT,
+
+        /// <summary>
+        /// (SYSTEM_FONT)
+        /// </summary>
+        System = StockObject.SYSTEM_FONT,
+
+        /// <summary>
+        /// (DEVICE_DEFAULT_FONT)
+        /// </summary>
+        DeviceDefault = StockObject.DEVICE_DEFAULT_FONT,
+
+        /// <summary>
+        /// (SYSTEM_FIXED_FONT)
+        /// </summary>
+        SystemFixed = StockObject.SYSTEM_FIXED_FONT,
+
+        /// <summary>
+        /// Default font used for menus, dialog boxes, etc. (DEFAULT_GUI_FONT)
+        /// </summary>
+        GuiFont = StockObject.DEFAULT_GUI_FONT
     }
 }

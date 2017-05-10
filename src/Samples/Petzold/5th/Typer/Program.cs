@@ -82,7 +82,7 @@ namespace Typer
                             dc.GetTextMetrics(out TEXTMETRIC tm);
                             cxChar = tm.tmAveCharWidth;
                             cyChar = tm.tmHeight;
-                            dc.SelectObject(StockFont.SYSTEM_FONT);
+                            dc.SelectObject(StockFont.System);
                         }
                     }
                     goto CalculateSize;
@@ -163,7 +163,7 @@ namespace Typer
                                         fixed (char* c = &pBuffer[xCaret, yCaret])
                                             dc.TextOut(xCaret * cxChar, yCaret * cyChar, c, cxBuffer - xCaret);
                                     }
-                                    dc.SelectObject(StockFont.SYSTEM_FONT);
+                                    dc.SelectObject(StockFont.System);
                                 }
 
                                 window.ShowCaret();
@@ -222,7 +222,7 @@ namespace Typer
                                             fixed (char* c = &pBuffer[xCaret, yCaret])
                                                 dc.TextOut(xCaret * cxChar, yCaret * cyChar, c, 1);
                                         }
-                                        dc.SelectObject(StockFont.SYSTEM_FONT);
+                                        dc.SelectObject(StockFont.System);
                                     }
 
                                     window.ShowCaret();
@@ -252,7 +252,7 @@ namespace Typer
                                     fixed (char* c = &pBuffer[0, y])
                                         dc.TextOut(0, y * cyChar, c, cxBuffer);
                             }
-                            dc.SelectObject(StockFont.SYSTEM_FONT);
+                            dc.SelectObject(StockFont.System);
                         }
                     }
                     return 0;

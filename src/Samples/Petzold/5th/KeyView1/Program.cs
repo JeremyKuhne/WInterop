@@ -76,7 +76,7 @@ namespace KeyView1
                     // Get character size for fixed-pitch font
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        dc.SelectObject(StockFont.SYSTEM_FIXED_FONT);
+                        dc.SelectObject(StockFont.SystemFixed);
                         dc.GetTextMetrics(out TEXTMETRIC tm);
                         cxChar = tm.tmAveCharWidth;
                         cyChar = tm.tmHeight;
@@ -125,7 +125,7 @@ namespace KeyView1
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        dc.SelectObject(StockFont.SYSTEM_FIXED_FONT);
+                        dc.SelectObject(StockFont.SystemFixed);
                         dc.SetBackgroundMode(BackgroundMode.TRANSPARENT);
                         dc.TextOut(0, 0, "Message        Key       Char     Repeat Scan Ext ALT Prev Tran");
                         dc.TextOut(0, 0, "_______        ___       ____     ______ ____ ___ ___ ____ ____");
