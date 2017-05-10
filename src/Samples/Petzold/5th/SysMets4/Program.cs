@@ -193,28 +193,28 @@ namespace SysMets4
                 case WindowMessage.KeyDown:
                     switch ((VirtualKey)wParam)
                     {
-                        case VirtualKey.VK_HOME:
+                        case VirtualKey.Home:
                             window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_TOP, 0);
                             break;
-                        case VirtualKey.VK_END:
+                        case VirtualKey.End:
                             window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_BOTTOM, 0);
                             break;
-                        case VirtualKey.VK_PRIOR:
+                        case VirtualKey.Prior:
                             window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_PAGEUP, 0);
                             break;
-                        case VirtualKey.VK_NEXT:
+                        case VirtualKey.Next:
                             window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
                             break;
-                        case VirtualKey.VK_UP:
+                        case VirtualKey.Up:
                             window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_LINEUP, 0);
                             break;
-                        case VirtualKey.VK_DOWN:
+                        case VirtualKey.Down:
                             window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollBarCommand.SB_LINEDOWN, 0);
                             break;
-                        case VirtualKey.VK_LEFT:
+                        case VirtualKey.Left:
                             window.SendMessage(WindowMessage.HorizontalScroll, (uint)ScrollBarCommand.SB_PAGEUP, 0);
                             break;
-                        case VirtualKey.VK_RIGHT:
+                        case VirtualKey.Right:
                             window.SendMessage(WindowMessage.HorizontalScroll, (uint)ScrollBarCommand.SB_PAGEDOWN, 0);
                             break;
                     }

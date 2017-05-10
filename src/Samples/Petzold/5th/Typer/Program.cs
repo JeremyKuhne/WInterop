@@ -122,31 +122,31 @@ namespace Typer
                 case WindowMessage.KeyDown:
                     switch ((VirtualKey)wParam)
                     {
-                        case VirtualKey.VK_HOME:
+                        case VirtualKey.Home:
                             xCaret = 0;
                             break;
-                        case VirtualKey.VK_END:
+                        case VirtualKey.End:
                             xCaret = cxBuffer - 1;
                             break;
-                        case VirtualKey.VK_PRIOR:
+                        case VirtualKey.Prior:
                             yCaret = 0;
                             break;
-                        case VirtualKey.VK_NEXT:
+                        case VirtualKey.Next:
                             yCaret = cyBuffer - 1;
                             break;
-                        case VirtualKey.VK_LEFT:
+                        case VirtualKey.Left:
                             xCaret = Math.Max(xCaret - 1, 0);
                             break;
-                        case VirtualKey.VK_RIGHT:
+                        case VirtualKey.Right:
                             xCaret = Math.Min(xCaret + 1, cxBuffer - 1);
                             break;
-                        case VirtualKey.VK_UP:
+                        case VirtualKey.Up:
                             yCaret = Math.Max(yCaret - 1, 0);
                             break;
-                        case VirtualKey.VK_DOWN:
+                        case VirtualKey.Down:
                             yCaret = Math.Min(yCaret + 1, cyBuffer - 1);
                             break;
-                        case VirtualKey.VK_DELETE:
+                        case VirtualKey.Delete:
                             for (int x = xCaret; x < cxBuffer - 1; x++)
                                 pBuffer[x, yCaret] = pBuffer[x + 1, yCaret];
 
@@ -182,7 +182,7 @@ namespace Typer
                                 if (xCaret > 0)
                                 {
                                     xCaret--;
-                                    window.SendMessage(WindowMessage.KeyDown, (uint)VirtualKey.VK_DELETE, 1);
+                                    window.SendMessage(WindowMessage.KeyDown, (uint)VirtualKey.Delete, 1);
                                 }
                                 break;
                             case '\t': // tab

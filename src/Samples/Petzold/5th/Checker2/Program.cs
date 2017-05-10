@@ -84,26 +84,26 @@ namespace Checker2
                     int y = Math.Max(0, Math.Min(DIVISIONS - 1, point.y / cyBlock));
                     switch ((VirtualKey)wParam)
                     {
-                        case VirtualKey.VK_UP:
+                        case VirtualKey.Up:
                             y--;
                             break;
-                        case VirtualKey.VK_DOWN:
+                        case VirtualKey.Down:
                             y++;
                             break;
-                        case VirtualKey.VK_LEFT:
+                        case VirtualKey.Left:
                             x--;
                             break;
-                        case VirtualKey.VK_RIGHT:
+                        case VirtualKey.Right:
                             x++;
                             break;
-                        case VirtualKey.VK_HOME:
+                        case VirtualKey.Home:
                             x = y = 0;
                             break;
-                        case VirtualKey.VK_END:
+                        case VirtualKey.End:
                             x = y = DIVISIONS - 1;
                             break;
-                        case VirtualKey.VK_RETURN:
-                        case VirtualKey.VK_SPACE:
+                        case VirtualKey.Return:
+                        case VirtualKey.Space:
                             window.SendMessage(WindowMessage.LeftButtonDown, (WPARAM)MouseKey.LeftButton,
                                 new LPARAM(y * cyBlock, x * cxBlock));
                             break;

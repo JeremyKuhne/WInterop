@@ -117,12 +117,12 @@ namespace Checker4
                     y = idFocus >> 8;
                     switch ((VirtualKey)wParam)
                     {
-                        case VirtualKey.VK_UP: y--; break;
-                        case VirtualKey.VK_DOWN: y++; break;
-                        case VirtualKey.VK_LEFT: x--; break;
-                        case VirtualKey.VK_RIGHT: x++; break;
-                        case VirtualKey.VK_HOME: x = y = 0; break;
-                        case VirtualKey.VK_END: x = y = DIVISIONS - 1; break;
+                        case VirtualKey.Up: y--; break;
+                        case VirtualKey.Down: y++; break;
+                        case VirtualKey.Left: x--; break;
+                        case VirtualKey.Right: x++; break;
+                        case VirtualKey.Home: x = y = 0; break;
+                        case VirtualKey.End: x = y = DIVISIONS - 1; break;
                         default: return 0;
                     }
                     x = (x + DIVISIONS) % DIVISIONS;
@@ -147,7 +147,7 @@ namespace Checker4
                     return 0;
                 case WindowMessage.KeyDown:
                     // Send most key presses to the parent window
-                    if ((VirtualKey)wParam != VirtualKey.VK_RETURN && (VirtualKey)wParam != VirtualKey.VK_SPACE)
+                    if ((VirtualKey)wParam != VirtualKey.Return && (VirtualKey)wParam != VirtualKey.Space)
                     {
                         window.GetParent().SendMessage(message, wParam, lParam);
                         return 0;
