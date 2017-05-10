@@ -105,7 +105,7 @@ namespace Checker4
                                 true);
                     return 0;
                 case WindowMessage.LeftButtonDown:
-                    ErrorMethods.MessageBeep(MessageBeepType.MB_OK);
+                    ErrorMethods.MessageBeep(BeepType.Ok);
                     return 0;
                 // On set-focus message, set focus to child window
                 case WindowMessage.SetFocus:

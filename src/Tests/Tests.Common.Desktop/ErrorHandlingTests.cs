@@ -21,14 +21,14 @@ namespace DesktopTests
         }
 
         [Theory,
-            InlineData(MessageBeepType.SimpleBeep),
-            InlineData(MessageBeepType.MB_OK),
-            InlineData(MessageBeepType.MB_ICONQUESTION),
-            InlineData(MessageBeepType.MB_ICONWARNING),
-            InlineData(MessageBeepType.MB_ICONASTERISK),
-            InlineData(MessageBeepType.MB_ICONERROR)
+            InlineData(BeepType.SimpleBeep),
+            InlineData(BeepType.Ok),
+            InlineData(BeepType.Question),
+            InlineData(BeepType.Warning),
+            InlineData(BeepType.Information),
+            InlineData(BeepType.Error)
             ]
-        public void BasicMessageBeep(MessageBeepType type)
+        public void BasicMessageBeep(BeepType type)
         {
             ErrorMethods.MessageBeep(type);
         }

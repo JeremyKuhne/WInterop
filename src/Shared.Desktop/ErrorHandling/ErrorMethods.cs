@@ -50,7 +50,7 @@ namespace WInterop.ErrorHandling
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool MessageBeep(
-                MessageBeepType uType);
+                BeepType uType);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace WInterop.ErrorHandling
         /// <summary>
         /// Play the specified sound (as defined in the Sound control panel).
         /// </summary>
-        public static void MessageBeep(MessageBeepType type = MessageBeepType.SimpleBeep)
+        public static void MessageBeep(BeepType type = BeepType.SimpleBeep)
         {
             if (!Imports.MessageBeep(type))
                 throw Errors.GetIoExceptionForLastError();

@@ -103,7 +103,7 @@ namespace Checker3
                                 true);
                     return 0;
                 case WindowMessage.LeftButtonDown:
-                    ErrorMethods.MessageBeep(MessageBeepType.MB_OK);
+                    ErrorMethods.MessageBeep(BeepType.Ok);
                     return 0;
                 case WindowMessage.Destroy:
                     Windows.PostQuitMessage(0);
