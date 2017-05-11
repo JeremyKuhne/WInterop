@@ -426,6 +426,17 @@ namespace WInterop.Windows
             return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetKeyNameTextW(lParam, buffer, (int)buffer.CharCapacity), null, Errors.Failed);
         }
 
+        public static SIZE GetDialogBaseUnits()
+        {
+            int result = Imports.GetDialogBaseUnits();
+
+            return new SIZE
+            {
+                cx = Conversion.LowWord(result),
+                cy = Conversion.HighWord(result)
+            };
+        }
+
         public static WindowHandle GetDialogItem(WindowHandle window, int id)
         {
             WindowHandle control = Imports.GetDlgItem(window, id);

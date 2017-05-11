@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop", "Winterop\WInterop.csproj", "{8031257A-B9C2-473F-A4DD-690BD6263FEB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -109,6 +109,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clock", "Samples\Petzold\5th\Clock\Clock.csproj", "{573ED4AF-1002-4D19-95E4-3E9B2B59E197}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhatClr", "Samples\Petzold\5th\WhatClr\WhatClr.csproj", "{FBA09B28-1364-49B5-97E8-55F6967CE365}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BtnLook", "Samples\Petzold\5th\BtnLook\BtnLook.csproj", "{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -699,6 +701,22 @@ Global
 		{FBA09B28-1364-49B5-97E8-55F6967CE365}.Release|x64.Build.0 = Release|Any CPU
 		{FBA09B28-1364-49B5-97E8-55F6967CE365}.Release|x86.ActiveCfg = Release|Any CPU
 		{FBA09B28-1364-49B5-97E8-55F6967CE365}.Release|x86.Build.0 = Release|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Debug|ARM.Build.0 = Debug|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Debug|x64.Build.0 = Debug|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Debug|x86.Build.0 = Debug|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Release|ARM.Build.0 = Release|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Release|x64.ActiveCfg = Release|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Release|x64.Build.0 = Release|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Release|x86.ActiveCfg = Release|Any CPU
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -742,5 +760,6 @@ Global
 		{5BADC8D8-FB25-4C6E-BDA6-B87ECF55C1C7} = {F5D72A2B-8550-493A-8E91-A88FBB29643D}
 		{573ED4AF-1002-4D19-95E4-3E9B2B59E197} = {F5D72A2B-8550-493A-8E91-A88FBB29643D}
 		{FBA09B28-1364-49B5-97E8-55F6967CE365} = {F5D72A2B-8550-493A-8E91-A88FBB29643D}
+		{F87A56DE-F6E3-43EB-ADC8-8521A88A45F1} = {F5D72A2B-8550-493A-8E91-A88FBB29643D}
 	EndGlobalSection
 EndGlobal

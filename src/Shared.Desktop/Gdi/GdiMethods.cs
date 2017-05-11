@@ -173,6 +173,11 @@ namespace WInterop.Gdi
             return Imports.UpdateWindow(window);
         }
 
+        public static bool ValidateRectangle(WindowHandle window, ref RECT rect)
+        {
+            return Imports.ValidateRect(window, ref rect);
+        }
+
         /// <summary>
         /// Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
         /// </summary>

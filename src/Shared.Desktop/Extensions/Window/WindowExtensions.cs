@@ -49,6 +49,7 @@ namespace WInterop.Extensions.WindowExtensions
         public static bool Invalidate(this WindowHandle window, bool erase = true) => GdiMethods.Invalidate(window, erase);
         public static bool InvalidateRectangle(this WindowHandle window, RECT rect, bool erase = true) => GdiMethods.InvalidateRectangle(window, rect, erase);
         public static bool UpdateWindow(this WindowHandle window) => GdiMethods.UpdateWindow(window);
+        public static bool ValidateRectangle(this WindowHandle window, ref RECT rect) => GdiMethods.ValidateRectangle(window, ref rect);
         public static void MoveWindow(this WindowHandle window, int x, int y, int width, int height, bool repaint) => WindowMethods.MoveWindow(window, x, y, width, height, repaint);
         public static IntPtr GetWindowLong(this WindowHandle window, WindowLong index) => WindowMethods.GetWindowLong(window, index);
         public static IntPtr SetWindowLong(this WindowHandle window, WindowLong index, IntPtr value) => WindowMethods.SetWindowLong(window, index, value);

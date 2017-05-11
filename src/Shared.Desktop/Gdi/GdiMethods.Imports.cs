@@ -133,6 +133,12 @@ namespace WInterop.Gdi
             public static extern bool UpdateWindow(
                 WindowHandle hWnd);
 
+            // https://msdn.microsoft.com/en-us/library/dd145194.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool ValidateRect(
+                WindowHandle hWnd,
+                [In] ref RECT lpRect);
+
             // https://msdn.microsoft.com/en-us/library/dd183362.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern IntPtr BeginPaint(

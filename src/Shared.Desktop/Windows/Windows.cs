@@ -102,5 +102,7 @@ namespace WInterop.Windows
 
         public static DeviceContext CreateDeviceContext(string driver, string device) => GdiMethods.CreateDeviceContext(driver, device);
         public static DeviceContext CreateInformationContext(string driver, string device) => GdiMethods.CreateInformationContext(driver, device);
+
+        public static SIZE GetDialogBaseUnits() => WindowMethods.GetDialogBaseUnits();
     }
 }

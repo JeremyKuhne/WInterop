@@ -43,11 +43,15 @@ namespace WInterop.Support
 
         public static ushort HighWord(uint value) => (ushort)((value >> 16) & 0xFFFF);
 
+        public static short HighWord(int value) => (short)((value >> 16) & 0xFFFF);
+
         public static ushort LowWord(IntPtr value) => (ushort)((ulong)value & 0xFFFF);
 
         public static ushort LowWord(UIntPtr value) => (ushort)((ulong)value & 0xFFFF);
 
         public static ushort LowWord(uint value) => (ushort)(value & 0xFFFF);
+
+        public static short LowWord(int value) => (short)(value & 0xFFFF);
 
         public static DateTime FileTimeToDateTime(FILETIME fileTime)
         {

@@ -126,7 +126,7 @@ namespace KeyView1
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SelectObject(StockFont.SystemFixed);
-                        dc.SetBackgroundMode(BackgroundMode.TRANSPARENT);
+                        dc.SetBackgroundMode(BackgroundMode.Transparent);
                         dc.TextOut(0, 0, "Message        Key       Char     Repeat Scan Ext ALT Prev Tran");
                         dc.TextOut(0, 0, "_______        ___       ____     ______ ____ ___ ___ ____ ____");
                         for (int i = 0; i < Math.Min(cLines, cyClient / cyChar - 1); i++)

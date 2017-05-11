@@ -17,49 +17,17 @@ namespace WInterop.Windows.Types
         public ushort LowWord => Conversion.LowWord(RawValue);
         public ushort HighWord => Conversion.HighWord(RawValue);
 
-        public LPARAM(IntPtr value)
-        {
-            RawValue = value;
-        }
+        public LPARAM(IntPtr value) => RawValue = value;
+        public LPARAM(short high, short low) => RawValue = (IntPtr)Conversion.HighLowToInt(high, low);
+        public LPARAM(int high, int low) => RawValue = (IntPtr)Conversion.HighLowToInt(checked((short)high), checked((short)low));
 
-        public LPARAM(short high, short low)
-        {
-            RawValue = (IntPtr)Conversion.HighLowToInt(high, low);
-        }
+        public static implicit operator int(LPARAM value) => (int)value.RawValue.ToInt64();
+        public static explicit operator uint(LPARAM value) => (uint)value.RawValue.ToInt64();
+        public static implicit operator LPARAM(int value) => new LPARAM((IntPtr)value);
+        public static implicit operator LPARAM(IntPtr value) => new LPARAM(value);
+        public static implicit operator IntPtr(LPARAM value) => value.RawValue;
+        public unsafe static explicit operator void*(LPARAM value) => value.RawValue.ToPointer();
 
-        public LPARAM(int high, int low)
-        {
-            RawValue = (IntPtr)Conversion.HighLowToInt(checked((short)high), checked((short)low));
-        }
-
-        public static implicit operator int(LPARAM value)
-        {
-            return (int)value.RawValue.ToInt64();
-        }
-
-        public static explicit operator uint(LPARAM value)
-        {
-            return (uint)value.RawValue.ToInt64();
-        }
-
-        public static implicit operator LPARAM(int value)
-        {
-            return new LPARAM((IntPtr)value);
-        }
-
-        public static implicit operator LPARAM(IntPtr value)
-        {
-            return new LPARAM(value);
-        }
-
-        public static implicit operator IntPtr(LPARAM value)
-        {
-            return value.RawValue;
-        }
-
-        public override string ToString()
-        {
-            return RawValue.ToString();
-        }
+        public override string ToString() => RawValue.ToString();
     }
 }

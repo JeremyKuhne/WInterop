@@ -9,7 +9,14 @@ namespace WInterop.Gdi.Types
 {
     public enum BackgroundMode : int
     {
-        TRANSPARENT = 1,
-        OPAQUE = 2
+        /// <summary>
+        /// (TRANSPARENT)
+        /// </summary>
+        Transparent = 1,
+
+        /// <summary>
+        /// (OPAQUE)
+        /// </summary>
+        Opaque = 2
     }
 }
