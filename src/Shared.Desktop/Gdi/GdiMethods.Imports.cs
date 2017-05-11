@@ -442,6 +442,12 @@ namespace WInterop.Gdi
                 DeviceContext hDC,
                 [In] ref RECT lprc);
 
+            // https://msdn.microsoft.com/en-us/library/dd162479.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool DrawFocusRect(
+                DeviceContext hDC,
+                [In] ref RECT lprc);
+
             // https://msdn.microsoft.com/en-us/library/dd162799.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool Pie(

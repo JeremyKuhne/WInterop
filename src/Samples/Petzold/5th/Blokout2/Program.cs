@@ -46,7 +46,7 @@ namespace Blokout2
                 module,
                 szAppName,
                 "Mouse Button & Capture Demo",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

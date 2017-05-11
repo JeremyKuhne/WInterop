@@ -48,7 +48,7 @@ namespace DigClock
                 module,
                 szAppName,
                 "Digital Clock",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

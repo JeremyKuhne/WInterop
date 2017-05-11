@@ -47,7 +47,7 @@ namespace SysMets4
                 module,
                 szAppName,
                 "Get System Metrics No. 4",
-                WindowStyle.OverlappedWindow | WindowStyle.VerticalScroll | WindowStyle.HorizontalScroll);
+                WindowStyles.OverlappedWindow | WindowStyles.VerticalScroll | WindowStyles.HorizontalScroll);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

@@ -319,6 +319,21 @@ namespace WInterop.Gdi
             return Imports.FillRect(deviceContext, ref rectangle, brush);
         }
 
+        public static bool FrameRectangle(DeviceContext deviceContext, RECT rectangle, BrushHandle brush)
+        {
+            return Imports.FrameRect(deviceContext, ref rectangle, brush);
+        }
+
+        public static bool InvertRectangle(DeviceContext deviceContext, RECT rectangle)
+        {
+            return Imports.InvertRect(deviceContext, ref rectangle);
+        }
+
+        public static bool DrawFocusRectangle(DeviceContext deviceContext, RECT rectangle)
+        {
+            return Imports.DrawFocusRect(deviceContext, ref rectangle);
+        }
+
         public unsafe static bool PolyBezier(DeviceContext deviceContext, params POINT[] points)
         {
             fixed (POINT* p = points)

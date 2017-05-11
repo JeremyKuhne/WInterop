@@ -5,23 +5,28 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.Windows.Types
 {
-    public enum GetAncestorOptions : uint
+    [Flags]
+    public enum OwnerDrawActions : uint
     {
-        /// <summary>
-        /// Retrieves the parent window. This does not include the owner, as it does with the GetParent function.
-        /// </summary>
-        GA_PARENT = 1,
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/bb775802.aspx
 
         /// <summary>
-        /// Retrieves the root window by walking the chain of parent windows.
+        /// (ODA_DRAWENTIRE)
         /// </summary>
-        GA_ROOT = 2,
+        DrawEntire = 0x0001,
 
         /// <summary>
-        /// Retrieves the owned root window by walking the chain of parent and owner windows returned by GetParent. 
+        /// (ODA_SELECT)
         /// </summary>
-        GA_ROOTOWNER = 3
+        Select = 0x0002,
+
+        /// <summary>
+        /// (ODA_FOCUS)
+        /// </summary>
+        Focut = 0x0004
     }
 }

@@ -27,6 +27,26 @@ namespace WInterop.Windows
                 WindowHandle hWnd,
                 GetWindowOption uCmd);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633520.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetWindowTextW(
+                WindowHandle hWnd,
+                SafeHandle lpString,
+                int nMaxCount);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633546.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool SetWindowTextW(
+                WindowHandle hWnd,
+                string lpString);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633517.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern uint GetWindowModuleFileNameW(
+                WindowHandle hwnd,
+                SafeHandle lpszFileName,
+                uint cchFileNameMax);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633584.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern int GetWindowLongW(
@@ -116,6 +136,24 @@ namespace WInterop.Windows
                 int cx,
                 int cy,
                 WindowPosition uFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633518.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetWindowPlacement(
+                WindowHandle hwnd,
+                ref WINDOWPLACEMENT lpwndpl);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633544.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetWindowPlacement(
+                WindowHandle hwnd,
+                [In] ref WINDOWPLACEMENT lpwndpl);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633519.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetWindowRect(
+                WindowHandle hWnd,
+                out RECT lpRect);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633534.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -252,10 +290,10 @@ namespace WInterop.Windows
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680.aspx
             [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern WindowHandle CreateWindowExW(
-                ExtendedWindowStyle dwExStyle,
+                ExtendedWindowStyles dwExStyle,
                 IntPtr lpClassName,
                 string lpWindowName,
-                WindowStyle dwStyle,
+                WindowStyles dwStyle,
                 int x,
                 int y,
                 int nWidth,
@@ -289,9 +327,9 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool AdjustWindowRectEx(
                 ref RECT lpRect,
-                WindowStyle dwStyle,
+                WindowStyles dwStyle,
                 bool bMenu,
-                ExtendedWindowStyle dwExStyle);
+                ExtendedWindowStyles dwExStyle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645507.aspx
             [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]

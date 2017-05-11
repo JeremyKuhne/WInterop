@@ -56,7 +56,7 @@ namespace Checker4
                 module,
                 szAppName,
                 "Checker4 Mouse Hit-Test Demo",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
@@ -85,8 +85,8 @@ namespace Checker4
                                 window.GetWindowLong(WindowLong.InstanceHandle),
                                 szChildClass,
                                 null,
-                                WindowStyle.ChildWindow | WindowStyle.Visible,
-                                ExtendedWindowStyle.None,
+                                WindowStyles.ChildWindow | WindowStyles.Visible,
+                                ExtendedWindowStyles.None,
                                 0, 0, 0, 0,
                                 window,
                                 (IntPtr)(y << 8 | x),
@@ -171,7 +171,7 @@ namespace Checker4
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        RECT rect = window.GetClientRect();
+                        RECT rect = window.GetClientRectangle();
                         dc.Rectangle(rect);
 
                         if (window.GetWindowLong(0) != IntPtr.Zero)

@@ -44,7 +44,7 @@ namespace Bezier
                 module,
                 "Bezier",
                 "Bezier Splines",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

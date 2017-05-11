@@ -11,7 +11,7 @@ namespace WInterop.Windows.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600.aspx
     [Flags]
-    public enum WindowStyle : uint
+    public enum WindowStyles : uint
     {
         /// <summary>
         /// Overlapped window with a title bar and border. (WS_OVERLAPPED)

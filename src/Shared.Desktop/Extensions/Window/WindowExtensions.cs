@@ -29,7 +29,8 @@ namespace WInterop.Extensions.WindowExtensions
         public static bool IsWindowUnicode(this WindowHandle window) => WindowMethods.IsWindowUnicode(window);
         public static CommandId MessageBox(this WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.MB_OK)
             => WindowMethods.MessageBox(owner, text, caption, type);
-        public static RECT GetClientRect(this WindowHandle window) => WindowMethods.GetClientRect(window);
+        public static RECT GetClientRectangle(this WindowHandle window) => WindowMethods.GetClientRectangle(window);
+        public static RECT GetWindowRectangle(this WindowHandle window) => WindowMethods.GetWindowRectangle(window);
         public static void SetScrollRange(this WindowHandle window, ScrollBar scrollBar, int min, int max, bool redraw)
             => WindowMethods.SetScrollRange(window, scrollBar, min, max, redraw);
         public static int SetScrollPosition(this WindowHandle window, ScrollBar scrollBar, int position, bool redraw)

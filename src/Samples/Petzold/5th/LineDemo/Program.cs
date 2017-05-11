@@ -44,7 +44,7 @@ namespace LineDemo
                 module,
                 "LineDemo",
                 "Line Demonstration",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

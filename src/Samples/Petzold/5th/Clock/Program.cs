@@ -48,7 +48,7 @@ namespace Clock
                 module,
                 szAppName,
                 "Analog Clock",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

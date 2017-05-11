@@ -44,7 +44,7 @@ namespace AltWind
                 module,
                 "AltWind",
                 "Alternate and Winding Fill Modes",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

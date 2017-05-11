@@ -177,8 +177,8 @@ namespace WInterop.Windows
             SafeModuleHandle instance,
             string className,
             string windowName,
-            WindowStyle style,
-            ExtendedWindowStyle extendedStyle = ExtendedWindowStyle.None,
+            WindowStyles style,
+            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.None,
             int x = WindowDefines.CW_USEDEFAULT,
             int y = WindowDefines.CW_USEDEFAULT,
             int width = WindowDefines.CW_USEDEFAULT,
@@ -191,8 +191,8 @@ namespace WInterop.Windows
             SafeModuleHandle instance,
             string className,
             string windowName,
-            WindowStyle style,
-            ExtendedWindowStyle extendedStyle,
+            WindowStyles style,
+            ExtendedWindowStyles extendedStyle,
             int x,
             int y,
             int width,
@@ -326,12 +326,20 @@ namespace WInterop.Windows
             Imports.PostQuitMessage(exitCode);
         }
 
-        public static RECT GetClientRect(WindowHandle window)
+        public static RECT GetClientRectangle(WindowHandle window)
         {
             if (!Imports.GetClientRect(window, out RECT rect))
                 throw Errors.GetIoExceptionForLastError();
 
             return rect;
+        }
+
+        public static RECT GetWindowRectangle(WindowHandle window)
+        {
+            if (!Imports.GetWindowRect(window, out RECT result))
+                throw Errors.GetIoExceptionForLastError();
+
+            return result;
         }
 
         public static void SetScrollRange(WindowHandle window, ScrollBar scrollBar, int min, int max, bool redraw)

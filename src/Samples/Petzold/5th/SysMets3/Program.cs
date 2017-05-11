@@ -45,7 +45,7 @@ namespace SysMets3
                 module,
                 "SysMets3",
                 "Get System Metrics No. 3",
-                WindowStyle.OverlappedWindow | WindowStyle.VerticalScroll | WindowStyle.HorizontalScroll);
+                WindowStyles.OverlappedWindow | WindowStyles.VerticalScroll | WindowStyles.HorizontalScroll);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

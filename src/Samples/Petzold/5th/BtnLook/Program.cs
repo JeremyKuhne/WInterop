@@ -46,7 +46,7 @@ namespace BtnLook
                 module,
                 szAppName,
                 "Button Look",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
@@ -83,11 +83,11 @@ namespace BtnLook
                 case WindowMessage.Create:
                     baseUnits = Windows.GetDialogBaseUnits();
                     hwndButton = new WindowHandle[button.Length];
-                    CREATESTRUCT* create = (CREATESTRUCT*)(void*)lParam;
+                    CREATESTRUCT* create = (CREATESTRUCT*)lParam;
                     for (int i = 0; i < button.Length; i++)
                         hwndButton[i] = Windows.CreateWindow(create->Instance, "button", button[i].ToString(),
-                            WindowStyle.Child | WindowStyle.Visible | (WindowStyle)button[i],
-                            ExtendedWindowStyle.None,
+                            WindowStyles.Child | WindowStyles.Visible | (WindowStyles)button[i],
+                            ExtendedWindowStyles.None,
                             baseUnits.cx, baseUnits.cy * (1 + 2 * i),
                             20 * baseUnits.cx, 7 * baseUnits.cy / 4,
                             window, (IntPtr)i, IntPtr.Zero);

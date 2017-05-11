@@ -11,7 +11,7 @@ namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ff700543.aspx
     [Flags]
-    public enum ExtendedWindowStyle : uint
+    public enum ExtendedWindowStyles : uint
     {
         /// <summary>
         /// Not actually defined, for convenience.

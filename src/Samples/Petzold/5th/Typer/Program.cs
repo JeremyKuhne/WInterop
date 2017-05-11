@@ -49,7 +49,7 @@ namespace Typer
                 module,
                 szAppName,
                 "Typing Program",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

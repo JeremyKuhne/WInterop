@@ -44,7 +44,7 @@ namespace SysMets2
                 module,
                 "SysMets2",
                 "Get System Metrics No. 2",
-                WindowStyle.OverlappedWindow | WindowStyle.VerticalScroll);
+                WindowStyles.OverlappedWindow | WindowStyles.VerticalScroll);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

@@ -47,7 +47,7 @@ namespace RandRect
                 module,
                 szAppName,
                 "Random Rectangles",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

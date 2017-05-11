@@ -44,7 +44,7 @@ namespace SineWave
                 module,
                 "SineWave",
                 "Sine Wave Using PolyLine",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

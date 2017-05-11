@@ -46,7 +46,7 @@ namespace Clover
                 module,
                 szAppName,
                 "Draw a Clover",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

@@ -46,7 +46,7 @@ namespace Beeper2
                 module,
                 szAppName,
                 "Beeper2 Timer Demo",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
@@ -83,7 +83,7 @@ namespace Beeper2
             fFlipFlop = !fFlipFlop;
             using (DeviceContext dc = window.GetDeviceContext())
             {
-                RECT rect = window.GetClientRect();
+                RECT rect = window.GetClientRectangle();
                 using (BrushHandle brush = fFlipFlop ? Windows.CreateSolidBrush(255, 0, 0) : Windows.CreateSolidBrush(0, 0, 255))
                 {
                     dc.FillRectangle(rect, brush);

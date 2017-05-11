@@ -46,7 +46,7 @@ namespace Beeper1
                 module,
                 szAppName,
                 "Beeper1 Timer Demo",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
@@ -76,7 +76,7 @@ namespace Beeper1
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        RECT rect = window.GetClientRect();
+                        RECT rect = window.GetClientRectangle();
                         using (BrushHandle brush = fFlipFlop ? Windows.CreateSolidBrush(255, 0, 0) : Windows.CreateSolidBrush(0, 0, 255))
                         {
                             dc.FillRectangle(rect, brush);

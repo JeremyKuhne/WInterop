@@ -48,7 +48,7 @@ namespace WhatClr
                 module,
                 szAppName,
                 "What Color",
-                WindowStyle.Overlapped | WindowStyle.Caption | WindowStyle.SystemMenu | WindowStyle.Border);
+                WindowStyles.Overlapped | WindowStyles.Caption | WindowStyles.SystemMenu | WindowStyles.Border);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
@@ -99,7 +99,7 @@ namespace WhatClr
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SelectObject(StockFont.SystemFixed);
-                        RECT rc = window.GetClientRect();
+                        RECT rc = window.GetClientRectangle();
                         dc.DrawText($"0x{cr.R:X2} 0x{cr.G:X2} 0x{cr.B:X2}", rc,
                             TextFormat.DT_SINGLELINE | TextFormat.DT_CENTER | TextFormat.DT_VCENTER);
                     }

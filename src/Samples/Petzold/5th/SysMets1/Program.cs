@@ -44,7 +44,7 @@ namespace SysMets1
                 module,
                 "SysMets1",
                 "Get System Metrics No. 1",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

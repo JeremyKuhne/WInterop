@@ -48,7 +48,7 @@ namespace HelloWin
                 module,
                 szAppName,
                 "The Hello Program",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
@@ -70,7 +70,7 @@ namespace HelloWin
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        RECT rect = window.GetClientRect();
+                        RECT rect = window.GetClientRectangle();
                         dc.DrawText("Hello, Windows 98!", rect, TextFormat.DT_SINGLELINE | TextFormat.DT_CENTER | TextFormat.DT_VCENTER);
                     }
                     return 0;

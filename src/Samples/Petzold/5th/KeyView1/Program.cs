@@ -46,7 +46,7 @@ namespace KeyView1
                 module,
                 szAppName,
                 "Keyboard Message Viewer #1",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

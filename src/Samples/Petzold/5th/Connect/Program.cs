@@ -46,7 +46,7 @@ namespace Connect
                 module,
                 szAppName,
                 "Connect-the-Points Mouse Demo",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();

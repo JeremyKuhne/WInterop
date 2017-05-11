@@ -47,7 +47,14 @@ namespace WInterop.Extensions.WindowExtensions
         public static bool Rectangle(this DeviceContext deviceContext, int left, int top, int right, int bottom)
             => GdiMethods.Rectangle(deviceContext, left, top, right, bottom);
         public static bool Rectangle(this DeviceContext deviceContext, RECT rectangle) => GdiMethods.Rectangle(deviceContext, rectangle);
-        public static bool FillRectangle(this DeviceContext deviceContext, RECT rectangle, BrushHandle brush) => GdiMethods.FillRectangle(deviceContext, rectangle, brush);
+        public static bool FillRectangle(this DeviceContext deviceContext, RECT rectangle, BrushHandle brush)
+            => GdiMethods.FillRectangle(deviceContext, rectangle, brush);
+        public static bool FrameRectangle(this DeviceContext deviceContext, RECT rectangle, BrushHandle brush)
+            => GdiMethods.FrameRectangle(deviceContext, rectangle, brush);
+        public static bool InvertRectangle(this DeviceContext deviceContext, RECT rectangle)
+            => GdiMethods.InvertRectangle(deviceContext, rectangle);
+        public static bool DrawFocusRectangle(this DeviceContext deviceContext, RECT rectangle)
+            => GdiMethods.DrawFocusRectangle(deviceContext, rectangle);
         public static bool Ellipse(this DeviceContext deviceContext, int left, int top, int right, int bottom)
             => GdiMethods.Ellipse(deviceContext, left, top, right, bottom);
         public static bool RoundRectangle(this DeviceContext deviceContext, int left, int top, int right, int bottom, int cornerWidth, int cornerHeight)

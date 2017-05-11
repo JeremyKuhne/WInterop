@@ -47,7 +47,7 @@ namespace Checker2
                 module,
                 szAppName,
                 "Checker2 Mouse Hit-Test Demo",
-                WindowStyle.OverlappedWindow);
+                WindowStyles.OverlappedWindow);
 
             window.ShowWindow(ShowWindow.Normal);
             window.UpdateWindow();
