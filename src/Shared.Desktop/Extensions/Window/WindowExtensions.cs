@@ -54,6 +54,18 @@ namespace WInterop.Extensions.WindowExtensions
         public static void MoveWindow(this WindowHandle window, int x, int y, int width, int height, bool repaint) => WindowMethods.MoveWindow(window, x, y, width, height, repaint);
         public static IntPtr GetWindowLong(this WindowHandle window, WindowLong index) => WindowMethods.GetWindowLong(window, index);
         public static IntPtr SetWindowLong(this WindowHandle window, WindowLong index, IntPtr value) => WindowMethods.SetWindowLong(window, index, value);
+        public static void SetWindowText(this WindowHandle window, string text) => WindowMethods.SetWindowText(window, text);
+        public static IntPtr SetClassLong(this WindowHandle window, ClassLong index, IntPtr value) => WindowMethods.SetClassLong(window, index, value);
+
+        /// <summary>
+        /// Sets the background brush for the window class. Returns the previous background brush.
+        /// </summary>
+        /// <param name="ownsHandle">
+        /// Whether or not the returned brush should own the handle. If true the brush handle
+        /// will be deleted when disposed / finalized.
+        /// </param>
+        public static BrushHandle SetClassBackgroundBrush(this WindowHandle window, BrushHandle brush, bool ownsHandle = true)
+            => new BrushHandle(window.SetClassLong(ClassLong.BackgroundBrush, brush.DangerousGetHandle()), ownsHandle);
         public static bool GetMessage(this WindowHandle window, out MSG message, uint minMessage = 0, uint maxMessage = 0) => WindowMethods.GetMessage(out message, window, minMessage, maxMessage);
         public static LRESULT SendMessage(this WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam) => WindowMethods.SendMessage(window, message, wParam, lParam);
         public static bool ScreenToClient(this WindowHandle window, ref POINT point) => GdiMethods.ScreenToClient(window, ref point);

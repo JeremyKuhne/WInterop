@@ -473,7 +473,7 @@ namespace WInterop.Windows
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646301.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern short GetKeyState(
+            public static extern KeyState GetKeyState(
                 VirtualKey vKey);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646302.aspx
@@ -686,6 +686,11 @@ namespace WInterop.Windows
                 uint uElapse,
                 TimerProcedure lpTimerFunc,
                 uint uToleranceDelay);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724371.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern COLORREF GetSysColor(
+                SystemColor nIndex);
         }
     }
 }

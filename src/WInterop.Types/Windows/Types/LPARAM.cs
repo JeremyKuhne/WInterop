@@ -26,7 +26,9 @@ namespace WInterop.Windows.Types
         public static implicit operator LPARAM(int value) => new LPARAM((IntPtr)value);
         public static implicit operator LPARAM(IntPtr value) => new LPARAM(value);
         public static implicit operator IntPtr(LPARAM value) => value.RawValue;
+
         public unsafe static explicit operator void*(LPARAM value) => value.RawValue.ToPointer();
+        public static explicit operator WindowHandle(LPARAM value) => value.RawValue;
 
         public override string ToString() => RawValue.ToString();
     }

@@ -17,14 +17,10 @@ namespace WInterop.Windows.Types
         public ushort LowWord => Conversion.LowWord(RawValue);
         public ushort HighWord => Conversion.HighWord(RawValue);
 
-        public LRESULT(IntPtr value)
-        {
-            RawValue = value;
-        }
+        public LRESULT(IntPtr value) => RawValue = value;
 
-        public static implicit operator LRESULT(int value)
-        {
-            return new LRESULT((IntPtr)value);
-        }
+        public static implicit operator LRESULT(int value) => new LRESULT((IntPtr)value);
+        public static implicit operator LRESULT(IntPtr value) => new LRESULT(value);
+        public static implicit operator IntPtr(LRESULT value) => value.RawValue;
     }
 }

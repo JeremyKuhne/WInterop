@@ -196,6 +196,16 @@ namespace WInterop.Gdi
             return new PaintDeviceContext(window, paintStruct, handle);
         }
 
+        public static COLORREF GetTextColor(DeviceContext deviceContext)
+        {
+            return Imports.GetTextColor(deviceContext);
+        }
+
+        public static COLORREF SetTextColor(DeviceContext deviceContext, COLORREF color)
+        {
+            return Imports.SetTextColor(deviceContext, color);
+        }
+
         public static unsafe bool TextOut(DeviceContext deviceContext, int x, int y, string text)
         {
             fixed (char* s = text)
@@ -370,6 +380,24 @@ namespace WInterop.Gdi
         public static unsafe bool SetWindowOrigin(DeviceContext deviceContext, int x, int y)
         {
             return Imports.SetWindowOrgEx(deviceContext, x, y, null);
+        }
+
+        /// <summary>
+        /// Shared brush, handle doesn't need disposed.
+        /// </summary>
+        public static BrushHandle GetSystemColorBrush(SystemColor systemColor)
+        {
+            return new BrushHandle(Imports.GetSysColorBrush(systemColor), ownsHandle: false);
+        }
+
+        public static COLORREF GetBackgroundColor(DeviceContext deviceContext)
+        {
+            return Imports.GetBkColor(deviceContext);
+        }
+
+        public static COLORREF SetBackgroundColor(DeviceContext deviceContext, COLORREF color)
+        {
+            return Imports.SetBkColor(deviceContext, color);
         }
 
         public static BackgroundMode SetBackgroundMode(DeviceContext deviceContext, BackgroundMode mode)

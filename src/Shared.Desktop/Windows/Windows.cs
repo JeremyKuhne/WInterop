@@ -65,8 +65,12 @@ namespace WInterop.Windows
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.MB_OK) => WindowMethods.MessageBox(text, caption, type);
         public static void MessageBeep(BeepType type = BeepType.SimpleBeep) => ErrorMethods.MessageBeep(type);
         public static int GetSystemMetrics(SystemMetric metric) => WindowMethods.GetSystemMetrics(metric);
+        public static KeyState GetKeyState(VirtualKey key) => WindowMethods.GetKeyState(key);
         public static string GetKeyNameText(LPARAM lParam) => WindowMethods.GetKeyNameText(lParam);
+        public static COLORREF GetSystemColor(SystemColor systemColor) => WindowMethods.GetSystemColor(systemColor);
+        public static BrushHandle GetSystemColorBrush(SystemColor systemColor) => GdiMethods.GetSystemColorBrush(systemColor);
         public static BrushHandle CreateSolidBrush(byte red, byte green, byte blue) => GdiMethods.CreateSolidBrush(red, green, blue);
+        public static BrushHandle CreateSolidBrush(COLORREF color) => GdiMethods.CreateSolidBrush(color.R, color.G, color.B);
         public static PenHandle CreatePen(PenStyle style, int width, COLORREF color) => GdiMethods.CreatePen(style, width, color);
 
         public static PenHandle CreatePen(PenStyleExtended style, uint width, COLORREF color, PenEndCap endCap = PenEndCap.PS_ENDCAP_ROUND, PenJoin join = PenJoin.PS_JOIN_ROUND)

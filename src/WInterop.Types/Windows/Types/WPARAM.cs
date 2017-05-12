@@ -17,45 +17,23 @@ namespace WInterop.Windows.Types
         public ushort LowWord => Conversion.LowWord(RawValue);
         public ushort HighWord => Conversion.HighWord(RawValue);
 
-        public WPARAM(UIntPtr value)
-        {
-            RawValue = value;
-        }
+        public WPARAM(UIntPtr value) => RawValue = value;
+        public WPARAM(ushort high, ushort low) => RawValue = (UIntPtr)Conversion.HighLowToInt(high, low);
 
-        public WPARAM(ushort high, ushort low)
-        {
-            RawValue = (UIntPtr)Conversion.HighLowToInt(high, low);
-        }
+        public static implicit operator WPARAM(UIntPtr value) => new WPARAM(value);
+        public static implicit operator UIntPtr(WPARAM value) => value.RawValue;
 
-        public static implicit operator uint(WPARAM value)
-        {
-            return (uint)value.RawValue.ToUInt64();
-        }
+        // We make these explicit as we want to encourage keeping signed/unsigned alignment
+        unsafe public static explicit operator WPARAM(IntPtr value) => new WPARAM(new UIntPtr(value.ToPointer()));
+        unsafe public static explicit operator IntPtr(WPARAM value) => new IntPtr(value.RawValue.ToPointer());
 
-        public static implicit operator WPARAM(uint value)
-        {
-            return new WPARAM((UIntPtr)value);
-        }
+        public static implicit operator uint(WPARAM value) => (uint)value.RawValue.ToUInt64();
+        public static implicit operator WPARAM(uint value) => new WPARAM((UIntPtr)value);
 
-        public static explicit operator VirtualKey(WPARAM value)
-        {
-            return (VirtualKey)value.RawValue.ToUInt32();
-        }
-
-        public static explicit operator WPARAM(VirtualKey value)
-        {
-            return (uint)value;
-        }
-
-        public static explicit operator MouseKey(WPARAM value)
-        {
-            return (MouseKey)value.RawValue.ToUInt32();
-        }
-
-        public static explicit operator WPARAM(MouseKey value)
-        {
-            return (uint)value;
-        }
+        public static explicit operator VirtualKey(WPARAM value) => (VirtualKey)value.RawValue.ToUInt32();
+        public static explicit operator WPARAM(VirtualKey value) => (uint)value;
+        public static explicit operator MouseKey(WPARAM value) => (MouseKey)value.RawValue.ToUInt32();
+        public static explicit operator WPARAM(MouseKey value) => (uint)value;
 
         public override string ToString()
         {

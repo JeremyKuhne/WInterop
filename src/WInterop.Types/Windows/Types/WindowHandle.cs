@@ -41,12 +41,10 @@ namespace WInterop.Windows.Types
         /// </summary>
         public static WindowHandle HWND_TOPMOST = new WindowHandle(new IntPtr(-1));
 
-        public WindowHandle(IntPtr hwnd)
-        {
-            HWND = hwnd;
-        }
+        public WindowHandle(IntPtr hwnd) => HWND = hwnd;
 
-        static public implicit operator IntPtr(WindowHandle handle) => handle.HWND;
+        public static implicit operator IntPtr(WindowHandle handle) => handle.HWND;
+        public static implicit operator WindowHandle(IntPtr handle) => new WindowHandle(handle);
 
         public override int GetHashCode() => HWND.GetHashCode();
 

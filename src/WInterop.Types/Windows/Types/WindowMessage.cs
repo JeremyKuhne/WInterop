@@ -97,7 +97,7 @@ namespace WInterop.Windows
         /// <summary>
         /// (WM_SYSCOLORCHANGE)
         /// </summary>
-        SytemColorChange = 0x0015,
+        SystemColorChange = 0x0015,
 
         /// <summary>
         /// (WM_SHOWWINDOW)

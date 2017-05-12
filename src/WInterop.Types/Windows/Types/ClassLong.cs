@@ -9,16 +9,59 @@ namespace WInterop.Windows.Types
 {
     public enum ClassLong : int
     {
-        GCL_MENUNAME       = -8,
-        GCL_HBRBACKGROUND  = -10,
-        GCL_HCURSOR        = -12,
-        GCL_HICON          = -14,
-        GCL_HMODULE        = -16,
-        GCL_CBWNDEXTRA     = -18,
-        GCL_CBCLSEXTRA     = -20,
-        GCL_WNDPROC        = -24,
-        GCL_STYLE          = -26,
-        GCW_ATOM           = -32,
-        GCL_HICONSM        = -34
+        /// <summary>
+        /// (GCL_MENUNAME)
+        /// </summary>
+        MenuName = -8,
+
+        /// <summary>
+        /// (GCL_HBRBACKGROUND)
+        /// </summary>
+        BackgroundBrush = -10,
+
+        /// <summary>
+        /// (GCL_HCURSOR)
+        /// </summary>
+        Cursor = -12,
+
+        /// <summary>
+        /// (GCL_HICON)
+        /// </summary>
+        Icon = -14,
+
+        /// <summary>
+        /// (GCL_HMODULE)
+        /// </summary>
+        Module = -16,
+
+        /// <summary>
+        /// (GCL_CBWNDEXTRA)
+        /// </summary>
+        WindowExtra = -18,
+
+        /// <summary>
+        /// (GCL_CBCLSEXTRA)
+        /// </summary>
+        ClassExtra = -20,
+
+        /// <summary>
+        /// (GCL_WNDPROC)
+        /// </summary>
+        WindowProcedure = -24,
+
+        /// <summary>
+        /// (GCL_STYLE)
+        /// </summary>
+        Style = -26,
+
+        /// <summary>
+        /// (GCW_ATOM)
+        /// </summary>
+        Atom = -32,
+
+        /// <summary>
+        /// (GCL_HICONSM)
+        /// </summary>
+        SmallIcon = -34
     }
 }

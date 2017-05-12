@@ -1030,6 +1030,11 @@ namespace WInterop.Gdi
             public static extern COLORREF GetDCBrushColor(
                 DeviceContext hdc);
 
+            // https://msdn.microsoft.com/en-us/library/dd144927.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern IntPtr GetSysColorBrush(
+                SystemColor nIndex);
+
             // https://msdn.microsoft.com/en-us/library/dd183509.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern PenHandle CreatePen(

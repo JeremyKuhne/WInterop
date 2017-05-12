@@ -16,6 +16,10 @@ namespace WInterop.Extensions.WindowExtensions
             => GdiMethods.GetDeviceCapability(deviceContext, capability);
         public static GdiObjectHandle SelectObject(this DeviceContext deviceContext, GdiObjectHandle @object)
             => GdiMethods.SelectObject(deviceContext, @object);
+        public static COLORREF GetTextColor(this DeviceContext deviceContext)
+            => GdiMethods.GetTextColor(deviceContext);
+        public static COLORREF SetTextColor(this DeviceContext deviceContext, COLORREF color)
+            => GdiMethods.SetTextColor(deviceContext, color);
         public static bool TextOut(this DeviceContext deviceContext, int x, int y, string text)
             => GdiMethods.TextOut(deviceContext, x, y, text);
         public static unsafe bool TextOut(this DeviceContext deviceContext, int x, int y, char* text, int length)
@@ -30,6 +34,10 @@ namespace WInterop.Extensions.WindowExtensions
             => GdiMethods.MoveTo(deviceContext, x, y);
         public static bool LineTo(this DeviceContext deviceContext, int x, int y)
             => GdiMethods.LineTo(deviceContext, x, y);
+        public static COLORREF GetBackgroundColor(this DeviceContext deviceContext)
+            => GdiMethods.GetBackgroundColor(deviceContext);
+        public static COLORREF SetBackgroundColor(this DeviceContext deviceContext, COLORREF color)
+            => GdiMethods.SetBackgroundColor(deviceContext, color);
         public static BackgroundMode SetBackgroundMode(this DeviceContext deviceContext, BackgroundMode mode)
             => GdiMethods.SetBackgroundMode(deviceContext, mode);
         public static BackgroundMode GetBackgroundMode(this DeviceContext deviceContext) => GdiMethods.GetBackgroundMode(deviceContext);

@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
@@ -227,6 +228,9 @@ namespace WInterop.Windows
 
         public static IntPtr GetWindowLong(WindowHandle window, WindowLong index)
         {
+            // Unfortunate, but this is necessary to tell if there is really an error
+            ErrorHandling.ErrorMethods.SetLastError(WindowsError.NO_ERROR);
+
             IntPtr result = Support.Environment.Is64BitProcess
                 ? (IntPtr)Imports.GetWindowLongPtrW(window, index)
                 : (IntPtr)Imports.GetWindowLongW(window, index);
@@ -250,6 +254,12 @@ namespace WInterop.Windows
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
             return result;
+        }
+
+        public static void SetWindowText(WindowHandle window, string text)
+        {
+            if (!Imports.SetWindowTextW(window, text))
+                throw Errors.GetIoExceptionForLastError();
         }
 
         public static IntPtr GetClassLong(WindowHandle window, ClassLong index)
@@ -351,7 +361,10 @@ namespace WInterop.Windows
         public static int SetScrollPosition(WindowHandle window, ScrollBar scrollBar, int position, bool redraw)
         {
             int result = Imports.SetScrollPos(window, scrollBar, position, redraw);
-            if (result == 0)
+
+            // There appears to be a bug in the V6 common controls where they set ERROR_ACCESSDENIED. Clearing
+            // LastError doesn't help. Skip error checking if we've set position 0.
+            if (result == 0 && position != 0)
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
             return result;
@@ -428,6 +441,11 @@ namespace WInterop.Windows
             return result;
         }
 
+        public static KeyState GetKeyState(VirtualKey key)
+        {
+            return Imports.GetKeyState(key);
+        }
+
         public static string GetKeyNameText(LPARAM lParam)
         {
             // It is possible that there may be no name for a key, in which case the api will return 0 with GetLastError of 0.
@@ -477,6 +495,11 @@ namespace WInterop.Windows
         {
             if (!Imports.KillTimer(window, id))
                 throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static COLORREF GetSystemColor(SystemColor systemColor)
+        {
+            return Imports.GetSysColor(systemColor);
         }
     }
 }
