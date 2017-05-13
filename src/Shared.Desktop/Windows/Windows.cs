@@ -62,7 +62,7 @@ namespace WInterop.Windows
         public static void SetCursorPosition(int x, int y) => ResourceMethods.SetCursorPosition(x, y);
         public static RegionHandle CreateEllipticRegion(int left, int top, int right, int bottom) => GdiMethods.CreateEllipticRegion(left, top, right, bottom);
         public static RegionHandle CreateRectangleRegion(int left, int top, int right, int bottom) => GdiMethods.CreateRectangleRegion(left, top, right, bottom);
-        public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.MB_OK) => WindowMethods.MessageBox(text, caption, type);
+        public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.Ok) => WindowMethods.MessageBox(text, caption, type);
         public static void MessageBeep(BeepType type = BeepType.SimpleBeep) => ErrorMethods.MessageBeep(type);
         public static int GetSystemMetrics(SystemMetric metric) => WindowMethods.GetSystemMetrics(metric);
         public static KeyState GetKeyState(VirtualKey key) => WindowMethods.GetKeyState(key);

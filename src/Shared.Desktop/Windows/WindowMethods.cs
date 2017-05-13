@@ -143,12 +143,12 @@ namespace WInterop.Windows
             return Imports.GetSystemMetrics(metric);
         }
 
-        public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.MB_OK)
+        public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.Ok)
         {
             return MessageBox(WindowHandle.Null, text, caption, type);
         }
 
-        public static CommandId MessageBox(WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.MB_OK)
+        public static CommandId MessageBox(WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.Ok)
         {
             CommandId result = Imports.MessageBoxExW(owner, text, caption, type, 0);
             if (result == CommandId.Error)

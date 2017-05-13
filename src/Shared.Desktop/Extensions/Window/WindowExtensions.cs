@@ -27,7 +27,7 @@ namespace WInterop.Extensions.WindowExtensions
         public static bool IsWindow(this WindowHandle window) => WindowMethods.IsWindow(window);
         public static bool IsWindowVisible(this WindowHandle window) => WindowMethods.IsWindowVisible(window);
         public static bool IsWindowUnicode(this WindowHandle window) => WindowMethods.IsWindowUnicode(window);
-        public static CommandId MessageBox(this WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.MB_OK)
+        public static CommandId MessageBox(this WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.Ok)
             => WindowMethods.MessageBox(owner, text, caption, type);
         public static RECT GetClientRectangle(this WindowHandle window) => WindowMethods.GetClientRectangle(window);
         public static RECT GetWindowRectangle(this WindowHandle window) => WindowMethods.GetWindowRectangle(window);
