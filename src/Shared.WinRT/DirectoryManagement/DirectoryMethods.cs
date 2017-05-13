@@ -8,6 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
+using WInterop.DirectoryManagement.BufferWrappers;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 using WInterop.Support;
@@ -85,7 +86,8 @@ namespace WInterop.DirectoryManagement
         /// </summary>
         public static string GetCurrentDirectory()
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetCurrentDirectoryW(buffer.CharCapacity, buffer));
+            var wrapper = new TempPathWrapper();
+            return BufferHelper.ApiInvoke(ref wrapper);
         }
 
         /// <summary>

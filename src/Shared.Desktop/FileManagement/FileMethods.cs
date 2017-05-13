@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
+using WInterop.FileManagement.BufferWrappers;
 using WInterop.FileManagement.Types;
 using WInterop.Handles.Types;
 using WInterop.Support;
@@ -160,7 +161,8 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetLongPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetLongPathNameW(path, buffer, buffer.CharCapacity), path);
+            var wrapper = new LongPathNameWrapper { Path = path };
+            return BufferHelper.ApiInvoke(ref wrapper, path);
         }
 
         /// <summary>
@@ -168,15 +170,19 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetShortPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetShortPathNameW(path, buffer, buffer.CharCapacity), path);
+            var wrapper = new ShortPathNameWrapper { Path = path };
+            return BufferHelper.ApiInvoke(ref wrapper, path);
         }
 
         /// <summary>
         /// Gets a canonical version of the given handle's path.
         /// </summary>
-        public static string GetFinalPathNameByHandle(SafeFileHandle fileHandle, GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED | GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+        public static string GetFinalPathNameByHandle(
+            SafeFileHandle fileHandle,
+            GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED | GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetFinalPathNameByHandleW(fileHandle, buffer, buffer.CharCapacity, flags));
+            var wrapper = new FinalPathNameByHandleWrapper { FileHandle = fileHandle, Flags = flags };
+            return BufferHelper.ApiInvoke(ref wrapper);
         }
 
         /// <summary>
@@ -191,7 +197,7 @@ namespace WInterop.FileManagement
             FileFlags flags = FileFlags.FILE_FLAG_BACKUP_SEMANTICS;
             if (!resolveLinks) flags |= FileFlags.FILE_FLAG_OPEN_REPARSE_POINT;
 
-            using (SafeFileHandle fileHandle = FileMethods.CreateFile(path, 0, ShareMode.FILE_SHARE_READWRITE,
+            using (SafeFileHandle fileHandle = CreateFile(path, 0, ShareMode.FILE_SHARE_READWRITE,
                 CreationDisposition.OPEN_EXISTING, FileAttributes.NONE, flags))
             {
                 return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
@@ -306,7 +312,7 @@ namespace WInterop.FileManagement
 
         private static string GetFileInformationString(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
                 uint nameLength = 260 * sizeof(char);

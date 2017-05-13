@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using WInterop.Authorization.BufferWrappers;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.Handles.Types;
@@ -186,7 +187,7 @@ namespace WInterop.Authorization
             TOKEN_INFORMATION_CLASS info,
             Action<Reader> action)
         {
-            BufferHelper.CachedInvoke<HeapBuffer>(buffer =>
+            BufferHelper.BufferInvoke<HeapBuffer>(buffer =>
             {
                 uint bytesNeeded;
                 while (!Imports.GetTokenInformation(
@@ -214,7 +215,7 @@ namespace WInterop.Authorization
                 // Loop through and get our privileges
                 uint count = reader.ReadUint();
 
-                BufferHelper.CachedInvoke((StringBuffer buffer) =>
+                BufferHelper.BufferInvoke((StringBuffer buffer) =>
                 {
                     for (int i = 0; i < count; i++)
                     {
@@ -448,36 +449,8 @@ namespace WInterop.Authorization
         /// </summary>
         public static AccountSidInfo LookupAccountSidLocal(ref SID sid)
         {
-            SID localSid = sid;
-            return BufferHelper.CachedInvoke((StringBuffer nameBuffer, StringBuffer domainNameBuffer) =>
-            {
-                SID_NAME_USE usage;
-                uint nameCharCapacity = nameBuffer.CharCapacity;
-                uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
-
-                while (!Imports.LookupAccountSidLocalW(
-                    ref localSid,
-                    nameBuffer,
-                    ref nameCharCapacity,
-                    domainNameBuffer,
-                    ref domainNameCharCapacity,
-                    out usage))
-                {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
-                    nameBuffer.EnsureCharCapacity(nameCharCapacity);
-                    domainNameBuffer.EnsureCharCapacity(domainNameCharCapacity);
-                }
-
-                nameBuffer.SetLengthToFirstNull();
-                domainNameBuffer.SetLengthToFirstNull();
-
-                return new AccountSidInfo
-                {
-                    Name = nameBuffer.ToString(),
-                    DomainName = domainNameBuffer.ToString(),
-                    Usage = usage
-                };
-            });
+            var wrapper = new LookupAccountSidLocalWrapper { Sid = sid };
+            return BufferHelper.TwoBufferInvoke<LookupAccountSidLocalWrapper, StringBuffer, AccountSidInfo>(ref wrapper);
         }
     }
 }

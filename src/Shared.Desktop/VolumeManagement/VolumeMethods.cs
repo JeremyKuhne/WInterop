@@ -134,7 +134,7 @@ namespace WInterop.VolumeManagement
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
         public static IEnumerable<string> GetLogicalDriveStrings()
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint result = 0;
 
@@ -158,7 +158,7 @@ namespace WInterop.VolumeManagement
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
         public static string GetVolumePathName(string path)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 while (!Imports.GetVolumePathNameW(path, buffer, buffer.CharCapacity))
                 {
@@ -185,7 +185,7 @@ namespace WInterop.VolumeManagement
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
         public static IEnumerable<string> GetVolumePathNamesForVolumeName(string volumeName)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint returnLength = 0;
 
@@ -215,7 +215,7 @@ namespace WInterop.VolumeManagement
         {
             volumeMountPoint = Paths.AddTrailingSeparator(volumeMountPoint);
 
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 // MSDN claims 50 is "reasonable", let's go double.
                 buffer.EnsureCharCapacity(100);

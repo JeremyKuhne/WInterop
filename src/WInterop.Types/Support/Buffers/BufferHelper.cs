@@ -64,27 +64,51 @@ namespace WInterop.Support.Buffers
         /// <example>
         /// return BufferHelper.CachedInvoke((NativeBuffer buffer) => { return string.Empty; });
         /// </example>
-        public static T CachedInvoke<T, BufferType>(Func<BufferType, T> func) where BufferType : HeapBuffer
+        public static T BufferInvoke<BufferType, T>(Func<BufferType, T> func) where BufferType : HeapBuffer
         {
-            T result = default(T);
-            CachedInvoke<BufferType>(buffer => result = func(buffer));
-            return result;
+            var wrapper = new FuncWrapper<BufferType, T> { Func = func };
+            return BufferInvoke<FuncWrapper<BufferType, T>, BufferType, T>(ref wrapper);
         }
 
         /// <summary>
-        /// Invoke the given action on a set of cached buffers that returns the given type.
+        /// Invoke the given action on a cached buffer that returns the given type.
         /// </summary>
-        public static T CachedInvoke<T, BufferType>(Func<BufferType, BufferType, T> func) where BufferType : HeapBuffer
+        public static T BufferInvoke<TBufferFunc, BufferType, T>(ref TBufferFunc func)
+            where TBufferFunc : IBufferFunc<BufferType, T>
+            where BufferType : HeapBuffer
         {
-            T result = default(T);
-            CachedInvoke<BufferType>((buffer1, buffer2) => result = func(buffer1, buffer2));
-            return result;
+            var wrapper = new BufferFuncWrapper<TBufferFunc, BufferType, T> { Func = func };
+            BufferInvoke<BufferFuncWrapper<TBufferFunc, BufferType, T>, BufferType>(ref wrapper);
+            return wrapper.Result;
+        }
+
+        /// <summary>
+        /// Invoke the given action on a set of cached buffers.
+        /// </summary>
+        public static T TwoBufferInvoke<TBufferFunc, BufferType, T>(ref TBufferFunc func)
+            where TBufferFunc : ITwoBufferFunc<BufferType, T>
+            where BufferType : HeapBuffer
+        {
+            var wrapper = new TwoBufferFuncWrapper<TBufferFunc, BufferType, T> { Func = func };
+            TwoBufferInvoke<TwoBufferFuncWrapper<TBufferFunc, BufferType, T>, BufferType>(ref wrapper);
+            return wrapper.Result;
         }
 
         /// <summary>
         /// Invoke the given action on a cached buffer.
         /// </summary>
-        public static void CachedInvoke<BufferType>(Action<BufferType> action) where BufferType : HeapBuffer
+        public static void BufferInvoke<BufferType>(Action<BufferType> action) where BufferType : HeapBuffer
+        {
+            var wrapper = new ActionWrapper<BufferType> { Action = action };
+            BufferInvoke<ActionWrapper<BufferType>, BufferType>(ref wrapper);
+        }
+
+        /// <summary>
+        /// Invoke the given action on a cached buffer.
+        /// </summary>
+        public static void BufferInvoke<TBufferAction, BufferType>(ref TBufferAction action)
+            where TBufferAction : IBufferAction<BufferType>
+            where BufferType : HeapBuffer
         {
             // For safer use it's better to ensure we always have at least some capacity in the buffer.
             // This allows consumers not to worry about making sure there is some capacity or trying to
@@ -99,7 +123,7 @@ namespace WInterop.Support.Buffers
             var buffer = StringBufferCache.Instance.Acquire(minCapacity: MinBufferSize);
             try
             {
-                action(buffer as BufferType);
+                action.Action(buffer as BufferType);
             }
             finally
             {
@@ -110,7 +134,9 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Invoke the given action on a set of cached buffers.
         /// </summary>
-        public static void CachedInvoke<BufferType>(Action<BufferType, BufferType> action) where BufferType : HeapBuffer
+        public static void TwoBufferInvoke<TBufferAction, BufferType>(ref TBufferAction action)
+            where TBufferAction : ITwoBufferAction<BufferType>
+            where BufferType : HeapBuffer
         {
             // For safer use it's better to ensure we always have at least some capacity in the buffer.
             // This allows consumers not to worry about making sure there is some capacity or trying to
@@ -126,7 +152,7 @@ namespace WInterop.Support.Buffers
             var buffer2 = StringBufferCache.Instance.Acquire(minCapacity: MinBufferSize);
             try
             {
-                action(buffer1 as BufferType, buffer2 as BufferType);
+                action.Action(buffer1 as BufferType, buffer2 as BufferType);
             }
             finally
             {
@@ -141,124 +167,103 @@ namespace WInterop.Support.Buffers
         /// </summary>
         /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
         /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
-        /// <example>
-        /// BufferHelper.CachedApiInvoke((buffer) => Imports.GetCurrentDirectoryW(buffer.CharCapacity, buffer));
-        /// </example>
-        public static string CachedApiInvoke(Func<StringBuffer, uint> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
+        public static string ApiInvoke<TBufferFunc>(
+            ref TBufferFunc invoker,
+            string detailForError = null,
+            Func<WindowsError, bool> shouldThrow = null)
+            where TBufferFunc : IBufferFunc<StringBuffer, uint>
         {
-            return CachedApiInvokeHelper((buffer) =>
+            ApiInvoker apiInvoker = new ApiInvoker
+            {
+                Invoker = new GrowBufferByReturnValue { Invoker = invoker },
+                DetailForError = detailForError,
+                ShouldThrow = shouldThrow
+            };
+
+            return BufferInvoke<ApiInvoker, StringBuffer, string>(ref apiInvoker);
+        }
+
+        /// <summary>
+        /// Uses the StringBuffer cache and increases the buffer size if needed. This is for APIs that follow the somewhat unfortunate pattern
+        /// of truncating the return string to fit the passed in buffer.
+        /// </summary>
+        /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
+        /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
+        public static string TruncatingApiInvoke<TBufferFunc>(
+            ref TBufferFunc invoker,
+            string detailForError = null,
+            Func<WindowsError, bool> shouldThrow = null)
+            where TBufferFunc : IBufferFunc<StringBuffer, uint>
+        {
+            ApiInvoker apiInvoker = new ApiInvoker
+            {
+                Invoker = new GrowBufferIfFull { Invoker = invoker },
+                DetailForError = detailForError,
+                ShouldThrow = shouldThrow
+            };
+
+            return BufferInvoke<ApiInvoker, StringBuffer, string>(ref apiInvoker);
+        }
+
+        private struct GrowBufferByReturnValue : IBufferFunc<StringBuffer, uint>
+        {
+            public IBufferFunc<StringBuffer, uint> Invoker;
+
+            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
             {
                 uint returnValue = 0;
 
                 // Ensure enough room for the output string
-                while ((returnValue = invoker(buffer)) > buffer.CharCapacity)
+                while ((returnValue = Invoker.Func(buffer)) > buffer.CharCapacity)
                     buffer.EnsureCharCapacity(returnValue);
 
                 return returnValue;
-            },
-            detailForError,
-            shouldThrow);
+            }
         }
 
-        /// <summary>
-        /// Uses the StringBuffer cache and increases the buffer size if needed. This is for APIs that follow the somewhat unfortunate pattern
-        /// of truncating the return string to fit the passed in buffer.
-        /// </summary>
-        /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
-        /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
-        /// <example>
-        /// BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetModuleFileNameW(module, buffer, buffer.CharCapacity));
-        /// </example>
-        public static string CachedTruncatingApiInvoke(Func<StringBuffer, uint> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
+        private struct GrowBufferIfFull : IBufferFunc<StringBuffer, uint>
         {
-            return CachedApiInvokeHelper((buffer) =>
+            public IBufferFunc<StringBuffer, uint> Invoker;
+
+            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
             {
                 uint returnValue = 0;
 
                 // Ensure enough room for the output string- some return the size with the null, some don't.
                 // We'll make sure we have enough for both cases.
-                while ((returnValue = invoker(buffer)) + 2 > buffer.CharCapacity)
+                while ((returnValue = Invoker.Func(buffer)) + 2 > buffer.CharCapacity)
                 {
                     buffer.EnsureCharCapacity(buffer.CharCapacity < 256 ? 256 : checked(buffer.CharCapacity * 2));
                 }
 
                 return returnValue;
-            },
-            detailForError,
-            shouldThrow);
+            }
         }
 
-        /// <summary>
-        /// Uses the StringBuffer cache and increases the buffer size if needed. This is for APIs that follow the somewhat unfortunate pattern
-        /// of truncating the return string to fit the passed in buffer.
-        /// </summary>
-        /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
-        /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
-        /// <example>
-        /// BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetClassNameW(window, buffer, (int)buffer.CharCapacity));
-        /// </example>
-        public static string CachedTruncatingApiInvoke(Func<StringBuffer, int> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
+        private struct ApiInvoker : IBufferFunc<StringBuffer, string>
         {
-            return CachedApiInvokeHelper((buffer) =>
+            public IBufferFunc<StringBuffer, uint> Invoker;
+            public string DetailForError;
+            public Func<WindowsError, bool> ShouldThrow;
+
+            string IBufferFunc<StringBuffer, string>.Func(StringBuffer buffer)
             {
-                int returnValue = 0;
-
-                // Ensure enough room for the output string- some return the size with the null, some don't.
-                // We'll make sure we have enough for both cases.
-                while ((returnValue = invoker(buffer)) + 2 > buffer.CharCapacity)
-                {
-                    buffer.EnsureCharCapacity(buffer.CharCapacity < 256 ? 256 : checked(buffer.CharCapacity * 2));
-                }
-
-                return returnValue;
-            },
-            detailForError,
-            shouldThrow);
-        }
-
-
-        private static string CachedApiInvokeHelper(Func<StringBuffer, uint> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
-        {
-            return CachedInvoke<string, StringBuffer>((buffer) =>
-            {
-                uint returnValue = invoker(buffer);
+                uint returnValue = Invoker.Func(buffer);
 
                 if (returnValue == 0)
                 {
                     // Failed
                     WindowsError error = (WindowsError)Marshal.GetLastWin32Error();
 
-                    if (shouldThrow != null && !shouldThrow(error))
+                    if (ShouldThrow != null && !ShouldThrow(error))
                         return null;
 
-                    throw Errors.GetIoExceptionForError(error, detailForError);
+                    throw Errors.GetIoExceptionForError(error, DetailForError);
                 }
 
                 buffer.Length = returnValue;
                 return buffer.ToString();
-            });
-        }
-
-        private static string CachedApiInvokeHelper(Func<StringBuffer, int> invoker, string detailForError = null, Func<WindowsError, bool> shouldThrow = null)
-        {
-            return CachedInvoke<string, StringBuffer>((buffer) =>
-            {
-                int returnValue = invoker(buffer);
-
-                if (returnValue == 0)
-                {
-                    // Failed
-                    WindowsError error = (WindowsError)Marshal.GetLastWin32Error();
-
-                    if (shouldThrow != null && !shouldThrow(error))
-                        return null;
-
-                    throw Errors.GetIoExceptionForError(error, detailForError);
-                }
-
-                buffer.Length = (uint)returnValue;
-                return buffer.ToString();
-            });
+            }
         }
     }
 }

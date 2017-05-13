@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
+using WInterop.FileManagement.BufferWrappers;
 using WInterop.FileManagement.Types;
 using WInterop.FileManagement.Types.CopyFile2;
 using WInterop.Support;
@@ -231,7 +232,8 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetTempPath()
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetTempPathW(buffer.CharCapacity, buffer));
+            var wrapper = new TempPathWrapper();
+            return BufferHelper.ApiInvoke(ref wrapper);
         }
 
         /// <summary>
@@ -239,7 +241,8 @@ namespace WInterop.FileManagement
         /// </summary>
         public static string GetFullPathName(string path)
         {
-            return BufferHelper.CachedApiInvoke((buffer) => Imports.GetFullPathNameW(path, buffer.CharCapacity, buffer, IntPtr.Zero), path);
+            var wrapper = new FullPathNameWrapper { Path = path };
+            return BufferHelper.ApiInvoke(ref wrapper, path);
         }
 
         /// <summary>
@@ -249,7 +252,7 @@ namespace WInterop.FileManagement
         /// <param name="prefix">Three character prefix for the filename.</param>
         public static string GetTempFileName(string path, string prefix)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(Paths.MaxPath);
                 uint result = Imports.GetTempFileNameW(
@@ -584,7 +587,7 @@ namespace WInterop.FileManagement
         /// </remarks>
         public static string GetFileNameByHandle(SafeFileHandle fileHandle)
         {
-            return BufferHelper.CachedInvoke((HeapBuffer buffer) =>
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 unsafe
                 {
@@ -659,7 +662,7 @@ namespace WInterop.FileManagement
             //     WCHAR StreamName[1];
             // } FILE_STREAM_INFO, *PFILE_STREAM_INFO;
 
-            return BufferHelper.CachedInvoke<IEnumerable<StreamInformation>, HeapBuffer>((buffer) =>
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 unsafe
                 {
@@ -946,7 +949,7 @@ namespace WInterop.FileManagement
 
         private unsafe static void GetFullDirectoryInfoHelper(SafeFileHandle directoryHandle, Action<HeapBuffer> action)
         {
-            BufferHelper.CachedInvoke((HeapBuffer buffer) =>
+            BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 // Make sure we have at least enough for the normal "." and ".."
                 buffer.EnsureByteCapacity((ulong)sizeof(FILE_FULL_DIR_INFO) * 2);

@@ -73,7 +73,7 @@ namespace WInterop.SystemInformation
         /// </summary>
         public static string GetUserName()
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint sizeInChars = buffer.CharCapacity;
                 while (!Imports.GetUserNameW(buffer, ref sizeInChars))
@@ -101,7 +101,7 @@ namespace WInterop.SystemInformation
         /// </summary>
         public static string GetUserName(EXTENDED_NAME_FORMAT format)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
                 while (!Imports.GetUserNameExW(format, buffer, ref size))
@@ -129,7 +129,7 @@ namespace WInterop.SystemInformation
         /// </summary>
         public static string GetComputerName()
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
                 while (!Imports.GetComputerNameW(buffer, ref size))
@@ -147,7 +147,7 @@ namespace WInterop.SystemInformation
         /// </summary>
         public static string GetComputerName(COMPUTER_NAME_FORMAT format)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
                 while (!Imports.GetComputerNameExW(format, buffer, ref size))
@@ -165,7 +165,7 @@ namespace WInterop.SystemInformation
         /// </summary>
         public static string ExpandEnvironmentVariables(string value)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint size;
                 while ((size = Imports.ExpandEnvironmentStringsW(value, buffer, buffer.CharCapacity)) > buffer.CharCapacity)

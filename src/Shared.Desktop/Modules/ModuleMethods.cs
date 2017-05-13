@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using WInterop.Modules.BufferWrappers;
 using WInterop.Modules.Types;
 using WInterop.ProcessAndThreads;
 using WInterop.ProcessAndThreads.Types;
@@ -177,10 +178,9 @@ namespace WInterop.Modules
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         public static string GetModuleFileName(SafeModuleHandle module, SafeProcessHandle process = null)
         {
-            if (process == null)
-                return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetModuleFileNameW(module, buffer, buffer.CharCapacity));
-            else
-                return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.K32GetModuleFileNameExW(process, module, buffer, buffer.CharCapacity));
+            var wrapper = new ModuleFileNameWrapper { Module = module, Process = process };
+
+            return BufferHelper.TruncatingApiInvoke(ref wrapper);
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace WInterop.Modules
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
             List<SafeModuleHandle> modules = new List<SafeModuleHandle>();
-            BufferHelper.CachedInvoke<HeapBuffer>(buffer =>
+            BufferHelper.BufferInvoke<HeapBuffer>(buffer =>
             {
                 uint sizeNeeded = (uint)buffer.ByteCapacity;
 

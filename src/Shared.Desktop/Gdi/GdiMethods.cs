@@ -228,7 +228,7 @@ namespace WInterop.Gdi
                 }
             }
 
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity((uint)(text.Length + 5));
                 buffer.Append(text);

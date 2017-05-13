@@ -131,7 +131,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string UnexpandEnvironmentStrings(string path)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(Paths.MaxPath);
                 if (!Imports.PathUnExpandEnvStringsW(path, buffer, buffer.CharCapacity))
@@ -148,7 +148,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string ExpandEnvironmentVariablesForUser(SafeTokenHandle token, string value)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 while (!Imports.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
                 {

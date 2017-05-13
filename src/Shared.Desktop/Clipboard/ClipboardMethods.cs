@@ -84,7 +84,7 @@ namespace WInterop.Clipboard
         /// <exception cref="ArgumentException">Thrown if passing in a built-in format type.</exception>
         public static string GetClipboardFormatName(uint format)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 int count;
                 while ((count = Imports.GetClipboardFormatNameW(format, buffer, (int)buffer.CharCapacity)) == 0)

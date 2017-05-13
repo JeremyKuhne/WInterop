@@ -12,6 +12,7 @@ using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
+using WInterop.Windows.BufferWrappers;
 using WInterop.Windows.Types;
 
 namespace WInterop.Windows
@@ -77,7 +78,8 @@ namespace WInterop.Windows
 
         public static string GetClassName(WindowHandle window)
         {
-            return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetClassNameW(window, buffer, (int)buffer.CharCapacity));
+            var wrapper = new ClassNameWrapper { Window = window };
+            return BufferHelper.TruncatingApiInvoke(ref wrapper);
         }
 
         public static WindowHandle GetFocus()
@@ -448,8 +450,10 @@ namespace WInterop.Windows
 
         public static string GetKeyNameText(LPARAM lParam)
         {
+            var wrapper = new KeyNameTextWrapper { LParam = lParam };
+
             // It is possible that there may be no name for a key, in which case the api will return 0 with GetLastError of 0.
-            return BufferHelper.CachedTruncatingApiInvoke((buffer) => Imports.GetKeyNameTextW(lParam, buffer, (int)buffer.CharCapacity), null, Errors.Failed);
+            return BufferHelper.TruncatingApiInvoke(ref wrapper, null, Errors.Failed);
         }
 
         public static SIZE GetDialogBaseUnits()

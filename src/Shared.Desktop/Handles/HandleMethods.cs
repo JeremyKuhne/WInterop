@@ -165,7 +165,7 @@ namespace WInterop.Handles
         /// </summary>
         public static string GetSymbolicLinkTarget(SafeSymbolicLinkObjectHandle linkHandle)
         {
-            return BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 UNICODE_STRING target = new UNICODE_STRING(buffer);
                 NTSTATUS status;
@@ -187,7 +187,7 @@ namespace WInterop.Handles
         {
             List<ObjectInformation> infos = new List<ObjectInformation>();
 
-            BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(1024);
 

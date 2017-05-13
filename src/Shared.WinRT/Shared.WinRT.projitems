@@ -12,10 +12,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\BufferWrappers\CurrentDirectoryWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMacros.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\FullPathNameWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\TempPathWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindOperation.cs" />

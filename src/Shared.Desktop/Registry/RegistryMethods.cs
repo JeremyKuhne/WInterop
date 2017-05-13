@@ -124,7 +124,7 @@ namespace WInterop.Desktop.Registry
 
         public unsafe static object QueryValue(RegistryKeyHandle key, string valueName)
         {
-            return BufferHelper.CachedInvoke((HeapBuffer buffer) =>
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 RegistryValueType valueType = new RegistryValueType();
 
@@ -177,7 +177,7 @@ namespace WInterop.Desktop.Registry
         {
             List<string> names = new List<string>();
 
-            BufferHelper.CachedInvoke((HeapBuffer buffer) =>
+            BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 NTSTATUS status;
                 while((status = Imports.NtEnumerateValueKey(
@@ -228,7 +228,7 @@ namespace WInterop.Desktop.Registry
         {
             List<object> data = new List<object>();
 
-            BufferHelper.CachedInvoke((HeapBuffer buffer) =>
+            BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 NTSTATUS status;
                 while ((status = Imports.NtEnumerateValueKey(
@@ -266,7 +266,7 @@ namespace WInterop.Desktop.Registry
         {
             List<string> names = new List<string>();
 
-            BufferHelper.CachedInvoke((StringBuffer buffer) =>
+            BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 // Ensure we have enough space to hold the perf key values
                 buffer.EnsureCharCapacity(10);

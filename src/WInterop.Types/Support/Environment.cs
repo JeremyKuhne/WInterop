@@ -30,7 +30,7 @@ namespace WInterop.Support
         {
             if (s_isWinRT == -1)
             {
-                BufferHelper.CachedInvoke((StringBuffer buffer) =>
+                BufferHelper.BufferInvoke((StringBuffer buffer) =>
                 {
                     uint bufferSize = buffer.CharCapacity;
                     try

@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Authentication\AuthenticationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\AuthorizationMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\BufferWrappers\LookupAccountSidLocalWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clipboard\ClipboardMethods.cs" />
@@ -24,6 +25,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Window\DeviceContextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Window\WindowExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\FinalPathNameByHandleWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\LongPathNameWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\ShortPathNameWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\BitmapHandle.cs" />
@@ -40,10 +44,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\MailslotMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modules\BufferWrappers\ModuleFileNameWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\ModuleMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Multimedia\MultimediaMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\Types\NetApiBufferHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagement\NetworkMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\BufferWrappers\EnvironmentVariableWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Types\EnvironmentStringsHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Registry\Types\RegistryKeyHandle.cs" />
@@ -63,6 +69,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\Types\FindVolumeHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\VolumeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\BufferWrappers\ClassNameWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\BufferWrappers\KeyNameTextWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\SystemParameters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\Types\DRAWITEMSTRUCT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\Types\WindowClass.cs" />

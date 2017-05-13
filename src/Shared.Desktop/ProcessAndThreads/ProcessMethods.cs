@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
+using WInterop.ProcessAndThreads.BufferWrappers;
 using WInterop.ProcessAndThreads.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -80,8 +81,10 @@ namespace WInterop.ProcessAndThreads
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            return BufferHelper.CachedApiInvoke(
-                buffer => Imports.GetEnvironmentVariableW(name, buffer, buffer.CharCapacity),
+            var wrapper = new EnvironmentVariableWrapper { Name = name };
+
+            return BufferHelper.ApiInvoke(
+                ref wrapper,
                 name,
                 error => error != WindowsError.ERROR_ENVVAR_NOT_FOUND);
         }

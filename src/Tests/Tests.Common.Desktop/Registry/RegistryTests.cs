@@ -39,7 +39,7 @@ namespace DesktopTests.Registry
         {
             using (var key = RegistryMethods.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
             {
-                key.IsLocalKey.Should().BeTrue();
+                key.IsLocalKey.Should().BeFalse();
             }
         }
 
@@ -49,7 +49,7 @@ namespace DesktopTests.Registry
             using (var key = RegistryMethods.OpenKey(RegistryKeyHandle.HKEY_CLASSES_ROOT, null))
             {
                 key.IsInvalid.Should().BeFalse();
-                key.IsSpecialKey.Should().BeTrue("the key should be special");
+                key.IsSpecialKey.Should().BeFalse();
             }
         }
 

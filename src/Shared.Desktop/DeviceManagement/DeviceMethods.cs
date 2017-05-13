@@ -47,7 +47,7 @@ namespace WInterop.DeviceManagement
             // Read ulong then get string
             string dosVolumePath = null;
 
-            BufferHelper.CachedInvoke((StringBuffer inBuffer) =>
+            BufferHelper.BufferInvoke((StringBuffer inBuffer) =>
             {
                 // The input is MOUNTMGR_TARGET_NAME which is a short length in bytes followed by the unicode string
                 // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562289.aspx
@@ -55,7 +55,7 @@ namespace WInterop.DeviceManagement
                 inBuffer.Append((char)(volume.Length * sizeof(char)));
                     inBuffer.Append(volume);
 
-                BufferHelper.CachedInvoke((StringBuffer outBuffer) =>
+                BufferHelper.BufferInvoke((StringBuffer outBuffer) =>
                 {
                     // Give enough for roughly 50 characters for a start
                     outBuffer.EnsureCharCapacity(50);
