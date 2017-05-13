@@ -20,6 +20,9 @@ namespace WInterop.Windows.Types
         public LRESULT(IntPtr value) => RawValue = value;
 
         public static implicit operator LRESULT(int value) => new LRESULT((IntPtr)value);
+        public static implicit operator int(LRESULT value) => (int)value.RawValue.ToInt64();
+        public static implicit operator LRESULT(uint value) => new LRESULT((IntPtr)value);
+        public static implicit operator uint(LRESULT value) => (uint)value.RawValue.ToInt64();
         public static implicit operator LRESULT(IntPtr value) => new LRESULT(value);
         public static implicit operator IntPtr(LRESULT value) => value.RawValue;
     }

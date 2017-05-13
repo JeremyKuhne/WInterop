@@ -66,8 +66,12 @@ namespace WInterop.Extensions.WindowExtensions
         /// </param>
         public static BrushHandle SetClassBackgroundBrush(this WindowHandle window, BrushHandle brush, bool ownsHandle = true)
             => new BrushHandle(window.SetClassLong(ClassLong.BackgroundBrush, brush.DangerousGetHandle()), ownsHandle);
-        public static bool GetMessage(this WindowHandle window, out MSG message, uint minMessage = 0, uint maxMessage = 0) => WindowMethods.GetMessage(out message, window, minMessage, maxMessage);
-        public static LRESULT SendMessage(this WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam) => WindowMethods.SendMessage(window, message, wParam, lParam);
+        public static bool GetMessage(this WindowHandle window, out MSG message, uint minMessage = 0, uint maxMessage = 0)
+            => WindowMethods.GetMessage(out message, window, minMessage, maxMessage);
+        public static LRESULT SendMessage(this WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+            => WindowMethods.SendMessage(window, message, wParam, lParam);
+        public static LRESULT SendMessage(this WindowHandle window, ListBoxMessage message, WPARAM wParam, LPARAM lParam)
+            => WindowMethods.SendMessage(window, (WindowMessage)message, wParam, lParam);
         public static bool ScreenToClient(this WindowHandle window, ref POINT point) => GdiMethods.ScreenToClient(window, ref point);
         public static bool ClientToScreen(this WindowHandle window, ref POINT point) => GdiMethods.ClientToScreen(window, ref point);
         public static void CreateCaret(this WindowHandle window, BitmapHandle bitmap, int width, int height) =>

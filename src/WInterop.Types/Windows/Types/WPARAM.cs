@@ -22,13 +22,19 @@ namespace WInterop.Windows.Types
 
         public static implicit operator WPARAM(UIntPtr value) => new WPARAM(value);
         public static implicit operator UIntPtr(WPARAM value) => value.RawValue;
+        public static implicit operator uint(WPARAM value) => (uint)value.RawValue.ToUInt64();
+        public static implicit operator WPARAM(uint value) => new WPARAM((UIntPtr)value);
 
         // We make these explicit as we want to encourage keeping signed/unsigned alignment
         unsafe public static explicit operator WPARAM(IntPtr value) => new WPARAM(new UIntPtr(value.ToPointer()));
         unsafe public static explicit operator IntPtr(WPARAM value) => new IntPtr(value.RawValue.ToPointer());
+        public static explicit operator int(WPARAM value) => (int)(uint)value;
+        public static explicit operator WPARAM(int value) => new WPARAM((UIntPtr)value);
+        public static explicit operator char(WPARAM value) => (char)(uint)value;
+        public static explicit operator WPARAM(char value) => new WPARAM((UIntPtr)value);
 
-        public static implicit operator uint(WPARAM value) => (uint)value.RawValue.ToUInt64();
-        public static implicit operator WPARAM(uint value) => new WPARAM((UIntPtr)value);
+        public unsafe static implicit operator void* (WPARAM value) => value.RawValue.ToPointer();
+        public unsafe static implicit operator WPARAM(void* value) => new WPARAM((UIntPtr)value);
 
         public static explicit operator VirtualKey(WPARAM value) => (VirtualKey)value.RawValue.ToUInt32();
         public static explicit operator WPARAM(VirtualKey value) => (uint)value;

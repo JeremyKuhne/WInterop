@@ -7,15 +7,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi;
+using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
-
-using WInterop.Extensions.WindowExtensions;
 
 namespace Typer
 {
