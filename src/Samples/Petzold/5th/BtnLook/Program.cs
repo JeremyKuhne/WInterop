@@ -40,7 +40,7 @@ namespace OwnDraw
                 ClassName = szAppName
             };
 
-            Windows.RegisterClass(wndclass);
+            Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = Windows.CreateWindow(
                 module,

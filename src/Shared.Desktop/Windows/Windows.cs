@@ -22,7 +22,7 @@ namespace WInterop.Windows
 {
     public static class Windows
     {
-        public static Atom RegisterClass(WindowClass windowClass) => WindowMethods.RegisterClass(windowClass);
+        public static Atom RegisterClass(ref WindowClass windowClass) => WindowMethods.RegisterClass(ref windowClass);
         public static WindowHandle CreateWindow(
                     SafeModuleHandle instance,
                     string className,

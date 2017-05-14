@@ -259,12 +259,12 @@ namespace WInterop.Windows
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633586.aspx
             [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern Atom RegisterClassW(
-                WindowClass lpWndClass);
+                ref WNDCLASS lpWndClass);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633587.aspx
             [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern Atom RegisterClassExW(
-                WNDCLASSEX lpwcx);
+                ref WNDCLASSEX lpwcx);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644899.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -278,6 +278,13 @@ namespace WInterop.Windows
                 SafeModuleHandle hInstance,
                 IntPtr lpClassName,
                 out WNDCLASS lpWndClass);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633579.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool GetClassInfoExW(
+                SafeModuleHandle hinst,
+                IntPtr lpszClass,
+                out WNDCLASSEX lpwcx);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633582.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]

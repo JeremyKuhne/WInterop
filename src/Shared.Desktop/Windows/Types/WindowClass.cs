@@ -9,13 +9,16 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
+using WInterop.Resources;
 using WInterop.Resources.Types;
 
 namespace WInterop.Windows.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577.aspx
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct WindowClass
     {
+        public uint Size;
         public ClassStyle Style;
         public WindowProcedure WindowProcedure;
         public int ClassExtraBytes;
@@ -24,27 +27,97 @@ namespace WInterop.Windows.Types
         public IconHandle Icon;
         public CursorHandle Cursor;
         public BrushHandle Background;
-        [MarshalAs(UnmanagedType.LPWStr)]
         public string MenuName;
-        [MarshalAs(UnmanagedType.LPWStr)]
+        public int MenuId;
         public string ClassName;
+        public Atom ClassAtom;
+        public IconHandle SmallIcon;
 
-        public unsafe WindowClass(WNDCLASS windowClass)
+        public unsafe static implicit operator WindowClass(WNDCLASSEX nativeClass)
         {
-            Style = windowClass.style;
-            WindowProcedure = Marshal.GetDelegateForFunctionPointer<WindowProcedure>(windowClass.lpfnWndProc);
-            ClassExtraBytes = windowClass.cbClassExtra;
-            WindowExtraBytes = windowClass.cbWndExtra;
-            Instance = windowClass.hInstance;
-            Icon = windowClass.hIcon;
-            Cursor = windowClass.hCursor;
-            Background = windowClass.hCursor;
-            MenuName = windowClass.lpszMenuName;
-            ClassName = windowClass.lpszClassName == IntPtr.Zero
-                ? null
-                : Atom.IsAtom(windowClass.lpszClassName)
-                    ? $"Atom: {windowClass.lpszClassName}"
-                    : new string((char*)windowClass.lpszClassName.ToPointer());
+            var windowClass = new WindowClass
+            {
+                Size = nativeClass.cbSize,
+                Style = nativeClass.style,
+                WindowProcedure = Marshal.GetDelegateForFunctionPointer<WindowProcedure>(nativeClass.lpfnWndProc),
+                ClassExtraBytes = nativeClass.cbClassExtra,
+                WindowExtraBytes = nativeClass.cbWndExtra,
+                Instance = nativeClass.hInstance,
+                Icon = nativeClass.hIcon,
+                Cursor = nativeClass.hCursor,
+                Background = nativeClass.hCursor,
+                SmallIcon = nativeClass.hIconSm
+            };
+
+            if (nativeClass.lpszMenuName != IntPtr.Zero)
+            {
+                if (ResourceMacros.IS_INTRESOURCE(nativeClass.lpszMenuName))
+                    windowClass.MenuId = (int)nativeClass.lpszMenuName;
+                else
+                    windowClass.MenuName = new string((char*)nativeClass.lpszMenuName.ToPointer());
+            }
+
+            if (nativeClass.lpszClassName == IntPtr.Zero)
+            {
+                if (Atom.IsAtom(nativeClass.lpszClassName))
+                    windowClass.ClassAtom = nativeClass.lpszClassName;
+                else
+                    windowClass.ClassName = new string((char*)nativeClass.lpszClassName.ToPointer());
+            }
+
+            return windowClass;
+        }
+
+        public class Marshaller : IDisposable
+        {
+            private GCHandle _menuName;
+            private GCHandle _className;
+
+            public unsafe void FillNative(out WNDCLASSEX native, ref WindowClass managed)
+            {
+                native.cbSize = (uint)sizeof(WNDCLASSEX);
+                native.style = managed.Style;
+                native.lpfnWndProc = Marshal.GetFunctionPointerForDelegate(managed.WindowProcedure);
+                native.cbClassExtra = managed.ClassExtraBytes;
+                native.cbWndExtra = managed.WindowExtraBytes;
+
+                // If the WindowClass struct goes out of scope, this would be bad,
+                // but that would require it coming off the stack- which would be
+                // pretty difficult to accomplish for users of this class.
+                native.hInstance = managed.Instance?.DangerousGetHandle() ?? IntPtr.Zero;
+                native.hIcon = managed.Icon?.DangerousGetHandle() ?? IntPtr.Zero;
+                native.hCursor = managed.Cursor?.DangerousGetHandle() ?? IntPtr.Zero;
+                native.hbrBackground = managed.Background?.DangerousGetHandle() ?? IntPtr.Zero;
+                native.hIconSm = managed.SmallIcon?.DangerousGetHandle() ?? IntPtr.Zero;
+
+                if (managed.ClassName != null)
+                {
+                    _className = GCHandle.Alloc(managed.ClassName, GCHandleType.Pinned);
+                    native.lpszClassName = _className.AddrOfPinnedObject();
+                }
+                else
+                {
+                    native.lpszClassName = managed.ClassAtom;
+                }
+
+                if (managed.MenuName != null)
+                {
+                    _menuName = GCHandle.Alloc(managed.MenuName, GCHandleType.Pinned);
+                    native.lpszMenuName = _menuName.AddrOfPinnedObject();
+                }
+                else
+                {
+                    native.lpszMenuName = (IntPtr)managed.MenuId;
+                }
+            }
+
+            public void Dispose()
+            {
+                if (_className.IsAllocated)
+                    _className.Free();
+                if (_menuName.IsAllocated)
+                    _menuName.Free();
+            }
         }
     }
 }

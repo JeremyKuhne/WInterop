@@ -11,23 +11,18 @@ using System.Runtime.InteropServices;
 namespace WInterop.Windows.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577.aspx
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct WNDCLASS
     {
         public ClassStyle style;
         public IntPtr lpfnWndProc;
         public int cbClassExtra;
         public int cbWndExtra;
-
-        // SafeHandles can't be marshalled *from* native code
         public IntPtr hInstance;
         public IntPtr hIcon;
         public IntPtr hCursor;
         public IntPtr hbrBackground;
-
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public string lpszMenuName;
-
+        public IntPtr lpszMenuName;
         public IntPtr lpszClassName;
      }
 }

@@ -160,21 +160,26 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static Atom RegisterClass(WindowClass windowClass)
+        public static unsafe Atom RegisterClass(ref WindowClass windowClass)
         {
-            Atom atom = Imports.RegisterClassW(windowClass);
-            if (!atom.IsValid)
-                throw Errors.GetIoExceptionForLastError();
+            Atom atom;
+            using (var marshaller = new WindowClass.Marshaller())
+            {
+                marshaller.FillNative(out WNDCLASSEX native, ref windowClass);
+                atom = Imports.RegisterClassExW(ref native);
+                if (!atom.IsValid)
+                    throw Errors.GetIoExceptionForLastError();
+            }
 
             return atom;
         }
 
         public static WindowClass GetClassInfo(SafeModuleHandle instance, Atom atom)
         {
-            if (!Imports.GetClassInfoW(instance, atom, out WNDCLASS windowClass))
+            if (!Imports.GetClassInfoExW(instance, atom, out WNDCLASSEX wndClass))
                 throw Errors.GetIoExceptionForLastError();
 
-            return new WindowClass(windowClass);
+            return wndClass;
         }
 
         public static WindowHandle CreateWindow(

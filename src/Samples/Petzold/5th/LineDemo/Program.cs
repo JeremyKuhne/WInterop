@@ -38,7 +38,7 @@ namespace LineDemo
                 ClassName = "LineDemo"
             };
 
-            Windows.RegisterClass(wndclass);
+            Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = WindowMethods.CreateWindow(
                 module,

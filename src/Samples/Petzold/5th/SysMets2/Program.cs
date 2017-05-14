@@ -38,7 +38,7 @@ namespace SysMets2
                 ClassName = "SysMets2"
             };
 
-            Windows.RegisterClass(wndclass);
+            Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = Windows.CreateWindow(
                 module,

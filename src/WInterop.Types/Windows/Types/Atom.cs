@@ -43,14 +43,8 @@ namespace WInterop.Windows.Types
             return value != 0 && value >> 16 == 0;
         }
 
-        static public implicit operator uint(Atom atom)
-        {
-            return atom.ATOM;
-        }
-
-        static public implicit operator IntPtr(Atom atom)
-        {
-            return (IntPtr)atom.ATOM;
-        }
+        static public implicit operator uint(Atom atom) => atom.ATOM;
+        static public implicit operator IntPtr(Atom atom) => (IntPtr)atom.ATOM;
+        static public implicit operator Atom(IntPtr atom) => new Atom((uint)atom);
     }
 }

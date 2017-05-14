@@ -44,13 +44,13 @@ namespace Checker3
                 ClassName = szAppName
             };
 
-            Windows.RegisterClass(wndclass);
+            Windows.RegisterClass(ref wndclass);
 
             wndclass.WindowProcedure = ChildWindowProcedure;
             wndclass.WindowExtraBytes = IntPtr.Size;
             wndclass.ClassName = szChildClass;
 
-            Windows.RegisterClass(wndclass);
+            Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = Windows.CreateWindow(
                 module,

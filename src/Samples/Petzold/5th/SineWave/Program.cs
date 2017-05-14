@@ -38,7 +38,7 @@ namespace SineWave
                 ClassName = "SineWave"
             };
 
-            Windows.RegisterClass(wndclass);
+            Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = Windows.CreateWindow(
                 module,
