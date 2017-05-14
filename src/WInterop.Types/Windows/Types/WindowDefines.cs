@@ -11,6 +11,8 @@ namespace WInterop.Windows.Types
     {
         public const int CW_USEDEFAULT = unchecked((int)0x80000000);
 
+        public const uint LB_ERR = unchecked((uint)-1);
+
         public const uint LVM_FIRST  = 0x1000;      // ListView messages
         public const uint TV_FIRST   = 0x1100;      // TreeView messages
         public const uint HDM_FIRST  = 0x1200;      // Header messages

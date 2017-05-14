@@ -219,7 +219,7 @@ namespace WInterop.Gdi
 
         public static unsafe int DrawText(DeviceContext deviceContext, string text, RECT rect, TextFormat format)
         {
-            if ((format & TextFormat.DT_MODIFYSTRING) == 0)
+            if ((format & TextFormat.ModifyString) == 0)
             {
                 // The string won't be changed, we can just pin
                 fixed (char* c = text)

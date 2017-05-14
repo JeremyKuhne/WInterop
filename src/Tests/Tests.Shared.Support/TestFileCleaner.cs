@@ -43,7 +43,7 @@ namespace Tests.Support
 
                 // Create a flag file and leave it open- this way we can track and clean abandoned (crashed/terminated) processes
                 _flagFile = FileMethods.CreateFileStream(flagFile,
-                    DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_NONE, CreationDisposition.CREATE_NEW);
+                    DesiredAccess.GenericReadWrite, 0, CreationDisposition.CreateNew);
 
                 var writer = new StreamWriter(_flagFile);
                 writer.WriteLine("Temporary Flag File");
@@ -105,7 +105,7 @@ namespace Tests.Support
         {
             string testFile = GetTestPath(basePath);
             using (var stream = FileMethods.CreateFileStream(testFile,
-                DesiredAccess.FILE_GENERIC_READWRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.CREATE_NEW))
+                DesiredAccess.GenericReadWrite, ShareMode.ReadWrite, CreationDisposition.CreateNew))
             {
                 using (var writer = new StreamWriter(stream))
                 {

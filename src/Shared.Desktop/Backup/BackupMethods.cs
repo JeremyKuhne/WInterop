@@ -53,8 +53,8 @@ namespace WInterop.Backup
                 path: path,
                 // To look at metadata we don't need read or write access
                 desiredAccess: 0,
-                shareMode: ShareMode.FILE_SHARE_READWRITE,
-                creationDisposition: CreationDisposition.OPEN_EXISTING,
+                shareMode: ShareMode.ReadWrite,
+                creationDisposition: CreationDisposition.OpenExisting,
                 fileAttributes: FileAttributes.NONE,
                 fileFlags: FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
             {

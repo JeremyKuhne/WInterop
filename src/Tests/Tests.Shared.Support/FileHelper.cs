@@ -19,7 +19,7 @@ namespace Tests.Support
         public static void WriteAllText(string path, string text)
         {
             using (var stream = FileMethods.CreateFileStream(path,
-                DesiredAccess.FILE_GENERIC_WRITE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_ALWAYS))
+                DesiredAccess.GenericWrite, ShareMode.ReadWrite, CreationDisposition.OpenAlways))
             {
                 using (var writer = new System.IO.StreamWriter(stream))
                 {
@@ -31,7 +31,7 @@ namespace Tests.Support
         public static string ReadAllText(string path)
         {
             using (var stream = FileMethods.CreateFileStream(path,
-                DesiredAccess.FILE_GENERIC_READ, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
             {
                 using (var reader = new System.IO.StreamReader(stream))
                 {

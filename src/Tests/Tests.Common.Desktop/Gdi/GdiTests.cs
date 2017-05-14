@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
@@ -167,13 +168,21 @@ namespace DesktopTests.Gdi
         }
 
         [Fact]
-        public unsafe void EnumFont_All()
+        public void EnumFont_All()
         {
             // Just making sure we don't fall over
             using (var context = GdiMethods.GetDeviceContext(WindowMethods.GetDesktopWindow()))
             {
                 GdiMethods.EnumerateFontFamilies(context, CharacterSet.DEFAULT_CHARSET, null).Should().NotBeEmpty();
             }
+        }
+
+        [Fact]
+        public void GetSystemColorBrush()
+        {
+            // System color brushes are special- they'll always give the same value
+            BrushHandle brush = GdiMethods.GetSystemColorBrush(SystemColor.MenuBar);
+            brush.DangerousGetHandle().Should().Be((IntPtr)0x1000c5);
         }
     }
 }

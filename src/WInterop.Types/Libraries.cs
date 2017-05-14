@@ -15,6 +15,7 @@ namespace WInterop
     public static class Libraries
     {
         public const string Advapi32 = "advapi32.dll";
+        public const string Comctl32 = "comctl32.dll";
         public const string Crypt32 = "crypt32.dll";
         public const string Gdi32 = "gdi32.dll";
         public const string Kernel32 = "kernel32.dll";

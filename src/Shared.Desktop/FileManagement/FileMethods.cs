@@ -197,8 +197,8 @@ namespace WInterop.FileManagement
             FileFlags flags = FileFlags.FILE_FLAG_BACKUP_SEMANTICS;
             if (!resolveLinks) flags |= FileFlags.FILE_FLAG_OPEN_REPARSE_POINT;
 
-            using (SafeFileHandle fileHandle = CreateFile(path, 0, ShareMode.FILE_SHARE_READWRITE,
-                CreationDisposition.OPEN_EXISTING, FileAttributes.NONE, flags))
+            using (SafeFileHandle fileHandle = CreateFile(path, 0, ShareMode.ReadWrite,
+                CreationDisposition.OpenExisting, FileAttributes.NONE, flags))
             {
                 return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
             }

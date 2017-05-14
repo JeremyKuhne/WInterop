@@ -71,7 +71,7 @@ namespace HelloWin
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         RECT rect = window.GetClientRectangle();
-                        dc.DrawText("Hello, Windows 98!", rect, TextFormat.DT_SINGLELINE | TextFormat.DT_CENTER | TextFormat.DT_VCENTER);
+                        dc.DrawText("Hello, Windows 98!", rect, TextFormat.SingleLine | TextFormat.Center | TextFormat.VerticallyCenter);
                     }
                     return 0;
                 case WindowMessage.Destroy:

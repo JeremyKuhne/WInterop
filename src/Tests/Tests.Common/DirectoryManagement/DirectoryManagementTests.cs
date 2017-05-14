@@ -56,7 +56,7 @@ namespace Tests.DirectoryManagement
             {
                 string directoryPath = temp.GetTestPath();
                 DirectoryMethods.CreateDirectory(directoryPath);
-                using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
                     FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     directory.IsInvalid.Should().BeFalse();
@@ -71,7 +71,7 @@ namespace Tests.DirectoryManagement
             {
                 string directoryPath = temp.GetTestPath();
                 DirectoryMethods.CreateDirectory(directoryPath);
-                using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
                     FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                 {
                     directory.IsInvalid.Should().BeFalse();
@@ -81,7 +81,7 @@ namespace Tests.DirectoryManagement
 
                 Action action = () =>
                 {
-                    using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                    using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
                         FileAttributes.FILE_ATTRIBUTE_DIRECTORY, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
                     {
 

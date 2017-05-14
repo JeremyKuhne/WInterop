@@ -101,7 +101,7 @@ namespace WhatClr
                         dc.SelectObject(StockFont.SystemFixed);
                         RECT rc = window.GetClientRectangle();
                         dc.DrawText($"0x{cr.R:X2} 0x{cr.G:X2} 0x{cr.B:X2}", rc,
-                            TextFormat.DT_SINGLELINE | TextFormat.DT_CENTER | TextFormat.DT_VCENTER);
+                            TextFormat.SingleLine | TextFormat.Center | TextFormat.VerticallyCenter);
                     }
                     return 0;
                 case WindowMessage.Destroy:

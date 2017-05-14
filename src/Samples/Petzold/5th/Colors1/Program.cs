@@ -71,6 +71,9 @@ namespace Colors1
         static string[] szColorLabel = { "Red", "Green", "Blue" };
         static WindowProcedure[] OldScroll = new WindowProcedure[3];
 
+        // We need to put the delegate in a static to prevent the callback from being collected
+        static WindowProcedure s_ScrollProcedure = ScrollProcedure;
+
 
         static unsafe LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
@@ -117,8 +120,7 @@ namespace Colors1
                             0, 0, 0, 0,
                             window, (IntPtr)i + 6, IntPtr.Zero);
 
-                        //OldScroll[i] = Marshal.GetDelegateForFunctionPointer<WindowProcedure>(hwndScroll[i].SetWindowLong(
-                        //    WindowLong.WindowProcedure, Marshal.GetFunctionPointerForDelegate<WindowProcedure>(ScrollProcedure)));
+                        OldScroll[i] = hwndScroll[i].SetWindowProcedure(s_ScrollProcedure);
 
                         hBrush[i] = Windows.CreateSolidBrush(crPrim[i]);
                     }

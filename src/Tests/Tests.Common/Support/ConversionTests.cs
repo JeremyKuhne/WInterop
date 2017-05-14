@@ -32,12 +32,12 @@ namespace Tests.Support
         }
 
         [Theory,
-            InlineData(System.IO.FileMode.Open, CreationDisposition.OPEN_EXISTING),
-            InlineData(System.IO.FileMode.Append, CreationDisposition.OPEN_ALWAYS),
-            InlineData(System.IO.FileMode.OpenOrCreate, CreationDisposition.OPEN_ALWAYS),
-            InlineData(System.IO.FileMode.Create, CreationDisposition.CREATE_ALWAYS),
-            InlineData(System.IO.FileMode.CreateNew, CreationDisposition.CREATE_NEW),
-            InlineData(System.IO.FileMode.Truncate, CreationDisposition.TRUNCATE_EXISTING)
+            InlineData(System.IO.FileMode.Open, CreationDisposition.OpenExisting),
+            InlineData(System.IO.FileMode.Append, CreationDisposition.OpenAlways),
+            InlineData(System.IO.FileMode.OpenOrCreate, CreationDisposition.OpenAlways),
+            InlineData(System.IO.FileMode.Create, CreationDisposition.CreateAlways),
+            InlineData(System.IO.FileMode.CreateNew, CreationDisposition.CreateNew),
+            InlineData(System.IO.FileMode.Truncate, CreationDisposition.TruncateExisting)
             ]
         public void FromFileModeTest(System.IO.FileMode mode, CreationDisposition expected)
         {

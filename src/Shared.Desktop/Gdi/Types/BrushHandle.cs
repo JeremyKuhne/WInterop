@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Windows.Types;
 
 namespace WInterop.Gdi.Types
 {
@@ -20,5 +21,7 @@ namespace WInterop.Gdi.Types
         public static implicit operator BrushHandle(IntPtr handle) => new BrushHandle(handle);
 
         public static implicit operator BrushHandle(StockBrush brush) => GdiMethods.GetStockBrush(brush);
+
+        public static implicit operator BrushHandle(SystemColor color) => GdiMethods.GetSystemColorBrush(color);
     }
 }

@@ -5,13 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
     /// <summary>
     /// Called FileMode in .NET System.IO.
     /// </summary>
@@ -20,29 +15,31 @@ namespace WInterop.FileManagement.Types
     /// </remarks>
     public enum CreationDisposition : uint
     {
-        /// <summary>
-        /// Create or fail if exists.
-        /// </summary>
-        CREATE_NEW = 1,
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
 
         /// <summary>
-        /// Create or overwrite.
+        /// Create or fail if exists. (CREATE_NEW)
         /// </summary>
-        CREATE_ALWAYS = 2,
+        CreateNew = 1,
 
         /// <summary>
-        /// Opens if exists, fails otherwise.
+        /// Create or overwrite. (CREATE_ALWAYS)
         /// </summary>
-        OPEN_EXISTING = 3,
+        CreateAlways = 2,
 
         /// <summary>
-        /// Open if exists, creates otherwise.
+        /// Opens if exists, fails otherwise. (OPEN_EXISTING)
         /// </summary>
-        OPEN_ALWAYS = 4,
+        OpenExisting = 3,
 
         /// <summary>
-        /// Opens if exists and sets the size to zero. Fails if the file does not exist.
+        /// Open if exists, creates otherwise. (OPEN_ALWAYS)
         /// </summary>
-        TRUNCATE_EXISTING = 5,
+        OpenAlways = 4,
+
+        /// <summary>
+        /// Opens if exists and sets the size to zero. Fails if the file does not exist. (TRUNCATE_EXISTING)
+        /// </summary>
+        TruncateExisting = 5,
     }
 }

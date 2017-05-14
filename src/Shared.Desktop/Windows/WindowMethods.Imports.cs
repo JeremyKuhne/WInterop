@@ -383,6 +383,15 @@ namespace WInterop.Windows
                 WPARAM wParam,
                 LPARAM lParam);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633571.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern LRESULT CallWindowProcW(
+                IntPtr lpPrevWndFunc,
+                WindowHandle hWnd,
+                WindowMessage Msg,
+                WPARAM wParam,
+                LPARAM lParam);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644945.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern void PostQuitMessage(
@@ -691,6 +700,47 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern COLORREF GetSysColor(
                 SystemColor nIndex);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761366.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern int DlgDirListW(
+                WindowHandle hDlg,
+                string lpPathSpec,
+                int nIDListBox,
+                int nIDStaticPath,
+                FileTypes uFileType);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761368.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool DlgDirSelectExW(
+                WindowHandle hDlg,
+                SafeHandle lpString,
+                int nCount,
+                int nIDListBox);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761723.aspx
+            [DllImport(Libraries.Comctl32, ExactSpelling = true)]
+            public static extern void DrawInsert(
+                WindowHandle handParent,
+                WindowHandle hLB,
+                int nItem);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761370.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern uint GetListBoxInfo(
+                WindowHandle hwnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761724.aspx
+            [DllImport(Libraries.Comctl32, ExactSpelling = true)]
+            public static extern int LBItemFromPt(
+                WindowHandle hLB,
+                POINT pt,
+                bool bAutoScroll);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761725.aspx
+            [DllImport(Libraries.Comctl32, ExactSpelling = true)]
+            public static extern bool MakeDragList(
+                WindowHandle hLB);
         }
     }
 }

@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Gdi.Types;
@@ -504,6 +505,18 @@ namespace WInterop.Windows
         public static COLORREF GetSystemColor(SystemColor systemColor)
         {
             return Imports.GetSysColor(systemColor);
+        }
+
+        /// <summary>
+        /// Wrapper to SetWindowLong for changing the window procedure. Returns the old
+        /// window procedure.
+        /// </summary>
+        public static WindowProcedure SetWindowProcedure(WindowHandle window, WindowProcedure newCallback)
+        {
+            return Marshal.GetDelegateForFunctionPointer<WindowProcedure>(
+                SetWindowLong(window,
+                    WindowLong.WindowProcedure,
+                    Marshal.GetFunctionPointerForDelegate<WindowProcedure>(newCallback)));
         }
     }
 }

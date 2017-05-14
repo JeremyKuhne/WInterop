@@ -25,7 +25,7 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = FileMethods.CreateFile(mailslotName, DesiredAccess.NONE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING))
+                using (var fileHandle = FileMethods.CreateFile(mailslotName, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);
@@ -46,7 +46,7 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = FileMethods.CreateFile(mailslotName, DesiredAccess.NONE, ShareMode.FILE_SHARE_READWRITE, CreationDisposition.OPEN_EXISTING,
+                using (var fileHandle = FileMethods.CreateFile(mailslotName, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
                     FileAttributes.NONE, FileFlags.FILE_FLAG_OVERLAPPED))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();

@@ -9,7 +9,6 @@ using System;
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363874.aspx
     /// <summary>
     /// Equivalent to System.IO.FileShare.
     /// </summary>
@@ -21,13 +20,26 @@ namespace WInterop.FileManagement.Types
     [Flags]
     public enum ShareMode : uint
     {
-        // Not actually defined in Windows, for convenience.
-        FILE_SHARE_NONE = 0,
-        FILE_SHARE_READ = 0x00000001,
-        FILE_SHARE_WRITE = 0x00000002,
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363874.aspx
 
-        // Not actually defined in Windows, for convenience.
-        FILE_SHARE_READWRITE = FILE_SHARE_READ | FILE_SHARE_WRITE,
-        FILE_SHARE_DELETE = 0x00000004
+        /// <summary>
+        /// Allow other read handles to be opened. (FILE_SHARE_READ)
+        /// </summary>
+        Read = 0x00000001,
+
+        /// <summary>
+        /// Allow other write handles to be opened. (FILE_SHARE_WRITE)
+        /// </summary>
+        Write = 0x00000002,
+
+        /// <summary>
+        /// Not actually defined in Windows, for convenience.
+        /// </summary>
+        ReadWrite = Read | Write,
+
+        /// <summary>
+        /// Allow others to delete the file.
+        /// </summary>
+        Delete = 0x00000004
     }
 }

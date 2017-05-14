@@ -64,11 +64,11 @@ namespace WInterop.Support
             switch (fileAccess)
             {
                 case System.IO.FileAccess.Read:
-                    return DesiredAccess.FILE_GENERIC_READ;
+                    return DesiredAccess.GenericRead;
                 case System.IO.FileAccess.Write:
-                    return DesiredAccess.FILE_GENERIC_WRITE;
+                    return DesiredAccess.GenericWrite;
                 case System.IO.FileAccess.ReadWrite:
-                    return DesiredAccess.FILE_GENERIC_READ | DesiredAccess.FILE_GENERIC_WRITE;
+                    return DesiredAccess.GenericRead | DesiredAccess.GenericWrite;
                 default:
                     return 0;
             }
@@ -77,10 +77,10 @@ namespace WInterop.Support
         public static System.IO.FileAccess DesiredAccessToFileAccess(DesiredAccess desiredAccess)
         {
             System.IO.FileAccess fileAccess = 0;
-            if ((desiredAccess & (DesiredAccess.FILE_GENERIC_READ | DesiredAccess.FILE_READ_DATA)) > 0)
+            if ((desiredAccess & (DesiredAccess.GenericRead | DesiredAccess.ReadData)) > 0)
                 fileAccess = System.IO.FileAccess.Read;
 
-            if ((desiredAccess & (DesiredAccess.FILE_GENERIC_WRITE | DesiredAccess.FILE_WRITE_DATA)) > 0)
+            if ((desiredAccess & (DesiredAccess.GenericWrite | DesiredAccess.WriteData)) > 0)
                 fileAccess = fileAccess == System.IO.FileAccess.Read ? System.IO.FileAccess.ReadWrite : System.IO.FileAccess.Write;
 
             return fileAccess;
@@ -101,7 +101,7 @@ namespace WInterop.Support
         public static CreationDisposition FileModeToCreationDisposition(System.IO.FileMode fileMode)
         {
             if (fileMode == System.IO.FileMode.Append)
-                return CreationDisposition.OPEN_ALWAYS;
+                return CreationDisposition.OpenAlways;
             else
                 return unchecked((CreationDisposition)fileMode);
         }

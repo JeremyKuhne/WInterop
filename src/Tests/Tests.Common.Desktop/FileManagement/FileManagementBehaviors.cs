@@ -70,8 +70,8 @@ namespace DesktopTests.FileManagementTests
             SafeFileHandle handle = FileMethods.CreateFile(
                 path,
                 0,
-                ShareMode.FILE_SHARE_READWRITE,
-                CreationDisposition.OPEN_EXISTING,
+                ShareMode.ReadWrite,
+                CreationDisposition.OpenExisting,
                 FileAttributes.NONE,
                 FileFlags.FILE_FLAG_BACKUP_SEMANTICS);
 

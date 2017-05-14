@@ -13,6 +13,7 @@ using WInterop.Resources.Types;
 
 namespace WInterop.Windows.Types
 {
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577.aspx
     public struct WindowClass
     {
         public ClassStyle Style;
