@@ -176,14 +176,24 @@ namespace WInterop.Windows
 
         public static WindowClass GetClassInfo(SafeModuleHandle instance, Atom atom)
         {
-            if (!Imports.GetClassInfoExW(instance, atom, out WNDCLASSEX wndClass))
+            if (!Imports.GetClassInfoExW(instance ?? SafeModuleHandle.Null, atom, out WNDCLASSEX wndClass))
                 throw Errors.GetIoExceptionForLastError();
 
             return wndClass;
         }
 
+        public unsafe static WindowClass GetClassInfo(SafeModuleHandle instance, string className)
+        {
+            WNDCLASSEX wndClass;
+
+            fixed (char* c = className)
+                if (!Imports.GetClassInfoExW(instance ?? SafeModuleHandle.Null, (IntPtr)c, out wndClass))
+                    throw Errors.GetIoExceptionForLastError();
+
+            return wndClass;
+        }
+
         public static WindowHandle CreateWindow(
-            SafeModuleHandle instance,
             string className,
             string windowName,
             WindowStyles style,
@@ -191,13 +201,61 @@ namespace WInterop.Windows
             int x = WindowDefines.CW_USEDEFAULT,
             int y = WindowDefines.CW_USEDEFAULT,
             int width = WindowDefines.CW_USEDEFAULT,
-            int height = WindowDefines.CW_USEDEFAULT)
+            int height = WindowDefines.CW_USEDEFAULT,
+            SafeModuleHandle instance = null)
         {
-            return CreateWindow(instance, className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.Null, IntPtr.Zero, IntPtr.Zero);
+            return CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.Null, IntPtr.Zero, instance, IntPtr.Zero);
+        }
+
+        public static WindowHandle CreateWindow(
+            Atom className,
+            string windowName,
+            WindowStyles style,
+            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.None,
+            int x = WindowDefines.CW_USEDEFAULT,
+            int y = WindowDefines.CW_USEDEFAULT,
+            int width = WindowDefines.CW_USEDEFAULT,
+            int height = WindowDefines.CW_USEDEFAULT,
+            SafeModuleHandle instance = null)
+        {
+            return CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.Null, IntPtr.Zero, instance, IntPtr.Zero);
+        }
+
+        public static WindowHandle CreateWindow(
+            Atom className,
+            string windowName,
+            WindowStyles style,
+            ExtendedWindowStyles extendedStyle,
+            int x,
+            int y,
+            int width,
+            int height,
+            WindowHandle parentWindow,
+            IntPtr menuHandle,
+            SafeModuleHandle instance,
+            IntPtr parameters)
+        {
+            WindowHandle window = Imports.CreateWindowExW(
+                extendedStyle,
+                className,
+                windowName,
+                style,
+                x,
+                y,
+                width,
+                height,
+                parentWindow,
+                menuHandle,
+                instance ?? SafeModuleHandle.Null,
+                parameters);
+
+            if (window == WindowHandle.Null)
+                throw Errors.GetIoExceptionForLastError();
+
+            return window;
         }
 
         public unsafe static WindowHandle CreateWindow(
-            SafeModuleHandle instance,
             string className,
             string windowName,
             WindowStyles style,
@@ -208,6 +266,7 @@ namespace WInterop.Windows
             int height,
             WindowHandle parentWindow,
             IntPtr menuHandle,
+            SafeModuleHandle instance,
             IntPtr parameters)
         {
             WindowHandle window;
@@ -224,7 +283,7 @@ namespace WInterop.Windows
                     height,
                     parentWindow,
                     menuHandle,
-                    instance,
+                    instance ?? SafeModuleHandle.Null,
                     parameters);
             }
 
@@ -234,10 +293,16 @@ namespace WInterop.Windows
             return window;
         }
 
+        public static void DestroyWindow(WindowHandle window)
+        {
+            if (!Imports.DestroyWindow(window))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
         public static IntPtr GetWindowLong(WindowHandle window, WindowLong index)
         {
             // Unfortunate, but this is necessary to tell if there is really an error
-            ErrorHandling.ErrorMethods.SetLastError(WindowsError.NO_ERROR);
+            ErrorMethods.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Support.Environment.Is64BitProcess
                 ? (IntPtr)Imports.GetWindowLongPtrW(window, index)

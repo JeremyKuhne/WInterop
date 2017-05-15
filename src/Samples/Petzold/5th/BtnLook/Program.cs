@@ -85,17 +85,17 @@ namespace OwnDraw
                     // Create the owner-draw pushbuttons
                     CREATESTRUCT* create = (CREATESTRUCT*)lParam;
 
-                    hwndSmaller = Windows.CreateWindow(create->Instance, "button", "",
+                    hwndSmaller = Windows.CreateWindow("button", "",
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
                         ExtendedWindowStyles.None,
                         0, 0, btnWidth, btnHeight,
-                        window, (IntPtr)ID_SMALLER, IntPtr.Zero);
+                        window, (IntPtr)ID_SMALLER, create->Instance, IntPtr.Zero);
+                    hwndLarger = Windows.CreateWindow("button", "",
+                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
+                        ExtendedWindowStyles.None,
+                        0, 0, btnWidth, btnHeight,
+                        window, (IntPtr)ID_LARGER, create->Instance, IntPtr.Zero);
 
-                    hwndLarger = Windows.CreateWindow(create->Instance, "button", "",
-                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
-                        ExtendedWindowStyles.None,
-                        0, 0, btnWidth, btnHeight,
-                        window, (IntPtr)ID_LARGER, IntPtr.Zero);
                     return 0;
                 case WindowMessage.Size:
                     cxClient = lParam.LowWord;

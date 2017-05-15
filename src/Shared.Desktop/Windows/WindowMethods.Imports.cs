@@ -310,6 +310,11 @@ namespace WInterop.Windows
                 SafeModuleHandle hInstance,
                 IntPtr lpParam);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632682.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool DestroyWindow(
+                WindowHandle hWnd);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724385.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern int GetSystemMetrics(

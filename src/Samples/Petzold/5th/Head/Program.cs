@@ -95,15 +95,15 @@ namespace Head
                     rect.top = 3 * baseUnits.cy;
 
                     // Create listbox and static text windows.
-                    hwndList = Windows.CreateWindow(((CREATESTRUCT*)lParam)->hInstance, "listbox", null,
+                    hwndList = Windows.CreateWindow("listbox", null,
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard, ExtendedWindowStyles.None,
                         baseUnits.cx, baseUnits.cy * 3, baseUnits.cx * 13 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.cy * 10,
-                        window, (IntPtr)ID_LIST, IntPtr.Zero);
+                        window, (IntPtr)ID_LIST, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
-                    hwndText = Windows.CreateWindow(((CREATESTRUCT*)lParam)->hInstance, "static", DirectoryMethods.GetCurrentDirectory(),
+                    hwndText = Windows.CreateWindow("static", DirectoryMethods.GetCurrentDirectory(),
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left, ExtendedWindowStyles.None,
                         baseUnits.cx, baseUnits.cy, baseUnits.cx * 260, baseUnits.cy,
-                        window, (IntPtr)ID_TEXT, IntPtr.Zero);
+                        window, (IntPtr)ID_TEXT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
                     OldList = hwndList.SetWindowProcedure(s_ListBoxProcedure);
 

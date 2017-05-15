@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VolumeManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowClassTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,17 @@ namespace WInterop.Windows
     {
         public static Atom RegisterClass(ref WindowClass windowClass) => WindowMethods.RegisterClass(ref windowClass);
         public static WindowHandle CreateWindow(
+                    string className,
+                    string windowName,
+                    WindowStyles style,
+                    ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.None,
+                    int x = WindowDefines.CW_USEDEFAULT,
+                    int y = WindowDefines.CW_USEDEFAULT,
+                    int width = WindowDefines.CW_USEDEFAULT,
+                    int height = WindowDefines.CW_USEDEFAULT,
+                    SafeModuleHandle instance = null)
+                    => WindowMethods.CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, instance);
+        public static WindowHandle CreateWindow(
                     SafeModuleHandle instance,
                     string className,
                     string windowName,
@@ -32,9 +43,9 @@ namespace WInterop.Windows
                     int x = WindowDefines.CW_USEDEFAULT,
                     int y = WindowDefines.CW_USEDEFAULT,
                     int width = WindowDefines.CW_USEDEFAULT,
-                    int height = WindowDefines.CW_USEDEFAULT) => WindowMethods.CreateWindow(instance, className, windowName, style, extendedStyle, x, y, width, height);
+                    int height = WindowDefines.CW_USEDEFAULT)
+                    => WindowMethods.CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, instance);
         public static WindowHandle CreateWindow(
-            SafeModuleHandle instance,
             string className,
             string windowName,
             WindowStyles style,
@@ -45,8 +56,9 @@ namespace WInterop.Windows
             int height,
             WindowHandle parentWindow,
             IntPtr menuHandle,
+            SafeModuleHandle instance,
             IntPtr parameters) => WindowMethods.CreateWindow(
-                instance, className, windowName, style, extendedStyle, x, y, width, height, parentWindow, menuHandle, parameters);
+                className, windowName, style, extendedStyle, x, y, width, height, parentWindow, menuHandle, instance, parameters);
         public static bool GetMessage(out MSG message, uint minMessage = 0, uint maxMessage = 0) => WindowMethods.GetMessage(out message, WindowHandle.Null, minMessage, maxMessage);
         public static bool PeekMessage(out MSG message, uint minMessage, uint maxMessage, PeekMessageOptions options)
             => WindowMethods.PeekMessage(out message, WindowHandle.Null, minMessage, maxMessage, options);

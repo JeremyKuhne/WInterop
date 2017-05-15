@@ -85,40 +85,40 @@ namespace Colors1
                     // Create the white-rectangle window against which the
                     // scroll bars will be positioned. The child window ID is 9.
 
-                    hwndRect = Windows.CreateWindow(hInstance, "static", null,
+                    hwndRect = Windows.CreateWindow("static", null,
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.WhiteRectangle,
                         ExtendedWindowStyles.None,
                         0, 0, 0, 0,
-                        window, (IntPtr)9, IntPtr.Zero);
+                        window, (IntPtr)9, hInstance, IntPtr.Zero);
 
                     for (int i = 0; i < 3; i++)
                     {
                         // The three scroll bars have IDs 0, 1, and 2, with
                         // scroll bar ranges from 0 through 255.
-                        hwndScroll[i] = Windows.CreateWindow(hInstance, "scrollbar", null,
+                        hwndScroll[i] = Windows.CreateWindow("scrollbar", null,
                             WindowStyles.Child | WindowStyles.Visible | WindowStyles.TabStop | (WindowStyles)ScrollBarStyles.Veritcal,
                             ExtendedWindowStyles.None,
                             0, 0, 0, 0,
-                            window, (IntPtr)i, IntPtr.Zero);
+                            window, (IntPtr)i, hInstance, IntPtr.Zero);
 
                         hwndScroll[i].SetScrollRange(ScrollBar.Control, 0, 255, false);
                         hwndScroll[i].SetScrollPosition(ScrollBar.Control, 0, false);
 
                         // The three color-name labels have IDs 3, 4, and 5,
                         // and text strings “Red”, “Green”, and “Blue”.
-                        hwndLabel[i] = Windows.CreateWindow(hInstance, "static", szColorLabel[i],
+                        hwndLabel[i] = Windows.CreateWindow("static", szColorLabel[i],
                             WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
                             ExtendedWindowStyles.None,
                             0, 0, 0, 0,
-                            window, (IntPtr)i + 3, IntPtr.Zero);
+                            window, (IntPtr)i + 3, hInstance, IntPtr.Zero);
 
                         // The three color-value text fields have IDs 6, 7,
                         // and 8, and initial text strings of “0”.
-                        hwndValue[i] = Windows.CreateWindow(hInstance, "static", "0",
+                        hwndValue[i] = Windows.CreateWindow("static", "0",
                             WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
                             ExtendedWindowStyles.None,
                             0, 0, 0, 0,
-                            window, (IntPtr)i + 6, IntPtr.Zero);
+                            window, (IntPtr)i + 6, hInstance, IntPtr.Zero);
 
                         OldScroll[i] = hwndScroll[i].SetWindowProcedure(s_ScrollProcedure);
 

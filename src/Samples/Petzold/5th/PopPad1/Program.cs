@@ -66,11 +66,11 @@ namespace PopPad1
             switch (message)
             {
                 case WindowMessage.Create:
-                    hwndEdit = Windows.CreateWindow(((CREATESTRUCT*)lParam)->hInstance, "edit", null,
+                    hwndEdit = Windows.CreateWindow("edit", null,
                         WindowStyles.Child | WindowStyles.Visible | WindowStyles.HorizontalScroll | WindowStyles.VerticalScroll
                         | WindowStyles.Border | (WindowStyles)EditStyles.Left | (WindowStyles)EditStyles.Multiline
                         | (WindowStyles)EditStyles.AutoHorizontalScroll | (WindowStyles)EditStyles.AutoVerticalScroll,
-                        ExtendedWindowStyles.None, 0, 0, 0, 0, window, (IntPtr)ID_EDIT, IntPtr.Zero);
+                        ExtendedWindowStyles.None, 0, 0, 0, 0, window, (IntPtr)ID_EDIT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
                     return 0;
                 case WindowMessage.SetFocus:
                     hwndEdit.SetFocus();

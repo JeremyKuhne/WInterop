@@ -162,6 +162,11 @@ namespace WInterop.ErrorHandling.Types
         ERROR_PRIVILEGE_NOT_HELD = 1314,
         ERROR_NONE_MAPPED = 1332,
         ERROR_DISK_CORRUPT = 1393,
+        ERROR_CLASS_ALREADY_EXISTS = 1410,
+        ERROR_CLASS_DOES_NOT_EXIST = 1411,
+        ERROR_CLASS_HAS_WINDOWS = 1412,
+        ERROR_INVALID_INDEX = 1413,
+        ERROR_INVALID_ICON_HANDLE = 1414,
 
         // From lmerr.h
         NERR_BASE = 2100,

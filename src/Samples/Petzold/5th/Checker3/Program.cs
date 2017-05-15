@@ -80,7 +80,6 @@ namespace Checker3
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
                             hwndChild[x, y] = Windows.CreateWindow(
-                                window.GetWindowLong(WindowLong.InstanceHandle),
                                 szChildClass,
                                 null,
                                 WindowStyles.ChildWindow | WindowStyles.Visible,
@@ -88,6 +87,7 @@ namespace Checker3
                                 0, 0, 0, 0,
                                 window,
                                 (IntPtr)(y << 8 | x),
+                                window.GetWindowLong(WindowLong.InstanceHandle),
                                 IntPtr.Zero);
                     return 0;
                 case WindowMessage.Size:

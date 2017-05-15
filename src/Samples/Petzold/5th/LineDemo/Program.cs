@@ -40,7 +40,7 @@ namespace LineDemo
 
             Windows.RegisterClass(ref wndclass);
 
-            WindowHandle window = WindowMethods.CreateWindow(
+            WindowHandle window = Windows.CreateWindow(
                 module,
                 "LineDemo",
                 "Line Demonstration",

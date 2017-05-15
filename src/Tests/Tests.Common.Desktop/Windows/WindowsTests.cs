@@ -110,11 +110,5 @@ namespace DesktopTests.Windows
             int keyCount = WindowMethods.GetKeyboardFunctionKeyCount();
             keyCount.Should().BeGreaterOrEqualTo(10);
         }
-
-        [Fact]
-        public unsafe void WindowClassSize()
-        {
-            sizeof(WNDCLASSEX).Should().Be(80);
-        }
     }
 }
