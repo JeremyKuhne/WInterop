@@ -134,7 +134,7 @@ namespace WInterop.Modules
         /// </summary>
         public static SafeModuleHandle GetRefCountedModuleHandle(string moduleName)
         {
-            // Module's reference count is incremented by 
+            // Module's reference count is incremented by 1
             return new RefCountedModuleHandle(GetModuleHandleHelper(moduleName, 0));
         }
 

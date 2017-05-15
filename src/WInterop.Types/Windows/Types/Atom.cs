@@ -23,15 +23,11 @@ namespace WInterop.Windows.Types
 
         public uint ATOM;
 
-        public Atom(uint atom)
-        {
-            ATOM = atom;
-        }
+        public Atom(uint atom) => ATOM = atom;
 
-        public bool IsValid
-        {
-            get { return ATOM != 0; }
-        }
+        public static Atom Null = new Atom(0);
+
+        public bool IsValid => ATOM != 0;
 
         public static bool IsAtom(IntPtr pointer)
         {

@@ -57,7 +57,7 @@ namespace WInterop.Windows.Types
                     windowClass.MenuName = new string((char*)nativeClass.lpszMenuName.ToPointer());
             }
 
-            if (nativeClass.lpszClassName == IntPtr.Zero)
+            if (nativeClass.lpszClassName != IntPtr.Zero)
             {
                 if (Atom.IsAtom(nativeClass.lpszClassName))
                     windowClass.ClassAtom = nativeClass.lpszClassName;

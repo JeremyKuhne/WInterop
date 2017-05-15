@@ -36,6 +36,5 @@ namespace WInterop.Modules.Types
             // that will decrement appropriately.
             return true;
         }
-
     }
 }

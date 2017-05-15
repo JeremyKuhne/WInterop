@@ -116,7 +116,7 @@ namespace WInterop.Windows
         /// </summary>
         public static void UnregisterClass(Atom atom, SafeModuleHandle module)
         {
-            if (!Imports.UnregisterClassW(atom, module))
+            if (!Imports.UnregisterClassW(atom, module ?? SafeModuleHandle.Null))
                 throw Errors.GetIoExceptionForLastError();
         }
 
@@ -132,7 +132,7 @@ namespace WInterop.Windows
             {
                 fixed (char* name = className)
                 {
-                    if (!Imports.UnregisterClassW((IntPtr)name, module))
+                    if (!Imports.UnregisterClassW((IntPtr)name, module ?? SafeModuleHandle.Null))
                         throw Errors.GetIoExceptionForLastError();
                 }
             }

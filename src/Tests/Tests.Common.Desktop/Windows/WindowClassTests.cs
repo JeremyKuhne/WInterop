@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
+using WInterop.Modules;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 using Xunit;
@@ -95,6 +96,71 @@ namespace DesktopTests.Windows
             finally
             {
                 if (window.IsValid) WindowMethods.DestroyWindow(window);
+            }
+        }
+
+        static LRESULT CallDefaultProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        {
+            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+        }
+
+        [Fact]
+        public void RegisterClass_UnregisterClassAtom()
+        {
+            WindowClass myClass = new WindowClass
+            {
+                ClassName = "RegisterClass_UnregisterClassAtom",
+                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
+                WindowProcedure = CallDefaultProcedure
+            };
+
+            Atom atom = WindowMethods.RegisterClass(ref myClass);
+            atom.IsValid.Should().BeTrue();
+
+            try
+            {
+                var info = WindowMethods.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
+                info.ClassName.Should().Be(null);
+                info.ClassAtom.Should().Be(atom);
+                info.Style.Should().Be(ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw);
+            }
+            finally
+            {
+                WindowMethods.UnregisterClass(atom, null);
+                Action action =
+                    () => WindowMethods.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
+                action.ShouldThrow<IOException>().And
+                    .HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_HANDLE));
+            }
+        }
+
+        [Fact]
+        public void RegisterClass_UnregisterClassName()
+        {
+            WindowClass myClass = new WindowClass
+            {
+                ClassName = "RegisterClass_UnregisterClassName",
+                Style = ClassStyle.HorizontalRedraw,
+                WindowProcedure = CallDefaultProcedure
+            };
+
+            Atom atom = WindowMethods.RegisterClass(ref myClass);
+            atom.IsValid.Should().BeTrue();
+
+            try
+            {
+                var info = WindowMethods.GetClassInfo(ModuleMethods.GetModuleHandle(null), "RegisterClass_UnregisterClassName");
+                info.ClassName.Should().Be("RegisterClass_UnregisterClassName");
+                info.ClassAtom.Should().Be(Atom.Null);
+                info.Style.Should().Be(ClassStyle.HorizontalRedraw);
+            }
+            finally
+            {
+                WindowMethods.UnregisterClass("RegisterClass_UnregisterClassName", null);
+                Action action =
+                    () => WindowMethods.GetClassInfo(ModuleMethods.GetModuleHandle(null), "RegisterClass_UnregisterClassName");
+                action.ShouldThrow<IOException>().And
+                    .HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
             }
         }
     }
