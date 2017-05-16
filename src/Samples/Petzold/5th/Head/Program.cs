@@ -68,7 +68,7 @@ namespace Head
         static TextFormat DTFLAGS = TextFormat.WordBreak | TextFormat.ExpandTabs | TextFormat.NoClip | TextFormat.NoPrefix;
 
         static WindowHandle hwndList, hwndText;
-        static WindowProcedure OldList;
+        static IntPtr OldList;
 
         // We need to put the delegate in a static to prevent the callback from being collected
         static WindowProcedure s_ListBoxProcedure = ListBoxProcedure;
@@ -210,7 +210,7 @@ namespace Head
                 window.GetParent().SendMessage(WindowMessage.Command,
                     new WPARAM(1, (ushort)ListBoxNotification.DoubleClick), (LPARAM)window);
 
-            return OldList(window, message, wParam, lParam);
+            return WindowMethods.CallWindowProcedure(OldList, window, message, wParam, lParam);
         }
     }
 }

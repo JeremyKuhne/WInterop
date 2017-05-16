@@ -69,7 +69,7 @@ namespace Colors1
         static int cyChar, idFocus;
         static RECT rcColor;
         static string[] szColorLabel = { "Red", "Green", "Blue" };
-        static WindowProcedure[] OldScroll = new WindowProcedure[3];
+        static IntPtr[] OldScroll = new IntPtr[3];
 
         // We need to put the delegate in a static to prevent the callback from being collected
         static WindowProcedure s_ScrollProcedure = ScrollProcedure;
@@ -237,7 +237,7 @@ namespace Colors1
                     break;
             }
 
-            return OldScroll[id](window, message, wParam, lParam);
+            return WindowMethods.CallWindowProcedure(OldScroll[id], window, message, wParam, lParam);
         }
     }
 }

@@ -317,7 +317,7 @@ namespace WInterop.Windows
         public static IntPtr SetWindowLong(WindowHandle window, WindowLong index, IntPtr value)
         {
             // Unfortunate, but this is necessary to tell if there is really an error
-            ErrorHandling.ErrorMethods.SetLastError(WindowsError.NO_ERROR);
+            ErrorMethods.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Support.Environment.Is64BitProcess
                 ? (IntPtr)Imports.SetWindowLongPtrW(window, index, value.ToInt64())
@@ -337,6 +337,9 @@ namespace WInterop.Windows
 
         public static IntPtr GetClassLong(WindowHandle window, ClassLong index)
         {
+            // Unfortunate, but this is necessary to tell if there is really an error
+            ErrorMethods.SetLastError(WindowsError.NO_ERROR);
+
             IntPtr result = Support.Environment.Is64BitProcess
                 ? (IntPtr)Imports.GetClassLongPtrW(window, index)
                 : (IntPtr)Imports.GetClassLongW(window, index);
@@ -349,6 +352,10 @@ namespace WInterop.Windows
 
         public static IntPtr SetClassLong(WindowHandle window, ClassLong index, IntPtr value)
         {
+            // Unfortunate, but this is necessary to tell if there is really an error
+            // (Even though this is only documented on SetWindowLong, happens here too)
+            ErrorMethods.SetLastError(WindowsError.NO_ERROR);
+
             IntPtr result = Support.Environment.Is64BitProcess
                 ? (IntPtr)Imports.SetClassLongPtrW(window, index, value.ToInt64())
                 : (IntPtr)Imports.SetClassLongW(window, index, value.ToInt32());
@@ -579,14 +586,20 @@ namespace WInterop.Windows
 
         /// <summary>
         /// Wrapper to SetWindowLong for changing the window procedure. Returns the old
-        /// window procedure.
+        /// window procedure handle- use CallWindowProcedure to call the old method.
         /// </summary>
-        public static WindowProcedure SetWindowProcedure(WindowHandle window, WindowProcedure newCallback)
+        public static IntPtr SetWindowProcedure(WindowHandle window, WindowProcedure newCallback)
         {
-            return Marshal.GetDelegateForFunctionPointer<WindowProcedure>(
-                SetWindowLong(window,
-                    WindowLong.WindowProcedure,
-                    Marshal.GetFunctionPointerForDelegate<WindowProcedure>(newCallback)));
+            // It is possible that the returned window procedure will not be a direct handle.
+            return SetWindowLong(window,
+                WindowLong.WindowProcedure,
+                Marshal.GetFunctionPointerForDelegate(newCallback));
         }
+
+        public static LRESULT CallWindowProcedure(IntPtr previous, WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        {
+            return Imports.CallWindowProcW(previous, window, message, wParam, lParam);
+        }
+
     }
 }

@@ -360,6 +360,22 @@ namespace WInterop.Windows
                 uint wMsgFilterMin,
                 uint wMsgFilterMax);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644938.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern POINTS GetMessagePos();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644939.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern int GetMessageTime();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644937.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern LPARAM GetMessageExtraInfo();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644954.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern LPARAM SetMessageExtraInfo(LPARAM lParam);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644943.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool PeekMessageW(
@@ -369,6 +385,11 @@ namespace WInterop.Windows
                 uint wMsgFilterMax,
                 PeekMessageOptions wRemoveMsg);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644940.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern uint GetQueueStatus(
+                QueueStatus flags);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644950.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern LRESULT SendMessageW(
@@ -376,6 +397,16 @@ namespace WInterop.Windows
                 WindowMessage Msg,
                 WPARAM wParam,
                 LPARAM lParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644948.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool ReplyMessage(
+                LRESULT lResult);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644942.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern MessageSources InSendMessageEx(
+                IntPtr lpReserved);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -386,6 +417,11 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool DispatchMessageW(
                 ref MSG lpMsg);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644947.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern uint RegisterWindowMessageW(
+                string lpString);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633572.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -400,6 +436,22 @@ namespace WInterop.Windows
             public static extern LRESULT CallWindowProcW(
                 IntPtr lpPrevWndFunc,
                 WindowHandle hWnd,
+                WindowMessage Msg,
+                WPARAM wParam,
+                LPARAM lParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644944.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool PostMessageW(
+                WindowHandle hWnd,
+                WindowMessage Msg,
+                WPARAM wParam,
+                LPARAM lParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644946.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool PostThreadMessageW(
+                uint idThread,
                 WindowMessage Msg,
                 WPARAM wParam,
                 LPARAM lParam);
@@ -501,6 +553,10 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool GetLastInputInfo(
                 ref LASTINPUTINFO plii);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644935.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool GetInputState();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645441.aspx
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]

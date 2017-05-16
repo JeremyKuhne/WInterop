@@ -163,5 +163,125 @@ namespace DesktopTests.Windows
                     .HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
             }
         }
+
+        [Fact]
+        public void RegisterClass_UnregisterActiveWindow()
+        {
+            WindowClass myClass = new WindowClass
+            {
+                ClassName = "RegisterClass_UnregisterActiveWindow",
+                WindowProcedure = CallDefaultProcedure,
+            };
+
+            Atom atom = WindowMethods.RegisterClass(ref myClass);
+            atom.IsValid.Should().BeTrue();
+
+            try
+            {
+                WindowHandle window = WindowMethods.CreateWindow(atom,
+                    "RegisterClass_UnregisterActiveWindow", WindowStyles.Diabled | WindowStyles.Minimize);
+                window.IsValid.Should().BeTrue();
+
+                try
+                {
+                    Action action = () => WindowMethods.UnregisterClass(atom, null);
+                    action.ShouldThrow<IOException>().And
+                        .HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_HAS_WINDOWS));
+                }
+                finally
+                {
+                    WindowMethods.DestroyWindow(window);
+                }
+            }
+            finally
+            {
+                WindowMethods.UnregisterClass(atom, null);
+            }
+        }
+
+        [Fact]
+        public void RegisterClass_GetSetClassLong()
+        {
+            // Some docs claim that 40 is the max, but that isn't true (at least in recent OSes)
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633574.aspx
+            WindowClass myClass = new WindowClass
+            {
+                ClassName = "RegisterClass_GetSetClassLong",
+                Style = ClassStyle.HorizontalRedraw,
+                WindowProcedure = CallDefaultProcedure,
+                ClassExtraBytes = 80
+            };
+
+            Atom atom = WindowMethods.RegisterClass(ref myClass);
+            atom.IsValid.Should().BeTrue();
+
+            try
+            {
+                WindowHandle window = WindowMethods.CreateWindow(atom,
+                    "RegisterClass_GetSetClassLong_Window", WindowStyles.Diabled | WindowStyles.Minimize);
+                window.IsValid.Should().BeTrue();
+
+                try
+                {
+                    var info = WindowMethods.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
+                    info.ClassExtraBytes.Should().Be(80);
+
+                    IntPtr result = WindowMethods.SetClassLong(window, (ClassLong)72, (IntPtr)0xDEADBEEF);
+                    result.Should().Be(IntPtr.Zero);
+
+                    WindowMethods.GetClassLong(window, (ClassLong)72).Should().Be((IntPtr)0xDEADBEEF);
+                }
+                finally
+                {
+                    WindowMethods.DestroyWindow(window);
+                }
+            }
+            finally
+            {
+                WindowMethods.UnregisterClass(atom, null);
+            }
+        }
+
+        [Fact]
+        public void RegisterClass_GetSetWindowLong()
+        {
+            // Some docs claim that 40 is the max, but that isn't true (at least in recent OSes)
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633574.aspx
+            WindowClass myClass = new WindowClass
+            {
+                ClassName = "RegisterClass_GetSetWindowLong",
+                WindowProcedure = CallDefaultProcedure,
+                WindowExtraBytes = 80
+            };
+
+            Atom atom = WindowMethods.RegisterClass(ref myClass);
+            atom.IsValid.Should().BeTrue();
+
+            try
+            {
+                WindowHandle window = WindowMethods.CreateWindow(atom,
+                    "RegisterClass_GetSetWindowLong_Window", WindowStyles.Diabled | WindowStyles.Minimize);
+                window.IsValid.Should().BeTrue();
+
+                try
+                {
+                    var info = WindowMethods.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
+                    info.WindowExtraBytes.Should().Be(80);
+
+                    IntPtr result = WindowMethods.SetWindowLong(window, (WindowLong)72, (IntPtr)0xDEADBEEF);
+                    result.Should().Be(IntPtr.Zero);
+
+                    WindowMethods.GetWindowLong(window, (WindowLong)72).Should().Be((IntPtr)0xDEADBEEF);
+                }
+                finally
+                {
+                    WindowMethods.DestroyWindow(window);
+                }
+            }
+            finally
+            {
+                WindowMethods.UnregisterClass(atom, null);
+            }
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace WInterop.Extensions.WindowExtensions
         public static IntPtr GetWindowLong(this WindowHandle window, WindowLong index) => WindowMethods.GetWindowLong(window, index);
         public static IntPtr SetWindowLong(this WindowHandle window, WindowLong index, IntPtr value)
             => WindowMethods.SetWindowLong(window, index, value);
-        public static WindowProcedure SetWindowProcedure(this WindowHandle window, WindowProcedure newCallback)
+        public static IntPtr SetWindowProcedure(this WindowHandle window, WindowProcedure newCallback)
             => WindowMethods.SetWindowProcedure(window, newCallback);
         public static void SetWindowText(this WindowHandle window, string text) => WindowMethods.SetWindowText(window, text);
         public static IntPtr SetClassLong(this WindowHandle window, ClassLong index, IntPtr value) => WindowMethods.SetClassLong(window, index, value);
