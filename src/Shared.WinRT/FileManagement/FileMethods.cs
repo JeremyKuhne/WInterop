@@ -88,6 +88,12 @@ namespace WInterop.FileManagement
                 SafeHandle lpBuffer,
                 IntPtr lpFilePart);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364418.aspx
+            [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern IntPtr FindFirstFileW(
+                string lpFileName,
+                out WIN32_FIND_DATA lpFindFileData);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern IntPtr FindFirstFileExW(

@@ -23,12 +23,12 @@ namespace WInterop.MemoryManagement.Types
     /// Windows attempts to grab space from the low fragmentation heap if the requested memory is below a platform specific
     /// threshold and certain flags aren't in play (such as NO_SERIALIZE).
     /// </remarks>
-    public class SafeHeapHandle : SafeBuffer, ISizedBuffer
+    public class HeapHandle : SafeBuffer, ISizedBuffer
     {
         /// <summary>
         /// Create an empty heap handle
         /// </summary>
-        public SafeHeapHandle() : this(0) { }
+        public HeapHandle() : this(0) { }
 
         /// <summary>
         /// Allocate a buffer of the given size and zero memory if requested.
@@ -36,7 +36,7 @@ namespace WInterop.MemoryManagement.Types
         /// <param name="nameof(byteLength)">Required size in bytes. Must be less than UInt32.MaxValue for 32 bit or UInt64.MaxValue for 64 bit.</param>
         /// <exception cref="OutOfMemoryException">Thrown if the requested memory size cannot be allocated.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if size is greater than the maximum memory size.</exception>
-        public SafeHeapHandle(ulong byteLength, bool zeroMemory = false) : base(ownsHandle: true)
+        public HeapHandle(ulong byteLength, bool zeroMemory = false) : base(ownsHandle: true)
         {
             if (byteLength > 0)
             {

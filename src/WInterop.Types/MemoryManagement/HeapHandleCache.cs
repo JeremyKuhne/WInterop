@@ -14,7 +14,7 @@ namespace WInterop.Handles
     /// Allows limited reuse of heap buffers to improve memory pressure. This cache does not ensure
     /// that multiple copies of handles are not released back into the cache.
     /// </summary>
-    public sealed class HeapHandleCache : Cache<SafeHeapHandle>
+    public sealed class HeapHandleCache : Cache<HeapHandle>
     {
         private ulong _minSize;
         private ulong _maxSize;
@@ -36,9 +36,9 @@ namespace WInterop.Handles
         /// <summary>
         /// Get a HeapHandle
         /// </summary>
-        public SafeHeapHandle Acquire(ulong minSize)
+        public HeapHandle Acquire(ulong minSize)
         {
-            SafeHeapHandle handle = Acquire();
+            HeapHandle handle = Acquire();
             if (minSize < _minSize) minSize = _minSize;
             if (handle.ByteLength < minSize)
             {
@@ -48,7 +48,7 @@ namespace WInterop.Handles
             return handle;
         }
 
-        public override void Release(SafeHeapHandle item)
+        public override void Release(HeapHandle item)
         {
             if (item.ByteLength <= _maxSize)
                 base.Release(item);

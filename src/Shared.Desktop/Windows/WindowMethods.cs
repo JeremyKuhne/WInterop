@@ -114,16 +114,16 @@ namespace WInterop.Windows
         /// <summary>
         /// Unregisters the given class Atom.
         /// </summary>
-        public static void UnregisterClass(Atom atom, SafeModuleHandle module)
+        public static void UnregisterClass(Atom atom, ModuleInstance module)
         {
-            if (!Imports.UnregisterClassW(atom, module ?? SafeModuleHandle.Null))
+            if (!Imports.UnregisterClassW(atom, module ?? ModuleInstance.Null))
                 throw Errors.GetIoExceptionForLastError();
         }
 
         /// <summary>
         /// Unregisters the given class name.
         /// </summary>
-        public static void UnregisterClass(string className, SafeModuleHandle module)
+        public static void UnregisterClass(string className, ModuleInstance module)
         {
             if (className == null)
                 throw new ArgumentNullException(nameof(className));
@@ -132,7 +132,7 @@ namespace WInterop.Windows
             {
                 fixed (char* name = className)
                 {
-                    if (!Imports.UnregisterClassW((IntPtr)name, module ?? SafeModuleHandle.Null))
+                    if (!Imports.UnregisterClassW((IntPtr)name, module ?? ModuleInstance.Null))
                         throw Errors.GetIoExceptionForLastError();
                 }
             }
@@ -174,20 +174,20 @@ namespace WInterop.Windows
             return atom;
         }
 
-        public static WindowClass GetClassInfo(SafeModuleHandle instance, Atom atom)
+        public static WindowClass GetClassInfo(ModuleInstance instance, Atom atom)
         {
-            if (!Imports.GetClassInfoExW(instance ?? SafeModuleHandle.Null, atom, out WNDCLASSEX wndClass))
+            if (!Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, atom, out WNDCLASSEX wndClass))
                 throw Errors.GetIoExceptionForLastError();
 
             return wndClass;
         }
 
-        public unsafe static WindowClass GetClassInfo(SafeModuleHandle instance, string className)
+        public unsafe static WindowClass GetClassInfo(ModuleInstance instance, string className)
         {
             WNDCLASSEX wndClass;
 
             fixed (char* c = className)
-                if (!Imports.GetClassInfoExW(instance ?? SafeModuleHandle.Null, (IntPtr)c, out wndClass))
+                if (!Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, (IntPtr)c, out wndClass))
                     throw Errors.GetIoExceptionForLastError();
 
             return wndClass;
@@ -202,7 +202,7 @@ namespace WInterop.Windows
             int y = WindowDefines.CW_USEDEFAULT,
             int width = WindowDefines.CW_USEDEFAULT,
             int height = WindowDefines.CW_USEDEFAULT,
-            SafeModuleHandle instance = null)
+            ModuleInstance instance = null)
         {
             return CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.Null, IntPtr.Zero, instance, IntPtr.Zero);
         }
@@ -216,7 +216,7 @@ namespace WInterop.Windows
             int y = WindowDefines.CW_USEDEFAULT,
             int width = WindowDefines.CW_USEDEFAULT,
             int height = WindowDefines.CW_USEDEFAULT,
-            SafeModuleHandle instance = null)
+            ModuleInstance instance = null)
         {
             return CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.Null, IntPtr.Zero, instance, IntPtr.Zero);
         }
@@ -232,7 +232,7 @@ namespace WInterop.Windows
             int height,
             WindowHandle parentWindow,
             IntPtr menuHandle,
-            SafeModuleHandle instance,
+            ModuleInstance instance,
             IntPtr parameters)
         {
             WindowHandle window = Imports.CreateWindowExW(
@@ -246,7 +246,7 @@ namespace WInterop.Windows
                 height,
                 parentWindow,
                 menuHandle,
-                instance ?? SafeModuleHandle.Null,
+                instance ?? ModuleInstance.Null,
                 parameters);
 
             if (window == WindowHandle.Null)
@@ -266,7 +266,7 @@ namespace WInterop.Windows
             int height,
             WindowHandle parentWindow,
             IntPtr menuHandle,
-            SafeModuleHandle instance,
+            ModuleInstance instance,
             IntPtr parameters)
         {
             WindowHandle window;
@@ -283,7 +283,7 @@ namespace WInterop.Windows
                     height,
                     parentWindow,
                     menuHandle,
-                    instance ?? SafeModuleHandle.Null,
+                    instance ?? ModuleInstance.Null,
                     parameters);
             }
 

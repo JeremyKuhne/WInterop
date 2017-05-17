@@ -13,7 +13,7 @@ namespace WInterop.Modules.BufferWrappers
 {
     public struct ModuleFileNameWrapper : IBufferFunc<StringBuffer, uint>
     {
-        public SafeModuleHandle Module;
+        public ModuleInstance Module;
         public SafeProcessHandle Process;
 
         uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)

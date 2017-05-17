@@ -10,7 +10,7 @@ using WInterop.Handles.Types;
 
 namespace WInterop.Resources.Types
 {
-    public class IconHandle : SafeHandleZeroIsInvalid
+    public class IconHandle : HandleZeroIsInvalid
     {
         public IconHandle() : base(ownsHandle: true) { }
 

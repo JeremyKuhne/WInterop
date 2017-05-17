@@ -12,7 +12,7 @@ namespace WInterop.Handles.Types
     /// <summary>
     /// Wrapper for an event handle
     /// </summary>
-    public class EventHandle : SafeCloseHandle
+    public class EventHandle : CloseHandle
     {
         public EventHandle() : base() { }
 

@@ -17,17 +17,17 @@ namespace WInterop.Modules.Types
     /// Typically we try to avoid using the safe prefix, in this case
     /// ModuleHandle is a type that lives in System.
     /// </remarks>
-    public class SafeModuleHandle : SafeHandleZeroIsInvalid
+    public class ModuleInstance : HandleZeroIsInvalid
     {
-        public static SafeModuleHandle Null = new SafeModuleHandle(IntPtr.Zero);
+        public static ModuleInstance Null = new ModuleInstance(IntPtr.Zero);
 
-        public SafeModuleHandle() : this(ownsHandle: false) { }
+        public ModuleInstance() : this(ownsHandle: false) { }
 
-        protected SafeModuleHandle(bool ownsHandle) : base(ownsHandle) { }
+        protected ModuleInstance(bool ownsHandle) : base(ownsHandle) { }
 
-        public SafeModuleHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
+        public ModuleInstance(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
 
-        static public implicit operator SafeModuleHandle(IntPtr handle) => new SafeModuleHandle(handle);
+        static public implicit operator ModuleInstance(IntPtr handle) => new ModuleInstance(handle);
 
         protected override bool ReleaseHandle()
         {

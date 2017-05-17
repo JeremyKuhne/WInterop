@@ -28,7 +28,7 @@ namespace Beeper1
         {
             const string szAppName = "Beeper1";
 
-            SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,

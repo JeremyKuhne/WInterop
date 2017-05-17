@@ -11,7 +11,7 @@ using WInterop.Handles.Types;
 
 namespace WInterop.Desktop.Registry.Types
 {
-    public class RegistryKeyHandle : SafeHandleZeroOrMinusOneIsInvalid
+    public class RegistryKeyHandle : HandleZeroOrMinusOneIsInvalid
     {
         private const uint REMOTE_HANDLE_TAG       = 0x00000001;
         private const uint REG_CLASSES_SPECIAL_TAG = 0x00000002;

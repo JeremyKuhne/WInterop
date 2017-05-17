@@ -10,7 +10,7 @@ using WInterop.Handles.Types;
 
 namespace WInterop.SecurityManagement.Types
 {
-    public class LsaHandle : SafeHandleZeroIsInvalid
+    public class LsaHandle : HandleZeroIsInvalid
     {
         public LsaHandle() : base(ownsHandle: true) { }
 

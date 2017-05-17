@@ -14,7 +14,7 @@ namespace WInterop.Gdi.Types
     /// <summary>
     /// GDI object handle (HGDIOBJ)
     /// </summary>
-    public class GdiObjectHandle : SafeHandleZeroIsInvalid
+    public class GdiObjectHandle : HandleZeroIsInvalid
     {
         public static GdiObjectHandle Null = new GdiObjectHandle(IntPtr.Zero);
 

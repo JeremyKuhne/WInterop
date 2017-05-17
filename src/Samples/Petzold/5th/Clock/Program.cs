@@ -30,7 +30,7 @@ namespace Clock
         {
             const string szAppName = "Clock";
 
-            SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,

@@ -12,7 +12,7 @@ namespace WInterop.Ipc.Types
     /// <summary>
     /// Safe handle for a mailslot
     /// </summary>
-    public class SafeMailslotHandle : SafeCloseHandle
+    public class SafeMailslotHandle : CloseHandle
     {
         public SafeMailslotHandle() : base() { }
     }

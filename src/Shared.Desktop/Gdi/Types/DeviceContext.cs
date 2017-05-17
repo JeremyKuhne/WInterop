@@ -13,7 +13,7 @@ namespace WInterop.Gdi.Types
     /// <summary>
     /// DeviceContext handle (HDC)
     /// </summary>
-    public class DeviceContext : SafeHandleZeroIsInvalid
+    public class DeviceContext : HandleZeroIsInvalid
     {
         public DeviceContext() : base(ownsHandle: true) { }
 

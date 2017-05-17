@@ -30,7 +30,7 @@ namespace HelloWin
         {
             const string szAppName = "HelloWin";
 
-            SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,

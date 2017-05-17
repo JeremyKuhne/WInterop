@@ -8,10 +8,10 @@
 namespace WInterop.Handles.Types
 {
     /// <summary>
-    /// Safe handle for an access token
+    /// Safe handle for a Windows object manager directory.
     /// </summary>
-    public class SafeTokenHandle : SafeCloseHandle
+    public class DirectoryObjectHandle : CloseHandle
     {
-        public SafeTokenHandle() : base() { }
+        public DirectoryObjectHandle() : base() { }
     }
 }

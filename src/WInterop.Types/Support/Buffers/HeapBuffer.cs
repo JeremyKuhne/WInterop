@@ -31,7 +31,7 @@ namespace WInterop.Support.Buffers
     /// </remarks>
     public class HeapBuffer : SizedBuffer
     {
-        private SafeHeapHandle _handle;
+        private HeapHandle _handle;
 
         // By using a platform specific data type we can be assured of atomic reads/writes.
         // Anything more than a uint isn't addressable on 32bit as well.
@@ -165,7 +165,7 @@ namespace WInterop.Support.Buffers
 
         private unsafe void ReleaseHandle()
         {
-            SafeHeapHandle handle;
+            HeapHandle handle;
             _handleLock.EnterWriteLock();
             try
             {

@@ -51,7 +51,7 @@ namespace WInterop.Handles
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566492.aspx
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             public static extern NTSTATUS NtOpenDirectoryObject(
-                out SafeDirectoryObjectHandle DirectoryHandle,
+                out DirectoryObjectHandle DirectoryHandle,
                 DirectoryObjectRights DesiredAccess,
                 ref OBJECT_ATTRIBUTES ObjectAttributes);
 
@@ -59,7 +59,7 @@ namespace WInterop.Handles
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567030.aspx
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             unsafe public static extern NTSTATUS NtOpenSymbolicLinkObject(
-                out SafeSymbolicLinkObjectHandle LinkHandle,
+                out SymbolicLinkObjectHandle LinkHandle,
                 SymbolicLinkObjectRights DesiredAccess,
                 ref OBJECT_ATTRIBUTES ObjectAttributes);
 
@@ -67,14 +67,14 @@ namespace WInterop.Handles
             // https://msdn.microsoft.com/en-us/library/bb470241.aspx
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             public static extern NTSTATUS NtQuerySymbolicLinkObject(
-                SafeSymbolicLinkObjectHandle LinkHandle,
+                SymbolicLinkObjectHandle LinkHandle,
                 ref UNICODE_STRING LinkTarget,
                 out uint ReturnedLength);
 
             // https://msdn.microsoft.com/en-us/library/bb470238.aspx
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             public static extern NTSTATUS NtQueryDirectoryObject(
-                SafeDirectoryObjectHandle DirectoryHandle,
+                DirectoryObjectHandle DirectoryHandle,
                 SafeHandle Buffer,
                 uint Length,
                 [MarshalAs(UnmanagedType.U1)] bool ReturnSingleEntry,
@@ -92,11 +92,11 @@ namespace WInterop.Handles
         /// <summary>
         /// Open a handle to a directory object at the given NT path.
         /// </summary>
-        public static SafeDirectoryObjectHandle OpenDirectoryObject(
+        public static DirectoryObjectHandle OpenDirectoryObject(
             string path,
             DirectoryObjectRights desiredAccess = DirectoryObjectRights.DIRECTORY_QUERY)
         {
-            return (SafeDirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
+            return (DirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
                 NTSTATUS status = Imports.NtOpenDirectoryObject(
                     DirectoryHandle: out var directory,
@@ -113,11 +113,11 @@ namespace WInterop.Handles
         /// <summary>
         /// Open a handle to a symbolic link at the given NT path.
         /// </summary>
-        public static SafeSymbolicLinkObjectHandle OpenSymbolicLinkObject(
+        public static SymbolicLinkObjectHandle OpenSymbolicLinkObject(
             string path,
             SymbolicLinkObjectRights desiredAccess = SymbolicLinkObjectRights.GENERIC_READ)
         {
-            return (SafeSymbolicLinkObjectHandle)OpenObjectHelper(path, (attributes) =>
+            return (SymbolicLinkObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
                 NTSTATUS status = Imports.NtOpenSymbolicLinkObject(
                     LinkHandle: out var link,
@@ -163,7 +163,7 @@ namespace WInterop.Handles
         /// <summary>
         /// Get the symbolic link's target path.
         /// </summary>
-        public static string GetSymbolicLinkTarget(SafeSymbolicLinkObjectHandle linkHandle)
+        public static string GetSymbolicLinkTarget(SymbolicLinkObjectHandle linkHandle)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
@@ -183,7 +183,7 @@ namespace WInterop.Handles
             });
         }
 
-        public static IEnumerable<ObjectInformation> GetDirectoryEntries(SafeDirectoryObjectHandle directoryHandle)
+        public static IEnumerable<ObjectInformation> GetDirectoryEntries(DirectoryObjectHandle directoryHandle)
         {
             List<ObjectInformation> infos = new List<ObjectInformation>();
 

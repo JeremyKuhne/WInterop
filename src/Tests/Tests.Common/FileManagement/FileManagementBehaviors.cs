@@ -6,8 +6,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System;
 using Tests.Support;
+using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
+using WInterop.FileManagement.Types;
+using WInterop.Support;
 using Xunit;
 
 namespace Tests.FileManagement
@@ -164,6 +168,51 @@ namespace Tests.FileManagement
         public void ValidateKnownFixedBehaviors(string value, string expected)
         {
             FileMethods.GetFullPathName(value).Should().Be(expected, $"source was {value}");
+        }
+
+        [Fact]
+        public void FindFirstFileBehaviors()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                IntPtr result = FileMethods.Imports.FindFirstFileW(cleaner.TempFolder, out WIN32_FIND_DATA findData);
+                IsValid(result).Should().BeTrue("root location exists");
+                FileMethods.Imports.FindClose(result);
+                result = FileMethods.Imports.FindFirstFileW(cleaner.GetTestPath(), out findData);
+                WindowsError error = Errors.GetLastError();
+                IsValid(result).Should().BeFalse("non-existant file");
+                error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
+                result = FileMethods.Imports.FindFirstFileW(Paths.Combine(cleaner.GetTestPath(), "NotHere"), out findData);
+                error = Errors.GetLastError();
+                IsValid(result).Should().BeFalse("non-existant subdir");
+                error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
+            }
+
+            bool IsValid(IntPtr value)
+            {
+                return value != IntPtr.Zero && value != (IntPtr)(-1);
+            }
+        }
+
+        [Fact]
+        public void GetFileAttributesBehaviors()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                bool success = FileMethods.Imports.GetFileAttributesExW(cleaner.TempFolder,
+                    GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA attributeData);
+                success.Should().BeTrue("root location exists");
+                success = FileMethods.Imports.GetFileAttributesExW(cleaner.GetTestPath(),
+                    GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
+                WindowsError error = Errors.GetLastError();
+                success.Should().BeFalse("non-existant file");
+                error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
+                success = FileMethods.Imports.GetFileAttributesExW(Paths.Combine(cleaner.GetTestPath(), "NotHere"),
+                    GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
+                error = Errors.GetLastError();
+                success.Should().BeFalse("non-existant subdir");
+                error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
+            }
         }
 
         [Fact]

@@ -28,7 +28,7 @@ namespace Clover
         {
             const string szAppName = "Clover";
 
-            SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,

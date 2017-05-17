@@ -32,7 +32,7 @@ namespace Checker3
         {
             const string szAppName = "Checker3";
 
-            SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,

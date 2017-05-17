@@ -13,11 +13,11 @@ namespace WInterop.Modules.Types
     /// <summary>
     /// Use this ModuleHandle when you want to decrement the module ref count when disposed.
     /// </summary>
-    public class RefCountedModuleHandle : SafeModuleHandle
+    public class RefCountedModuleInstance : ModuleInstance
     {
-        public RefCountedModuleHandle() : base(ownsHandle: true) { }
+        public RefCountedModuleInstance() : base(ownsHandle: true) { }
 
-        public RefCountedModuleHandle(IntPtr handle) : base(handle, ownsHandle: true) { }
+        public RefCountedModuleInstance(IntPtr handle) : base(handle, ownsHandle: true) { }
 
         protected override bool ReleaseHandle()
         {

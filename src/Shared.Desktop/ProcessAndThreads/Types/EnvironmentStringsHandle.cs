@@ -13,7 +13,7 @@ namespace WInterop.ProcessAndThreads.Types
     /// <summary>
     /// Safe handle for a block of memory returned by GetEnvironmentStrings.
     /// </summary>
-    public class EnvironmentStringsHandle : SafeHandleZeroIsInvalid
+    public class EnvironmentStringsHandle : HandleZeroIsInvalid
     {
         public EnvironmentStringsHandle() : base(ownsHandle: true)
         {

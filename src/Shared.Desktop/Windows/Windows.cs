@@ -32,10 +32,10 @@ namespace WInterop.Windows
                     int y = WindowDefines.CW_USEDEFAULT,
                     int width = WindowDefines.CW_USEDEFAULT,
                     int height = WindowDefines.CW_USEDEFAULT,
-                    SafeModuleHandle instance = null)
+                    ModuleInstance instance = null)
                     => WindowMethods.CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, instance);
         public static WindowHandle CreateWindow(
-                    SafeModuleHandle instance,
+                    ModuleInstance instance,
                     string className,
                     string windowName,
                     WindowStyles style,
@@ -56,7 +56,7 @@ namespace WInterop.Windows
             int height,
             WindowHandle parentWindow,
             IntPtr menuHandle,
-            SafeModuleHandle instance,
+            ModuleInstance instance,
             IntPtr parameters) => WindowMethods.CreateWindow(
                 className, windowName, style, extendedStyle, x, y, width, height, parentWindow, menuHandle, instance, parameters);
         public static bool GetMessage(out MSG message, uint minMessage = 0, uint maxMessage = 0) => WindowMethods.GetMessage(out message, WindowHandle.Null, minMessage, maxMessage);

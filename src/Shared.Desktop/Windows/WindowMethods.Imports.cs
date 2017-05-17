@@ -270,19 +270,19 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool UnregisterClassW(
                 IntPtr lpClassName,
-                SafeModuleHandle hInstance);
+                ModuleInstance hInstance);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633578.aspx
             [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool GetClassInfoW(
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 IntPtr lpClassName,
                 out WNDCLASS lpWndClass);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633579.aspx
             [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool GetClassInfoExW(
-                SafeModuleHandle hinst,
+                ModuleInstance hinst,
                 IntPtr lpszClass,
                 out WNDCLASSEX lpwcx);
 
@@ -307,7 +307,7 @@ namespace WInterop.Windows
                 int nHeight,
                 WindowHandle hWndParent,
                 IntPtr hMenu,
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 IntPtr lpParam);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632682.aspx
@@ -561,7 +561,7 @@ namespace WInterop.Windows
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645441.aspx
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern WindowHandle CreateDialogIndirectParamW(
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 SafeHandle lpTemplate,
                 WindowHandle hWndParent,
                 DialogProcedure lpDialogFunc,
@@ -570,7 +570,7 @@ namespace WInterop.Windows
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645445.aspx
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern WindowHandle CreateDialogParamW(
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 string lpTemplateName,
                 WindowHandle hWndParent,
                 DialogProcedure lpDialogFunc,
@@ -587,7 +587,7 @@ namespace WInterop.Windows
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645461.aspx
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern IntPtr DialogBoxIndirectParamW(
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 SafeHandle hDialogTemplate,
                 WindowHandle hWndParent,
                 DialogProcedure lpDialogFunc,
@@ -596,7 +596,7 @@ namespace WInterop.Windows
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645465.aspx
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern IntPtr DialogBoxParamW(
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 string lpTemplateName,
                 WindowHandle hWndParent,
                 DialogProcedure lpDialogFunc,

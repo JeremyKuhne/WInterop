@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
+using WInterop.Support;
 using WInterop.Windows.Types;
 
 namespace WInterop.Resources
@@ -24,7 +25,7 @@ namespace WInterop.Resources
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647486.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             unsafe public static extern int LoadStringW(
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 int uID,
                 out char* lpBuffer,
                 int nBufferMax);
@@ -75,7 +76,7 @@ namespace WInterop.Resources
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648072.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern SharedIconHandle LoadIconW(
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 IntPtr lpIconName);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648063.aspx
@@ -96,7 +97,7 @@ namespace WInterop.Resources
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648385.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern CursorHandle CreateCursor(
-                SafeModuleHandle hInst,
+                ModuleInstance hInst,
                 int xHotSpot,
                 int yHotSpot,
                 int nWidth,
@@ -136,7 +137,7 @@ namespace WInterop.Resources
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648391.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern SharedCursorHandle LoadCursorW(
-                SafeModuleHandle hInstance,
+                ModuleInstance hInstance,
                 IntPtr lpCursorName);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648392.aspx
@@ -171,6 +172,111 @@ namespace WInterop.Resources
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern int ShowCursor(
                 bool bShow);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647616.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool AppendMenuW(
+                MenuHandle hMenu,
+                MenuFlags uFlags,
+                IntPtr uIDNewItem,
+                IntPtr lpNewItem);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647619.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern MenuFlags CheckMenuItem(
+                MenuHandle hmenu,
+                uint uIDCheckItem,
+                MenuFlags uCheck);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647621.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool CheckMenuRadioItem(
+                MenuHandle hmenu,
+                uint idFirst,
+                uint idLast,
+                uint idCheck,
+                MenuFlags uFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647624.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern MenuHandle CreateMenu();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647626.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern MenuHandle CreatePopupMenu();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647626.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool DeleteMenu(
+                MenuHandle hMenu,
+                uint uPosition,
+                MenuFlags uFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647631.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool DestroyMenu(
+                IntPtr hMenu);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647633.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool DrawMenuBar(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647636.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool EnableMenuItem(
+                MenuHandle hMenu,
+                uint uIDEnableItem,
+                MenuFlags uEnable);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647637.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool EndMenu();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647640.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern MenuHandle GetMenu(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647833.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetMenuBarInfo(
+                WindowHandle hwnd,
+                MenuObject idObject,
+                int idItem,
+                ref MENUBARINFO pmbi);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647976.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetMenuDefaultItem(
+                MenuHandle hMenu,
+                bool fByPos,
+                uint gmdiFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647977.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetMenuInfo(
+                MenuHandle hMenu,
+                ref MENUINFO lpcmi);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647978.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern int GetMenuItemCount(
+                MenuHandle hMenu);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647979.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern uint GetMenuItemID(
+                MenuHandle hMenu,
+                int nPos);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647980.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool GetMenuItemInfoW(
+                MenuHandle hMenu,
+                uint uItem,
+                bool fByPos,
+                ref MENUITEMINFO lpmii);
         }
     }
 }

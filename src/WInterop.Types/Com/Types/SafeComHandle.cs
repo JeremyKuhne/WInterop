@@ -10,7 +10,7 @@ using WInterop.Handles.Types;
 
 namespace WInterop.Com.Types
 {
-    public class SafeComHandle : SafeHandleZeroOrMinusOneIsInvalid
+    public class SafeComHandle : HandleZeroOrMinusOneIsInvalid
     {
         public SafeComHandle() : this(ownsHandle: true)
         {

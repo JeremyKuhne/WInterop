@@ -58,6 +58,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\CursorHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\IconHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\MenuBarInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\MenuHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\MenuInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\SharedCursorHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\SharedIconHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceMethods.cs" />

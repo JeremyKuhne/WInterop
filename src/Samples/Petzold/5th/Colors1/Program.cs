@@ -28,7 +28,7 @@ namespace Colors1
         {
             const string szAppName = "Colors1";
 
-            SafeModuleHandle module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
@@ -80,7 +80,7 @@ namespace Colors1
             switch (message)
             {
                 case WindowMessage.Create:
-                    SafeModuleHandle hInstance = window.GetWindowLong(WindowLong.InstanceHandle);
+                    ModuleInstance hInstance = window.GetWindowLong(WindowLong.InstanceHandle);
 
                     // Create the white-rectangle window against which the
                     // scroll bars will be positioned. The child window ID is 9.
@@ -192,7 +192,7 @@ namespace Colors1
                     window.InvalidateRectangle(rcColor, true);
                     return 0;
                 case WindowMessage.ControlColorScrollBar:
-                    return hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)].DangerousGetHandle();
+                    return (IntPtr)hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)];
                 case WindowMessage.ControlColorStatic:
                     id = (int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id);
 

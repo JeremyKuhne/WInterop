@@ -19,7 +19,7 @@ namespace WInterop.Resources
         /// <summary>
         /// Get the specified string resource from the given library.
         /// </summary>
-        unsafe public static string LoadString(SafeModuleHandle library, int identifier)
+        unsafe public static string LoadString(ModuleInstance library, int identifier)
         {
             // A string resource is mapped in with the dll, there is no need to allocate
             // or free a buffer.
@@ -35,14 +35,14 @@ namespace WInterop.Resources
 
         public static IconHandle LoadIcon(IconId id)
         {
-            IconHandle handle = Imports.LoadIconW(SafeModuleHandle.Null, (IntPtr)id);
+            IconHandle handle = Imports.LoadIconW(ModuleInstance.Null, (IntPtr)id);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError();
 
             return handle;
         }
 
-        public unsafe static IconHandle LoadIcon(string name, SafeModuleHandle module)
+        public unsafe static IconHandle LoadIcon(string name, ModuleInstance module)
         {
             IconHandle handle;
             fixed (char* n = name)
@@ -58,7 +58,7 @@ namespace WInterop.Resources
 
         public static CursorHandle LoadCursor(CursorId id)
         {
-            CursorHandle handle = Imports.LoadCursorW(SafeModuleHandle.Null, (IntPtr)id);
+            CursorHandle handle = Imports.LoadCursorW(ModuleInstance.Null, (IntPtr)id);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -154,6 +154,27 @@ namespace WInterop.Resources
         {
             if (!Imports.HideCaret(window))
                 throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static MenuHandle CreateMenu()
+        {
+            MenuHandle menu = Imports.CreateMenu();
+            if (menu.IsInvalid)
+                throw Errors.GetIoExceptionForLastError();
+            return menu;
+        }
+
+        public unsafe static void AppendMenu(MenuHandle menu, string text, int id, bool disabled = false, bool @checked = false)
+        {
+            MenuFlags flags = MenuFlags.String;
+            if (disabled) flags |= MenuFlags.Grayed;
+            if (@checked) flags |= MenuFlags.Checked;
+
+            fixed (char* c = text)
+            {
+                if (!Imports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c))
+                    throw Errors.GetIoExceptionForLastError();
+            }
         }
     }
 }

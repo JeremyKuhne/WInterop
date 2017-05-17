@@ -14,7 +14,7 @@ namespace WInterop.VolumeManagement.Types
     /// <summary>
     /// Safe handle for a block of memory returned by GetEnvironmentStrings.
     /// </summary>
-    public class FindVolumeHandle : SafeHandleZeroIsInvalid
+    public class FindVolumeHandle : HandleZeroIsInvalid
     {
         public FindVolumeHandle() : base(ownsHandle: true)
         {

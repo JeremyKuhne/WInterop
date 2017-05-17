@@ -13,7 +13,7 @@ namespace WInterop.ProcessAndThreads.Types
     /// <summary>
     /// Safe handle for a process.
     /// </summary>
-    public class SafeProcessHandle : SafeCloseHandle
+    public class SafeProcessHandle : CloseHandle
     {
         public SafeProcessHandle() : base() { }
 

@@ -22,14 +22,14 @@ namespace WInterop.Multimedia
             [DllImport(Libraries.Winmm, ExactSpelling = true)]
             public static extern bool PlaySoundW(
                 IntPtr pszSound,
-                SafeModuleHandle hmod,
+                ModuleInstance hmod,
                 PlaySoundOptions fdwSound);
         }
 
         public static bool PlaySound(PlaySoundAlias alias, PlaySoundOptions options)
         {
             options |= PlaySoundOptions.SND_ALIAS_ID;
-            return Imports.PlaySoundW((IntPtr)alias, SafeModuleHandle.Null, options);
+            return Imports.PlaySoundW((IntPtr)alias, ModuleInstance.Null, options);
         }
     }
 }

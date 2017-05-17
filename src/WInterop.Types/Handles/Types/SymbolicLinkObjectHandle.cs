@@ -10,8 +10,8 @@ namespace WInterop.Handles.Types
     /// <summary>
     /// Safe handle for a Windows object manager symbolic link.
     /// </summary>
-    public class SafeSymbolicLinkObjectHandle : SafeCloseHandle
+    public class SymbolicLinkObjectHandle : CloseHandle
     {
-        public SafeSymbolicLinkObjectHandle() : base() { }
+        public SymbolicLinkObjectHandle() : base() { }
     }
 }

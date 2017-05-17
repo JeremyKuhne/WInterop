@@ -10,7 +10,7 @@ using WInterop.Handles.Types;
 
 namespace WInterop.Resources.Types
 {
-    public class CursorHandle : SafeHandleZeroIsInvalid
+    public class CursorHandle : HandleZeroIsInvalid
     {
         public CursorHandle() : base(ownsHandle: true) { }
 

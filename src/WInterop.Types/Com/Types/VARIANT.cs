@@ -14,7 +14,7 @@ using WInterop.Support;
 namespace WInterop.Com.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms221627.aspx
-    public class VARIANT : SafeHandleZeroOrMinusOneIsInvalid
+    public class VARIANT : HandleZeroOrMinusOneIsInvalid
     {
         protected const ulong DataOffset = 8;
         protected const ulong NativeSize = 24;

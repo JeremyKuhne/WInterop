@@ -23,7 +23,7 @@ namespace WInterop.Windows.Types
         public WindowProcedure WindowProcedure;
         public int ClassExtraBytes;
         public int WindowExtraBytes;
-        public SafeModuleHandle Instance;
+        public ModuleInstance Instance;
         public IconHandle Icon;
         public CursorHandle Cursor;
         public BrushHandle Background;
@@ -84,11 +84,11 @@ namespace WInterop.Windows.Types
                 // If the WindowClass struct goes out of scope, this would be bad,
                 // but that would require it coming off the stack- which would be
                 // pretty difficult to accomplish for users of this class.
-                native.hInstance = managed.Instance?.DangerousGetHandle() ?? IntPtr.Zero;
-                native.hIcon = managed.Icon?.DangerousGetHandle() ?? IntPtr.Zero;
-                native.hCursor = managed.Cursor?.DangerousGetHandle() ?? IntPtr.Zero;
-                native.hbrBackground = managed.Background?.DangerousGetHandle() ?? IntPtr.Zero;
-                native.hIconSm = managed.SmallIcon?.DangerousGetHandle() ?? IntPtr.Zero;
+                native.hInstance = (IntPtr)managed.Instance;
+                native.hIcon = (IntPtr)managed.Icon;
+                native.hCursor = (IntPtr)managed.Cursor;
+                native.hbrBackground = (IntPtr)managed.Background;
+                native.hIconSm = (IntPtr)managed.SmallIcon;
 
                 if (managed.ClassName != null)
                 {

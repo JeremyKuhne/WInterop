@@ -12,7 +12,7 @@ namespace WInterop.Handles.Types
     /// <summary>
     /// Wrapper for a native certificate store handle.
     /// </summary>
-    public class CertificateStoreHandle : SafeHandleZeroIsInvalid
+    public class CertificateStoreHandle : HandleZeroIsInvalid
     {
         public CertificateStoreHandle() : base(ownsHandle: true)
         {

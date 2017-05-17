@@ -80,14 +80,16 @@ namespace DesktopTests.Windows
                 {
                     WindowMethods.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)42);
 
-                    value = 1999;
                     IntPtr previous = IntPtr.Zero;
-                    previous = WindowMethods.SetWindowProcedure(window, (w, m, wParam, lParam) =>
+                    WindowProcedure subClass = (w, m, wParam, lParam) =>
                     {
                         return WindowMethods.CallWindowProcedure(previous, w, m, wParam, lParam);
-                    });
+                    };
 
+                    value = 1999;
+                    previous = WindowMethods.SetWindowProcedure(window, subClass);
                     WindowMethods.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)1999);
+                    GC.KeepAlive(subClass);
                 }
                 finally
                 {

@@ -28,6 +28,6 @@ namespace WInterop.Windows.Types
 
         public unsafe string Name => lpszName == IntPtr.Zero ? null : new string((char*)lpszName.ToPointer());
         public unsafe string Class => lpszClass == IntPtr.Zero ? null : new string((char*)lpszClass.ToPointer());
-        public SafeModuleHandle Instance => hInstance;
+        public ModuleInstance Instance => hInstance;
     }
 }

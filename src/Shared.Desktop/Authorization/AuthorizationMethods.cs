@@ -32,7 +32,7 @@ namespace WInterop.Authorization
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool AdjustTokenPrivileges(
-                SafeTokenHandle TokenHandle,
+                TokenHandle TokenHandle,
                 [MarshalAs(UnmanagedType.Bool)] bool DisableAllPrivileges,
                 ref TOKEN_PRIVILEGES NewState,
                 uint BufferLength,
@@ -43,7 +43,7 @@ namespace WInterop.Authorization
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool GetTokenInformation(
-                SafeTokenHandle TokenHandle,
+                TokenHandle TokenHandle,
                 TOKEN_INFORMATION_CLASS TokenInformationClass,
                 void* TokenInformation,
                 uint TokenInformationLength,
@@ -70,7 +70,7 @@ namespace WInterop.Authorization
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool PrivilegeCheck(
-                SafeTokenHandle ClientToken,
+                TokenHandle ClientToken,
                 ref PRIVILEGE_SET RequiredPrivileges,
                 [MarshalAs(UnmanagedType.Bool)] out bool pfResult);
 
@@ -79,7 +79,7 @@ namespace WInterop.Authorization
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool SetThreadToken(
                 IntPtr Thread,
-                SafeTokenHandle Token);
+                TokenHandle Token);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -90,12 +90,12 @@ namespace WInterop.Authorization
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool DuplicateTokenEx(
-                SafeTokenHandle hExistingToken,
+                TokenHandle hExistingToken,
                 TokenRights dwDesiredAccess,
                 IntPtr lpTokenAttributes,
                 SECURITY_IMPERSONATION_LEVEL ImpersonationLevel,
                 TOKEN_TYPE TokenType,
-                ref SafeTokenHandle phNewToken);
+                ref TokenHandle phNewToken);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379295.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -103,7 +103,7 @@ namespace WInterop.Authorization
             public static extern bool OpenProcessToken(
                 IntPtr ProcessHandle,
                 TokenRights DesiredAccesss,
-                out SafeTokenHandle TokenHandle);
+                out TokenHandle TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -112,7 +112,7 @@ namespace WInterop.Authorization
                 SafeThreadHandle ThreadHandle,
                 TokenRights DesiredAccess,
                 [MarshalAs(UnmanagedType.Bool)] bool OpenAsSelf,
-                out SafeTokenHandle TokenHandle);
+                out TokenHandle TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379166.aspx
             // LookupAccountSid
@@ -159,7 +159,7 @@ namespace WInterop.Authorization
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool ConvertSidToStringSidW(
                 ref SID Sid,
-                out SafeLocalHandle StringSid);
+                out LocalHandle StringSid);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446658.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -183,7 +183,7 @@ namespace WInterop.Authorization
         private const uint PRIVILEGE_SET_ALL_NECESSARY = 1;
 
         private unsafe static void TokenInformationInvoke(
-            SafeTokenHandle token,
+            TokenHandle token,
             TOKEN_INFORMATION_CLASS info,
             Action<Reader> action)
         {
@@ -205,7 +205,7 @@ namespace WInterop.Authorization
             });
         }
 
-        public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(SafeTokenHandle token)
+        public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(TokenHandle token)
         {
             var privileges = new List<PrivilegeSetting>();
 
@@ -245,7 +245,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if the given token has the specified privilege. The privilege may or may not be enabled.
         /// </summary>
-        public static bool HasPrivilege(SafeTokenHandle token, Privileges privilege)
+        public static bool HasPrivilege(TokenHandle token, Privileges privilege)
         {
             return GetTokenPrivileges(token).Any(t => t.Privilege == privilege);
         }
@@ -263,7 +263,7 @@ namespace WInterop.Authorization
         /// Checks if the given privilege is enabled. This does not tell you whether or not it
         /// is possible to get a privilege- most held privileges are not enabled by default.
         /// </summary>
-        public static bool IsPrivilegeEnabled(SafeTokenHandle token, Privileges privilege)
+        public static bool IsPrivilegeEnabled(TokenHandle token, Privileges privilege)
         {
             LUID luid = LookupPrivilegeValue(privilege.ToString());
 
@@ -289,7 +289,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Opens a process token.
         /// </summary>
-        public static SafeTokenHandle OpenProcessToken(TokenRights desiredAccess)
+        public static TokenHandle OpenProcessToken(TokenRights desiredAccess)
         {
             if (!Imports.OpenProcessToken(ProcessMethods.GetCurrentProcess(), desiredAccess, out var processToken))
                 throw Errors.GetIoExceptionForLastError(desiredAccess.ToString());
@@ -300,7 +300,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Opens a thread token.
         /// </summary>
-        public static SafeTokenHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
+        public static TokenHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
         {
             if (!Imports.OpenThreadToken(ThreadMethods.Imports.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
@@ -308,7 +308,7 @@ namespace WInterop.Authorization
                 if (error != WindowsError.ERROR_NO_TOKEN)
                     throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
 
-                using (SafeTokenHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE))
+                using (TokenHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE))
                 {
                     if (!Imports.DuplicateTokenEx(
                         processToken,
@@ -331,7 +331,7 @@ namespace WInterop.Authorization
         /// </summary>
         public unsafe static bool IsProcessElevated()
         {
-            using (SafeTokenHandle token = OpenProcessToken(TokenRights.TOKEN_READ))
+            using (TokenHandle token = OpenProcessToken(TokenRights.TOKEN_READ))
             {
                 TOKEN_ELEVATION elevation = new TOKEN_ELEVATION();
                 if (!Imports.GetTokenInformation(
@@ -351,7 +351,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the SID for the given token.
         /// </summary>
-        public unsafe static SID GetTokenSid(SafeTokenHandle token)
+        public unsafe static SID GetTokenSid(TokenHandle token)
         {
             SID sid = new SID();
             TokenInformationInvoke(token, TOKEN_INFORMATION_CLASS.TokenUser,
@@ -410,7 +410,7 @@ namespace WInterop.Authorization
 
             unsafe
             {
-                return new string((char*)handle.DangerousGetHandle());
+                return new string((char*)handle);
             }
         }
 

@@ -11,18 +11,23 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Handles.Types
 {
-    public abstract class SafeHandleZeroOrMinusOneIsInvalid : SafeHandle, IBuffer
+    public abstract class BaseHandle : SafeHandle, IBuffer
     {
         // Why are HANDLE return values so inconsistent?
         // https://blogs.msdn.microsoft.com/oldnewthing/20040302-00/?p=40443
 
-        protected SafeHandleZeroOrMinusOneIsInvalid(bool ownsHandle)
+        protected BaseHandle(bool ownsHandle)
             : base(invalidHandleValue: IntPtr.Zero, ownsHandle: ownsHandle)
         {
         }
 
-        public override bool IsInvalid => handle == IntPtr.Zero || handle == new IntPtr(-1);
+        protected BaseHandle(IntPtr handle, bool ownsHandle = false)
+            : this(ownsHandle)
+        {
+            SetHandle(handle);
+        }
 
-        public unsafe void* VoidPointer => (void*)handle;
+        public unsafe static implicit operator void*(BaseHandle handle) => handle;
+        public static explicit operator IntPtr(BaseHandle handle) => handle?.DangerousGetHandle() ?? IntPtr.Zero;
     }
 }
