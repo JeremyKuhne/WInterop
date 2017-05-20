@@ -398,6 +398,35 @@ namespace WInterop.Windows
                 WPARAM wParam,
                 LPARAM lParam);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644951.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SendMessageCallbackW(
+                WindowHandle hWnd,
+                WindowMessage Msg,
+                WPARAM wParam,
+                LPARAM lParam,
+                SendAsyncProcedure lpCallBack,
+                UIntPtr dwData);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644952.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern LRESULT SendMessageTimeoutW(
+                WindowHandle hWnd,
+                WindowMessage Msg,
+                WPARAM wParam,
+                LPARAM lParam,
+                SendMessageTimeoutOptions fuFlags,
+                uint uTimeout,
+                out UIntPtr lpdwResult);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644953.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SendNotifyMessageW(
+                WindowHandle hWnd,
+                WindowMessage Msg,
+                WPARAM wParam,
+                LPARAM lParam);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644948.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool ReplyMessage(
