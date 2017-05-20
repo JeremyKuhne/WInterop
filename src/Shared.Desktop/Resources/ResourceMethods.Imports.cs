@@ -322,7 +322,89 @@ namespace WInterop.Resources
                 uint uItemHitite,
                 MenuFlags uHilite);
 
-            
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647988.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool InsertMenuItemW(
+                MenuHandle hMenu,
+                uint uItem,
+                bool fByPosition,
+                [In] ref MENUITEMINFO lpmii);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647989.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool IsMenu(
+                IntPtr hMenu);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647990.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern MenuHandle LoadMenuW(
+                ModuleInstance hInstance,
+                IntPtr lpMenuName);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647991.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern MenuHandle LoadMenuIndirectW(
+                SafeHandle lpMenuTemplate);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647992.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern int MenuItemFromPoint(
+                WindowHandle hWnd,
+                MenuHandle hMenu,
+                POINT ptScreen);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647994.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool RemoveMenu(
+                MenuHandle hMenu,
+                uint uPosition,
+                MenuFlags uFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647995.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetMenu(
+                WindowHandle hWnd,
+                MenuHandle hMenu);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647996.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetMenuDefaultItem(
+                MenuHandle hMenu,
+                uint uItem,
+                bool fByPos);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647997.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetMenuInfo(
+                MenuHandle hmenu,
+                [In] ref MENUINFO lpcmi);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647998.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetMenuItemBitmaps(
+                MenuHandle hMenu,
+                uint uPosition,
+                MenuFlags uFlags,
+                BitmapHandle hBitmapUnchecked,
+                BitmapHandle hBitmapChecked);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648001.aspx
+            [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool SetMenuItemInfoW(
+                MenuHandle hMenu,
+                uint uItem,
+                bool fByPosition,
+                [In] ref MENUITEMINFO lpmii);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648003.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern BOOL TrackPopupMenuEx(
+                WindowHandle hmenu,
+                PopupMenuOptions fuFlags,
+                int x,
+                int y,
+                WindowHandle hwnd,
+                TPMPARAMS* lptpm);
         }
     }
 }
