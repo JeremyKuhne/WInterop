@@ -12,6 +12,7 @@ using Tests.Support;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 using WInterop.ProcessAndThreads;
+using WInterop.Support;
 using Xunit;
 
 namespace DesktopTests.FileManagementTests
@@ -76,6 +77,38 @@ namespace DesktopTests.FileManagementTests
                 FileFlags.FILE_FLAG_BACKUP_SEMANTICS);
 
             handle.IsInvalid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CopyFileExNonExistantBehaviors()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string source = cleaner.GetTestPath();
+                string destination = cleaner.GetTestPath();
+
+                Action action = () => FileMethods.CopyFileEx(source, destination);
+                action.ShouldThrow<System.IO.FileNotFoundException>();
+
+                source = Paths.Combine(source, "file");
+                action.ShouldThrow<System.IO.DirectoryNotFoundException>();
+            }
+        }
+
+        [Fact]
+        public void File_CopyNonExistantBehaviors()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string source = cleaner.GetTestPath();
+                string destination = cleaner.GetTestPath();
+
+                Action action = () => System.IO.File.Copy(source, destination);
+                action.ShouldThrow<System.IO.FileNotFoundException>();
+
+                source = Paths.Combine(source, "file");
+                action.ShouldThrow<System.IO.DirectoryNotFoundException>();
+            }
         }
     }
 }
