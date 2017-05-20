@@ -14,8 +14,8 @@ namespace WInterop.Resources.Types
     {
         public uint cbSize;
         public MenuItemInfoMembers fMask;
-        public uint fType;
-        public uint fState;
+        public MenuItemTypes fType;
+        public MenuStates fState;
         public uint wID;
         public IntPtr hSubMenu;
         public IntPtr hbmpChecked;

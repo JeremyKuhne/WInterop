@@ -59,12 +59,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\CursorHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\IconHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\MenuBarInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\MenuBitmaps.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\MenuHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\MenuInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\MenuItemInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\SharedCursorHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\SharedIconHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceMacros.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\Types\SharedMenuHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\Types\LsaHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\Types\LsaMemoryHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\SecurityMethods.cs" />

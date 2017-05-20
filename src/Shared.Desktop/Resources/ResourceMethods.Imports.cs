@@ -235,7 +235,7 @@ namespace WInterop.Resources
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647640.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern MenuHandle GetMenu(
+            public static extern SharedMenuHandle GetMenu(
                 WindowHandle hWnd);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647833.aspx
@@ -277,6 +277,52 @@ namespace WInterop.Resources
                 uint uItem,
                 bool fByPos,
                 ref MENUITEMINFO lpmii);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647981.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetMenuItemRect(
+                WindowHandle hWnd,
+                MenuHandle hMenu,
+                uint uItem,
+                out RECT lprcItem);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647982.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern MenuFlags GetMenuState(
+                MenuHandle hMenu,
+                uint uId,
+                MenuFlags uFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647983.aspx
+            [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern int GetMenuString(
+                MenuHandle hMenu,
+                uint uIDItem,
+                SafeHandle lpString,
+                int nMaxCount,
+                MenuFlags uFlag);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647984.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern SharedMenuHandle GetSubMenu(
+                MenuHandle hMenu,
+                int nPos);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647985.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern SharedMenuHandle GetSystemMenu(
+                WindowHandle hWnd,
+                bool bRevert);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647986.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool HiliteMenuItem(
+                WindowHandle hwnd,
+                MenuHandle hmenu,
+                uint uItemHitite,
+                MenuFlags uHilite);
+
+            
         }
     }
 }
