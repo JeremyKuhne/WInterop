@@ -85,7 +85,7 @@ namespace WInterop.Windows
         public static BrushHandle CreateSolidBrush(COLORREF color) => GdiMethods.CreateSolidBrush(color.R, color.G, color.B);
         public static PenHandle CreatePen(PenStyle style, int width, COLORREF color) => GdiMethods.CreatePen(style, width, color);
 
-        public static PenHandle CreatePen(PenStyleExtended style, uint width, COLORREF color, PenEndCap endCap = PenEndCap.PS_ENDCAP_ROUND, PenJoin join = PenJoin.PS_JOIN_ROUND)
+        public static PenHandle CreatePen(PenStyleExtended style, uint width, COLORREF color, PenEndCap endCap = PenEndCap.Round, PenJoin join = PenJoin.Round)
             => GdiMethods.CreatePen(style, width, color, endCap, join);
 
         public static FontHandle CreateFont(

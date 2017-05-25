@@ -62,7 +62,7 @@ namespace Blokout2
         {
             using (DeviceContext dc = window.GetDeviceContext())
             {
-                dc.SetRasterOperation(RasterOperation.R2_NOT);
+                dc.SetRasterOperation(PenMixMode.Not);
                 dc.SelectObject(StockBrush.Null);
                 dc.Rectangle(ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y);
             }
@@ -118,7 +118,7 @@ namespace Blokout2
                         }
                         if (fBlocking)
                         {
-                            dc.SetRasterOperation(RasterOperation.R2_NOT);
+                            dc.SetRasterOperation(PenMixMode.Not);
                             dc.SelectObject(StockBrush.Null);
                             dc.Rectangle(ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y);
                         }

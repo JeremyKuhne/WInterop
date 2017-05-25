@@ -15,6 +15,8 @@ namespace WInterop.Gdi.Types
     /// </summary>
     public class DeviceContext : HandleZeroIsInvalid
     {
+        public static DeviceContext Null = new DeviceContext(IntPtr.Zero, ownsHandle: false);
+
         public DeviceContext() : base(ownsHandle: true) { }
 
         public DeviceContext(IntPtr handle, bool ownsHandle) : base(ownsHandle)

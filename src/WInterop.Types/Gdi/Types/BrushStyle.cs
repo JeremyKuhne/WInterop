@@ -9,16 +9,59 @@ namespace WInterop.Gdi.Types
 {
     public enum BrushStyle : uint
     {
-        BS_SOLID           = 0,
-        BS_NULL            = 1,
-        BS_HOLLOW          = BS_NULL,
-        BS_HATCHED         = 2,
-        BS_PATTERN         = 3,
-        BS_INDEXED         = 4,
-        BS_DIBPATTERN      = 5,
-        BS_DIBPATTERNPT    = 6,
-        BS_PATTERN8X8      = 7,
-        BS_DIBPATTERN8X8   = 8,
-        BS_MONOPATTERN     = 9
+        /// <summary>
+        /// [BS_SOLID]
+        /// </summary>
+        Solid = 0,
+
+        /// <summary>
+        /// [BS_NULL]
+        /// </summary>
+        Null = 1,
+
+        /// <summary>
+        /// [BS_HOLLOW]
+        /// </summary>
+        Hollow = Null,
+
+        /// <summary>
+        /// [BS_HATCHED]
+        /// </summary>
+        Hatched = 2,
+
+        /// <summary>
+        /// [BS_PATTERN]
+        /// </summary>
+        Pattern = 3,
+
+        /// <summary>
+        /// [BS_INDEXED]
+        /// </summary>
+        Indexed = 4,
+
+        /// <summary>
+        /// [BS_DIBPATTERN]
+        /// </summary>
+        DibPattern = 5,
+
+        /// <summary>
+        /// [BS_DIBPATTERNPT]
+        /// </summary>
+        DibPatternPointer = 6,
+
+        /// <summary>
+        /// [BS_PATTERN8X8]
+        /// </summary>
+        Pattern8x8 = 7,
+
+        /// <summary>
+        /// [BS_DIBPATTERN8X8]
+        /// </summary>
+        DibPattern8x8 = 8,
+
+        /// <summary>
+        /// [BS_MONOPATTERN]
+        /// </summary>
+        MonoPattern = 9
     }
 }

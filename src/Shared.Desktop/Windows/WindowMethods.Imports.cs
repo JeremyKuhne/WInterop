@@ -47,6 +47,12 @@ namespace WInterop.Windows
                 SafeHandle lpszFileName,
                 uint cchFileNameMax);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633522.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern uint GetWindowThreadProcessId(
+                WindowHandle hWnd,
+                out uint lpdwProcessId);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633584.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern int GetWindowLongW(
@@ -137,6 +143,28 @@ namespace WInterop.Windows
                 int cy,
                 WindowPosition uFlags);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632672.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern DeferWindowPositionHandle BeginDeferWindowPos(
+                int nNumWindows);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632681.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern DeferWindowPositionHandle DeferWindowPos(
+                DeferWindowPositionHandle hWinPosInfo,
+                WindowHandle hWnd,
+                WindowHandle hWndInsertAfter,
+                int X,
+                int Y,
+                int cx,
+                int cy,
+                WindowPosition uFlags);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633440.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool EndDeferWindowPos(
+                DeferWindowPositionHandle hWinPosInfo);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633518.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetWindowPlacement(
@@ -222,7 +250,23 @@ namespace WInterop.Windows
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633528.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern bool IsWindow(WindowHandle hWnd);
+            public static extern bool IsWindow(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633526.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool IsHungAppWindow(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633527.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool IsIconic(
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633531.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool IsZoomed(
+                WindowHandle hWnd);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633529.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -249,6 +293,11 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool IsChild(
                 WindowHandle hWndParent,
+                WindowHandle hWnd);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632671.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint ArrangeIconicWindows(
                 WindowHandle hWnd);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633525.aspx
@@ -838,6 +887,26 @@ namespace WInterop.Windows
             [DllImport(Libraries.Comctl32, ExactSpelling = true)]
             public static extern bool MakeDragList(
                 WindowHandle hLB);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633494.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool EnumChildWindows(
+                WindowHandle hWndParent,
+                EnumerateWindowProcedure lpEnumFunc,
+                LPARAM lParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633495.aspx
+            [DllImport(Libraries.User32, ExactSpelling = true)]
+            public static extern bool EnumThreadWindows(
+                uint dwThreadId,
+                EnumerateWindowProcedure lpfn,
+                LPARAM lParam);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633497.aspx
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool EnumWindows(
+                EnumerateWindowProcedure lpEnumFunc,
+                LPARAM lParam);
         }
     }
 }

@@ -41,13 +41,14 @@ namespace WInterop.Gdi.Types
             ObjectType type = GdiMethods.Imports.GetObjectType(handle);
             switch (type)
             {
-                case ObjectType.OBJ_BRUSH:
+                case ObjectType.Brush:
                     return new BrushHandle(handle, ownsHandle);
-                case ObjectType.OBJ_PEN:
+                case ObjectType.Pen:
+                case ObjectType.ExtendedPen:
                     return new PenHandle(handle, ownsHandle);
-                case ObjectType.OBJ_BITMAP:
+                case ObjectType.Bitmap:
                     return new BitmapHandle(handle, ownsHandle);
-                case ObjectType.OBJ_FONT:
+                case ObjectType.Font:
                     return new FontHandle(handle, ownsHandle);
                 default:
                     Debug.Fail($"Object type {type} not handled yet.");

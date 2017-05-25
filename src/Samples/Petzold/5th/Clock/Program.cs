@@ -5,13 +5,19 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+#define GDIPLUS
+
+#if GDIPLUS
+using WInterop.GdiPlus;
+#endif
+
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
+using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
-using WInterop.Support;
 using WInterop.SystemInformation.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
@@ -28,6 +34,9 @@ namespace Clock
         [STAThread]
         static void Main()
         {
+#if GDIPLUS
+            UIntPtr token = GdiPlusMethods.Startup();
+#endif
             const string szAppName = "Clock";
 
             ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
@@ -58,6 +67,10 @@ namespace Clock
                 Windows.TranslateMessage(ref message);
                 Windows.DispatchMessage(ref message);
             }
+
+#if GDIPLUS
+            GdiPlusMethods.Shutdown(token);
+#endif
         }
 
         static void SetIsotropic(DeviceContext hdc, int cxClient, int cyClient)
@@ -81,26 +94,42 @@ namespace Clock
             }
         }
 
-        static void DrawClock(DeviceContext hdc)
+        static void DrawClock(DeviceContext dc)
         {
             int iAngle;
             POINT[] pt = new POINT[3];
-            for (iAngle = 0; iAngle < 360; iAngle += 6)
+
+#if GDIPLUS
+            using (var graphics = GdiPlusMethods.CreateGraphics(dc))
+            using (var brush = GdiPlusMethods.CreateSolidBrush(new ARGB(0, 0, 0)))
             {
-                pt[0].x = 0;
-                pt[0].y = 900;
-                RotatePoint(pt, 1, iAngle);
-                pt[2].x = pt[2].y = iAngle % 5 != 0 ? 33 : 100;
-                pt[0].x -= pt[2].x / 2;
-                pt[0].y -= pt[2].y / 2;
-                pt[1].x = pt[0].x + pt[2].x;
-                pt[1].y = pt[0].y + pt[2].y;
-                hdc.SelectObject(StockBrush.Black);
-                hdc.Ellipse(pt[0].x, pt[0].y, pt[1].x, pt[1].y);
+                GdiPlusMethods.SetSmoothingMode(graphics, SmoothingMode.AntiAlias);
+#else
+                dc.SelectObject(StockBrush.Black);
+#endif
+                for (iAngle = 0; iAngle < 360; iAngle += 6)
+                {
+                    pt[0].x = 0;
+                    pt[0].y = 900;
+                    RotatePoint(pt, 1, iAngle);
+                    pt[2].x = pt[2].y = iAngle % 5 != 0 ? 33 : 100;
+                    pt[0].x -= pt[2].x / 2;
+                    pt[0].y -= pt[2].y / 2;
+                    pt[1].x = pt[0].x + pt[2].x;
+                    pt[1].y = pt[0].y + pt[2].y;
+
+#if GDIPLUS
+                    GdiPlusMethods.FillEllipse(graphics, brush, pt[0].x, pt[0].y, pt[1].x - pt[0].x, pt[1].y - pt[0].y);
+#else
+                    dc.Ellipse(pt[0].x, pt[0].y, pt[1].x, pt[1].y);
+#endif
+                }
+#if GDIPLUS
             }
+#endif
         }
 
-        static void DrawHands(DeviceContext hdc, SYSTEMTIME pst, bool fChange)
+        static void DrawHands(DeviceContext dc, SYSTEMTIME pst, bool fChange)
         {
             int[] iAngle =
             {
@@ -116,11 +145,41 @@ namespace Clock
                 new POINT[] { new POINT(0, 0), new POINT(0, 0), new POINT(0, 0), new POINT(0, 0), new POINT(0, 800) }
             };
 
-            for (int i = fChange? 0 : 2 ; i< 3 ; i++)
+            COLORREF color = GdiMethods.GetPenColor(dc.GetCurrentPen());
+            bool erase = (color != new COLORREF());
+
+#if GDIPLUS
+            using (var graphics = GdiPlusMethods.CreateGraphics(dc))
             {
-                RotatePoint(pt[i], 5, iAngle[i]);
-                hdc.Polyline(pt[i]);
+                if (erase)
+                {
+                    using (var brush = GdiPlusMethods.CreateSolidBrush(color))
+                    {
+                        GdiPlusMethods.FillEllipse(graphics, brush, -830, -830, 1660, 1660);
+                    }
+                    return;
+                }
+
+                using (var pen = GdiPlusMethods.CreatePen(color))
+                {
+                    GdiPlusMethods.SetSmoothingMode(graphics, SmoothingMode.HighQuality);
+
+#endif
+
+                    for (int i = fChange ? 0 : 2; i < 3; i++)
+                    {
+                        RotatePoint(pt[i], 5, iAngle[i]);
+
+#if GDIPLUS
+                        GdiPlusMethods.DrawLines(graphics, pen, pt[i]);
+#else
+                        dc.Polyline(pt[i]);
+#endif
+                    }
+#if GDIPLUS
+                }
             }
+#endif
         }
 
         const int ID_TIMER = 1;

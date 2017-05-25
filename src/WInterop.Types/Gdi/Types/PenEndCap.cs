@@ -9,8 +9,19 @@ namespace WInterop.Gdi.Types
 {
     public enum PenEndCap : uint
     {
-        PS_ENDCAP_ROUND     = 0x00000000,
-        PS_ENDCAP_SQUARE    = 0x00000100,
-        PS_ENDCAP_FLAT      = 0x00000200
+        /// <summary>
+        /// [PS_ENDCAP_ROUND]
+        /// </summary>
+        Round = 0x00000000,
+
+        /// <summary>
+        /// [PS_ENDCAP_SQUARE]
+        /// </summary>
+        Square = 0x00000100,
+
+        /// <summary>
+        /// [PS_ENDCAP_FLAT]
+        /// </summary>
+        Flat = 0x00000200
     }
 }

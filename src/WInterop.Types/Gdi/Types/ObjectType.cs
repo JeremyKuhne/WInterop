@@ -7,22 +7,78 @@
 
 namespace WInterop.Gdi.Types
 {
-    // https://msdn.microsoft.com/en-us/library/dd144905.aspx
     public enum ObjectType : uint
     {
-        OBJ_PEN            = 1,
-        OBJ_BRUSH          = 2,
-        OBJ_DC             = 3,
-        OBJ_METADC         = 4,
-        OBJ_PAL            = 5,
-        OBJ_FONT           = 6,
-        OBJ_BITMAP         = 7,
-        OBJ_REGION         = 8,
-        OBJ_METAFILE       = 9,
-        OBJ_MEMDC          = 10,
-        OBJ_EXTPEN         = 11,
-        OBJ_ENHMETADC      = 12,
-        OBJ_ENHMETAFILE    = 13,
-        OBJ_COLORSPACE     = 14
+        // https://msdn.microsoft.com/en-us/library/dd144905.aspx
+
+        /// <summary>
+        /// [OBJ_PEN]
+        /// </summary>
+        Pen = 1,
+
+        /// <summary>
+        /// [OBJ_BRUSH]
+        /// </summary>
+        Brush = 2,
+
+        /// <summary>
+        /// [OBJ_DC]
+        /// </summary>
+        DeviceContext = 3,
+
+        /// <summary>
+        /// [OBJ_METADC]
+        /// </summary>
+        MetafileDeviceContext = 4,
+
+        /// <summary>
+        /// [OBJ_PAL]
+        /// </summary>
+        Palette = 5,
+
+        /// <summary>
+        /// [OBJ_FONT]
+        /// </summary>
+        Font = 6,
+
+        /// <summary>
+        /// [OBJ_BITMAP]
+        /// </summary>
+        Bitmap = 7,
+
+        /// <summary>
+        /// [OBJ_REGION]
+        /// </summary>
+        Region = 8,
+
+        /// <summary>
+        /// [OBJ_METAFILE]
+        /// </summary>
+        Metafile = 9,
+
+        /// <summary>
+        /// [OBJ_MEMDC]
+        /// </summary>
+        MemoryDeviceContext = 10,
+
+        /// <summary>
+        /// [OBJ_EXTPEN]
+        /// </summary>
+        ExtendedPen = 11,
+
+        /// <summary>
+        /// [OBJ_ENHMETADC]
+        /// </summary>
+        EnhancedMetafileDeviceContext = 12,
+
+        /// <summary>
+        /// [OBJ_ENHMETAFILE]
+        /// </summary>
+        EnhancedMetafile = 13,
+
+        /// <summary>
+        /// [OBJ_COLORSPACE]
+        /// </summary>
+        ColorSpace = 14
     }
 }

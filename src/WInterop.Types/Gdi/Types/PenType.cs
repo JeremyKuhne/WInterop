@@ -9,8 +9,19 @@ namespace WInterop.Gdi.Types
 {
     public enum PenType : uint
     {
-        PS_USERSTYLE       = 7,
-        PS_COSMETIC        = 0x00000000,
-        PS_GEOMETRIC       = 0x00010000
+        /// <summary>
+        /// [PS_USERSTYLE]
+        /// </summary>
+        UserStyle = 7,
+
+        /// <summary>
+        /// [PS_COSMETIC]
+        /// </summary>
+        Cosmetic = 0x00000000,
+
+        /// <summary>
+        /// [PS_GEOMETRIC]
+        /// </summary>
+        Geometric = 0x00010000
     }
 }

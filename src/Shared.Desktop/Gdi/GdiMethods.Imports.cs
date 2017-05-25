@@ -83,6 +83,19 @@ namespace WInterop.Gdi
             public static extern BrushHandle CreateSolidBrush(
                 COLORREF crColor);
 
+            // https://msdn.microsoft.com/en-us/library/dd144869.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern IntPtr GetCurrentObject(
+                DeviceContext hdc,
+                ObjectType uObjectType);
+
+            // https://msdn.microsoft.com/en-us/library/dd144904.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public unsafe static extern int GetObjectW(
+                GdiObjectHandle hgdiobj,
+                int cbBuffer,
+                void* lpvObject);
+
             // https://msdn.microsoft.com/en-us/library/dd162957.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern IntPtr SelectObject(
@@ -117,6 +130,13 @@ namespace WInterop.Gdi
                 uint cPlanes,
                 uint cBitsPerPel,
                 IntPtr lpvBits);
+
+            // https://msdn.microsoft.com/en-us/library/dd183488.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern BitmapHandle CreateCompatibleBitmap(
+                DeviceContext hdc,
+                int nWidth,
+                int nHeight);
 
             // https://msdn.microsoft.com/en-us/library/dd144905.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -1000,13 +1020,13 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd144922.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern RasterOperation GetROP2(
+            public static extern PenMixMode GetROP2(
                 DeviceContext hdc);
 
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern RasterOperation SetROP2(
+            public static extern PenMixMode SetROP2(
                 DeviceContext hdc,
-                RasterOperation fnDrawMode);
+                PenMixMode fnDrawMode);
 
             // https://msdn.microsoft.com/en-us/library/dd144852.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -1050,6 +1070,32 @@ namespace WInterop.Gdi
                 [In] ref LOGBRUSH lplb,
                 uint dwStyleCount,
                 uint[] lpStyle);
+
+            // https://msdn.microsoft.com/en-us/library/dd144844.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern bool GdiFlush();
+
+            // https://msdn.microsoft.com/en-us/library/dd144845.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern uint GdiGetBatchLimit();
+
+            // https://msdn.microsoft.com/en-us/library/dd144846.aspx
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            public static extern uint GdiSetBatchLimit(
+                uint dwLimit);
+
+            // https://msdn.microsoft.com/en-us/library/dd183370.aspx
+            [DllImport(Libraries.Gdi32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool BitBlt(
+                DeviceContext hdcDest,
+                int nXDest,
+                int nYDest,
+                int nWidth,
+                int nHeight,
+                DeviceContext hdcSrc,
+                int nXSrc,
+                int nYSrc,
+                uint dwRop);
         }
     }
 }

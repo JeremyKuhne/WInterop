@@ -34,6 +34,10 @@ namespace WInterop.Extensions.WindowExtensions
             => GdiMethods.MoveTo(deviceContext, x, y);
         public static bool LineTo(this DeviceContext deviceContext, int x, int y)
             => GdiMethods.LineTo(deviceContext, x, y);
+        public static PenHandle GetCurrentPen(this DeviceContext deviceContext)
+            => GdiMethods.GetCurrentPen(deviceContext);
+        public static COLORREF GetBrushColor(this DeviceContext deviceContext)
+            => GdiMethods.GetBrushColor(deviceContext);
         public static COLORREF GetBackgroundColor(this DeviceContext deviceContext)
             => GdiMethods.GetBackgroundColor(deviceContext);
         public static COLORREF SetBackgroundColor(this DeviceContext deviceContext, COLORREF color)
@@ -41,9 +45,9 @@ namespace WInterop.Extensions.WindowExtensions
         public static BackgroundMode SetBackgroundMode(this DeviceContext deviceContext, BackgroundMode mode)
             => GdiMethods.SetBackgroundMode(deviceContext, mode);
         public static BackgroundMode GetBackgroundMode(this DeviceContext deviceContext) => GdiMethods.GetBackgroundMode(deviceContext);
-        public static RasterOperation SetRasterOperation(this DeviceContext deviceContext, RasterOperation foregroundMixMode)
+        public static PenMixMode SetRasterOperation(this DeviceContext deviceContext, PenMixMode foregroundMixMode)
             => GdiMethods.SetRasterOperation(deviceContext, foregroundMixMode);
-        public static RasterOperation GetRasterOperation(this DeviceContext deviceContext) => GdiMethods.GetRasterOperation(deviceContext);
+        public static PenMixMode GetRasterOperation(this DeviceContext deviceContext) => GdiMethods.GetRasterOperation(deviceContext);
         public static PolyFillMode GetPolyFillMode(this DeviceContext deviceContext)
             => GdiMethods.GetPolyFillMode(deviceContext);
         public static PolyFillMode SetPolyFillMode(this DeviceContext deviceContext, PolyFillMode fillMode)

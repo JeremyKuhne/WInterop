@@ -9,6 +9,11 @@ using System;
 
 namespace WInterop.Windows.Types
 {
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633573(v=vs.85).aspx
+
+    /// <summary>
+    /// Callback that processes messages sent to a window. [WindowProc]
+    /// </summary>
     public delegate LRESULT WindowProcedure(
         WindowHandle hwnd,
         WindowMessage uMsg,

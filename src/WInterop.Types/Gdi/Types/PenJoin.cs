@@ -9,8 +9,19 @@ namespace WInterop.Gdi.Types
 {
     public enum PenJoin : uint
     {
-        PS_JOIN_ROUND      = 0x00000000,
-        PS_JOIN_BEVEL      = 0x00001000,
-        PS_JOIN_MITER      = 0x00002000
+        /// <summary>
+        /// [PS_JOIN_ROUND]
+        /// </summary>
+        Round = 0x00000000,
+
+        /// <summary>
+        /// [PS_JOIN_BEVEL]
+        /// </summary>
+        Bevel = 0x00001000,
+
+        /// <summary>
+        /// [PS_JOIN_MITER]
+        /// </summary>
+        Miter = 0x00002000
     }
 }

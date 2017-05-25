@@ -9,13 +9,44 @@ namespace WInterop.Gdi.Types
 {
     public enum PenStyleExtended : uint
     {
-        PS_SOLID = 0,
-        PS_DASH = 1,
-        PS_DOT = 2,
-        PS_DASHDOT = 3,
-        PS_DASHDOTDOT = 4,
-        PS_NULL = 5,
-        PS_INSIDEFRAME = 6,
-        PS_ALTERNATE = 8
+        /// <summary>
+        /// [PS_SOLID]
+        /// </summary>
+        Solid = 0,
+
+        /// <summary>
+        /// [PS_DASH]
+        /// </summary>
+        Dash = 1,
+
+        /// <summary>
+        /// [PS_DOT]
+        /// </summary>
+        Dot = 2,
+
+        /// <summary>
+        /// [PS_DASHDOT]
+        /// </summary>
+        DashDot = 3,
+
+        /// <summary>
+        /// [PS_DASHDOTDOT]
+        /// </summary>
+        DashDotDot = 4,
+
+        /// <summary>
+        /// [PS_NULL]
+        /// </summary>
+        Null = 5,
+
+        /// <summary>
+        /// [PS_INSIDEFRAME]
+        /// </summary>
+        InsideFrame = 6,
+
+        /// <summary>
+        /// [PS_ALTERNATE]
+        /// </summary>
+        Alternate = 8
     }
 }

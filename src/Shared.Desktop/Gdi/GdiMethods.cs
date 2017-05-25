@@ -26,6 +26,16 @@ namespace WInterop.Gdi
             return Imports.CreateDCW(driver, device, null, null);
         }
 
+        /// <summary>
+        /// Returns an in memory device context that is compatible with the specified device.
+        /// </summary>
+        /// <param name="deviceContext">An existing device context or null for the application's current screen.</param>
+        /// <returns>A 1 by 1 monochrome memory device context.</returns>
+        public unsafe static DeviceContext CreateCompatibleDeviceContext(DeviceContext deviceContext)
+        {
+            return Imports.CreateCompatibleDC(deviceContext ?? DeviceContext.Null);
+        }
+
         public unsafe static DeviceContext CreateInformationContext(string driver, string device)
         {
             return Imports.CreateICW(driver, device, null, null);
@@ -110,10 +120,16 @@ namespace WInterop.Gdi
                 return null;
 
             ObjectType type = Imports.GetObjectType(@object.DangerousGetHandle());
-            if (type == ObjectType.OBJ_REGION)
+            if (type == ObjectType.Region)
                 return null;
 
             return GdiObjectHandle.Create(handle, ownsHandle: false);
+        }
+
+        public static PenHandle GetCurrentPen(DeviceContext deviceContext)
+        {
+            IntPtr handle = Imports.GetCurrentObject(deviceContext, ObjectType.Pen);
+            return new PenHandle(handle);
         }
 
         public static GdiObjectHandle GetStockObject(StockObject @object)
@@ -137,20 +153,49 @@ namespace WInterop.Gdi
             return Imports.CreatePen(style, width, color);
         }
 
-        public static PenHandle CreatePen(PenStyleExtended style, uint width, COLORREF color, PenEndCap endCap = PenEndCap.PS_ENDCAP_ROUND, PenJoin join = PenJoin.PS_JOIN_ROUND)
+        public static PenHandle CreatePen(PenStyleExtended style, uint width, COLORREF color, PenEndCap endCap = PenEndCap.Round, PenJoin join = PenJoin.Round)
         {
             LOGBRUSH brush = new LOGBRUSH
             {
                 lbColor = color,
-                lpStyle = BrushStyle.BS_SOLID
+                lpStyle = BrushStyle.Solid
             };
 
             return Imports.ExtCreatePen(
-                (uint)style | (uint)PenType.PS_GEOMETRIC | (uint)endCap | (uint)join,
+                (uint)style | (uint)PenType.Geometric | (uint)endCap | (uint)join,
                 width,
                 ref brush,
                 0,
                 null);
+        }
+
+        public unsafe static COLORREF GetPenColor(PenHandle pen)
+        {
+            var penType = Imports.GetObjectType((IntPtr)pen);
+            switch (penType)
+            {
+                case ObjectType.Pen:
+                    LOGPEN logPen = new LOGPEN();
+                    int size = sizeof(LOGPEN);
+                    if (Imports.GetObjectW(pen, size, &logPen) == size)
+                        return logPen.lopnColor;
+                    break;
+                case ObjectType.ExtendedPen:
+                    BufferHelper.BufferInvoke((HeapBuffer buffer) =>
+                    {
+                        size = Imports.GetObjectW(pen, 0, null);
+                        if (size == 0)
+                            throw new InvalidOperationException();
+                        buffer.EnsureByteCapacity((ulong)size);
+                        size = Imports.GetObjectW(pen, size, buffer.VoidPointer);
+                        if (size < sizeof(EXTLOGPEN))
+                            throw new InvalidOperationException();
+                        return ((EXTLOGPEN*)buffer.VoidPointer)->elpColor;
+                    });
+                    break;
+            }
+
+            throw new InvalidOperationException();
         }
 
         public static FontHandle GetStockFont(StockFont font)
@@ -395,6 +440,11 @@ namespace WInterop.Gdi
             return Imports.GetBkColor(deviceContext);
         }
 
+        public static COLORREF GetBrushColor(DeviceContext deviceContext)
+        {
+            return Imports.GetDCBrushColor(deviceContext);
+        }
+
         public static COLORREF SetBackgroundColor(DeviceContext deviceContext, COLORREF color)
         {
             return Imports.SetBkColor(deviceContext, color);
@@ -410,12 +460,12 @@ namespace WInterop.Gdi
             return Imports.GetBkMode(deviceContext);
         }
 
-        public static RasterOperation SetRasterOperation(DeviceContext deviceContext, RasterOperation foregroundMixMode)
+        public static PenMixMode SetRasterOperation(DeviceContext deviceContext, PenMixMode foregroundMixMode)
         {
             return Imports.SetROP2(deviceContext, foregroundMixMode);
         }
 
-        public static RasterOperation GetRasterOperation(DeviceContext deviceContext)
+        public static PenMixMode GetRasterOperation(DeviceContext deviceContext)
         {
             return Imports.GetROP2(deviceContext);
         }
