@@ -85,4 +85,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\Windows.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Gdi\BitBLT History.txt" />
+  </ItemGroup>
 </Project>

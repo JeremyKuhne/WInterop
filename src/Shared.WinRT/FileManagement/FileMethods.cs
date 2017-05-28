@@ -891,7 +891,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static long GetFilePointer(SafeFileHandle fileHandle)
         {
-            return SetFilePointer(fileHandle, 0, MoveMethod.FILE_CURRENT);
+            return SetFilePointer(fileHandle, 0, MoveMethod.Current);
         }
 
         /// <summary>

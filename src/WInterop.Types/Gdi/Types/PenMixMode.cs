@@ -13,6 +13,7 @@ namespace WInterop.Gdi.Types
     public enum PenMixMode : int
     {
         // https://msdn.microsoft.com/en-us/library/cc234985.aspx
+        // https://msdn.microsoft.com/en-us/library/dd183369.aspx
 
         /// <summary>
         /// Pixel is always drawn black. [R2_BLACK]

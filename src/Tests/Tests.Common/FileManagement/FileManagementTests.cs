@@ -361,7 +361,7 @@ namespace Tests.FileManagementTests
             {
                 using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), DesiredAccess.GenericReadWrite, 0, CreationDisposition.CreateNew))
                 {
-                    FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.FILE_CURRENT).Should().Be(0);
+                    FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.Current).Should().Be(0);
                 }
             }
         }
@@ -378,7 +378,7 @@ namespace Tests.FileManagementTests
                 {
                     FileMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
                     FileMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
-                    FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.FILE_BEGIN);
+                    FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.Begin);
                     byte[] outBuffer = new byte[data.Length];
                     FileMethods.ReadFile(fileHandle, outBuffer, (uint)data.Length).Should().Be((uint)data.Length);
                     outBuffer.ShouldBeEquivalentTo(data);

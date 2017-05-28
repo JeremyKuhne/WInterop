@@ -10,8 +10,19 @@ namespace WInterop.FileManagement.Types
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365542.aspx
     public enum MoveMethod : uint
     {
-        FILE_BEGIN = 0,
-        FILE_CURRENT = 1,
-        FILE_END = 2
+        /// <summary>
+        /// Seek from the beginning of the file. [FILE_BEGIN]
+        /// </summary>
+        Begin = 0,
+
+        /// <summary>
+        /// Seek relative to the current position. [FILE_CURRENT]
+        /// </summary>
+        Current = 1,
+
+        /// <summary>
+        /// Seek from the end of the file. [FILE_END]
+        /// </summary>
+        End = 2
     }
 }

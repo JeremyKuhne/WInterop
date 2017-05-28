@@ -1,0 +1,2602 @@
+﻿This is from the COMMENT.BLT file in the Windows 3.0 DDK.
+(The source ASCII art formatting needed to be redone.)
+
+
+; History and technical notes concerning BitBLT.
+; Created: In Windows' distant past (c. 1983)
+
+The following notes and thoughts were compiled during and after the
+creation of different versions of BITBLT for Windows. The first
+version of BITBLT was all static code, and supported sixteen combining
+functions (raster operations, or ROPs).
+
+The second version of BITBLT compiled a BLT operation to the stack in
+an attempt to optimize larger BLTs, and supported the same sixteen ROPs.
+
+The third version of BITBLT (called SUPERBLT at the time) supported all
+possible terinary ROPs of AND (a), OR (o), XOR (x), and NOT (n), between
+a source (S), a pattern (P), and the destination (D).  An encoding was
+developed wherein the ROP could be specified as a sixteen bit number.
+
+The fourth version of BITBLT involved color devices, and specified how
+to convert color between monochrome (black/white) bitmaps and color
+bitmaps (and a color display). Any reference to color conversion in
+the notes only applies to color devices; There currently is no color
+conversion for strictly black and white devices.  Color devices were
+required to support bitmaps in both their color format and monochrome
+(black/white) bitmaps.
+
+The fifth version of BITBLT supports bitmaps which are greater than 64K
+(an obvious problem in a iAPX80nnn environment).
+
+BITBLT is similar to a byte block move operation except that blocks are
+moved on bit boundaries.  This may require that the bits of the source
+be aligned to the bits of the destination (phased aligned).  An example
+of this would be moving all bits of a bitmap left two pixels.  Once the
+bits are aligned, they are then combined with an optional pattern and
+the destination as specified by the ROP.
+
+The innermost functionality of BITBLT might be pictured as:
+
+ --------    --------    -------    ---------
+|        |  |       *|  |       |  |         |
+| Source |  | Color  |  | Phase |  | Used    |
+| Byte   |->| Conver |->| Align |->| Unused  |--
+| Fetch  |  | -sion  |  | -ment |  | Bits    |  |
+|        |  |        |  |       |  | Masking |  |
+ --------    --------    -------    ---------   |
+                                                |
+                                                |
+ ---------                                      |     ---------      ---------
+|         |                                      --->|         |    |         |
+|         |                                          |         |    | New     |
+| Pattern |----------------------------------------->|  ROP    |--->| Dest    |
+|         |                                          |         |    |         |
+|         |                                      --->|         |    |         |
+ ---------                                      |     ---------      ---------
+                                                |
+                                                |
+ ---------                                      |
+|         |                                     |
+|         |                                     |
+|   Dest  |-------------------------------------
+|         |
+|         |
+ ---------
+
+ * color conversion only applies if going between a black/white
+   surface and a color surface (bitmap or display).
+
+
+Bytes are fetched from a source.  Color conversion is applied if the source
+and destination are of different color formats (color conversion will be
+explained later).  The source bits are then aligned with the destination.
+Bits from a previous phase alignment and this one are combined to form
+one byte's worth of data.  The unused bits from the phase alignment are
+saved for the next phase alignment (used/unused bits and phase alignment
+is discussed in detail later). The ROP is applied against the source
+bits, the pattern, and the destination as needed, and this result replaces
+the destination byte.
+
+In the following pictures, "S" is the source, "D" is the destination, and
+"x" is the corner where the first byte will be fetched from.  The comment
+on the right tells in which directions (X and Y) the BLT must be performed
+to prevent overwritting a source byte before it is used as a source.  The
+cases of overlap are:
+
+    a)           Disjoint   (not special cased)
+
+    b)           identical  (not special cased)
+
+    c)           overlapping:
+                  ...................
+       1)        !D                  !
+             ____!             ..x   !
+            |S   !               :   !     Start at upper right corner of S
+            |    !                   !     stepping left and down the screen
+            |    !...................!
+            |                    :
+            |____________________:
+
+
+             __________________
+       2)   |S                 |
+            |     .....................     Start at lower right corner of S
+            |    !D                    !    stepping left and up the screen
+            |    !             :       !
+            |____!           ..x       !
+                 !                     !
+                 !.....................!
+
+
+
+                   __________________
+       3)         |S                 |
+             .....|...............   |
+            !D                   !   |     Start at lower right corner of S
+            !     :              !   |     stepping right and up the screen
+            !     x..            !___|
+            !                    !
+            !....................!
+
+
+             ..................
+       4)   !D                 !
+            !   x..            !____       Start at upper left corner of S
+            !   :              !    |      stepping right and down the screen
+            !                  !    |
+            !..................!    |
+                :S                  |
+                :___________________|
+
+
+            The following four are degenerate cases (along with identical
+            and disjoint) and the directions are as implemented herein.
+
+             ..................
+       5)   !D                 !           Start at upper left hand corner of S
+            !                  !           stepping right and down the screen
+            !x..               !
+            !                  !
+            !..................!
+            :S                 :
+            :__________________:
+
+
+
+             __________________
+       6)   |S                 |
+            |..................|           Start at lower left hand corner of S
+            !D                 !           stepping right and up the screen
+            !                  !
+            !x..               !
+            !                  !
+            !..................!
+
+
+             ____ ....................
+       7)   |S   !D              x    !     Start at upper right hand corner of S
+            |    !               :    !     stepping left and down the screen
+            |    !                    !
+            |    !                    !
+            |____!....................!
+
+
+             ..................._____
+       8)   !D   x              ! S   |
+            !    :              !     |     Start at upper left hand corner of S
+            !                   !     |     stepping right and down the screen
+            !                   !     |
+            !...................!_____|
+
+The following notes are more on the phase relationship of the source
+and destination bitmaps.  Since BLTs are performed on bit boundaries
+instead of byte boundaries, rotations of the source bitmap bytes may
+have to be performed.   The source data is always rotated to be
+aligned with the destination.  The notes will hopefully give some idea
+on how the phase relationship is determined and how to start the BLT
+off (some phase relationships require a different number of initial
+source bitmap fetches to get enough bits to satisfy the first store).
+
+The number of bytes seperating the source and destination in the
+following examples is irrelevant; Only the relationship of the
+bits within the bytes is of importance.
+
+In the following, the saved and the used masks are applied after
+rotating the source byte.   Used bits are those bits that are used
+immediately.  Unused bits are those bits that have to be carried
+over to the next byte (old unused bits are those unused bits from
+the previous byte).
+
+    In the following:
+
+        saved bits mask     A mask which gives the bits that
+                            must be carried over to the next
+                            byte BLTed.
+
+        used  bits mask     A mask which gives the bits that
+                            are to be used for the current
+                            byte BLTed.
+
+        old unused bits     Those bits that were not used in
+                            the last byte BLTed, and therefore
+                            must be used for the current byte
+                            BLTed.
+
+        first byte mask     A mask which is used to mask the
+                            bits of the very first byte BLTed
+                            that are to be altered.  The
+                            complement of this mask gives the
+                            bits of the destination byte that
+                            are to remain unaltered.
+
+How the BLT is started is based on the cases of overlap as specified above.
+
+For box cases 3,4,5,6,8,disjoint,same (as pictured above), BLT starting at
+the left, stepping right.  Calculations are performed based on the left side
+of the source and destination rectangles.  The starting mask is based on the
+leftmost byte of the destination and the ending mask based on the rightmost
+byte of the destination:
+
+    Scan line case 1: (source start MOD 8) = (dest start MOD 8)
+
+            |         3   4   5   6   7 | 0   1   2   3   4   5   6   7 |
+  src   |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+            |         3   4   5   6   7 | 0   1   2   3   4   5   6   7 |
+  dest  |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+
+    saved bits mask:                    used bits mask:
+
+    | 0   0   0   0   0   0   0   0 |   | 1   1   1   1   1   1   1   1 |
+    |___|___|___|___|___|___|___|___|   |___|___|___|___|___|___|___|___|
+
+
+    first byte mask:
+                                           phase is 0 (no rol's)
+    | 0   0   0   1   1   1   1   1 |          (no ror's)
+    |___|___|___|___|___|___|___|___|
+
+    The first byte must be fetched.  Since both the source and the
+    destination are on the same bit boundary, no phase alignment code
+    is nessacary, and will not be generated.
+
+    Scan line case 2: (source start MOD 8) > (dest start MOD 8)
+
+        | x   x   x   x   4   5   6   7 | 0   1   2   3   4   5   6   7 |
+  src   |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+        | x   4   5   6   7   0   1   2 | 3   4   5   6   7   .   .   . |
+  dest  |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+
+    saved bits mask:                    used bits mask:
+
+    | 1   1   1   1   1   0   0   0 |   | 0   0   0   0   0   1   1   1 |
+    |___|___|___|___|___|___|___|___|   |___|___|___|___|___|___|___|___|
+
+
+    first byte mask:
+                                          phase is 3 (3 rol's)
+    | 0   1   1   1   1   1   1   1 |          (5 ror's)
+    |___|___|___|___|___|___|___|___|
+
+
+    To start the BLT, the first byte will be fetched and rotated.
+    The used/unused bits will be masked and the unused bits saved
+    (in this case the initial unused bits will be x4567).
+
+    Since there will not be enough bits to complete the destination
+    byte (3 bits short), another fetch and alignment will be performed.
+    The old unused bits will be added to the new used bits (012), and
+    displayed with a mask so the first 'n' bits won't be altered.  The
+    new unused bits will be carried through to the next operation.
+
+    Scan line case 3:  (source start MOD 8) < (dest start MOD 8)
+
+        | x   x   x   3   4   5   6   7 | 0   1   2   3   4   5   6   7 |
+  src   |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+        | x   x   x   x   x   3   4   5 | 6   7   0   1   2   3   4   5 |
+  dest  |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+
+    saved bits mask:                    used bits mask:
+
+    | 1   1   0   0   0   0   0   0 |   | 0   0   1   1   1   1   1   1 |
+    |___|___|___|___|___|___|___|___|   |___|___|___|___|___|___|___|___|
+
+
+    first byte mask:
+                                          phase is 6 (6 rol's)
+    | 0   0   0   0   0   1   1   1 |          (2 ror's)
+    |___|___|___|___|___|___|___|___|
+
+    To start the BLT, the first byte will be fetched and rotated.
+    The unused bits will be saved (in this case the initial
+    unused bits will be 67).  The new used bits (xxx345) will be
+    displayed with a mask so the first 'n' bits won't be altered.
+    The new unused bits will be carried through to the next operation.
+    This is the same case as having a phase of 0, so they can use
+    the same initial byte procedure.
+
+    A useful piece of information derived from phase is how many
+    bits to use and how many to save.  You use the rightmost "phase"
+    number of bits, and save the leftmost 8-phase bits in the current
+    operation.
+
+For box cases 1,2,7, BLT starting at right, stepping left.  Calculations are
+performed on the right side of the source and destination rectangles.  The
+starting mask is based on the rightmost byte of the destination and the ending
+mask based on the leftmost byte of the destination.
+
+    Scan line case 4: (source end MOD 8) = (dest end MOD 8)
+
+        | 0   1   2   3   4   5   6   7| 0   1   2   x   x   x   x   x  |
+  src   |___|___|___|___|___|___|___|__|___|___|___|___|___|___|___|____|
+
+        | 0   1   2   3   4   5   6   7| 0   1   2   x   x   x   x   x  |
+  dest  |___|___|___|___|___|___|___|__|___|___|___|___|___|___|___|____|
+
+
+    saved bits mask:                    used bits mask:
+
+    | 0   0   0   0   0   0   0   0 |   | 1   1   1   1   1   1   1   1 |
+    |___|___|___|___|___|___|___|___|   |___|___|___|___|___|___|___|___|
+
+
+                        first byte mask:
+    phase is 0 (no rol's)
+     (no ror's)         | 1   1   1   0   0   0   0   0 |
+                        |___|___|___|___|___|___|___|___|
+
+
+    The first byte must be fetched.  Since both the source and the
+    destination are on the same bit boundary, no phase alignment code
+    is nessacary, and will not be generated.
+
+
+    Scan line case 5: (source end MOD 8) < (dest end MOD 8)
+
+        | 0   1   2   3   4   5   6   7 | 0   1   2   x   x   x   x   x |
+  src   |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+        | .   .   0   1   2   3   4   5 | 6   7   0   1   2   x   x   x |
+  dest  |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+
+    saved bits mask:                    used bits mask:
+
+    | 0   0   1   1   1   1   1   1 |   | 1   1   0   0   0   0   0   0 |
+    |___|___|___|___|___|___|___|___|   |___|___|___|___|___|___|___|___|
+
+
+                        first byte mask:
+    phase is 6 (6 rol's)
+           (2 ror's)    | 1   1   1   1   1   0   0   0 |
+                        |___|___|___|___|___|___|___|___|
+
+
+    To start the BLT, the first byte will be fetched and rotated.
+    The used/unused bits will be masked and the unused bits saved
+    (in this case the initial unused bits will be ..012xxx).
+
+    Since there will not be enough bits to complete the destination
+    byte (2 bits short), another fetch and alignment will be performed.
+    The old unused bits will be added to the new used bits (67), and
+    displayed with a mask so the first 'n' bits won't be altered.  The
+    new unused bits will be carried through to the next operation.
+
+    Scan line case 6: (source end MOD 8) > (dest end MOD 8)
+
+        | 0   1   2   3   4   5   6   7 | 0   1   2   3   4   x   x   x |
+  src   |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+        | 2   3   4   5   6   7   0   1 | 2   3   4   x   x   x   x   x |
+  dest  |___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|___|
+
+
+    saved bits mask:                    used bits mask:
+
+    | 0   0   0   0   0   0   1   1 |   | 1   1   1   1   1   1   0   0 |
+    |___|___|___|___|___|___|___|___|   |___|___|___|___|___|___|___|___|
+
+
+                        first byte mask:
+    phase is 2 (2 rol's)
+           (6 ror's)    | 1   1   1   0   0   0   0   0 |
+                        |___|___|___|___|___|___|___|___|
+
+
+    To start the BLT, the first byte will be fetched and rotated.
+    The unused bits will be saved (in this case the initial
+    unused bits will be 01).  The new used bits (234xxx) will be
+    displayed with a mask so the first 'n' bits won't be altered.
+    The new unused bits will be carried through to the next operation.
+    This is the same case as having a phase of 0, so they can use
+    the same initial byte procedure.
+
+    A useful piece of information derived from phase is how many
+    bits to use and how many to save.  You save the rightmost phase
+    number of bits, and use the leftmost phase bits in the current
+    operation.
+
+Interlace on the CGA: Some effort was involved to create an algorithm
+for handling interleaved and non-interleaved BLTing.  Two increments
+are required when interleave is involved, one for stepping from an odd
+scan to an even scan, and one for stepping from an even scan to an odd
+scan.  Once the two increments are determined, by XORing them together
+you get an XOR mask which can be used to toggle between the two increments.
+
+The Y update logic then consists of adding in the increment, then
+XORing the increment with the XOR mask.
+
+                    Starting     initial
+           Y          raster     increment
+
+       increasing      even      2000
+       increasing      odd       E050
+
+          2000 XOR E050 = C050 = increment XOR mask
+
+       decreasing      even      1FB0
+       decreasing      odd       E000
+
+          1FB0 XOR E000 = FFB0 = increment XOR mask
+
+
+Raster Operation Codes And Definitions
+
+The raster operation codes define how GDI combines the bits in a source
+bitmap with the bits in the destination bitmap.
+
+Each raster operation code represents a Boolean operation in which the
+source, the currently selected brush, and the destination are combined.
+
+The operands used in the operations are:
+
+    S   Source bitmap
+    P   Currently selected brush (also called pattern)
+    D   Destination bitmap
+
+The Boolean operators used in these operations are:
+
+    o   Bitwise Or
+    x   Bitwise Exclusive Or
+    a   Bitwise And
+    n   Bitwise Not (inverse)
+
+All Boolean operations are presented in reverse Polish notation.  For
+example, the operation
+
+    PSo
+
+replaces the destination with a combination of the source and brush.
+The operation
+
+    DPSoo
+
+combines the source and brush with the destination.  Note that there
+are alternate spellings of the same function so although a particular
+spelling may not be in the list, an equivalent form will be.
+
+Each raster operation code is a 32-bit integer value whose high-order
+word is a Boolean operation index and low-order word is the operation
+code.  The 16-bit operation index is a zero-extended 8-bit value which
+represents the result of the Boolean operation on predefined brush,
+source, and destination values.  For example, the operation indexes for
+the "PSo" and "DPSoo" operations are:
+
+
+
+    P  S  D  |    PSo     DPSoo
+    _________|   ______   _____
+             |
+    0  0  0  |      0       0
+    0  0  1  |      0       1
+    0  1  0  |      1       1
+    0  1  1  |      1       1
+    1  0  0  |      1       1
+    1  0  1  |      1       1
+    1  1  0  |      1       1
+    1  1  1  |      1       1
+
+ Operation index:  00FC    00FE
+
+
+In this case, "PSo" has the operation index 00FC (read from bottom up);
+"DPSoo" has the index 00FE.  These values define the location of the
+corresponding raster operation code in the following table.  The "PSo"
+operation is in line 252 (FC hex) of the table; "DPSoo" in line 254
+(hex FE).
+
+This section lists the raster operation codes.
+
+Boolean                 Boolean
+Function      HEX       Function     Function      HEX       Function
+In HEX        Rop       In R Polish  In HEX        Rop       In R Polish
+________   _________    __________   ________   _________    ____________
+
+   00      00000042      0              80      008003E9      DPSaa
+   01      00010289      DPSoon         81      00810975      SPxDSxon
+   02      00020C89      DPSona         82      00820C49      DPSxna
+   03      000300AA      PSon           83      00831E04      SPDSnoaxn
+   04      00040C88      SDPona         84      00840C48      SDPxna
+   05      000500A9      DPon           85      00851E05      PDSPnoaxn
+   06      00060865      PDSxnon        86      008617A6      DSPDSoaxx
+   07      000702C5      PDSaon         87      008701C5      PDSaxn
+   08      00080F08      SDPnaa         88      008800C6      DSa
+   09      00090245      PDSxon         89      00891B08      SDPSnaoxn
+   0A      000A0329      DPna           8A      008A0E06      DSPnoa
+   0B      000B0B2A      PSDnaon        8B      008B0666      DSPDxoxn
+   0C      000C0324      SPna           8C      008C0E08      SDPnoa
+   0D      000D0B25      PDSnaon        8D      008D0668      SDPSxoxn
+   0E      000E08A5      PDSonon        8E      008E1D7C      SSDxPDxax
+   0F      000F0001      Pn             8F      008F0CE5      PDSanan
+   10      00100C85      PDSona         90      00900C45      PDSxna
+   11      001100A6      DSon           91      00911E08      SDPSnoaxn
+   12      00120868      SDPxnon        92      009217A9      DPSDPoaxx
+   13      001302C8      SDPaon         93      009301C4      SPDaxn
+   14      00140869      DPSxnon        94      009417AA      PSDPSoaxx
+   15      001502C9      DPSaon         95      009501C9      DPSaxn
+   16      00165CCA      PSDPSanaxx     96      00960169      DPSxx
+   17      00171D54      SSPxDSxaxn     97      0097588A      PSDPSonoxx
+   18      00180D59      SPxPDxa        98      00981888      SDPSonoxn
+   19      00191CC8      SDPSanaxn      99      00990066      DSxn
+   1A      001A06C5      PDSPaox        9A      009A0709      DPSnax
+   1B      001B0768      SDPSxaxn       9B      009B07A8      SDPSoaxn
+   1C      001C06CA      PSDPaox        9C      009C0704      SPDnax
+   1D      001D0766      DSPDxaxn       9D      009D07A6      DSPDoaxn
+   1E      001E01A5      PDSox          9E      009E16E6      DSPDSaoxx
+   1F      001F0385      PDSoan         9F      009F0345      PDSxan
+   20      00200F09      DPSnaa         A0      00A000C9      DPa
+   21      00210248      SDPxon         A1      00A11B05      PDSPnaoxn
+   22      00220326      DSna           A2      00A20E09      DPSnoa
+   23      00230B24      SPDnaon        A3      00A30669      DPSDxoxn
+   24      00240D55      SPxDSxa        A4      00A41885      PDSPonoxn
+   25      00251CC5      PDSPanaxn      A5      00A50065      PDxn
+   26      002606C8      SDPSaox        A6      00A60706      DSPnax
+   27      00271868      SDPSxnox       A7      00A707A5      PDSPoaxn
+   28      00280369      DPSxa          A8      00A803A9      DPSoa
+   29      002916CA      PSDPSaoxxn     A9      00A90189      DPSoxn
+   2A      002A0CC9      DPSana         AA      00AA0029      D
+   2B      002B1D58      SSPxPDxaxn     AB      00AB0889      DPSono
+   2C      002C0784      SPDSoax        AC      00AC0744      SPDSxax
+   2D      002D060A      PSDnox         AD      00AD06E9      DPSDaoxn
+   2E      002E064A      PSDPxox        AE      00AE0B06      DSPnao
+   2F      002F0E2A      PSDnoan        AF      00AF0229      DPno
+   30      0030032A      PSna           B0      00B00E05      PDSnoa
+   31      00310B28      SDPnaon        B1      00B10665      PDSPxoxn
+   32      00320688      SDPSoox        B2      00B21974      SSPxDSxox
+   33      00330008      Sn             B3      00B30CE8      SDPanan
+   34      003406C4      SPDSaox        B4      00B4070A      PSDnax
+   35      00351864      SPDSxnox       B5      00B507A9      DPSDoaxn
+   36      003601A8      SDPox          B6      00B616E9      DPSDPaoxx
+   37      00370388      SDPoan         B7      00B70348      SDPxan
+   38      0038078A      PSDPoax        B8      00B8074A      PSDPxax
+   39      00390604      SPDnox         B9      00B906E6      DSPDaoxn
+   3A      003A0644      SPDSxox        BA      00BA0B09      DPSnao
+   3B      003B0E24      SPDnoan        BB      00BB0226      DSno
+   3C      003C004A      PSx            BC      00BC1CE4      SPDSanax
+   3D      003D18A4      SPDSonox       BD      00BD0D7D      SDxPDxan
+   3E      003E1B24      SPDSnaox       BE      00BE0269      DPSxo
+   3F      003F00EA      PSan           BF      00BF08C9      DPSano
+   40      00400F0A      PSDnaa         C0      00C000CA      PSa
+   41      00410249      DPSxon         C1      00C11B04      SPDSnaoxn
+   42      00420D5D      SDxPDxa        C2      00C21884      SPDSonoxn
+   43      00431CC4      SPDSanaxn      C3      00C3006A      PSxn
+   44      00440328      SDna           C4      00C40E04      SPDnoa
+   45      00450B29      DPSnaon        C5      00C50664      SPDSxoxn
+   46      004606C6      DSPDaox        C6      00C60708      SDPnax
+   47      0047076A      PSDPxaxn       C7      00C707AA      PSDPoaxn
+   48      00480368      SDPxa          C8      00C803A8      SDPoa
+   49      004916C5      PDSPDaoxxn     C9      00C90184      SPDoxn
+   4A      004A0789      DPSDoax        CA      00CA0749      DPSDxax
+   4B      004B0605      PDSnox         CB      00CB06E4      SPDSaoxn
+   4C      004C0CC8      SDPana         CC      00CC0020      S
+   4D      004D1954      SSPxDSxoxn     CD      00CD0888      SDPono
+   4E      004E0645      PDSPxox        CE      00CE0B08      SDPnao
+   4F      004F0E25      PDSnoan        CF      00CF0224      SPno
+   50      00500325      PDna           D0      00D00E0A      PSDnoa
+   51      00510B26      DSPnaon        D1      00D1066A      PSDPxoxn
+   52      005206C9      DPSDaox        D2      00D20705      PDSnax
+   53      00530764      SPDSxaxn       D3      00D307A4      SPDSoaxn
+   54      005408A9      DPSonon        D4      00D41D78      SSPxPDxax
+   55      00550009      Dn             D5      00D50CE9      DPSanan
+   56      005601A9      DPSox          D6      00D616EA      PSDPSaoxx
+   57      00570389      DPSoan         D7      00D70349      DPSxan
+   58      00580785      PDSPoax        D8      00D80745      PDSPxax
+   59      00590609      DPSnox         D9      00D906E8      SDPSaoxn
+   5A      005A0049      DPx            DA      00DA1CE9      DPSDanax
+   5B      005B18A9      DPSDonox       DB      00DB0D75      SPxDSxan
+   5C      005C0649      DPSDxox        DC      00DC0B04      SPDnao
+   5D      005D0E29      DPSnoan        DD      00DD0228      SDno
+   5E      005E1B29      DPSDnaox       DE      00DE0268      SDPxo
+   5F      005F00E9      DPan           DF      00DF08C8      SDPano
+   60      00600365      PDSxa          E0      00E003A5      PDSoa
+   61      006116C6      DSPDSaoxxn     E1      00E10185      PDSoxn
+   62      00620786      DSPDoax        E2      00E20746      DSPDxax
+   63      00630608      SDPnox         E3      00E306EA      PSDPaoxn
+   64      00640788      SDPSoax        E4      00E40748      SDPSxax
+   65      00650606      DSPnox         E5      00E506E5      PDSPaoxn
+   66      00660046      DSx            E6      00E61CE8      SDPSanax
+   67      006718A8      SDPSonox       E7      00E70D79      SPxPDxan
+   68      006858A6      DSPDSonoxxn    E8      00E81D74      SSPxDSxax
+   69      00690145      PDSxxn         E9      00E95CE6      DSPDSanaxxn
+   6A      006A01E9      DPSax          EA      00EA02E9      DPSao
+   6B      006B178A      PSDPSoaxxn     EB      00EB0849      DPSxno
+   6C      006C01E8      SDPax          EC      00EC02E8      SDPao
+   6D      006D1785      PDSPDoaxxn     ED      00ED0848      SDPxno
+   6E      006E1E28      SDPSnoax       EE      00EE0086      DSo
+   6F      006F0C65      PDSxnan        EF      00EF0A08      SDPnoo
+   70      00700CC5      PDSana         F0      00F00021      P
+   71      00711D5C      SSDxPDxaxn     F1      00F10885      PDSono
+   72      00720648      SDPSxox        F2      00F20B05      PDSnao
+   73      00730E28      SDPnoan        F3      00F3022A      PSno
+   74      00740646      DSPDxox        F4      00F40B0A      PSDnao
+   75      00750E26      DSPnoan        F5      00F50225      PDno
+   76      00761B28      SDPSnaox       F6      00F60265      PDSxo
+   77      007700E6      DSan           F7      00F708C5      PDSano
+   78      007801E5      PDSax          F8      00F802E5      PDSao
+   79      00791786      DSPDSoaxxn     F9      00F90845      PDSxno
+   7A      007A1E29      DPSDnoax       FA      00FA0089      DPo
+   7B      007B0C68      SDPxnan        FB      00FB0A09      DPSnoo
+   7C      007C1E24      SPDSnoax       FC      00FC008A      PSo
+   7D      007D0C69      DPSxnan        FD      00FD0A0A      PSDnoo
+   7E      007E0955      SPxDSxo        FE      00FE02A9      DPSoo
+   7F      007F03C9      DPSaan         FF      00FF0062      1
+
+How the ROP is encoded.
+
+As this section is being written, it is now over two years since the
+encoding scheme for the ROPs was developed and implemented.
+
+As stated above, the high order word is the result of the raster
+operation when using the given definitions of D, S, and P.  This
+high order word was actually added at a later date for hardware
+BLTers so at the most only a table lookup would be needed.  It can
+also be used in place of the ROP parsing.
+
+The low order word in and of itself doesn't contain enough information
+to generate the ROP code.  What it contains is:
+
+    a)  An index specifing which predefined parse sting to use.  A parse
+    string has a format like:
+
+        SDPSDPSD
+
+          or
+
+        S+SD-PDS
+
+    where S, D, and P represent source, destination, and pattern.
+    The "+" represents a "push", and the "-" represents a "pop".
+    Sixteen of the 256 ROPs cannot be represented without using
+    "push" and "pop".
+
+    b)  Amount to rotate the parse string.  If the base string is:
+
+        SDPSDPSD
+
+    and an offset of 2 was given, the new base string would be:
+
+        PSDPSDSD
+
+    c)  Five logic operations.  The logic operations could be any of:
+
+        NOT
+        XOR
+        OR
+        AND
+
+    d)  A parity bit used to imply a sixth logic operation of NOT.
+    Pairs of trailing NOTs are discarded since they cancel.
+
+Example 1: 85, 0085 1E05, PDSPnoaxn, D = not ((((not P) or S) and D) xor P)
+
+    1E05 = 00 01 11 10 00 0 001 01
+           |  |  |  |  |  |  |  |
+           |  |  |  |  |  |  |  |___ bias start by 1
+           |  |  |  |  |  |  |______ use string 1
+           |  |  |  |  |  |_________ parity - no trailing NOT
+           |  |  |  |  |____________ Logic operation #1 is a NOT
+           |  |  |  |_______________ Logic operation #2 is a OR
+           |  |  |__________________ Logic operation #3 is a AND
+           |  |_____________________ Logic operation #4 is a XOR
+           |________________________ Logic operation #5 is a NOT
+
+    String #1 is defined as:      SPDSPDSP
+
+    After the bias, it will be:   PDSPDSPS
+
+    The number of binary logic operations + 1 gives an index into the
+    new string of the first operand.  In this case, there are three
+    binary operations, so the first operand would be the fourth element
+    of the string (P), the second operand would be the third element (S),
+    and so forth.
+
+Example 2: 71, 0071 1D5C, SSDxPDxaxn, D = not (((D xor P) and (D xor S)) xor S)
+
+    1D5C = 00 01 11 01 01 0 111 00
+           |  |  |  |  |  |  |  |
+           |  |  |  |  |  |  |  |___ don't bias start
+           |  |  |  |  |  |  |______ use string 7
+           |  |  |  |  |  |_________ parity - no trailing NOT
+           |  |  |  |  |____________ Logic operation #1 is a XOR
+           |  |  |  |_______________ Logic operation #2 is a XOR
+           |  |  |__________________ Logic operation #3 is a AND
+           |  |_____________________ Logic operation #4 is a XOR
+           |________________________ Logic operation #5 is a NOT
+
+    String #7 is defined as:      S+SD-PDS
+
+    The number of binary logic operations + 1 normally gives an index
+    into the string of the first operand.  When a push/pop is involved,
+    this must be biased by 2 to account for the encoded push/pop.
+
+    In this case, there are four binary operations, plus a push and
+    a pop, so the first operand would be the seventh element of the
+    string (D), the second operand would be the sixth element (P),
+    and so forth.
+
+Color conversion applies when the source and destination color formats
+are different.  Color conversion could also effect the brush in use for
+the BLT operation.
+
+    a)  Mono ==> Color Color Conversion
+
+    The mono ==> color color conversion is applied when the source
+    is monochrome and the destination is color.
+
+    When going from mono to color, 1 bits are considered to be
+    background color, and 0 bits are considered to be foreground
+    color.
+
+    If the background color is white and the foreground (text) color
+    is black, then the conversion needn't be generated (it just gives
+    the source).
+
+    b)  Color ==> Mono Color Conversion
+
+    The color ==> mono color conversion is applied when the source
+    is color and the destination is monochrome.
+
+    When going from color to monochrome, all colors that are background
+    should be mapped to 1's (white), and all colors which aren't back-
+    ground to 0's (black).
+
+    This also applies to brushes.  When going color ==> monochrome,
+    the bits of the brush are also converted.  All brush pixels which
+    match the background color should be mapped to 1's (white), and
+    all colors which aren't background should be mapped to 0's (black).
+
+
+;   The following is a complete list of the raster operations as
+;   generated by the bitblt rop generator.
+;
+;   Entry:  AL     =  Source byte
+;           DH     =  Pattern Bytes
+;           ES:DI --> Destination byte
+;
+;   Exit:   AL     =  Result
+;           DH     =  Pattern Bytes
+;           ES:DI --> Destination byte
+;           AH    IS possibly the destination byte
+
+
+;   00  00000042    0
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,AH
+
+;   01  00010289    DPSoon
+    OR     AL,DH
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   02  00020C89    DPSona
+    OR     AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+
+;   03  000300AA    PSon
+    OR     AL,DH
+    NOT    AL
+
+;   04  00040C88    SDPona
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+
+;   05  000500A9    DPon
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   06  00060865    PDSxnon
+    XOR    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+    NOT    AL
+
+;   07  000702C5    PDSaon
+    AND    AL,ES:[DI]
+    OR     AL,DH
+    NOT    AL
+
+;   08  00080F08    SDPnaa
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    AND    AL,DL
+
+;   09  00090245    PDSxon
+    XOR    AL,ES:[DI]
+    OR     AL,DH
+    NOT    AL
+
+;   0A  000A0329    DPna
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+
+;   0B  000B0B2A    PSDnaon
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+    OR     AL,DH
+    NOT    AL
+
+;   0C  000C0324    SPna
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,DL
+
+;   0D  000D0B25    PDSnaon
+    NOT    AL
+    AND    AL,ES:[DI]
+    OR     AL,DH
+    NOT    AL
+
+;   0E  000E08A5    PDSonon
+    OR     AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+    NOT    AL
+
+;   0F  000F0001    Pn
+    MOV    AL,DH
+    NOT    AL
+
+;   10  00100C85    PDSona
+    OR     AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+
+;   11  001100A6    DSon
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   12  00120868    SDPxnon
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+    NOT    AL
+
+;   13  001302C8    SDPaon
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    OR     AL,DL
+    NOT    AL
+
+;   14  00140869    DPSxnon
+    XOR    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   15  001502C9    DPSaon
+    AND    AL,DH
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   16  00165CCA    PSDPSanaxx
+    MOV    DL,AL
+    AND    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+    XOR    AL,DH
+
+;   17  00171D54    SSPxDSxaxn
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,BL
+    XOR    AL,DL
+    NOT    AL
+
+;   18  00180D59    SPxPDxa
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    XOR    AL,DH
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,BL
+
+;   19  00191CC8    SDPSanaxn
+    MOV    DL,AL
+    AND    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+    NOT    AL
+
+;   1A  001A06C5    PDSPaox
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,DL
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+
+;   1B  001B0768    SDPSxaxn
+    MOV    DL,AL
+    XOR    AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+    NOT    AL
+
+;   1C  001C06CA    PSDPaox
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    OR     AL,DL
+    XOR    AL,DH
+
+;   1D  001D0766    DSPDxaxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DH
+    AND    AL,DL
+    XOR    AL,AH
+    NOT    AL
+
+;   1E  001E01A5    PDSox
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+
+;   1F  001F0385    PDSoan
+    OR     AL,ES:[DI]
+    AND    AL,DH
+    NOT    AL
+
+;   20  00200F09    DPSnaa
+    NOT    AL
+    AND    AL,DH
+    AND    AL,ES:[DI]
+
+;   21  00210248    SDPxon
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    OR     AL,DL
+    NOT    AL
+
+;   22  00220326    DSna
+    NOT    AL
+    AND    AL,ES:[DI]
+
+;   23  00230B24    SPDnaon
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+    OR     AL,DL
+    NOT    AL
+
+;   24  00240D55    SPxDSxa
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,BL
+
+;   25  00251CC5    PDSPanaxn
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,DL
+    NOT    AL
+    AND    AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   26  002606C8    SDPSaox
+    MOV    DL,AL
+    AND    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+
+;   27  00271868    SDPSxnox
+    MOV    DL,AL
+    XOR    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+
+;   28  00280369    DPSxa
+    XOR    AL,DH
+    AND    AL,ES:[DI]
+
+;   29  002916CA    PSDPSaoxxn
+    MOV    DL,AL
+    AND    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+    XOR    AL,DH
+    NOT    AL
+
+;   2A  002A0CC9    DPSana
+    AND    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+
+;   2B  002B1D58    SSPxPDxaxn
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    XOR    AL,DH
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,BL
+    XOR    AL,DL
+    NOT    AL
+
+;   2C  002C0784    SPDSoax
+    MOV    DL,AL
+    OR     AL,ES:[DI]
+    AND    AL,DH
+    XOR    AL,DL
+
+;   2D  002D060A    PSDnox
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+    XOR    AL,DH
+
+;   2E  002E064A    PSDPxox
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    OR     AL,DL
+    XOR    AL,DH
+
+;   2F  002F0E2A    PSDnoan
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+    AND    AL,DH
+    NOT    AL
+
+;   30  0030032A    PSna
+    NOT    AL
+    AND    AL,DH
+
+;   31  00310B28    SDPnaon
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    OR     AL,DL
+    NOT    AL
+
+;   32  00320688    SDPSoox
+    MOV    DL,AL
+    OR     AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+
+;   33  00330008    Sn
+    NOT    AL
+
+;   34  003406C4    SPDSaox
+    MOV    DL,AL
+    AND    AL,ES:[DI]
+    OR     AL,DH
+    XOR    AL,DL
+
+;   35  00351864    SPDSxnox
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+    XOR    AL,DL
+
+;   36  003601A8    SDPox
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+
+;   37  00370388    SDPoan
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+    AND    AL,DL
+    NOT    AL
+
+;   38  0038078A    PSDPoax
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+    AND    AL,DL
+    XOR    AL,DH
+
+;   39  00390604    SPDnox
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+    XOR    AL,DL
+
+;   3A  003A0644    SPDSxox
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    OR     AL,DH
+    XOR    AL,DL
+
+;   3B  003B0E24    SPDnoan
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+    AND    AL,DL
+    NOT    AL
+
+;   3C  003C004A    PSx
+    XOR    AL,DH
+
+;   3D  003D18A4    SPDSonox
+    MOV    DL,AL
+    OR     AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+    XOR    AL,DL
+
+;   3E  003E1B24    SPDSnaox
+    MOV    DL,AL
+    NOT    AL
+    AND    AL,ES:[DI]
+    OR     AL,DH
+    XOR    AL,DL
+
+;   3F  003F00EA    PSan
+    AND    AL,DH
+    NOT    AL
+
+;   40  00400F0A    PSDnaa
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+    AND    AL,DH
+
+;   41  00410249    DPSxon
+    XOR    AL,DH
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   42  00420D5D    SDxPDxa
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DH
+    MOV    BL,AL
+    MOV    AL,AH
+    XOR    AL,DL
+    AND    AL,BL
+
+;   43  00431CC4    SPDSanaxn
+    MOV    DL,AL
+    AND    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   44  00440328    SDna
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+
+;   45  00450B29    DPSnaon
+    NOT    AL
+    AND    AL,DH
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   46  004606C6    DSPDaox
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    AND    AL,DH
+    OR     AL,DL
+    XOR    AL,AH
+
+;   47  0047076A    PSDPxaxn
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    AND    AL,DL
+    XOR    AL,DH
+    NOT    AL
+
+;   48  00480368    SDPxa
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    AND    AL,DL
+
+;   49  004916C5    PDSPDaoxxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    AND    AL,DH
+    OR     AL,DL
+    XOR    AL,AH
+    XOR    AL,DH
+    NOT    AL
+
+;   4A  004A0789    DPSDoax
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    OR     AL,DL
+    AND    AL,DH
+    XOR    AL,AH
+
+;   4B  004B0605    PDSnox
+    NOT    AL
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+
+;   4C  004C0CC8    SDPana
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+
+;   4D  004D1954    SSPxDSxoxn
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    OR     AL,BL
+    XOR    AL,DL
+    NOT    AL
+
+;   4E  004E0645    PDSPxox
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+
+;   4F  004F0E25    PDSnoan
+    NOT    AL
+    OR     AL,ES:[DI]
+    AND    AL,DH
+    NOT    AL
+
+;   50  00500325    PDna
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+
+;   51  00510B26    DSPnaon
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,DL
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   52  005206C9    DPSDaox
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    AND    AL,DL
+    OR     AL,DH
+    XOR    AL,AH
+
+;   53  00530764    SPDSxaxn
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    AND    AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   54  005408A9    DPSonon
+    OR     AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    NOT    AL
+
+;   55  00550009    Dn
+    MOV    AL,ES:[DI]
+    NOT    AL
+
+;   56  005601A9    DPSox
+    OR     AL,DH
+    XOR    AL,ES:[DI]
+
+;   57  00570389    DPSoan
+    OR     AL,DH
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   58  00580785    PDSPoax
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,DL
+    AND    AL,ES:[DI]
+    XOR    AL,DH
+
+;   59  00590609    DPSnox
+    NOT    AL
+    OR     AL,DH
+    XOR    AL,ES:[DI]
+
+;   5A  005A0049    DPx
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+
+;   5B  005B18A9    DPSDonox
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    OR     AL,DL
+    NOT    AL
+    OR     AL,DH
+    XOR    AL,AH
+
+;   5C  005C0649    DPSDxox
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DL
+    OR     AL,DH
+    XOR    AL,AH
+
+;   5D  005D0E29    DPSnoan
+    NOT    AL
+    OR     AL,DH
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   5E  005E1B29    DPSDnaox
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    NOT    AL
+    AND    AL,DL
+    OR     AL,DH
+    XOR    AL,AH
+
+;   5F  005F00E9    DPan
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   60  00600365    PDSxa
+    XOR    AL,ES:[DI]
+    AND    AL,DH
+
+;   61  006116C6    DSPDSaoxxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    AND    AL,AH
+    OR     AL,DH
+    XOR    AL,DL
+    XOR    AL,AH
+    NOT    AL
+
+;   62  00620786    DSPDoax
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    OR     AL,DH
+    AND    AL,DL
+    XOR    AL,AH
+
+;   63  00630608    SDPnox
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+
+;   64  00640788    SDPSoax
+    MOV    DL,AL
+    OR     AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+
+;   65  00650606    DSPnox
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,DL
+    XOR    AL,ES:[DI]
+
+;   66  00660046    DSx
+    XOR    AL,ES:[DI]
+
+;   67  006718A8    SDPSonox
+    MOV    DL,AL
+    OR     AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+
+;   68  006858A6    DSPDSonoxxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    OR     AL,AH
+    NOT    AL
+    OR     AL,DH
+    XOR    AL,DL
+    XOR    AL,AH
+    NOT    AL
+
+;   69  00690145    PDSxxn
+    XOR    AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   6A  006A01E9    DPSax
+    AND    AL,DH
+    XOR    AL,ES:[DI]
+
+;   6B  006B178A    PSDPSoaxxn
+    MOV    DL,AL
+    OR     AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+    XOR    AL,DH
+    NOT    AL
+
+;   6C  006C01E8    SDPax
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+
+;   6D  006D1785    PDSPDoaxxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    OR     AL,DH
+    AND    AL,DL
+    XOR    AL,AH
+    XOR    AL,DH
+    NOT    AL
+
+;   6E  006E1E28    SDPSnoax
+    MOV    DL,AL
+    NOT    AL
+    OR     AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+
+;   6F  006F0C65    PDSxnan
+    XOR    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+    NOT    AL
+
+;   70  00700CC5    PDSana
+    AND    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+
+;   71  00711D5C    SSDxPDxaxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DH
+    MOV    BL,AL
+    MOV    AL,AH
+    XOR    AL,DL
+    AND    AL,BL
+    XOR    AL,DL
+    NOT    AL
+
+;   72  00720648    SDPSxox
+    MOV    DL,AL
+    XOR    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+
+;   73  00730E28    SDPnoan
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    AND    AL,DL
+    NOT    AL
+
+;   74  00740646    DSPDxox
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DH
+    OR     AL,DL
+    XOR    AL,AH
+
+;   75  00750E26    DSPnoan
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,DL
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   76  00761B28    SDPSnaox
+    MOV    DL,AL
+    NOT    AL
+    AND    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+
+;   77  007700E6    DSan
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   78  007801E5    PDSax
+    AND    AL,ES:[DI]
+    XOR    AL,DH
+
+;   79  00791786    DSPDSoaxxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    OR     AL,AH
+    AND    AL,DH
+    XOR    AL,DL
+    XOR    AL,AH
+    NOT    AL
+
+;   7A  007A1E29    DPSDnoax
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    NOT    AL
+    OR     AL,DL
+    AND    AL,DH
+    XOR    AL,AH
+
+;   7B  007B0C68    SDPxnan
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+    NOT    AL
+
+;   7C  007C1E24    SPDSnoax
+    MOV    DL,AL
+    NOT    AL
+    OR     AL,ES:[DI]
+    AND    AL,DH
+    XOR    AL,DL
+
+;   7D  007D0C69    DPSxnan
+    XOR    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   7E  007E0955    SPxDSxo
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    OR     AL,BL
+
+;   7F  007F03C9    DPSaan
+    AND    AL,DH
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   80  008003E9    DPSaa
+    AND    AL,DH
+    AND    AL,ES:[DI]
+
+;   81  00810975    SPxDSxon
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    OR     AL,BL
+    NOT    AL
+
+;   82  00820C49    DPSxna
+    XOR    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+
+;   83  00831E04    SPDSnoaxn
+    MOV    DL,AL
+    NOT    AL
+    OR     AL,ES:[DI]
+    AND    AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   84  00840C48    SDPxna
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+
+;   85  00851E05    PDSPnoaxn
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,DL
+    AND    AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   86  008617A6    DSPDSoaxx
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    OR     AL,AH
+    AND    AL,DH
+    XOR    AL,DL
+    XOR    AL,AH
+
+;   87  008701C5    PDSaxn
+    AND    AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   88  008800C6    DSa
+    AND    AL,ES:[DI]
+
+;   89  00891B08    SDPSnaoxn
+    MOV    DL,AL
+    NOT    AL
+    AND    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+    NOT    AL
+
+;   8A  008A0E06    DSPnoa
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,DL
+    AND    AL,ES:[DI]
+
+;   8B  008B0666    DSPDxoxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DH
+    OR     AL,DL
+    XOR    AL,AH
+    NOT    AL
+
+;   8C  008C0E08    SDPnoa
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    AND    AL,DL
+
+;   8D  008D0668    SDPSxoxn
+    MOV    DL,AL
+    XOR    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+    NOT    AL
+
+;   8E  008E1D7C    SSDxPDxax
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DH
+    MOV    BL,AL
+    MOV    AL,AH
+    XOR    AL,DL
+    AND    AL,BL
+    XOR    AL,DL
+
+;   8F  008F0CE5    PDSanan
+    AND    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+    NOT    AL
+
+;   90  00900C45    PDSxna
+    XOR    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+
+;   91  00911E08    SDPSnoaxn
+    MOV    DL,AL
+    NOT    AL
+    OR     AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+    NOT    AL
+
+;   92  009217A9    DPSDPoaxx
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,DH
+    OR     AL,AH
+    AND    AL,DL
+    XOR    AL,DH
+    XOR    AL,AH
+
+;   93  009301C4    SPDaxn
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    AND    AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   94  009417AA    PSDPSoaxx
+    MOV    DL,AL
+    OR     AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+    XOR    AL,DH
+
+;   95  009501C9    DPSaxn
+    AND    AL,DH
+    XOR    AL,ES:[DI]
+    NOT    AL
+
+;   96  00960169    DPSxx
+    XOR    AL,DH
+    XOR    AL,ES:[DI]
+
+;   97  0097588A    PSDPSonoxx
+    MOV    DL,AL
+    OR     AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+    XOR    AL,DH
+
+;   98  00981888    SDPSonoxn
+    MOV    DL,AL
+    OR     AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+    NOT    AL
+
+;   99  00990066    DSxn
+    XOR    AL,ES:[DI]
+    NOT    AL
+
+;   9A  009A0709    DPSnax
+    NOT    AL
+    AND    AL,DH
+    XOR    AL,ES:[DI]
+
+;   9B  009B07A8    SDPSoaxn
+    MOV    DL,AL
+    OR     AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+    NOT    AL
+
+;   9C  009C0704    SPDnax
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+    XOR    AL,DL
+
+;   9D  009D07A6    DSPDoaxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    OR     AL,DH
+    AND    AL,DL
+    XOR    AL,AH
+    NOT    AL
+
+;   9E  009E16E6    DSPDSaoxx
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    AND    AL,AH
+    OR     AL,DH
+    XOR    AL,DL
+    XOR    AL,AH
+
+;   9F  009F0345    PDSxan
+    XOR    AL,ES:[DI]
+    AND    AL,DH
+    NOT    AL
+
+;   A0  00A000C9    DPa
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+
+;   A1  00A11B05    PDSPnaoxn
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,DL
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   A2  00A20E09    DPSnoa
+    NOT    AL
+    OR     AL,DH
+    AND    AL,ES:[DI]
+
+;   A3  00A30669    DPSDxoxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DL
+    OR     AL,DH
+    XOR    AL,AH
+    NOT    AL
+
+;   A4  00A41885    PDSPonoxn
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,DL
+    NOT    AL
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   A5  00A50065    PDxn
+    MOV    AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   A6  00A60706    DSPnax
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,DL
+    XOR    AL,ES:[DI]
+
+;   A7  00A707A5    PDSPoaxn
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,DL
+    AND    AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   A8  00A803A9    DPSoa
+    OR     AL,DH
+    AND    AL,ES:[DI]
+
+;   A9  00A90189    DPSoxn
+    OR     AL,DH
+    XOR    AL,ES:[DI]
+    NOT    AL
+
+;   AA  00AA0029    D
+    MOV    AL,ES:[DI]
+
+;   AB  00AB0889    DPSono
+    OR     AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+
+;   AC  00AC0744    SPDSxax
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    AND    AL,DH
+    XOR    AL,DL
+
+;   AD  00AD06E9    DPSDaoxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    AND    AL,DL
+    OR     AL,DH
+    XOR    AL,AH
+    NOT    AL
+
+;   AE  00AE0B06    DSPnao
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,DL
+    OR     AL,ES:[DI]
+
+;   AF  00AF0229    DPno
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+
+;   B0  00B00E05    PDSnoa
+    NOT    AL
+    OR     AL,ES:[DI]
+    AND    AL,DH
+
+;   B1  00B10665    PDSPxoxn
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   B2  00B21974    SSPxDSxox
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    OR     AL,BL
+    XOR    AL,DL
+
+;   B3  00B30CE8    SDPanan
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+    NOT    AL
+
+;   B4  00B4070A    PSDnax
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+    XOR    AL,DH
+
+;   B5  00B507A9    DPSDoaxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    OR     AL,DL
+    AND    AL,DH
+    XOR    AL,AH
+    NOT    AL
+
+;   B6  00B616E9    DPSDPaoxx
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,DH
+    AND    AL,AH
+    OR     AL,DL
+    XOR    AL,DH
+    XOR    AL,AH
+
+;   B7  00B70348    SDPxan
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    AND    AL,DL
+    NOT    AL
+
+;   B8  00B8074A    PSDPxax
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    AND    AL,DL
+    XOR    AL,DH
+
+;   B9  00B906E6    DSPDaoxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    AND    AL,DH
+    OR     AL,DL
+    XOR    AL,AH
+    NOT    AL
+
+;   BA  00BA0B09    DPSnao
+    NOT    AL
+    AND    AL,DH
+    OR     AL,ES:[DI]
+
+;   BB  00BB0226    DSno
+    NOT    AL
+    OR     AL,ES:[DI]
+
+;   BC  00BC1CE4    SPDSanax
+    MOV    DL,AL
+    AND    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+    XOR    AL,DL
+
+;   BD  00BD0D7D    SDxPDxan
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DH
+    MOV    BL,AL
+    MOV    AL,AH
+    XOR    AL,DL
+    AND    AL,BL
+    NOT    AL
+
+;   BE  00BE0269    DPSxo
+    XOR    AL,DH
+    OR     AL,ES:[DI]
+
+;   BF  00BF08C9    DPSano
+    AND    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+
+;   C0  00C000CA    PSa
+    AND    AL,DH
+
+;   C1  00C11B04    SPDSnaoxn
+    MOV    DL,AL
+    NOT    AL
+    AND    AL,ES:[DI]
+    OR     AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   C2  00C21884    SPDSonoxn
+    MOV    DL,AL
+    OR     AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   C3  00C3006A    PSxn
+    XOR    AL,DH
+    NOT    AL
+
+;   C4  00C40E04    SPDnoa
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+    AND    AL,DL
+
+;   C5  00C50664    SPDSxoxn
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    OR     AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   C6  00C60708    SDPnax
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+
+;   C7  00C707AA    PSDPoaxn
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+    AND    AL,DL
+    XOR    AL,DH
+    NOT    AL
+
+;   C8  00C803A8    SDPoa
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+    AND    AL,DL
+
+;   C9  00C90184    SPDoxn
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    OR     AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   CA  00CA0749    DPSDxax
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DL
+    AND    AL,DH
+    XOR    AL,AH
+
+;   CB  00CB06E4    SPDSaoxn
+    MOV    DL,AL
+    AND    AL,ES:[DI]
+    OR     AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   CC  00CC0020    S
+
+;   CD  00CD0888    SDPono
+    MOV    DL,AL
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+
+;   CE  00CE0B08    SDPnao
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    OR     AL,DL
+
+;   CF  00CF0224    SPno
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,DL
+
+;   D0  00D00E0A    PSDnoa
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+    AND    AL,DH
+
+;   D1  00D1066A    PSDPxoxn
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    OR     AL,DL
+    XOR    AL,DH
+    NOT    AL
+
+;   D2  00D20705    PDSnax
+    NOT    AL
+    AND    AL,ES:[DI]
+    XOR    AL,DH
+
+;   D3  00D307A4    SPDSoaxn
+    MOV    DL,AL
+    OR     AL,ES:[DI]
+    AND    AL,DH
+    XOR    AL,DL
+    NOT    AL
+
+;   D4  00D41D78    SSPxPDxax
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    XOR    AL,DH
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,BL
+    XOR    AL,DL
+
+;   D5  00D50CE9    DPSanan
+    AND    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   D6  00D616EA    PSDPSaoxx
+    MOV    DL,AL
+    AND    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+    XOR    AL,DH
+
+;   D7  00D70349    DPSxan
+    XOR    AL,DH
+    AND    AL,ES:[DI]
+    NOT    AL
+
+;   D8  00D80745    PDSPxax
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,ES:[DI]
+    XOR    AL,DH
+
+;   D9  00D906E8    SDPSaoxn
+    MOV    DL,AL
+    AND    AL,DH
+    OR     AL,ES:[DI]
+    XOR    AL,DL
+    NOT    AL
+
+;   DA  00DA1CE9    DPSDanax
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    AND    AL,DL
+    NOT    AL
+    AND    AL,DH
+    XOR    AL,AH
+
+;   DB  00DB0D75    SPxDSxan
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,BL
+    NOT    AL
+
+;   DC  00DC0B04    SPDnao
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DH
+    OR     AL,DL
+
+;   DD  00DD0228    SDno
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+
+;   DE  00DE0268    SDPxo
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    OR     AL,DL
+
+;   DF  00DF08C8    SDPano
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+
+;   E0  00E003A5    PDSoa
+    OR     AL,ES:[DI]
+    AND    AL,DH
+
+;   E1  00E10185    PDSoxn
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   E2  00E20746    DSPDxax
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,DH
+    AND    AL,DL
+    XOR    AL,AH
+
+;   E3  00E306EA    PSDPaoxn
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    OR     AL,DL
+    XOR    AL,DH
+    NOT    AL
+
+;   E4  00E40748    SDPSxax
+    MOV    DL,AL
+    XOR    AL,DH
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+
+;   E5  00E506E5    PDSPaoxn
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,DL
+    OR     AL,ES:[DI]
+    XOR    AL,DH
+    NOT    AL
+
+;   E6  00E61CE8    SDPSanax
+    MOV    DL,AL
+    AND    AL,DH
+    NOT    AL
+    AND    AL,ES:[DI]
+    XOR    AL,DL
+
+;   E7  00E70D79    SPxPDxan
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    XOR    AL,DH
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,BL
+    NOT    AL
+
+;   E8  00E81D74    SSPxDSxax
+    MOV    DL,AL
+    XOR    AL,ES:[DI]
+    MOV    BL,AL
+    MOV    AL,DH
+    XOR    AL,DL
+    AND    AL,BL
+    XOR    AL,DL
+
+;   E9  00E95CE6    DSPDSanaxxn
+    MOV    DL,AL
+    MOV    AH,ES:[DI]
+    AND    AL,AH
+    NOT    AL
+    AND    AL,DH
+    XOR    AL,DL
+    XOR    AL,AH
+    NOT    AL
+
+;   EA  00EA02E9    DPSao
+    AND    AL,DH
+    OR     AL,ES:[DI]
+
+;   EB  00EB0849    DPSxno
+    XOR    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+
+;   EC  00EC02E8    SDPao
+    MOV    DL,AL
+    MOV    AL,DH
+    AND    AL,ES:[DI]
+    OR     AL,DL
+
+;   ED  00ED0848    SDPxno
+    MOV    DL,AL
+    MOV    AL,DH
+    XOR    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+
+;   EE  00EE0086    DSo
+    OR     AL,ES:[DI]
+
+;   EF  00EF0A08    SDPnoo
+    MOV    DL,AL
+    MOV    AL,DH
+    NOT    AL
+    OR     AL,ES:[DI]
+    OR     AL,DL
+
+;   F0  00F00021    P
+    MOV    AL,DH
+
+;   F1  00F10885    PDSono
+    OR     AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+
+;   F2  00F20B05    PDSnao
+    NOT    AL
+    AND    AL,ES:[DI]
+    OR     AL,DH
+
+;   F3  00F3022A    PSno
+    NOT    AL
+    OR     AL,DH
+
+;   F4  00F40B0A    PSDnao
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    AND    AL,DL
+    OR     AL,DH
+
+;   F5  00F50225    PDno
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+
+;   F6  00F60265    PDSxo
+    XOR    AL,ES:[DI]
+    OR     AL,DH
+
+;   F7  00F708C5    PDSano
+    AND    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+
+;   F8  00F802E5    PDSao
+    AND    AL,ES:[DI]
+    OR     AL,DH
+
+;   F9  00F90845    PDSxno
+    XOR    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DH
+
+;   FA  00FA0089    DPo
+    MOV    AL,DH
+    OR     AL,ES:[DI]
+
+;   FB  00FB0A09    DPSnoo
+    NOT    AL
+    OR     AL,DH
+    OR     AL,ES:[DI]
+
+;   FC  00FC008A    PSo
+    OR     AL,DH
+
+;   FD  00FD0A0A    PSDnoo
+    MOV    DL,AL
+    MOV    AL,ES:[DI]
+    NOT    AL
+    OR     AL,DL
+    OR     AL,DH
+
+;   FE  00FE02A9    DPSoo
+    OR     AL,DH
+    OR     AL,ES:[DI]
+
+;   FF  00FF0062    1
+    MOV    AH,ES:[DI]
+    MOV    AL,AH
+    XOR    AL,AH
+    NOT    AL
+
+
+SUPERBLT is a variation of OEMBITBL.ASM that compiles a BLT procedure
+on the stack and executes it.  The code is placed on the stack and all
+intermediate values are stored on the stack.
+
+
+SUPERBLT takes advantage of the fact that a BLT operation can be defined
+in terms of specific operations, those being:
+
+    initial fetch(es)
+    initial byte processing
+    innerloop
+    last byte fetch
+    last byte processesing
+    loop control
+
+The innerloop and last byte routines may or may not be present, depending
+on the size of the BLT.  If they are not needed, then there will not be
+any code generated for them.
+
+The phase alignment is one place where SUPERBLT gains much speed over
+OEMBITBL.  Instead of generating a  "ROL AL,CL" instruction, a series
+of "ROR AL,1" or "ROL AL,1" instructions are generated which will be
+the optimum time for rotating the bits for alignment (this method gains
+up to 20 clocks over rotating through CL).  Also, if the phase alignment
+happens to be zero (no rotates needed), no phase alignment code will be
+generated at all.
+
+
+An example "PSx" BLT follows.  The phase relationship will be 2 in the
+example.  There will be 33 bytes to be processed in the innerloop, and
+there will be a last byte to be processed.  The source bitmap is in memory,
+and the destination is an interlaced screen.  There will be two required
+fetches to start the BLT.
+
+BLT:
+    push    cx                  ;Save source and destination pointers
+    push    di
+    push    si
+
+;   This is what the compiled pattern fetch code should look like:
+
+getPat:
+    mov dx,ds                   ;Save source segment
+    mov cx,si                   ;  and offset
+    mov si,pattern offset       ;Set pattern offset address
+    mov ax,pattern segment      ;Set pattern segment address
+    mov bl,row index
+    mov ds,ax
+    and bx,7                    ;Make into an index
+    mov bl,[bx][si]             ;Get the pattern for this scan line
+    mov si,cx                   ;Restore source offset
+    mov ds,dx                   ;Restore source segment
+    mov dh,bl                   ;Pattern will be needed here
+    add ss:byte ptr ?,increment ;Adjust pointer to next pattern
+
+BLTouterloop:
+    mov bp,phaseMask            ;Load phase alignment mask
+
+;   Perform mandatory first byte fetch.
+
+    lodsb                       ;Get source byte
+    rol al,1                    ;Align bits as needed
+    rol al,1                    ;Align bits as needed
+    mov ah,al
+    and ax,bp                   ;Perform phase mask
+    or  al,bh                   ;Mask in old unused bits
+    mov bh,ah                   ;Save new unused bits
+
+    lodsb                       ;Get source byte
+    rol al,1                    ;Align bits as needed
+    rol al,1                    ;Align bits as needed
+    mov ah,al
+    and ax,dx                   ;Perform phase mask
+    or  al,bh                   ;Mask in old unused bits
+    mov bh,ah                   ;Save new unused bits
+
+    xor al,dh                   ;Perform logic action (PSx)
+    mov ah,es:[di]              ;Get destination
+    and ax,gl_start_mask        ;Mask altered/unaltered bits
+    or  al,ah                   ;Combine the bits
+    stosb                       ;  and store them
+
+    mov cx,9                    ;Count MOD4 + 1 since odd byte was left
+    jmp short BLTloopREM1       ;Process first byte, then the rest
+
+BLTloop:
+    lodsb                       ;Get source byte
+    rol al,1                    ;Align bits as needed
+    rol al,1                    ;Align bits as needed
+    mov ah,al
+    and ax,bp                   ;Perform phase mask
+    or  al,bh                   ;Mask in old unused bits
+    mov bh,ah                   ;Save new unused bits
+    xor al,dh                   ;Perform logic action (PSx)
+    stosb                       ;Store result
+
+BLTloopREM3:
+    lodsb                       ;Get source byte
+    rol al,1                    ;Align bits as needed
+    rol al,1                    ;Align bits as needed
+    mov ah,al
+    and ax,bp                   ;Perform phase mask
+    or  al,bh                   ;Mask in old unused bits
+    mov bh,ah                   ;Save new unused bits
+    xor al,dh                   ;Perform logic action (PSx)
+    stosb                       ;Store result
+
+BLTloopREM2:
+    lodsb                       ;Get source byte
+    rol al,1                    ;Align bits as needed
+    rol al,1                    ;Align bits as needed
+    mov ah,al
+    and ax,bp                   ;Perform phase mask
+    or  al,bh                   ;Mask in old unused bits
+    mov bh,ah                   ;Save new unused bits
+    xor al,dh                   ;Perform logic action (PSx)
+    stosb                       ;Store result
+
+BLTloopREM1:
+    lodsb                       ;Get source byte
+    rol al,1                    ;Align bits as needed
+    rol al,1                    ;Align bits as needed
+    mov ah,al
+    and ax,bp                   ;Perform phase mask
+    or  al,bh                   ;Mask in old unused bits
+    mov bh,ah                   ;Save new unused bits
+    xor al,dh                   ;Perform logic action (PSx)
+    stosb                       ;Store result
+
+    loop    BLTloop             ;Loop until all bytes processed
+
+
+;   Process the last byte of the scan line
+
+    lodsb                       ;Get source byte
+    rol al,1                    ;Align bits as needed
+    rol al,1                    ;Align bits as needed
+    mov ah,al
+    and ax,dx                   ;Perform phase mask
+    or  al,bh                   ;Mask in old unused bits
+    mov bh,ah                   ;Save new unused bits
+
+    xor al,dh                   ;Perform logic action (PSx)
+    mov ah,es:[di]              ;Get destination
+    and ax,gl_last_mask         ;Mask altered/unaltered bits
+    or  al,ah                   ;Combine the bits
+    stosb                       ;  and store them
+
+
+    pop si                      ;Get source pointer
+    add si,SrcInc               ;  and update it
+    pop di                      ;Get dest pointer
+    pop cx                      ;  and scan line count
+    add di,DestInc              ;Update Destination pointer
+    xor ss:$-2,DestIncXOR       ;Toggle increment
+
+    dec cx                      ;More scan lines to process?
+    jr  z,exitBLT               ;  No
+    jmp BLT010                  ;  Yes
+exitBLT:
+    ret far
