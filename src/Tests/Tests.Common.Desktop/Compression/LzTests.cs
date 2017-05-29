@@ -14,6 +14,7 @@ using WInterop.Compression;
 using WInterop.Compression.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
+using WInterop.Support;
 using Xunit;
 
 namespace DesktopTests.Compression
@@ -152,18 +153,7 @@ namespace DesktopTests.Compression
             }
         }
 
-        [Theory,
-            InlineData("Foo", 0x00, "Foo"),
-            InlineData("Foo", (byte)'B', "Foo"),
-            InlineData("Foo.a", (byte)'F', "Foo.a"),
-            InlineData("Foo._", 0x00, "Foo"),
-            InlineData("Foo._", (byte)'_', "Foo._"),
-            InlineData("Foo._", (byte)'C', "Foo.C"),
-            InlineData("Foo._um", (byte)'g', "Foo._um"),
-            InlineData("Foo._", (byte)'d', "Foo.D"),
-            InlineData("FOo.tx_", (byte)'E', "FOo.txE"),
-            InlineData("FoO.Appl_", (byte)'~', "FoO.Appl~")
-            ]
+        [Theory, MemberData(nameof(ExpandedTestData))]
         public void ExpandedName(string compressedName, byte character, string expandedName)
         {
             using (var cleaner = new TestFileCleaner())
@@ -171,14 +161,58 @@ namespace DesktopTests.Compression
                 byte[] data = new byte[CompressedFile1.Length];
                 CompressedFile1.CopyTo(data, 0);
                 data[9] = character;
-                string path = Path.Combine(cleaner.TempFolder, compressedName);
+                string path = Paths.Combine(cleaner.TempFolder, compressedName);
                 FileHelper.WriteAllBytes(path, data);
                 Path.GetFileName(CompressionMethods.GetExpandedName(path)).Should().Be(expandedName);
             }
         }
 
+        [Theory, MemberData(nameof(ExpandedTestData))]
+        public void ExpandedNameEx(string compressedName, byte character, string expandedName)
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                byte[] data = new byte[CompressedFile1.Length];
+                CompressedFile1.CopyTo(data, 0);
+                data[9] = character;
+                string path = Paths.Combine(cleaner.TempFolder, compressedName);
+                FileHelper.WriteAllBytes(path, data);
+                Path.GetFileName(CompressionMethods.GetExpandedNameEx(path)).Should().Be(expandedName);
+            }
+        }
+
+        public static TheoryData<string, byte, string> ExpandedTestData
+        {
+            get
+            {
+                return new TheoryData<string, byte, string>
+                {
+                    { "Foo", 0x00, "Foo" },
+                    { "Foo", (byte)'B', "Foo" },
+                    { "Foo.a", (byte)'F', "Foo.a" },
+                    { "Foo._", 0x00, "Foo" },
+                    { "Foo._", (byte)'_', "Foo._" },
+                    { "Foo._", (byte)'C', "Foo.C" },
+                    { "Foo._um", (byte)'g', "Foo._um" },
+                    { "Foo._", (byte)'d', "Foo.D" },
+                    { "FOo.tx_", (byte)'E', "FOo.txE" },
+                    { "FoO.Appl_", (byte)'~', "FoO.Appl~" }
+                };
+            }
+        }
+
         [Fact]
-        public void ExpandName_LongPath()
+        public void ExpandedName_NotLzFile()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = cleaner.CreateTestFile("ExpandedName_NotLzFile");
+                CompressionMethods.GetExpandedName(path).Should().Be(path);
+            }
+        }
+
+        [Fact]
+        public void ExpandedName_LongPath()
         {
             // Unfortunately GetExpandedNameW doesn't fail properly. It calls the A version
             // and accidentally ignores the errors returned, copying garbage into the

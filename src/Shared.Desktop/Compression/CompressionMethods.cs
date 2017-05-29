@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using WInterop.Compression.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
@@ -114,9 +113,45 @@ namespace WInterop.Compression
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 buffer.EnsureByteCapacity(Paths.MaxPath);
-                ValidateLzResult(Imports.GetExpandedNameA(path, buffer));
+                ValidateLzResult(Imports.GetExpandedNameA(Paths.RemoveTrailingSeparators(path), buffer));
                 return BufferHelper.GetNullTerminatedAsciiString(buffer.BytePointer, Paths.MaxPath);
             });
+        }
+
+        /// <summary>
+        /// Equivalent implementation of GetExpandedName that doesn't have a path length limit.
+        /// </summary>
+        /// <remarks>
+        /// There are possibly quirks with ASCII handling that this function may not replicate. Files
+        /// that end in a DBCS character get some special handling.
+        /// </remarks>
+        public unsafe static string GetExpandedNameEx(string path)
+        {
+            // Need to end with underscore or be at least as long as the header.
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            path = Paths.RemoveTrailingSeparators(path);
+            if (path[path.Length -1] != '_'
+                || FileMethods.GetFileAttributesEx(path).Size <= (ulong)sizeof(LzxHeader))
+                return path;
+
+            char replacement;
+            using (var file = FileMethods.CreateFile(path, DesiredAccess.GenericRead, ShareMode.Read, CreationDisposition.OpenExisting))
+            {
+                LzxHeader header = new LzxHeader();
+
+                if (FileMethods.ReadFile(file, (byte*)&header, (uint)sizeof(LzxHeader)) < sizeof(LzxHeader))
+                    return path;
+
+                replacement = char.ToUpperInvariant((char)header.extensionChar);
+            }
+
+            bool noExtension = path.Length == 1 || path[path.Length - 2] == '.';
+            if (replacement == (char)0x00)
+                return path.Substring(0, path.Length - (noExtension ? 2 : 1));
+
+            return Strings.ReplaceChar(path, path.Length - 1, replacement);
         }
 
         public static LzHandle LzCreateFile(
