@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 using WInterop.ErrorHandling.Types;
 
 namespace WInterop.Support.Buffers
@@ -56,6 +57,15 @@ namespace WInterop.Support.Buffers
             {
                 Buffer.MemoryCopy(source, destinationPointer, bytesToCopy, bytesToCopy);
             }
+        }
+
+        public static unsafe string GetNullTerminatedAsciiString(byte* source, int maxSize)
+        {
+            int length = 0;
+            byte* start = source;
+            for (; *source != 0x00 && length < maxSize; source++, length++) ;
+
+            return length == 0 ? string.Empty : Encoding.ASCII.GetString(start, length);
         }
 
         /// <summary>

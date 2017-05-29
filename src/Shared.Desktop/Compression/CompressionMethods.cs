@@ -62,9 +62,19 @@ namespace WInterop.Compression
                 int lOffset,
                 MoveMethod iOrigin);
 
+            // Unfortunately GetExpandedNameW doesn't fail properly. It calls the A version
+            // and accidentally ignores the errors returned, copying garbage into the
+            // returned string.
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364941.aspx
             [DllImport(Libraries.Lz32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern int GetExpandedNameW(
+                string lpszSource,
+                SafeHandle lpszBuffer);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364941.aspx
+            [DllImport(Libraries.Lz32, CharSet = CharSet.Ansi, ExactSpelling = true)]
+            public static extern int GetExpandedNameA(
                 string lpszSource,
                 SafeHandle lpszBuffer);
 
@@ -93,6 +103,20 @@ namespace WInterop.Compression
             // TODO:
             // VerInstallFile handles both LZ and Cabinet compresed files.
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647462.aspx
+        }
+
+        /// <summary>
+        /// Returns the expanded name of the file. Does not work for paths that are over 128
+        /// characters long.
+        /// </summary>
+        public unsafe static string GetExpandedName(string path)
+        {
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
+            {
+                buffer.EnsureByteCapacity(Paths.MaxPath);
+                ValidateLzResult(Imports.GetExpandedNameA(path, buffer));
+                return BufferHelper.GetNullTerminatedAsciiString(buffer.BytePointer, Paths.MaxPath);
+            });
         }
 
         public static LzHandle LzCreateFile(
@@ -135,12 +159,7 @@ namespace WInterop.Compression
         {
             OFSTRUCT ofs = new OFSTRUCT();
             int result = ValidateLzResult(Imports.LZOpenFileW(fileName, ref ofs, openStyle));
-
-            int length = 0;
-            byte* start = ofs.szPathName;
-            for (; *start != 0x00 && length < OFSTRUCT.OFS_MAXPATHNAME; start++, length++) ;
-
-            uncompressedName = Encoding.ASCII.GetString(ofs.szPathName, length);
+            uncompressedName = BufferHelper.GetNullTerminatedAsciiString(ofs.szPathName, OFSTRUCT.OFS_MAXPATHNAME);
             return new LzHandle(result);
         }
 
@@ -200,7 +219,10 @@ namespace WInterop.Compression
                     destinationHandle = LzOpenFile(destination, OpenFileStyle.ReadWrite | OpenFileStyle.ShareDenyWrite | OpenFileStyle.Create);
                 }
 
-                return ValidateLzResult(Imports.LZCopy(sourceHandle, destinationHandle));
+                using (destinationHandle)
+                {
+                    return ValidateLzResult(Imports.LZCopy(sourceHandle, destinationHandle));
+                }
             }
         }
     }

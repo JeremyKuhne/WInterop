@@ -26,7 +26,6 @@ namespace DesktopTests.Compression
         public void ReadStream_ExpandedSmaller(bool useCreateFile)
         {
             // Try a file that is bigger compressed
-
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.CreateTestFile(CompressedFile1);
@@ -41,7 +40,6 @@ namespace DesktopTests.Compression
                         result.Should().Be(CompressedContent1);
                     }
                 }
-
             }
         }
 
@@ -51,7 +49,6 @@ namespace DesktopTests.Compression
         public void ReadStream_ExpandedLarger(bool useCreateFile)
         {
             // Try a file that is bigger uncompressed
-
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.CreateTestFile(CompressedFile2);
@@ -66,7 +63,6 @@ namespace DesktopTests.Compression
                         result.Should().Be(CompressedContent2);
                     }
                 }
-
             }
         }
 
@@ -128,6 +124,130 @@ namespace DesktopTests.Compression
                 header.extensionChar.Should().Be(0x00);
             }
         }
+
+        [Fact]
+        public unsafe void ValidHeader()
+        {
+            fixed (byte* b = CompressedFile1)
+            {
+                LzxHeader header = *(LzxHeader*)b;
+                header.IsHeaderValid().Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public unsafe void InvalidHeader()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                byte[] data = new byte[CompressedFile1.Length];
+                CompressedFile1.CopyTo(data, 0);
+                data[i] = 0xCC;
+
+                fixed (byte* b = data)
+                {
+                    LzxHeader header = *(LzxHeader*)b;
+                    header.IsHeaderValid().Should().BeFalse($"byte {i} was modified");
+                }
+            }
+        }
+
+        [Theory,
+            InlineData("Foo", 0x00, "Foo"),
+            InlineData("Foo", (byte)'B', "Foo"),
+            InlineData("Foo.a", (byte)'F', "Foo.a"),
+            InlineData("Foo._", 0x00, "Foo"),
+            InlineData("Foo._", (byte)'_', "Foo._"),
+            InlineData("Foo._", (byte)'C', "Foo.C"),
+            InlineData("Foo._um", (byte)'g', "Foo._um"),
+            InlineData("Foo._", (byte)'d', "Foo.D"),
+            InlineData("FOo.tx_", (byte)'E', "FOo.txE"),
+            InlineData("FoO.Appl_", (byte)'~', "FoO.Appl~")
+            ]
+        public void ExpandedName(string compressedName, byte character, string expandedName)
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                byte[] data = new byte[CompressedFile1.Length];
+                CompressedFile1.CopyTo(data, 0);
+                data[9] = character;
+                string path = Path.Combine(cleaner.TempFolder, compressedName);
+                FileHelper.WriteAllBytes(path, data);
+                Path.GetFileName(CompressionMethods.GetExpandedName(path)).Should().Be(expandedName);
+            }
+        }
+
+        [Fact]
+        public void ExpandName_LongPath()
+        {
+            // Unfortunately GetExpandedNameW doesn't fail properly. It calls the A version
+            // and accidentally ignores the errors returned, copying garbage into the
+            // returned string.
+
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
+                FileHelper.WriteAllBytes(path, CompressedFile1);
+                Action action = () => CompressionMethods.GetExpandedName(path);
+                action.ShouldThrow<WInteropIOException>().WithMessage("BadValue");
+            }
+        }
+
+        [Fact]
+        public void OpenFile_LongPath()
+        {
+            // The OpenFile api only supports 128 character paths.
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
+                FileHelper.WriteAllBytes(path, CompressedFile1);
+                Action action = () => CompressionMethods.LzOpenFile(path);
+                action.ShouldThrow<WInteropIOException>().WithMessage("BadInHandle");
+            }
+        }
+
+        [Fact]
+        public void CreateFile_LongPath()
+        {
+            // Unlike OpenFile, CreateFile handles > 128 character paths.
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
+                FileHelper.WriteAllBytes(path, CompressedFile1);
+                using (var handle = CompressionMethods.LzCreateFile(path))
+                {
+                    handle.RawHandle.Should().BeGreaterThan(0);
+                }
+            }
+        }
+
+        [Fact]
+        public void CreateFile_OverMaxPathLongPath()
+        {
+            // Unlike OpenFile, CreateFile handles > 128 character paths. Unfortunately it is
+            // constrained by MAX_PATH internal buffers, so it cant go over 260.
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 300);
+                FileHelper.WriteAllBytes(path, CompressedFile1);
+                Action action = () => CompressionMethods.LzCreateFile(path);
+                action.ShouldThrow<WInteropIOException>().WithMessage("BadValue");
+            }
+        }
+
+        // [Fact]
+        public unsafe void ExpandAll()
+        {
+            string path = @"P:\TEmp\DDK\WIN30DDK";
+            string targetRoot = Path.Combine(Path.GetDirectoryName(path), "Expanded", Path.GetFileName(path));
+            foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+            {
+                string target = Path.Combine(targetRoot, file.Substring(path.Length + 1));
+                Directory.CreateDirectory(Path.GetDirectoryName(target));
+                CompressionMethods.CopyFile(file, target);
+            }
+        }
+
 
         // COMPRESS.EXE from the Windows Server 2003 resource kit doesn't get the expanded size in the header
         // correct (when running on Win10 RS2 at least). Not sure why this is, or why expand.exe seems to be

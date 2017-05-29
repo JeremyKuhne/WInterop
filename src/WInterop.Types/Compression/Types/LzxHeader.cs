@@ -20,7 +20,7 @@ namespace WInterop.Compression.Types
         public fixed byte signature[8];
 
         /// <summary>
-        /// Always 'A' (0x42)
+        /// Always 'A' (0x41)
         /// </summary>
         public byte algorithm;
 
@@ -33,6 +33,20 @@ namespace WInterop.Compression.Types
         /// The uncompressed size (in little endian order)
         /// </summary>
         public fixed byte uncompressedSize[4];
+
+        public bool IsHeaderValid()
+        {
+            if (algorithm != 0x41) return false;
+
+            fixed (byte* b = signature)
+            fixed (byte* c = LzxSignature)
+            {
+                for (int i = 0; i < LzxSignature.Length; i++)
+                    if (b[i] != c[i]) return false;
+            }
+
+            return true;
+        }
 
         public byte[] GetSignature()
         {

@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.DirectoryManagement;
-using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
@@ -16,8 +15,24 @@ namespace Tests.Support
 {
     public static class FileHelper
     {
+        public static void WriteAllBytes(string path, byte[] data)
+        {
+            EnsurePathDirectoryExists(path);
+
+            using (var stream = FileMethods.CreateFileStream(path,
+                DesiredAccess.GenericWrite, ShareMode.ReadWrite, CreationDisposition.OpenAlways))
+            {
+                using (var writer = new System.IO.BinaryWriter(stream))
+                {
+                    writer.Write(data);
+                }
+            }
+        }
+
         public static void WriteAllText(string path, string text)
         {
+            EnsurePathDirectoryExists(path);
+
             using (var stream = FileMethods.CreateFileStream(path,
                 DesiredAccess.GenericWrite, ShareMode.ReadWrite, CreationDisposition.OpenAlways))
             {
@@ -94,6 +109,20 @@ namespace Tests.Support
 
             // We've either emptied or we're a reparse point, delete the directory
             DirectoryMethods.RemoveDirectory(path);
+        }
+
+        public static void EnsurePathDirectoryExists(string path)
+        {
+            CreateDirectoryRecursive(TrimLastSegment(path));
+        }
+
+        public static string TrimLastSegment(string path)
+        {
+            int length = path.Length;
+            while (((length > 0)
+                && (path[--length] != Paths.DirectorySeparator))
+                && (path[length] != Paths.AltDirectorySeparator)) { }
+            return path.Substring(0, length);
         }
     }
 }
