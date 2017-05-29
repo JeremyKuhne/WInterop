@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop", "Winterop\WInterop.csproj", "{8031257A-B9C2-473F-A4DD-690BD6263FEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.WinRT", "Winterop.WinRT\WInterop.WinRT.csproj", "{8031257A-B9C2-473F-A4DD-690BD6263FEB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7334C3CF-A7B8-491B-BBA5-197856E3FA3B} = {7334C3CF-A7B8-491B-BBA5-197856E3FA3B}
 	EndProjectSection
