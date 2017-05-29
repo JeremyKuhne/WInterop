@@ -21,6 +21,7 @@ namespace WInterop
         public const string Gdi32 = "gdi32.dll";
         public const string GdiPlus = "gdiplus.dll";
         public const string Kernel32 = "kernel32.dll";
+        public const string Lz32 = "lz32.dll";
         public const string Ntdll = "ntdll.dll";
         public const string Netapi32 = "netapi32.dll";
         public const string Ole32 = "ole32.dll";

@@ -116,6 +116,21 @@ namespace Tests.Support
             return testFile;
         }
 
+        public string CreateTestFile(byte[] content, string basePath = null)
+        {
+            string testFile = GetTestPath(basePath);
+            using (var stream = FileMethods.CreateFileStream(testFile,
+                DesiredAccess.GenericReadWrite, ShareMode.ReadWrite, CreationDisposition.CreateNew))
+            {
+                using (var writer = new BinaryWriter(stream))
+                {
+                    writer.Write(content);
+                }
+            }
+
+            return testFile;
+        }
+
         public void Dispose()
         {
             Dispose(disposing: true);

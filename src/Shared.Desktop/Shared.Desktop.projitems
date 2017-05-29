@@ -16,6 +16,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Backup\BackupReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clipboard\ClipboardMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communications\CommunicationsMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\CompressionMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Types\LzCreateHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Types\LzHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Types\LzStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceMethods.cs" />

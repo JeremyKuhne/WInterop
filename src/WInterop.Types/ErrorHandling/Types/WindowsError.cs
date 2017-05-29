@@ -12,8 +12,11 @@ namespace WInterop.ErrorHandling.Types
     /// </summary>
     public enum WindowsError : uint
     {
+        // Note that the first 90 error codes come from DOS extended error codes.
+
         // From winerror.h
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx
+
         NO_ERROR = 0,
         ERROR_SUCCESS = 0,
         NERR_Success = 0,
