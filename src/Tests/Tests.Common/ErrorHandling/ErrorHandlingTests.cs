@@ -27,9 +27,9 @@ namespace Tests.ErrorHandling
             InlineData(WindowsError.ERROR_OPERATION_ABORTED, typeof(OperationCanceledException)),
             InlineData(WindowsError.ERROR_NOT_READY, typeof(DriveNotReadyException)),
             InlineData(WindowsError.FVE_E_LOCKED_VOLUME, typeof(DriveLockedException)),
-            InlineData(WindowsError.ERROR_ALREADY_EXISTS, typeof(IOException)),
+            InlineData(WindowsError.ERROR_ALREADY_EXISTS, typeof(FileExistsException)),
             InlineData(WindowsError.ERROR_SHARING_VIOLATION, typeof(IOException)),
-            InlineData(WindowsError.ERROR_FILE_EXISTS, typeof(IOException))
+            InlineData(WindowsError.ERROR_FILE_EXISTS, typeof(FileExistsException))
             ]
         public void ErrorsMapToExceptions(WindowsError error, Type exceptionType)
         {

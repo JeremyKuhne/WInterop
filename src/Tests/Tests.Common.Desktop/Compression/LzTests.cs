@@ -77,7 +77,7 @@ namespace DesktopTests.Compression
                 string source = cleaner.CreateTestFile(CompressedFile2);
                 string destination = cleaner.GetTestPath();
 
-                CompressionMethods.CopyFile(source, destination, false, useCreateFile).Should().Be(563);
+                CompressionMethods.LzCopyFile(source, destination, false, useCreateFile).Should().Be(563);
 
                 FileHelper.ReadAllText(destination).Should().Be(CompressedContent2);
             }
@@ -93,7 +93,7 @@ namespace DesktopTests.Compression
                 string source = cleaner.CreateTestFile(CompressedFile2);
                 string destination = cleaner.CreateTestFile($"CopyFile_OverExisting({useCreateFile})");
 
-                CompressionMethods.CopyFile(source, destination, overwrite: true, useCreateFile: useCreateFile).Should().Be(563);
+                CompressionMethods.LzCopyFile(source, destination, overwrite: true, useCreateFile: useCreateFile).Should().Be(563);
                 FileHelper.ReadAllText(destination).Should().Be(CompressedContent2);
             }
         }
@@ -108,7 +108,7 @@ namespace DesktopTests.Compression
                 string source = cleaner.CreateTestFile(CompressedFile2);
                 string destination = cleaner.CreateTestFile($"CopyFile_NotOverExisting({useCreateFile})");
 
-                Action action = () => CompressionMethods.CopyFile(source, destination, overwrite: false, useCreateFile: useCreateFile);
+                Action action = () => CompressionMethods.LzCopyFile(source, destination, overwrite: false, useCreateFile: useCreateFile);
                 action.ShouldThrow<IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_FILE_EXISTS));
             }
         }
@@ -223,7 +223,7 @@ namespace DesktopTests.Compression
                 string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
                 Action action = () => CompressionMethods.GetExpandedName(path);
-                action.ShouldThrow<WInteropIOException>().WithMessage("BadValue");
+                action.ShouldThrow<LzException>().And.Error.Should().Be(LzError.BadValue);
             }
         }
 
@@ -236,7 +236,7 @@ namespace DesktopTests.Compression
                 string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
                 Action action = () => CompressionMethods.LzOpenFile(path);
-                action.ShouldThrow<WInteropIOException>().WithMessage("BadInHandle");
+                action.ShouldThrow<LzException>().And.Error.Should().Be(LzError.BadInHandle);
             }
         }
 
@@ -263,25 +263,12 @@ namespace DesktopTests.Compression
             using (var cleaner = new TestFileCleaner())
             {
                 string path = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 300);
+                FileHelper.EnsurePathDirectoryExists(path);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
                 Action action = () => CompressionMethods.LzCreateFile(path);
-                action.ShouldThrow<WInteropIOException>().WithMessage("BadValue");
+                action.ShouldThrow<LzException>().And.Error.Should().Be(LzError.BadValue);
             }
         }
-
-        // [Fact]
-        public unsafe void ExpandAll()
-        {
-            string path = @"P:\TEmp\DDK\WIN30DDK";
-            string targetRoot = Path.Combine(Path.GetDirectoryName(path), "Expanded", Path.GetFileName(path));
-            foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
-            {
-                string target = Path.Combine(targetRoot, file.Substring(path.Length + 1));
-                Directory.CreateDirectory(Path.GetDirectoryName(target));
-                CompressionMethods.CopyFile(file, target);
-            }
-        }
-
 
         // COMPRESS.EXE from the Windows Server 2003 resource kit doesn't get the expanded size in the header
         // correct (when running on Win10 RS2 at least). Not sure why this is, or why expand.exe seems to be

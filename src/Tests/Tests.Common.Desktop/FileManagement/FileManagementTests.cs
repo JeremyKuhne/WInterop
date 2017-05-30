@@ -181,7 +181,7 @@ namespace DesktopTests.FileManagementMethods
             string tempPath = FileMethods.GetTempPath();
             string lowerTempPath = tempPath.ToLowerInvariant();
             tempPath.Should().NotBe(lowerTempPath);
-            FileMethods.GetFinalPathName(lowerTempPath, 0, false).Should().Be(@"\\?\" + Paths.RemoveTrailingSeparators(tempPath));
+            FileMethods.GetFinalPathName(lowerTempPath, 0, false).Should().Be(@"\\?\" + Paths.TrimTrailingSeparators(tempPath));
         }
 
         [Fact]

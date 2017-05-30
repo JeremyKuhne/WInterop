@@ -95,7 +95,7 @@ namespace WInterop.VolumeManagement
         [SuppressMessage("Microsoft.Interoperability", "CA1404:CallGetLastErrorImmediatelyAfterPInvoke")]
         public static IEnumerable<string> QueryDosDevice(string deviceName)
         {
-            if (deviceName != null) deviceName = Paths.RemoveTrailingSeparators(deviceName);
+            if (deviceName != null) deviceName = Paths.TrimTrailingSeparators(deviceName);
 
             // Null will return everything defined- this list is quite large so set a higher initial allocation
 

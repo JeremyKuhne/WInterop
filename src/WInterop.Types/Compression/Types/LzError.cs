@@ -45,8 +45,8 @@ namespace WInterop.Compression.Types
         BadValue = -7,
 
         /// <summary>
-        /// [LZERROR_UNKNOWNALG]
+        /// Compression algorithm not recognized. [LZERROR_UNKNOWNALG]
         /// </summary>
-        LZERROR_UNKNOWNALG = -8  /* compression algorithm not recognized */
+        UnknownAlgorithm = -8
     }
 }

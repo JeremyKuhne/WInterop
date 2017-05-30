@@ -168,7 +168,6 @@ namespace WInterop.Support
             }
         }
 
-
         private static Exception WindowsErrorToException(WindowsError error, string message, string path)
         {
             switch (error)
@@ -192,6 +191,9 @@ namespace WInterop.Support
                     return new OperationCanceledException(message);
                 case WindowsError.ERROR_NOT_READY:
                     return new DriveNotReadyException(message);
+                case WindowsError.ERROR_FILE_EXISTS:
+                case WindowsError.ERROR_ALREADY_EXISTS:
+                    return new FileExistsException(message, error);
                 case WindowsError.FVE_E_LOCKED_VOLUME:
                     return new DriveLockedException(message);
                 case WindowsError.ERROR_INVALID_PARAMETER:
@@ -199,9 +201,7 @@ namespace WInterop.Support
                 case WindowsError.ERROR_NOT_SUPPORTED:
                 case WindowsError.ERROR_NOT_SUPPORTED_IN_APPCONTAINER:
                     return new NotSupportedException(message);
-                case WindowsError.ERROR_ALREADY_EXISTS:
                 case WindowsError.ERROR_SHARING_VIOLATION:
-                case WindowsError.ERROR_FILE_EXISTS:
                 default:
                     return new IOException(message, (int)Macros.HRESULT_FROM_WIN32(error));
             }

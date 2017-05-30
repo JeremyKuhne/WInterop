@@ -136,7 +136,7 @@ namespace WInterop.Support
         /// </summary>
         /// <returns>The path with an appended directory separator if necessary.</returns>
         /// <exception cref="System.ArgumentNullException">Thrown if path is null.</exception>
-        public static string RemoveTrailingSeparators(string path)
+        public static string TrimTrailingSeparators(string path)
         {
             if (path == null) { throw new ArgumentNullException(nameof(path)); }
             if (EndsInDirectorySeparator(path))
@@ -150,28 +150,36 @@ namespace WInterop.Support
         }
 
         /// <summary>
-        /// Combines two strings, adding a directory separator between if needed.
-        /// Does not validate path characters.
+        /// Combines strings, adding a directory separator between if needed.
+        /// Does not validate path characters, and does not consider rooting.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="path1"/> is null.</exception>
-        public static string Combine(string path1, string path2)
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="paths"/> is null.</exception>
+        public static string Combine(params string[] paths)
         {
-            if (path1 == null) throw new ArgumentNullException(nameof(path1));
+            if (paths == null) throw new ArgumentNullException(nameof(paths));
 
-            // Add nothing to something is something
-            if (string.IsNullOrEmpty(path2)) return path1;
+            int total = 0;
+            foreach (string path in paths)
+                total += 1 + path?.Length ?? 0;
 
-            StringBuilder sb = new StringBuilder();
-            if (!EndsInDirectorySeparator(path1) && !BeginsWithDirectorySeparator(path2))
+            StringBuilder sb = new StringBuilder(total);
+            foreach (string path in paths)
             {
-                sb.Append(path1);
-                sb.Append(DirectorySeparator);
-                sb.Append(path2);
-            }
-            else
-            {
-                sb.Append(path1);
-                sb.Append(path2);
+                if (string.IsNullOrEmpty(path)) continue;
+
+                if (sb.Length > 0 && !IsDirectorySeparator(sb[sb.Length - 1]))
+                    sb.Append(DirectorySeparator);
+
+                int start = 0;
+
+                for (; start < path.Length && IsDirectorySeparator(path[start]); start++) ;
+                if (start == path.Length) continue;
+
+                // If we're not the first string into the path, don't trim the extra separators.
+                // (We don't want to remove \\server\share or \\?\c:\foo...)
+                if (sb.Length == 0) start = 0;
+
+                sb.Append(path, start, path.Length - start);
             }
 
             return sb.ToString();
@@ -235,6 +243,41 @@ namespace WInterop.Support
                 && (path[1] == '\\' || path[1] == '?')
                 && path[2] == '?'
                 && path[3] == '\\';
+        }
+
+        /// <summary>
+        /// Chops off the last path segment.
+        /// </summary>
+        public static string TrimLastSegment(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return path;
+
+            path = TrimTrailingSeparators(path);
+            int length = path.Length;
+            while (((length > 0)
+                && (path[--length] != DirectorySeparator))
+                && (path[length] != AltDirectorySeparator)) { }
+            return path.Substring(0, length);
+        }
+
+        /// <summary>
+        /// Returns the last path segment.
+        /// </summary>
+        public static string GetLastSegment(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return path;
+
+            path = TrimTrailingSeparators(path);
+            int lastSeparator = path.Length;
+            while (((lastSeparator > 0)
+                && (path[--lastSeparator] != DirectorySeparator))
+                && (path[lastSeparator] != AltDirectorySeparator)) { }
+
+            if (lastSeparator == 0) return path;
+
+            // Move past the separator
+            lastSeparator++;
+            return path.Substring(lastSeparator, path.Length - lastSeparator);
         }
     }
 }

@@ -19,17 +19,5 @@ namespace WInterop.ErrorHandling.Types
 
         public DriveNotReadyException(string message, Exception innerException = null)
             : base(message, Macros.HRESULT_FROM_WIN32(DefaultError), innerException) { }
-
-        public DriveNotReadyException(string message, HRESULT hresult, Exception innerException = null)
-            : base(message, hresult, innerException) { }
-
-        public DriveNotReadyException(HRESULT result)
-            : base(result) { }
-
-        public DriveNotReadyException(WindowsError error)
-            : base(error) { }
-
-        public DriveNotReadyException(NTSTATUS status)
-            : base(status) { }
     }
 }

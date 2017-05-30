@@ -54,7 +54,7 @@ namespace WInterop.FileManagement
                 // trailing slash it is legitimate to try and find whatever that matches. Note that we also don't need
                 // to bother checking the first character, as anything else there would be invalid.
 
-                path = Paths.RemoveTrailingSeparators(path);
+                path = Paths.TrimTrailingSeparators(path);
                 if ((path.Length == 2 && path[1] == ':')   // C:
                     || (path.Length == 6 && path[5] == ':' && Paths.IsExtendedDosDevicePath(path))) // \\?\C:
                 {

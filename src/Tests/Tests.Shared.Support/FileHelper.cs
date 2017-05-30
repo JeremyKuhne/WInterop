@@ -17,8 +17,6 @@ namespace Tests.Support
     {
         public static void WriteAllBytes(string path, byte[] data)
         {
-            EnsurePathDirectoryExists(path);
-
             using (var stream = FileMethods.CreateFileStream(path,
                 DesiredAccess.GenericWrite, ShareMode.ReadWrite, CreationDisposition.OpenAlways))
             {
@@ -31,8 +29,6 @@ namespace Tests.Support
 
         public static void WriteAllText(string path, string text)
         {
-            EnsurePathDirectoryExists(path);
-
             using (var stream = FileMethods.CreateFileStream(path,
                 DesiredAccess.GenericWrite, ShareMode.ReadWrite, CreationDisposition.OpenAlways))
             {
