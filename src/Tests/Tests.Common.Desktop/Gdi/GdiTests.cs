@@ -148,9 +148,9 @@ namespace DesktopTests.Gdi
                 var info = GdiMethods.EnumerateFontFamilies(context, CharacterSet.ANSI_CHARSET, "Arial");
                 info.Count().Should().Be(4);
                 var regular = info.First();
-                regular.FontAttributes.elfEnumLogfontEx.FullName.Should().Be("Arial");
-                regular.FontAttributes.elfEnumLogfontEx.Style.Should().Be("Regular");
-                regular.FontAttributes.elfEnumLogfontEx.Script.Should().Be("Western");
+                regular.FontAttributes.elfEnumLogfontEx.elfFullName.Value.Should().Be("Arial");
+                regular.FontAttributes.elfEnumLogfontEx.elfStyle.Value.Should().Be("Regular");
+                regular.FontAttributes.elfEnumLogfontEx.elfScript.Value.Should().Be("Western");
                 regular.TextMetrics.ntmTm.ntmFlags.Should().Be(TextMetricFlags.NTM_REGULAR | TextMetricFlags.NTM_TT_OPENTYPE | TextMetricFlags.NTM_DSIG);
                 regular.TextMetrics.ntmTm.tmPitchAndFamily.PitchTypes.Should().Be(FontPitchTypes.VariablePitch | FontPitchTypes.TrueType | FontPitchTypes.Vector);
                 regular.TextMetrics.ntmTm.tmPitchAndFamily.Family.Should().Be(FontFamily.Swiss);

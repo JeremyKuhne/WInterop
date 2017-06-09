@@ -92,11 +92,10 @@ namespace WInterop.FileManagement
 
         private FindResult FindFirstFile()
         {
-            WIN32_FIND_DATA findData;
             _findHandle = FileMethods.Imports.FindFirstFileExW(
                 OriginalPath,
                 GetAlternateName ? FINDEX_INFO_LEVELS.FindExInfoStandard : FINDEX_INFO_LEVELS.FindExInfoBasic,
-                out findData,
+                out WIN32_FIND_DATA findData,
                 // FINDEX_SEARCH_OPS.FindExSearchNameMatch is what FindFirstFile calls Ex wtih
                 DirectoriesOnly ? FINDEX_SEARCH_OPS.FindExSearchLimitToDirectories : FINDEX_SEARCH_OPS.FindExSearchNameMatch,
                 IntPtr.Zero,
@@ -117,8 +116,7 @@ namespace WInterop.FileManagement
 
         private FindResult FindNextFile()
         {
-            WIN32_FIND_DATA findData;
-            if (!FileMethods.Imports.FindNextFileW(_findHandle, out findData))
+            if (!FileMethods.Imports.FindNextFileW(_findHandle, out WIN32_FIND_DATA findData))
             {
                 WindowsError error = Errors.GetLastError();
                 if (error == WindowsError.ERROR_NO_MORE_FILES)

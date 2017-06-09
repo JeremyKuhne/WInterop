@@ -20,7 +20,7 @@ namespace WInterop.Gdi.Types
         private const int CCHDEVICENAME = 32;
         private const int CCHFORMNAME = 32;
 
-        public unsafe fixed char dmDeviceName[CCHDEVICENAME];
+        public FixedString.Size32 dmDeviceName;
         public ushort dmSpecVersion;
         public ushort dmDriverVersion;
         public ushort dmSize;
@@ -32,7 +32,7 @@ namespace WInterop.Gdi.Types
         public short dmYResolution;
         public short dmTTOption;
         public short dmCollate;
-        public unsafe fixed char dmFormName[CCHFORMNAME];
+        public FixedString.Size32 dmFormName;
         public ushort dmLogPixels;
         public uint dmBitsPerPel;
         public uint dmPelsWidth;
@@ -148,34 +148,6 @@ namespace WInterop.Gdi.Types
         {
             DM_INTERLACED = 0x00000002,
             DMDISPLAYFLAGS_TEXTMODE = 0x00000004
-        }
-
-        public unsafe string DeviceName
-        {
-            get
-            {
-                fixed (char* c = dmDeviceName)
-                    return new string(c);
-            }
-            set
-            {
-                fixed (char* c = dmDeviceName)
-                    Strings.StringToBuffer(value, c, CCHDEVICENAME - 1);
-            }
-        }
-
-        public unsafe string FormName
-        {
-            get
-            {
-                fixed (char* c = dmFormName)
-                    return new string(c);
-            }
-            set
-            {
-                fixed (char* c = dmFormName)
-                    Strings.StringToBuffer(value, c, CCHFORMNAME - 1);
-            }
         }
     }
 }

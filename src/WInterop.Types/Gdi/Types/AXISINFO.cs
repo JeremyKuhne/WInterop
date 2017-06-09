@@ -21,20 +21,6 @@ namespace WInterop.Gdi.Types
 
         public int axMinValue;
         public int axMaxValue;
-        public unsafe fixed char axAxisName[MM_MAX_AXES_NAMELEN];
-
-        public unsafe string AxisName
-        {
-            get
-            {
-                fixed (char* b = axAxisName)
-                    return new string(b);
-            }
-            set
-            {
-                fixed (char* b = axAxisName)
-                    Strings.StringToBuffer(value, b, MM_MAX_AXES_NAMELEN - 1);
-            }
-        }
+        public FixedString.Size16 axAxisName;
     }
 }

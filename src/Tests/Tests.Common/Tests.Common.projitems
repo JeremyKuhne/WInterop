@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\ConversionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\DelegatesTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\EnvironmentTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\FixedStringTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\PathsTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
   </ItemGroup>

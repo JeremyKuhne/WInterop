@@ -29,24 +29,6 @@ namespace WInterop.Gdi.Types
         public ClippingPrecision lfClipPrecision;
         public Quality lfQuality;
         public PitchAndFamily lfPitchAndFamily;
-        public unsafe fixed char lfFaceName[LF_FACESIZE];
-
-        public unsafe string FaceName
-        {
-            get
-            {
-                fixed (char* c = lfFaceName)
-                    return new string(c);
-            }
-            set
-            {
-                fixed (char* c = lfFaceName)
-                    Strings.StringToBuffer(value, c, LF_FACESIZE - 1);
-            }
-        }
-
-        public static unsafe void Foo (char* c)
-        {
-        }
+        public FixedString.Size32 lfFaceName;
     }
 }

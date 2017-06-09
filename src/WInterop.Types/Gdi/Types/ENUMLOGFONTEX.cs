@@ -17,50 +17,8 @@ namespace WInterop.Gdi.Types
         public const int LF_FACESIZE = 32;
 
         public LOGFONT elfLogFont;
-        public unsafe fixed char elfFullName[LF_FULLFACESIZE];
-        public unsafe fixed char elfStyle[LF_FACESIZE];
-        public unsafe fixed char elfScript[LF_FACESIZE];
-
-        public unsafe string FullName
-        {
-            get
-            {
-                fixed (char* c = elfFullName)
-                    return new string(c);
-            }
-            set
-            {
-                fixed (char* c = elfFullName)
-                    Strings.StringToBuffer(value, c, LF_FULLFACESIZE - 1);
-            }
-        }
-
-        public unsafe string Style
-        {
-            get
-            {
-                fixed (char* c = elfStyle)
-                    return new string(c);
-            }
-            set
-            {
-                fixed (char* c = elfStyle)
-                    Strings.StringToBuffer(value, c, LF_FACESIZE - 1);
-            }
-        }
-
-        public unsafe string Script
-        {
-            get
-            {
-                fixed (char* c = elfScript)
-                    return new string(c);
-            }
-            set
-            {
-                fixed (char* c = elfScript)
-                    Strings.StringToBuffer(value, c, LF_FACESIZE - 1);
-            }
-        }
+        public FixedString.Size64 elfFullName;
+        public FixedString.Size32 elfStyle;
+        public FixedString.Size32 elfScript;
     }
 }

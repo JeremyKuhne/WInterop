@@ -507,8 +507,9 @@ namespace WInterop.Gdi
             LOGFONT logFont = new LOGFONT
             {
                 lfCharSet = characterSet,
-                FaceName = faceName
             };
+
+            logFont.lfFaceName.Value = faceName;
 
             List<FontInformation> info = new List<FontInformation>();
             GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);
