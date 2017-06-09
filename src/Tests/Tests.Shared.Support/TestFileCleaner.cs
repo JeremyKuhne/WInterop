@@ -51,6 +51,9 @@ namespace Tests.Support
             }
         }
 
+        /// <summary>
+        /// The isolated root folder for this instance of TestFileCleaner.
+        /// </summary>
         public string TempFolder { [DebuggerStepThrough] get; private set; }
 
         public void TrackFile(string path)

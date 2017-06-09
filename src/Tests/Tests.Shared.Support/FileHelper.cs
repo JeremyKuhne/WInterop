@@ -51,7 +51,7 @@ namespace Tests.Support
             }
         }
 
-        public static void CreateDirectoryRecursive(string path)
+        public static string CreateDirectoryRecursive(string path)
         {
             if (!FileMethods.PathExists(path))
             {
@@ -59,6 +59,8 @@ namespace Tests.Support
                 CreateDirectoryRecursive(path.Substring(0, lastSeparator));
                 DirectoryMethods.CreateDirectory(path);
             }
+
+            return path;
         }
 
         public static void DeleteDirectoryRecursive(string path)

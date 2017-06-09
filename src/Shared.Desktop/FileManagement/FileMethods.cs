@@ -7,7 +7,9 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using WInterop.Authentication.Types;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
@@ -154,6 +156,14 @@ namespace WInterop.FileManagement
                 uint Length,
                 FILE_INFORMATION_CLASS FileInformationClass);
 
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff546850.aspx
+            // https://msdn.microsoft.com/en-us/library/hh551132.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public unsafe static extern BOOLEAN RtlIsNameInExpression(
+                UNICODE_STRING* Expression,
+                UNICODE_STRING* Name,
+                BOOLEAN IgnoreCase,
+                IntPtr UpcaseTable);
         }
 
         /// <summary>
@@ -373,6 +383,37 @@ namespace WInterop.FileManagement
                 GetFileInformation(fileHandle, FILE_INFORMATION_CLASS.FileModeInformation, &info, sizeof(FILE_MODE_INFORMATION));
             }
             return info;
+        }
+
+        /// <summary>
+        /// Return whether or not the given expression matches the given name. Takes standard
+        /// Windows wildcards (*, ?, &lt;, &gt; &quot;).
+        /// </summary>
+        public unsafe static bool IsNameInExpression(string expression, string name, bool ignoreCase)
+        {
+            // If ignore case is set, the API will uppercase the name *if* an UpcaseTable
+            // is not provided. It then flips to case-sensitive. In this state the expression
+            // has to be uppercase to match as expected.
+
+            fixed (char* e = ignoreCase ? expression.ToUpperInvariant() : expression)
+            fixed (char* n = name)
+            {
+                UNICODE_STRING* eus = null;
+                UNICODE_STRING* nus = null;
+
+                if (e != null)
+                {
+                    var temp = new UNICODE_STRING(e, expression);
+                    eus = &temp;
+                }
+                if (n != null)
+                {
+                    var temp = new UNICODE_STRING(n, name);
+                    nus = &temp;
+                }
+
+                return Imports.RtlIsNameInExpression(eus, nus, ignoreCase, IntPtr.Zero);
+            }
         }
     }
 }

@@ -48,6 +48,13 @@ namespace WInterop.Authentication.Types
             Buffer = buffer.CharPointer;
         }
 
+        public unsafe UNICODE_STRING(char* buffer, string sourceString)
+        {
+            Length = checked((ushort)(sourceString.Length * sizeof(char)));
+            MaximumLength = Length;
+            Buffer = buffer;
+        }
+
         /// <summary>
         /// Returns the current buffer as a string.
         /// </summary>
