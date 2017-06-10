@@ -7,7 +7,6 @@
 
 using FluentAssertions;
 using System;
-using System.Runtime.InteropServices;
 using WInterop.Support;
 using Xunit;
 

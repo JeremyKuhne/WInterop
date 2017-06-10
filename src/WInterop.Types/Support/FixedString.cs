@@ -9,11 +9,23 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Support
 {
+    /// <summary>
+    /// Contains definitions for various fixed size strings for creating blittable
+    /// structs. Provides easy string property access. Set strings are always null
+    /// terminated and will truncate if too large.
+    /// 
+    /// Usage: Instead of "fixed char _buffer[12]" use "FixedBuffer.Size12 _buffer"
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct FixedString
     {
-        private const int BaseSize = 1;
+        // We cant derive structs in C#, this is the next best thing. Nested
+        // class/struct defines have visibility to the nesting class/struct
+        // privates, and given the pointer manipulation we must do we can
+        // leverage it for a similar effect. It isn't perfect, but it reduces
+        // copying of the riskier blocks of code.
 
+        private const int BaseSize = 1;
         private unsafe fixed char _buffer[BaseSize];
 
         private string GetString(int maxSize)
@@ -60,7 +72,6 @@ namespace WInterop.Support
                 set => _buffer.SetString(value, Size);
             }
         }
-
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct Size32

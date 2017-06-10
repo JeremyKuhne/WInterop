@@ -591,7 +591,7 @@ namespace WInterop.FileManagement
         /// <remarks>
         /// The exact data that is returned is somewhat complicated and is described in the documentation for ZwQueryInformationFile.
         /// </remarks>
-        public static string GetFileNameByHandle(SafeFileHandle fileHandle)
+        public unsafe static string GetFileNameByHandle(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -610,8 +610,8 @@ namespace WInterop.FileManagement
                     }
                 }
 
-                var reader = new CheckedReader(buffer);
-                return reader.ReadString((int)(reader.ReadUint() / 2));
+                TrailingString.SizedInBytes* value = (TrailingString.SizedInBytes*)buffer.VoidPointer;
+                return value->Value;
             });
         }
 
@@ -655,19 +655,8 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Get the list of data streams for the given handle.
         /// </summary>
-        public static IEnumerable<StreamInformation> GetStreamInformationByHandle(SafeFileHandle fileHandle)
+        public unsafe static IEnumerable<StreamInformation> GetStreamInformationByHandle(SafeFileHandle fileHandle)
         {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364406.aspx
-
-            // typedef struct _FILE_STREAM_INFO
-            // {
-            //     DWORD NextEntryOffset;
-            //     DWORD StreamNameLength;
-            //     LARGE_INTEGER StreamSize;
-            //     LARGE_INTEGER StreamAllocationSize;
-            //     WCHAR StreamName[1];
-            // } FILE_STREAM_INFO, *PFILE_STREAM_INFO;
-
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 unsafe
@@ -690,24 +679,7 @@ namespace WInterop.FileManagement
                     }
                 }
 
-                var infos = new List<StreamInformation>();
-                var reader = new CheckedReader(buffer);
-                uint offset = 0;
-
-                do
-                {
-                    reader.ByteOffset = offset;
-                    offset = reader.ReadUint();
-                    uint nameLength = reader.ReadUint();
-                    infos.Add(new StreamInformation
-                    {
-                        Size = reader.ReadUlong(),
-                        AllocationSize = reader.ReadUlong(),
-                        Name = reader.ReadString((int)(nameLength / 2))
-                    });
-                } while (offset != 0);
-
-                return infos;
+                return StreamInformation.Create((FILE_STREAM_INFO*)buffer.VoidPointer);
             });
         }
 

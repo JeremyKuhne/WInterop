@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Collections.Generic;
+
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
@@ -26,5 +28,25 @@ namespace WInterop.FileManagement.Types
         /// Allocated size of the stream
         /// </summary>
         public ulong AllocationSize;
+
+        public unsafe StreamInformation(FILE_STREAM_INFO* info)
+        {
+            Name = info->StreamName.GetValue(info->StreamNameLength);
+            Size = info->StreamSize;
+            AllocationSize = info->StreamAllocationSize;
+        }
+
+        public static unsafe IEnumerable<StreamInformation> Create(FILE_STREAM_INFO* info)
+        {
+            var infos = new List<StreamInformation>();
+            byte* start = (byte*)info;
+            while (true)
+            {
+                infos.Add(new StreamInformation(info));
+                if (info->NextEntryOffset == 0) break;
+                info = (FILE_STREAM_INFO*)(start + info->NextEntryOffset);
+            }
+            return infos;
+        }
     }
 }

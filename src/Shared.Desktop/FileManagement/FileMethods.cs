@@ -7,7 +7,6 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Authentication.Types;
 using WInterop.Authorization.Types;
@@ -320,19 +319,21 @@ namespace WInterop.FileManagement
             return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileAlternateNameInformation);
         }
 
-        private static string GetFileInformationString(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass)
+        private unsafe static string GetFileInformationString(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass)
         {
-            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
-                uint nameLength = 260 * sizeof(char);
 
-                var reader = new CheckedReader(buffer);
+                // Start with MAX_PATH
+                uint byteLength = 260 * sizeof(char);
+
+                TrailingString.SizedInBytes* value = null;
 
                 while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
                 {
                     // Add space for the FileNameLength
-                    buffer.EnsureByteCapacity(nameLength + sizeof(uint));
+                    buffer.EnsureByteCapacity(byteLength + sizeof(uint));
 
                     unsafe
                     {
@@ -346,16 +347,15 @@ namespace WInterop.FileManagement
 
                     if (status == NTSTATUS.STATUS_SUCCESS || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
                     {
-                        reader.ByteOffset = 0;
-                        nameLength = reader.ReadUint();
+                        value = (TrailingString.SizedInBytes*)buffer.VoidPointer;
+                        byteLength = value->SizeInBytes;
                     }
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
                     throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
-                // The string isn't null terminated so we have to explicitly pass the size
-                return reader.ReadString(checked((int)nameLength) / sizeof(char));
+                return value->Value;
             });
         }
 

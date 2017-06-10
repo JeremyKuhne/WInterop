@@ -12,6 +12,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
+using WInterop.Support;
 
 namespace WInterop.FileManagement.Types
 {
@@ -41,9 +42,11 @@ namespace WInterop.FileManagement.Types
         public uint FileNameLength;
         public uint EaSize;
         public sbyte ShortNameLength;
-        public unsafe fixed char ShortName[12];
+        public FixedString.Size12 ShortName;
         public long FileId;
+
         // This is a variable length string
         // WCHAR FileName[1];
+        public TrailingString.Unsized FileName;
     }
 }
