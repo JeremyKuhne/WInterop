@@ -183,7 +183,7 @@ namespace WInterop.Handles
             });
         }
 
-        public static IEnumerable<ObjectInformation> GetDirectoryEntries(DirectoryObjectHandle directoryHandle)
+        public unsafe static IEnumerable<ObjectInformation> GetDirectoryEntries(DirectoryObjectHandle directoryHandle)
         {
             List<ObjectInformation> infos = new List<ObjectInformation>();
 
@@ -208,20 +208,15 @@ namespace WInterop.Handles
                     if (status != NTSTATUS.STATUS_SUCCESS && status != NTSTATUS.STATUS_MORE_ENTRIES)
                         break;
 
-                    CheckedReader reader = new CheckedReader(buffer);
-
-                    do
+                    UNICODE_STRING* name = (UNICODE_STRING*)buffer.VoidPointer;
+                    while (name->Length != 0)
                     {
-                        UNICODE_STRING name = reader.ReadStruct<UNICODE_STRING>();
-                        if (name.Length == 0) break;
-                        UNICODE_STRING type = reader.ReadStruct<UNICODE_STRING>();
-
                         infos.Add(new ObjectInformation
                         {
-                            Name = name.ToString(),
-                            TypeName = type.ToString()
+                            Name = name++->ToString(),
+                            TypeName = name++->ToString()
                         });
-                    } while (true);
+                    };
 
                 } while (status == NTSTATUS.STATUS_MORE_ENTRIES);
 
@@ -235,7 +230,7 @@ namespace WInterop.Handles
         /// <summary>
         /// Get the name fot he given handle. This is typically the NT path of the object.
         /// </summary>
-        public static string GetObjectName(SafeHandle handle)
+        public unsafe static string GetObjectName(SafeHandle handle)
         {
             // IoQueryFileDosDeviceName wraps this for file handles, but requires calling ExFreePool to free the allocated memory
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff548474.aspx
@@ -270,7 +265,7 @@ namespace WInterop.Handles
                 if (!ErrorMacros.NT_SUCCESS(status))
                     throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
-                return new CheckedReader(buffer).ReadStruct<UNICODE_STRING>().ToString();
+                return ((UNICODE_STRING*)(buffer.VoidPointer))->ToString();
             }
         }
 
@@ -301,7 +296,7 @@ namespace WInterop.Handles
                 if (!ErrorMacros.NT_SUCCESS(status))
                     throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
-                return new CheckedReader(buffer).ReadStruct<OBJECT_TYPE_INFORMATION>().TypeName.ToString();
+                return ((OBJECT_TYPE_INFORMATION*)(buffer.VoidPointer))->TypeName.ToString();
             }
         }
     }

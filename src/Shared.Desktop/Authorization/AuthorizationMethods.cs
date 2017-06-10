@@ -185,23 +185,22 @@ namespace WInterop.Authorization
         private unsafe static void TokenInformationInvoke(
             TokenHandle token,
             TOKEN_INFORMATION_CLASS info,
-            Action<Reader> action)
+            Action<IntPtr> action)
         {
             BufferHelper.BufferInvoke<HeapBuffer>(buffer =>
             {
-                uint bytesNeeded;
                 while (!Imports.GetTokenInformation(
                     token,
                     info,
                     buffer.VoidPointer,
                     (uint)buffer.ByteCapacity,
-                    out bytesNeeded))
+                    out uint bytesNeeded))
                 {
                     Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureByteCapacity(bytesNeeded);
                 }
 
-                action(new CheckedReader(buffer));
+                action(buffer.DangerousGetHandle());
             });
         }
 
@@ -210,31 +209,33 @@ namespace WInterop.Authorization
             var privileges = new List<PrivilegeSetting>();
 
             TokenInformationInvoke(token, TOKEN_INFORMATION_CLASS.TokenPrivileges,
-            reader =>
+            buffer =>
             {
-                // Loop through and get our privileges
-                uint count = reader.ReadUint();
+                uint* u = (uint*)buffer;
 
-                BufferHelper.BufferInvoke((StringBuffer buffer) =>
+                // Loop through and get our privileges
+                uint count = *u++;
+
+                BufferHelper.BufferInvoke((StringBuffer stringBuffer) =>
                 {
                     for (int i = 0; i < count; i++)
                     {
                         LUID luid = new LUID
                         {
-                            LowPart = reader.ReadUint(),
-                            HighPart = reader.ReadUint(),
+                            LowPart = *u++,
+                            HighPart = *u++,
                         };
 
-                        uint length = buffer.CharCapacity;
+                        uint length = stringBuffer.CharCapacity;
 
-                        if (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, buffer, ref length))
+                        if (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, stringBuffer, ref length))
                             throw Errors.GetIoExceptionForLastError();
 
-                        buffer.Length = length;
+                        stringBuffer.Length = length;
 
-                        PrivilegeAttributes attributes = (PrivilegeAttributes)reader.ReadUint();
-                        privileges.Add(new PrivilegeSetting(buffer.ToString(), attributes));
-                        buffer.Length = 0;
+                        PrivilegeAttributes attributes = (PrivilegeAttributes)(*u++);
+                        privileges.Add(new PrivilegeSetting(stringBuffer.ToString(), attributes));
+                        stringBuffer.Length = 0;
                     }
                 });
             });
@@ -355,10 +356,9 @@ namespace WInterop.Authorization
         {
             SID sid = new SID();
             TokenInformationInvoke(token, TOKEN_INFORMATION_CLASS.TokenUser,
-            reader =>
+            buffer =>
             {
-                var sa = reader.ReadStruct<SID_AND_ATTRIBUTES>();
-                if (!Imports.CopySid((uint)sizeof(SID), out sid, sa.Sid))
+                if (!Imports.CopySid((uint)sizeof(SID), out sid, ((SID_AND_ATTRIBUTES*)buffer)->Sid))
                 {
                     throw Errors.GetIoExceptionForLastError();
                 }

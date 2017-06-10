@@ -108,7 +108,7 @@ namespace WInterop.Shell
         /// <summary>
         /// Get the Guid identifiers for all known folders.
         /// </summary>
-        public static IEnumerable<Guid> GetKnownFolderIds()
+        public unsafe static IEnumerable<Guid> GetKnownFolderIds()
         {
             List<Guid> ids = new List<Guid>();
 
@@ -117,9 +117,9 @@ namespace WInterop.Shell
 
             using (buffer)
             {
-                Reader reader = new Reader(buffer);
+                Guid* g = (Guid*)buffer.DangerousGetHandle();
                 for (int i = 0; i < count; i++)
-                    ids.Add(reader.ReadStruct<Guid>());
+                    ids.Add(*g++);
             }
 
             return ids;
