@@ -24,8 +24,7 @@ namespace WInterop.Support.Buffers
 
         public Reader(IBuffer buffer)
         {
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
-            _buffer = buffer;
+            _buffer = buffer ?? throw new ArgumentNullException(nameof(buffer));
         }
 
         public unsafe byte* BytePointer => (byte*)_buffer.DangerousGetHandle() + _byteOffset;

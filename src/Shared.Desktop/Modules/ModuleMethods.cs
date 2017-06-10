@@ -235,8 +235,7 @@ namespace WInterop.Modules
         {
             if (process == null) process = ProcessMethods.GetCurrentProcess();
 
-            List<ModuleInstance> modules = new List<ModuleInstance>();
-            BufferHelper.BufferInvoke<HeapBuffer>(buffer =>
+            return BufferHelper.BufferInvoke<HeapBuffer, ModuleInstance[]>(buffer =>
             {
                 uint sizeNeeded = (uint)buffer.ByteCapacity;
 
@@ -248,14 +247,15 @@ namespace WInterop.Modules
                         throw Errors.GetIoExceptionForLastError();
                 } while (sizeNeeded > buffer.ByteCapacity);
 
-                CheckedReader reader = new CheckedReader(buffer);
-                for (int i = 0; i < sizeNeeded; i += sizeof(IntPtr))
+                IntPtr* b = (IntPtr*)buffer.VoidPointer;
+                ModuleInstance[] modules = new ModuleInstance[sizeNeeded / sizeof(IntPtr)];
+                for (int i = 0; i < modules.Length; i++)
                 {
-                    modules.Add(new ModuleInstance(reader.ReadIntPtr()));
+                    modules[i] = (new ModuleInstance(*b++));
                 }
-            });
 
-            return modules;
+                return modules;
+            });
         }
     }
 }

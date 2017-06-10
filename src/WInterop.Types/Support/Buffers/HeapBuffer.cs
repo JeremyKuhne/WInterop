@@ -29,7 +29,7 @@ namespace WInterop.Support.Buffers
     /// 
     /// The actual buffer handle / memory location can change when resizing.
     /// </remarks>
-    public class HeapBuffer : SizedBuffer
+    public class HeapBuffer : ISizedBuffer, IDisposable
     {
         private HeapHandle _handle;
 
@@ -58,7 +58,8 @@ namespace WInterop.Support.Buffers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return DangerousGetHandle().ToPointer();
+                HeapHandle handle = _handle;
+                return handle == null ? null : handle.VoidPointer;
             }
         }
 
@@ -74,11 +75,13 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Get the handle to the buffer. Prefer using SafeHandle instead of IntPtr for interop (there is an implicit converter).
         /// </summary>
-        public override IntPtr DangerousGetHandle()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IntPtr DangerousGetHandle()
         {
             return _handle?.DangerousGetHandle() ?? IntPtr.Zero;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator SafeHandle(HeapBuffer buffer)
         {
             // Marshalling code will throw on null for SafeHandle
@@ -88,10 +91,11 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// The capacity of the buffer in bytes.
         /// </summary>
-        public override ulong ByteCapacity
+        public ulong ByteCapacity
         {
             // Capacity will never decrease, except after disposal. In addition, using the void* allows reads/writes
             // to capacity to be atomic. As such we shouldn't have to worry about returning a size that is too small.
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get { unsafe { return (ulong)_byteCapacity; } }
         }
 
@@ -184,7 +188,12 @@ namespace WInterop.Support.Buffers
             }
         }
 
-        protected override void Dispose(bool disposing)
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing)
                 ReleaseHandle();
