@@ -7,14 +7,11 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
-using System.Runtime.InteropServices;
 using WInterop.Authentication.Types;
-using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.BufferWrappers;
 using WInterop.FileManagement.Types;
-using WInterop.Handles.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -22,149 +19,6 @@ namespace WInterop.FileManagement
 {
     public static partial class FileMethods
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
-            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            unsafe public static extern SafeFileHandle CreateFileW(
-                string lpFileName,
-                DesiredAccess dwDesiredAccess,
-                ShareMode dwShareMode,
-                SECURITY_ATTRIBUTES* lpSecurityAttributes,
-                CreationDisposition dwCreationDisposition,
-                uint dwFlagsAndAttributes,
-                IntPtr hTemplateFile);
-
-            // https://https://msdn.microsoft.com/en-us/library/windows/desktop/aa365497.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern IntPtr ReOpenFile(
-                SafeFileHandle hOriginalFile,
-                DesiredAccess dwDesiredAccess,
-                ShareMode dwShareMode,
-                uint dwFlags);
-
-            // Ex version is supported by WinRT apps
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364944.aspx
-            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern FileAttributes GetFileAttributesW(
-                string lpFileName);
-
-            // Ex version is supported by WinRT apps
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GetFileInformationByHandle(
-                SafeFileHandle hFile,
-                out BY_HANDLE_FILE_INFORMATION lpFileInformation);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364980.aspx (kernel32)
-            [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern uint GetLongPathNameW(
-                string lpszShortPath,
-                SafeHandle lpszLongPath,
-                uint cchBuffer);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364989.aspx (kernel32)
-            [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern uint GetShortPathNameW(
-                string lpszLongPath,
-                SafeHandle lpszShortPath,
-                uint cchBuffer);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364962.aspx (kernel32)
-            [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern uint GetFinalPathNameByHandleW(
-                SafeFileHandle hFile,
-                SafeHandle lpszFilePath,
-                uint cchFilePath,
-                GetFinalPathNameByHandleFlags dwFlags);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363852.aspx
-            // CopyFile calls CopyFileEx with COPY_FILE_FAIL_IF_EXISTS if fail if exists is set
-            // (Neither are available in WinRT- use CopyFile2)
-            [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool CopyFileExW(
-                string lpExistingFileName,
-                string lpNewFileName,
-                CopyProgressRoutine lpProgressRoutine,
-                IntPtr lpData,
-                [MarshalAs(UnmanagedType.Bool)] ref bool pbCancel,
-                CopyFileFlags dwCopyFlags);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363866.aspx
-            // Note that CreateSymbolicLinkW returns a BOOLEAN (byte), not a BOOL (int)
-            [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.U1)]
-            public static extern bool CreateSymbolicLinkW(
-                string lpSymlinkFileName,
-                string lpTargetFileName,
-                SYMBOLIC_LINK_FLAG dwFlags);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364021.aspx
-            [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool EncryptFileW(
-                string lpFileName);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363903.aspx
-            [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool DecryptFileW(
-                string lpFileName,
-                uint dwReserved);
-
-            // Adding Users to an Encrypted File
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363765.aspx
-            //
-            // 1. LookupAccountName() to get SID
-            // 2. CertOpenSystemStore((HCRYPTPROV)NULL,L"TrustedPeople") to get cert store
-            // 3. CertFindCertificateInStore() to find the desired cert (PCCERT_CONTEXT)
-            //
-            //   EFS_CERTIFICATE.cbTotalLength = Marshal.Sizeof(EFS_CERTIFICATE)
-            //   EFS_CERTIFICATE.pUserSid = &SID
-            //   EFS_CERTIFICATE.pCertBlob.dwCertEncodingType = CCERT_CONTEXT.dwCertEncodingType
-            //   EFS_CERTIFICATE.pCertBlob.cbData = CCERT_CONTEXT.cbCertEncoded
-            //   EFS_CERTIFICATE.pCertBlob.pbData = CCERT_CONTEXT.pbCertEncoded
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363770.aspx
-            //
-            //  DWORD WINAPI AddUsersToEncryptedFile(
-            //      _In_ LPCWSTR lpFileName,
-            //      _In_ PENCRYPTION_CERTIFICATE_LIST pUsers
-            //  );
-            [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern uint AddUsersToEncryptedFile(
-                string lpFileName,
-
-                /// <summary>
-                /// Pointer to ENCRYPTION_CERTIFICATE_LIST array
-                /// </summary>
-                IntPtr pUsers);
-
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567052.aspx
-            // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
-            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            unsafe public static extern NTSTATUS NtQueryInformationFile(
-                SafeFileHandle FileHandle,
-                out IO_STATUS_BLOCK IoStatusBlock,
-                void* FileInformation,
-                uint Length,
-                FILE_INFORMATION_CLASS FileInformationClass);
-
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff546850.aspx
-            // https://msdn.microsoft.com/en-us/library/hh551132.aspx
-            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern BOOLEAN RtlIsNameInExpression(
-                UNICODE_STRING* Expression,
-                UNICODE_STRING* Name,
-                BOOLEAN IgnoreCase,
-                IntPtr UpcaseTable);
-        }
-
         /// <summary>
         /// Get the long (non 8.3) path version of the given path.
         /// </summary>
