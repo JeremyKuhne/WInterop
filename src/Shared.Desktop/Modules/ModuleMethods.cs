@@ -50,7 +50,7 @@ namespace WInterop.Modules
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            unsafe public static extern bool GetModuleHandleExW(
+            public unsafe static extern bool GetModuleHandleExW(
                 GetModuleFlags dwFlags,
                 IntPtr lpModuleName,
                 out IntPtr moduleHandle);

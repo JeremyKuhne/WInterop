@@ -47,7 +47,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Read a string of the given amount of characters from the buffer. Advances the reader offset.
         /// </summary>
-        unsafe public virtual string ReadString(int charCount)
+        public unsafe virtual string ReadString(int charCount)
         {
             if (charCount == 0) return string.Empty;
 
@@ -62,7 +62,7 @@ namespace WInterop.Support.Buffers
         /// <remarks>
         /// LSA_UNICODE_STRING has the same definition as UNICODE_STRING.
         /// </remarks>
-        unsafe public string ReadUNICODE_STRING()
+        public unsafe string ReadUNICODE_STRING()
         {
             UNICODE_STRING us = *(UNICODE_STRING*)BytePointer;
             string value = new string(us.Buffer, 0, us.Length / sizeof(char));
@@ -81,7 +81,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Read a short at the current offset. Advances the reader offset.
         /// </summary>
-        unsafe public virtual short ReadShort()
+        public unsafe virtual short ReadShort()
         {
             byte* address = BytePointer;
             _byteOffset += sizeof(short);
@@ -109,7 +109,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Read an int at the current offset. Advances the reader offset.
         /// </summary>
-        unsafe public virtual int ReadInt()
+        public unsafe virtual int ReadInt()
         {
             byte* address = BytePointer;
             _byteOffset += sizeof(int);
@@ -137,7 +137,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Read a long at the current offset. Advances the reader offset.
         /// </summary>
-        unsafe public virtual long ReadLong()
+        public unsafe virtual long ReadLong()
         {
             byte* address = BytePointer;
             _byteOffset += sizeof(long);

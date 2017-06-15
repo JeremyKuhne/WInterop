@@ -10,25 +10,11 @@ using WInterop.Support;
 
 namespace WInterop.FileManagement.Types
 {
-    /// <summary>
-    /// Used with GetFileInformationByHandleEx and FileIdBothDirectoryInfo/RestartInfo.
-    /// </summary>
-    /// <remarks>
-    /// Very close to FILE_BOTH_DIR_INFORMATION, but not exactly the same.
-    /// </remarks>
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540235.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct FILE_ID_BOTH_DIR_INFO
+    public struct FILE_BOTH_DIR_INFORMATION
     {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364226.aspx
-
-        /// <summary>
-        /// Byte offset for the next FILE_ID_BOTH_DIR_INFO, or 0 if no entries follow
-        /// </summary>
         public uint NextEntryOffset;
-
-        /// <summary>
-        /// Byte offset within the parent directory, undefined for NTFS.
-        /// </summary>
         public uint FileIndex;
         public LongFileTime CreationTime;
         public LongFileTime LastAccessTime;
@@ -41,10 +27,6 @@ namespace WInterop.FileManagement.Types
         public uint EaSize;
         public sbyte ShortNameLength;
         public FixedString.Size12 ShortName;
-        public long FileId;
-
-        // This is a variable length string
-        // WCHAR FileName[1];
         public TrailingString.Unsized FileName;
     }
 }

@@ -26,8 +26,8 @@ namespace WInterop.Windows.Types
         public static implicit operator WPARAM(uint value) => new WPARAM((UIntPtr)value);
 
         // We make these explicit as we want to encourage keeping signed/unsigned alignment
-        unsafe public static explicit operator WPARAM(IntPtr value) => new WPARAM(new UIntPtr(value.ToPointer()));
-        unsafe public static explicit operator IntPtr(WPARAM value) => new IntPtr(value.RawValue.ToPointer());
+        public unsafe static explicit operator WPARAM(IntPtr value) => new WPARAM(new UIntPtr(value.ToPointer()));
+        public unsafe static explicit operator IntPtr(WPARAM value) => new IntPtr(value.RawValue.ToPointer());
         public static explicit operator int(WPARAM value) => (int)(uint)value;
         public static explicit operator WPARAM(int value) => new WPARAM((UIntPtr)value);
         public static explicit operator char(WPARAM value) => (char)(uint)value;

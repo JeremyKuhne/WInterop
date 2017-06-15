@@ -22,7 +22,7 @@ namespace WInterop.Ipc
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365147.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            unsafe public static extern SafeMailslotHandle CreateMailslotW(
+            public unsafe static extern SafeMailslotHandle CreateMailslotW(
                 string lpName,
                 uint nMaxMessageSize,
                 uint lReadTimeout,
@@ -31,7 +31,7 @@ namespace WInterop.Ipc
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365435.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            unsafe public static extern bool GetMailslotInfo(
+            public unsafe static extern bool GetMailslotInfo(
                 SafeMailslotHandle hMailslot,
                 uint* lpMaxMessageSize,
                 uint* lpNextSize,
@@ -41,7 +41,7 @@ namespace WInterop.Ipc
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365786.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            unsafe public static extern bool SetMailslotInfo(
+            public unsafe static extern bool SetMailslotInfo(
                 SafeMailslotHandle hMailslot,
                 uint lReadTimeout);
         }

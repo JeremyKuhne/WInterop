@@ -15,7 +15,7 @@ namespace WInterop.FileManagement.Types.CopyFile2
     {
         public uint dwSize;
         public CopyFileFlags dwCopyFlags;
-        unsafe public int* pfCanel;
+        public unsafe int* pfCanel;
         public IntPtr pProgressRoutine;
         public IntPtr pvCallbackContext;
     }

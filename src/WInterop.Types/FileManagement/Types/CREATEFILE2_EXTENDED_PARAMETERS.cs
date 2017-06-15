@@ -19,7 +19,7 @@ namespace WInterop.FileManagement.Types
         public FileAttributes dwFileAttributes;
         public FileFlags dwFileFlags;
         public SecurityQosFlags dwSecurityQosFlags;
-        unsafe public SECURITY_ATTRIBUTES* lpSecurityAttributes;
+        public unsafe SECURITY_ATTRIBUTES* lpSecurityAttributes;
         public IntPtr hTemplateFile;
     }
 }

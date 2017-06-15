@@ -66,7 +66,7 @@ namespace WInterop.Clipboard
 
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            unsafe public static extern bool GetUpdatedClipboardFormats(
+            public unsafe static extern bool GetUpdatedClipboardFormats(
                 uint* lpuiFormats,
                 uint cFormats,
                 uint* pcFormatsOut);

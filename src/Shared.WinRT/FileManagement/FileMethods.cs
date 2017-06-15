@@ -120,7 +120,7 @@ namespace WInterop.FileManagement
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364953.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l2_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            unsafe public static extern bool GetFileInformationByHandleEx(
+            public unsafe static extern bool GetFileInformationByHandleEx(
                 SafeFileHandle hFile,
                 FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
                 void* lpFileInformation,
@@ -135,7 +135,7 @@ namespace WInterop.FileManagement
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            unsafe public static extern bool ReadFile(
+            public unsafe static extern bool ReadFile(
                 SafeFileHandle hFile,
                 byte* lpBuffer,
                 uint nNumberOfBytesToRead,
@@ -145,7 +145,7 @@ namespace WInterop.FileManagement
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            unsafe public static extern bool WriteFile(
+            public unsafe static extern bool WriteFile(
                 SafeFileHandle hFile,
                 byte* lpBuffer,
                 uint nNumberOfBytesToWrite,
@@ -734,7 +734,7 @@ namespace WInterop.FileManagement
         /// <param name="bufferOffset">Buffer offset.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
         /// <returns>The number of bytes read.</returns>
-        unsafe public static uint ReadFile(SafeFileHandle fileHandle, byte* buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
+        public unsafe static uint ReadFile(SafeFileHandle fileHandle, byte* buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
         {
             if (buffer == null) throw new ArgumentNullException("buffer");
             if (fileHandle == null) throw new ArgumentNullException("fileHandle");
@@ -820,7 +820,7 @@ namespace WInterop.FileManagement
         /// <param name="bufferOffset">Buffer offset.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="buffer"/> or <paramref name="fileHandle"/> is null.</exception>
         /// <returns>The number of bytes written.</returns>
-        unsafe public static uint WriteFile(SafeFileHandle fileHandle, byte* buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
+        public unsafe static uint WriteFile(SafeFileHandle fileHandle, byte* buffer, uint numberOfBytes, ulong? fileOffset = null, uint bufferOffset = 0)
         {
             if (buffer == null) throw new ArgumentNullException("buffer");
             if (fileHandle == null) throw new ArgumentNullException("fileHandle");

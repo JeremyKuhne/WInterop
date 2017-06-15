@@ -20,7 +20,7 @@ namespace WInterop.DiskManagement
         {
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            unsafe public static extern bool GetDiskFreeSpaceExW(
+            public unsafe static extern bool GetDiskFreeSpaceExW(
                 string lpDirectoryName,
                 ulong* lpFreeBytesAvailable,
                 ulong* lpTotalNumberOfBytes,

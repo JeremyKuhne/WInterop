@@ -24,7 +24,7 @@ namespace WInterop.Resources
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647486.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            unsafe public static extern int LoadStringW(
+            public unsafe static extern int LoadStringW(
                 ModuleInstance hInstance,
                 int uID,
                 out char* lpBuffer,

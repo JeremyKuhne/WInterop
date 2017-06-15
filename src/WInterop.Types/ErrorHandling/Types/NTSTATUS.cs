@@ -14,7 +14,39 @@ namespace WInterop.ErrorHandling.Types
     {
         // NTSTATUS values
         // https://msdn.microsoft.com/en-us/library/cc704588.aspx
+        //
+        // Using NTSTATUS values
+        // https://msdn.microsoft.com/en-us/library/windows/hardware/ff565436.aspx
+
+        /// <summary>
+        /// The operation completed successfully.
+        /// </summary>
         STATUS_SUCCESS = 0x00000000,
+
+        /// <summary>
+        /// The caller attempted to wait for a mutex that has been abandoned.
+        /// </summary>
+        STATUS_ABANDONED = 0x00000080,
+
+        /// <summary>
+        /// A user-mode APC was delivered before the given Interval expired.
+        /// </summary>
+        STATUS_USER_APC = 0x000000C0,
+
+        /// <summary>
+        /// The given Timeout interval expired.
+        /// </summary>
+        STATUS_TIMEOUT = 0x00000102,
+
+        /// <summary>
+        /// The operation that was requested is pending completion.
+        /// </summary>
+        STATUS_PENDING = 0x00000103,
+
+        /// <summary>
+        /// A reparse should be performed by the Object Manager because the name of the file resulted in a symbolic link.
+        /// </summary>
+        STATUS_REPARSE = 0x00000104,
 
         /// <summary>
         /// Returned by enumeration APIs to indicate more information is available to successive calls.

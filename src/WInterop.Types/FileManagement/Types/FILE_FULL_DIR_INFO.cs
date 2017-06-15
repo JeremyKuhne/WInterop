@@ -5,18 +5,24 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Collections.Generic;
+using WInterop.Support;
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/hh447298.aspx
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540310.aspx
-
     /// <summary>
     /// Used with GetFileInformationByHandleEx and FileIdBothDirectoryInfo/RestartInfo.
     /// </summary>
+    /// <remarks>
+    /// Identical to FILE_FULL_DIR_INFORMATION.
+    /// </remarks>
     public struct FILE_FULL_DIR_INFO
     {
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/hh447298.aspx
+        // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540289.aspx
+
+        /// <summary>
+        /// Offset in bytes of the next entry, if any.
+        /// </summary>
         public uint NextEntryOffset;
 
         /// <summary>
@@ -24,10 +30,10 @@ namespace WInterop.FileManagement.Types
         /// </summary>
         public uint FileIndex;
 
-        public long CreationTime;
-        public long LastAccessTime;
-        public long LastWriteTime;
-        public long ChangeTime;
+        public LongFileTime CreationTime;
+        public LongFileTime LastAccessTime;
+        public LongFileTime LastWriteTime;
+        public LongFileTime ChangeTime;
 
         public long EndOfFile;
         public long AllocationSize;
@@ -50,11 +56,11 @@ namespace WInterop.FileManagement.Types
         /// <summary>
         /// The first character of the file name (the rest of the characters follow)
         /// </summary>
-        public char FileName;
+        public TrailingString.Unsized FileName;
 
         public unsafe static string GetFileName(FILE_FULL_DIR_INFO* info)
         {
-            return new string(&(*info).FileName, 0, (int)((*info).FileNameLength / 2));
+            return info->FileName.GetValue(info->FileNameLength);
         }
 
         public unsafe static FILE_FULL_DIR_INFO* GetNextInfo(FILE_FULL_DIR_INFO* info)

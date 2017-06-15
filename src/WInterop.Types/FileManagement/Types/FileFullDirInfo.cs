@@ -38,15 +38,15 @@ namespace WInterop.FileManagement.Types
 
         public unsafe FileFullDirInfo(FILE_FULL_DIR_INFO* info)
         {
-            FileIndex = (*info).FileIndex;
-            CreationTime = DateTime.FromFileTime((*info).CreationTime);
-            LastAccessTime = DateTime.FromFileTime((*info).LastAccessTime);
-            LastWriteTime = DateTime.FromFileTime((*info).LastWriteTime);
-            ChangeTime = DateTime.FromFileTime((*info).ChangeTime);
-            EndOfFile = (*info).EndOfFile;
-            AllocationSize = (*info).AllocationSize;
-            FileAttributes = (*info).FileAttributes;
-            ExtendedAttributesSize = (*info).EaSize;
+            FileIndex = info->FileIndex;
+            CreationTime = info->CreationTime.ToDateTimeUtc().ToLocalTime();
+            LastAccessTime = info->LastAccessTime.ToDateTimeUtc().ToLocalTime();
+            LastWriteTime = info->LastWriteTime.ToDateTimeUtc().ToLocalTime();
+            ChangeTime = info->ChangeTime.ToDateTimeUtc().ToLocalTime();
+            EndOfFile = info->EndOfFile;
+            AllocationSize = info->AllocationSize;
+            FileAttributes = info->FileAttributes;
+            ExtendedAttributesSize = info->EaSize;
             FileName = FILE_FULL_DIR_INFO.GetFileName(info);
         }
     }

@@ -19,7 +19,7 @@ namespace WInterop.Resources
         /// <summary>
         /// Get the specified string resource from the given library.
         /// </summary>
-        unsafe public static string LoadString(ModuleInstance library, int identifier)
+        public unsafe static string LoadString(ModuleInstance library, int identifier)
         {
             // A string resource is mapped in with the dll, there is no need to allocate
             // or free a buffer.

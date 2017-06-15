@@ -12,7 +12,6 @@ using WInterop.Authentication.Types;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
-using WInterop.Handles.Types;
 using WInterop.Support;
 
 namespace WInterop.FileManagement
@@ -26,7 +25,7 @@ namespace WInterop.FileManagement
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            unsafe public static extern SafeFileHandle CreateFileW(
+            public unsafe static extern SafeFileHandle CreateFileW(
                 string lpFileName,
                 DesiredAccess dwDesiredAccess,
                 ShareMode dwShareMode,
@@ -145,12 +144,28 @@ namespace WInterop.FileManagement
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567052.aspx
             // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            unsafe public static extern NTSTATUS NtQueryInformationFile(
+            public unsafe static extern NTSTATUS NtQueryInformationFile(
                 SafeFileHandle FileHandle,
                 out IO_STATUS_BLOCK IoStatusBlock,
                 void* FileInformation,
                 uint Length,
                 FILE_INFORMATION_CLASS FileInformationClass);
+
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556633.aspx
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567047.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public unsafe static extern NTSTATUS NtQueryDirectoryFile(
+                SafeFileHandle FileHandle,
+                IntPtr Event,
+                AsyncProcedureCall ApcRoutine,
+                IntPtr ApcContext,
+                out IO_STATUS_BLOCK IoStatusBlock,
+                void* FileInformation,
+                uint Length,
+                FILE_INFORMATION_CLASS FileInformationClass,
+                BOOLEAN ReturnSingleEntry,
+                string FileName,
+                BOOLEAN RestartScan);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff546850.aspx
             // https://msdn.microsoft.com/en-us/library/hh551132.aspx
