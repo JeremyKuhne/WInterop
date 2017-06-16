@@ -158,6 +158,7 @@ namespace WInterop.ErrorHandling.Types
         ERROR_MR_MID_NOT_FOUND = 317,
         ERROR_OPERATION_ABORTED = 995,
         ERROR_NO_TOKEN = 1008,
+        ERROR_NO_ASSOCIATION = 1155,
         ERROR_NOT_FOUND = 1168,
         ERROR_CANCELLED = 1223,
         ERROR_REQUEST_ABORTED = 1235,

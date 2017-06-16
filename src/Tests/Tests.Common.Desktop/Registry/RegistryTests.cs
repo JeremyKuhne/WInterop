@@ -8,8 +8,8 @@
 using System;
 using Xunit;
 using FluentAssertions;
-using WInterop.Desktop.Registry;
-using WInterop.Desktop.Registry.Types;
+using WInterop.Registry;
+using WInterop.Registry.Types;
 
 namespace DesktopTests.Registry
 {

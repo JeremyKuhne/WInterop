@@ -11,6 +11,8 @@ namespace WInterop.Com.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms221170.aspx
     // [MS-OAUT] https://msdn.microsoft.com/en-us/library/cc237865.aspx
+
+    // VARTYPE is a ushort
     public enum VARENUM : ushort
     {
         VT_EMPTY = 0,

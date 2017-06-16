@@ -13,6 +13,7 @@ namespace WInterop.ErrorHandling.Types
         S_OK = 0,
         S_FALSE = 1,
         E_FAIL = unchecked((int)0x80004005),
+        E_POINTER = unchecked((int)0x80004003),
         E_ACCESSDENIED = unchecked((int)0x80070005L),
         E_INVALIDARG = unchecked((int)0x80070057)
     }

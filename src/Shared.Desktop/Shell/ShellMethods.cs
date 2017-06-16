@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Com.Types;
+using WInterop.Registry.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.Handles.Types;
 using WInterop.Shell.Types;
@@ -25,32 +26,34 @@ namespace WInterop.Shell
         public static partial class Imports
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762188.aspx
-            [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, SetLastError = false, ExactSpelling = true)]
+            [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT SHGetKnownFolderPath(
                 [MarshalAs(UnmanagedType.LPStruct)] Guid rfid,
                 KNOWN_FOLDER_FLAG dwFlags,
                 SafeHandle hToken,
                 out string ppszPath);
 
-            [DllImport(Libraries.Shell32, SetLastError = false, ExactSpelling = true)]
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762187.aspx
+            [DllImport(Libraries.Shell32, ExactSpelling = true)]
             public static extern HRESULT SHGetKnownFolderIDList(
                 [MarshalAs(UnmanagedType.LPStruct)] Guid rfid,
                 KNOWN_FOLDER_FLAG dwFlags,
                 SafeHandle hToken,
                 out ItemIdList ppidl);
 
-            [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, SetLastError = false, ExactSpelling = true)]
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762191.aspx
+            [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT SHGetNameFromIDList(
                 ItemIdList pidl,
                 SIGDN sigdnName,
                 out string ppszName);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773760.aspx
             [DllImport(Libraries.Shlwapi, CharSet = CharSet.Unicode, SetLastError = false, ExactSpelling = true)]
             public static extern bool PathUnExpandEnvStringsW(
                 string pszPath,
                 SafeHandle pszBuf,
                 uint cchBuf);
-
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762275.aspx
             [DllImport(Libraries.Userenv, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -59,6 +62,80 @@ namespace WInterop.Shell
                 string lpSrc,
                 SafeHandle lpDst,
                 uint dwSize);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773468.aspx
+            [DllImport(Libraries.Shlwapi, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern HRESULT AssocQueryKeyW(
+                ASSOCF flags,
+                ASSOCKEY key,
+                string pszAssoc,
+                string pszExtra,
+                out RegistryKeyHandle phkeyOut);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773471.aspx
+            [DllImport(Libraries.Shlwapi, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern HRESULT AssocQueryStringW(
+                ASSOCF flags,
+                ASSOCSTR str,
+                string pszAssoc,
+                string pszExtra,
+                SafeHandle pszOut,
+                ref uint pcchOut);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773473.aspx
+            [DllImport(Libraries.Shlwapi, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern HRESULT AssocQueryStringByKeyW(
+                ASSOCF flags,
+                ASSOCSTR str,
+                RegistryKeyHandle hkAssoc,
+                string pszExtra,
+                SafeHandle pszOut,
+                ref uint pcchOut);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762079.aspx
+            [DllImport(Libraries.PropSys, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern HRESULT PSGetPropertyDescriptionListFromString(
+                string pszPropList,
+                [MarshalAs(UnmanagedType.LPStruct)] Guid riid,
+                [MarshalAs(UnmanagedType.Interface)] out IPropertyDescriptionList ppv);
+        }
+
+        public static IPropertyDescriptionList GetPropertyDescriptionListFromString(string value)
+        {
+            HRESULT result = Imports.PSGetPropertyDescriptionListFromString(value, new Guid(InterfaceIds.IID_IPropertyDescriptionList), out IPropertyDescriptionList list);
+            if (result != HRESULT.S_OK)
+                throw Errors.GetIoExceptionForHResult(result);
+            return list;
+        }
+
+        public static RegistryKeyHandle AssocQueryKey(ASSOCF flags, ASSOCKEY key, string association, string extraInfo)
+        {
+            HRESULT result = Imports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle);
+            if (result != HRESULT.S_OK)
+                throw Errors.GetIoExceptionForHResult(result);
+            return handle;
+        }
+
+        public static string AssocQueryString(ASSOCF flags, ASSOCSTR @string, string association, string extraInfo)
+        {
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
+            {
+                flags |= ASSOCF.NoTruncate;
+
+                HRESULT result;
+                uint count = buffer.CharCapacity;
+                while ((result = Imports.AssocQueryStringW(flags, @string, association, extraInfo, buffer, ref count)) == HRESULT.E_POINTER)
+                {
+                    buffer.EnsureCharCapacity(count);
+                }
+
+                if (result != HRESULT.S_OK)
+                    throw Errors.GetIoExceptionForHResult(result, association);
+
+                // Count includes the null
+                buffer.Length = count - 1;
+                return buffer.ToString();
+            });
         }
 
         /// <summary>

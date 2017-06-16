@@ -89,7 +89,7 @@ namespace WInterop.Support
                 default:
                     return Macros.HRESULT_FACILITY(hr) == Facility.WIN32
                         ? WindowsErrorToException((WindowsError)Macros.HRESULT_CODE(hr), message, path)
-                        : new IOException(message, (int)hr);
+                        : new WInteropIOException(message, hr);
             }
         }
 
@@ -164,7 +164,7 @@ namespace WInterop.Support
                     }
                 }
 
-                throw new IOException("Failed to get error string.", (int)Macros.HRESULT_FROM_WIN32(lastError));
+                throw new WInteropIOException("Failed to get error string.", Macros.HRESULT_FROM_WIN32(lastError));
             }
         }
 
@@ -203,7 +203,7 @@ namespace WInterop.Support
                     return new NotSupportedException(message);
                 case WindowsError.ERROR_SHARING_VIOLATION:
                 default:
-                    return new IOException(message, (int)Macros.HRESULT_FROM_WIN32(error));
+                    return new WInteropIOException(message, Macros.HRESULT_FROM_WIN32(error));
             }
         }
 

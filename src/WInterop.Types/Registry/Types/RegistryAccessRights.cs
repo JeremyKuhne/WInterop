@@ -8,7 +8,7 @@
 using System;
 using WInterop.Authorization.Types;
 
-namespace WInterop.Desktop.Registry.Types
+namespace WInterop.Registry.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724878.aspx
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa384129.aspx

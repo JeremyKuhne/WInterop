@@ -8,13 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Desktop.Registry.Types;
+using WInterop.Registry.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
+using System.Runtime.InteropServices.ComTypes;
 
-namespace WInterop.Desktop.Registry
+namespace WInterop.Registry
 {
     public static partial class RegistryMethods
     {
@@ -62,6 +63,34 @@ namespace WInterop.Desktop.Registry
                 void* lpData,
                 uint* lpcbData);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724902.aspx
+            [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern WindowsError RegQueryInfoKeyW(
+                RegistryKeyHandle hKey,
+                SafeHandle lpClass,
+                ref uint lpcClass,
+                IntPtr lpReserved,
+                out uint lpcSubKeys,
+                out uint lpcMaxSubKeyLen,
+                out uint lpcMaxClassLen,
+                out uint lpcValues,
+                out uint lpcMaxValueNameLen,
+                out uint lpcMaxValueLen,
+                out uint lpcbSecurityDescriptor,
+                out FILETIME lpftLastWriteTime);
+
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556680.aspx 
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567060.aspx
+            [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+            public unsafe static extern NTSTATUS NtQueryKey(
+                RegistryKeyHandle KeyHandle,
+                KEY_INFORMATION_CLASS KeyInformationClass,
+                void* KeyInformation,
+                uint Length,
+                out uint ResultLength);
+
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556514.aspx
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566453.aspx
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             public unsafe static extern NTSTATUS NtEnumerateValueKey(
                 RegistryKeyHandle KeyHandle,
@@ -70,6 +99,25 @@ namespace WInterop.Desktop.Registry
                 void* KeyValueInformation,
                 uint Length,
                 out uint ResultLength);
+        }
+
+        public unsafe static string QueryKeyName(RegistryKeyHandle key)
+        {
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
+            {
+                NTSTATUS status;
+                uint resultLength;
+                while ((status = Imports.NtQueryKey(key, KEY_INFORMATION_CLASS.KeyNameInformation, buffer.VoidPointer, (uint)buffer.ByteCapacity, out resultLength))
+                    == NTSTATUS.STATUS_BUFFER_TOO_SMALL || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
+                {
+                    buffer.EnsureByteCapacity(resultLength);
+                }
+
+                if (status != NTSTATUS.STATUS_SUCCESS)
+                    ErrorMethods.GetIoExceptionForNTStatus(status);
+
+                return ((KEY_NAME_INFORMATION*)buffer.VoidPointer)->Name.Value;
+            });
         }
 
         /// <summary>

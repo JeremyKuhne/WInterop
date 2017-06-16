@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\MenuTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\SecurityTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shell\AssociationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />

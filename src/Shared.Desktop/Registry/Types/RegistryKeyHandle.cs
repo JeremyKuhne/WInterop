@@ -9,7 +9,7 @@ using System;
 using WInterop.ErrorHandling.Types;
 using WInterop.Handles.Types;
 
-namespace WInterop.Desktop.Registry.Types
+namespace WInterop.Registry.Types
 {
     public class RegistryKeyHandle : HandleZeroOrMinusOneIsInvalid
     {
