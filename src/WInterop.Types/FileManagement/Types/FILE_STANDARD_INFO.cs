@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
+using WInterop.Support;
 
 namespace WInterop.FileManagement.Types
 {
@@ -18,7 +19,7 @@ namespace WInterop.FileManagement.Types
         public ulong AllocationSize;
         public ulong EndOfFile;
         public uint NumberOfLinks;
-        public byte DeletePending;
-        public byte Directory;
+        public BOOLEAN DeletePending;
+        public BOOLEAN Directory;
     }
 }

@@ -15,7 +15,6 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.BufferWrappers;
 using WInterop.FileManagement.Types;
-using WInterop.FileManagement.Types.CopyFile2;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Synchronization.Types;

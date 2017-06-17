@@ -20,8 +20,8 @@ namespace WInterop.FileManagement.Types
             AllocationSize = data.AllocationSize;
             EndOfFile = data.EndOfFile;
             NumberOfLinks = data.NumberOfLinks;
-            DeletePending = data.DeletePending != 0;
-            Directory = data.Directory != 0;
+            DeletePending = data.DeletePending;
+            Directory = data.Directory;
         }
     }
 }

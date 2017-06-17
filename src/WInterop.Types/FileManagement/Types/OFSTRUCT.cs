@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.ErrorHandling.Types;
+using WInterop.Support;
 
 namespace WInterop.FileManagement.Types
 {
@@ -14,7 +15,7 @@ namespace WInterop.FileManagement.Types
     {
         public const int OFS_MAXPATHNAME = 128;
         public byte cBytes;
-        public byte fFixedDisk;
+        public BOOLEAN fFixedDisk;
         public ushort nErrCode;
         public ushort Reserved1;
         public ushort Reserved2;

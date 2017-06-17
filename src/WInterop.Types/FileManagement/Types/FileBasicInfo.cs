@@ -20,10 +20,10 @@ namespace WInterop.FileManagement.Types
         public FileBasicInfo(FILE_BASIC_INFO data)
         {
             Attributes = data.FileAttributes;
-            CreationTime = DateTime.FromFileTime(data.CreationTime);
-            LastAccessTime = DateTime.FromFileTime(data.LastAccessTime);
-            LastWriteTime = DateTime.FromFileTime(data.LastWriteTime);
-            ChangeTime = DateTime.FromFileTime(data.ChangeTime);
+            CreationTime = data.CreationTime.ToDateTimeUtc().ToLocalTime();
+            LastAccessTime = data.LastAccessTime.ToDateTimeUtc().ToLocalTime();
+            LastWriteTime = data.LastWriteTime.ToDateTimeUtc().ToLocalTime();
+            ChangeTime = data.ChangeTime.ToDateTimeUtc().ToLocalTime();
         }
     }
 }

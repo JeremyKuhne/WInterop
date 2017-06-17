@@ -22,7 +22,7 @@ namespace DesktopTests.Windows
         [Fact]
         public unsafe void WindowClassSize()
         {
-            sizeof(WNDCLASSEX).Should().Be(80);
+            sizeof(WNDCLASSEX).Should().Be(WInterop.Support.Environment.Is64BitProcess ? 80 : 48);
         }
 
         [Fact]
@@ -226,10 +226,10 @@ namespace DesktopTests.Windows
                     var info = WindowMethods.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
                     info.ClassExtraBytes.Should().Be(80);
 
-                    IntPtr result = WindowMethods.SetClassLong(window, (ClassLong)72, (IntPtr)0xDEADBEEF);
+                    IntPtr result = WindowMethods.SetClassLong(window, (ClassLong)72, (IntPtr)0x0000BEEF);
                     result.Should().Be(IntPtr.Zero);
 
-                    WindowMethods.GetClassLong(window, (ClassLong)72).Should().Be((IntPtr)0xDEADBEEF);
+                    WindowMethods.GetClassLong(window, (ClassLong)72).Should().Be((IntPtr)0x0000BEEF);
                 }
                 finally
                 {
@@ -268,10 +268,10 @@ namespace DesktopTests.Windows
                     var info = WindowMethods.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
                     info.WindowExtraBytes.Should().Be(80);
 
-                    IntPtr result = WindowMethods.SetWindowLong(window, (WindowLong)72, (IntPtr)0xDEADBEEF);
+                    IntPtr result = WindowMethods.SetWindowLong(window, (WindowLong)72, (IntPtr)0x0000BEEF);
                     result.Should().Be(IntPtr.Zero);
 
-                    WindowMethods.GetWindowLong(window, (WindowLong)72).Should().Be((IntPtr)0xDEADBEEF);
+                    WindowMethods.GetWindowLong(window, (WindowLong)72).Should().Be((IntPtr)0x0000BEEF);
                 }
                 finally
                 {

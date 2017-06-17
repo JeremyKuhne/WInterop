@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Support;
 
 namespace WInterop.FileManagement.Types
 {
@@ -21,10 +20,10 @@ namespace WInterop.FileManagement.Types
         public FileInfo(WIN32_FILE_ATTRIBUTE_DATA data)
         {
             Attributes = data.dwFileAttributes;
-            CreationTime = Conversion.FileTimeToDateTime(data.ftCreationTime);
-            LastAccessTime = Conversion.FileTimeToDateTime(data.ftLastAccessTime);
-            LastWriteTime = Conversion.FileTimeToDateTime(data.ftLastWriteTime);
-            Size = Conversion.HighLowToLong(data.nFileSizeHigh, data.nFileSizeLow);
+            CreationTime = data.ftCreationTime.ToDateTimeUtc().ToLocalTime();
+            LastAccessTime = data.ftLastAccessTime.ToDateTimeUtc().ToLocalTime();
+            LastWriteTime = data.ftLastWriteTime.ToDateTimeUtc().ToLocalTime();
+            Size = data.nFileSize;
         }
     }
 }

@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Support;
 
 namespace WInterop.FileManagement.Types
 {
@@ -25,17 +24,17 @@ namespace WInterop.FileManagement.Types
         public DateTime LastWrite { get; private set; }
         public ulong Length { get; private set; }
 
-        public FindResult(WIN32_FIND_DATA findData, string searchPath)
+        public FindResult(ref WIN32_FIND_DATA findData, string searchPath)
         {
             SearchPath = searchPath;
             FileName = findData.cFileName;
             AlternateFileName = findData.cAlternateFileName;
             Attributes = findData.dwFileAttributes;
 
-            Creation = Conversion.FileTimeToDateTime(findData.ftCreationTime);
-            LastAccess = Conversion.FileTimeToDateTime(findData.ftLastAccessTime);
-            LastWrite = Conversion.FileTimeToDateTime(findData.ftLastWriteTime);
-            Length = Conversion.HighLowToLong(findData.nFileSizeHigh, findData.nFileSizeLow);
+            Creation = findData.ftCreationTime.ToDateTimeUtc().ToLocalTime();
+            LastAccess = findData.ftLastAccessTime.ToDateTimeUtc().ToLocalTime();
+            LastWrite = findData.ftLastWriteTime.ToDateTimeUtc().ToLocalTime();
+            Length = findData.nFileSize;
         }
     }
 }

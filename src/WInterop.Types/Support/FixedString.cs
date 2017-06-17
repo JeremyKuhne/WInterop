@@ -57,6 +57,26 @@ namespace WInterop.Support
                 get => _buffer.GetString(Size);
                 set => _buffer.SetString(value, Size);
             }
+
+            public override string ToString() => Value;
+            public static implicit operator string(Size12 s) => s.Value;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct Size14
+        {
+            private const int Size = 14;
+            private FixedString _buffer;
+            private unsafe fixed char _bufferExtension[Size - BaseSize];
+
+            public string Value
+            {
+                get => _buffer.GetString(Size);
+                set => _buffer.SetString(value, Size);
+            }
+
+            public override string ToString() => Value;
+            public static implicit operator string(Size14 s) => s.Value;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -71,6 +91,9 @@ namespace WInterop.Support
                 get => _buffer.GetString(Size);
                 set => _buffer.SetString(value, Size);
             }
+
+            public override string ToString() => Value;
+            public static implicit operator string(Size16 s) => s.Value;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -85,6 +108,9 @@ namespace WInterop.Support
                 get => _buffer.GetString(Size);
                 set => _buffer.SetString(value, Size);
             }
+
+            public override string ToString() => Value;
+            public static implicit operator string(Size32 s) => s.Value;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -99,6 +125,9 @@ namespace WInterop.Support
                 get => _buffer.GetString(Size);
                 set => _buffer.SetString(value, Size);
             }
+
+            public override string ToString() => Value;
+            public static implicit operator string(Size64 s) => s.Value;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -113,6 +142,9 @@ namespace WInterop.Support
                 get => _buffer.GetString(Size);
                 set => _buffer.SetString(value, Size);
             }
+
+            public override string ToString() => Value;
+            public static implicit operator string(Size128 s) => s.Value;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -127,6 +159,9 @@ namespace WInterop.Support
                 get => _buffer.GetString(Size);
                 set => _buffer.SetString(value, Size);
             }
+
+            public override string ToString() => Value;
+            public static implicit operator string(Size256 s) => s.Value;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -141,6 +176,9 @@ namespace WInterop.Support
                 get => _buffer.GetString(Size);
                 set => _buffer.SetString(value, Size);
             }
+
+            public override string ToString() => Value;
+            public static implicit operator string(Size260 s) => s.Value;
         }
     }
 }

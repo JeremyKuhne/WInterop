@@ -111,7 +111,7 @@ namespace WInterop.FileManagement
                 throw Errors.GetIoExceptionForLastError(OriginalPath);
             }
 
-            return new FindResult(findData, OriginalPath);
+            return new FindResult(ref findData, OriginalPath);
         }
 
         private FindResult FindNextFile()
@@ -124,7 +124,7 @@ namespace WInterop.FileManagement
                 throw Errors.GetIoExceptionForLastError(OriginalPath);
             }
 
-            return new FindResult(findData, OriginalPath);
+            return new FindResult(ref findData, OriginalPath);
         }
 
         public void Dispose()
