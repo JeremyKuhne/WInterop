@@ -87,20 +87,14 @@ namespace Tests.Support
             // Reparse points don't need to be empty to be deleted. Deleting will simply disconnect the reparse point, which is what we want.
             if ((data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT) != FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT)
             {
-                using (FindOperation findOperation = new FindOperation(Paths.Combine(path, "*")))
+                foreach (FindResult findResult in new FindOperation(Paths.Combine(path, "*")))
                 {
-                    FindResult findResult;
-                    while ((findResult = findOperation.GetNextResult()) != null)
+                    if (findResult.FileName != "." && findResult.FileName != "..")
                     {
-                        if (findResult.FileName != "." && findResult.FileName != "..")
-                        {
-                            bool isDirectory = (findResult.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) == FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
-
-                            if (isDirectory)
-                                DeleteDirectoryRecursive(Paths.Combine(path, findResult.FileName));
-                            else
-                                FileMethods.DeleteFile(Paths.Combine(path, findResult.FileName));
-                        }
+                        if ((findResult.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) == FileAttributes.FILE_ATTRIBUTE_DIRECTORY)
+                            DeleteDirectoryRecursive(Paths.Combine(path, findResult.FileName));
+                        else
+                            FileMethods.DeleteFile(Paths.Combine(path, findResult.FileName));
                     }
                 }
             }

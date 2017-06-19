@@ -23,11 +23,11 @@ namespace WInterop.Support
             return (WindowsError)Marshal.GetLastWin32Error();
         }
 
-        public static void ThrowIfLastErrorNot(WindowsError error)
+        public static void ThrowIfLastErrorNot(WindowsError error, string path = null)
         {
             WindowsError lastError = GetLastError();
             if (lastError != error)
-                throw GetIoExceptionForError(lastError);
+                throw GetIoExceptionForError(lastError, path);
         }
 
         public static bool Failed(WindowsError error)

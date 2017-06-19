@@ -17,6 +17,7 @@ using WInterop.FileManagement.Types;
 using WInterop.Support.Buffers;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
+using System.Collections.Generic;
 
 namespace Tests.FileManagementTests
 {
@@ -311,31 +312,22 @@ namespace Tests.FileManagementTests
         [Fact]
         public void FindFirstFileNoFiles()
         {
-            using (var find = FileMethods.CreateFindOperation(FileMethods.GetTempPath() + System.IO.Path.GetRandomFileName()))
-            {
-                find.GetNextResult().Should().BeNull();
-            }
+            FileMethods.CreateFindOperation(Paths.Combine(FileMethods.GetTempPath(), System.IO.Path.GetRandomFileName()))
+                .Should().BeEmpty();
         }
 
-        [Fact]
-        public void FindFileEmptyFolder()
+        [Theory,
+            InlineData("*"),
+            InlineData("*.*")]
+        public void FindFileEmptyFolder(string pattern)
         {
             using (var temp = new TestFileCleaner())
             {
-                string subdir = System.IO.Path.Combine(temp.TempFolder, "Subdir");
+                string subdir = Paths.Combine(temp.TempFolder, "Subdir");
                 DirectoryMethods.CreateDirectory(subdir);
 
-                using (var find = FileMethods.CreateFindOperation(subdir + @"\*"))
-                {
-                    var foundFile = find.GetNextResult();
-                    foundFile.Should().NotBeNull();
-                    foundFile.FileName.Should().Be(".");
-                    foundFile = find.GetNextResult();
-                    foundFile.Should().NotBeNull();
-                    foundFile.FileName.Should().Be("..");
-                    foundFile = find.GetNextResult();
-                    foundFile.Should().BeNull();
-                }
+                FileMethods.CreateFindOperation(Paths.Combine(subdir, pattern)).Select(s => s.FileName)
+                    .Should().Contain(new string[] { ".", ".." });
             }
         }
 
@@ -564,10 +556,7 @@ namespace Tests.FileManagementTests
             ]
         public void FindFirstFileHandlesRoots(string path)
         {
-            using (var find = FileMethods.CreateFindOperation(path))
-            {
-                find.GetNextResult().Should().BeNull();
-            }
+            FileMethods.CreateFindOperation(path).Should().BeEmpty();
         }
 
         [Fact]
