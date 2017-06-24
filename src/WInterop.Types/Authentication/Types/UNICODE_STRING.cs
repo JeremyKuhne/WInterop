@@ -11,7 +11,7 @@ using WInterop.Support.Buffers;
 namespace WInterop.Authentication.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380518.aspx
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct UNICODE_STRING
     {
         /// <summary>

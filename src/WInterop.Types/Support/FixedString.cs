@@ -26,11 +26,11 @@ namespace WInterop.Support
         // copying of the riskier blocks of code.
 
         private const int BaseSize = 1;
-        private unsafe fixed char _buffer[BaseSize];
+        private char _firstChar;
 
         private string GetString(int maxSize)
         {
-            fixed (char* c = _buffer)
+            fixed(char* c = &_firstChar)
             {
                 // Go to null or end of buffer
                 int end = 0;
@@ -41,7 +41,7 @@ namespace WInterop.Support
 
         private void SetString(string value, int maxSize)
         {
-            fixed (char* c = _buffer)
+            fixed (char* c = &_firstChar)
                 Strings.StringToBuffer(value, c, maxSize - 1, nullTerminate: true);
         }
 
