@@ -17,21 +17,6 @@ namespace Tests.Support
     public class ConversionsTests
     {
         [Theory,
-            InlineData(0, 0, 0x0701cdd41453c000),    // January 1, 1601
-            InlineData(0, 1, 0x0701cdd41453c001),
-            InlineData(0, -1, 0x0701cdd51453bfff)    // If we don't cast to uint this would throw an exception
-            ]
-        public void FromFileTimeTest(int high, int low, long expectedTicks)
-        {
-            FILETIME fileTime;
-            fileTime.dwHighDateTime = high;
-            fileTime.dwLowDateTime = low;
-
-            DateTime dt = Conversion.FileTimeToDateTime(fileTime);
-            dt.Ticks.Should().Be(expectedTicks);
-        }
-
-        [Theory,
             InlineData(System.IO.FileMode.Open, CreationDisposition.OpenExisting),
             InlineData(System.IO.FileMode.Append, CreationDisposition.OpenAlways),
             InlineData(System.IO.FileMode.OpenOrCreate, CreationDisposition.OpenAlways),

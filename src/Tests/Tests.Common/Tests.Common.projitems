@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHandlingTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\DateTimeTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementBehaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementTypes.cs" />
@@ -29,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\DelegatesTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\EnvironmentTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\FixedStringTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\PackingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\PathsTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
   </ItemGroup>

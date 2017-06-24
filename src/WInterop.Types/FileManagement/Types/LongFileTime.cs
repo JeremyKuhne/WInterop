@@ -10,10 +10,13 @@ using System;
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
+    /// 100-nanosecond intervals (ticks) since January 1, 1601 (UTC).
+    /// </summary>
+    /// <remarks>
     /// For NT times that are defined as longs (LARGE_INTEGER, etc.).
     /// Do NOT use for FILETIME unless you are POSITIVE it will fall on an
     /// 8 byte boundary.
-    /// </summary>
+    /// </remarks>
     public struct LongFileTime
     {
         /// <summary>

@@ -53,11 +53,6 @@ namespace WInterop.Support
 
         public static short LowWord(int value) => (short)(value & 0xFFFF);
 
-        public static DateTime FileTimeToDateTime(FILETIME fileTime)
-        {
-            return DateTime.FromFileTime((((long)fileTime.dwHighDateTime) << 32) + (uint)fileTime.dwLowDateTime);
-        }
-
         public static DesiredAccess FileAccessToDesiredAccess(System.IO.FileAccess fileAccess)
         {
             // See FileStream.Init to see how the mapping is done in .NET

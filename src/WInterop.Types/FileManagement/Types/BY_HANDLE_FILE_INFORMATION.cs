@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 namespace WInterop.FileManagement.Types
 {
@@ -17,9 +16,9 @@ namespace WInterop.FileManagement.Types
     public struct BY_HANDLE_FILE_INFORMATION
     {
         public FileAttributes dwFileAttributes;
-        public ComTypes.FILETIME ftCreationTime;
-        public ComTypes.FILETIME ftLastAccessTime;
-        public ComTypes.FILETIME ftLastWriteTime;
+        public FILETIME ftCreationTime;
+        public FILETIME ftLastAccessTime;
+        public FILETIME ftLastWriteTime;
         public uint dwVolumeSerialNumber;
         public uint nFileSizeHigh;
         public uint nFileSizeLow;
