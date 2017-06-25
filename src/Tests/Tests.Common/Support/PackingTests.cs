@@ -17,7 +17,7 @@ namespace Tests.Support
 
         // Type alignment is the size of it's largest element
         // Fields must align with fields of their own size or the type alignment, whichever is smaller
-
+#pragma warning disable CS0649
         private struct IntLong
         {
             public int Int;
@@ -82,5 +82,7 @@ namespace Tests.Support
             void* largeInt = &i.LargeInt;
             ((ulong)largeInt - (ulong)start).Should().Be(8u);
         }
+#pragma warning restore CS0649
+
     }
 }

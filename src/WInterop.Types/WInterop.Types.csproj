@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <ImportCommonProps>false</ImportCommonProps>
+    <ImportSDKProps>true</ImportSDKProps>
+    <ImportILProps>true</ImportILProps>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
-  <!-- https://github.com/Microsoft/msbuild/issues/1392 -->
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <SignAssembly>True</SignAssembly>

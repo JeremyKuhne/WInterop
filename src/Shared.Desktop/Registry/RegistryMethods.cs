@@ -240,8 +240,8 @@ namespace WInterop.Registry
                     {
                         case NTSTATUS.STATUS_SUCCESS:
                             KEY_VALUE_BASIC_INFORMATION* info = (KEY_VALUE_BASIC_INFORMATION*)buffer.VoidPointer;
-                            if (filterTo == RegistryValueType.REG_NONE || (*info).Type == filterTo)
-                                names.Add(new string(&(*info).Name, 0, (int)(*info).NameLength / sizeof(char)));
+                            if (filterTo == RegistryValueType.REG_NONE || info->Type == filterTo)
+                                names.Add(info->Name.Value);
                             break;
                         case NTSTATUS.STATUS_BUFFER_OVERFLOW:
                         case NTSTATUS.STATUS_BUFFER_TOO_SMALL:

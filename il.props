@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Inspired by insOmniaque/ILSupport (https://github.com/ins0mniaque/ILSupport)
+Copyright (c) 2012-2013 Jean-Philippe Leconte
+Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+Copyright (c) Jeremy W. Kuhne. All rights reserved.
+Licensed under the MIT license. See LICENSE file in the project root for full license information.
+-->
+
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <!-- Strip out none il item groups if we're in an SDK project -->
+    <!-- <None Condition="'$(EnableDefaultItems)' == 'true' And '$(EnableDefaultNoneItems)' == 'true'" Remove="**/*.il" /> -->
+
+    <IL Include="**/*.il">
+        <!-- for some reason visibility isn't working (SDK project quirk?), so we'll leave the "none" items above -->
+        <Visible>true</Visible>
+    </IL>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <CompileILDependsOn>
+      ILCheckDependencies;
+      ILPrepareForBuild;
+      ILDecompile;
+      ILCompile;
+    </CompileILDependsOn>
+    <ILDasm>$(SDK40ToolsPath)ildasm.exe</ILDasm>
+    <ILAsm>$(MSBuildFrameworkToolsPath)\ilasm.exe</ILAsm>
+  </PropertyGroup>
+  <Target
+    Name="CompileIL"
+    DependsOnTargets="$(CompileILDependsOn)"
+    AfterTargets="CoreCompile"
+    BeforeTargets="_TimeStampAfterCompile;AfterCompile"
+    Condition="'@(IL)' != ''" />
+
+  <Target Name="ILCheckDependencies">
+    <Error
+      Text="Cannot find ILDasm.exe at '$(ILDasm)'"
+      Condition="!Exists('$(ILDasm)')" />
+    <Error
+      Text="Cannot find ILAsm.exe at '$(ILAsm)'"
+      Condition="!Exists('$(ILAsm)')" />
+  </Target>
+
+  <Target Name="ILPrepareForBuild">
+    <PropertyGroup>
+      <ILOutputDirectory>@(IntermediateAssembly->'%(RootDir)%(Directory)')</ILOutputDirectory>
+      <ILSourceDirectory>$(ILOutputDirectory)BeforeIL\</ILSourceDirectory>
+      <ILFilename>@(IntermediateAssembly->'%(Filename).il')</ILFilename>
+      <ILResourceFilename>@(IntermediateAssembly->'%(Filename).res')</ILResourceFilename>
+      <ILFile>$(ILOutputDirectory)$(ILFilename)</ILFile>
+      <ILResourceFile>$(ILOutputDirectory)$(ILResourceFilename)</ILResourceFile>
+    </PropertyGroup>
+  </Target>
+
+    <UsingTask TaskName="RemoveMethodStubs" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+      <ParameterGroup>
+        <ILInput Required="true" />
+        <ILOutput Required="true" />
+      </ParameterGroup>
+      <Task>
+        <Using Namespace="System.Text.RegularExpressions" />
+        <Using Namespace="System.IO" />
+        <Code Type="Fragment" Language="cs">
+<![CDATA[
+            DateTime start = DateTime.Now;
+            Log.LogMessage("Removing message stubs..", MessageImportance.High);
+            string text = File.ReadAllText(ILInput);
+            Regex forwardRef = new Regex(
+                @"\.method [^{}]+ cil managed forwardref(?>[^}]+)} // end of method (?<method>(?>[^ \r\t\n]+))");
+            text = forwardRef.Replace(text, @"// extern method ${method} with forwardref removed for IL import");
+            File.WriteAllText(ILOutput, text);
+            DateTime end = DateTime.Now;
+            Log.LogMessage(String.Format("Finished removing message stubs. {0} milliseconds elapsed.", (end-start).Milliseconds), MessageImportance.High);
+]]>
+        </Code>
+      </Task>
+    </UsingTask>
+  
+  <Target
+    Name="ILDecompile"
+    Inputs="@(IntermediateAssembly)"
+    Outputs="$(ILFile)"
+    Condition="Exists('@(IntermediateAssembly)')">
+    <PropertyGroup>
+      <ILOriginalFile>$(ILSourceDirectory)$(ILFilename)</ILOriginalFile>
+      <ILOriginalResourceFile>$(ILSourceDirectory)$(ILResourceFilename)</ILOriginalResourceFile>
+      <ILDasmCommand>"$(ILDasm)" /nobar /linenum /output:"$(ILOriginalFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasmCommand>
+    </PropertyGroup>
+    <MakeDir Directories="$(ILSourceDirectory)" />
+    <Exec Command="$(ILDasmCommand)" />
+    <Copy SourceFiles="$(ILOriginalResourceFile)" DestinationFiles="$(ILResourceFile)" />
+    <ItemGroup>
+      <FileWrites Include="$(ILOriginalFile);$(ILFile);$(ILOriginalResourceFile);$(ILResourceFile);$(ILSourceDirectory)*.resources" />
+    </ItemGroup>
+    <RemoveMethodStubs
+        ILInput="$(ILOriginalFile)"
+        ILOutput="$(ILFile)" />
+    <Move SourceFiles="@(IntermediateAssembly)" DestinationFolder="$(ILOutputDirectory)">
+      <Output TaskParameter="MovedFiles" ItemName="FileWrites" />
+    </Move>
+    <Delete Files="@(IntermediateAssembly)" />
+  </Target>
+
+  <Target
+    Name="ILCompile"
+    Inputs="@(IL)"
+    Outputs="@(IntermediateAssembly)">
+
+    <PropertyGroup>
+      <ILAsmCommand>"$(ILAsm)" /nologo /output:@(IntermediateAssembly->'"%(FullPath)"', ' ')</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(FileAlignment)' != ''">
+      <ILAsmCommand>$(ILAsmCommand) /alignment=$(FileAlignment)</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(BaseAddress)' != ''">
+      <ILAsmCommand>$(ILAsmCommand) /base=$(BaseAddress)</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OutputType)' == 'Library'">
+      <ILAsmCommand>$(ILAsmCommand) /dll</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(DebugType)' == 'pdbonly'">
+      <ILAsmCommand>$(ILAsmCommand) /pdb</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(DebugType)' == 'full'">
+      <ILAsmCommand>$(ILAsmCommand) /debug</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Optimize)' == 'true'">
+      <ILAsmCommand>$(ILAsmCommand) /optimize</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Platform)' == 'x64'">
+      <ILAsmCommand>$(ILAsmCommand) /pe64 /x64</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Platform)' == 'Itanium'">
+      <ILAsmCommand>$(ILAsmCommand) /pe64 /itanium</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(AssemblyOriginatorKeyFile)' != ''">
+      <ILAsmCommand>$(ILAsmCommand) /key:"$(AssemblyOriginatorKeyFile)"</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="Exists('$(ILResourceFile)')">
+      <ILAsmCommand>$(ILAsmCommand) /resource:"$(ILResourceFile)"</ILAsmCommand>
+    </PropertyGroup>
+    <PropertyGroup Condition="Exists('$(ILFile)')">
+      <ILAsmCommand>$(ILAsmCommand) "$(ILFile)"</ILAsmCommand>
+    </PropertyGroup>
+    <Exec Command="$(ILAsmCommand) @(IL->'&quot;%(FullPath)&quot;', ' ') > $(ILSourceDirectory)ilasm.log" />
+    <ItemGroup>
+      <FileWrites Include="$(ILSourceDirectory)ilasm.log" />
+    </ItemGroup>
+    <Touch Files="$(ILFile)" />
+  </Target>
+</Project>

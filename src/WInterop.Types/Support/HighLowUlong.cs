@@ -13,8 +13,10 @@ namespace WInterop.Support
     /// </summary>
     public struct HighLowUlong
     {
+#pragma warning disable CS0649
         private uint High;
         private uint Low;
+#pragma warning restore CS0649
 
         public static implicit operator ulong(HighLowUlong u) => Conversion.HighLowToLong(u.High, u.Low);
     }

@@ -15,7 +15,9 @@ namespace WInterop.FileManagement.Types
     public struct COPYFILE2_MESSAGE
     {
         public COPYFILE2_MESSAGE_TYPE Type;
+#pragma warning disable CS0169
         private uint dwPadding;
+#pragma warning restore CS0169
         public MessageUnion Message;
 
         [StructLayout(LayoutKind.Explicit)]
@@ -46,7 +48,9 @@ namespace WInterop.FileManagement.Types
         public struct ChunkStarted
         {
             public uint dwStreamNumber;
+#pragma warning disable CS0169
             private uint dwReserved;
+#pragma warning restore CS0169
             public IntPtr hSourceFile;
             public IntPtr hDestinationFile;
             public ulong uliChunkNumber;
@@ -61,7 +65,9 @@ namespace WInterop.FileManagement.Types
         public struct ChunkFinished
         {
             public uint dwStreamNumber;
+#pragma warning disable CS0169
             private uint dwReserved;
+#pragma warning restore CS0169
             public IntPtr hSourceFile;
             public IntPtr hDestinationFile;
             public ulong uliChunkNumber;
@@ -78,7 +84,9 @@ namespace WInterop.FileManagement.Types
         public struct StreamStarted
         {
             public uint dwStreamNumber;
+#pragma warning disable CS0169
             private uint dwReserved;
+#pragma warning restore CS0169
             public IntPtr hSourceFile;
             public IntPtr hDestinationFile;
             public ulong uliStreamSize;
@@ -92,7 +100,9 @@ namespace WInterop.FileManagement.Types
         public struct StreamFinished
         {
             public uint dwStreamNumber;
+#pragma warning disable CS0169
             private uint dwReserved;
+#pragma warning restore CS0169
             public IntPtr hSourceFile;
             public IntPtr hDestinationFile;
             public ulong uliStreamSize;
@@ -103,7 +113,9 @@ namespace WInterop.FileManagement.Types
 
         public struct PollContinue
         {
+#pragma warning disable CS0169
             private uint dwReserved;
+#pragma warning restore CS0169
         }
 
         /// <summary>
@@ -114,7 +126,9 @@ namespace WInterop.FileManagement.Types
             public COPYFILE2_COPY_PHASE CopyPhase;
             public uint dwStreamNumber;
             public HRESULT hrFailure;
+#pragma warning disable CS0169
             private uint dwReserved;
+#pragma warning restore CS0169
             public ulong uliChunkNumber;
             public ulong uliStreamSize;
             public ulong uliStreamBytesTransferred;
