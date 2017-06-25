@@ -25,9 +25,9 @@ namespace WInterop.Backup
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa362509.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool BackupRead(
+            public unsafe static extern bool BackupRead(
                 SafeFileHandle hFile,
-                SafeHandle lpBuffer,
+                void* lpBuffer,
                 uint nNumberOfBytesToRead,
                 out uint lpNumberOfBytesRead,
                 [MarshalAs(UnmanagedType.Bool)] bool bAbort,

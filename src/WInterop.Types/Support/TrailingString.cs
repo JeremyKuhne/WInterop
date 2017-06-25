@@ -38,6 +38,9 @@ namespace WInterop.Support
 
             public unsafe string GetValue(uint sizeInBytes)
             {
+                if (sizeInBytes == 0)
+                    return string.Empty;
+
                 fixed (char* c = &_firstChar)
                     return new string(c, 0, (int)(sizeInBytes / sizeof(char)));
             }
@@ -73,6 +76,8 @@ namespace WInterop.Support
             /// Gets the string value.
             /// </summary>
             public string Value => _firstChar.GetValue(SizeInBytes);
+
+            public override string ToString() => Value;
         }
     }
 }

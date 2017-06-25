@@ -24,10 +24,23 @@ namespace Tests.Support
             public long Long;
         }
 
+        private struct LongInt
+        {
+            public long Long;
+            public int Int;
+        }
+
         private struct IntInt
         {
             public int Int1;
             public int Int2;
+        }
+
+        private struct IntIntInt
+        {
+            public int Int1;
+            public int Int2;
+            public int Int3;
         }
 
 

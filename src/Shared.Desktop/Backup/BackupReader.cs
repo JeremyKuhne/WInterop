@@ -24,6 +24,10 @@ namespace WInterop.Backup
         private SafeFileHandle _fileHandle;
         private HeapBuffer _buffer = new HeapBuffer(4096);
 
+        // BackupReader requires us to read the header and its string separately. Given packing, the
+        // string starts a uint in from the end.
+        private unsafe static uint s_headerSize = (uint)sizeof(WIN32_STREAM_ID) - sizeof(uint);
+
         public BackupReader(SafeFileHandle fileHandle)
         {
             _fileHandle = fileHandle;
@@ -33,8 +37,8 @@ namespace WInterop.Backup
         {
             if (!BackupMethods.Imports.BackupRead(
                 hFile: _fileHandle,
-                lpBuffer: _buffer,
-                nNumberOfBytesToRead: (uint)sizeof(WIN32_STREAM_ID),
+                lpBuffer: _buffer.VoidPointer,
+                nNumberOfBytesToRead: s_headerSize,
                 lpNumberOfBytesRead: out uint bytesRead,
                 bAbort: false,
                 bProcessSecurity: true,
@@ -46,15 +50,14 @@ namespace WInterop.Backup
             // Exit if at the end
             if (bytesRead == 0) return null;
 
-            WIN32_STREAM_ID streamId = *((WIN32_STREAM_ID*)_buffer.DangerousGetHandle());
-            string name = null;
-            if (streamId.dwStreamNameSize > 0)
+            WIN32_STREAM_ID* streamId = (WIN32_STREAM_ID*)_buffer.VoidPointer;
+            if (streamId->StreamName.SizeInBytes > 0)
             {
-                _buffer.EnsureByteCapacity(streamId.dwStreamNameSize);
+                _buffer.EnsureByteCapacity(s_headerSize + streamId->StreamName.SizeInBytes);
                 if (!BackupMethods.Imports.BackupRead(
                     hFile: _fileHandle,
-                    lpBuffer: _buffer,
-                    nNumberOfBytesToRead: streamId.dwStreamNameSize,
+                    lpBuffer: (void*)(_buffer.DangerousGetHandle() + (int)s_headerSize),
+                    nNumberOfBytesToRead: streamId->StreamName.SizeInBytes,
                     lpNumberOfBytesRead: out bytesRead,
                     bAbort: false,
                     bProcessSecurity: true,
@@ -62,10 +65,9 @@ namespace WInterop.Backup
                 {
                     throw Errors.GetIoExceptionForLastError();
                 }
-                name = Marshal.PtrToStringUni(_buffer.DangerousGetHandle(), (int)bytesRead / 2);
             }
 
-            if (streamId.Size > 0)
+            if (streamId->Size > 0)
             {
                 // Move to the next header, if any
                 if (!BackupMethods.Imports.BackupSeek(
@@ -82,9 +84,9 @@ namespace WInterop.Backup
 
             return new BackupStreamInformation
             {
-                Name = name,
-                StreamType = streamId.dwStreamId,
-                Size = streamId.Size
+                Name = streamId->StreamName.Value,
+                StreamType = streamId->dwStreamId,
+                Size = streamId->Size
             };
         }
 
@@ -94,7 +96,7 @@ namespace WInterop.Backup
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        private unsafe void Dispose(bool disposing)
         {
             if (disposing)
             {
@@ -107,7 +109,7 @@ namespace WInterop.Backup
                 // Free the context memory
                 if (!BackupMethods.Imports.BackupRead(
                     hFile: _fileHandle,
-                    lpBuffer: EmptySafeHandle.Instance,
+                    lpBuffer: null,
                     nNumberOfBytesToRead: 0,
                     lpNumberOfBytesRead: out _,
                     bAbort: true,

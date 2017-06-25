@@ -20,7 +20,7 @@ namespace WInterop.Backup.Types
         /// <summary>
         /// Size of the alternate stream
         /// </summary>
-        public ulong Size;
+        public long Size;
 
         /// <summary>
         /// Stream type.
