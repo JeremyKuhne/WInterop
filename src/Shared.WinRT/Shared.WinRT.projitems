@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\TempPathWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\SafeHandleStreamWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
