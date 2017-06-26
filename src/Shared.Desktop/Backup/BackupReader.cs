@@ -7,12 +7,8 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using WInterop.Backup.Types;
-using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.Handles.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -22,7 +18,7 @@ namespace WInterop.Backup
     {
         private IntPtr _context = IntPtr.Zero;
         private SafeFileHandle _fileHandle;
-        private HeapBuffer _buffer = new HeapBuffer(4096);
+        private StringBuffer _buffer = StringBufferCache.Instance.Acquire();
 
         // BackupReader requires us to read the header and its string separately. Given packing, the
         // string starts a uint in from the end.
@@ -35,9 +31,10 @@ namespace WInterop.Backup
 
         public unsafe BackupStreamInformation? GetNextInfo()
         {
+            void* buffer = _buffer.VoidPointer;
             if (!BackupMethods.Imports.BackupRead(
                 hFile: _fileHandle,
-                lpBuffer: _buffer.VoidPointer,
+                lpBuffer: buffer,
                 nNumberOfBytesToRead: s_headerSize,
                 lpNumberOfBytesRead: out uint bytesRead,
                 bAbort: false,
@@ -50,13 +47,13 @@ namespace WInterop.Backup
             // Exit if at the end
             if (bytesRead == 0) return null;
 
-            WIN32_STREAM_ID* streamId = (WIN32_STREAM_ID*)_buffer.VoidPointer;
+            WIN32_STREAM_ID* streamId = (WIN32_STREAM_ID*)buffer;
             if (streamId->StreamName.SizeInBytes > 0)
             {
                 _buffer.EnsureByteCapacity(s_headerSize + streamId->StreamName.SizeInBytes);
                 if (!BackupMethods.Imports.BackupRead(
                     hFile: _fileHandle,
-                    lpBuffer: (void*)(_buffer.DangerousGetHandle() + (int)s_headerSize),
+                    lpBuffer: Pointers.Offset(buffer, s_headerSize),
                     nNumberOfBytesToRead: streamId->StreamName.SizeInBytes,
                     lpNumberOfBytesRead: out bytesRead,
                     bAbort: false,
@@ -100,7 +97,7 @@ namespace WInterop.Backup
         {
             if (disposing)
             {
-                _buffer?.Dispose();
+                StringBufferCache.Instance.Release(_buffer);
             }
             _buffer = null;
 
