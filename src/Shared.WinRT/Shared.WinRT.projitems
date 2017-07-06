@@ -30,6 +30,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemoryManagement\MemoryMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pipes\PipeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pipes\PipeMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ThreadMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StructuredStorage\StructuredStorageMethods.cs" />
