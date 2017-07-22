@@ -98,5 +98,33 @@ namespace Tests.Support
         {
             sizeof(FixedString.Size260).Should().Be(260 * sizeof(char));
         }
+
+        [Theory,
+            InlineData("", null, false),
+            InlineData("", "", true),
+            InlineData("", "a", false),
+            InlineData("", "\0", false),
+            InlineData("a", "", false),
+            InlineData("a", "a", true),
+            InlineData("fizzlestick", "fizzlestick", true),
+            InlineData("fizzlestick", "fizzlestick\0", false),
+            InlineData("fizzlestick", "fizzlestic\0", false),
+            InlineData("fizzlesticks", "fizzlesticks", true),
+            InlineData("fizzlesticks", "fizzlestick", false),
+            InlineData("fizzlesticks", "fizzlesticks!", false),
+            InlineData("fizzlesticks", "fizzlesticks\0", false)
+            ]
+        public unsafe void Size12_Equality(string buffer, string compareTo, bool expected)
+        {
+            // Manually copy in the buffer to allow testing non-null terminated
+            FixedString.Size12 s = new FixedString.Size12();
+
+            fixed (char* c = buffer)
+            {
+                Buffer.MemoryCopy(c, (char*)&s, sizeof(FixedString.Size12) * sizeof(char), buffer.Length * sizeof(char));
+            }
+
+            s.Equals(compareTo).Should().Be(expected);
+        }
     }
 }

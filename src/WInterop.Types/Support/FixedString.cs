@@ -45,6 +45,28 @@ namespace WInterop.Support
                 Strings.StringToBuffer(value, c, maxSize - 1, nullTerminate: true);
         }
 
+        private bool Equals(string value, int maxSize)
+        {
+            if (value == null || value.Length > maxSize)
+                return false;
+
+            fixed (char* c = &_firstChar)
+            {
+                int i = 0;
+                for (; i < value.Length; i++)
+                {
+                    // Fixed strings are always terminated at null
+                    // and therefore can never match embedded nulls.
+                    if (value[i] != c[i] || value[i] == '\0')
+                        return false;
+                }
+
+                // If we've maxed out the buffer or reached the
+                // null terminator, we're equal.
+                return i == maxSize || c[i] == '\0';
+            }
+        }
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct Size12
         {
@@ -60,6 +82,7 @@ namespace WInterop.Support
 
             public override string ToString() => Value;
             public static implicit operator string(Size12 s) => s.Value;
+            public bool Equals(string value) => _buffer.Equals(value, Size);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -77,6 +100,7 @@ namespace WInterop.Support
 
             public override string ToString() => Value;
             public static implicit operator string(Size14 s) => s.Value;
+            public bool Equals(string value) => _buffer.Equals(value, Size);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -94,6 +118,7 @@ namespace WInterop.Support
 
             public override string ToString() => Value;
             public static implicit operator string(Size16 s) => s.Value;
+            public bool Equals(string value) => _buffer.Equals(value, Size);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -111,6 +136,7 @@ namespace WInterop.Support
 
             public override string ToString() => Value;
             public static implicit operator string(Size32 s) => s.Value;
+            public bool Equals(string value) => _buffer.Equals(value, Size);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -128,6 +154,7 @@ namespace WInterop.Support
 
             public override string ToString() => Value;
             public static implicit operator string(Size64 s) => s.Value;
+            public bool Equals(string value) => _buffer.Equals(value, Size);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -145,6 +172,7 @@ namespace WInterop.Support
 
             public override string ToString() => Value;
             public static implicit operator string(Size128 s) => s.Value;
+            public bool Equals(string value) => _buffer.Equals(value, Size);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -162,6 +190,7 @@ namespace WInterop.Support
 
             public override string ToString() => Value;
             public static implicit operator string(Size256 s) => s.Value;
+            public bool Equals(string value) => _buffer.Equals(value, Size);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -179,6 +208,7 @@ namespace WInterop.Support
 
             public override string ToString() => Value;
             public static implicit operator string(Size260 s) => s.Value;
+            public bool Equals(string value) => _buffer.Equals(value, Size);
         }
     }
 }
