@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.WinRT", "Winterop.WinRT\WInterop.WinRT.csproj", "{8031257A-B9C2-473F-A4DD-690BD6263FEB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -125,6 +125,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.GdiPlus", "WInterop.GdiPlus\WInterop.GdiPlus.csproj", "{47987443-2B3A-4807-8E5C-0F4911D4A4FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Petzold", "Petzold", "{1C0A50A0-778D-4AF2-9F04-E95206DA34AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{A9CDD00C-DD0E-4BCC-8970-0D4CC0D1B583}"
+	ProjectSection(SolutionItems) = preProject
+		..\il.props = ..\il.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -870,5 +875,8 @@ Global
 		{E45B871A-AC42-4ED0-AFD7-EC450297B3A4} = {1C0A50A0-778D-4AF2-9F04-E95206DA34AC}
 		{50B373FD-DFEF-4DFF-9260-3BFAC746BAFC} = {9BFE01D1-0EF4-4CFC-8E20-254A7E39FB14}
 		{1C0A50A0-778D-4AF2-9F04-E95206DA34AC} = {F5D72A2B-8550-493A-8E91-A88FBB29643D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D0C3A88-8F05-4858-97B6-0E554C1064BD}
 	EndGlobalSection
 EndGlobal
