@@ -47,7 +47,7 @@ namespace DesktopTests.Ipc.MailslotTests
                 handle.IsInvalid.Should().BeFalse();
 
                 using (var fileHandle = FileMethods.CreateFile(mailslotName, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                    FileAttributes.NONE, FileFlags.FILE_FLAG_OVERLAPPED))
+                    FileAttributes.None, FileFlags.Overlapped))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);

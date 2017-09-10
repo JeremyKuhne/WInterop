@@ -99,7 +99,7 @@ namespace Tests.FileManagementTests
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var file = FileMethods.CreateFile(@"C:\.", 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                    FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                    FileAttributes.None, FileFlags.BackupSemantics))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -127,7 +127,7 @@ namespace Tests.FileManagementTests
         {
             string tempPath = FileMethods.GetTempPath();
             var info = FileMethods.GetFileAttributesEx(tempPath);
-            info.Attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+            info.Attributes.Should().HaveFlag(FileAttributes.Directory);
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace Tests.FileManagementTests
                 string tempFileName = cleaner.GetTestPath();
 
                 using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericReadWrite, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                    FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                    FileAttributes.None, FileFlags.BackupSemantics))
                 {
                     var info = FileMethods.GetFileStandardInfoByHandle(directory);
                     info.Directory.Should().BeTrue();
@@ -197,15 +197,15 @@ namespace Tests.FileManagementTests
                 string tempFileName = cleaner.GetTestPath();
 
                 using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                    FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                    FileAttributes.None, FileFlags.BackupSemantics))
                 {
                     var directoryInfo = FileMethods.GetFileBasicInfoByHandle(directory);
-                    directoryInfo.Attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+                    directoryInfo.Attributes.Should().HaveFlag(FileAttributes.Directory);
 
                     using (var file = FileMethods.CreateFile(tempFileName, DesiredAccess.GenericReadWrite, ShareMode.ReadWrite, CreationDisposition.CreateNew))
                     {
                         var fileInfo = FileMethods.GetFileBasicInfoByHandle(file);
-                        fileInfo.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+                        fileInfo.Attributes.Should().NotHaveFlag(FileAttributes.Directory);
                         fileInfo.CreationTime.Should().BeAfter(directoryInfo.CreationTime);
                     }
                 }
@@ -221,7 +221,7 @@ namespace Tests.FileManagementTests
                 string tempFileName = cleaner.GetTestPath();
 
                 using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                    FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                    FileAttributes.None, FileFlags.BackupSemantics))
                 {
                     var directoryInfo = FileMethods.GetStreamInformationByHandle(directory);
                     directoryInfo.Should().BeEmpty();
@@ -276,13 +276,13 @@ namespace Tests.FileManagementTests
             try
             {
                 var originalInfo = FileMethods.GetFileAttributesEx(tempFileName);
-                originalInfo.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_READONLY);
-                FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes | FileAttributes.FILE_ATTRIBUTE_READONLY);
+                originalInfo.Attributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
+                FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes | FileAttributes.ReadOnly);
                 var newInfo = FileMethods.GetFileAttributesEx(tempFileName);
-                newInfo.Attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_READONLY);
+                newInfo.Attributes.Should().HaveFlag(FileAttributes.ReadOnly);
                 FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes);
                 newInfo = FileMethods.GetFileAttributesEx(tempFileName);
-                newInfo.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_READONLY);
+                newInfo.Attributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
             }
             finally
             {
@@ -305,7 +305,7 @@ namespace Tests.FileManagementTests
                 FileMethods.CopyFile(source, destination);
 
                 var info = FileMethods.GetFileAttributesEx(destination);
-                info.Attributes.Should().NotHaveFlag(FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+                info.Attributes.Should().NotHaveFlag(FileAttributes.Directory);
             }
         }
 
@@ -395,7 +395,7 @@ namespace Tests.FileManagementTests
         {
             string tempPath = FileMethods.GetTempPath();
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                FileAttributes.None, FileFlags.BackupSemantics))
             {
                 FileMethods.GetFileType(directory).Should().Be(FileType.FILE_TYPE_DISK);
             }
@@ -572,8 +572,8 @@ namespace Tests.FileManagementTests
                     System.IO.FileShare.ReadWrite,
                     System.IO.FileMode.Open,
                     0,
-                    FileFlags.FILE_FLAG_OPEN_REPARSE_POINT      // To avoid traversing links
-                        | FileFlags.FILE_FLAG_BACKUP_SEMANTICS);    // To open directories
+                    FileFlags.OpenReparsePoint           // To avoid traversing links
+                        | FileFlags.BackupSemantics);    // To open directories
 
                 string name = FileMethods.GetFileNameByHandle(fileHandle);
                 name.Should().Be(@"\Users");
@@ -593,8 +593,8 @@ namespace Tests.FileManagementTests
                     fileMode: System.IO.FileMode.Append,
                     fileAttributes: 0,
                     securityFlags: WInterop.Support.Environment.IsWindowsStoreApplication()
-                        ? SecurityQosFlags.NONE
-                        : SecurityQosFlags.SECURITY_SQOS_PRESENT | SecurityQosFlags.SECURITY_ANONYMOUS))
+                        ? SecurityQosFlags.None
+                        : SecurityQosFlags.QosPresent | SecurityQosFlags.Anonymous))
                 {
                     stream.Should().NotBeNull();
                 }

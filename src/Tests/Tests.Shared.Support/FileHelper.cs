@@ -72,26 +72,26 @@ namespace Tests.Support
                 throw Errors.GetIoExceptionForError(WindowsError.ERROR_PATH_NOT_FOUND, path);
             }
 
-            if ((data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) != FileAttributes.FILE_ATTRIBUTE_DIRECTORY)
+            if ((data.Value.Attributes & FileAttributes.Directory) != FileAttributes.Directory)
             {
                 // Not a directory, a file
                 throw Errors.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, path);
             }
 
-            if ((data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_READONLY) == FileAttributes.FILE_ATTRIBUTE_READONLY)
+            if ((data.Value.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
             {
                 // Make it writable
-                FileMethods.SetFileAttributes(path, data.Value.Attributes & ~FileAttributes.FILE_ATTRIBUTE_READONLY);
+                FileMethods.SetFileAttributes(path, data.Value.Attributes & ~FileAttributes.ReadOnly);
             }
 
             // Reparse points don't need to be empty to be deleted. Deleting will simply disconnect the reparse point, which is what we want.
-            if ((data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT) != FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT)
+            if ((data.Value.Attributes & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
             {
                 foreach (FindResult findResult in new FindOperation(Paths.Combine(path, "*")))
                 {
                     if (findResult.FileName != "." && findResult.FileName != "..")
                     {
-                        if ((findResult.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) == FileAttributes.FILE_ATTRIBUTE_DIRECTORY)
+                        if ((findResult.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
                             DeleteDirectoryRecursive(Paths.Combine(path, findResult.FileName));
                         else
                             FileMethods.DeleteFile(Paths.Combine(path, findResult.FileName));

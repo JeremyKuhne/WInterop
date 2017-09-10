@@ -75,8 +75,8 @@ namespace DesktopTests.FileManagementTests
                 0,
                 ShareMode.ReadWrite,
                 CreationDisposition.OpenExisting,
-                FileAttributes.NONE,
-                FileFlags.FILE_FLAG_BACKUP_SEMANTICS);
+                FileAttributes.None,
+                FileFlags.BackupSemantics);
 
             handle.IsInvalid.Should().BeFalse();
         }

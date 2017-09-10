@@ -103,9 +103,12 @@ namespace WInterop.Support
                 source: IntPtr.Zero,
                 flags: FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM);
 
-            return Enum.IsDefined(typeof(WindowsError), error)
-                ? $"{error} ({(uint)error}): {message}"
-                : $"Error {error}: {message}";
+            // There are a few defintions for '0', we'll always use ERROR_SUCCESS
+            return error == WindowsError.ERROR_SUCCESS
+                ? $"ERROR_SUCCESS ({(uint)error}): {message}"
+                : Enum.IsDefined(typeof(WindowsError), error)
+                    ? $"{error} ({(uint)error}): {message}"
+                    : $"Error {error}: {message}";
         }
 
         /// <summary>

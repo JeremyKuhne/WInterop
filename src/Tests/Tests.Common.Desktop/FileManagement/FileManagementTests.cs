@@ -103,7 +103,7 @@ namespace DesktopTests.FileManagementMethods
                 }
 
                 using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.GenericRead,
-                    ShareMode.ReadWrite, CreationDisposition.OpenExisting, FileAttributes.NONE, FileFlags.FILE_FLAG_OPEN_REPARSE_POINT))
+                    ShareMode.ReadWrite, CreationDisposition.OpenExisting, FileAttributes.None, FileFlags.OpenReparsePoint))
                 {
                     handle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
@@ -197,7 +197,7 @@ namespace DesktopTests.FileManagementMethods
                 {
                     action();
                     var attributes = FileMethods.GetFileAttributes(symbolicLink);
-                    attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT);
+                    attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
                 }
                 else
                 {
@@ -223,7 +223,7 @@ namespace DesktopTests.FileManagementMethods
                 {
                     action();
                     var attributes = FileMethods.GetFileAttributes(symbolicLink);
-                    attributes.Should().HaveFlag(FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT);
+                    attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
                 }
                 else
                 {
@@ -268,7 +268,7 @@ namespace DesktopTests.FileManagementMethods
         {
             string tempPath = FileMethods.GetTempPath();
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                FileAttributes.None, FileFlags.BackupSemantics))
             {
                 // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
                 string name = FileMethods.GetFileName(directory);
@@ -282,7 +282,7 @@ namespace DesktopTests.FileManagementMethods
         {
             string tempPath = FileMethods.GetTempPath();
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                FileAttributes.None, FileFlags.BackupSemantics))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
                 try
@@ -303,7 +303,7 @@ namespace DesktopTests.FileManagementMethods
         {
             string tempPath = FileMethods.GetTempPath();
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                FileAttributes.None, FileFlags.BackupSemantics))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
                 string directoryName = FileMethods.GetShortName(directory);
@@ -349,7 +349,7 @@ namespace DesktopTests.FileManagementMethods
             {
                 string filePath = cleaner.GetTestPath();
                 using (var file = FileMethods.CreateFile(filePath, DesiredAccess.GenericReadWrite, 0,
-                    CreationDisposition.CreateNew, FileAttributes.NONE, FileFlags.FILE_FLAG_OVERLAPPED))
+                    CreationDisposition.CreateNew, FileAttributes.None, FileFlags.Overlapped))
                 {
                     file.IsInvalid.Should().BeFalse();
                     var mode = FileMethods.GetFileMode(file);

@@ -13,7 +13,7 @@ namespace WInterop.FileManagement
     {
         public static bool AreInvalid(this FileAttributes attributes)
         {
-            return attributes == FileAttributes.INVALID_FILE_ATTRIBUTES;
+            return attributes == FileAttributes.Invalid;
         }
     }
 }

@@ -57,11 +57,11 @@ namespace WInterop.FileManagement
             if (path == null) return null;
 
             // BackupSemantics is needed to get directory handles
-            FileFlags flags = FileFlags.FILE_FLAG_BACKUP_SEMANTICS;
-            if (!resolveLinks) flags |= FileFlags.FILE_FLAG_OPEN_REPARSE_POINT;
+            FileFlags flags = FileFlags.BackupSemantics;
+            if (!resolveLinks) flags |= FileFlags.OpenReparsePoint;
 
             using (SafeFileHandle fileHandle = CreateFile(path, 0, ShareMode.ReadWrite,
-                CreationDisposition.OpenExisting, FileAttributes.NONE, flags))
+                CreationDisposition.OpenExisting, FileAttributes.None, flags))
             {
                 return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
             }
@@ -97,9 +97,9 @@ namespace WInterop.FileManagement
             DesiredAccess desiredAccess,
             ShareMode shareMode,
             CreationDisposition creationDisposition,
-            FileAttributes fileAttributes = FileAttributes.NONE,
-            FileFlags fileFlags = FileFlags.NONE,
-            SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
+            FileAttributes fileAttributes = FileAttributes.None,
+            FileFlags fileFlags = FileFlags.None,
+            SecurityQosFlags securityQosFlags = SecurityQosFlags.None)
         {
             uint flags = (uint)fileAttributes | (uint)fileFlags | (uint)securityQosFlags;
 
@@ -139,7 +139,7 @@ namespace WInterop.FileManagement
         public static FileAttributes GetFileAttributes(string path)
         {
             FileAttributes attributes = Imports.GetFileAttributesW(path);
-            if (attributes == FileAttributes.INVALID_FILE_ATTRIBUTES)
+            if (attributes == FileAttributes.Invalid)
                 throw Errors.GetIoExceptionForLastError(path);
 
             return attributes;

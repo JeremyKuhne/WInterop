@@ -21,7 +21,7 @@ namespace Tests
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 using (var mountPointManager = FileMethods.CreateFile(
-                    @"\\.\MountPointManager", 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting, FileAttributes.FILE_ATTRIBUTE_NORMAL))
+                    @"\\.\MountPointManager", 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting, FileAttributes.Normal))
                 {
                     mountPointManager.IsInvalid.Should().BeFalse();
                 }

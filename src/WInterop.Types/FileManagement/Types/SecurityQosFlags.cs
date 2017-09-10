@@ -16,14 +16,41 @@ namespace WInterop.FileManagement.Types
         /// <summary>
         /// Not technically a defined attribute, added here for convenience.
         /// </summary>
-        NONE = 0x0,
+        None = 0x0,
 
-        SECURITY_SQOS_PRESENT = 0x00100000,
-        SECURITY_ANONYMOUS = (SECURITY_IMPERSONATION_LEVEL.SecurityAnonymous << 16),
-        SECURITY_IDENTIFICATION = (SECURITY_IMPERSONATION_LEVEL.SecurityIdentification << 16),
-        SECURITY_IMPERSONATION = (SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation << 16),
-        SECURITY_DELEGATION = (SECURITY_IMPERSONATION_LEVEL.SecurityDelegation << 16),
-        SECURITY_CONTEXT_TRACKING = 0x00040000,
-        SECURITY_EFFECTIVE_ONLY = 0x00080000
+        /// <summary>
+        /// [SECURITY_SQOS_PRESENT]
+        /// </summary>
+        QosPresent = 0x00100000,
+
+        /// <summary>
+        /// [SECURITY_ANONYMOUS]
+        /// </summary>
+        Anonymous = (SECURITY_IMPERSONATION_LEVEL.SecurityAnonymous << 16),
+
+        /// <summary>
+        /// [SECURITY_IDENTIFICATION]
+        /// </summary>
+        Identification = (SECURITY_IMPERSONATION_LEVEL.SecurityIdentification << 16),
+
+        /// <summary>
+        /// [SECURITY_IMPERSONATION]
+        /// </summary>
+        Impersonation = (SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation << 16),
+
+        /// <summary>
+        /// [SECURITY_DELEGATION]
+        /// </summary>
+        Delegations = (SECURITY_IMPERSONATION_LEVEL.SecurityDelegation << 16),
+
+        /// <summary>
+        /// [SECURITY_CONTEXT_TRACKING]
+        /// </summary>
+        ContextTracking = 0x00040000,
+
+        /// <summary>
+        /// [SECURITY_EFFECTIVE_ONLY]
+        /// </summary>
+        EffectiveOnly = 0x00080000
     }
 }

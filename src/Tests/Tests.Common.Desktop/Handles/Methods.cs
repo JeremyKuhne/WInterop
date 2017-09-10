@@ -25,7 +25,7 @@ namespace DesktopTests.HandlesTests
         {
             string tempPath = FileMethods.GetTempPath();
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                FileAttributes.None, FileFlags.BackupSemantics))
             {
                 string name = HandleMethods.GetObjectType(directory);
                 name.Should().Be("File");
@@ -37,7 +37,7 @@ namespace DesktopTests.HandlesTests
         {
             string tempPath = FileMethods.GetTempPath();
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                FileAttributes.None, FileFlags.BackupSemantics))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string name = HandleMethods.GetObjectName(directory);
@@ -109,7 +109,7 @@ namespace DesktopTests.HandlesTests
         {
             string tempPath = FileMethods.GetTempPath();
             using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.NONE, FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                FileAttributes.None, FileFlags.BackupSemantics))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string fullName = HandleMethods.GetObjectName(directory);
@@ -132,8 +132,8 @@ namespace DesktopTests.HandlesTests
                 System.IO.FileShare.ReadWrite,
                 System.IO.FileMode.Open,
                 0,
-                FileFlags.FILE_FLAG_OPEN_REPARSE_POINT          // To avoid traversing links
-                    | FileFlags.FILE_FLAG_BACKUP_SEMANTICS);    // To open directories
+                FileFlags.OpenReparsePoint           // To avoid traversing links
+                    | FileFlags.BackupSemantics);    // To open directories
 
             string name = HandleMethods.GetObjectName(fileHandle);
             name.Should().Be(@"\Device\NamedPipe\");
@@ -154,8 +154,8 @@ namespace DesktopTests.HandlesTests
                 System.IO.FileShare.ReadWrite,
                 System.IO.FileMode.Open,
                 0,
-                FileFlags.FILE_FLAG_OPEN_REPARSE_POINT          // To avoid traversing links
-                    | FileFlags.FILE_FLAG_BACKUP_SEMANTICS);    // To open directories
+                FileFlags.OpenReparsePoint           // To avoid traversing links
+                    | FileFlags.BackupSemantics);    // To open directories
 
             string name = HandleMethods.GetObjectName(fileHandle);
             name.Should().Be(@"\Device\NamedPipe");

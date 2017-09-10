@@ -87,8 +87,8 @@ namespace WInterop.FileManagement
             System.IO.FileShare fileShare,
             System.IO.FileMode fileMode,
             System.IO.FileAttributes fileAttributes = 0,
-            FileFlags fileFlags = FileFlags.NONE,
-            SecurityQosFlags securityFlags = SecurityQosFlags.NONE)
+            FileFlags fileFlags = FileFlags.None,
+            SecurityQosFlags securityFlags = SecurityQosFlags.None)
         {
             return CreateFileStream(
                 path: path,
@@ -108,9 +108,9 @@ namespace WInterop.FileManagement
             DesiredAccess desiredAccess,
             ShareMode shareMode,
             CreationDisposition creationDisposition,
-            FileAttributes fileAttributes = FileAttributes.NONE,
-            FileFlags fileFlags = FileFlags.NONE,
-            SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
+            FileAttributes fileAttributes = FileAttributes.None,
+            FileFlags fileFlags = FileFlags.None,
+            SecurityQosFlags securityQosFlags = SecurityQosFlags.None)
         {
             var fileHandle = CreateFile(path, desiredAccess, shareMode, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
 
@@ -119,7 +119,7 @@ namespace WInterop.FileManagement
                 handle: fileHandle,
                 access: Conversion.DesiredAccessToFileAccess(desiredAccess),
                 bufferSize: 4096,
-                isAsync: (fileFlags & FileFlags.FILE_FLAG_OVERLAPPED) != 0);
+                isAsync: (fileFlags & FileFlags.Overlapped) != 0);
         }
 
         private delegate SafeFileHandle CreateFileDelegate(
@@ -142,8 +142,8 @@ namespace WInterop.FileManagement
             System.IO.FileShare fileShare,
             System.IO.FileMode fileMode,
             System.IO.FileAttributes fileAttributes = 0,
-            FileFlags fileFlags = FileFlags.NONE,
-            SecurityQosFlags securityFlags = SecurityQosFlags.NONE)
+            FileFlags fileFlags = FileFlags.None,
+            SecurityQosFlags securityFlags = SecurityQosFlags.None)
         {
             return CreateFile(
                 path: path,
@@ -163,9 +163,9 @@ namespace WInterop.FileManagement
             DesiredAccess desiredAccess,
             ShareMode shareMode,
             CreationDisposition creationDisposition,
-            FileAttributes fileAttributes = FileAttributes.NONE,
-            FileFlags fileFlags = FileFlags.NONE,
-            SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
+            FileAttributes fileAttributes = FileAttributes.None,
+            FileFlags fileFlags = FileFlags.None,
+            SecurityQosFlags securityQosFlags = SecurityQosFlags.None)
         {
             // Prefer CreateFile2, falling back to CreateFileEx if we can
             if (s_createFileDelegate == null)
@@ -198,9 +198,9 @@ namespace WInterop.FileManagement
             DesiredAccess desiredAccess,
             ShareMode shareMode,
             CreationDisposition creationDisposition,
-            FileAttributes fileAttributes = FileAttributes.NONE,
-            FileFlags fileFlags = FileFlags.NONE,
-            SecurityQosFlags securityQosFlags = SecurityQosFlags.NONE)
+            FileAttributes fileAttributes = FileAttributes.None,
+            FileFlags fileFlags = FileFlags.None,
+            SecurityQosFlags securityQosFlags = SecurityQosFlags.None)
         {
             CREATEFILE2_EXTENDED_PARAMETERS extended = new CREATEFILE2_EXTENDED_PARAMETERS()
             {
@@ -325,7 +325,7 @@ namespace WInterop.FileManagement
         public static bool FileExists(string path)
         {
             var data = TryGetFileInfo(path);
-            return data.HasValue && (data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) != FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
+            return data.HasValue && (data.Value.Attributes & FileAttributes.Directory) != FileAttributes.Directory;
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace WInterop.FileManagement
         public static bool DirectoryExists(string path)
         {
             var data = TryGetFileInfo(path);
-            return data.HasValue && (data.Value.Attributes & FileAttributes.FILE_ATTRIBUTE_DIRECTORY) == FileAttributes.FILE_ATTRIBUTE_DIRECTORY;
+            return data.HasValue && (data.Value.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
         /// <summary>

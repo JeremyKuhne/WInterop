@@ -19,90 +19,132 @@ namespace WInterop.FileManagement.Types
         /// <summary>
         /// Not technically a defined attribute, added here for convenience.
         /// </summary>
-        NONE = 0x0,
-
-        FILE_ATTRIBUTE_READONLY = 0x00000001,
-        FILE_ATTRIBUTE_HIDDEN = 0x00000002,
-        FILE_ATTRIBUTE_SYSTEM = 0x00000004,
+        None = 0x0,
 
         /// <summary>
-        /// File is a directory.
+        /// File is read only. [FILE_ATTRIBUTE_READONLY]
         /// </summary>
-        FILE_ATTRIBUTE_DIRECTORY = 0x00000010,
-        FILE_ATTRIBUTE_ARCHIVE = 0x00000020,
+        ReadOnly = 0x00000001,
 
         /// <summary>
-        /// Reserved for system use.
+        /// [FILE_ATTRIBUTE_HIDDEN]
+        /// </summary>
+        Hidden = 0x00000002,
+
+        /// <summary>
+        /// [FILE_ATTRIBUTE_SYSTEM]
+        /// </summary>
+        System = 0x00000004,
+
+        /// <summary>
+        /// File is a directory. [FILE_ATTRIBUTE_DIRECTORY]
+        /// </summary>
+        Directory = 0x00000010,
+
+        /// <summary>
+        /// [FILE_ATTRIBUTE_ARCHIVE]
+        /// </summary>
+        Acrchive = 0x00000020,
+
+        /// <summary>
+        /// Reserved for system use. [FILE_ATTRIBUTE_DEVICE]
         /// </summary>
         /// <remarks>
         /// Filtered out by CreateFile.
         /// </remarks>
-        FILE_ATTRIBUTE_DEVICE = 0x00000040,
-        FILE_ATTRIBUTE_NORMAL = 0x00000080,
+        Device = 0x00000040,
+
+        /// <summary>
+        /// [FILE_ATTRIBUTE_NORMAL]
+        /// </summary>
+        Normal = 0x00000080,
 
         /// <summary>
         /// Indicates that file is temporary and will attempt to keep as much in the cache as possible.
+        /// [FILE_ATTRIBUTE_TEMPORARY]
         /// </summary>
-        FILE_ATTRIBUTE_TEMPORARY = 0x00000100,
-        FILE_ATTRIBUTE_SPARSE_FILE = 0x00000200,
+        Temporary = 0x00000100,
 
         /// <summary>
-        /// Link of some sort
+        /// [FILE_ATTRIBUTE_SPARSE_FILE]
         /// </summary>
-        FILE_ATTRIBUTE_REPARSE_POINT = 0x00000400,
-        FILE_ATTRIBUTE_COMPRESSED = 0x00000800,
+        SparseFile = 0x00000200,
 
         /// <summary>
-        /// Not available immediately. Used by Remote Storage.
+        /// Link of some sort. [FILE_ATTRIBUTE_REPARSE_POINT]
         /// </summary>
-        FILE_ATTRIBUTE_OFFLINE = 0x00001000,
+        ReparsePoint = 0x00000400,
 
         /// <summary>
-        /// Not to be indexed by the content indexing service.
+        /// [FILE_ATTRIBUTE_COMPRESSED]
         /// </summary>
-        FILE_ATTRIBUTE_NOT_CONTENT_INDEXED = 0x00002000,
-        FILE_ATTRIBUTE_ENCRYPTED = 0x00004000,
+        Compressed = 0x00000800,
 
         /// <summary>
-        /// Configured with integrity (ReFS only)
+        /// Not available immediately. Used by Remote Storage. [FILE_ATTRIBUTE_OFFLINE]
         /// </summary>
-        FILE_ATTRIBUTE_INTEGRITY_STREAM = 0x00008000,
+        Offline = 0x00001000,
 
         /// <summary>
-        /// Reserved for system use.
+        /// Not to be indexed by the content indexing service. [FILE_ATTRIBUTE_NOT_CONTENT_INDEXED]
+        /// </summary>
+        NotContentIndexed = 0x00002000,
+
+        /// <summary>
+        /// File is encrypted. [FILE_ATTRIBUTE_ENCRYPTED]
+        /// </summary>
+        Encrypted = 0x00004000,
+
+        /// <summary>
+        /// Configured with integrity (ReFS only). [FILE_ATTRIBUTE_INTEGRITY_STREAM]
+        /// </summary>
+        IntegrityStream = 0x00008000,
+
+        /// <summary>
+        /// Reserved for system use. [FILE_ATTRIBUTE_VIRTUAL]
         /// </summary>
         /// <remarks>
         /// Filtered out by CreateFile.
         /// </remarks>
-        FILE_ATTRIBUTE_VIRTUAL = 0x00010000,
+        Virtual = 0x00010000,
 
         /// <summary>
         /// User data stream should not be read by the background data integrity checker.
-        /// Only used on Storage Spaces and ReFS volumes.
+        /// Only used on Storage Spaces and ReFS volumes. [FILE_ATTRIBUTE_NO_SCRUB_DATA]
         /// </summary>
-        FILE_ATTRIBUTE_NO_SCRUB_DATA = 0x00020000,
+        NoScrubData = 0x00020000,
 
         /// <summary>
-        /// File has extended attributes? (FILE_EA_INFORMATION?)
+        /// File has extended attributes. (FILE_EA_INFORMATION) [FILE_ATTRIBUTE_EA]
         /// </summary>
         /// <remarks>
         /// Filtered out by CreateFile.
         /// </remarks>
-        FILE_ATTRIBUTE_EA = 0x00040000,
+        ExtendedAttributes = 0x00040000,
 
         // The next four attributes show up in RS2, likely all related to the new "On-demand Sync"
 
         // FILE_ATTRIBUTE_RECALL_ON_OPEN = 0x00040000,
 
-        FILE_ATTRIBUTE_PINNED = 0x00080000,
+        /// <summary>
+        /// [FILE_ATTRIBUTE_PINNED]
+        /// </summary>
+        Pinned = 0x00080000,
 
+        /// <summary>
+        /// [FILE_ATTRIBUTE_UNPINNED]
+        /// </summary>
         FILE_ATTRIBUTE_UNPINNED = 0x00100000,
 
-        FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS = 0x00400000,
+        /// <summary>
+        /// [FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS]
+        /// </summary>
+        RecallOnDataAccess = 0x00400000,
 
         /// <summary>
         /// Be careful with this, check for invalid <i>before</i> checking other flags.
+        /// [INVALID_FILE_ATTRIBUTES]
         /// </summary>
-        INVALID_FILE_ATTRIBUTES = unchecked((uint)(-1))
+        Invalid = unchecked((uint)(-1))
     }
 }

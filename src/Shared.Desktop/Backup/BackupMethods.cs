@@ -55,8 +55,8 @@ namespace WInterop.Backup
                 desiredAccess: 0,
                 shareMode: ShareMode.ReadWrite,
                 creationDisposition: CreationDisposition.OpenExisting,
-                fileAttributes: FileAttributes.NONE,
-                fileFlags: FileFlags.FILE_FLAG_BACKUP_SEMANTICS))
+                fileAttributes: FileAttributes.None,
+                fileFlags: FileFlags.BackupSemantics))
             {
                 using (BackupReader reader = new BackupReader(fileHandle))
                 {

@@ -168,8 +168,8 @@ namespace WInterop.Desktop.Communications
         /// </summary>
         public static SafeFileHandle CreateComFileHandle(
             string path,
-            FileAttributes fileAttributes = FileAttributes.NONE,
-            FileFlags fileFlags = FileFlags.NONE)
+            FileAttributes fileAttributes = FileAttributes.None,
+            FileFlags fileFlags = FileFlags.None)
         {
             return FileMethods.CreateFile(
                 path,
