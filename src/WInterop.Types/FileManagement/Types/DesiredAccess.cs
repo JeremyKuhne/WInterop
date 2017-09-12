@@ -122,45 +122,45 @@ namespace WInterop.FileManagement.Types
         /// <summary>
         /// All standard and specific rights. (FILE_ALL_ACCESS)
         /// </summary>
-        AllAccess = StandardAccessRights.STANDARD_RIGHTS_REQUIRED | StandardAccessRights.SYNCHRONIZE | 0x1FF,
+        AllAccess = StandardAccessRights.Required | StandardAccessRights.Synchronize | 0x1FF,
 
         /// <summary>
         /// The right to delete the object. (DELETE)
         /// </summary>
-        Delete = StandardAccessRights.DELETE,
+        Delete = StandardAccessRights.Delete,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
         /// Doesn't include system access control list info (SACL). (READ_CONTROL)
         /// </summary>
-        ReadControl = StandardAccessRights.READ_CONTROL,
+        ReadControl = StandardAccessRights.ReadControl,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
         /// object's security descriptor. (WRITE_DAC)
         /// </summary>
-        WriteDac = StandardAccessRights.WRITE_DAC,
+        WriteDac = StandardAccessRights.WriteDac,
 
         /// <summary>
         /// The right to change the owner in the object's security descriptor. (WRITE_OWNER)
         /// </summary>
-        WriteOwner = StandardAccessRights.WRITE_OWNER,
+        WriteOwner = StandardAccessRights.WriteOwner,
 
         /// <summary>
         /// The right to use the object for synchronization. Enables a thread to wait until the object
         /// is in the signaled state. This is required if opening a synchronous handle.(SYNCHRONIZE)
         /// </summary>
-        Synchronize = StandardAccessRights.SYNCHRONIZE,
+        Synchronize = StandardAccessRights.Synchronize,
 
         /// <summary>
         /// Same as READ_CONTROL.
         /// </summary>
-        StandardRightsRead = StandardAccessRights.STANDARD_RIGHTS_READ,
+        StandardRightsRead = StandardAccessRights.Read,
 
         /// <summary>
         /// STANDARD_RIGHTS_WRITE. Same as READ_CONTROL.
         /// </summary>
-        StandardRightsWrite = StandardAccessRights.STANDARD_RIGHTS_WRITE,
+        StandardRightsWrite = StandardAccessRights.Write,
 
         /// <summary>
         /// STANDARD_RIGHTS_EXECUTE. Same as READ_CONTROL.

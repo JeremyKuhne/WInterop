@@ -34,7 +34,7 @@ namespace WInterop.Handles
         /// </summary>
         public static DirectoryObjectHandle OpenDirectoryObject(
             string path,
-            DirectoryObjectRights desiredAccess = DirectoryObjectRights.DIRECTORY_QUERY)
+            DirectoryObjectRights desiredAccess = DirectoryObjectRights.Query)
         {
             return (DirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
             {

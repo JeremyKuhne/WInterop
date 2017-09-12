@@ -22,7 +22,7 @@ namespace WInterop.Authorization.Types
         TOKEN_ADJUST_DEFAULT = 0x0080,
         TOKEN_ADJUST_SESSIONID = 0x0100,
 
-        TOKEN_ALL_ACCESS_P = StandardAccessRights.STANDARD_RIGHTS_REQUIRED
+        TOKEN_ALL_ACCESS_P = StandardAccessRights.Required
                     | TOKEN_ASSIGN_PRIMARY
                     | TOKEN_DUPLICATE |
                           TOKEN_IMPERSONATE |
@@ -34,14 +34,14 @@ namespace WInterop.Authorization.Types
 
         TOKEN_ALL_ACCESS = TOKEN_ALL_ACCESS_P |
                           TOKEN_ADJUST_SESSIONID,
-        TOKEN_READ = StandardAccessRights.STANDARD_RIGHTS_READ |
+        TOKEN_READ = StandardAccessRights.Read |
                           TOKEN_QUERY,
-        TOKEN_WRITE = StandardAccessRights.STANDARD_RIGHTS_WRITE |
+        TOKEN_WRITE = StandardAccessRights.Write |
                           TOKEN_ADJUST_PRIVILEGES |
                           TOKEN_ADJUST_GROUPS |
                           TOKEN_ADJUST_DEFAULT,
-        TOKEN_EXECUTE = StandardAccessRights.STANDARD_RIGHTS_EXECUTE,
-        TOKEN_TRUST_CONSTRAINT_MASK = StandardAccessRights.STANDARD_RIGHTS_READ |
+        TOKEN_EXECUTE = StandardAccessRights.Execute,
+        TOKEN_TRUST_CONSTRAINT_MASK = StandardAccessRights.Read |
                                        TOKEN_QUERY |
                                        TOKEN_QUERY_SOURCE
     }

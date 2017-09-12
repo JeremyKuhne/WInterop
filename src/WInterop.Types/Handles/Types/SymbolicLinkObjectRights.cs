@@ -15,7 +15,7 @@ namespace WInterop.Handles.Types
     {
         SYMBOLIC_LINK_QUERY = 0x0001,
         SYMBOLIC_LINK_SET = 0x0002,
-        SYMBOLIC_LINK_ALL_ACCESS = StandardAccessRights.STANDARD_RIGHTS_REQUIRED | SYMBOLIC_LINK_QUERY,
+        SYMBOLIC_LINK_ALL_ACCESS = StandardAccessRights.Required | SYMBOLIC_LINK_QUERY,
 
         /// <summary>
         /// Maps to STANDARD_RIGHTS_READ | SYMBOLIC_LINK_QUERY.

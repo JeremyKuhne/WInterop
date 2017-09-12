@@ -21,35 +21,35 @@ namespace WInterop.Authorization.Types
         /// <summary>
         /// All possible rights for an event object.
         /// </summary>
-        EVENT_ALL_ACCESS = StandardAccessRights.STANDARD_RIGHTS_ALL | 0x3,
+        EVENT_ALL_ACCESS = StandardAccessRights.All | 0x3,
 
         /// <summary>
         /// The right to delete the object.
         /// </summary>
-        DELETE = StandardAccessRights.DELETE,
+        DELETE = StandardAccessRights.Delete,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
         /// Doesn't include system access control list info (SACL).
         /// </summary>
-        READ_CONTROL = StandardAccessRights.READ_CONTROL,
+        READ_CONTROL = StandardAccessRights.ReadControl,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
         /// object's security descriptor.
         /// </summary>
-        WRITE_DAC = StandardAccessRights.WRITE_DAC,
+        WRITE_DAC = StandardAccessRights.WriteDac,
 
         /// <summary>
         /// The right to change the owner in the object's security descriptor.
         /// </summary>
-        WRITE_OWNER = StandardAccessRights.WRITE_OWNER,
+        WRITE_OWNER = StandardAccessRights.WriteOwner,
 
         /// <summary>
         /// The right to use the object for synchronization. Enables a thread to wait
         /// until the object is in the signaled state.
         /// </summary>
-        SYNCHRONIZE = StandardAccessRights.SYNCHRONIZE,
+        SYNCHRONIZE = StandardAccessRights.Synchronize,
 
         /// <summary>
         /// Internally maps to KEY_READ.

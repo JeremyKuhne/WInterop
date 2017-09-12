@@ -39,16 +39,16 @@ namespace WInterop.Registry.Types
         KEY_WOW64_RES           = 0x0300,
 
         KEY_READ =
-            StandardAccessRights.STANDARD_RIGHTS_READ
+            StandardAccessRights.Read
             | KEY_QUERY_VALUE
             | KEY_ENUMERATE_SUB_KEYS
             | KEY_NOTIFY,
         KEY_WRITE =
-            StandardAccessRights.STANDARD_RIGHTS_WRITE
+            StandardAccessRights.Write
             | KEY_SET_VALUE
             | KEY_CREATE_SUB_KEY,
         KEY_EXECUTE = KEY_READ,
-        KEY_ALL_ACCESS = StandardAccessRights.STANDARD_RIGHTS_REQUIRED
+        KEY_ALL_ACCESS = StandardAccessRights.Required
             | KEY_QUERY_VALUE
             | KEY_SET_VALUE
             | KEY_CREATE_SUB_KEY
@@ -59,24 +59,24 @@ namespace WInterop.Registry.Types
         /// <summary>
         /// The right to delete the object.
         /// </summary>
-        DELETE = StandardAccessRights.DELETE,
+        DELETE = StandardAccessRights.Delete,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
         /// Doesn't include system access control list info (SACL).
         /// </summary>
-        READ_CONTROL = StandardAccessRights.READ_CONTROL,
+        READ_CONTROL = StandardAccessRights.ReadControl,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
         /// object's security descriptor.
         /// </summary>
-        WRITE_DAC = StandardAccessRights.WRITE_DAC,
+        WRITE_DAC = StandardAccessRights.WriteDac,
 
         /// <summary>
         /// The right to change the owner in the object's security descriptor.
         /// </summary>
-        WRITE_OWNER = StandardAccessRights.WRITE_OWNER,
+        WRITE_OWNER = StandardAccessRights.WriteOwner,
 
         /// <summary>
         /// Internally maps to KEY_READ.

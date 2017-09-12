@@ -15,49 +15,49 @@ namespace WInterop.Handles.Types
     public enum DirectoryObjectRights : uint
     {
         /// <summary>
-        /// Query access to the directory object.
+        /// Query access to the directory object. [DIRECTORY_QUERY]
         /// </summary>
-        DIRECTORY_QUERY = 0x0001,
+        Query = 0x0001,
 
         /// <summary>
-        /// Name-lookup access to the directory object.
+        /// Name-lookup access to the directory object. [DIRECTORY_TRAVERSE]
         /// </summary>
-        DIRECTORY_TRAVERSE = 0x0002,
+        Traverse = 0x0002,
 
         /// <summary>
-        /// Name-creation access to the directory object.
+        /// Name-creation access to the directory object. [DIRECTORY_CREATE_OBJECT]
         /// </summary>
-        DIRECTORY_CREATE_OBJECT = 0x0004,
+        CreateObject = 0x0004,
 
         /// <summary>
-        /// Subdirectory-creation access to the directory object.
+        /// Subdirectory-creation access to the directory object. [DIRECTORY_CREATE_SUBDIRECTORY]
         /// </summary>
-        DIRECTORY_CREATE_SUBDIRECTORY = 0x0008,
+        CreateSubdirectory = 0x0008,
 
-        DIRECTORY_ALL_ACCESS = StandardAccessRights.STANDARD_RIGHTS_REQUIRED | DIRECTORY_QUERY | DIRECTORY_TRAVERSE
-            | DIRECTORY_CREATE_OBJECT | DIRECTORY_CREATE_SUBDIRECTORY,
+        AllAccess = StandardAccessRights.Required | Query | Traverse
+            | CreateObject | CreateSubdirectory,
 
         /// <summary>
         /// The right to delete the object.
         /// </summary>
-        DELETE = StandardAccessRights.DELETE,
+        DELETE = StandardAccessRights.Delete,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
         /// Doesn't include system access control list info (SACL).
         /// </summary>
-        READ_CONTROL = StandardAccessRights.READ_CONTROL,
+        READ_CONTROL = StandardAccessRights.ReadControl,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
         /// object's security descriptor.
         /// </summary>
-        WRITE_DAC = StandardAccessRights.WRITE_DAC,
+        WRITE_DAC = StandardAccessRights.WriteDac,
 
         /// <summary>
         /// The right to change the owner in the object's security descriptor.
         /// </summary>
-        WRITE_OWNER = StandardAccessRights.WRITE_OWNER,
+        WRITE_OWNER = StandardAccessRights.WriteOwner,
 
         /// <summary>
         /// Maps to STANDARD_RIGHTS_READ | DIRECTORY_QUERY | DIRECTORY_TRAVERSE.
