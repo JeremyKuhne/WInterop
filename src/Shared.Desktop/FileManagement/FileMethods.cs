@@ -7,6 +7,7 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
+using System.Collections.Generic;
 using WInterop.Authentication.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;

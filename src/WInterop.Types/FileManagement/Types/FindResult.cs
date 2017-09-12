@@ -11,30 +11,28 @@ namespace WInterop.FileManagement.Types
 {
     public class FindResult
     {
-        /// <summary>
-        /// The path used for creating the FindOperation.
-        /// </summary>
-        public string SearchPath { get; private set; }
-
+        public string Directory { get; private set; }
         public string FileName { get; private set; }
         public string AlternateFileName { get; private set; }
         public FileAttributes Attributes { get; private set; }
-        public DateTime Creation { get; private set; }
-        public DateTime LastAccess { get; private set; }
-        public DateTime LastWrite { get; private set; }
+        public DateTime CreationUtc { get; private set; }
+        public DateTime LastAccessUtc { get; private set; }
+        public DateTime LastWriteUtc { get; private set; }
         public ulong Length { get; private set; }
+        public ReparseTag ReparseTag { get; private set; }
 
-        public FindResult(ref WIN32_FIND_DATA findData, string searchPath)
+        public FindResult(ref WIN32_FIND_DATA findData, string directory)
         {
-            SearchPath = searchPath;
+            Directory = directory;
             FileName = findData.cFileName;
             AlternateFileName = findData.cAlternateFileName;
             Attributes = findData.dwFileAttributes;
 
-            Creation = findData.ftCreationTime.ToDateTimeUtc().ToLocalTime();
-            LastAccess = findData.ftLastAccessTime.ToDateTimeUtc().ToLocalTime();
-            LastWrite = findData.ftLastWriteTime.ToDateTimeUtc().ToLocalTime();
+            CreationUtc = findData.ftCreationTime.ToDateTimeUtc();
+            LastAccessUtc = findData.ftLastAccessTime.ToDateTimeUtc();
+            LastWriteUtc = findData.ftLastWriteTime.ToDateTimeUtc();
             Length = findData.nFileSize;
+            ReparseTag = (ReparseTag)findData.dwReserved0;
         }
     }
 }

@@ -14,34 +14,33 @@ using WInterop.Support;
 
 namespace WInterop.FileManagement
 {
+    public delegate bool FindPredicate(ref WIN32_FIND_DATA data);
+
     /// <summary>
     /// Encapsulates a find operation.
     /// </summary>
     public class FindOperation : IEnumerable<FindResult>
     {
         public bool GetAlternateName { get; private set; }
-        public string OriginalPath { get; private set; }
+        public string Directory { get; private set; }
+        public string Filter { get; private set; }
 
         /// <summary>
         /// Encapsulates a find operation. Will strip trailing separator as FindFile will not take it.
         /// </summary>
-        /// <param name="path">
-        /// The search path. The path must not end in a directory separator. The final file/directory name (after the last
-        /// directory separator) can contain wildcards, the full details can be found at
+        /// <param name="directory">The directory to search in.</param>
+        /// <param name="filter">
+        /// The filter. Can contain wildcards, full details can be found at
         /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
         /// </param>
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
         public FindOperation(
-            string path,
+            string directory,
+            string filter = "*",
             bool getAlternateName = false)
         {
-            if (Paths.EndsInDirectorySeparator(path))
-            {
-                // Find first file does not like trailing separators so we'll cull it
-                path = Paths.TrimTrailingSeparators(path);
-            }
-
-            OriginalPath = path;
+            Directory = directory;
+            Filter = filter;
             GetAlternateName = getAlternateName;
         }
 
@@ -54,6 +53,7 @@ namespace WInterop.FileManagement
             private IntPtr _findHandle;
             private bool _lastEntryFound;
             private FindOperation _operation;
+            private string _searchPath;
 
             public FindEnumerator(FindOperation operation)
             {
@@ -89,7 +89,7 @@ namespace WInterop.FileManagement
             private FindResult FindFirstFile()
             {
                 _findHandle = FileMethods.Imports.FindFirstFileExW(
-                    _operation.OriginalPath,
+                    _searchPath,
                     _operation.GetAlternateName ? FINDEX_INFO_LEVELS.FindExInfoStandard : FINDEX_INFO_LEVELS.FindExInfoBasic,
                     out WIN32_FIND_DATA findData,
                     // FindExSearchNameMatch (0) is what FindFirstFile calls Ex with. This value has no impact on
@@ -105,27 +105,35 @@ namespace WInterop.FileManagement
                     if (error == WindowsError.ERROR_FILE_NOT_FOUND)
                         return null;
 
-                    throw Errors.GetIoExceptionForLastError(_operation.OriginalPath);
+                    throw Errors.GetIoExceptionForLastError(_operation.Directory);
                 }
 
-                return new FindResult(ref findData, _operation.OriginalPath);
+                return new FindResult(ref findData, _operation.Directory);
             }
 
             private FindResult FindNextFile()
             {
                 if (!FileMethods.Imports.FindNextFileW(_findHandle, out WIN32_FIND_DATA findData))
                 {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_NO_MORE_FILES, _operation.OriginalPath);
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_NO_MORE_FILES, _operation.Directory);
                     return null;
                 }
 
-                return new FindResult(ref findData, _operation.OriginalPath);
+                return new FindResult(ref findData, _operation.Directory);
             }
 
             public void Reset()
             {
                 _findHandle = IntPtr.Zero;
                 _lastEntryFound = false;
+
+                if (_searchPath == null)
+                {
+                    _searchPath = string.IsNullOrEmpty(_operation.Filter) ? _operation.Directory : Paths.Combine(_operation.Directory, _operation.Filter);
+
+                    // Find first file does not like trailing separators so we'll cull it
+                    _searchPath = Paths.TrimTrailingSeparators(_searchPath);
+                }
 
                 // There is one weird special case. If we're passed a legacy root volume (e.g. C:\) then removing the
                 // trailing separator will make the path drive relative, leading to whatever the current directory is
@@ -134,14 +142,10 @@ namespace WInterop.FileManagement
                 // You can't find a volume on it's own anyway, so we'll exit out in this case. For C: without a
                 // trailing slash it is legitimate to try and find whatever that matches. Note that we also don't need
                 // to bother checking the first character, as anything else there would be invalid.
-                if ((_operation.OriginalPath.Length == 2 && _operation.OriginalPath[1] == ':')   // C:
-                    || (_operation.OriginalPath.Length == 6 && _operation.OriginalPath[5] == ':' && Paths.IsExtendedDosDevicePath(_operation.OriginalPath))) // \\?\C:
+                if ((_searchPath.Length == 2 && _searchPath[1] == ':')   // C:
+                    || (_searchPath.Length == 6 && _searchPath[5] == ':' && Paths.IsExtendedDosDevicePath(_searchPath))) // \\?\C:
                 {
                     _lastEntryFound = true;
-                }
-                else
-                {
-                    _lastEntryFound = false;
                 }
             }
 

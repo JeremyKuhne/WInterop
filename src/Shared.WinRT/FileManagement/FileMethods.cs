@@ -283,17 +283,18 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Creates a wrapper for finding files.
         /// </summary>
-        /// <param name="path">
-        /// The search path. The path must not end in a directory separator. The final file/directory name (after the last
-        /// directory separator) can contain wildcards, the full details can be found at
+        /// <param name="directory">The directory to search in.</param>
+        /// <param name="filter">
+        /// The filter. Can contain wildcards, full details can be found at
         /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
         /// </param>
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
         public static FindOperation CreateFindOperation(
-            string path,
+            string directory,
+            string filter = "*",
             bool getAlternateName = false)
         {
-            return new FindOperation(path, getAlternateName);
+            return new FindOperation(directory, filter, getAlternateName);
         }
 
         /// <summary>

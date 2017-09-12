@@ -305,7 +305,7 @@ namespace Tests.FileManagementTests
         [Fact]
         public void FindFirstFileNoFiles()
         {
-            FileMethods.CreateFindOperation(Paths.Combine(FileMethods.GetTempPath(), System.IO.Path.GetRandomFileName()))
+            FileMethods.CreateFindOperation(FileMethods.GetTempPath(), System.IO.Path.GetRandomFileName())
                 .Should().BeEmpty();
         }
 
@@ -319,7 +319,7 @@ namespace Tests.FileManagementTests
                 string subdir = Paths.Combine(temp.TempFolder, "Subdir");
                 DirectoryMethods.CreateDirectory(subdir);
 
-                FileMethods.CreateFindOperation(Paths.Combine(subdir, pattern)).Select(s => s.FileName)
+                FileMethods.CreateFindOperation(subdir, pattern).Select(s => s.FileName)
                     .Should().Contain(new string[] { ".", ".." });
             }
         }
@@ -543,7 +543,8 @@ namespace Tests.FileManagementTests
             ]
         public void FindFirstFileHandlesRoots(string path)
         {
-            FileMethods.CreateFindOperation(path).Should().BeEmpty();
+            FileMethods.CreateFindOperation(path).Should().NotBeEmpty();
+            FileMethods.CreateFindOperation(path, null).Should().BeEmpty();
         }
 
         [Fact]
