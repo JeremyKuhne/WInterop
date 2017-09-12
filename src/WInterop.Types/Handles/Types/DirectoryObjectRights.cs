@@ -62,21 +62,21 @@ namespace WInterop.Handles.Types
         /// <summary>
         /// Maps to STANDARD_RIGHTS_READ | DIRECTORY_QUERY | DIRECTORY_TRAVERSE.
         /// </summary>
-        GENERIC_READ = GenericAccessRights.GENERIC_READ,
+        GENERIC_READ = GenericAccessRights.Read,
 
         /// <summary>
         /// Maps to STANDARD_RIGHTS_WRITE | DIRECTORY_CREATE_OBJECT | DIRECTORY_CREATE_SUBDIRECTORY.
         /// </summary>
-        GENERIC_WRITE = GenericAccessRights.GENERIC_WRITE,
+        GENERIC_WRITE = GenericAccessRights.Write,
 
         /// <summary>
         /// Maps to STANDARD_RIGHTS_EXECUTE | DIRECTORY_QUERY | DIRECTORY_TRAVERSE.
         /// </summary>
-        GENERIC_EXECUTE = GenericAccessRights.GENERIC_EXECUTE,
+        GENERIC_EXECUTE = GenericAccessRights.Execute,
 
         /// <summary>
         /// Maps to DIRECTORY_ALL_ACCESS.
         /// </summary>
-        GENERIC_ALL = GenericAccessRights.GENERIC_ALL
+        GENERIC_ALL = GenericAccessRights.All
     }
 }

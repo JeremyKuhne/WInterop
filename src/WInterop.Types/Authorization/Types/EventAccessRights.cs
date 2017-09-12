@@ -54,21 +54,21 @@ namespace WInterop.Authorization.Types
         /// <summary>
         /// Internally maps to KEY_READ.
         /// </summary>
-        GENERIC_READ = GenericAccessRights.GENERIC_READ,
+        GENERIC_READ = GenericAccessRights.Read,
 
         /// <summary>
         /// Internally maps to KEY_WRITE.
         /// </summary>
-        GENERIC_WRITE = GenericAccessRights.GENERIC_WRITE,
+        GENERIC_WRITE = GenericAccessRights.Write,
 
         /// <summary>
         /// Internally maps to KEY_EXECUTE | KEY_CREATE_LINK.
         /// </summary>
-        GENERIC_EXECUTE = GenericAccessRights.GENERIC_EXECUTE,
+        GENERIC_EXECUTE = GenericAccessRights.Execute,
 
         /// <summary>
         /// Internally maps to KEY_ALL_ACCESS.
         /// </summary>
-        GENERIC_ALL = GenericAccessRights.GENERIC_ALL
+        GENERIC_ALL = GenericAccessRights.All
     }
 }

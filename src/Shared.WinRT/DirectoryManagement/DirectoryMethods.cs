@@ -75,8 +75,8 @@ namespace WInterop.DirectoryManagement
             return FileMethods.CreateFile(
                 directoryPath,
                 CreationDisposition.OpenExisting,
-                DesiredAccess.GenericRead,
-                ShareMode.ReadWrite,
+                DesiredAccess.ListDirectory,
+                ShareMode.ReadWrite | ShareMode.Delete,
                 FileAttributes.None,
                 FileFlags.BackupSemantics);
         }

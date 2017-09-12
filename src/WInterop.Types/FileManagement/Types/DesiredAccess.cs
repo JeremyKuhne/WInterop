@@ -171,7 +171,7 @@ namespace WInterop.FileManagement.Types
         /// FILE_GENERIC_READ. Maps internally to FILE_READ_ATTRIBUTES | FILE_READ_DATA | FILE_READ_EA | STANDARD_RIGHTS_READ | SYNCHRONIZE.
         /// (For directories, FILE_READ_ATTRIBUTES | FILE_LIST_DIRECTORY | FILE_READ_EA | STANDARD_RIGHTS_READ | SYNCHRONIZE.)
         /// </summary>
-        GenericRead = GenericAccessRights.GENERIC_READ,
+        GenericRead = GenericAccessRights.Read,
 
         /// <summary>
         /// FILE_GENERIC_WRITE. Maps internally to FILE_APPEND_DATA | FILE_WRITE_ATTRIBUTES | FILE_WRITE_DATA
@@ -179,13 +179,13 @@ namespace WInterop.FileManagement.Types
         /// (For directories, FILE_ADD_SUBDIRECTORY | FILE_WRITE_ATTRIBUTES | FILE_ADD_FILE
         ///  | FILE_WRITE_EA | STANDARD_RIGHTS_WRITE | SYNCHRONIZE.)
         /// </summary>
-        GenericWrite = GenericAccessRights.GENERIC_WRITE,
+        GenericWrite = GenericAccessRights.Write,
 
         /// <summary>
         /// FILE_GENERIC_EXECUTE. Maps internally to FILE_EXECUTE | FILE_READ_ATTRIBUTES | STANDARD_RIGHTS_EXECUTE | SYNCHRONIZE.
         /// (For directories, FILE_DELETE_CHILD | FILE_READ_ATTRIBUTES | STANDARD_RIGHTS_EXECUTE | SYNCHRONIZE.)
         /// </summary>
-        GenericExecute = GenericAccessRights.GENERIC_EXECUTE,
+        GenericExecute = GenericAccessRights.Execute,
 
         /// <summary>
         /// Not technically part of the SDK, for convenience.
