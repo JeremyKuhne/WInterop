@@ -9,6 +9,7 @@ using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using WInterop.DeviceManagement;
+using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 using WInterop.Handles;
@@ -24,8 +25,7 @@ namespace DesktopTests.HandlesTests
         public void GetHandleTypeBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.None, FileFlags.BackupSemantics))
+            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
             {
                 string name = HandleMethods.GetObjectType(directory);
                 name.Should().Be("File");
@@ -36,8 +36,7 @@ namespace DesktopTests.HandlesTests
         public void GetHandleNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.None, FileFlags.BackupSemantics))
+            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string name = HandleMethods.GetObjectName(directory);
@@ -108,12 +107,11 @@ namespace DesktopTests.HandlesTests
         public void QueryDosVolumePathBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.None, FileFlags.BackupSemantics))
+            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string fullName = HandleMethods.GetObjectName(directory);
-                string fileName = FileMethods.GetFileNameByHandle(directory);
+                string fileName = FileMethods.GetFileName(directory);
                 string deviceName = fullName.Substring(0, fullName.Length - fileName.Length);
 
                 string dosVolumePath = DeviceMethods.QueryDosVolumePath(deviceName);
@@ -126,7 +124,7 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void GetPipeObjectInfo()
         {
-            var fileHandle = FileMethods.CreateFile(
+            var fileHandle = FileMethods.CreateFileSystemIo(
                 @"\\.\pipe\",
                 0,                  // We don't care about read or write, we're just getting metadata with this handle
                 System.IO.FileShare.ReadWrite,
@@ -141,14 +139,14 @@ namespace DesktopTests.HandlesTests
             string typeName = HandleMethods.GetObjectType(fileHandle);
             typeName.Should().Be(@"File");
 
-            string fileName = FileMethods.GetFileNameByHandle(fileHandle);
+            string fileName = FileMethods.GetFileName(fileHandle);
             fileName.Should().Be(@"\");
         }
 
         [Fact]
         public void GetPipeObjectInfoNoTrailingSlash()
         {
-            var fileHandle = FileMethods.CreateFile(
+            var fileHandle = FileMethods.CreateFileSystemIo(
                 @"\\.\pipe",
                 0,                  // We don't care about read or write, we're just getting metadata with this handle
                 System.IO.FileShare.ReadWrite,
@@ -164,7 +162,7 @@ namespace DesktopTests.HandlesTests
             typeName.Should().Be(@"File");
 
             // Not sure why this is- probably the source of why so many other things go wrong
-            Action action = () => FileMethods.GetFileNameByHandle(fileHandle);
+            Action action = () => FileMethods.GetFileName(fileHandle);
             action.ShouldThrow<ArgumentException>().And.HResult.Should().Be(unchecked((int)0x80070057));
         }
     }

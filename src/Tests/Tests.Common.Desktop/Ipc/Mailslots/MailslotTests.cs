@@ -14,7 +14,7 @@ using Xunit;
 
 namespace DesktopTests.Ipc.MailslotTests
 {
-    public class Methods
+    public class MailslotTests
     {
         [Fact]
         public void BasicCreateMailslot()
@@ -25,7 +25,7 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = FileMethods.CreateFile(mailslotName, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+                using (var fileHandle = FileMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);
@@ -46,7 +46,7 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = FileMethods.CreateFile(mailslotName, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
+                using (var fileHandle = FileMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0, ShareMode.ReadWrite,
                     FileAttributes.None, FileFlags.Overlapped))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();

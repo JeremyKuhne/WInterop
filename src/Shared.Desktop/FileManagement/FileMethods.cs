@@ -12,6 +12,7 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.BufferWrappers;
 using WInterop.FileManagement.Types;
+using WInterop.Handles.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -60,8 +61,8 @@ namespace WInterop.FileManagement
             FileFlags flags = FileFlags.BackupSemantics;
             if (!resolveLinks) flags |= FileFlags.OpenReparsePoint;
 
-            using (SafeFileHandle fileHandle = CreateFile(path, 0, ShareMode.ReadWrite,
-                CreationDisposition.OpenExisting, FileAttributes.None, flags))
+            using (SafeFileHandle fileHandle = CreateFile(path, CreationDisposition.OpenExisting, 0, ShareMode.ReadWrite,
+                FileAttributes.None, flags))
             {
                 return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
             }
@@ -92,7 +93,7 @@ namespace WInterop.FileManagement
         /// CreateFile wrapper. Desktop only. Prefer FileManagement.CreateFile() as it will handle all supported platforms.
         /// </summary>
         /// <remarks>Not available in Windows Store applications.</remarks>
-        public static SafeFileHandle CreateFileW(
+        public unsafe static SafeFileHandle CreateFileW(
             string path,
             DesiredAccess desiredAccess,
             ShareMode shareMode,
@@ -103,11 +104,64 @@ namespace WInterop.FileManagement
         {
             uint flags = (uint)fileAttributes | (uint)fileFlags | (uint)securityQosFlags;
 
-            unsafe
+            SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, null, creationDisposition, flags, IntPtr.Zero);
+            if (handle.IsInvalid)
+                throw Errors.GetIoExceptionForLastError(path);
+            return handle;
+        }
+
+        /// <summary>
+        /// NtCreateFile wrapper.
+        /// </summary>
+        public unsafe static SafeFileHandle CreateFileDirect(
+            string path,
+            CreateDisposition createDisposition,
+            DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
+            ShareMode shareAccess = ShareMode.ReadWrite,
+            FileAttributes fileAttributes = FileAttributes.None,
+            CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
+            ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
+        {
+            return CreateFileRelative(path, null, createDisposition, desiredAccess, shareAccess,
+                fileAttributes, createOptions, objectAttributes);
+        }
+
+        public unsafe static SafeFileHandle CreateFileRelative(
+            string path,
+            SafeFileHandle rootDirectory,
+            CreateDisposition createDisposition,
+            DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
+            ShareMode shareAccess = ShareMode.ReadWrite,
+            FileAttributes fileAttributes = FileAttributes.None,
+            CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
+            ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
+        {
+            fixed (char* c = path)
             {
-                SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, null, creationDisposition, flags, IntPtr.Zero);
-                if (handle.IsInvalid)
-                    throw Errors.GetIoExceptionForLastError(path);
+                UNICODE_STRING name = new UNICODE_STRING(c, path);
+                OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES(
+                    &name,
+                    objectAttributes,
+                    rootDirectory == null ? null : (void*)rootDirectory?.DangerousGetHandle(),
+                    null,
+                    null);
+
+                NTSTATUS status = Imports.NtCreateFile(
+                    out SafeFileHandle handle,
+                    desiredAccess,
+                    ref attributes,
+                    out IO_STATUS_BLOCK statusBlock,
+                    AllocationSize: null,
+                    FileAttributes: fileAttributes,
+                    ShareAccess: shareAccess,
+                    CreateDisposition: createDisposition,
+                    CreateOptions: createOptions,
+                    EaBuffer: null,
+                    EaLength: 0);
+
+                if (status != NTSTATUS.STATUS_SUCCESS)
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status, path);
+
                 return handle;
             }
         }
@@ -268,6 +322,16 @@ namespace WInterop.FileManagement
 
                 return Imports.RtlIsNameInExpression(eus, nus, ignoreCase, IntPtr.Zero);
             }
+        }
+
+        public unsafe static FileAccessRights GetRights(SafeFileHandle fileHandle)
+        {
+            FILE_ACCESS_INFORMATION access = new FILE_ACCESS_INFORMATION();
+            NTSTATUS result = Imports.NtQueryInformationFile(fileHandle, out _,
+                &access, (uint)sizeof(FILE_ACCESS_INFORMATION), FILE_INFORMATION_CLASS.FileAccessInformation);
+            if (result != NTSTATUS.STATUS_SUCCESS)
+                throw ErrorMethods.GetIoExceptionForNTStatus(result);
+            return access.AccessFlags;
         }
     }
 }

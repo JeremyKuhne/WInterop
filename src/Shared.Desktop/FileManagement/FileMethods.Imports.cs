@@ -12,6 +12,7 @@ using WInterop.Authentication.Types;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
+using WInterop.Handles.Types;
 using WInterop.Support;
 
 namespace WInterop.FileManagement
@@ -141,6 +142,22 @@ namespace WInterop.FileManagement
                 /// </summary>
                 IntPtr pUsers);
 
+            // https://msdn.microsoft.com/en-us/library/bb432380.aspx
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566424.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public unsafe static extern NTSTATUS NtCreateFile(
+                out SafeFileHandle FileHandle,
+                DesiredAccess DesiredAccess,
+                ref OBJECT_ATTRIBUTES ObjectAttributes,
+                out IO_STATUS_BLOCK IoStatusBlock,
+                long* AllocationSize,
+                FileAttributes FileAttributes,
+                ShareMode ShareAccess,
+                CreateDisposition CreateDisposition,
+                CreateOptions CreateOptions,
+                void* EaBuffer,
+                uint EaLength);
+
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567052.aspx
             // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -149,6 +166,14 @@ namespace WInterop.FileManagement
                 out IO_STATUS_BLOCK IoStatusBlock,
                 void* FileInformation,
                 uint Length,
+                FILE_INFORMATION_CLASS FileInformationClass);
+
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567096.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public unsafe static extern NTSTATUS NtSetInformationFile(
+                SafeFileHandle FileHandle,
+                out IO_STATUS_BLOCK IoStatusBlock,
+                void* FileInformation,
                 FILE_INFORMATION_CLASS FileInformationClass);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556633.aspx

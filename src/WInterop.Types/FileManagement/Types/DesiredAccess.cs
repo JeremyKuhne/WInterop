@@ -147,10 +147,10 @@ namespace WInterop.FileManagement.Types
         WriteOwner = StandardAccessRights.WRITE_OWNER,
 
         /// <summary>
-        /// The right to use the object for synchronization. Enables a thread to wait
-        /// until the object is in the signaled state. (SYNCHRONIZE)
+        /// The right to use the object for synchronization. Enables a thread to wait until the object
+        /// is in the signaled state. This is required if opening a synchronous handle.(SYNCHRONIZE)
         /// </summary>
-        Synchronoize = StandardAccessRights.SYNCHRONIZE,
+        Synchronize = StandardAccessRights.SYNCHRONIZE,
 
         /// <summary>
         /// Same as READ_CONTROL.

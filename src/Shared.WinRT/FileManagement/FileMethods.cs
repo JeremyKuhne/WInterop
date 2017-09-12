@@ -112,7 +112,7 @@ namespace WInterop.FileManagement
             FileFlags fileFlags = FileFlags.None,
             SecurityQosFlags securityQosFlags = SecurityQosFlags.None)
         {
-            var fileHandle = CreateFile(path, desiredAccess, shareMode, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
+            var fileHandle = CreateFile(path, creationDisposition, desiredAccess, shareMode, fileAttributes, fileFlags, securityQosFlags);
 
             // FileStream will own the lifetime of the handle
             return new System.IO.FileStream(
@@ -136,7 +136,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Wrapper that allows using System.IO defines where available. Calls CreateFile2 if available.
         /// </summary>
-        public static SafeFileHandle CreateFile(
+        public static SafeFileHandle CreateFileSystemIo(
             string path,
             System.IO.FileAccess fileAccess,
             System.IO.FileShare fileShare,
@@ -160,9 +160,9 @@ namespace WInterop.FileManagement
         /// </summary>
         public static SafeFileHandle CreateFile(
             string path,
-            DesiredAccess desiredAccess,
-            ShareMode shareMode,
             CreationDisposition creationDisposition,
+            DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite,
+            ShareMode shareMode = ShareMode.ReadWrite,
             FileAttributes fileAttributes = FileAttributes.None,
             FileFlags fileFlags = FileFlags.None,
             SecurityQosFlags securityQosFlags = SecurityQosFlags.None)
@@ -386,7 +386,7 @@ namespace WInterop.FileManagement
         /// <remarks>
         /// The exact data that is returned is somewhat complicated and is described in the documentation for ZwQueryInformationFile.
         /// </remarks>
-        public unsafe static string GetFileNameByHandle(SafeFileHandle fileHandle)
+        public unsafe static string GetFileNameLegacy(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -413,7 +413,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Get standard file info from the given file handle.
         /// </summary>
-        public static FileStandardInfo GetFileStandardInfoByHandle(SafeFileHandle fileHandle)
+        public static FileStandardInfo GetFileStandardInformation(SafeFileHandle fileHandle)
         {
             FILE_STANDARD_INFO info;
             unsafe
@@ -432,7 +432,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Get basic file info from the given file handle.
         /// </summary>
-        public static FileBasicInfo GetFileBasicInfoByHandle(SafeFileHandle fileHandle)
+        public static FileBasicInfo GetFileBasicInformation(SafeFileHandle fileHandle)
         {
             FILE_BASIC_INFO info;
             unsafe
@@ -450,7 +450,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Get the list of data streams for the given handle.
         /// </summary>
-        public unsafe static IEnumerable<StreamInformation> GetStreamInformationByHandle(SafeFileHandle fileHandle)
+        public unsafe static IEnumerable<StreamInformation> GetStreamInformation(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -687,7 +687,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Gets the filenames in the specified directory. Includes "." and "..".
         /// </summary>
-        public unsafe static IEnumerable<string> GetDirectoryFilenamesFromHandle(SafeFileHandle directoryHandle)
+        public unsafe static IEnumerable<string> GetDirectoryFilenames(SafeFileHandle directoryHandle)
         {
             List<string> filenames = new List<string>();
             GetFullDirectoryInfoHelper(directoryHandle, buffer =>
@@ -705,7 +705,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Gets all of the info for files within the given directory handle.
         /// </summary>
-        public unsafe static IEnumerable<FileFullDirInfo> GetDirectoryInfoFromHandle(SafeFileHandle directoryHandle)
+        public unsafe static IEnumerable<FileFullDirInfo> GetDirectoryInformation(SafeFileHandle directoryHandle)
         {
             List<FileFullDirInfo> infos = new List<FileFullDirInfo>();
             GetFullDirectoryInfoHelper(directoryHandle, buffer =>

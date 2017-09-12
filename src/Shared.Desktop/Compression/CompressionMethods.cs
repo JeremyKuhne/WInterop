@@ -138,7 +138,7 @@ namespace WInterop.Compression
                 return filenameOnly ? Paths.GetLastSegment(path) : path;
 
             char replacement;
-            using (var file = FileMethods.CreateFile(path, DesiredAccess.GenericRead, ShareMode.Read, CreationDisposition.OpenExisting))
+            using (var file = FileMethods.CreateFile(path, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareMode.Read))
             {
                 LzxHeader header = new LzxHeader();
 

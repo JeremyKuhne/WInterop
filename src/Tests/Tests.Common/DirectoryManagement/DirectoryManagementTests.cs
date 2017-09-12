@@ -56,8 +56,7 @@ namespace Tests.DirectoryManagement
             {
                 string directoryPath = temp.GetTestPath();
                 DirectoryMethods.CreateDirectory(directoryPath);
-                using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                    FileAttributes.Directory, FileFlags.BackupSemantics))
+                using (var directory = DirectoryMethods.CreateDirectoryHandle(directoryPath))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
@@ -71,8 +70,7 @@ namespace Tests.DirectoryManagement
             {
                 string directoryPath = temp.GetTestPath();
                 DirectoryMethods.CreateDirectory(directoryPath);
-                using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                    FileAttributes.Directory, FileFlags.BackupSemantics))
+                using (var directory = DirectoryMethods.CreateDirectoryHandle(directoryPath))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
@@ -81,10 +79,8 @@ namespace Tests.DirectoryManagement
 
                 Action action = () =>
                 {
-                    using (var directory = FileMethods.CreateFile(directoryPath, 0, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                        FileAttributes.Directory, FileFlags.BackupSemantics))
+                    using (var directory = DirectoryMethods.CreateDirectoryHandle(directoryPath))
                     {
-
                     }
                 };
 

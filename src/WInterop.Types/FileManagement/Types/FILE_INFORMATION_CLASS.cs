@@ -22,12 +22,28 @@ namespace WInterop.FileManagement.Types
         FileRenameInformation = 10,
         FileLinkInformation = 11,
         FileNamesInformation = 12,
+
+        /// <summary>
+        /// Allows marking a file handle for deletion. Handle must have been opened with DesiredAccess.Delete.
+        /// You cannot change the state of a handle opened with DeleteOnClose. Use with FILE_DISPOSITION_INFORMATION.
+        /// </summary>
         FileDispositionInformation = 13,
         FilePositionInformation = 14,
         FileFullEaInformation = 15,
         FileModeInformation = 16,
         FileAlignmentInformation = 17,
+
+        /// <summary>
+        /// Used with FILE_ALL_INFORMATION.
+        /// </summary>
+        /// <remarks>
+        /// Aggregate of FileBasicInformation, FileStandardInformation, FileInternalInformation,
+        /// FileEaInformation, FilePositionInformation, & FileNameInformation.
+        /// 
+        /// https://msdn.microsoft.com/en-us/library/ff469436.aspx
+        /// </remarks>
         FileAllInformation = 18,
+
         FileAllocationInformation = 19,
         FileEndOfFileInformation = 20,
         FileAlternateNameInformation = 21,
@@ -77,6 +93,13 @@ namespace WInterop.FileManagement.Types
         FileReplaceCompletionInformation = 61, // Windows 8.1
         FileHardLinkFullIdInformation = 62,
         FileIdExtdBothDirectoryInformation = 63,
-        FileMaximumInformation = 64
+        FileDispositionInformationEx = 64,
+        FileRenameInformationEx = 65,
+        FileRenameInformationExBypassAccessCheck = 66,
+        FileDesiredStorageClassInformation = 67,
+        FileStatInformation= 68
+
+        // This is always set to the last value
+        // FileMaximumInformation
     }
 }

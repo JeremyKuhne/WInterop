@@ -8,9 +8,9 @@
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364217.aspx">FILE_BASIC_INFO</a> structure.
+    /// <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff545762.aspx">FILE_BASIC_INFORMATION</a> structure.
     /// </summary>
-    public struct FILE_BASIC_INFO
+    public struct FILE_BASIC_INFORMATION
     {
         public LongFileTime CreationTime;
         public LongFileTime LastAccessTime;

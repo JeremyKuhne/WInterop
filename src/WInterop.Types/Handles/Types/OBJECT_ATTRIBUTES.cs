@@ -7,18 +7,53 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Authentication.Types;
+using WInterop.Authorization.Types;
 
 namespace WInterop.Handles.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff557749.aspx
-    [StructLayout(LayoutKind.Sequential)]
-    public struct OBJECT_ATTRIBUTES
+    public unsafe struct OBJECT_ATTRIBUTES
     {
         public uint Length;
-        public IntPtr RootDirectory;
-        public IntPtr ObjectName;
+
+        /// <summary>
+        /// Optional handle to root object directory for the given ObjectName.
+        /// Can be a file system directory or object manager directory.
+        /// </summary>
+        public void* RootDirectory;
+
+        /// <summary>
+        /// Name of the object. Must be fully qualified if RootDirectory isn't set.
+        /// Otherwise is relative to RootDirectory.
+        /// </summary>
+        public UNICODE_STRING* ObjectName;
+
         public ObjectAttributes Attributes;
-        public IntPtr SecurityDescriptor;
-        public IntPtr SecurityQualityOfService;
+
+        /// <summary>
+        /// If null, object will receive default security settings.
+        /// </summary>
+        public SECURITY_DESCRIPTOR* SecurityDescriptor;
+
+        /// <summary>
+        /// Optional quality of service to be applied to the object. Used to indicate
+        /// security impersonation level and context tracking mode (dynamic or static).
+        /// </summary>
+        public void* SecurityQualityOfService;
+
+        /// <summary>
+        /// Equivalent of InitializeObjectAttributes macro with the exception that you can directly set SQOS.
+        /// </summary>
+        public unsafe OBJECT_ATTRIBUTES(UNICODE_STRING* objectName, ObjectAttributes attributes = 0, void* rootDirectory = null,
+            SECURITY_DESCRIPTOR* securityDescriptor = null, void* securityQualityOfService = null)
+        {
+            Length = (uint)sizeof(OBJECT_ATTRIBUTES);
+            RootDirectory = rootDirectory;
+            ObjectName = objectName;
+            Attributes = attributes;
+            SecurityDescriptor = securityDescriptor;
+            SecurityQualityOfService = securityQualityOfService;
+        }
     }
 }

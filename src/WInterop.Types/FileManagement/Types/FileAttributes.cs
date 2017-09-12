@@ -27,12 +27,13 @@ namespace WInterop.FileManagement.Types
         ReadOnly = 0x00000001,
 
         /// <summary>
-        /// [FILE_ATTRIBUTE_HIDDEN]
+        /// The file is hidden and should not be included in an oridinary
+        /// directory listing. [FILE_ATTRIBUTE_HIDDEN]
         /// </summary>
         Hidden = 0x00000002,
 
         /// <summary>
-        /// [FILE_ATTRIBUTE_SYSTEM]
+        /// Operating system file. [FILE_ATTRIBUTE_SYSTEM]
         /// </summary>
         System = 0x00000004,
 
@@ -42,6 +43,7 @@ namespace WInterop.FileManagement.Types
         Directory = 0x00000010,
 
         /// <summary>
+        /// File should be archived. Used by backup programs.
         /// [FILE_ATTRIBUTE_ARCHIVE]
         /// </summary>
         Acrchive = 0x00000020,
@@ -55,7 +57,7 @@ namespace WInterop.FileManagement.Types
         Device = 0x00000040,
 
         /// <summary>
-        /// [FILE_ATTRIBUTE_NORMAL]
+        /// No other attributes set. Only valid on its own. [FILE_ATTRIBUTE_NORMAL]
         /// </summary>
         Normal = 0x00000080,
 
@@ -71,7 +73,8 @@ namespace WInterop.FileManagement.Types
         SparseFile = 0x00000200,
 
         /// <summary>
-        /// Link of some sort. [FILE_ATTRIBUTE_REPARSE_POINT]
+        /// File is a reparse point and will be further parsed dependent on the reparse point type.
+        /// [FILE_ATTRIBUTE_REPARSE_POINT]
         /// </summary>
         ReparsePoint = 0x00000400,
 
@@ -134,7 +137,7 @@ namespace WInterop.FileManagement.Types
         /// <summary>
         /// [FILE_ATTRIBUTE_UNPINNED]
         /// </summary>
-        FILE_ATTRIBUTE_UNPINNED = 0x00100000,
+        Unpinned = 0x00100000,
 
         /// <summary>
         /// [FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS]

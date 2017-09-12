@@ -19,10 +19,10 @@ namespace WInterop.FileManagement.Types
         /// </summary>
         public uint FileIndex;
 
-        public DateTime CreationTime;
-        public DateTime LastAccessTime;
-        public DateTime LastWriteTime;
-        public DateTime ChangeTime;
+        public DateTime CreationTimeUtc;
+        public DateTime LastAccessTimeUtc;
+        public DateTime LastWriteTimeUtc;
+        public DateTime ChangeTimeUtc;
 
         public long EndOfFile;
         public long AllocationSize;
@@ -39,10 +39,10 @@ namespace WInterop.FileManagement.Types
         public unsafe FileFullDirInfo(FILE_FULL_DIR_INFO* info)
         {
             FileIndex = info->FileIndex;
-            CreationTime = info->CreationTime.ToDateTimeUtc().ToLocalTime();
-            LastAccessTime = info->LastAccessTime.ToDateTimeUtc().ToLocalTime();
-            LastWriteTime = info->LastWriteTime.ToDateTimeUtc().ToLocalTime();
-            ChangeTime = info->ChangeTime.ToDateTimeUtc().ToLocalTime();
+            CreationTimeUtc = info->CreationTime.ToDateTimeUtc();
+            LastAccessTimeUtc = info->LastAccessTime.ToDateTimeUtc();
+            LastWriteTimeUtc = info->LastWriteTime.ToDateTimeUtc();
+            ChangeTimeUtc = info->ChangeTime.ToDateTimeUtc();
             EndOfFile = info->EndOfFile;
             AllocationSize = info->AllocationSize;
             FileAttributes = info->FileAttributes;

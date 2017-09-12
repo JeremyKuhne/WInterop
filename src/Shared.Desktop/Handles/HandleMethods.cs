@@ -71,32 +71,29 @@ namespace WInterop.Handles
             });
         }
 
-        private static SafeHandle OpenObjectHelper(string path, Func<OBJECT_ATTRIBUTES, SafeHandle> invoker)
+        private unsafe static SafeHandle OpenObjectHelper(string path, Func<OBJECT_ATTRIBUTES, SafeHandle> invoker)
         {
-            unsafe
+            fixed (char* pathPointer = path)
             {
-                fixed (char* pathPointer = path)
+                ushort length = checked((ushort)(path.Length * sizeof(char)));
+                var objectName = new UNICODE_STRING
                 {
-                    ushort length = checked((ushort)(path.Length * sizeof(char)));
-                    var objectName = new UNICODE_STRING
-                    {
-                        Length = length,
-                        MaximumLength = length,
-                        Buffer = pathPointer
-                    };
+                    Length = length,
+                    MaximumLength = length,
+                    Buffer = pathPointer
+                };
 
-                    OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES
-                    {
-                        Length = (uint)sizeof(OBJECT_ATTRIBUTES),
-                        RootDirectory = IntPtr.Zero,
-                        ObjectName = (IntPtr)(&objectName),
-                        SecurityDescriptor = IntPtr.Zero,
-                        SecurityQualityOfService = IntPtr.Zero
-                    };
+                OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES
+                {
+                    Length = (uint)sizeof(OBJECT_ATTRIBUTES),
+                    RootDirectory = null,
+                    ObjectName = &objectName,
+                    SecurityDescriptor = null,
+                    SecurityQualityOfService = null
+                };
 
-                    SafeHandle handle = invoker(attributes);
-                    return handle;
-                }
+                SafeHandle handle = invoker(attributes);
+                return handle;
             }
         }
 

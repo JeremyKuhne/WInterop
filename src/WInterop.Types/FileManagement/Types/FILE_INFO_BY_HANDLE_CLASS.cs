@@ -7,71 +7,212 @@
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364228.aspx
-    // Note that support is gleaned from documentation for the structures- Ge/SetFileInformationByHandle
-    // aren't themselves filtered. Some may work that claim they don't.
     public enum FILE_INFO_BY_HANDLE_CLASS : uint
     {
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364228.aspx
+        // Note that OS support is gleaned from documentation & headers for the structures.
+
         /// <summary>
         /// Returns basic information (timestamps and attributes) for a file in FILE_BASIC_INFO.
         /// </summary>
         /// <remarks>
-        /// Supported in Store apps, thunks to NtQueryInformationFile
+        /// Thunks to NtQueryInformationFile & FileBasicInformation. Windows 7 and up.
         /// </remarks>
-        FileBasicInfo = 0,
+        FileBasicInfo,
 
         /// <summary>
         /// Returns file size, link count, pending delete status, and if it is a directory in FILE_STANDARD_INFO.
         /// </summary>
         /// <remarks>
-        /// Supported in Store apps, thunks to NtQueryInformationFile
+        /// Thunks to NtQueryInformationFile & FileStandardInformation. Windows 7 and up.
         /// </remarks>
-        FileStandardInfo = 1,
+        FileStandardInfo,
 
         /// <summary>
         /// Gets the file name in FILE_NAME_INFO.
         /// </summary>
         /// <remarks>
-        /// Supported in Store apps, thunks to NtQueryInformationFile
+        /// Thunks to NtQueryInformationFile & FileNameInformation. Windows 7 and up.
         /// </remarks>
-        FileNameInfo = 2,
+        FileNameInfo,
 
-        // For setting, Desktop only (MoveFileEx is supported)
-        FileRenameInfo = 3,
-        // For setting, Desktop only (DeleteFile is supported)
-        FileDispositionInfo = 4,
-        // For setting, Desktop only
-        FileAllocationInfo = 5,
-        // For setting, Desktop only (SetEndOfFile is supported)
-        FileEndOfFileInfo = 6,
-        // Supported in Store apps, thunks to NtQueryInformationFile
-        FileStreamInfo = 7,
-        // Supported in Store apps, thunks to NtQueryInformationFile
-        FileCompressionInfo = 8,
-        // Supported in Store apps, thunks to NtQueryInformationFile
-        FileAttributeTagInfo = 9,
-        // Supported in Store apps, thunks to NtQueryDirectoryFile
-        FileIdBothDirectoryInfo = 10, // 0xA
-        // Supported in Store apps, thunks to NtQueryDirectoryFile
-        FileIdBothDirectoryRestartInfo = 11, // 0xB
-        // For setting, Desktop only
-        FileIoPriorityHintInfo = 12, // 0xC
-        // For setting, Desktop only
-        FileRemoteProtocolInfo = 13, // 0xD
-        // Desktop only, thunks to NtQueryDirectoryFile
-        FileFullDirectoryInfo = 14, // 0xE
-        // Desktop only, thunks to NtQueryDirectoryFile
-        FileFullDirectoryRestartInfo = 15, // 0xF
-        // Supported in Store apps, thunks to NtQueryVolumeInformationFile
-        FileStorageInfo = 16, // 0x10
-        // Supported in Store apps, thunks to NtQueryInformationFile
-        FileAlignmentInfo = 17, // 0x11
-        // Desktop only, thunks to NtQueryInformationFile
-        FileIdInfo = 18, // 0x12
-        // Server desktop only, thunks to NtQueryDirectoryFile
-        FileIdExtdDirectoryInfo = 19, // 0x13
-        // Server desktop only, thunks to NtQueryDirectoryFile
-        FileIdExtdDirectoryRestartInfo = 20, // 0x14
-        MaximumFileInfoByHandlesClass = 21
+        /// <summary>
+        /// Allows renaming a file without having to specify a full path, if you have
+        /// a handle to the directory the file resides in.
+        /// </summary>
+        /// <remarks>
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
+        /// Windows 7 and up. MoveFileEx is effectively the same API.
+        /// </remarks>
+        FileRenameInfo,
+
+        /// <summary>
+        /// Allows marking a file handle for deletion. Handle must have been opened with DesiredAccess.Delete.
+        /// You cannot change the state of a handle opened with DeleteOnClose.
+        /// </summary>
+        /// <remarks>
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
+        /// Windows 7 and up. DeleteFile is effectively the same API.
+        /// </remarks>
+        FileDispositionInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
+        /// Windows 7 and up. SetEndOfFile is more direct.
+        /// </remarks>
+        FileAllocationInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
+        /// Windows 7 and up. SetEndOfFile is effectively the same API.
+        /// </remarks>
+        FileEndOfFileInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryInformationFile & FileStreamInformation. Windows 7 and up.
+        /// </remarks>
+        FileStreamInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryInformationFile & FileCompressionInformation. Windows 7 and up.
+        /// </remarks>
+        FileCompressionInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryInformationFile & FileAttributeTagInformation. Windows 7 and up.
+        /// </remarks>
+        FileAttributeTagInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryDirectoryFile & FileIdBothDirectoryInformation with RestartScan
+        /// set to false. Windows 7 and up.
+        /// </remarks>
+        FileIdBothDirectoryInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryDirectoryFile & FileIdBothDirectoryInformation with RestartScan
+        /// set to true. Windows 7 and up.
+        /// </remarks>
+        FileIdBothDirectoryRestartInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
+        /// Windows 7 and up.
+        /// </remarks>
+        FileIoPriorityHintInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryInformationFile & FileRemoteProtocolInformation. Windows 7 and up.
+        /// </remarks>
+        FileRemoteProtocolInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryDirectoryFile & FileFullDirectoryInformation with RestartScan
+        /// set to false. Windows 8 and up.
+        /// </remarks>
+        FileFullDirectoryInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryDirectoryFile & FileFullDirectoryInformation with RestartScan
+        /// set to true. Windows 8 and up.
+        /// </remarks>
+        FileFullDirectoryRestartInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryVolumeInformationFile & FileFsSectorSizeInformation. Windows 8 and up.
+        /// </remarks>
+        FileStorageInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryInformationFile & FileAlignmentInformation. Windows 8 and up.
+        /// </remarks>
+        FileAlignmentInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryInformationFile & FileIdInformation. Windows 8 and up.
+        /// </remarks>
+        FileIdInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryDirectoryFile & FileIdExtdDirectoryInformation with RestartScan
+        /// set to false. Windows 8 and up.
+        /// </remarks>
+        FileIdExtdDirectoryInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Thunks to NtQueryDirectoryFile & FileIdExtdDirectoryInformation with RestartScan
+        /// set to true. Windows 8 and up.
+        /// </remarks>
+        FileIdExtdDirectoryRestartInfo,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
+        /// Windows 10 Anniversary Update (RS1) and up.
+        /// </remarks>
+        FileDispositionInfoEx,
+
+        /// <summary>
+        /// Allows renaming with POSIX semantics.
+        /// </summary>
+        /// <remarks>
+        /// Replaces the BOOLEAN in FILE_RENAME_INFORMATION with a union of BOOLEAN and uint flags.
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
+        /// Windows 10 Anniversary Update (RS1) and up.
+        /// </remarks>
+        FileRenameInfoEx
+
+        // Always follows the final enum value.
+        // MaximumFileInfoByHandlesClass
     }
 }

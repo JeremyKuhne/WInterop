@@ -16,6 +16,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\LzTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\Methods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CreateDirectTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileInformationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DEVMODE_Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DISPLAY_DEVICE_Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiTests.cs" />
@@ -24,7 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementBehaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\Methods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\Methods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\MailslotTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThread\ProcessTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Registry\RegistryTests.cs" />

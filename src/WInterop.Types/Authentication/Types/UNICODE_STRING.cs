@@ -48,6 +48,9 @@ namespace WInterop.Authentication.Types
             Buffer = buffer.CharPointer;
         }
 
+        /// <summary>
+        /// Initialize the content of the string based on a fixed char from the given source string.
+        /// </summary>
         public unsafe UNICODE_STRING(char* buffer, string sourceString)
         {
             Length = checked((ushort)(sourceString.Length * sizeof(char)));

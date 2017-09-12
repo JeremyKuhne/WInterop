@@ -17,35 +17,38 @@ namespace WInterop.Handles.Types
     {
         /// <summary>
         /// This handle can be inherited by child processes of the current process.
+        /// [OBJ_INHERIT]
         /// </summary>
-        OBJ_INHERIT = 0x00000002,
+        Inherit = 0x00000002,
 
         /// <summary>
         /// This flag only applies to objects that are named within the object manager.
         /// By default, such objects are deleted when all open handles to them are closed.
         /// If this flag is specified, the object is not deleted when all open handles are closed.
+        /// [OBJ_PERMANENT]
         /// </summary>
-        OBJ_PERMANENT = 0x00000010,
+        Permanent = 0x00000010,
 
         /// <summary>
-        /// Only a single handle can be open for this object.
+        /// Only a single handle can be open for this object. [OBJ_EXCLUSIVE]
         /// </summary>
-        OBJ_EXCLUSIVE = 0x00000020,
+        Exclusive = 0x00000020,
 
         /// <summary>
-        /// Lookups for this object should be case insensitive
+        /// Lookups for this object should be case insensitive. [OBJ_CASE_INSENSITIVE]
         /// </summary>
-        OBJ_CASE_INSENSITIVE = 0x00000040,
+        CaseInsensitive = 0x00000040,
 
         /// <summary>
-        /// Create on existing object should open, not fail with STATUS_OBJECT_NAME_COLLISION
+        /// Create on existing object should open, not fail with STATUS_OBJECT_NAME_COLLISION.
+        /// [OBJ_OPENIF]
         /// </summary>
-        OBJ_OPENIF = 0x00000080,
+        OpenIf = 0x00000080,
 
         /// <summary>
-        /// Open the symbolic link, not it's target
+        /// Open the symbolic link, not its target. [OBJ_OPENLINK]
         /// </summary>
-        OBJ_OPENLINK = 0x00000100,
+        OpenLink = 0x00000100,
 
         // Only accessible from kernel mode
         // OBJ_KERNEL_HANDLE

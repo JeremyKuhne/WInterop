@@ -173,9 +173,9 @@ namespace WInterop.Desktop.Communications
         {
             return FileMethods.CreateFile(
                 path,
+                CreationDisposition.OpenExisting,
                 DesiredAccess.GenericReadWrite,
                 0,
-                CreationDisposition.OpenExisting,
                 fileAttributes,
                 fileFlags);
         }

@@ -16,6 +16,7 @@ using Tests.Support;
 using WInterop.Support;
 using Xunit;
 using WInterop.ErrorHandling.Types;
+using WInterop.DirectoryManagement;
 
 namespace DesktopTests.FileManagementMethods
 {
@@ -43,8 +44,7 @@ namespace DesktopTests.FileManagementMethods
             {
                 string filePath = cleaner.CreateTestFile("FinalPathNameVolumeNameBehavior");
 
-                using (var handle = FileMethods.CreateFile(filePath.ToLower(),
-                     DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+                using (var handle = FileMethods.CreateFile(filePath.ToLower(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
@@ -93,7 +93,7 @@ namespace DesktopTests.FileManagementMethods
                 FileMethods.FileExists(symbolicLink).Should().BeTrue("symbolic link should exist");
 
                 // GetFinalPathName should normalize the casing, pushing ToUpper to validate
-                using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+                using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
                 {
                     handle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
@@ -102,8 +102,8 @@ namespace DesktopTests.FileManagementMethods
                         .Should().Be(extendedPath);
                 }
 
-                using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), DesiredAccess.GenericRead,
-                    ShareMode.ReadWrite, CreationDisposition.OpenExisting, FileAttributes.None, FileFlags.OpenReparsePoint))
+                using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead,
+                    ShareMode.ReadWrite, FileAttributes.None, FileFlags.OpenReparsePoint))
                 {
                     handle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
@@ -121,8 +121,7 @@ namespace DesktopTests.FileManagementMethods
             {
                 string filePath = cleaner.CreateTestFile("FinalPathNameBehavior");
 
-                using (var handle = FileMethods.CreateFile(filePath.ToLower(),
-                    DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+                using (var handle = FileMethods.CreateFile(filePath.ToLower(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
@@ -154,8 +153,7 @@ namespace DesktopTests.FileManagementMethods
                 FileHelper.CreateDirectoryRecursive(longPath);
                 FileHelper.WriteAllText(filePath, "FinalPathNameLongPathPrefixRoundTripBehavior");
 
-                using (var handle = FileMethods.CreateFile(filePath,
-                    DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+                using (var handle = FileMethods.CreateFile(filePath, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
@@ -244,8 +242,7 @@ namespace DesktopTests.FileManagementMethods
         public void CreateFileRawParition()
         {
             // You can't open with read/write access unless running elevated
-            using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\Harddisk0\Partition0",
-                0, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+            using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\Harddisk0\Partition0", CreationDisposition.OpenExisting, 0))
             {
                 file.IsInvalid.Should().BeFalse();
                 FileMethods.GetFileType(file).Should().Be(FileType.FILE_TYPE_DISK);
@@ -255,8 +252,7 @@ namespace DesktopTests.FileManagementMethods
         [Fact]
         public void CreateFileHarddiskVolume()
         {
-            using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\HarddiskVolume1",
-                DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+            using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\HarddiskVolume1", CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
             {
                 file.IsInvalid.Should().BeFalse();
                 FileMethods.GetFileType(file).Should().Be(FileType.FILE_TYPE_DISK);
@@ -267,8 +263,7 @@ namespace DesktopTests.FileManagementMethods
         public void GetFileNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.None, FileFlags.BackupSemantics))
+            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
                 string name = FileMethods.GetFileName(directory);
@@ -281,8 +276,7 @@ namespace DesktopTests.FileManagementMethods
         public void GetVolumeNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.None, FileFlags.BackupSemantics))
+            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
                 try
@@ -302,8 +296,7 @@ namespace DesktopTests.FileManagementMethods
         public void GetShortNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateFile(tempPath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting,
-                FileAttributes.None, FileFlags.BackupSemantics))
+            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
                 string directoryName = FileMethods.GetShortName(directory);
@@ -313,7 +306,7 @@ namespace DesktopTests.FileManagementMethods
                 string tempFilePath = System.IO.Path.Combine(tempPath, tempFileName);
                 try
                 {
-                    using (var file = FileMethods.CreateFile(tempFilePath, DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.CreateNew))
+                    using (var file = FileMethods.CreateFile(tempFilePath, CreationDisposition.CreateNew, DesiredAccess.GenericRead))
                     {
                         string fileName = FileMethods.GetShortName(file);
                         fileName.Length.Should().BeLessOrEqualTo(12);
@@ -332,8 +325,7 @@ namespace DesktopTests.FileManagementMethods
             using (var cleaner = new TestFileCleaner())
             {
                 string filePath = cleaner.GetTestPath();
-                using (var file = FileMethods.CreateFile(filePath, DesiredAccess.GenericReadWrite, 0,
-                    CreationDisposition.CreateNew))
+                using (var file = FileMethods.CreateFile(filePath, CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
                 {
                     file.IsInvalid.Should().BeFalse();
                     var mode = FileMethods.GetFileMode(file);
@@ -348,8 +340,8 @@ namespace DesktopTests.FileManagementMethods
             using (var cleaner = new TestFileCleaner())
             {
                 string filePath = cleaner.GetTestPath();
-                using (var file = FileMethods.CreateFile(filePath, DesiredAccess.GenericReadWrite, 0,
-                    CreationDisposition.CreateNew, FileAttributes.None, FileFlags.Overlapped))
+                using (var file = FileMethods.CreateFile(filePath, CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0,
+                    FileAttributes.None, FileFlags.Overlapped))
                 {
                     file.IsInvalid.Should().BeFalse();
                     var mode = FileMethods.GetFileMode(file);

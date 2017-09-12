@@ -133,8 +133,8 @@ namespace Head
                         SafeFileHandle hFile = null;
                         try
                         {
-                            using (hFile = FileMethods.CreateFile(szFile,
-                                DesiredAccess.GenericRead, ShareMode.Read, CreationDisposition.OpenExisting))
+                            using (hFile = FileMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
+                                DesiredAccess.GenericRead, ShareMode.Read))
                             {
                                 if (!hFile.IsInvalid)
                                 {
@@ -175,8 +175,8 @@ namespace Head
                         break;
 
                     uint bytesRead;
-                    using (var hFile = FileMethods.CreateFile(szFile,
-                        DesiredAccess.GenericRead, ShareMode.Read, CreationDisposition.OpenExisting))
+                    using (var hFile = FileMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
+                        DesiredAccess.GenericRead, ShareMode.Read))
                     {
                         if (hFile.IsInvalid)
                         {
