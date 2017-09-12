@@ -86,7 +86,8 @@ namespace WInterop.FileManagement
                     string lpFileName,
                     FINDEX_INFO_LEVELS fInfoLevelId,
                     out WIN32_FIND_DATA lpFindFileData,
-                    FINDEX_SEARCH_OPS fSearchOp,
+                    uint fSearchOp,                        // This never actually has meaning and is likely a holdover of 9x
+                                                           // set it to 0 to avoid failing parameter checks.
                     IntPtr lpSearchFilter,                 // Reserved
                     FindFirstFileExFlags dwAdditionalFlags);
 

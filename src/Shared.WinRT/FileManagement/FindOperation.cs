@@ -19,7 +19,6 @@ namespace WInterop.FileManagement
     /// </summary>
     public class FindOperation : IEnumerable<FindResult>
     {
-        public bool DirectoriesOnly { get; private set; }
         public bool GetAlternateName { get; private set; }
         public string OriginalPath { get; private set; }
 
@@ -31,11 +30,9 @@ namespace WInterop.FileManagement
         /// directory separator) can contain wildcards, the full details can be found at
         /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
         /// </param>
-        /// <param name="directoriesOnly">Attempts to filter to just directories where supported.</param>
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
         public FindOperation(
             string path,
-            bool directoriesOnly = false,
             bool getAlternateName = false)
         {
             if (Paths.EndsInDirectorySeparator(path))
@@ -45,7 +42,6 @@ namespace WInterop.FileManagement
             }
 
             OriginalPath = path;
-            DirectoriesOnly = directoriesOnly;
             GetAlternateName = getAlternateName;
         }
 
@@ -96,8 +92,9 @@ namespace WInterop.FileManagement
                     _operation.OriginalPath,
                     _operation.GetAlternateName ? FINDEX_INFO_LEVELS.FindExInfoStandard : FINDEX_INFO_LEVELS.FindExInfoBasic,
                     out WIN32_FIND_DATA findData,
-                    // FINDEX_SEARCH_OPS.FindExSearchNameMatch is what FindFirstFile calls Ex wtih
-                    _operation.DirectoriesOnly ? FINDEX_SEARCH_OPS.FindExSearchLimitToDirectories : FINDEX_SEARCH_OPS.FindExSearchNameMatch,
+                    // FindExSearchNameMatch (0) is what FindFirstFile calls Ex with. This value has no impact on
+                    // the actual behavior of the API other than it checks it to make sure that it is < 2.
+                    0,
                     IntPtr.Zero,
                     FindFirstFileExFlags.FIND_FIRST_EX_LARGE_FETCH);
 

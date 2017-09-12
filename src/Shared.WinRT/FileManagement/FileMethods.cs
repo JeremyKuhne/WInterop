@@ -288,14 +288,12 @@ namespace WInterop.FileManagement
         /// directory separator) can contain wildcards, the full details can be found at
         /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
         /// </param>
-        /// <aram name="directoriesOnly">Attempts to filter to just directories where supported.</param>
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
         public static FindOperation CreateFindOperation(
             string path,
-            bool directoriesOnly = false,
             bool getAlternateName = false)
         {
-            return new FindOperation(path, directoriesOnly, getAlternateName);
+            return new FindOperation(path, getAlternateName);
         }
 
         /// <summary>
