@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceMacros.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Types\TemporaryErrorMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />

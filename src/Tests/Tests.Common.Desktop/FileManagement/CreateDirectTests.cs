@@ -61,5 +61,45 @@ namespace DesktopTests.FileManagement
                 }
             }
         }
+
+        [Fact]
+        public void OpenDirectoryDirect()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                using (var directory = DirectoryMethods.CreateDirectoryHandle(cleaner.TempFolder))
+                {
+                    directory.IsInvalid.Should().BeFalse("can open the root directory");
+
+                    string name = System.IO.Path.GetRandomFileName();
+                    string path = Paths.Combine(cleaner.TempFolder, name);
+                    DirectoryMethods.CreateDirectory(path);
+
+                    using (var subdir = DirectoryMethods.CreateDirectoryHandle(directory, name))
+                    {
+                        subdir.IsInvalid.Should().BeFalse("can open subdir from handle");
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void CreateDirectoryDirect()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                using (var directory = DirectoryMethods.CreateDirectoryHandle(cleaner.TempFolder))
+                {
+                    directory.IsInvalid.Should().BeFalse();
+
+                    string name = System.IO.Path.GetRandomFileName();
+                    using (var subdir = DirectoryMethods.CreateDirectory(directory, name))
+                    {
+                        subdir.IsInvalid.Should().BeFalse();
+                        FileMethods.DirectoryExists(Paths.Combine(cleaner.TempFolder, name)).Should().BeTrue();
+                    }
+                }
+            }
+        }
     }
 }
