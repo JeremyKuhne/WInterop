@@ -25,41 +25,41 @@ namespace DesktopTests.FileManagement
                 // CreateFile ALWAYS adds SYNCHRONIZE & FILE_READ_ATTRIBUTES.
                 using (var handle = FileMethods.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadControl))
                 {
-                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.FILE_READ_ATTRIBUTES | FileAccessRights.READ_CONTROL | FileAccessRights.SYNCHRONIZE);
+                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl | FileAccessRights.Synchronize);
                 }
 
                 using (var handle = FileMethods.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes))
                 {
-                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.FILE_READ_ATTRIBUTES | FileAccessRights.SYNCHRONIZE);
+                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
                 }
 
                 using (var handle = FileMethods.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.Synchronize))
                 {
-                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.FILE_READ_ATTRIBUTES | FileAccessRights.SYNCHRONIZE);
+                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
                 }
 
                 using (var handle = FileMethods.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
                 {
-                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.FILE_READ_ATTRIBUTES | FileAccessRights.READ_CONTROL
-                        | FileAccessRights.SYNCHRONIZE | FileAccessRights.FILE_READ_DATA | FileAccessRights.FILE_READ_EA);
+                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl
+                        | FileAccessRights.Synchronize | FileAccessRights.ReadData | FileAccessRights.ReadExtendedAttributes);
                 }
 
                 // DesiredAccess.Synchronize is required for synchronous access.
                 string directTestFile = @"\??\" + testFile;
                 using (var handle = FileMethods.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.Synchronize))
                 {
-                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.SYNCHRONIZE);
+                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.Synchronize);
                 }
 
                 // Open async
                 using (var handle = FileMethods.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes, ShareMode.ReadWrite, 0, 0))
                 {
-                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.FILE_READ_ATTRIBUTES);
+                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes);
                 }
 
                 using (var handle = FileMethods.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes | DesiredAccess.Synchronize, ShareMode.ReadWrite, 0, 0))
                 {
-                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.FILE_READ_ATTRIBUTES | FileAccessRights.SYNCHRONIZE);
+                    FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
                 }
             }
         }

@@ -20,72 +20,72 @@ namespace WInterop.FileManagement.Types
     public enum FileAccessRights : uint
     {
         /// <summary>
-        /// The right to read data from the file.
+        /// The right to read data from the file. [FILE_READ_DATA]
         /// </summary>
-        FILE_READ_DATA = 0x0001,
+        ReadData = 0x0001,
 
         /// <summary>
-        /// The right to write data to the file.
+        /// The right to write data to the file. [FILE_WRITE_DATA]
         /// </summary>
-        FILE_WRITE_DATA = 0x0002,
+        WriteData = 0x0002,
 
         /// <summary>
-        /// The right to append data to the file. FILE_WRITE_DATA is needed
-        /// to overwrite existing data.
+        /// The right to append data to the file. WriteData is needed
+        /// to overwrite existing data. [FILE_APPEND_DATA]
         /// </summary>
-        FILE_APPEND_DATA = 0x0004,
+        AppendData = 0x0004,
 
         /// <summary>
-        /// The right to read extended attributes.
+        /// The right to read extended attributes. [FILE_READ_EA]
         /// </summary>
-        FILE_READ_EA = 0x0008,
+        ReadExtendedAttributes = 0x0008,
 
         /// <summary>
-        /// The right to write extended attributes.
+        /// The right to write extended attributes. [FILE_WRITE_EA]
         /// </summary>
-        FILE_WRITE_EA = 0x0010,
+        WriteExtendedAttributes = 0x0010,
 
         /// <summary>
-        /// The right to execute the file.
+        /// The right to execute the file. [FILE_EXECUTE]
         /// </summary>
-        FILE_EXECUTE = 0x0020,
+        Execute = 0x0020,
 
         /// <summary>
-        /// The right to read attributes.
+        /// The right to read attributes. [FILE_READ_ATTRIBUTES]
         /// </summary>
-        FILE_READ_ATTRIBUTES = 0x0080,
+        ReadAttributes = 0x0080,
 
         /// <summary>
-        /// The right to write attributes.
+        /// The right to write attributes. [FILE_WRITE_ATTRIBUTES]
         /// </summary>
-        FILE_WRITE_ATTRIBUTES = 0x0100,
+        WriteAttributes = 0x0100,
 
         /// <summary>
-        /// The right to delete the object.
+        /// The right to delete the object. [DELETE]
         /// </summary>
-        DELETE = StandardAccessRights.Delete,
+        Delete = StandardAccessRights.Delete,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
-        /// Doesn't include system access control list info (SACL).
+        /// Doesn't include system access control list info (SACL). [READ_CONTROL]
         /// </summary>
-        READ_CONTROL = StandardAccessRights.ReadControl,
+        ReadControl = StandardAccessRights.ReadControl,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
-        /// object's security descriptor.
+        /// object's security descriptor. [WRITE_DAC]
         /// </summary>
-        WRITE_DAC = StandardAccessRights.WriteDac,
+        WriteDac = StandardAccessRights.WriteDac,
 
         /// <summary>
-        /// The right to change the owner in the object's security descriptor.
+        /// The right to change the owner in the object's security descriptor. [WRITE_OWNER]
         /// </summary>
-        WRITE_OWNER = StandardAccessRights.WriteOwner,
+        WriteOwner = StandardAccessRights.WriteOwner,
 
         /// <summary>
         /// The right to use the object for synchronization. Enables a thread to wait
-        /// until the object is in the signaled state.
+        /// until the object is in the signaled state. [SYNCHRONIZE]
         /// </summary>
-        SYNCHRONIZE = StandardAccessRights.Synchronize
+        Synchronize = StandardAccessRights.Synchronize
     }
 }

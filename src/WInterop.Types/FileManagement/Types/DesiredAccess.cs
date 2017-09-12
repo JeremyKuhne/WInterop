@@ -29,7 +29,7 @@ namespace WInterop.FileManagement.Types
         /// <remarks>
         /// Directory version of this flag is FILE_LIST_DIRECTORY.
         /// </remarks>
-        ReadData = FileAccessRights.FILE_READ_DATA,
+        ReadData = FileAccessRights.ReadData,
 
         /// <summary>
         /// For a directory, the right to list the contents. (FILE_LIST_DIRECTORY)
@@ -45,7 +45,7 @@ namespace WInterop.FileManagement.Types
         /// <remarks>
         /// Directory version of this flag is FILE_ADD_FILE.
         /// </remarks>
-        WriteData = FileAccessRights.FILE_WRITE_DATA,
+        WriteData = FileAccessRights.WriteData,
 
         /// <summary>
         /// For a directory, the right to create a file in a directory. (FILE_ADD_FILE)
@@ -62,7 +62,7 @@ namespace WInterop.FileManagement.Types
         /// <remarks>
         /// Directory version of this flag is FILE_ADD_SUBDIRECTORY.
         /// </remarks>
-        AppendData = FileAccessRights.FILE_APPEND_DATA,
+        AppendData = FileAccessRights.AppendData,
 
         /// <summary>
         /// For a directory, the right to create a subdirectory. (FILE_ADD_SUBDIRECTORY)
@@ -93,7 +93,7 @@ namespace WInterop.FileManagement.Types
         /// <remarks>
         /// Directory version of this flag is FILE_TRAVERSE.
         /// </remarks>
-        Execute = FileAccessRights.FILE_EXECUTE,
+        Execute = FileAccessRights.Execute,
 
         /// <summary>
         /// For a directory, the right to traverse the directory. (FILE_TRAVERSE)
