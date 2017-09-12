@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\BufferWrappers\CurrentDirectoryWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMacros.cs" />
