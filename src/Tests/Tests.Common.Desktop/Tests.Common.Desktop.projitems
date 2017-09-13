@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Registry\RegistryTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\MenuTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SafeString\SafeStringTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityManagement\SecurityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\AssociationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellTests.cs" />

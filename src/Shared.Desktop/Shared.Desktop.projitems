@@ -48,7 +48,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiDefines.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\PaintDeviceContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Types\WindowDeviceContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SafeString\StringMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SafeString\StringMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\MailslotMethods.cs" />

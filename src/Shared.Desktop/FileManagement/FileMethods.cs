@@ -7,13 +7,12 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
-using System.Collections.Generic;
-using WInterop.Authentication.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.BufferWrappers;
 using WInterop.FileManagement.Types;
 using WInterop.Handles.Types;
+using WInterop.SafeString.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

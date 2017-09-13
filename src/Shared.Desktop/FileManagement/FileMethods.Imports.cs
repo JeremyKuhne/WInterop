@@ -8,11 +8,11 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authentication.Types;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
 using WInterop.Handles.Types;
+using WInterop.SafeString.Types;
 using WInterop.Support;
 
 namespace WInterop.FileManagement

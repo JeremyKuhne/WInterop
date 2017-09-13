@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using WInterop.SafeString.Types;
 
 namespace WInterop.Support.Buffers
 {
@@ -777,5 +778,7 @@ namespace WInterop.Support.Buffers
             _length = 0;
             base.Dispose(disposing);
         }
+
+        public UNICODE_STRING ToUnicodeString() => new UNICODE_STRING(this);
     }
 }

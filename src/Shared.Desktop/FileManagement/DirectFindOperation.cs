@@ -12,11 +12,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using WInterop.Authentication.Types;
 using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
+using WInterop.SafeString.Types;
 using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement

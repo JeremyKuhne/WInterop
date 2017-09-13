@@ -1,0 +1,35 @@
+﻿// ------------------------
+//    WInterop Framework
+// ------------------------
+
+// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System.Runtime.InteropServices;
+using WInterop.ErrorHandling.Types;
+using WInterop.SafeString.Types;
+using WInterop.Support;
+
+namespace WInterop.SafeString
+{
+    public static partial class StringMethods
+    {
+        /// <summary>
+        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+        /// </summary>
+        public static partial class Imports
+        {
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff563005.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static unsafe extern NTSTATUS RtlUpcaseUnicodeString(
+                UNICODE_STRING* DestinationString,
+                UNICODE_STRING* SourceString,
+                BOOLEAN AllocateDestinationString);
+
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff561903.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static unsafe extern void RtlFreeUnicodeString(
+                UNICODE_STRING* UnicodeString);
+        }
+    }
+}

@@ -14,8 +14,6 @@ using WInterop.Support;
 
 namespace WInterop.FileManagement
 {
-    public delegate bool FindPredicate(ref WIN32_FIND_DATA data);
-
     /// <summary>
     /// Encapsulates a find operation.
     /// </summary>
