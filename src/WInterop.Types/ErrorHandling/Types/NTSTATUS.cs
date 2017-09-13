@@ -59,6 +59,11 @@ namespace WInterop.ErrorHandling.Types
         STATUS_BUFFER_OVERFLOW = unchecked((int)0x80000005),
 
         /// <summary>
+        /// {No More Files} No more files were found which match the file specification.
+        /// </summary>
+        STATUS_NO_MORE_FILES = unchecked((int)0x80000006),
+
+        /// <summary>
         /// {No More Entries} No more entries are available from an enumeration operation.
         /// </summary>
         STATUS_NO_MORE_ENTRIES = unchecked((int)0x8000001A),
@@ -82,6 +87,11 @@ namespace WInterop.ErrorHandling.Types
         /// The specified information record length does not match the length that is required for the specified information class.
         /// </summary>
         STATUS_INFO_LENGTH_MISMATCH = unchecked((int)0xC0000004),
+
+        /// <summary>
+        /// Invalid access to memory location.
+        /// </summary>
+        STATUS_ACCESS_VIOLATION = unchecked((int)0xC0000005),
 
         /// <summary>
         /// An invalid HANDLE was specified.

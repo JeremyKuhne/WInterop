@@ -189,7 +189,7 @@ namespace WInterop.FileManagement
                 uint Length,
                 FILE_INFORMATION_CLASS FileInformationClass,
                 BOOLEAN ReturnSingleEntry,
-                string FileName,
+                ref UNICODE_STRING FileName,
                 BOOLEAN RestartScan);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff546850.aspx

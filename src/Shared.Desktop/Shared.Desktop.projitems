@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\FinalPathNameByHandleWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\LongPathNameWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\ShortPathNameWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\DirectFindOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiMethods.Imports.cs" />

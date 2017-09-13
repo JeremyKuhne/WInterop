@@ -21,7 +21,7 @@ namespace WInterop.FileManagement.Types
         public FILETIME ftLastAccessTime;
         public FILETIME ftLastWriteTime;
         public HighLowUlong nFileSize;
-        public uint dwReserved0;
+        public ReparseTag dwReserved0;
         public uint dwReserved1;
         public FixedString.Size260 cFileName;
         public FixedString.Size14 cAlternateFileName;

@@ -19,6 +19,7 @@ namespace WInterop.FileManagement.Types
         public DateTime LastAccessUtc { get; private set; }
         public DateTime LastWriteUtc { get; private set; }
         public ulong Length { get; private set; }
+        public ulong AllocatedBytes { get; private set; }
         public ReparseTag ReparseTag { get; private set; }
 
         public FindResult(ref WIN32_FIND_DATA findData, string directory)
@@ -32,7 +33,33 @@ namespace WInterop.FileManagement.Types
             LastAccessUtc = findData.ftLastAccessTime.ToDateTimeUtc();
             LastWriteUtc = findData.ftLastWriteTime.ToDateTimeUtc();
             Length = findData.nFileSize;
-            ReparseTag = (ReparseTag)findData.dwReserved0;
+            ReparseTag = findData.dwReserved0;
+        }
+
+        public unsafe FindResult(FILE_DIRECTORY_INFORMATION* info, string directory)
+        {
+            Directory = directory;
+            FileName = info->FileName.Value;
+            Attributes = info->FileAttributes;
+            CreationUtc = info->CreationTime.ToDateTimeUtc();
+            LastAccessUtc = info->LastAccessTime.ToDateTimeUtc();
+            LastWriteUtc = info->ChangeTime.ToDateTimeUtc();
+            Length = (uint)info->EndOfFile;
+            AllocatedBytes = (uint)info->AllocationSize;
+        }
+
+        public unsafe FindResult(FILE_FULL_DIR_INFORMATION* info, string directory)
+        {
+            Directory = directory;
+            FileName = info->FileName.GetValue(info->FileNameLength);
+            Attributes = info->FileAttributes;
+            CreationUtc = info->CreationTime.ToDateTimeUtc();
+            LastAccessUtc = info->LastAccessTime.ToDateTimeUtc();
+            LastWriteUtc = info->ChangeTime.ToDateTimeUtc();
+            Length = (uint)info->EndOfFile;
+            AllocatedBytes = (uint)info->AllocationSize;
+            if ((info->FileAttributes & FileAttributes.ReparsePoint) != 0)
+                ReparseTag = (ReparseTag)info->EaSize;
         }
     }
 }
