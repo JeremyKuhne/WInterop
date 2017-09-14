@@ -8,14 +8,12 @@
 using FluentAssertions;
 using Microsoft.Win32.SafeHandles;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using Tests.Support;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
-using WInterop.VolumeManagement;
-using System.Linq;
 using Xunit;
 
 namespace DesktopTests.FileManagementTests
@@ -34,7 +32,7 @@ namespace DesktopTests.FileManagementTests
                 FindOperation find = new FindOperation(testFile);
                 string fileName = find.FirstOrDefault()?.FileName;
 
-                using (var fileHandle = FileMethods.CreateFile(Paths.AddTrailingSeparator(testFile), DesiredAccess.ReadAttributes, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+                using (var fileHandle = FileMethods.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                 }
