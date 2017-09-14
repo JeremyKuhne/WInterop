@@ -10,19 +10,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
-using WInterop.SafeString.Types;
 using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement
 {
-    // public delegate bool FindPredicate(ref WIN32_FIND_DATA data);
-
     /// <summary>
     /// Encapsulates a find operation.
     /// </summary>
@@ -51,24 +47,7 @@ namespace WInterop.FileManagement
         public IEnumerator<FindResult> GetEnumerator()
         {
             SafeFileHandle handle = DirectoryMethods.CreateDirectoryHandle(Directory);
-            return new FindEnumerator(handle, Directory, ProcessFilter(Filter));
-        }
-
-        private static string ProcessFilter(string filter)
-        {
-            if (string.IsNullOrEmpty(filter))
-                return filter;
-
-            StringBuilder sb = new StringBuilder(filter);
-            sb.Replace(".?", "\"");
-            sb.Replace(".*", "\"");
-            sb.Replace('?', '>');
-            if (sb.Length > 1 && sb[sb.Length - 1] == '.' && sb[sb.Length - 2] == '*')
-            {
-                sb.Length = sb.Length - 1;
-                sb[sb.Length - 1] = '<';
-            }
-            return sb.ToString();
+            return new FindEnumerator(handle, Directory, new DosFilterPredicate(Filter, ignoreCase: true));
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -78,11 +57,11 @@ namespace WInterop.FileManagement
             private HeapBuffer _buffer;
             private SafeFileHandle _directory;
             private string _path;
-            private string _filter;
+            private IDirectFindFilter _filter;
             private bool _lastEntryFound;
             private FILE_FULL_DIR_INFORMATION* _current;
 
-            public FindEnumerator(SafeFileHandle directory, string path, string filter)
+            public FindEnumerator(SafeFileHandle directory, string path, IDirectFindFilter filter)
             {
                 _directory = directory;
                 _path = path;
@@ -99,7 +78,10 @@ namespace WInterop.FileManagement
             {
                 if (_lastEntryFound) return false;
 
-                FindNextFile();
+                do
+                {
+                    FindNextFile();
+                } while (_current != null && !_filter.Match(_current));
                 return _current != null;
             }
 
@@ -112,34 +94,30 @@ namespace WInterop.FileManagement
                     return;
                 }
 
-                fixed (char* c = _filter)
-                {
-                    UNICODE_STRING filter = new UNICODE_STRING(c, _filter);
-                    NTSTATUS status = FileMethods.Imports.NtQueryDirectoryFile(
-                        _directory,
-                        IntPtr.Zero,
-                        null,
-                        IntPtr.Zero,
-                        out IO_STATUS_BLOCK statusBlock,
-                        _buffer.VoidPointer,
-                        (uint)_buffer.ByteCapacity,
-                        FILE_INFORMATION_CLASS.FileFullDirectoryInformation,
-                        false,
-                        ref filter,
-                        false);
+                NTSTATUS status = FileMethods.Imports.NtQueryDirectoryFile(
+                    _directory,
+                    IntPtr.Zero,
+                    null,
+                    IntPtr.Zero,
+                    out IO_STATUS_BLOCK statusBlock,
+                    _buffer.VoidPointer,
+                    (uint)_buffer.ByteCapacity,
+                    FILE_INFORMATION_CLASS.FileFullDirectoryInformation,
+                    false,
+                    null,
+                    false);
 
-                    switch (status)
-                    {
-                        case NTSTATUS.STATUS_NO_MORE_FILES:
-                            _lastEntryFound = true;
-                            _current = null;
-                            return;
-                        case NTSTATUS.STATUS_SUCCESS:
-                            Debug.Assert(statusBlock.Information.ToInt64() != 0);
-                            break;
-                        default:
-                            throw ErrorMethods.GetIoExceptionForNTStatus(status);
-                    }
+                switch (status)
+                {
+                    case NTSTATUS.STATUS_NO_MORE_FILES:
+                        _lastEntryFound = true;
+                        _current = null;
+                        return;
+                    case NTSTATUS.STATUS_SUCCESS:
+                        Debug.Assert(statusBlock.Information.ToInt64() != 0);
+                        break;
+                    default:
+                        throw ErrorMethods.GetIoExceptionForNTStatus(status);
                 }
 
                 _current = (FILE_FULL_DIR_INFORMATION*)_buffer.VoidPointer;

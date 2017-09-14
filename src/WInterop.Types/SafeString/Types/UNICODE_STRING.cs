@@ -60,6 +60,16 @@ namespace WInterop.SafeString.Types
         }
 
         /// <summary>
+        /// Initialize from a char buffer and length in bytes.
+        /// </summary>
+        public unsafe UNICODE_STRING(char* buffer, uint lengthInBytes)
+        {
+            Length = checked((ushort)(lengthInBytes));
+            MaximumLength = Length;
+            Buffer = buffer;
+        }
+
+        /// <summary>
         /// Returns the current buffer as a string.
         /// </summary>
         public override string ToString()

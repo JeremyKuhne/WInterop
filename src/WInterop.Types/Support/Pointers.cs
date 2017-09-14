@@ -14,7 +14,7 @@ namespace WInterop.Support
         /// <summary>
         /// Offset the given pointer by the specified number of bytes.
         /// </summary>
-        [MethodImpl((MethodImplOptions)16)]
+        [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern unsafe void* Offset<T>(void* pointer, T offset) where T : struct;
     }
 }

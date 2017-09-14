@@ -779,6 +779,7 @@ namespace WInterop.Support.Buffers
             base.Dispose(disposing);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UNICODE_STRING ToUnicodeString() => new UNICODE_STRING(this);
     }
 }

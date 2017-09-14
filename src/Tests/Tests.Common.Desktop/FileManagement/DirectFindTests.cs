@@ -33,7 +33,7 @@ namespace DesktopTests.FileManagement
         {
             using (var cleaner = new TestFileCleaner())
             {
-                var files = new DirectFindOperation(cleaner.TempFolder, "*Win*").ToArray();
+                var files = new DirectFindOperation(cleaner.TempFolder, "*win*").ToArray();
                 files.Length.Should().Be(1);
                 files[0].FileName.Should().Be("%WinteropFlagFile%");
             }
