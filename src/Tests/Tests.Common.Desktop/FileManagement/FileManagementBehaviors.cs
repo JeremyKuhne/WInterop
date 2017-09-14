@@ -15,12 +15,32 @@ using WInterop.FileManagement.Types;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using WInterop.VolumeManagement;
+using System.Linq;
 using Xunit;
 
 namespace DesktopTests.FileManagementTests
 {
     public class FileManagementBehaviors
     {
+        [Fact]
+        public void OpenFileWithTrailingSeparator()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string testFile = cleaner.CreateTestFile(nameof(OpenFileWithTrailingSeparator));
+
+                string fullName = FileMethods.GetFullPathName(Paths.AddTrailingSeparator(testFile));
+
+                FindOperation find = new FindOperation(testFile);
+                string fileName = find.FirstOrDefault()?.FileName;
+
+                using (var fileHandle = FileMethods.CreateFile(Paths.AddTrailingSeparator(testFile), DesiredAccess.ReadAttributes, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+                {
+                    fileHandle.IsInvalid.Should().BeFalse();
+                }
+            }
+        }
+
         [Theory,
             Trait("Environment", "CurrentDirectory"),
             InlineData(@"C:", @"C:\Users"),
