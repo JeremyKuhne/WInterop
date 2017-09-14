@@ -19,12 +19,48 @@ namespace WInterop.FileManagement
         unsafe bool Match(FILE_FULL_DIR_INFORMATION* record);
     }
 
-    public class DosFilterPredicate : IDirectFindFilter
+    public class MultiFilter : IDirectFindFilter
+    {
+        private IDirectFindFilter[] _filters;
+
+        public MultiFilter(params IDirectFindFilter[] filters)
+        {
+            _filters = filters;
+        }
+
+        public unsafe bool Match(FILE_FULL_DIR_INFORMATION* record)
+        {
+            foreach (var filter in _filters)
+            {
+                if (!filter.Match(record))
+                    return false;
+            }
+            return true;
+        }
+    }
+
+    public class NormalDirectoryFilter : IDirectFindFilter
+    {
+        public static NormalDirectoryFilter Instance = new NormalDirectoryFilter();
+
+        private NormalDirectoryFilter() { }
+
+        public unsafe bool Match(FILE_FULL_DIR_INFORMATION* record) => NotSpecialDirectory(record);
+
+        public static unsafe bool NotSpecialDirectory(FILE_FULL_DIR_INFORMATION* record)
+        {
+            return record->FileNameLength > 2 * sizeof(char)
+                || *(char*)&record->FileName != '.'
+                || (record->FileNameLength == 2 * sizeof(char) && *((char*)&record->FileName + 1) != '.');
+        }
+    }
+
+    public class DosFilter : IDirectFindFilter
     {
         private StringBuffer _buffer;
         private bool _ignoreCase;
 
-        public DosFilterPredicate(string filter, bool ignoreCase)
+        public DosFilter(string filter, bool ignoreCase)
         {
             ProcessFilter(filter, ignoreCase);
             _ignoreCase = ignoreCase;

@@ -15,6 +15,7 @@ using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement
@@ -26,6 +27,7 @@ namespace WInterop.FileManagement
     {
         public string Directory { get; private set; }
         public string Filter { get; private set; }
+        public bool Recursive { get; private set; }
 
         /// <summary>
         /// Encapsulates a find operation. Will strip trailing separator as FindFile will not take it.
@@ -38,16 +40,19 @@ namespace WInterop.FileManagement
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
         public DirectFindOperation(
             string directory,
+            bool recursive = false,
             string filter = "*")
         {
             Directory = directory;
             Filter = filter;
+            Recursive = recursive;
         }
 
         public IEnumerator<FindResult> GetEnumerator()
         {
             SafeFileHandle handle = DirectoryMethods.CreateDirectoryHandle(Directory);
-            return new FindEnumerator(handle, Directory, new DosFilterPredicate(Filter, ignoreCase: true));
+            return new FindEnumerator(handle, Directory, Recursive,
+                new MultiFilter(NormalDirectoryFilter.Instance, new DosFilter(Filter, ignoreCase: true)));
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -60,14 +65,16 @@ namespace WInterop.FileManagement
             private IDirectFindFilter _filter;
             private bool _lastEntryFound;
             private FILE_FULL_DIR_INFORMATION* _current;
+            private Queue<Tuple<SafeFileHandle, string>> _pending;
 
-            public FindEnumerator(SafeFileHandle directory, string path, IDirectFindFilter filter)
+            public FindEnumerator(SafeFileHandle directory, string path, bool recursive, IDirectFindFilter filter)
             {
                 _directory = directory;
                 _path = path;
                 _filter = filter;
                 _buffer = HeapBuffer.Cache.Acquire(4096);
-                Reset();
+                if (recursive)
+                    _pending = new Queue<Tuple<SafeFileHandle, string>>();
             }
 
             public FindResult Current => new FindResult(_current, _path);
@@ -78,11 +85,24 @@ namespace WInterop.FileManagement
             {
                 if (_lastEntryFound) return false;
 
+                FILE_FULL_DIR_INFORMATION* info;
+
                 do
                 {
                     FindNextFile();
-                } while (_current != null && !_filter.Match(_current));
-                return _current != null;
+                    info = _current;
+                    if (_pending != null && info != null && (info->FileAttributes & FileAttributes.Directory) != 0
+                        && NormalDirectoryFilter.NotSpecialDirectory(info))
+                    {
+                        // Stash directory to recurse into
+                        string fileName = info->FileName.GetValue(info->FileNameLength);
+                        _pending.Enqueue(Tuple.Create(
+                            DirectoryMethods.CreateDirectoryHandle(_directory, fileName),
+                            Paths.Combine(_path, fileName)));
+                    }
+                } while (info != null && !_filter.Match(info));
+
+                return info != null;
             }
 
             private unsafe void FindNextFile()
@@ -90,6 +110,7 @@ namespace WInterop.FileManagement
                 FILE_FULL_DIR_INFORMATION* info = _current;
                 if (info != null && info->NextEntryOffset != 0)
                 {
+                    // We're already in a buffer and have another entry
                     _current = (FILE_FULL_DIR_INFORMATION*)((byte*)info + info->NextEntryOffset);
                     return;
                 }
@@ -110,8 +131,20 @@ namespace WInterop.FileManagement
                 switch (status)
                 {
                     case NTSTATUS.STATUS_NO_MORE_FILES:
-                        _lastEntryFound = true;
                         _current = null;
+                        if (_pending == null || _pending.Count == 0)
+                        {
+                            _lastEntryFound = true;
+                        }
+                        else
+                        {
+                            // Grab the next directory to parse
+                            var next = _pending.Dequeue();
+                            _directory.Dispose();
+                            _directory = next.Item1;
+                            _path = next.Item2;
+                            FindNextFile();
+                        }
                         return;
                     case NTSTATUS.STATUS_SUCCESS:
                         Debug.Assert(statusBlock.Information.ToInt64() != 0);
@@ -125,7 +158,7 @@ namespace WInterop.FileManagement
 
             public void Reset()
             {
-                _lastEntryFound = false;
+                throw new NotSupportedException();
             }
 
             public void Dispose()

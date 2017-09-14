@@ -218,7 +218,7 @@ namespace WInterop.FileManagement
                 pCreateExParams: ref extended);
 
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError();
+                throw Errors.GetIoExceptionForLastError(path);
 
             return handle;
         }

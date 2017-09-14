@@ -6,9 +6,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
+using WInterop.Support;
 
 namespace WInterop.FileManagement.Types
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class FindResult
     {
         public string Directory { get; private set; }
@@ -61,5 +64,7 @@ namespace WInterop.FileManagement.Types
             if ((info->FileAttributes & FileAttributes.ReparsePoint) != 0)
                 ReparseTag = (ReparseTag)info->EaSize;
         }
+
+        private string DebuggerDisplay => Paths.Combine(Directory, FileName);
     }
 }
