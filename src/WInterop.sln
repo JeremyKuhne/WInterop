@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26912.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.WinRT", "Winterop.WinRT\WInterop.WinRT.csproj", "{8031257A-B9C2-473F-A4DD-690BD6263FEB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -134,6 +134,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{AFC731DB-E357-46B7-A5D1-1258180FD510}"
 EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Tests\Tests.Shared.Support\Tests.Shared.Support.projitems*{1cc4af0d-dc51-4626-b08e-955f36898073}*SharedItemsImports = 13
 		Tests\Tests.Common\Tests.Common.projitems*{2035a6ee-3425-4eba-8067-919adab2599e}*SharedItemsImports = 13
@@ -897,5 +900,11 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1D0C3A88-8F05-4858-97B6-0E554C1064BD}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

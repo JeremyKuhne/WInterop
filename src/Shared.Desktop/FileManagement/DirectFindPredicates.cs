@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+// #define WIN32FIND
+
 using System;
 using WInterop.FileManagement.Types;
 using WInterop.SafeString;
@@ -16,7 +18,11 @@ namespace WInterop.FileManagement
 {
     public interface IDirectFindFilter
     {
+#if WIN32FIND
+        bool Match(ref WIN32_FIND_DATA record);
+#else
         unsafe bool Match(FILE_FULL_DIR_INFORMATION* record);
+#endif
     }
 
     public class MultiFilter : IDirectFindFilter
@@ -28,6 +34,19 @@ namespace WInterop.FileManagement
             _filters = filters;
         }
 
+
+#if WIN32FIND
+        public bool Match(ref WIN32_FIND_DATA record)
+        {
+            foreach (var filter in _filters)
+            {
+                if (!filter.Match(ref record))
+                    return false;
+            }
+            return true;
+        }
+
+#else
         public unsafe bool Match(FILE_FULL_DIR_INFORMATION* record)
         {
             foreach (var filter in _filters)
@@ -37,6 +56,7 @@ namespace WInterop.FileManagement
             }
             return true;
         }
+#endif
     }
 
     public class NormalDirectoryFilter : IDirectFindFilter
@@ -45,6 +65,13 @@ namespace WInterop.FileManagement
 
         private NormalDirectoryFilter() { }
 
+#if WIN32FIND
+        public bool Match(ref WIN32_FIND_DATA record)
+        {
+            return !record.cFileName.Equals(".") && !record.cFileName.Equals("..");
+        }
+
+#else
         public unsafe bool Match(FILE_FULL_DIR_INFORMATION* record) => NotSpecialDirectory(record);
 
         public static unsafe bool NotSpecialDirectory(FILE_FULL_DIR_INFORMATION* record)
@@ -53,6 +80,7 @@ namespace WInterop.FileManagement
                 || *(char*)&record->FileName != '.'
                 || (record->FileNameLength == 2 * sizeof(char) && *((char*)&record->FileName + 1) != '.');
         }
+#endif
     }
 
     public class DosFilter : IDirectFindFilter
@@ -66,6 +94,23 @@ namespace WInterop.FileManagement
             _ignoreCase = ignoreCase;
         }
 
+#if WIN32FIND
+        public unsafe bool Match(ref WIN32_FIND_DATA record)
+        {
+            if (_buffer == null)
+                return true;
+
+            fixed (void* v = &record.cFileName)
+            {
+                char* c = (char*)v;
+                uint count = 0;
+                while (*c != '\0') { c++; count++; }
+                UNICODE_STRING name = new UNICODE_STRING((char*)v, count * sizeof(char));
+                UNICODE_STRING filter = _buffer.ToUnicodeString();
+                return FileMethods.Imports.RtlIsNameInExpression(&filter, &name, _ignoreCase, IntPtr.Zero);
+            }
+        }
+#else
         public unsafe bool Match(FILE_FULL_DIR_INFORMATION* record)
         {
             if (_buffer == null)
@@ -75,6 +120,7 @@ namespace WInterop.FileManagement
             UNICODE_STRING filter = _buffer.ToUnicodeString();
             return FileMethods.Imports.RtlIsNameInExpression(&filter, &name, _ignoreCase, IntPtr.Zero);
         }
+#endif
 
         private unsafe void ProcessFilter(string filter, bool ignoreCase)
         {

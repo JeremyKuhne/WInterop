@@ -11,6 +11,7 @@ using System.Linq;
 using Tests.Support;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
+using WInterop.FileManagement.Types;
 using WInterop.Support;
 using Xunit;
 
@@ -23,11 +24,9 @@ namespace DesktopTests.FileManagement
         {
             using (var cleaner = new TestFileCleaner())
             {
-                var files = new DirectFindOperation(cleaner.TempFolder).ToArray();
-                files.Length.Should().Be(3);
-                files[0].FileName.Should().Be(".");
-                files[1].FileName.Should().Be("..");
-                files[2].FileName.Should().Be("%WinteropFlagFile%");
+                var files = new DirectFindOperation<FindResult>(cleaner.TempFolder).ToArray();
+                files.Length.Should().Be(1);
+                files[0].FileName.Should().Be("%WinteropFlagFile%");
             }
         }
 
@@ -36,9 +35,21 @@ namespace DesktopTests.FileManagement
         {
             using (var cleaner = new TestFileCleaner())
             {
-                var files = new DirectFindOperation(cleaner.TempFolder, false, "*win*").ToArray();
+                var files = new DirectFindOperation<FindResult>(cleaner.TempFolder, false, "*win*").ToArray();
                 files.Length.Should().Be(1);
                 files[0].FileName.Should().Be("%WinteropFlagFile%");
+            }
+        }
+
+        [Fact]
+        public void SimpleFilterFind2()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                FileHelper.WriteAllText(Paths.Combine(cleaner.TempFolder, "foo.txt"), nameof(SimpleFilterFind2));
+                var files = new DirectFindOperation<string>(cleaner.TempFolder, true, "*.txt").ToArray();
+                files.Length.Should().Be(1);
+                files[0].Should().EndWith("foo.txt");
             }
         }
 
@@ -58,11 +69,12 @@ namespace DesktopTests.FileManagement
                 string fileE = Paths.Combine(subdirD, "E");
                 FileHelper.WriteAllText(fileE, "E file");
 
-                var files = new DirectFindOperation(subdirA, recursive: true).ToArray();
+                var files = new DirectFindOperation<string>(subdirA, recursive: true).ToArray();
+                files.Should().BeEquivalentTo(System.IO.Directory.GetFileSystemEntries(subdirA, "*", System.IO.SearchOption.AllDirectories));
             }
         }
 
-        [Fact]
+        //[Fact]
         public void TestGetAllEntries()
         {
             string path = @"P:\repos\corefx";
