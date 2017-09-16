@@ -139,9 +139,9 @@ namespace WInterop.FileManagement
             bool refcounted = false;
             try
             {
-                rootDirectory.DangerousAddRef(ref refcounted);
+                rootDirectory?.DangerousAddRef(ref refcounted);
                 return new SafeFileHandle(
-                    CreateFileRelative(path, rootDirectory.DangerousGetHandle(), createDisposition, desiredAccess,
+                    CreateFileRelative(path, rootDirectory?.DangerousGetHandle() ?? IntPtr.Zero, createDisposition, desiredAccess,
                         shareAccess, fileAttributes, createOptions, objectAttributes),
                     true);
             }

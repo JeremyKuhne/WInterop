@@ -19,9 +19,11 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\Shared.Desktop\Shared.Desktop.projitems" Label="Shared" />
   <Import Project="..\Shared.WinRT\Shared.WinRT.projitems" Label="Shared" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <Content Include="Gdi\BitBLT History.txt" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WInterop.Types\WInterop.Types.csproj" />
   </ItemGroup>
