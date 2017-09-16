@@ -146,7 +146,7 @@ namespace WInterop.FileManagement
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566424.aspx
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern NTSTATUS NtCreateFile(
-                out SafeFileHandle FileHandle,
+                out IntPtr FileHandle,
                 DesiredAccess DesiredAccess,
                 ref OBJECT_ATTRIBUTES ObjectAttributes,
                 out IO_STATUS_BLOCK IoStatusBlock,
@@ -178,6 +178,20 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556633.aspx
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567047.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public unsafe static extern NTSTATUS NtQueryDirectoryFile(
+                IntPtr FileHandle,
+                IntPtr Event,
+                AsyncProcedureCall ApcRoutine,
+                IntPtr ApcContext,
+                out IO_STATUS_BLOCK IoStatusBlock,
+                void* FileInformation,
+                uint Length,
+                FILE_INFORMATION_CLASS FileInformationClass,
+                BOOLEAN ReturnSingleEntry,
+                UNICODE_STRING* FileName,
+                BOOLEAN RestartScan);
+
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern NTSTATUS NtQueryDirectoryFile(
                 SafeFileHandle FileHandle,

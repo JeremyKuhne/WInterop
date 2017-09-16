@@ -136,18 +136,44 @@ namespace WInterop.FileManagement
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
         {
+            bool refcounted = false;
+            try
+            {
+                rootDirectory.DangerousAddRef(ref refcounted);
+                return new SafeFileHandle(
+                    CreateFileRelative(path, rootDirectory.DangerousGetHandle(), createDisposition, desiredAccess,
+                        shareAccess, fileAttributes, createOptions, objectAttributes),
+                    true);
+            }
+            finally
+            {
+                if (refcounted)
+                    rootDirectory.DangerousRelease();
+            }
+        }
+
+        public unsafe static IntPtr CreateFileRelative(
+            string path,
+            IntPtr rootDirectory,
+            CreateDisposition createDisposition,
+            DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
+            ShareMode shareAccess = ShareMode.ReadWrite,
+            FileAttributes fileAttributes = FileAttributes.None,
+            CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
+            ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
+        {
             fixed (char* c = path)
             {
                 UNICODE_STRING name = new UNICODE_STRING(c, path);
                 OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES(
                     &name,
                     objectAttributes,
-                    rootDirectory == null ? null : (void*)rootDirectory?.DangerousGetHandle(),
+                    rootDirectory,
                     null,
                     null);
 
                 NTSTATUS status = Imports.NtCreateFile(
-                    out SafeFileHandle handle,
+                    out IntPtr handle,
                     desiredAccess,
                     ref attributes,
                     out IO_STATUS_BLOCK statusBlock,

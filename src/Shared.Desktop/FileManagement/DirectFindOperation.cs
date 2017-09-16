@@ -7,17 +7,20 @@
 
 // #define WIN32HANDLE
 // #define WIN32FIND
+#define USEINTPTR
 
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.ConstrainedExecution;
 using System.Threading;
 using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
+using WInterop.Handles;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -64,12 +67,19 @@ namespace WInterop.FileManagement
         public IEnumerator<T> GetEnumerator()
         {
             SafeFileHandle handle = DirectoryMethods.CreateDirectoryHandle(_directory);
+#if USEINTPTR
+            IntPtr phandle = handle.DangerousGetHandle();
+            handle.SetHandleAsInvalid();
+            handle.Dispose();
+            return new FindEnumerator(phandle, this);
+#else
             return new FindEnumerator(handle, this);
+#endif
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private unsafe class FindEnumerator : IEnumerator<T>
+        private unsafe class FindEnumerator : CriticalFinalizerObject, IEnumerator<T>
         {
 #if WIN32FIND
             private IntPtr _findHandle;
@@ -79,14 +89,27 @@ namespace WInterop.FileManagement
             private HeapBuffer _buffer;
 #endif
 
+#if USEINTPTR
+            private IntPtr _directory;
+#else
             private SafeFileHandle _directory;
+#endif
             private string _path;
             private bool _lastEntryFound;
+#if USEINTPTR
+            private Queue<ValueTuple<IntPtr, string>> _pending;
+#else
             private Queue<ValueTuple<SafeFileHandle, string>> _pending;
+#endif
             private DirectFindOperation<T> _findOperation;
 
+#if USEINTPTR
+            public FindEnumerator(IntPtr directory, DirectFindOperation<T> findOperation)
+#else
             public FindEnumerator(SafeFileHandle directory, DirectFindOperation<T> findOperation)
+#endif
             {
+                // Set the handle first to ensure we always dispose of it
                 _directory = directory;
                 _path = findOperation._directory;
 #if !WIN32FIND
@@ -94,7 +117,11 @@ namespace WInterop.FileManagement
 #endif
                 _findOperation = findOperation;
                 if (findOperation._recursive)
+#if USEINTPTR
+                    _pending = new Queue<ValueTuple<IntPtr, string>>();
+#else
                     _pending = new Queue<ValueTuple<SafeFileHandle, string>>();
+#endif
             }
 
 #if WIN32FIND
@@ -140,8 +167,8 @@ namespace WInterop.FileManagement
                         string fileName = info->FileName.GetValue(info->FileNameLength);
                         string subDirectory = string.Concat(_path, "\\", fileName);
                         _pending.Enqueue(ValueTuple.Create(
-                            DirectoryMethods.CreateDirectoryHandle(subDirectory),
-                            // DirectoryMethods.CreateDirectoryHandle(_directory, fileName),
+                            // DirectoryMethods.CreateDirectoryHandle(subDirectory),
+                            DirectoryMethods.CreateDirectoryHandle(_directory, fileName),
                             subDirectory));
                     }
                 } while (info != null && !_findOperation._filter.Match(info));
@@ -282,7 +309,11 @@ namespace WInterop.FileManagement
                         {
                             // Grab the next directory to parse
                             var next = _pending.Dequeue();
+#if USEINTPTR
+                            HandleMethods.CloseHandle(_directory);
+#else
                             _directory.Dispose();
+#endif
                             _directory = next.Item1;
                             _path = next.Item2;
                             FindNextFile();
@@ -296,7 +327,7 @@ namespace WInterop.FileManagement
                 }
 #endif
 
-                _current = (FILE_FULL_DIR_INFORMATION*)_buffer.VoidPointer;
+                            _current = (FILE_FULL_DIR_INFORMATION*)_buffer.VoidPointer;
             }
 #endif
 
@@ -317,10 +348,26 @@ namespace WInterop.FileManagement
                 HeapBuffer buffer = Interlocked.Exchange(ref _buffer, null);
                 if (buffer != null)
                     HeapBuffer.Cache.Release((StringBuffer)buffer);
+
+                var queue = Interlocked.Exchange(ref _pending, null);
+                if (queue != null)
+                {
+                    while (queue.Count > 0)
+#if USEINTPTR
+                        HandleMethods.CloseHandle(queue.Dequeue().Item1);
+#else
+                        queue.Dequeue().Item1?.Dispose();
+#endif
+                }
 #else
                 FileMethods.Imports.FindClose(_findHandle);
 #endif
+
+#if USEINTPTR
+                HandleMethods.CloseHandle(_directory);
+#else
                 _directory?.Dispose();
+#endif
             }
 
             ~FindEnumerator()

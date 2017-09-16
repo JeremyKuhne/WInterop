@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Win32.SafeHandles;
+using System;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 
@@ -29,9 +30,24 @@ namespace WInterop.DirectoryManagement
         }
 
         /// <summary>
-        /// Simple wrapper to allow creating a file handle for an existing directory.
+        /// Creates a directory handle from an existing directory handle.
         /// </summary>
         public static SafeFileHandle CreateDirectoryHandle(SafeFileHandle rootDirectory, string subdirectoryPath)
+        {
+            return FileMethods.CreateFileRelative(
+                subdirectoryPath,
+                rootDirectory,
+                CreateDisposition.Open,
+                DesiredAccess.ListDirectory | DesiredAccess.Synchronize,
+                ShareMode.ReadWrite | ShareMode.Delete,
+                FileAttributes.None,
+                CreateOptions.SynchronousIoNonalert | CreateOptions.DirectoryFile | CreateOptions.OpenForBackupIntent | CreateOptions.OpenReparsePoint);
+        }
+
+        /// <summary>
+        /// Creates a raw directory handle from an existing directory handle.
+        /// </summary>
+        public static IntPtr CreateDirectoryHandle(IntPtr rootDirectory, string subdirectoryPath)
         {
             return FileMethods.CreateFileRelative(
                 subdirectoryPath,

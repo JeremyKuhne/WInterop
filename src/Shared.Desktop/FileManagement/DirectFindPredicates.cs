@@ -124,7 +124,7 @@ namespace WInterop.FileManagement
 
         private unsafe void ProcessFilter(string filter, bool ignoreCase)
         {
-            if (string.IsNullOrEmpty(filter))
+            if (string.IsNullOrEmpty(filter) || filter == "*" || filter == "*.*")
                 return;
 
             int length = filter.Length;

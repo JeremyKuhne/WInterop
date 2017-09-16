@@ -86,7 +86,7 @@ namespace WInterop.Handles
                 OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES
                 {
                     Length = (uint)sizeof(OBJECT_ATTRIBUTES),
-                    RootDirectory = null,
+                    RootDirectory = IntPtr.Zero,
                     ObjectName = &objectName,
                     SecurityDescriptor = null,
                     SecurityQualityOfService = null

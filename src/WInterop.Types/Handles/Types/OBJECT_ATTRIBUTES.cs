@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using WInterop.Authorization.Types;
 using WInterop.SafeString.Types;
 
@@ -19,7 +20,7 @@ namespace WInterop.Handles.Types
         /// Optional handle to root object directory for the given ObjectName.
         /// Can be a file system directory or object manager directory.
         /// </summary>
-        public void* RootDirectory;
+        public IntPtr RootDirectory;
 
         /// <summary>
         /// Name of the object. Must be fully qualified if RootDirectory isn't set.
@@ -43,7 +44,7 @@ namespace WInterop.Handles.Types
         /// <summary>
         /// Equivalent of InitializeObjectAttributes macro with the exception that you can directly set SQOS.
         /// </summary>
-        public unsafe OBJECT_ATTRIBUTES(UNICODE_STRING* objectName, ObjectAttributes attributes = 0, void* rootDirectory = null,
+        public unsafe OBJECT_ATTRIBUTES(UNICODE_STRING* objectName, ObjectAttributes attributes, IntPtr rootDirectory,
             SECURITY_DESCRIPTOR* securityDescriptor = null, void* securityQualityOfService = null)
         {
             Length = (uint)sizeof(OBJECT_ATTRIBUTES);
