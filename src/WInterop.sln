@@ -44,8 +44,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tests.Common.Desktop", "Tes
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeTestLibrary", "Tests\NativeTestLibrary\NativeTestLibrary.vcxproj", "{9B6766AF-03F6-48B0-89DC-41881B3E00CA}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.WinRT", "Shared.WinRT\Shared.WinRT.shproj", "{2322DE30-4C84-4D86-AC36-8E6C0E750C43}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.Types", "WInterop.Types\WInterop.Types.csproj", "{2BA38BE4-66E8-4B7C-A978-7BA8F3FCE486}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tests.Shared.Support", "Tests\Tests.Shared.Support\Tests.Shared.Support.shproj", "{1CC4AF0D-DC51-4626-B08E-955F36898073}"
@@ -131,11 +129,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{A9CD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{AFC731DB-E357-46B7-A5D1-1258180FD510}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WInterop.Shared", "WInterop.Shared\WInterop.Shared.shproj", "{2322DE30-4C84-4D86-AC36-8E6C0E750C43}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Tests\Tests.Shared.Support\Tests.Shared.Support.projitems*{1cc4af0d-dc51-4626-b08e-955f36898073}*SharedItemsImports = 13
 		Tests\Tests.Common\Tests.Common.projitems*{2035a6ee-3425-4eba-8067-919adab2599e}*SharedItemsImports = 13
-		Shared.WinRT\Shared.WinRT.projitems*{2322de30-4c84-4d86-ac36-8e6c0e750c43}*SharedItemsImports = 13
+		WInterop.Shared\WInterop.Shared.projitems*{2322de30-4c84-4d86-ac36-8e6c0e750c43}*SharedItemsImports = 13
 		Tests\Tests.Common.Desktop\Tests.Common.Desktop.projitems*{36072c7a-6b56-46a6-a7a6-233a1b686709}*SharedItemsImports = 4
 		Common\Common.projitems*{8031257a-b9c2-473f-a4dd-690bd6263feb}*SharedItemsImports = 4
 		Tests\Tests.Common.Desktop\Tests.Common.Desktop.projitems*{a6bc8af5-e3bf-4f75-9fba-fe5ed7d50ad2}*SharedItemsImports = 13
