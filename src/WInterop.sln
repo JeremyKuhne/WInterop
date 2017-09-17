@@ -34,6 +34,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{03801197-72C1-4497-9AF8-51798E2F8EA8}"
+	ProjectSection(SolutionItems) = preProject
+		..\il.props = ..\il.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests\Tests.csproj", "{C17F4110-A1D1-4FAC-83F6-19B49A36F075}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -121,11 +124,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.GdiPlus", "WInterop.GdiPlus\WInterop.GdiPlus.csproj", "{47987443-2B3A-4807-8E5C-0F4911D4A4FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Petzold", "Petzold", "{1C0A50A0-778D-4AF2-9F04-E95206DA34AC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{A9CDD00C-DD0E-4BCC-8970-0D4CC0D1B583}"
-	ProjectSection(SolutionItems) = preProject
-		..\il.props = ..\il.props
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{AFC731DB-E357-46B7-A5D1-1258180FD510}"
 EndProject
