@@ -32,7 +32,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="..\Tests.Common.Desktop\Tests.Common.Desktop.projitems" Label="Shared" />
+  <Import Project="..\Tests.Shared.Desktop\Tests.Shared.Desktop.projitems" Label="Shared" />
   <Import Project="..\Tests.Shared.Support\Tests.Shared.Support.projitems" Label="Shared" />
+  <Import Project="..\Tests.Shared\Tests.Shared.projitems" Label="Shared" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

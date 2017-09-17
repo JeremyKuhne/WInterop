@@ -4,11 +4,15 @@ Managed wrappers for Windows APIs
 
 ## What it is
 
-A set of portable libraries with P/Invokes and wrapper methods for Windows APIs. Currently the library set is split into WInterop.dll (Windows Store accessible APIs)
-and WInterop.Desktop.dll (APIs that aren't available to Windows Store applications).
+A set of portable libraries with P/Invokes and wrapper methods for Windows APIs. There are two versions of the library:
 
-It is expected to be practically useful both as a component and as a place to document how to P/Invoke. Unlike existing documentation sites the code has version history
-and can be tested, which should be more practical and hopefully ultimately more robust.
+ - WInterop.UniversalWindows.dll (Windows Store accessible APIs)
+ - WInterop.Desktop.dll (APIs that aren't available to Windows Store applications)
+
+WInterop.Types.dll contains most of the types used in WInterop to allow exchange of types across libraries no matter which of the two libraries they use.
+
+It is expected to be practically useful both as a component and as a place to document how to P/Invoke. Unlike existing documentation sites the code has
+version history and can be tested, which should be more practical and hopefully ultimately more robust.
 
 WInterop is in an early stage of development. As it expands expect breaking changes. Contributions and feedback are welcome.
 
