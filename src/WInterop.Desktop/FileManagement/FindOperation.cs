@@ -29,12 +29,12 @@ namespace WInterop.FileManagement
     /// <summary>
     /// Encapsulates a find operation.
     /// </summary>
-    public class DirectFindOperation<T> : IEnumerable<T>
+    public class FindOperation<T> : IEnumerable<T>
     {
         private string _directory;
         private bool _recursive;
-        private IDirectFindTransform<T> _transform;
-        private IDirectFindFilter _filter;
+        private IFindTransform<T> _transform;
+        private IFindFilter _filter;
 
         /// <summary>
         /// Encapsulates a find operation. Will strip trailing separator as FindFile will not take it.
@@ -45,20 +45,20 @@ namespace WInterop.FileManagement
         /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
         /// </param>
         /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
-        public DirectFindOperation(
+        public FindOperation(
             string directory,
             bool recursive = false,
             string filter = "*",
-            IDirectFindTransform<T> transform = null)
+            IFindTransform<T> transform = null)
         {
             _directory = directory;
             _recursive = recursive;
             if (transform == null)
             {
                 if (typeof(T) == typeof(string))
-                    transform = (IDirectFindTransform<T>)DirectFindTransforms.ToFullPath.Instance;
+                    transform = (IFindTransform<T>)FindTransforms.ToFullPath.Instance;
                 else if (typeof(T) == typeof(FindResult))
-                    transform = (IDirectFindTransform<T>)DirectFindTransforms.ToFindResult.Instance;
+                    transform = (IFindTransform<T>)FindTransforms.ToFindResult.Instance;
             }
             _transform = transform;
             _filter = new MultiFilter(NormalDirectoryFilter.Instance, new DosFilter(filter, ignoreCase: true));
@@ -112,10 +112,10 @@ namespace WInterop.FileManagement
             private Queue<ValueTuple<SafeFileHandle, string>> _pending;
 #endif
 #endif
-            private DirectFindOperation<T> _findOperation;
+            private FindOperation<T> _findOperation;
 
 #if USEINTPTR
-            public FindEnumerator(IntPtr directory, DirectFindOperation<T> findOperation)
+            public FindEnumerator(IntPtr directory, FindOperation<T> findOperation)
 #else
             public FindEnumerator(SafeFileHandle directory, DirectFindOperation<T> findOperation)
 #endif

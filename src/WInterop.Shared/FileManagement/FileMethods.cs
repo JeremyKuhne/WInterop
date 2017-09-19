@@ -288,13 +288,11 @@ namespace WInterop.FileManagement
         /// The filter. Can contain wildcards, full details can be found at
         /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
         /// </param>
-        /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
-        public static FindOperation CreateFindOperation(
+        public static FindOperation<string> CreateFindOperation(
             string directory,
-            string filter = "*",
-            bool getAlternateName = false)
+            string filter = "*")
         {
-            return new FindOperation(directory, filter, getAlternateName);
+            return new FindOperation<string>(directory, filter);
         }
 
         /// <summary>

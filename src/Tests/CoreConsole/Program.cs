@@ -30,7 +30,7 @@ namespace ConsoleApp1
 
                 // files = System.IO.Directory.GetFileSystemEntries(path, filter, System.IO.SearchOption.AllDirectories);
                 // files = new DirectFindOperation<FindResult>(path, true, filter).Select(v => string.Concat(v.Directory, "\\", v.FileName)).ToArray();
-                files = new DirectFindOperation<string>(path, true, filter).ToArray();
+                files = new FindOperation<string>(path, true, filter).ToArray();
 
                 watch.Stop();
                 Console.WriteLine($"{files.Length} files, {watch.ElapsedMilliseconds} time");

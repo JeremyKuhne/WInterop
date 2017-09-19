@@ -16,7 +16,7 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement
 {
-    public interface IDirectFindFilter
+    public interface IFindFilter
     {
 #if WIN32FIND
         bool Match(ref WIN32_FIND_DATA record);
@@ -25,11 +25,11 @@ namespace WInterop.FileManagement
 #endif
     }
 
-    public class MultiFilter : IDirectFindFilter
+    public class MultiFilter : IFindFilter
     {
-        private IDirectFindFilter[] _filters;
+        private IFindFilter[] _filters;
 
-        public MultiFilter(params IDirectFindFilter[] filters)
+        public MultiFilter(params IFindFilter[] filters)
         {
             _filters = filters;
         }
@@ -59,7 +59,7 @@ namespace WInterop.FileManagement
 #endif
     }
 
-    public class NormalDirectoryFilter : IDirectFindFilter
+    public class NormalDirectoryFilter : IFindFilter
     {
         public static NormalDirectoryFilter Instance = new NormalDirectoryFilter();
 
@@ -83,7 +83,7 @@ namespace WInterop.FileManagement
 #endif
     }
 
-    public class DosFilter : IDirectFindFilter
+    public class DosFilter : IFindFilter
     {
         private StringBuffer _buffer;
         private bool _ignoreCase;

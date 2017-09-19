@@ -15,7 +15,7 @@ using WInterop.Support;
 
 namespace WInterop.FileManagement
 {
-    public interface IDirectFindTransform<T>
+    public interface IFindTransform<T>
     {
 #if WIN32FIND
         unsafe T TransformResult(ref WIN32_FIND_DATA record, string directory);
@@ -24,9 +24,9 @@ namespace WInterop.FileManagement
 #endif
     }
 
-    public static class DirectFindTransforms
+    public static class FindTransforms
     {
-        public class ToFullPath : IDirectFindTransform<string>
+        public class ToFullPath : IFindTransform<string>
         {
             private ToFullPath() { }
             public static ToFullPath Instance = new ToFullPath();
@@ -69,7 +69,7 @@ namespace WInterop.FileManagement
 #endif
         }
 
-        public class ToFindResult : IDirectFindTransform<FindResult>
+        public class ToFindResult : IFindTransform<FindResult>
         {
             private ToFindResult() { }
             public static ToFindResult Instance = new ToFindResult();
