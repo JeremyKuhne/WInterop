@@ -280,20 +280,20 @@ namespace WInterop.FileManagement
             }
         }
 
-        /// <summary>
-        /// Creates a wrapper for finding files.
-        /// </summary>
-        /// <param name="directory">The directory to search in.</param>
-        /// <param name="filter">
-        /// The filter. Can contain wildcards, full details can be found at
-        /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
-        /// </param>
-        public static FindOperation<string> CreateFindOperation(
-            string directory,
-            string filter = "*")
-        {
-            return new FindOperation<string>(directory, filter);
-        }
+        ///// <summary>
+        ///// Creates a wrapper for finding files.
+        ///// </summary>
+        ///// <param name="directory">The directory to search in.</param>
+        ///// <param name="filter">
+        ///// The filter. Can contain wildcards, full details can be found at
+        ///// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
+        ///// </param>
+        //public static FindOperation<string> CreateFindOperation(
+        //    string directory,
+        //    string filter = "*")
+        //{
+        //    return new FindOperation<string>(directory, filter);
+        //}
 
         /// <summary>
         /// Gets the file attributes for the given path.

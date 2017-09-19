@@ -89,7 +89,8 @@ namespace WInterop.FileManagement
             private IntPtr _findHandle;
             private WIN32_FIND_DATA _current;
 #else
-            private FILE_FULL_DIR_INFORMATION* _current;
+            private RawFindData _current;
+            private FILE_FULL_DIR_INFORMATION* _currentInfo;
             private HeapBuffer _buffer;
 #endif
 
@@ -144,7 +145,7 @@ namespace WInterop.FileManagement
 #if WIN32FIND
             public T Current => _findOperation._transform.TransformResult(ref _current, _path);
 #else
-            public T Current => _findOperation._transform.TransformResult(_current, _path);
+            public T Current => _findOperation._transform.TransformResult(ref _current, _path);
 #endif
 
             object IEnumerator.Current => Current;
@@ -173,19 +174,18 @@ namespace WInterop.FileManagement
                 do
                 {
                     FindNextFile();
-                    info = _current;
-                    if (_pending != null && info != null && (info->FileAttributes & FileAttributes.Directory) != 0
-                        && NormalDirectoryFilter.NotSpecialDirectory(info))
+                    if (!_lastEntryFound && _pending != null && (_current.FileAttributes & FileAttributes.Directory) != 0
+                        && NormalDirectoryFilter.NotSpecialDirectory(ref _current))
                     {
                         // Stash directory to recurse into
-                        string fileName = info->FileName.GetValue(info->FileNameLength);
+                        string fileName = _current.ToString();
                         string subDirectory = string.Concat(_path, "\\", fileName);
                         _pending.Enqueue(ValueTuple.Create(
                             // DirectoryMethods.CreateDirectoryHandle(subDirectory),
                             DirectoryMethods.CreateDirectoryHandle(_directory, fileName),
                             subDirectory));
                     }
-                } while (info != null && !_findOperation._filter.Match(info));
+                } while (!_lastEntryFound && !_findOperation._filter.Match(ref _current));
 #endif
 
                 return !_lastEntryFound;
@@ -254,7 +254,7 @@ namespace WInterop.FileManagement
 #else
             private unsafe void FindNextFile()
             {
-                FILE_FULL_DIR_INFORMATION* info = _current;
+                FILE_FULL_DIR_INFORMATION* info = _currentBuffer;
                 if (info != null && info->NextEntryOffset != 0)
                 {
                     // We're already in a buffer and have another entry

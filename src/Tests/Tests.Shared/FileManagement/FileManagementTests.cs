@@ -302,27 +302,27 @@ namespace Tests.FileManagementTests
             }
         }
 
-        [Fact]
-        public void FindFirstFileNoFiles()
-        {
-            FileMethods.CreateFindOperation(FileMethods.GetTempPath(), System.IO.Path.GetRandomFileName())
-                .Should().BeEmpty();
-        }
+        //[Fact]
+        //public void FindFirstFileNoFiles()
+        //{
+        //    FileMethods.CreateFindOperation(FileMethods.GetTempPath(), System.IO.Path.GetRandomFileName())
+        //        .Should().BeEmpty();
+        //}
 
-        [Theory,
-            InlineData("*"),
-            InlineData("*.*")]
-        public void FindFileEmptyFolder(string pattern)
-        {
-            using (var temp = new TestFileCleaner())
-            {
-                string subdir = Paths.Combine(temp.TempFolder, "Subdir");
-                DirectoryMethods.CreateDirectory(subdir);
+        //[Theory,
+        //    InlineData("*"),
+        //    InlineData("*.*")]
+        //public void FindFileEmptyFolder(string pattern)
+        //{
+        //    using (var temp = new TestFileCleaner())
+        //    {
+        //        string subdir = Paths.Combine(temp.TempFolder, "Subdir");
+        //        DirectoryMethods.CreateDirectory(subdir);
 
-                FileMethods.CreateFindOperation(subdir, pattern).Select(s => s.FileName)
-                    .Should().Contain(new string[] { ".", ".." });
-            }
-        }
+        //        FileMethods.CreateFindOperation(subdir, pattern).Select(s => s.FileName)
+        //            .Should().Contain(new string[] { ".", ".." });
+        //    }
+        //}
 
         [Theory,
             InlineData(new byte[] { 0xDE })
@@ -537,15 +537,15 @@ namespace Tests.FileManagementTests
             }
         }
 
-        [Theory,
-            InlineData(@"C:\"),
-            InlineData(@"\\?\C:\")
-            ]
-        public void FindFirstFileHandlesRoots(string path)
-        {
-            FileMethods.CreateFindOperation(path).Should().NotBeEmpty();
-            FileMethods.CreateFindOperation(path, null).Should().BeEmpty();
-        }
+        //[Theory,
+        //    InlineData(@"C:\"),
+        //    InlineData(@"\\?\C:\")
+        //    ]
+        //public void FindFirstFileHandlesRoots(string path)
+        //{
+        //    FileMethods.CreateFindOperation(path).Should().NotBeEmpty();
+        //    FileMethods.CreateFindOperation(path, null).Should().BeEmpty();
+        //}
 
         [Fact]
         public void GetFileNameByHandle()

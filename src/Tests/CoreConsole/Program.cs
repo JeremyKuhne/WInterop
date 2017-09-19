@@ -1,6 +1,7 @@
 ﻿#define INTERACTIVE
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using WInterop.FileManagement;
@@ -13,12 +14,14 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            string path = @"E:\x"; //@"P:\SteamLibrary";
-            string filter = @"*.txt";
+            string path = @"D:\NetFxDev1";
+            string filter = @"*";
+            const int iterations = 50;
             Stopwatch watch = new Stopwatch();
-            watch.Start();
             string[] files = null;
-            for (int i = 0; i < 10; i++)
+            List<long> times = new List<long>(iterations);
+
+            for (int i = 0; i < iterations; i++)
             {
 #if INTERACTIVE
                 GC.Collect();
@@ -34,11 +37,9 @@ namespace ConsoleApp1
 
                 watch.Stop();
                 Console.WriteLine($"{files.Length} files, {watch.ElapsedMilliseconds} time");
-#if INTERACTIVE
-                Console.ReadLine();
-#endif
+                if (i > 0) times.Add(watch.ElapsedMilliseconds);
             }
-            Console.WriteLine("Done");
+            Console.WriteLine(iterations < 2 ? "Done" : $"Done- {(long)times.Average()} average");
 #if INTERACTIVE
             Console.ReadLine();
 #endif

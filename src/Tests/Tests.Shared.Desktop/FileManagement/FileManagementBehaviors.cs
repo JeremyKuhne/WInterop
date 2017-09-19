@@ -29,9 +29,6 @@ namespace DesktopTests.FileManagementTests
 
                 string fullName = FileMethods.GetFullPathName(Paths.AddTrailingSeparator(testFile));
 
-                FindOperation find = new FindOperation(testFile);
-                string fileName = find.FirstOrDefault()?.FileName;
-
                 using (var fileHandle = FileMethods.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();

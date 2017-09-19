@@ -65,6 +65,17 @@ namespace WInterop.FileManagement.Types
                 ReparseTag = (ReparseTag)info->EaSize;
         }
 
+        public unsafe FindResult(ref RawFindData info, string directory)
+        {
+            Directory = directory;
+            FileName = info.FileName.ToString();
+            Attributes = info.FileAttributes;
+            CreationUtc = info.CreationTimeUtc;
+            LastAccessUtc = info.LastAccessTimeUtc;
+            LastWriteUtc = info.LastWriteTimeUtc;
+            Length = (uint)info.FileSize;
+        }
+
         private string DebuggerDisplay => Paths.Combine(Directory, FileName);
     }
 }
