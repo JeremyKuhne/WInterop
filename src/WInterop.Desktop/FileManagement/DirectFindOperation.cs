@@ -66,6 +66,9 @@ namespace WInterop.FileManagement
 
         public IEnumerator<T> GetEnumerator()
         {
+#if WIN32FIND
+            return new FindEnumerator(IntPtr.Zero, this);
+#else
             SafeFileHandle handle = DirectoryMethods.CreateDirectoryHandle(_directory);
 #if USEINTPTR
             IntPtr phandle = handle.DangerousGetHandle();
@@ -74,6 +77,7 @@ namespace WInterop.FileManagement
             return new FindEnumerator(phandle, this);
 #else
             return new FindEnumerator(handle, this);
+#endif
 #endif
         }
 
@@ -89,17 +93,24 @@ namespace WInterop.FileManagement
             private HeapBuffer _buffer;
 #endif
 
+#if !WIN32FIND
 #if USEINTPTR
             private IntPtr _directory;
 #else
             private SafeFileHandle _directory;
 #endif
+#endif
             private string _path;
             private bool _lastEntryFound;
+
+#if WIN32FIND
+            private Queue<string> _pending;
+#else
 #if USEINTPTR
             private Queue<ValueTuple<IntPtr, string>> _pending;
 #else
             private Queue<ValueTuple<SafeFileHandle, string>> _pending;
+#endif
 #endif
             private DirectFindOperation<T> _findOperation;
 
@@ -109,18 +120,24 @@ namespace WInterop.FileManagement
             public FindEnumerator(SafeFileHandle directory, DirectFindOperation<T> findOperation)
 #endif
             {
+#if !WIN32FIND
                 // Set the handle first to ensure we always dispose of it
                 _directory = directory;
+#endif
                 _path = findOperation._directory;
 #if !WIN32FIND
                 _buffer = HeapBuffer.Cache.Acquire(4096);
 #endif
                 _findOperation = findOperation;
                 if (findOperation._recursive)
+#if WIN32FIND
+                    _pending = new Queue<string>();
+#else
 #if USEINTPTR
-                    _pending = new Queue<ValueTuple<IntPtr, string>>();
+                _pending = new Queue<ValueTuple<IntPtr, string>>();
 #else
                     _pending = new Queue<ValueTuple<SafeFileHandle, string>>();
+#endif
 #endif
             }
 
@@ -146,10 +163,7 @@ namespace WInterop.FileManagement
                         // Stash directory to recurse into
                         string fileName = _current.cFileName.Value;
                         string subDirectory = string.Concat(_path, "\\", fileName);
-                        _pending.Enqueue(ValueTuple.Create(
-                            DirectoryMethods.CreateDirectoryHandle(subDirectory),
-                            // DirectoryMethods.CreateDirectoryHandle(_directory, fileName),
-                            subDirectory));
+                        _pending.Enqueue(subDirectory);
 
                     }
                 } while (!_lastEntryFound && !_findOperation._filter.Match(ref _current));
@@ -206,10 +220,7 @@ namespace WInterop.FileManagement
                             else
                             {
                                 // Grab the next directory to parse
-                                var next = _pending.Dequeue();
-                                _directory.Dispose();
-                                _directory = next.Item1;
-                                _path = next.Item2;
+                                _path = _pending.Dequeue();
                                 FindNextFile();
                             }
                             return;
@@ -234,10 +245,7 @@ namespace WInterop.FileManagement
                         else
                         {
                             // Grab the next directory to parse
-                            var next = _pending.Dequeue();
-                            _directory.Dispose();
-                            _directory = next.Item1;
-                            _path = next.Item2;
+                            _path = _pending.Dequeue();
                             FindNextFile();
                         }
                     }
@@ -363,10 +371,12 @@ namespace WInterop.FileManagement
                 FileMethods.Imports.FindClose(_findHandle);
 #endif
 
+#if !WIN32FIND
 #if USEINTPTR
                 HandleMethods.CloseHandle(_directory);
 #else
                 _directory?.Dispose();
+#endif
 #endif
             }
 
