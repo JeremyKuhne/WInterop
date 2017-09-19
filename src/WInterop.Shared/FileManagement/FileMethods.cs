@@ -175,12 +175,8 @@ namespace WInterop.FileManagement
                 {
                     return s_createFileDelegate(path, desiredAccess, shareMode, creationDisposition, fileAttributes, fileFlags, securityQosFlags);
                 }
-                catch (Exception exception)
+                catch (EntryPointNotFoundException)
                 {
-                    // Any error other than EntryPointNotFound we've found CreateFile2, rethrow
-                    if (!Errors.IsEntryPointNotFoundException(exception))
-                        throw;
-
                     s_createFileDelegate = Delegates.CreateDelegate<CreateFileDelegate>(
                         "WInterop.FileManagement.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
                         "CreateFileW");
@@ -244,12 +240,8 @@ namespace WInterop.FileManagement
                     s_copyFileDelegate(source, destination, overwrite);
                     return;
                 }
-                catch (Exception exception)
+                catch (EntryPointNotFoundException)
                 {
-                    // Any error other than EntryPointNotFound we've found CreateFile2, rethrow
-                    if (!Errors.IsEntryPointNotFoundException(exception))
-                        throw;
-
                     s_copyFileDelegate = Delegates.CreateDelegate<CopyFileDelegate>(
                         "WInterop.FileManagement.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
                         "CopyFileEx");

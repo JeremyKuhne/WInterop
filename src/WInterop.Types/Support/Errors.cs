@@ -209,13 +209,5 @@ namespace WInterop.Support
                     return new WInteropIOException(message, Macros.HRESULT_FROM_WIN32(error));
             }
         }
-
-        /// <summary>
-        /// EntryPointNotFoundException isn't available in portable assemblies. Use this to check the type.
-        /// </summary>
-        public static bool IsEntryPointNotFoundException(Exception e)
-        {
-            return e.GetType().FullName.Equals("System.EntryPointNotFoundException", StringComparison.Ordinal);
-        }
     }
 }

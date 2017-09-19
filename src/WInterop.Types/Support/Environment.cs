@@ -49,13 +49,9 @@ namespace WInterop.Support
                                 throw Errors.GetIoExceptionForError(result);
                         }
                     }
-                    catch (Exception e)
+                    catch (EntryPointNotFoundException)
                     {
-                        if (Errors.IsEntryPointNotFoundException(e))
-                            // API doesn't exist, pre Win8
-                            s_isWinRT = 0;
-                        else
-                            throw;
+                        s_isWinRT = 0;
                     }
                 });
             }
