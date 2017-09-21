@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\SafeHandleStreamWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
