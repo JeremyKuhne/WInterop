@@ -7,7 +7,8 @@
 
 using FluentAssertions;
 using System;
-using WInterop.Support;
+using WInterop;
+using WInterop.Support.Buffers;
 using Xunit;
 
 namespace Tests.Support
@@ -23,7 +24,7 @@ namespace Tests.Support
         [Fact]
         public unsafe void Size12_ShouldBeEmpty()
         {
-            new FixedString.Size12().Value.Should().Be(string.Empty);
+            new FixedString.Size12().Buffer.ToNullTerminatedString().Should().Be(string.Empty);
         }
 
         [Theory,
@@ -33,21 +34,17 @@ namespace Tests.Support
             ]
         public unsafe void Size12_RoundTrip(string value)
         {
-            FixedString.Size12 s = new FixedString.Size12()
-            {
-                Value = value
-            };
-            s.Value.Should().Be(value);
+            FixedString.Size12 s = new FixedString.Size12();
+            s.Buffer.CopyFrom(value);
+            s.Buffer.ToNullTerminatedString().Should().Be(value);
         }
 
         [Fact]
         public unsafe void Size12_SetOver()
         {
-            FixedString.Size12 s = new FixedString.Size12()
-            {
-                Value = "Fizzlesticks"
-            };
-            s.Value.Should().Be("Fizzlestick");
+            FixedString.Size12 s = new FixedString.Size12();
+            s.Buffer.CopyFrom("Fizzlesticks");
+            s.Buffer.ToNullTerminatedString().Should().Be("Fizzlestick");
         }
 
         [Fact]
@@ -60,7 +57,7 @@ namespace Tests.Support
             {
                 Buffer.MemoryCopy(c, f, 12 * sizeof(char), 12 * sizeof(char));
             }
-            s.Value.Should().Be("fizzlesticks");
+            s.Buffer.ToNullTerminatedString().Should().Be("fizzlesticks");
         }
 
         [Fact]
@@ -124,7 +121,7 @@ namespace Tests.Support
                 Buffer.MemoryCopy(c, (char*)&s, sizeof(FixedString.Size12) * sizeof(char), buffer.Length * sizeof(char));
             }
 
-            s.Equals(compareTo).Should().Be(expected);
+            s.Buffer.NullTerminatedOrdinalEquals(compareTo).Should().Be(expected);
         }
     }
 }

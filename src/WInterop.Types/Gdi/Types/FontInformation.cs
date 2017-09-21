@@ -15,12 +15,12 @@ namespace WInterop.Gdi.Types
 
         public override string ToString()
         {
-            string fullName = FontAttributes.elfEnumLogfontEx.elfFullName.Value;
-            string style = FontAttributes.elfEnumLogfontEx.elfStyle.Value;
+            string fullName = FontAttributes.elfEnumLogfontEx.elfFullName.ToNullTerminatedString();
+            string style = FontAttributes.elfEnumLogfontEx.elfStyle.ToNullTerminatedString();
 
             return fullName.EndsWith(style)
-                ? $"{fullName} {FontAttributes.elfEnumLogfontEx.elfScript.Value} ({FontType})"
-                : $"{fullName} {style} {FontAttributes.elfEnumLogfontEx.elfScript.Value} ({FontType})";
+                ? $"{fullName} {FontAttributes.elfEnumLogfontEx.elfScript.ToNullTerminatedString()} ({FontType})"
+                : $"{fullName} {style} {FontAttributes.elfEnumLogfontEx.elfScript.ToNullTerminatedString()} ({FontType})";
         }
     }
 }

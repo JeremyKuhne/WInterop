@@ -45,7 +45,7 @@ namespace Tests.Globalization
         public void StringToUpperInvariantUnsafe(string value, string expected)
         {
             // Copy the string so we don't run into any interning issues
-            value = String.Copy(value);
+            value = value == null ? null : String.Copy(value);
             GlobalizationMethods.ToUpperInvariantUnsafe(value);
             value.Should().Be(expected);
         }
@@ -59,7 +59,7 @@ namespace Tests.Globalization
         public void StringToLowerInvariantUnsafe(string value, string expected)
         {
             // Copy the string so we don't run into any interning issues
-            value = String.Copy(value);
+            value = value == null ? null : String.Copy(value);
             GlobalizationMethods.ToLowerInvariantUnsafe(value);
             value.Should().Be(expected);
         }

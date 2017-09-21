@@ -72,7 +72,7 @@ namespace WInterop.Support.Buffers
         /// Invoke the given action on a cached buffer that returns the given type.
         /// </summary>
         /// <example>
-        /// return BufferHelper.CachedInvoke((NativeBuffer buffer) => { return string.Empty; });
+        /// return BufferHelper.BufferInvoke((NativeBuffer buffer) => { return string.Empty; });
         /// </example>
         public static T BufferInvoke<BufferType, T>(Func<BufferType, T> func) where BufferType : HeapBuffer
         {

@@ -20,4 +20,7 @@
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.4.0-preview2-25405-01" />
+  </ItemGroup>
 </Project>

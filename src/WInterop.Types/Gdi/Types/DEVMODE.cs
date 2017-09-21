@@ -7,10 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Support;
+using WInterop.Support.Buffers;
 
 namespace WInterop.Gdi.Types
 {
+#pragma warning disable IDE1006
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd183565.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct DEVMODE
@@ -20,7 +21,8 @@ namespace WInterop.Gdi.Types
         private const int CCHDEVICENAME = 32;
         private const int CCHFORMNAME = 32;
 
-        public FixedString.Size32 dmDeviceName;
+        private FixedString.Size32 _dmDeviceName;
+        public Span<char> dmDeviceName => _dmDeviceName.Buffer;
         public ushort dmSpecVersion;
         public ushort dmDriverVersion;
         public ushort dmSize;
@@ -32,7 +34,8 @@ namespace WInterop.Gdi.Types
         public short dmYResolution;
         public short dmTTOption;
         public short dmCollate;
-        public FixedString.Size32 dmFormName;
+        private FixedString.Size32 _dmFormName;
+        public Span<char> dmFormName => _dmFormName.Buffer;
         public ushort dmLogPixels;
         public uint dmBitsPerPel;
         public uint dmPelsWidth;
@@ -150,4 +153,5 @@ namespace WInterop.Gdi.Types
             DMDISPLAYFLAGS_TEXTMODE = 0x00000004
         }
     }
+#pragma warning restore IDE1006
 }

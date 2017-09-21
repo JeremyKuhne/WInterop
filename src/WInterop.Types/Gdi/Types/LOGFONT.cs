@@ -5,11 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 using WInterop.Support;
+using WInterop.Support.Buffers;
 
 namespace WInterop.Gdi.Types
 {
+#pragma warning disable IDE1006
     // https://msdn.microsoft.com/en-us/library/dd145037.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct LOGFONT
@@ -29,6 +32,8 @@ namespace WInterop.Gdi.Types
         public ClippingPrecision lfClipPrecision;
         public Quality lfQuality;
         public PitchAndFamily lfPitchAndFamily;
-        public FixedString.Size32 lfFaceName;
+        private FixedString.Size32 _lfFaceName;
+        public Span<char> lfFaceName => _lfFaceName.Buffer;
     }
+#pragma warning restore IDE1006
 }

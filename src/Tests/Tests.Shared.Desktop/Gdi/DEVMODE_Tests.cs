@@ -7,6 +7,7 @@
 
 using FluentAssertions;
 using System.Runtime.InteropServices;
+using WInterop;
 using WInterop.Gdi.Types;
 using Xunit;
 
@@ -26,12 +27,12 @@ namespace DesktopTests.Gdi
         public unsafe void DeviceName()
         {
             DEVMODE devMode = new DEVMODE();
-            devMode.dmDeviceName.Value.Should().Be(string.Empty);
-            devMode.dmDeviceName.Value = "Foo";
-            devMode.dmDeviceName.Value.Should().Be("Foo");
+            devMode.dmDeviceName.ToNullTerminatedString().Should().Be(string.Empty);
+            devMode.dmDeviceName.CopyFrom("Foo");
+            devMode.dmDeviceName.ToNullTerminatedString().Should().Be("Foo");
             string tooLong = new string('a', 40);
-            devMode.dmDeviceName.Value = tooLong;
-            devMode.dmDeviceName.Value.Should().Be(new string('a', 31));
+            devMode.dmDeviceName.CopyFrom(tooLong);
+            devMode.dmDeviceName.ToNullTerminatedString().Should().Be(new string('a', 31));
 
             // The next value in the struct- ensuring we didn't write over
             devMode.dmSpecVersion.Should().Be(0);
@@ -41,12 +42,12 @@ namespace DesktopTests.Gdi
         public unsafe void FormName()
         {
             DEVMODE devMode = new DEVMODE();
-            devMode.dmFormName.Value.Should().Be(string.Empty);
-            devMode.dmFormName.Value = "Bar";
-            devMode.dmFormName.Value.Should().Be("Bar");
+            devMode.dmFormName.ToNullTerminatedString().Should().Be(string.Empty);
+            devMode.dmFormName.CopyFrom("Bar");
+            devMode.dmFormName.ToNullTerminatedString().Should().Be("Bar");
             string tooLong = new string('z', 40);
-            devMode.dmFormName.Value = tooLong;
-            devMode.dmFormName.Value.Should().Be(new string('z', 31));
+            devMode.dmFormName.CopyFrom(tooLong);
+            devMode.dmFormName.ToNullTerminatedString().Should().Be(new string('z', 31));
 
             // The next value in the struct- ensuring we didn't write over
             devMode.dmLogPixels.Should().Be(0);

@@ -509,7 +509,7 @@ namespace WInterop.Gdi
                 lfCharSet = characterSet,
             };
 
-            logFont.lfFaceName.Value = faceName;
+            logFont.lfFaceName.CopyFrom(faceName);
 
             List<FontInformation> info = new List<FontInformation>();
             GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);
