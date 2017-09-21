@@ -12,7 +12,6 @@ using System.Runtime.InteropServices;
 using WInterop.Desktop.Communications.Types;
 using WInterop.Registry;
 using WInterop.Registry.Types;
-using WInterop.ErrorHandling;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 using WInterop.Support;

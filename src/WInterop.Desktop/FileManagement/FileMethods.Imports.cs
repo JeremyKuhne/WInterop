@@ -13,7 +13,6 @@ using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
-using WInterop.Support;
 
 namespace WInterop.FileManagement
 {

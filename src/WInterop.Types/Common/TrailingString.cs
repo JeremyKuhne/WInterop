@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Support
+namespace WInterop
 {
     /// <summary>
     /// It is a pretty common pattern to have a trailing string on a native struct

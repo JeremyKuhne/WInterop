@@ -88,6 +88,10 @@ namespace WInterop.Support.Buffers
             return buffer?._handle ?? EmptySafeHandle.Instance;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe implicit operator ReadOnlySpan<byte>(HeapBuffer buffer)
+            => new ReadOnlySpan<byte>(buffer.VoidPointer, (int)buffer.ByteCapacity);
+
         /// <summary>
         /// The capacity of the buffer in bytes.
         /// </summary>

@@ -8,7 +8,6 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
-using WInterop.Support;
 using WInterop.Windows.Types;
 
 namespace WInterop.Gdi

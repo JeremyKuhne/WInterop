@@ -4,8 +4,6 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
-using WInterop.Support;
 
 namespace ConsoleApp1
 {

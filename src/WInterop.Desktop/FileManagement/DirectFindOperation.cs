@@ -21,7 +21,6 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
 using WInterop.Handles;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement

@@ -7,13 +7,10 @@
 
 using FluentAssertions;
 using Microsoft.Win32.SafeHandles;
-using System.IO;
 using System.Runtime.InteropServices;
 using WInterop.Desktop.Communications;
 using WInterop.Desktop.Communications.Types;
-using WInterop.FileManagement;
 using WInterop.Windows;
-using WInterop.Windows.Types;
 using Xunit;
 
 namespace DesktopTests.Communication

@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Support;
 
 namespace WInterop.Gdi.Types
 {
+#pragma warning disable IDE1006 // Naming Styles
     // https://msdn.microsoft.com/en-us/library/dd162768.aspx
     public struct PAINTSTRUCT
     {
@@ -18,6 +18,8 @@ namespace WInterop.Gdi.Types
         public RECT rcPaint;
         public BOOL fRestore;
         public BOOL fIncUpdate;
-        public unsafe fixed byte rgbReserved[32];
+        private unsafe FixedByte.Size32 _rgbReserved;
+        public Span<byte> rgbReserved => _rgbReserved.Buffer;
     }
+#pragma warning restore IDE1006 // Naming Styles
 }

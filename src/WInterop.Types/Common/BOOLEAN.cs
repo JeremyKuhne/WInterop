@@ -5,42 +5,33 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Support
+namespace WInterop
 {
     /// <summary>
     /// Using bool in a struct prevents the struct from being blittable.
     /// This allows structs to marshal more effectively.
     /// </summary>
-    public struct BOOL
+    public struct BOOLEAN
     {
-        public uint RawValue;
+        public byte RawValue;
 
-        public BOOL(bool b)
+        public BOOLEAN(bool b)
         {
-            RawValue = b ? 1u : 0u;
+            RawValue = b ? (byte)1 : (byte)0;
         }
 
-        public BOOL(uint value)
+        public BOOLEAN(byte value)
         {
             RawValue = value;
-        }
-
-        public BOOL(int value)
-        {
-            RawValue = (uint)value;
         }
 
         public bool IsTrue => RawValue != 0;
 
         public bool IsFalse => RawValue == 0;
 
-        public static implicit operator bool(BOOL b) => b.IsTrue;
+        public static implicit operator bool(BOOLEAN b) => b.IsTrue;
 
-        public static implicit operator BOOL(bool b) => new BOOL(b);
-
-        public static implicit operator uint(BOOL b) => b.RawValue;
-
-        public static implicit operator BOOL(uint b) => new BOOL(b);
+        public static implicit operator BOOLEAN(bool b) => new BOOLEAN(b);
 
         public override string ToString()
         {

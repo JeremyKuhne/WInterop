@@ -9,8 +9,6 @@ using FluentAssertions;
 using System;
 using Tests.Support;
 using WInterop.DirectoryManagement;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
 using Xunit;
 
 namespace Tests.DirectoryManagement

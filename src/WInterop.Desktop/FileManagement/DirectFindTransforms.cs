@@ -8,8 +8,6 @@
 // #define WIN32FIND
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using WInterop.FileManagement.Types;
 using WInterop.Support;
 

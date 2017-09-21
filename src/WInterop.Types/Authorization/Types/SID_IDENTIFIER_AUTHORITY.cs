@@ -6,37 +6,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Support;
 
 namespace WInterop.Authorization.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379598.aspx
     public struct SID_IDENTIFIER_AUTHORITY
     {
-        public unsafe fixed byte Value[6];
-
-        public byte[] Authority
-        {
-            get
-            {
-                byte[] authority = new byte[6];
-                unsafe
-                {
-                    fixed (byte* a = authority)
-                    fixed (byte* v = Value)
-                    {
-                        a[0] = v[0];
-                        a[1] = v[1];
-                        a[2] = v[2];
-                        a[3] = v[3];
-                        a[4] = v[4];
-                        a[5] = v[5];
-                    }
-                }
-
-                return authority;
-            }
-        }
+        private FixedByte.Size6 _Value;
+        public Span<byte> Value => _Value.Buffer;
 
         public static byte[] SECURITY_NULL_SID_AUTHORITY = new byte[] { 0, 0, 0, 0, 0, 0 };
         public static byte[] SECURITY_WORLD_SID_AUTHORITY = new byte[] { 0, 0, 0, 0, 0, 1 };
@@ -53,23 +30,19 @@ namespace WInterop.Authorization.Types
 
         public override bool Equals(object obj)
         {
-            if (obj is SID_IDENTIFIER_AUTHORITY)
-                return (Equals((SID_IDENTIFIER_AUTHORITY)obj));
-
-            if (obj is byte[])
-                return Arrays.AreEquivalent(Authority, (byte[])obj);
-
-            return false;
+            switch (obj)
+            {
+                case SID_IDENTIFIER_AUTHORITY authority:
+                    return Equals(authority);
+                case byte[] bytes:
+                    return Value.SequenceEqual(new ReadOnlySpan<byte>(bytes));
+                default:
+                    return false;
+            }
         }
 
-        public bool Equals(SID_IDENTIFIER_AUTHORITY other)
-        {
-            return Arrays.AreEquivalent(Authority, other.Authority);
-        }
+        public bool Equals(SID_IDENTIFIER_AUTHORITY other) => Value.SequenceEqual(other.Value);
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

@@ -59,13 +59,17 @@ namespace WInterop.Support.Buffers
             }
         }
 
-        public static unsafe string GetNullTerminatedAsciiString(byte* source, int maxSize)
+        public static unsafe string GetNullTerminatedAsciiString(ReadOnlySpan<byte> source)
         {
-            int length = 0;
-            byte* start = source;
-            for (; *source != 0x00 && length < maxSize; source++, length++) ;
+            if (source.Length == 0)
+                return string.Empty;
 
-            return length == 0 ? string.Empty : Encoding.ASCII.GetString(start, length);
+            int length = source.IndexOf(0x00);
+            if (length == 0)
+                return string.Empty;
+
+            fixed (byte* start = &source.DangerousGetPinnableReference())
+                return Encoding.ASCII.GetString(start, length == -1 ? source.Length : length);
         }
 
         /// <summary>

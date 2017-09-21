@@ -7,8 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Support;
-using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement.Types
 {

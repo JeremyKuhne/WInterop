@@ -7,7 +7,6 @@
 
 using System.Runtime.InteropServices;
 using WInterop.DiskManagement.Types;
-using WInterop.ErrorHandling;
 using WInterop.Support;
 
 namespace WInterop.DiskManagement

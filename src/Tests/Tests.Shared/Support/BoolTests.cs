@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Support;
+using WInterop;
 using Xunit;
 
 namespace Tests.Support

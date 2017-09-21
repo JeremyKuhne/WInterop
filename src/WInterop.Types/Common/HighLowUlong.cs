@@ -5,7 +5,9 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Support
+using WInterop.Support;
+
+namespace WInterop
 {
     /// <summary>
     /// For easier access of ulongs where they are defined in native structs as separate

@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Support.Buffers;
 
 namespace WInterop.Gdi.Types
 {

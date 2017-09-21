@@ -8,7 +8,6 @@
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
 using WInterop.SafeString.Types;
-using WInterop.Support;
 
 namespace WInterop.SafeString
 {

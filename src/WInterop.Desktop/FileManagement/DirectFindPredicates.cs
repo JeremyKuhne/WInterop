@@ -11,7 +11,6 @@ using System;
 using WInterop.FileManagement.Types;
 using WInterop.SafeString;
 using WInterop.SafeString.Types;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.FileManagement

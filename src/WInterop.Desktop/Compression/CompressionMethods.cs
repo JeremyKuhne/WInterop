@@ -115,7 +115,7 @@ namespace WInterop.Compression
             {
                 buffer.EnsureByteCapacity(Paths.MaxPath);
                 ValidateLzResult(Imports.GetExpandedNameA(Paths.TrimTrailingSeparators(path), buffer), path);
-                return BufferHelper.GetNullTerminatedAsciiString(buffer.BytePointer, Paths.MaxPath);
+                return BufferHelper.GetNullTerminatedAsciiString(buffer);
             });
         }
 
@@ -199,7 +199,7 @@ namespace WInterop.Compression
         {
             OFSTRUCT ofs = new OFSTRUCT();
             int result = ValidateLzResult(Imports.LZOpenFileW(path, ref ofs, openStyle), path);
-            uncompressedName = BufferHelper.GetNullTerminatedAsciiString(ofs.szPathName, OFSTRUCT.OFS_MAXPATHNAME);
+            uncompressedName = BufferHelper.GetNullTerminatedAsciiString(ofs.szPathName);
             return new LzHandle(result);
         }
 

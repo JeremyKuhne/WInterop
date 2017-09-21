@@ -7,7 +7,6 @@
 
 using System;
 using WInterop.Gdi.Types;
-using WInterop.Support;
 using WInterop.Windows.Types;
 
 namespace WInterop.Resources.Types

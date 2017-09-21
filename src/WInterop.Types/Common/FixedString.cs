@@ -6,9 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Support.Buffers
+namespace WInterop
 {
     /// <summary>
     /// Contains definitions for various fixed size strings for creating blittable
@@ -25,7 +26,7 @@ namespace WInterop.Support.Buffers
             private const int Size = 12;
             private unsafe fixed char _buffer[Size];
 
-            public Span<char> Buffer { get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
+            public Span<char> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -34,7 +35,8 @@ namespace WInterop.Support.Buffers
             private const int Size = 14;
             private unsafe fixed char _buffer[Size];
 
-            public Span<char> Buffer { get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
+            
+            public Span<char> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -43,7 +45,7 @@ namespace WInterop.Support.Buffers
             private const int Size = 16;
             private unsafe fixed char _buffer[Size];
 
-            public Span<char> Buffer { get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
+            public Span<char> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -52,7 +54,7 @@ namespace WInterop.Support.Buffers
             private const int Size = 32;
             private unsafe fixed char _buffer[Size];
 
-            public Span<char> Buffer { get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
+            public Span<char> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -61,7 +63,7 @@ namespace WInterop.Support.Buffers
             private const int Size = 64;
             private unsafe fixed char _buffer[Size];
 
-            public Span<char> Buffer { get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
+            public Span<char> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -70,7 +72,7 @@ namespace WInterop.Support.Buffers
             private const int Size = 128;
             private unsafe fixed char _buffer[Size];
 
-            public Span<char> Buffer { get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
+            public Span<char> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -79,7 +81,7 @@ namespace WInterop.Support.Buffers
             private const int Size = 256;
             private unsafe fixed char _buffer[Size];
 
-            public Span<char> Buffer { get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
+            public Span<char> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -88,7 +90,7 @@ namespace WInterop.Support.Buffers
             private const int Size = 260;
             private unsafe fixed char _buffer[Size];
 
-            public Span<char> Buffer { get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
+            public Span<char> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (char* c = _buffer) return new Span<char>(c, Size); } }
         }
     }
 }

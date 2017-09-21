@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
-using WInterop.Support;
 using WInterop.SystemInformation.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;

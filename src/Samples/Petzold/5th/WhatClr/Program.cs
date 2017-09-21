@@ -10,8 +10,6 @@ using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
-using WInterop.Multimedia;
-using WInterop.Multimedia.Types;
 using WInterop.Resources.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
