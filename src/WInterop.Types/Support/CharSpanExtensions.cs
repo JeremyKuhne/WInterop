@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop
+namespace WInterop.Support
 {
     public static class CharSpanExtensions
     {
@@ -16,7 +16,7 @@ namespace WInterop
         /// </summary>
         /// <param name="source">The string to copy from.</param>
         /// <param name="nullTerminate">Add a null to the end of the string.</param>
-        public static void CopyFrom(this Span<char> buffer, string source,  bool nullTerminate = true)
+        public static void CopyFrom(this Span<char> buffer, string source, bool nullTerminate = true)
         {
             if (buffer.Length == 0 || source == null || source.Length == 0)
             {
@@ -43,12 +43,12 @@ namespace WInterop
         /// <summary>
         /// Return the given buffer as a string, terminating at null if found.
         /// </summary>
-        public static unsafe string ToNullTerminatedString(this Span<char> buffer) => ToNullTerminatedString((ReadOnlySpan<char>)buffer);
+        public static unsafe string CreateString(this Span<char> buffer) => CreateString((ReadOnlySpan<char>)buffer);
 
         /// <summary>
         /// Return the given buffer as a string, terminating at null if found.
         /// </summary>
-        public static unsafe string ToNullTerminatedString(this ReadOnlySpan<char> buffer)
+        public static unsafe string CreateString(this ReadOnlySpan<char> buffer)
         {
             int nullChar = buffer.IndexOf('\0');
             if (nullChar == 0)
@@ -64,14 +64,16 @@ namespace WInterop
         }
 
         /// <summary>
-        /// Returns true if the buffer equals the given value, presuming the buffer terminates at null.
+        /// Returns true if the buffer equals the given value, presuming the buffer contents either
+        /// terminate at null or has an implicit null at the end of the buffer.
         /// </summary>
-        public static bool NullTerminatedOrdinalEquals(this Span<char> buffer, string value) => NullTerminatedOrdinalEquals((ReadOnlySpan<char>)buffer, value);
+        public static bool EqualsOrdinal(this Span<char> buffer, string value) => EqualsOrdinal((ReadOnlySpan<char>)buffer, value);
 
         /// <summary>
-        /// Returns true if the buffer equals the given value, presuming the buffer terminates at null.
+        /// Returns true if the buffer equals the given value, presuming the buffer contents either
+        /// terminate at null or has an implicit null at the end of the buffer.
         /// </summary>
-        public static bool NullTerminatedOrdinalEquals(this ReadOnlySpan<char> buffer, string value)
+        public static bool EqualsOrdinal(this ReadOnlySpan<char> buffer, string value)
         {
             if (value == null || value.Length > buffer.Length)
                 return false;

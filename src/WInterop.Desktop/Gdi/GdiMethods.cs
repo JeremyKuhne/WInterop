@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Windows.Types;
 

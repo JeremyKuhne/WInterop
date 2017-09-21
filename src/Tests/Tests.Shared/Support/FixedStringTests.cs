@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System;
-using WInterop;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 using Xunit;
 
@@ -24,7 +24,7 @@ namespace Tests.Support
         [Fact]
         public unsafe void Size12_ShouldBeEmpty()
         {
-            new FixedString.Size12().Buffer.ToNullTerminatedString().Should().Be(string.Empty);
+            new FixedString.Size12().Buffer.CreateString().Should().Be(string.Empty);
         }
 
         [Theory,
@@ -36,7 +36,7 @@ namespace Tests.Support
         {
             FixedString.Size12 s = new FixedString.Size12();
             s.Buffer.CopyFrom(value);
-            s.Buffer.ToNullTerminatedString().Should().Be(value);
+            s.Buffer.CreateString().Should().Be(value);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Tests.Support
         {
             FixedString.Size12 s = new FixedString.Size12();
             s.Buffer.CopyFrom("Fizzlesticks");
-            s.Buffer.ToNullTerminatedString().Should().Be("Fizzlestick");
+            s.Buffer.CreateString().Should().Be("Fizzlestick");
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace Tests.Support
             {
                 Buffer.MemoryCopy(c, f, 12 * sizeof(char), 12 * sizeof(char));
             }
-            s.Buffer.ToNullTerminatedString().Should().Be("fizzlesticks");
+            s.Buffer.CreateString().Should().Be("fizzlesticks");
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace Tests.Support
                 Buffer.MemoryCopy(c, (char*)&s, sizeof(FixedString.Size12) * sizeof(char), buffer.Length * sizeof(char));
             }
 
-            s.Buffer.NullTerminatedOrdinalEquals(compareTo).Should().Be(expected);
+            s.Buffer.EqualsOrdinal(compareTo).Should().Be(expected);
         }
     }
 }

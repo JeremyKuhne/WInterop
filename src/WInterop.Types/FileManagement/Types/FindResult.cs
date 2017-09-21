@@ -28,8 +28,8 @@ namespace WInterop.FileManagement.Types
         public FindResult(ref WIN32_FIND_DATA findData, string directory)
         {
             Directory = directory;
-            FileName = findData.cFileName.ToNullTerminatedString();
-            AlternateFileName = findData.cAlternateFileName.ToNullTerminatedString();
+            FileName = findData.cFileName.CreateString();
+            AlternateFileName = findData.cAlternateFileName.CreateString();
             Attributes = findData.dwFileAttributes;
 
             CreationUtc = findData.ftCreationTime.ToDateTimeUtc();
