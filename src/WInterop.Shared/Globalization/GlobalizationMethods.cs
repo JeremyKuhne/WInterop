@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.CompilerServices;
 using WInterop.Globalization.Types;
 using WInterop.Support;
@@ -25,55 +26,30 @@ namespace WInterop.Globalization
         /// Compare the given strings. Note that String.CompareOrdinal can be faster than this.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int CompareStringOrdinal(string first, string second, bool ignoreCase = false)
+        public static int CompareStringOrdinal(string first, string second, bool ignoreCase = false)
         {
             if (first == second)
                 return 0;
-
-            if (first == null)
+            else if (first == null)
                 return -1;
-
-            if (second == null)
+            else if (second == null)
                 return 1;
 
-            fixed (char* f = first)
-            fixed (char* s = second)
-            {
-                return CompareStringOrdinal(f, first.Length, s, second.Length, ignoreCase);
-            }
+            return CompareStringOrdinal(first.AsSpan(), second.AsSpan(), ignoreCase);
         }
 
         /// <summary>
         /// Compare the given strings.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int CompareStringOrdinal(string first, char* second, int secondLength, bool ignoreCase = false)
+        public static unsafe int CompareStringOrdinal(ReadOnlySpan<char> first, ReadOnlySpan<char> second, bool ignoreCase = false)
         {
-            if (first == null && second == null)
-                return 0;
-
-            if (first == null)
-                return -1;
-
-            if (second == null)
-                return 1;
-
-            fixed (char* f = first)
-            {
-                if (f == second && first.Length == secondLength)
-                    return 0;
-
-                return CompareStringOrdinal(f, first.Length, second, secondLength, ignoreCase);
-            }
-        }
-
-        /// <summary>
-        /// Compare the given strings.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int CompareStringOrdinal(char* first, int firstLength, char* second, int secondLength, bool ignoreCase = false)
-        {
-            int result = Imports.CompareStringOrdinal(first, firstLength, second, secondLength, ignoreCase);
+            int result = Imports.CompareStringOrdinal(
+                ref first.DangerousGetPinnableReference(),
+                first.Length,
+                ref second.DangerousGetPinnableReference(),
+                second.Length,
+                ignoreCase);
 
             if (result == 0)
                 throw Errors.GetIoExceptionForLastError();

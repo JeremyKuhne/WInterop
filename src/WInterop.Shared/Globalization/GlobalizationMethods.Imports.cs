@@ -29,9 +29,9 @@ namespace WInterop.Globalization
             // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317762.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern int CompareStringOrdinal(
-                char* lpString1,
+                ref char lpString1,
                 int cchCount1,
-                char* lpString2,
+                ref char lpString2,
                 int cchCount2,
                 bool bIgnoreCase);
 
