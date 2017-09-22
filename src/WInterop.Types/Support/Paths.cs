@@ -43,6 +43,18 @@ namespace WInterop.Support
         //
         private static readonly char[] s_DirectorySeparatorCharacters = new char[] { System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar };
 
+        private static readonly char[] s_WildCards = new char[] { '?', '*', '\"', '>', '<' };
+
+        /// <summary>
+        /// Return true if the string contains any wildcards.
+        /// </summary>
+        /// <param name="value">The string to check.</param>
+        /// <param name="startIndex">The index to start looking from.</param>
+        public static unsafe bool ContainsWildcards(string value, int startIndex = 0)
+        {
+            return value.IndexOfAny(s_WildCards, startIndex) != -1;
+        }
+
         /// <summary>
         /// The default directory separator
         /// </summary>
