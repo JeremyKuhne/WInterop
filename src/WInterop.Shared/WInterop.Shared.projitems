@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\FullPathNameWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\BufferWrappers\TempPathWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\DosMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.Imports.cs" />

@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\DateTimeTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\DosMatcherTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementBehaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementTypes.cs" />
