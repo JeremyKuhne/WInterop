@@ -74,5 +74,26 @@ namespace Tests.Support
             span.CopyFrom(source, nullTerminate);
             buffer.Should().Equal(expected);
         }
+
+        [Theory,
+            InlineData("", "", true, true),
+            InlineData("", "", false, true),
+            InlineData("", "a", true, false),
+            InlineData("", "a", false, false),
+            InlineData("a", "", true, true),
+            InlineData("a", "", false, true),
+            InlineData("a", "a", false, true),
+            InlineData("a", "a", true, true),
+            InlineData("a", "A", false, false),
+            InlineData("a", "A", true, true),
+            InlineData("a", "ab", false, false),
+            InlineData("a", "ab", true, false),
+            InlineData("abbacab", "cab", false, true),
+            InlineData("abbacab", "aca", true, false)
+            ]
+        public void EndsWith(string buffer, string value, bool ignoreCase, bool expected)
+        {
+            buffer.AsSpan().EndsWithOrdinal(value.AsSpan(), ignoreCase).Should().Be(expected);
+        }
     }
 }
