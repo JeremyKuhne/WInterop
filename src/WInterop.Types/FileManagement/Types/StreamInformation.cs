@@ -31,7 +31,7 @@ namespace WInterop.FileManagement.Types
 
         public unsafe StreamInformation(FILE_STREAM_INFO* info)
         {
-            Name = info->StreamName.GetValue(info->StreamNameLength);
+            Name = info->StreamName.CreateString();
             Size = info->StreamSize;
             AllocationSize = info->StreamAllocationSize;
         }

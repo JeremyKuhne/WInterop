@@ -10,7 +10,6 @@ using WInterop.ErrorHandling.Types;
 
 namespace WInterop.FileManagement.Types
 {
-#pragma warning disable IDE1006 // Naming Styles
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365282.aspx
     public unsafe struct OFSTRUCT
     {
@@ -26,5 +25,4 @@ namespace WInterop.FileManagement.Types
         // The nErrCode is a DOS error, which maps directly to Windows errors.
         public WindowsError GetErrorCode() => (WindowsError)nErrCode;
     }
-#pragma warning restore IDE1006 // Naming Styles
 }

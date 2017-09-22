@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System;
-using WInterop.Support;
+using WInterop;
 using Xunit;
 
 namespace Tests.Support

@@ -75,9 +75,10 @@ namespace WInterop.FileManagement
 
         public static unsafe bool NotSpecialDirectory(FILE_FULL_DIR_INFORMATION* record)
         {
-            return record->FileNameLength > 2 * sizeof(char)
-                || *(char*)&record->FileName != '.'
-                || (record->FileNameLength == 2 * sizeof(char) && *((char*)&record->FileName + 1) != '.');
+            ReadOnlySpan<char> fileName = record->FileName;
+            return fileName.Length > 2
+                || fileName[0] != '.'
+                || (fileName.Length == 2 && fileName[1] != '.');
         }
 #endif
     }
@@ -115,7 +116,7 @@ namespace WInterop.FileManagement
             if (_buffer == null)
                 return true;
 
-            UNICODE_STRING name = new UNICODE_STRING((char*)&record->FileName, record->FileNameLength);
+            UNICODE_STRING name = new UNICODE_STRING(record->FileName);
             UNICODE_STRING filter = _buffer.ToUnicodeString();
             return FileMethods.Imports.RtlIsNameInExpression(&filter, &name, _ignoreCase, IntPtr.Zero);
         }

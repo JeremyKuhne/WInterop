@@ -28,6 +28,7 @@ namespace WInterop.FileManagement.Types
         public sbyte ShortNameLength;
         private FixedString.Size12 _ShortName;
         public Span<char> ShortName => _ShortName.Buffer;
-        public TrailingString.Unsized FileName;
+        private TrailingString _FileName;
+        public ReadOnlySpan<char> FileName => _FileName.GetBuffer(FileNameLength);
     }
 }

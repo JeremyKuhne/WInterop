@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Support
+namespace WInterop
 {
     public static class CharSpanExtensions
     {

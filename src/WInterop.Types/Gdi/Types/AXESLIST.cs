@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/dd183360.aspx
@@ -15,21 +17,14 @@ namespace WInterop.Gdi.Types
 
         public uint axlReserved;
         public uint axlNumAxes;
-        public unsafe fixed byte axlAxisInfo[MM_MAX_NUMAXES * AXISINFO.AxisInfoSize];
+        private unsafe fixed byte _axlAxisInfo[MM_MAX_NUMAXES * AXISINFO.AxisInfoSize];
 
-        public unsafe AXISINFO[] AxisInfo
+        public unsafe Span<AXISINFO> axlAxisInfo
         {
             get
             {
-                AXISINFO[] infos = new AXISINFO[axlNumAxes];
-                fixed (byte* b = axlAxisInfo)
-                {
-                    AXISINFO* a = (AXISINFO*)b;
-                    for (int i = 0; i < axlNumAxes; i++)
-                        infos[i] = a[i];
-                }
-
-                return infos;
+                fixed (void* v = _axlAxisInfo)
+                    return new Span<AXISINFO>(v, MM_MAX_NUMAXES);
             }
         }
     }

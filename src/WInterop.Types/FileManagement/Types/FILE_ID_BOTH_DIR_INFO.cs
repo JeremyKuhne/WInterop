@@ -43,9 +43,7 @@ namespace WInterop.FileManagement.Types
         private FixedString.Size12 _ShortName;
         public Span<char> ShortName => _ShortName.Buffer;
         public long FileId;
-
-        // This is a variable length string
-        // WCHAR FileName[1];
-        public TrailingString.Unsized FileName;
+        private TrailingString _FileName;
+        public ReadOnlySpan<char> FileName => _FileName.GetBuffer(FileNameLength);
     }
 }

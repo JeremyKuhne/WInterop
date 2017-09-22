@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.FileManagement.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540329.aspx
@@ -13,6 +15,8 @@ namespace WInterop.FileManagement.Types
     {
         public uint NextEntryOffset;
         public uint FileIndex;
-        public TrailingString.SizedInBytes FileName;
+        public uint FileNameLength;
+        private TrailingString _FileName;
+        public ReadOnlySpan<char> FileName => _FileName.GetBuffer(FileNameLength);
     }
 }

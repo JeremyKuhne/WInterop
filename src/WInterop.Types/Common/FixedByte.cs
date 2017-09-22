@@ -10,12 +10,12 @@ using System.Runtime.CompilerServices;
 
 namespace WInterop
 {
-    public unsafe struct FixedByte
+    public unsafe static class FixedByte
     {
         public struct Size6
         {
             private const int Size = 6;
-            private unsafe fixed byte _buffer[Size];
+            private fixed byte _buffer[Size];
 
             public Span<byte> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (byte* c = _buffer) return new Span<byte>(c, Size); } }
         }
@@ -23,7 +23,7 @@ namespace WInterop
         public struct Size32
         {
             private const int Size = 32;
-            private unsafe fixed byte _buffer[Size];
+            private fixed byte _buffer[Size];
 
             public Span<byte> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (byte* c = _buffer) return new Span<byte>(c, Size); } }
         }
@@ -31,7 +31,7 @@ namespace WInterop
         public struct Size128
         {
             private const int Size = 128;
-            private unsafe fixed byte _buffer[Size];
+            private fixed byte _buffer[Size];
 
             public Span<byte> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (byte* c = _buffer) return new Span<byte>(c, Size); } }
         }

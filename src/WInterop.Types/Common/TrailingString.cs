@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace WInterop
@@ -20,64 +22,16 @@ namespace WInterop
     /// the trailing characters will have been truncated as they aren't actually
     /// part of the struct.
     /// </remarks>
-    public static class TrailingString
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct TrailingString
     {
-        /// <summary>
-        /// Helper wrapper.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        private struct FirstChar
+        private char _firstChar;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe ReadOnlySpan<char> GetBuffer(uint sizeInBytes)
         {
-            private char _firstChar;
-
-            public unsafe string GetNullTerminatedString()
-            {
-                fixed (char* c = &_firstChar)
-                    return new string(c);
-            }
-
-            public unsafe string GetValue(uint sizeInBytes)
-            {
-                if (sizeInBytes == 0)
-                    return string.Empty;
-
-                fixed (char* c = &_firstChar)
-                    return new string(c, 0, (int)(sizeInBytes / sizeof(char)));
-            }
-        }
-
-        /// <summary>
-        /// For null-terminated trailing strings that don't have a size.
-        /// </summary>
-        public struct Unsized
-        {
-            private FirstChar _firstChar;
-
-            /// <summary>
-            /// Get the string value by looking for a null terminator.
-            /// </summary>
-            public unsafe string Value => _firstChar.GetNullTerminatedString();
-
-            /// <summary>
-            /// Gets the string value of the specified byte size.
-            /// </summary>
-            public unsafe string GetValue(uint sizeInBytes) => _firstChar.GetValue(sizeInBytes);
-        }
-
-        /// <summary>
-        /// For null-terminated trailing strings that start with a uint of the size in bytes.
-        /// </summary>
-        public struct SizedInBytes
-        {
-            public uint SizeInBytes;
-            private FirstChar _firstChar;
-
-            /// <summary>
-            /// Gets the string value.
-            /// </summary>
-            public string Value => _firstChar.GetValue(SizeInBytes);
-
-            public override string ToString() => Value;
+            fixed (char* c = &_firstChar)
+                return new ReadOnlySpan<char>(c, (int)(sizeInBytes / sizeof(char)));
         }
     }
 }

@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi.Types
 {
-#pragma warning disable IDE1006
     // https://msdn.microsoft.com/en-us/library/dd145037.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct LOGFONT
@@ -33,5 +32,4 @@ namespace WInterop.Gdi.Types
         private FixedString.Size32 _lfFaceName;
         public Span<char> lfFaceName => _lfFaceName.Buffer;
     }
-#pragma warning restore IDE1006
 }

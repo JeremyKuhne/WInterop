@@ -60,7 +60,7 @@ namespace WInterop.FileManagement
                 {
                     Buffer.MemoryCopy(d, f, fullPath.Length * sizeof(char), directory.Length * sizeof(char));
                     f[directory.Length] = Paths.DirectorySeparator;
-                    Buffer.MemoryCopy((void*)&record->FileName, f + directory.Length + 1, fullPath.Length * sizeof(char), record->FileNameLength);
+                    record->FileName.CopyTo(new Span<char>(f + directory.Length + 1, fullPath.Length - directory.Length - 1));
                 }
                 return fullPath;
             }

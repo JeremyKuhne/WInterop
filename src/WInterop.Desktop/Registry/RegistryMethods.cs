@@ -116,7 +116,7 @@ namespace WInterop.Registry
                 if (status != NTSTATUS.STATUS_SUCCESS)
                     ErrorMethods.GetIoExceptionForNTStatus(status);
 
-                return ((KEY_NAME_INFORMATION*)buffer.VoidPointer)->Name.Value;
+                return ((KEY_NAME_INFORMATION*)buffer.VoidPointer)->Name.CreateString();
             });
         }
 
@@ -241,7 +241,7 @@ namespace WInterop.Registry
                         case NTSTATUS.STATUS_SUCCESS:
                             KEY_VALUE_BASIC_INFORMATION* info = (KEY_VALUE_BASIC_INFORMATION*)buffer.VoidPointer;
                             if (filterTo == RegistryValueType.REG_NONE || info->Type == filterTo)
-                                names.Add(info->Name.Value);
+                                names.Add(info->Name.CreateString());
                             break;
                         case NTSTATUS.STATUS_BUFFER_OVERFLOW:
                         case NTSTATUS.STATUS_BUFFER_TOO_SMALL:

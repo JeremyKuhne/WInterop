@@ -177,7 +177,7 @@ namespace WInterop.FileManagement
                         && NormalDirectoryFilter.NotSpecialDirectory(info))
                     {
                         // Stash directory to recurse into
-                        string fileName = info->FileName.GetValue(info->FileNameLength);
+                        string fileName = info->FileName.CreateString();
                         string subDirectory = string.Concat(_path, "\\", fileName);
                         _pending.Enqueue(ValueTuple.Create(
                             // DirectoryMethods.CreateDirectoryHandle(subDirectory),

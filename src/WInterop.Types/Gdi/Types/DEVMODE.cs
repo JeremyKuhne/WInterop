@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi.Types
 {
-#pragma warning disable IDE1006
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd183565.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct DEVMODE
@@ -152,5 +151,4 @@ namespace WInterop.Gdi.Types
             DMDISPLAYFLAGS_TEXTMODE = 0x00000004
         }
     }
-#pragma warning restore IDE1006
 }

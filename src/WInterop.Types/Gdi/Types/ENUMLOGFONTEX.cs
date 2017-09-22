@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi.Types
 {
-#pragma warning disable IDE1006
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct ENUMLOGFONTEX
     {
@@ -25,5 +24,4 @@ namespace WInterop.Gdi.Types
         public Span<char> elfStyle => _elfStyle.Buffer;
         public Span<char> elfScript => _elfScript.Buffer;
     }
-#pragma warning restore IDE1006
 }

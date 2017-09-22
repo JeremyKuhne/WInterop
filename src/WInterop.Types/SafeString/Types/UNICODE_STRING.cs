@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
 
@@ -62,11 +63,13 @@ namespace WInterop.SafeString.Types
         /// <summary>
         /// Initialize from a char buffer and length in bytes.
         /// </summary>
-        public unsafe UNICODE_STRING(char* buffer, uint lengthInBytes)
+        public unsafe UNICODE_STRING(ReadOnlySpan<char> buffer)
         {
-            Length = checked((ushort)(lengthInBytes));
+            Length = checked((ushort)(buffer.Length * sizeof(char)));
             MaximumLength = Length;
-            Buffer = buffer;
+
+            fixed(char* c = &buffer.DangerousGetPinnableReference())
+                Buffer = c;
         }
 
         /// <summary>

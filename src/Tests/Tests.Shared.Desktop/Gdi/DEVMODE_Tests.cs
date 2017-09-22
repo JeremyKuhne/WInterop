@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System.Runtime.InteropServices;
-using WInterop.Support;
+using WInterop;
 using WInterop.Gdi.Types;
 using Xunit;
 

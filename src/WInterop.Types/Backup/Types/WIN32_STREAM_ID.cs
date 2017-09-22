@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace WInterop.Backup.Types
@@ -24,6 +25,12 @@ namespace WInterop.Backup.Types
         /// </summary>
         public long Size;
 
-        public TrailingString.SizedInBytes StreamName;
+        /// <summary>
+        /// Stream name size, in bytes.
+        /// </summary>
+        public uint dwStreamNameSize;
+
+        private TrailingString _cStreamName;
+        public ReadOnlySpan<char> cStreamName => _cStreamName.GetBuffer(dwStreamNameSize);
     }
 }

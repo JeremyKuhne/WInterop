@@ -10,21 +10,11 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540289.aspx
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545817.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct FILE_FULL_DIR_INFORMATION
+    public struct FILE_NAME_INFORMATION
     {
-        public uint NextEntryOffset;
-        public uint FileIndex;
-        public LongFileTime CreationTime;
-        public LongFileTime LastAccessTime;
-        public LongFileTime LastWriteTime;
-        public LongFileTime ChangeTime;
-        public long EndOfFile;
-        public long AllocationSize;
-        public FileAttributes FileAttributes;
         public uint FileNameLength;
-        public uint EaSize;
         private TrailingString _FileName;
         public ReadOnlySpan<char> FileName => _FileName.GetBuffer(FileNameLength);
     }

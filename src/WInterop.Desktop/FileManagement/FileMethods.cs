@@ -262,7 +262,7 @@ namespace WInterop.FileManagement
                 // Start with MAX_PATH
                 uint byteLength = 260 * sizeof(char);
 
-                TrailingString.SizedInBytes* value = null;
+                FILE_NAME_INFORMATION* value = null;
 
                 while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
                 {
@@ -281,15 +281,15 @@ namespace WInterop.FileManagement
 
                     if (status == NTSTATUS.STATUS_SUCCESS || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
                     {
-                        value = (TrailingString.SizedInBytes*)buffer.VoidPointer;
-                        byteLength = value->SizeInBytes;
+                        value = (FILE_NAME_INFORMATION*)buffer.VoidPointer;
+                        byteLength = value->FileNameLength;
                     }
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
                     throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
-                return value->Value;
+                return value->FileName.CreateString();
             });
         }
 

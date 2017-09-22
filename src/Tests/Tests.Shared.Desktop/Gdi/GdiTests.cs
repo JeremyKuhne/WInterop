@@ -9,7 +9,7 @@ using FluentAssertions;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Support;
+using WInterop;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Windows;

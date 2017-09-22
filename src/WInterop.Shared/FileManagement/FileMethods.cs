@@ -396,8 +396,7 @@ namespace WInterop.FileManagement
                     }
                 }
 
-                TrailingString.SizedInBytes* value = (TrailingString.SizedInBytes*)buffer.VoidPointer;
-                return value->Value;
+                return ((FILE_NAME_INFO*)buffer.VoidPointer)->FileName.CreateString();
             });
         }
 
@@ -686,7 +685,7 @@ namespace WInterop.FileManagement
                 FILE_FULL_DIR_INFO* info = (FILE_FULL_DIR_INFO*)buffer.BytePointer;
                 do
                 {
-                    filenames.Add(FILE_FULL_DIR_INFO.GetFileName(info));
+                    filenames.Add(info->FileName.CreateString());
                     info = FILE_FULL_DIR_INFO.GetNextInfo(info);
                 } while (info != null);
             });

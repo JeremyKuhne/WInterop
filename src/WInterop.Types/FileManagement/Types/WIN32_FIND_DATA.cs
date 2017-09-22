@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.FileManagement.Types
 {
-#pragma warning disable IDE1006
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365740.aspx">WIN32_FIND_DATA</a> structure.
     /// </summary>
@@ -29,5 +28,4 @@ namespace WInterop.FileManagement.Types
         public Span<char> cFileName => _cFileName.Buffer;
         public Span<char> cAlternateFileName => _cAlternateFileName.Buffer;
     }
-#pragma warning restore IDE1006
 }

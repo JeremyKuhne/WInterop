@@ -42,7 +42,7 @@ namespace WInterop.FileManagement.Types
         public unsafe FindResult(FILE_DIRECTORY_INFORMATION* info, string directory)
         {
             Directory = directory;
-            FileName = info->FileName.Value;
+            FileName = info->FileName.CreateString();
             Attributes = info->FileAttributes;
             CreationUtc = info->CreationTime.ToDateTimeUtc();
             LastAccessUtc = info->LastAccessTime.ToDateTimeUtc();
@@ -54,7 +54,7 @@ namespace WInterop.FileManagement.Types
         public unsafe FindResult(FILE_FULL_DIR_INFORMATION* info, string directory)
         {
             Directory = directory;
-            FileName = info->FileName.GetValue(info->FileNameLength);
+            FileName = info->FileName.CreateString();
             Attributes = info->FileAttributes;
             CreationUtc = info->CreationTime.ToDateTimeUtc();
             LastAccessUtc = info->LastAccessTime.ToDateTimeUtc();

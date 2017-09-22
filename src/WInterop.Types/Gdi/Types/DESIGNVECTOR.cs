@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/dd183551.aspx
@@ -15,21 +17,7 @@ namespace WInterop.Gdi.Types
 
         public uint dvReserved;
         public uint dvNumAxes;
-        public unsafe fixed int dvValues[MM_MAX_NUMAXES];
-
-        public unsafe int[] Values
-        {
-            get
-            {
-                int[] infos = new int[dvNumAxes];
-                fixed (int* p = dvValues)
-                {
-                    for (int i = 0; i < dvNumAxes; i++)
-                        infos[i] = p[i];
-                }
-
-                return infos;
-            }
-        }
+        private FixedInt.Size16 _dvValues;
+        public Span<int> dvValues => _dvValues.Buffer;
     }
 }

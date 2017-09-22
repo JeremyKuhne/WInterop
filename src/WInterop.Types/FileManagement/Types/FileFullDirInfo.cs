@@ -47,7 +47,7 @@ namespace WInterop.FileManagement.Types
             AllocationSize = info->AllocationSize;
             FileAttributes = info->FileAttributes;
             ExtendedAttributesSize = info->EaSize;
-            FileName = FILE_FULL_DIR_INFO.GetFileName(info);
+            FileName = info->FileName.CreateString();
         }
     }
 }

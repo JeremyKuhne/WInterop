@@ -48,13 +48,13 @@ namespace WInterop.Backup
             if (bytesRead == 0) return null;
 
             WIN32_STREAM_ID* streamId = (WIN32_STREAM_ID*)buffer;
-            if (streamId->StreamName.SizeInBytes > 0)
+            if (streamId->dwStreamNameSize > 0)
             {
-                _buffer.EnsureByteCapacity(s_headerSize + streamId->StreamName.SizeInBytes);
+                _buffer.EnsureByteCapacity(s_headerSize + streamId->dwStreamNameSize);
                 if (!BackupMethods.Imports.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: Pointers.Offset(buffer, s_headerSize),
-                    nNumberOfBytesToRead: streamId->StreamName.SizeInBytes,
+                    nNumberOfBytesToRead: streamId->dwStreamNameSize,
                     lpNumberOfBytesRead: out bytesRead,
                     bAbort: false,
                     bProcessSecurity: true,
@@ -81,7 +81,7 @@ namespace WInterop.Backup
 
             return new BackupStreamInformation
             {
-                Name = streamId->StreamName.Value,
+                Name = streamId->cStreamName.CreateString(),
                 StreamType = streamId->dwStreamId,
                 Size = streamId->Size
             };

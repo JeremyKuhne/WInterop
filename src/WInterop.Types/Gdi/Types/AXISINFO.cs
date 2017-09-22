@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi.Types
 {
-#pragma warning disable IDE1006 // Naming Styles
     // https://msdn.microsoft.com/en-us/library/dd183361.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct AXISINFO
@@ -25,5 +24,4 @@ namespace WInterop.Gdi.Types
         private FixedString.Size16 _axAxisName;
         public Span<char> axAxisName => _axAxisName.Buffer;
     }
-#pragma warning restore IDE1006 // Naming Styles
 }

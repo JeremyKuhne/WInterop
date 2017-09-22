@@ -9,7 +9,6 @@ using System;
 
 namespace WInterop.Gdi.Types
 {
-#pragma warning disable IDE1006 // Naming Styles
     // https://msdn.microsoft.com/en-us/library/dd162768.aspx
     public struct PAINTSTRUCT
     {
@@ -21,5 +20,4 @@ namespace WInterop.Gdi.Types
         private unsafe FixedByte.Size32 _rgbReserved;
         public Span<byte> rgbReserved => _rgbReserved.Buffer;
     }
-#pragma warning restore IDE1006 // Naming Styles
 }
