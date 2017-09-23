@@ -50,7 +50,6 @@ namespace WInterop.FileManagement
 
             int nameOffset = 0;
             int expressionOffset;
-            int length;
 
             int priorMatch;
             int currentMatch;
@@ -93,33 +92,15 @@ namespace WInterop.FileManagement
 
                 while (priorMatch < matchCount)
                 {
-                    // We have to carry on our expression analysis as far as possible
-                    // for each character of name, so we loop here until the
-                    // expression stops matching.  A clue here is that expression
-                    // cases that can match zero or more characters end with a
-                    // continue, while those that can accept only a single character
-                    // end with a break.
+                    // We have to carry on our expression analysis as far as possible for each
+                    // character of name, so we loop here until the expression stops matching.
 
                     expressionOffset = (priorMatches[priorMatch++] + 1) / 2;
-                    length = 0;
 
                     while (expressionOffset < expression.Length)
                     {
-                        // The first time through the loop we don't want
-                        // to increment expressionOffset.
-
-                        expressionOffset += length;
-
                         currentState = expressionOffset * 2;
-
-                        if (expressionOffset == expression.Length)
-                        {
-                            currentMatches[currentMatch++] = maxState;
-                            break;
-                        }
-
                         expressionChar = expression[expressionOffset];
-                        length = 1;
 
                         // We may be about to exhaust the local space for matches,
                         // so we have to reallocate if this is the case.
@@ -138,9 +119,7 @@ namespace WInterop.FileManagement
                         if (expressionChar == '*')
                         {
                             // '*' matches any character zero or more times.
-                            currentMatches[currentMatch++] = currentState;
-                            currentMatches[currentMatch++] = currentState + 1;
-                            continue;
+                            goto MatchZeroOrMore;
                         }
                         else if (expressionChar == '<')
                         {
@@ -149,31 +128,24 @@ namespace WInterop.FileManagement
                             // If we are at a period, determine if we are allowed to
                             // consume it, i.e. make sure it is not the last one.
 
-                            bool iCanEatADot = false;
+                            bool notLastPeriod = false;
                             if (!nameFinished && nameChar == '.')
-                            {
                                 for (int offset = nameOffset; offset < name.Length; offset++)
-                                {
                                     if (name[offset] == '.')
                                     {
-                                        iCanEatADot = true;
+                                        notLastPeriod = true;
                                         break;
                                     }
-                                }
-                            }
 
-                            if (nameFinished || nameChar != '.' || iCanEatADot)
+                            if (nameFinished || nameChar != '.' || notLastPeriod)
                             {
-                                currentMatches[currentMatch++] = currentState;
-                                currentMatches[currentMatch++] = currentState + 1;
-                                continue;
+                                goto MatchZeroOrMore;
                             }
                             else
                             {
                                 // We are at a period.  We can only match zero
                                 // characters (i.e. the epsilon transition).
-                                currentMatches[currentMatch++] = currentState + 1;
-                                continue;
+                                goto MatchZero;
                             }
                         }
                         else
@@ -184,15 +156,15 @@ namespace WInterop.FileManagement
 
                             if (expressionChar == '>')
                             {
-                                // '>' (DOS_QM) is the most complicated.  If the name is finished,
-                                // we can match zero characters.  If this name is a '.', we
+                                // '>' (DOS_QM) is the most complicated. If the name is finished,
+                                // we can match zero characters. If this name is a '.', we
                                 // don't match, but look at the next expression.  Otherwise
                                 // we match a single character.
                                 if (nameFinished || nameChar == '.')
-                                    continue;
+                                    goto NextExpressionCharacter;
 
                                 currentMatches[currentMatch++] = currentState;
-                                break;
+                                goto ExpressionFinished;
                             }
                             else if (expressionChar == '"')
                             {
@@ -200,20 +172,19 @@ namespace WInterop.FileManagement
                                 // beyond the end of name.
                                 if (nameFinished)
                                 {
-                                    continue;
+                                    goto NextExpressionCharacter;
                                 }
                                 else if (nameChar == '.')
                                 {
                                     currentMatches[currentMatch++] = currentState;
                                 }
-                                break;
+                                goto ExpressionFinished;
                             }
                             else
                             {
                                 // From this point on a name character is required to even
                                 // continue, let alone make a match.
-                                if (nameFinished)
-                                    break;
+                                if (nameFinished) goto ExpressionFinished;
 
                                 if (expressionChar == '?')
                                 {
@@ -229,10 +200,20 @@ namespace WInterop.FileManagement
                                 }
 
                                 // The expression didn't match so move to the next prior match.
-                                break;
+                                goto ExpressionFinished;
                             }
                         }
+
+                        MatchZeroOrMore:
+                            currentMatches[currentMatch++] = currentState;
+                        MatchZero:
+                            currentMatches[currentMatch++] = currentState + 1;
+                        NextExpressionCharacter:
+                            if (++expressionOffset == expression.Length)
+                                currentMatches[currentMatch++] = maxState;
                     } // while (expressionOffset < expression.Length)
+
+                    ExpressionFinished:
 
                     // Prevent duplication in the destination array.
                     //

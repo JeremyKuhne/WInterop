@@ -164,7 +164,7 @@ namespace WInterop.FileManagement
         {
             fixed (char* c = path)
             {
-                UNICODE_STRING name = new UNICODE_STRING(c, path);
+                UNICODE_STRING name = new UNICODE_STRING(c, path.Length);
                 OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES(
                     &name,
                     objectAttributes,
@@ -325,6 +325,9 @@ namespace WInterop.FileManagement
         /// </summary>
         public unsafe static bool IsNameInExpression(string expression, string name, bool ignoreCase)
         {
+            if (string.IsNullOrEmpty(expression) || string.IsNullOrEmpty(name))
+                return false;
+
             // If ignore case is set, the API will uppercase the name *if* an UpcaseTable
             // is not provided. It then flips to case-sensitive. In this state the expression
             // has to be uppercase to match as expected.
@@ -337,12 +340,12 @@ namespace WInterop.FileManagement
 
                 if (e != null)
                 {
-                    var temp = new UNICODE_STRING(e, expression);
+                    var temp = new UNICODE_STRING(e, expression.Length);
                     eus = &temp;
                 }
                 if (n != null)
                 {
-                    var temp = new UNICODE_STRING(n, name);
+                    var temp = new UNICODE_STRING(n, name.Length);
                     nus = &temp;
                 }
 

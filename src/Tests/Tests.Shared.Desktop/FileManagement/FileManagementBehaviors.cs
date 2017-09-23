@@ -131,64 +131,13 @@ namespace DesktopTests.FileManagementTests
             }
         }
 
-        [Theory,
-            InlineData(@"*", @"foo.txt", true, true),
-            InlineData(@".", @"foo.txt", true, false),
-            InlineData(@".", @"footxt", true, false),
-            InlineData(@"*.*", @"foo.txt", true, true),
-            InlineData(@"*.*", @"foo.", true, true),
-            InlineData(@"*.*", @".foo", true, true),
-            InlineData(@"*.*", @"footxt", true, false),
-            InlineData("<\"*", @"footxt", true, true),              // DOS equivalent of *.*
-            InlineData("<\"*", @"foo.txt", true, true),             // DOS equivalent of *.*
-            InlineData("<\"*", @".foo", true, true),                // DOS equivalent of *.*
-            InlineData("<\"*", @"foo.", true, true),                // DOS equivalent of *.*
-            InlineData(">\">", @"a.b", true, true),                 // DOS equivalent of ?.?
-            InlineData(">\">", @"a.", true, true),                  // DOS equivalent of ?.?
-            InlineData(">\">", @"a", true, true),                   // DOS equivalent of ?.?
-            InlineData(">\">", @"ab", true, false),                 // DOS equivalent of ?.?
-            InlineData(">\">", @"a.bc", true, false),               // DOS equivalent of ?.?
-            InlineData(">\">", @"ab.c", true, false),               // DOS equivalent of ?.?
-            InlineData(">>\">>", @"a.b", true, true),               // DOS equivalent of ??.??
-            InlineData(">>\"\">>", @"a.b", true, false),            // Not possible to do from DOS ??""??
-            InlineData(">>\">>", @"a.bc", true, true),              // DOS equivalent of ??.??
-            InlineData(">>\">>", @"ab.ba", true, true),             // DOS equivalent of ??.??
-            InlineData(">>\">>", @"ab.", true, true),               // DOS equivalent of ??.??
-            InlineData(">>\"\"\">>", @"ab.", true, true),           // Not possible to do from DOS ??"""??
-            InlineData(">>b\">>", @"ab.ba", true, false),           // DOS equivalent of ??b.??
-            InlineData("a>>\">>", @"ab.ba", true, true),            // DOS equivalent of a??.??
-            InlineData(">>\">>a", @"ab.ba", true, false),           // DOS equivalent of ??.??a
-            InlineData(">>\"b>>", @"ab.ba", true, true),            // DOS equivalent of ??.b??
-            InlineData(">>\"b>>", @"ab.b", true, true),             // DOS equivalent of ??.b??
-            InlineData(">>b.>>", @"ab.ba", true, false),
-            InlineData("a>>.>>", @"ab.ba", true, true),
-            InlineData(">>.>>a", @"ab.ba", true, false),
-            InlineData(">>.b>>", @"ab.ba", true, true),
-            InlineData(">>.b>>", @"ab.b", true, true),
-            InlineData(">>\">>\">>", @"ab.ba", true, true),         // DOS equivalent of ??.??.?? (The last " is an optional period)
-            InlineData(">>\">>\">>", @"abba", true, false),         // DOS equivalent of ??.??.?? (The first " isn't, so this doesn't match)
-            InlineData(">>\"ab\"ba", @"ab.ba", true, false),        // DOS equivalent of ??.ab.ba
-            InlineData("ab\"ba\">>", @"ab.ba", true, true),         // DOS equivalent of ab.ba.??
-            InlineData("ab\">>\"ba", @"ab.ba", true, false),        // DOS equivalent of ab.??.ba
-            InlineData(">>\">>\">>>", @"ab.ba.cab", true, true),    // DOS equivalent of ??.??.???
-            InlineData("a>>\"b>>\"c>>>", @"ab.ba.cab", true, true), // DOS equivalent of a??.b??.c???
-            InlineData(@"<", @"a", true, true),                     // DOS equivalent of *.
-            InlineData(@"<", @"a.", true, true),                    // DOS equivalent of *.
-            InlineData(@"<", @"a. ", true, false),                  // DOS equivalent of *.
-            InlineData(@"<", @"a.b", true, false),                  // DOS equivalent of *.
-            InlineData(@"foo<", @"foo.", true, true),               // DOS equivalent of foo*.
-            InlineData(@"foo<", @"foo. ", true, false),             // DOS equivalent of foo*.
-            InlineData(@"<<", @"a.b", true, true),
-            InlineData(@"<<", @"a.b.c", true, true),
-            InlineData("<\"", @"a.b.c", true, false),
-            InlineData(@"<.", @"a", true, false),
-            InlineData(@"<.", @"a.", true, true),
-            InlineData(@"<.", @"a.b", true, false),
-            ]
+        [Theory, MemberData(nameof(DosMatchData))]
         public void IsNameInExpression(string expression, string name, bool ignoreCase, bool expected)
         {
             FileMethods.IsNameInExpression(expression, name, ignoreCase).Should().Be(expected,
-                $"'{expression}' in '{name}' with ignoreCase of {ignoreCase}");
+                $"'{expression ?? "<null>"}' in '{name ?? "<null>"}' with ignoreCase of {ignoreCase}");
         }
+
+        public static TheoryData<string, string, bool, bool> DosMatchData => Tests.FileManagement.DosMatcherTests.DosMatchData;
     }
 }

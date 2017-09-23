@@ -116,9 +116,12 @@ namespace WInterop.FileManagement
             if (_buffer == null)
                 return true;
 
-            UNICODE_STRING name = new UNICODE_STRING(record->FileName);
-            UNICODE_STRING filter = _buffer.ToUnicodeString();
-            return FileMethods.Imports.RtlIsNameInExpression(&filter, &name, _ignoreCase, IntPtr.Zero);
+            fixed (char* c = &record->FileName.DangerousGetPinnableReference())
+            {
+                UNICODE_STRING name = new UNICODE_STRING(c, record->FileName.Length);
+                UNICODE_STRING filter = _buffer.ToUnicodeString();
+                return FileMethods.Imports.RtlIsNameInExpression(&filter, &name, _ignoreCase, IntPtr.Zero);
+            }
         }
 #endif
 

@@ -53,23 +53,11 @@ namespace WInterop.SafeString.Types
         /// <summary>
         /// Initialize the content of the string based on a fixed char from the given source string.
         /// </summary>
-        public unsafe UNICODE_STRING(char* buffer, string sourceString)
+        public unsafe UNICODE_STRING(char* buffer, int length)
         {
-            Length = checked((ushort)(sourceString.Length * sizeof(char)));
+            Length = checked((ushort)(length * sizeof(char)));
             MaximumLength = Length;
             Buffer = buffer;
-        }
-
-        /// <summary>
-        /// Initialize from a char buffer and length in bytes.
-        /// </summary>
-        public unsafe UNICODE_STRING(ReadOnlySpan<char> buffer)
-        {
-            Length = checked((ushort)(buffer.Length * sizeof(char)));
-            MaximumLength = Length;
-
-            fixed(char* c = &buffer.DangerousGetPinnableReference())
-                Buffer = c;
         }
 
         /// <summary>
