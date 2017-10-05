@@ -26,15 +26,10 @@ namespace WInterop.Synchronization.Types
         /// </summary>
         public UIntPtr InternalHigh;
 
-        // Offset as defined here is not technically part of the definition, adding for easier use.
-        // OffsetLot is defined as Offset in the specs
-        // public uint OffsetLow;
-        // public uint OffsetHigh;
-
         /// <summary>
         /// The offset to read from if the file supports seeking. Must be zero otherwise.
         /// </summary>
-        public ulong Offset;
+        public LowHighUlong Offset;
 
         // Ignoring this union of offset as it is reserved.
         // public IntPtr Pointer;

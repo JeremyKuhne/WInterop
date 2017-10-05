@@ -16,41 +16,24 @@ namespace WInterop.Support
         private const double MinOleDate = -657435.0;
         private const double MaxOleDate = 2958466.0;
 
-        public static ulong HighLowToLong(uint high, uint low)
-        {
-            return ((ulong)high) << 32 | ((ulong)low & 0xFFFFFFFF);
-        }
+        public static ulong HighLowToLong(uint high, uint low) => ((ulong)high) << 32 | low;
+        public static long HighLowToLong(int high, int low) => (long)HighLowToLong((uint)high, (uint)low);
+        public static uint HighLowToInt(ushort high, ushort low) => ((uint)high) << 16 | low;
+        public static int HighLowToInt(short high, short low) => (int)HighLowToInt((ushort)high, (ushort)low);
 
-        public static long HighLowToLong(int high, int low)
-        {
-            return ((long)high) << 32 | low & 0xFFFFFFFF;
-        }
-
-        public static uint HighLowToInt(ushort high, ushort low)
-        {
-            return ((uint)high) << 16 | ((uint)low & 0xFFFF);
-        }
-
-        public static int HighLowToInt(short high, short low)
-        {
-            return high << 16 | low & 0xFFFF;
-        }
+        // Note that we always cast IntPtr to ulong to avoid checked blocks
 
         public static ushort HighWord(IntPtr value) => (ushort)(((ulong)value >> 16) & 0xFFFF);
-
         public static ushort HighWord(UIntPtr value) => (ushort)(((ulong)value >> 16) & 0xFFFF);
+        public static uint HighWord(ulong value) => (uint)(value >> 32);
+        public static ushort HighWord(uint value) => (ushort)(value >> 16);
+        public static short HighWord(int value) => (short)HighWord((uint)value);
 
-        public static ushort HighWord(uint value) => (ushort)((value >> 16) & 0xFFFF);
-
-        public static short HighWord(int value) => (short)((value >> 16) & 0xFFFF);
-
-        public static ushort LowWord(IntPtr value) => (ushort)((ulong)value & 0xFFFF);
-
-        public static ushort LowWord(UIntPtr value) => (ushort)((ulong)value & 0xFFFF);
-
-        public static ushort LowWord(uint value) => (ushort)(value & 0xFFFF);
-
-        public static short LowWord(int value) => (short)(value & 0xFFFF);
+        public static ushort LowWord(IntPtr value) => (ushort)((ulong)value);
+        public static ushort LowWord(UIntPtr value) => (ushort)((ulong)value);
+        public static uint LowWord(ulong value) => (uint)value;
+        public static ushort LowWord(uint value) => (ushort)value;
+        public static short LowWord(int value) => (short)LowWord((uint)value);
 
         public static DesiredAccess FileAccessToDesiredAccess(System.IO.FileAccess fileAccess)
         {

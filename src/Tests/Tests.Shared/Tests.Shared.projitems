@@ -38,6 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\PathsTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\PointersTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\StructsTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\UlongTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
   </ItemGroup>
 </Project>
