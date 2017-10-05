@@ -6,8 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using Microsoft.Win32.SafeHandles;
 using System;
 using Tests.Support;
+using WInterop.DirectoryManagement;
+using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
@@ -230,6 +233,107 @@ namespace Tests.FileManagement
 
             // Works
             // NativeMethods.FileManagement.GetFullPathName(PathGenerator.CreatePathOfLength(@"C:\", short.MaxValue - 2));
+        }
+
+        [Fact]
+        public void LockedFileDirectoryDeletion()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string directory = cleaner.GetTestPath();
+                DirectoryMethods.CreateDirectory(directory);
+                FileMethods.DirectoryExists(directory).Should().BeTrue();
+                string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion), directory);
+                using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareMode.ReadWrite | ShareMode.Delete))
+                {
+                    handle.IsInvalid.Should().BeFalse();
+
+                    // Mark the file for deletion
+                    FileMethods.DeleteFile(file);
+
+                    // RemoveDirectory API call will throw
+                    Action action = () => DirectoryMethods.RemoveDirectory(directory);
+                    action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_DIR_NOT_EMPTY));
+
+                    // Opening the directory for deletion will succeed, but have no impact
+                    using (var directoryHandle = FileMethods.CreateFile(
+                        directory,
+                        CreationDisposition.OpenExisting,
+                        DesiredAccess.ListDirectory | DesiredAccess.Delete,
+                        ShareMode.ReadWrite | ShareMode.Delete,
+                        FileAttributes.None,
+                        FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
+                    {
+                        directoryHandle.IsInvalid.Should().BeFalse();
+                    }
+                }
+
+                // File will be gone now that the handle is closed
+                FileMethods.FileExists(file).Should().BeFalse();
+
+                // But the directory will still exist as it doesn't respect DeleteOnClose with an open handle when it is closed
+                FileMethods.DirectoryExists(directory).Should().BeTrue();
+
+                // Create a handle to the directory again with DeleteOnClose and it will actually delete the directory
+                using (var directoryHandle = FileMethods.CreateFile(
+                    directory,
+                    CreationDisposition.OpenExisting,
+                    DesiredAccess.ListDirectory | DesiredAccess.Delete,
+                    ShareMode.ReadWrite | ShareMode.Delete,
+                    FileAttributes.None,
+                    FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
+                {
+                    directoryHandle.IsInvalid.Should().BeFalse();
+                }
+                FileMethods.DirectoryExists(directory).Should().BeFalse();
+            }
+        }
+
+
+        [Fact]
+        public void LockedFileDirectoryDeletion2()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string directory = cleaner.GetTestPath();
+                DirectoryMethods.CreateDirectory(directory);
+                FileMethods.DirectoryExists(directory).Should().BeTrue();
+                string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion2), directory);
+
+                SafeFileHandle directoryHandle = null;
+                using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareMode.ReadWrite | ShareMode.Delete))
+                {
+                    handle.IsInvalid.Should().BeFalse();
+
+                    // Mark the file for deletion
+                    FileMethods.DeleteFile(file);
+
+                    // Open the directory handle
+                    directoryHandle = FileMethods.CreateFile(
+                        directory,
+                        CreationDisposition.OpenExisting,
+                        DesiredAccess.ListDirectory | DesiredAccess.Delete,
+                        ShareMode.ReadWrite | ShareMode.Delete,
+                        FileAttributes.None,
+                        FileFlags.BackupSemantics | FileFlags.DeleteOnClose);
+                }
+
+                try
+                {
+                    // File will be gone now that the handle is closed
+                    FileMethods.FileExists(file).Should().BeFalse();
+
+                    directoryHandle.Close();
+
+                    // The directory will not exist as the open handle was closed before it was closed
+                    FileMethods.DirectoryExists(directory).Should().BeFalse();
+
+                }
+                finally
+                {
+                    directoryHandle?.Close();
+                }
+            }
         }
     }
 }
