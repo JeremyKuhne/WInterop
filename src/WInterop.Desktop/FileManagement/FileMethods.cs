@@ -235,13 +235,13 @@ namespace WInterop.FileManagement
             //      WCHAR FileName[1];
             //  } FILE_NAME_INFORMATION, *PFILE_NAME_INFORMATION;
 
-            return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileNameInformation);
+            return GetFileInformationString(fileHandle, FileInformationClass.FileNameInformation);
         }
 
         public static string GetVolumeName(SafeFileHandle fileHandle)
         {
             // Same basic structure as FILE_NAME_INFORMATION
-            return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileVolumeNameInformation);
+            return GetFileInformationString(fileHandle, FileInformationClass.FileVolumeNameInformation);
         }
 
         /// <summary>
@@ -250,10 +250,10 @@ namespace WInterop.FileManagement
         public static string GetShortName(SafeFileHandle fileHandle)
         {
             // Same basic structure as FILE_NAME_INFORMATION
-            return GetFileInformationString(fileHandle, FILE_INFORMATION_CLASS.FileAlternateNameInformation);
+            return GetFileInformationString(fileHandle, FileInformationClass.FileAlternateNameInformation);
         }
 
-        private unsafe static string GetFileInformationString(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass)
+        private unsafe static string GetFileInformationString(SafeFileHandle fileHandle, FileInformationClass fileInformationClass)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -293,7 +293,7 @@ namespace WInterop.FileManagement
             });
         }
 
-        unsafe private static void GetFileInformation(SafeFileHandle fileHandle, FILE_INFORMATION_CLASS fileInformationClass, void* value, uint size)
+        unsafe private static void GetFileInformation(SafeFileHandle fileHandle, FileInformationClass fileInformationClass, void* value, uint size)
         {
             NTSTATUS status = Imports.NtQueryInformationFile(
                 FileHandle: fileHandle,
@@ -309,12 +309,12 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Gets the file mode for the given handle.
         /// </summary>
-        public static FILE_MODE_INFORMATION GetFileMode(SafeFileHandle fileHandle)
+        public static FileAccessMode GetFileMode(SafeFileHandle fileHandle)
         {
-            FILE_MODE_INFORMATION info;
+            FileAccessMode info;
             unsafe
             {
-                GetFileInformation(fileHandle, FILE_INFORMATION_CLASS.FileModeInformation, &info, sizeof(FILE_MODE_INFORMATION));
+                GetFileInformation(fileHandle, FileInformationClass.FileModeInformation, &info, sizeof(FileAccessMode));
             }
             return info;
         }
@@ -357,7 +357,7 @@ namespace WInterop.FileManagement
         {
             FILE_ACCESS_INFORMATION access = new FILE_ACCESS_INFORMATION();
             NTSTATUS result = Imports.NtQueryInformationFile(fileHandle, out _,
-                &access, (uint)sizeof(FILE_ACCESS_INFORMATION), FILE_INFORMATION_CLASS.FileAccessInformation);
+                &access, (uint)sizeof(FILE_ACCESS_INFORMATION), FileInformationClass.FileAccessInformation);
             if (result != NTSTATUS.STATUS_SUCCESS)
                 throw ErrorMethods.GetIoExceptionForNTStatus(result);
             return access.AccessFlags;

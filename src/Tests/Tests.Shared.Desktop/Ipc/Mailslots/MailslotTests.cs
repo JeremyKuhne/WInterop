@@ -28,11 +28,11 @@ namespace DesktopTests.Ipc.MailslotTests
                 using (var fileHandle = FileMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
-                    FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);
+                    FileMethods.GetFileType(fileHandle).Should().Be(FileType.Unknown);
                     var modeInfo = FileMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened synchronously
-                    modeInfo.Should().Be(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
+                    modeInfo.Should().Be(FileAccessMode.SynchronousNotAlertable);
                 }
             }
         }
@@ -50,11 +50,11 @@ namespace DesktopTests.Ipc.MailslotTests
                     FileAttributes.None, FileFlags.Overlapped))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
-                    FileMethods.GetFileType(fileHandle).Should().Be(FileType.FILE_TYPE_UNKNOWN);
+                    FileMethods.GetFileType(fileHandle).Should().Be(FileType.Unknown);
                     var modeInfo = FileMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened asynchronously (e.g. no synchronous flag)
-                    modeInfo.Should().Be((FILE_MODE_INFORMATION)0);
+                    modeInfo.Should().Be((FileAccessMode)0);
                 }
             }
         }

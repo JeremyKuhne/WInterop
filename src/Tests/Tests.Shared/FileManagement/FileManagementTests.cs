@@ -200,7 +200,7 @@ namespace Tests.FileManagementTests
                     {
                         var fileInfo = FileMethods.GetFileBasicInformation(file);
                         fileInfo.Attributes.Should().NotHaveFlag(FileAttributes.Directory);
-                        fileInfo.CreationTime.Should().BeAfter(directoryInfo.CreationTime);
+                        fileInfo.CreationTimeUtc.Should().BeAfter(directoryInfo.CreationTimeUtc);
                     }
                 }
             }
@@ -389,7 +389,7 @@ namespace Tests.FileManagementTests
             string tempPath = FileMethods.GetTempPath();
             using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
             {
-                FileMethods.GetFileType(directory).Should().Be(FileType.FILE_TYPE_DISK);
+                FileMethods.GetFileType(directory).Should().Be(FileType.Disk);
             }
         }
 
@@ -532,7 +532,7 @@ namespace Tests.FileManagementTests
             {
                 using (var testFile = FileMethods.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
                 {
-                    FileMethods.GetFileType(testFile).Should().Be(FileType.FILE_TYPE_DISK);
+                    FileMethods.GetFileType(testFile).Should().Be(FileType.Disk);
                 }
             }
         }

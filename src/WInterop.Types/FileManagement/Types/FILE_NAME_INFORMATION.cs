@@ -10,7 +10,10 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545817.aspx
+    /// <summary>
+    /// <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff545817.aspx">FILE_NAME_INFORMATION</a> structure.
+    /// Equivalent to <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364388.aspx">FILE_NAME_INFO</a> structure.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct FILE_NAME_INFORMATION
     {

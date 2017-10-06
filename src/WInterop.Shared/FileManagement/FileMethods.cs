@@ -396,7 +396,7 @@ namespace WInterop.FileManagement
                     }
                 }
 
-                return ((FILE_NAME_INFO*)buffer.VoidPointer)->FileName.CreateString();
+                return ((FILE_NAME_INFORMATION*)buffer.VoidPointer)->FileName.CreateString();
             });
         }
 
@@ -405,14 +405,14 @@ namespace WInterop.FileManagement
         /// </summary>
         public static FileStandardInfo GetFileStandardInformation(SafeFileHandle fileHandle)
         {
-            FILE_STANDARD_INFO info;
+            FILE_STANDARD_INFORMATION info;
             unsafe
             {
                 if (!Imports.GetFileInformationByHandleEx(
                     fileHandle,
                     FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo,
                     &info,
-                    (uint)sizeof(FILE_STANDARD_INFO)))
+                    (uint)sizeof(FILE_STANDARD_INFORMATION)))
                     throw Errors.GetIoExceptionForLastError();
             }
 
@@ -424,14 +424,14 @@ namespace WInterop.FileManagement
         /// </summary>
         public static FileBasicInfo GetFileBasicInformation(SafeFileHandle fileHandle)
         {
-            FILE_BASIC_INFO info;
+            FILE_BASIC_INFORMATION info;
             unsafe
             {
                 if (!Imports.GetFileInformationByHandleEx(
                     fileHandle,
                     FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo,
                     &info,
-                    (uint)sizeof(FILE_BASIC_INFO)))
+                    (uint)sizeof(FILE_BASIC_INFORMATION)))
                     throw Errors.GetIoExceptionForLastError();
             }
             return new FileBasicInfo(info);
@@ -668,7 +668,7 @@ namespace WInterop.FileManagement
         public static FileType GetFileType(SafeFileHandle fileHandle)
         {
             FileType fileType = Imports.GetFileType(fileHandle);
-            if (fileType == FileType.FILE_TYPE_UNKNOWN)
+            if (fileType == FileType.Unknown)
                 Errors.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
             return fileType;

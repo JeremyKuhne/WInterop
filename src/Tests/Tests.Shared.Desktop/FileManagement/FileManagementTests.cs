@@ -245,7 +245,7 @@ namespace DesktopTests.FileManagementMethods
             using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\Harddisk0\Partition0", CreationDisposition.OpenExisting, 0))
             {
                 file.IsInvalid.Should().BeFalse();
-                FileMethods.GetFileType(file).Should().Be(FileType.FILE_TYPE_DISK);
+                FileMethods.GetFileType(file).Should().Be(FileType.Disk);
             }
         }
 
@@ -255,7 +255,7 @@ namespace DesktopTests.FileManagementMethods
             using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\HarddiskVolume1", CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
             {
                 file.IsInvalid.Should().BeFalse();
-                FileMethods.GetFileType(file).Should().Be(FileType.FILE_TYPE_DISK);
+                FileMethods.GetFileType(file).Should().Be(FileType.Disk);
             }
         }
 
@@ -329,7 +329,7 @@ namespace DesktopTests.FileManagementMethods
                 {
                     file.IsInvalid.Should().BeFalse();
                     var mode = FileMethods.GetFileMode(file);
-                    mode.Should().HaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
+                    mode.Should().HaveFlag(FileAccessMode.SynchronousNotAlertable);
                 }
             }
         }
@@ -345,8 +345,8 @@ namespace DesktopTests.FileManagementMethods
                 {
                     file.IsInvalid.Should().BeFalse();
                     var mode = FileMethods.GetFileMode(file);
-                    mode.Should().NotHaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_NONALERT);
-                    mode.Should().NotHaveFlag(FILE_MODE_INFORMATION.FILE_SYNCHRONOUS_IO_ALERT);
+                    mode.Should().NotHaveFlag(FileAccessMode.SynchronousAlertable);
+                    mode.Should().NotHaveFlag(FileAccessMode.SynchronousNotAlertable);
                 }
             }
         }

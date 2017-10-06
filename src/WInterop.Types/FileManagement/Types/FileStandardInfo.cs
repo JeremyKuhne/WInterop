@@ -15,7 +15,7 @@ namespace WInterop.FileManagement.Types
         public bool DeletePending;
         public bool Directory;
 
-        public FileStandardInfo(FILE_STANDARD_INFO data)
+        public FileStandardInfo(FILE_STANDARD_INFORMATION data)
         {
             AllocationSize = data.AllocationSize;
             EndOfFile = data.EndOfFile;

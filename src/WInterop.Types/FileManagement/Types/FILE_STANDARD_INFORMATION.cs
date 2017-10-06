@@ -9,6 +9,7 @@ namespace WInterop.FileManagement.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff545855.aspx">FILE_STANDARD_INFORMATION</a> structure.
+    /// Equivalent to <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364401.aspx">FILE_STANDARD_INFO</a> structure.
     /// </summary>
     public struct FILE_STANDARD_INFORMATION
     {

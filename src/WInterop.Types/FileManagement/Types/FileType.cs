@@ -12,10 +12,26 @@ namespace WInterop.FileManagement.Types
     /// </summary>
     public enum FileType : uint
     {
-        FILE_TYPE_UNKNOWN = 0x0000,
-        FILE_TYPE_DISK = 0x0001,
-        FILE_TYPE_CHAR = 0x0002,
-        FILE_TYPE_PIPE = 0x0003,
+        /// <summary>
+        /// File type is unknown. [FILE_TYPE_UNKNOWN]
+        /// </summary>
+        Unknown = 0x0000,
+
+        /// <summary>
+        /// File type is as disk file. [FILE_TYPE_DISK]
+        /// </summary>
+        Disk = 0x0001,
+
+        /// <summary>
+        /// Character file, such as an LPT device or a console. [FILE_TYPE_CHAR]
+        /// </summary>
+        Character = 0x0002,
+
+        /// <summary>
+        /// A pipe or socket. [FILE_TYPE_PIPE]
+        /// </summary>
+        Pipe = 0x0003,
+
         // Unused
         // FILE_TYPE_REMOTE = 0x8000
     }

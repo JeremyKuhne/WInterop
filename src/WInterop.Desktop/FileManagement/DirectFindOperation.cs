@@ -299,7 +299,7 @@ namespace WInterop.FileManagement
                     out IO_STATUS_BLOCK statusBlock,
                     _buffer.VoidPointer,
                     (uint)_buffer.ByteCapacity,
-                    FILE_INFORMATION_CLASS.FileFullDirectoryInformation,
+                    FileInformationClass.FileFullDirectoryInformation,
                     false,
                     null,
                     false);

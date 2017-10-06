@@ -13,6 +13,7 @@ using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
+using WInterop.Synchronization.Types;
 
 namespace WInterop.FileManagement
 {
@@ -165,7 +166,7 @@ namespace WInterop.FileManagement
                 out IO_STATUS_BLOCK IoStatusBlock,
                 void* FileInformation,
                 uint Length,
-                FILE_INFORMATION_CLASS FileInformationClass);
+                FileInformationClass FileInformationClass);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567096.aspx
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -173,7 +174,7 @@ namespace WInterop.FileManagement
                 SafeFileHandle FileHandle,
                 out IO_STATUS_BLOCK IoStatusBlock,
                 void* FileInformation,
-                FILE_INFORMATION_CLASS FileInformationClass);
+                FileInformationClass FileInformationClass);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556633.aspx
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567047.aspx
@@ -186,7 +187,7 @@ namespace WInterop.FileManagement
                 out IO_STATUS_BLOCK IoStatusBlock,
                 void* FileInformation,
                 uint Length,
-                FILE_INFORMATION_CLASS FileInformationClass,
+                FileInformationClass FileInformationClass,
                 BOOLEAN ReturnSingleEntry,
                 UNICODE_STRING* FileName,
                 BOOLEAN RestartScan);
@@ -200,7 +201,7 @@ namespace WInterop.FileManagement
                 out IO_STATUS_BLOCK IoStatusBlock,
                 void* FileInformation,
                 uint Length,
-                FILE_INFORMATION_CLASS FileInformationClass,
+                FileInformationClass FileInformationClass,
                 BOOLEAN ReturnSingleEntry,
                 UNICODE_STRING* FileName,
                 BOOLEAN RestartScan);
@@ -213,6 +214,18 @@ namespace WInterop.FileManagement
                 UNICODE_STRING* Name,
                 BOOLEAN IgnoreCase,
                 IntPtr UpcaseTable);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365465.aspx
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+            public unsafe static extern bool ReadDirectoryChangesW(
+                SafeFileHandle hDirectory,
+                void* lpBuffer,
+                uint nBufferLength,
+                bool bWatchSubtree,
+                FileNotifyChange dwNotifyFilter,
+                out uint lpBytesReturned,
+                ref OVERLAPPED lpOverlapped,
+                FileIOCompletionRoutine lpCompletionRoutine);
         }
     }
 }

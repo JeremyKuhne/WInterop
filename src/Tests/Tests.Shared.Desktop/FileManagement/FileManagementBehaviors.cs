@@ -10,6 +10,8 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Linq;
 using Tests.Support;
+using WInterop.ErrorHandling;
+using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 using WInterop.ProcessAndThreads;
@@ -30,12 +32,11 @@ namespace DesktopTests.FileManagementTests
                 string fullName = FileMethods.GetFullPathName(Paths.AddTrailingSeparator(testFile));
 
                 FindOperation find = new FindOperation(testFile);
-                string fileName = find.FirstOrDefault()?.FileName;
+                Action action = () => find.FirstOrDefault();
+                action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_DIRECTORY));
 
-                using (var fileHandle = FileMethods.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes))
-                {
-                    fileHandle.IsInvalid.Should().BeFalse();
-                }
+                action = () => FileMethods.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes);
+                action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_NAME));
             }
         }
 

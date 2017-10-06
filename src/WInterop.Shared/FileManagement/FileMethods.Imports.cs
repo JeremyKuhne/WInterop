@@ -193,10 +193,10 @@ namespace WInterop.FileManagement
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetOverlappedResultEx(
                 SafeFileHandle hFile,
-                [In] ref OVERLAPPED lpOverlapped,
+                ref OVERLAPPED lpOverlapped,
                 out uint lpNumberOfBytesTransferred,
                 uint dwMilliseconds,
-                [MarshalAs(UnmanagedType.Bool)] bool bAlertable);
+                bool bAlertable);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365716.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

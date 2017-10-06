@@ -12,18 +12,18 @@ namespace WInterop.FileManagement.Types
     public struct FileBasicInfo
     {
         public FileAttributes Attributes;
-        public DateTime CreationTime;
-        public DateTime LastAccessTime;
-        public DateTime LastWriteTime;
-        public DateTime ChangeTime;
+        public DateTime CreationTimeUtc;
+        public DateTime LastAccessTimeUtc;
+        public DateTime LastWriteTimeUtc;
+        public DateTime ChangeTimeUtc;
 
-        public FileBasicInfo(FILE_BASIC_INFO data)
+        public FileBasicInfo(FILE_BASIC_INFORMATION data)
         {
             Attributes = data.FileAttributes;
-            CreationTime = data.CreationTime.ToDateTimeUtc().ToLocalTime();
-            LastAccessTime = data.LastAccessTime.ToDateTimeUtc().ToLocalTime();
-            LastWriteTime = data.LastWriteTime.ToDateTimeUtc().ToLocalTime();
-            ChangeTime = data.ChangeTime.ToDateTimeUtc().ToLocalTime();
+            CreationTimeUtc = data.CreationTime.ToDateTimeUtc();
+            LastAccessTimeUtc = data.LastAccessTime.ToDateTimeUtc();
+            LastWriteTimeUtc = data.LastWriteTime.ToDateTimeUtc();
+            ChangeTimeUtc = data.ChangeTime.ToDateTimeUtc();
         }
     }
 }

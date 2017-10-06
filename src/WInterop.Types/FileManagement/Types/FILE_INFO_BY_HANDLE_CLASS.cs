@@ -7,6 +7,9 @@
 
 namespace WInterop.FileManagement.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum FILE_INFO_BY_HANDLE_CLASS : uint
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364228.aspx

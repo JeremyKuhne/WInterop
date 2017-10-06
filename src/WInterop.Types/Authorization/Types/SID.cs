@@ -57,7 +57,6 @@ namespace WInterop.Authorization.Types
     /// is publicly defined in the headers as above, it is unlikely to change. If you want to play safe
     /// by MSDN use the methods for all data access. (TODO: Not implemented yet.)
     /// </remarks>
-    [StructLayout(LayoutKind.Sequential)]
     public struct SID
     {
         // From winnt.h

@@ -7,9 +7,17 @@
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff728840.aspx
-    public enum FILE_INFORMATION_CLASS : uint
+    /// <summary>
+    /// Classes of information available via NtSetInformationFile and NtQueryInformationFile.
+    /// [FILE_INFORMATION_CLASS]
+    /// </summary>
+    /// <remarks>
+    /// A number of these are exposed through the GetFileInformationByHandle Win32 API.
+    /// </remarks>
+    public enum FileInformationClass : uint
     {
+        // https://msdn.microsoft.com/en-us/library/windows/hardware/ff728840.aspx
+
         FileDirectoryInformation = 1,
         FileFullDirectoryInformation = 2,
         FileBothDirectoryInformation = 3,
@@ -30,6 +38,13 @@ namespace WInterop.FileManagement.Types
         FileDispositionInformation = 13,
         FilePositionInformation = 14,
         FileFullEaInformation = 15,
+
+        /// <summary>
+        /// Gets the file access mode (cannot set). Used with [FILE_MODE_INFORMATION].
+        /// </summary>
+        /// <remarks>
+        /// Sadly not available via GetFileInformationByHandle yet.
+        /// </remarks>
         FileModeInformation = 16,
         FileAlignmentInformation = 17,
 
