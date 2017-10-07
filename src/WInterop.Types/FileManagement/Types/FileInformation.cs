@@ -9,7 +9,7 @@ using System;
 
 namespace WInterop.FileManagement.Types
 {
-    public struct FileInfo
+    public struct FileInformation
     {
         public FileAttributes Attributes;
         public DateTime CreationTime;
@@ -17,7 +17,7 @@ namespace WInterop.FileManagement.Types
         public DateTime LastWriteTime;
         public ulong Size;
 
-        public FileInfo(WIN32_FILE_ATTRIBUTE_DATA data)
+        public FileInformation(WIN32_FILE_ATTRIBUTE_DATA data)
         {
             Attributes = data.dwFileAttributes;
             CreationTime = data.ftCreationTime.ToDateTimeUtc().ToLocalTime();

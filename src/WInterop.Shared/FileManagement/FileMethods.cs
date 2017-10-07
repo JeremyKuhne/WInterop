@@ -292,12 +292,12 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Gets the file attributes for the given path.
         /// </summary>
-        public static FileInfo GetFileAttributesEx(string path)
+        public static FileInformation GetFileAttributesEx(string path)
         {
             if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
                 throw Errors.GetIoExceptionForLastError(path);
 
-            return new FileInfo(data);
+            return new FileInformation(data);
         }
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace WInterop.FileManagement
         /// Tries to get file info, returns null if the given path doesn't exist.
         /// </summary>
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
-        public static FileInfo? TryGetFileInfo(string path)
+        public static FileInformation? TryGetFileInfo(string path)
         {
             if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
             {
@@ -349,7 +349,7 @@ namespace WInterop.FileManagement
                 }
             }
 
-            return new FileInfo(data);
+            return new FileInformation(data);
         }
 
         /// <summary>
@@ -682,11 +682,11 @@ namespace WInterop.FileManagement
             List<string> filenames = new List<string>();
             GetFullDirectoryInfoHelper(directoryHandle, buffer =>
             {
-                FILE_FULL_DIR_INFO* info = (FILE_FULL_DIR_INFO*)buffer.BytePointer;
+                FILE_FULL_DIR_INFORMATION* info = (FILE_FULL_DIR_INFORMATION*)buffer.BytePointer;
                 do
                 {
                     filenames.Add(info->FileName.CreateString());
-                    info = FILE_FULL_DIR_INFO.GetNextInfo(info);
+                    info = FILE_FULL_DIR_INFORMATION.GetNextInfo(info);
                 } while (info != null);
             });
             return filenames;
@@ -695,16 +695,16 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Gets all of the info for files within the given directory handle.
         /// </summary>
-        public unsafe static IEnumerable<FileFullDirInfo> GetDirectoryInformation(SafeFileHandle directoryHandle)
+        public unsafe static IEnumerable<FullFileInformation> GetDirectoryInformation(SafeFileHandle directoryHandle)
         {
-            List<FileFullDirInfo> infos = new List<FileFullDirInfo>();
+            List<FullFileInformation> infos = new List<FullFileInformation>();
             GetFullDirectoryInfoHelper(directoryHandle, buffer =>
             {
-                FILE_FULL_DIR_INFO* info = (FILE_FULL_DIR_INFO*)buffer.BytePointer;
+                FILE_FULL_DIR_INFORMATION* info = (FILE_FULL_DIR_INFORMATION*)buffer.BytePointer;
                 do
                 {
-                    infos.Add(new FileFullDirInfo(info));
-                    info = FILE_FULL_DIR_INFO.GetNextInfo(info);
+                    infos.Add(new FullFileInformation(info));
+                    info = FILE_FULL_DIR_INFORMATION.GetNextInfo(info);
                 } while (info != null);
             });
             return infos;
@@ -715,7 +715,7 @@ namespace WInterop.FileManagement
             BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 // Make sure we have at least enough for the normal "." and ".."
-                buffer.EnsureByteCapacity((ulong)sizeof(FILE_FULL_DIR_INFO) * 2);
+                buffer.EnsureByteCapacity((ulong)sizeof(FILE_FULL_DIR_INFORMATION) * 2);
 
                 do
                 {

@@ -10,9 +10,9 @@ using System;
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
-    /// Managed wrapper for FILE_FULL_DIR_INFO
+    /// Managed wrapper for FILE_FULL_DIR_INFORMATION.
     /// </summary>
-    public struct FileFullDirInfo
+    public struct FullFileInformation
     {
         /// <summary>
         /// Byte offset within the parent directory, undefined for NTFS.
@@ -36,7 +36,7 @@ namespace WInterop.FileManagement.Types
 
         public string FileName;
 
-        public unsafe FileFullDirInfo(FILE_FULL_DIR_INFO* info)
+        public unsafe FullFileInformation(FILE_FULL_DIR_INFORMATION* info)
         {
             FileIndex = info->FileIndex;
             CreationTimeUtc = info->CreationTime.ToDateTimeUtc();
