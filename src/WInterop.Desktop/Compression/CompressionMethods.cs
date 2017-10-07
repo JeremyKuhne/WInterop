@@ -89,7 +89,7 @@ namespace WInterop.Compression
             public static extern int LZCreateFileW(
                 string lpFileName,
                 DesiredAccess dwAccess,
-                ShareMode dwShareMode,
+                ShareModes dwShareMode,
                 CreationDisposition dwCreate,
                 SafeHandle lpCompressedName);
 
@@ -138,7 +138,7 @@ namespace WInterop.Compression
                 return filenameOnly ? Paths.GetLastSegment(path) : path;
 
             char replacement;
-            using (var file = FileMethods.CreateFile(path, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareMode.Read))
+            using (var file = FileMethods.CreateFile(path, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.Read))
             {
                 LzxHeader header = new LzxHeader();
 
@@ -162,7 +162,7 @@ namespace WInterop.Compression
             string path,
             out string uncompressedName,
             DesiredAccess access = DesiredAccess.GenericRead,
-            ShareMode share = ShareMode.ReadWrite,
+            ShareModes share = ShareModes.ReadWrite,
             CreationDisposition creation = CreationDisposition.OpenExisting)
         {
             string name = null;
@@ -185,7 +185,7 @@ namespace WInterop.Compression
         public static LzHandle LzCreateFile(
             string path,
             DesiredAccess access = DesiredAccess.GenericRead,
-            ShareMode share = ShareMode.ReadWrite,
+            ShareModes share = ShareModes.ReadWrite,
             CreationDisposition creation = CreationDisposition.OpenExisting)
         {
             return new LzCreateHandle(ValidateLzResult(
@@ -337,7 +337,7 @@ namespace WInterop.Compression
                 LzHandle destinationHandle;
                 if (useCreateFile)
                 {
-                    destinationHandle = LzCreateFile(destination, DesiredAccess.GenericReadWrite, ShareMode.Read,
+                    destinationHandle = LzCreateFile(destination, DesiredAccess.GenericReadWrite, ShareModes.Read,
                         overwrite ? CreationDisposition.CreateAlways : CreationDisposition.CreateNew);
                 }
                 else

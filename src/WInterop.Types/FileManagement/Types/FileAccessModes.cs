@@ -13,7 +13,7 @@ namespace WInterop.FileManagement.Types
     /// File access mode information.
     /// </summary>
     [Flags]
-    public enum FileAccessMode : uint
+    public enum FileAccessModes : uint
     {
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545809.aspx
 

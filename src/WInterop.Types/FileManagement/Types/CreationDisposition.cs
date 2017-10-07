@@ -18,27 +18,27 @@ namespace WInterop.FileManagement.Types
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
 
         /// <summary>
-        /// Create or fail if exists. (CREATE_NEW)
+        /// Create or fail if exists. [CREATE_NEW]
         /// </summary>
         CreateNew = 1,
 
         /// <summary>
-        /// Create or overwrite. (CREATE_ALWAYS)
+        /// Create or overwrite. [CREATE_ALWAYS]
         /// </summary>
         CreateAlways = 2,
 
         /// <summary>
-        /// Opens if exists, fails otherwise. (OPEN_EXISTING)
+        /// Opens if exists, fails otherwise. [OPEN_EXISTING]
         /// </summary>
         OpenExisting = 3,
 
         /// <summary>
-        /// Open if exists, creates otherwise. (OPEN_ALWAYS)
+        /// Open if exists, creates otherwise. [OPEN_ALWAYS]
         /// </summary>
         OpenAlways = 4,
 
         /// <summary>
-        /// Opens if exists and sets the size to zero. Fails if the file does not exist. (TRUNCATE_EXISTING)
+        /// Opens if exists and sets the size to zero. Fails if the file does not exist. [TRUNCATE_EXISTING]
         /// </summary>
         TruncateExisting = 5,
     }

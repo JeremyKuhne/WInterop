@@ -13,18 +13,19 @@ namespace WInterop.FileManagement.Types
     public enum ReplaceFileFlags : uint
     {
         /// <summary>
-        /// Not supported.
+        /// Not supported. [REPLACEFILE_WRITE_THROUGH]
         /// </summary>
-        REPLACEFILE_WRITE_THROUGH = 0x00000001,
+        WriteThrough = 0x00000001,
 
         /// <summary>
-        /// Ignores errors while merging metadata (such as attributes and ACLs)
+        /// Ignores errors while merging metadata (such as attributes and ACLs).
+        /// [REPLACEFILE_IGNORE_MERGE_ERRORS]
         /// </summary>
-        REPLACEFILE_IGNORE_MERGE_ERRORS = 0x00000002,
+        IgnoreMergeErrors = 0x00000002,
 
         /// <summary>
-        /// Ignores errors while merging ACL information
+        /// Ignores errors while merging ACL information. [REPLACEFILE_IGNORE_ACL_ERRORS]
         /// </summary>
-        REPLACEFILE_IGNORE_ACL_ERRORS = 0x00000004
+        IgnoreAclErrors = 0x00000004
     }
 }

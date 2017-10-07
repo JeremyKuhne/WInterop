@@ -94,7 +94,7 @@ namespace Tests.FileManagementTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var file = FileMethods.CreateFile(@"C:\.", CreationDisposition.OpenExisting, 0, ShareMode.ReadWrite,
+                using (var file = FileMethods.CreateFile(@"C:\.", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
                     FileAttributes.None, FileFlags.BackupSemantics))
                 {
                     file.IsInvalid.Should().BeFalse();

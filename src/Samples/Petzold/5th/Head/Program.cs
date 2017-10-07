@@ -134,7 +134,7 @@ namespace Head
                         try
                         {
                             using (hFile = FileMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
-                                DesiredAccess.GenericRead, ShareMode.Read))
+                                DesiredAccess.GenericRead, ShareModes.Read))
                             {
                                 if (!hFile.IsInvalid)
                                 {
@@ -176,7 +176,7 @@ namespace Head
 
                     uint bytesRead;
                     using (var hFile = FileMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
-                        DesiredAccess.GenericRead, ShareMode.Read))
+                        DesiredAccess.GenericRead, ShareModes.Read))
                     {
                         if (hFile.IsInvalid)
                         {

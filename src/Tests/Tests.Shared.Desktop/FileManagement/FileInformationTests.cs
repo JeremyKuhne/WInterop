@@ -52,12 +52,12 @@ namespace DesktopTests.FileManagement
                 }
 
                 // Open async
-                using (var handle = FileMethods.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes, ShareMode.ReadWrite, 0, 0))
+                using (var handle = FileMethods.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes, ShareModes.ReadWrite, 0, 0))
                 {
                     FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes);
                 }
 
-                using (var handle = FileMethods.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes | DesiredAccess.Synchronize, ShareMode.ReadWrite, 0, 0))
+                using (var handle = FileMethods.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes | DesiredAccess.Synchronize, ShareModes.ReadWrite, 0, 0))
                 {
                     FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
                 }

@@ -106,7 +106,7 @@ namespace WInterop.FileManagement
         public static System.IO.Stream CreateFileStream(
             string path,
             DesiredAccess desiredAccess,
-            ShareMode shareMode,
+            ShareModes shareMode,
             CreationDisposition creationDisposition,
             FileAttributes fileAttributes = FileAttributes.None,
             FileFlags fileFlags = FileFlags.None,
@@ -125,7 +125,7 @@ namespace WInterop.FileManagement
         private delegate SafeFileHandle CreateFileDelegate(
             string path,
             DesiredAccess desiredAccess,
-            ShareMode shareMode,
+            ShareModes shareMode,
             CreationDisposition creationDisposition,
             FileAttributes fileAttributes,
             FileFlags fileFlags,
@@ -162,7 +162,7 @@ namespace WInterop.FileManagement
             string path,
             CreationDisposition creationDisposition,
             DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite,
-            ShareMode shareMode = ShareMode.ReadWrite,
+            ShareModes shareMode = ShareModes.ReadWrite,
             FileAttributes fileAttributes = FileAttributes.None,
             FileFlags fileFlags = FileFlags.None,
             SecurityQosFlags securityQosFlags = SecurityQosFlags.None)
@@ -192,7 +192,7 @@ namespace WInterop.FileManagement
         public static unsafe SafeFileHandle CreateFile2(
             string path,
             DesiredAccess desiredAccess,
-            ShareMode shareMode,
+            ShareModes shareMode,
             CreationDisposition creationDisposition,
             FileAttributes fileAttributes = FileAttributes.None,
             FileFlags fileFlags = FileFlags.None,

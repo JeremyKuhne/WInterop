@@ -20,81 +20,81 @@ namespace WInterop.FileManagement.Types
     public enum DirectoryAccessRights : uint
     {
         /// <summary>
-        /// The right to list the directory contents.
+        /// The right to list the directory contents. [FILE_LIST_DIRECTORY]
         /// </summary>
-        FILE_LIST_DIRECTORY = 0x0001,
+        ListDirectory = 0x0001,
 
         /// <summary>
-        /// The right to create a file in the directory.
+        /// The right to create a file in the directory. [FILE_ADD_FILE]
         /// </summary>
-        FILE_ADD_FILE = 0x0002,
+        AddFile = 0x0002,
 
         /// <summary>
-        /// The right to create a subdirectory.
+        /// The right to create a subdirectory. [FILE_ADD_SUBDIRECTORY]
         /// </summary>
-        FILE_ADD_SUBDIRECTORY = 0x0004,
+        AddSubdirectory = 0x0004,
 
         /// <summary>
-        /// The right to read extended attributes.
+        /// The right to read extended attributes. [FILE_READ_EA]
         /// </summary>
-        FILE_READ_EA = 0x0008,
+        ReadExtendedAttributes = 0x0008,
 
         /// <summary>
-        /// The right to write extended attributes.
+        /// The right to write extended attributes. [FILE_WRITE_EA]
         /// </summary>
-        FILE_WRITE_EA = 0x0010,
+        WriteExtendedAttributes = 0x0010,
 
         /// <summary>
         /// The right to traverse the directory. (The right to walk through the
-        /// directory to the desired sub-object.)
+        /// directory to the desired sub-object.) [FILE_TRAVERSE]
         /// </summary>
         /// <remarks>
         /// Normally all users are granted the BYPASS_TRAVERSE_CHECKING right.
         /// </remarks>
-        FILE_TRAVERSE = 0x0020,
+        Traverse = 0x0020,
 
         /// <summary>
         /// The right to delete the directory and all the files it contains,
-        /// including read-only files.
+        /// including read-only files. [FILE_DELETE_CHILD]
         /// </summary>
-        FILE_DELETE_CHILD = 0x0040,
+        DeleteChild = 0x0040,
 
         /// <summary>
-        /// The right to read attributes.
+        /// The right to read attributes. [FILE_READ_ATTRIBUTES]
         /// </summary>
-        FILE_READ_ATTRIBUTES = 0x0080,
+        ReadAttributes = 0x0080,
 
         /// <summary>
-        /// The right to write attributes.
+        /// The right to write attributes. [FILE_WRITE_ATTRIBUTES]
         /// </summary>
-        FILE_WRITE_ATTRIBUTES = 0x0100,
+        WriteAttributes = 0x0100,
 
         /// <summary>
-        /// The right to delete the object.
+        /// The right to delete the object. [DELETE]
         /// </summary>
-        DELETE = StandardAccessRights.Delete,
+        Delete = StandardAccessRights.Delete,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
-        /// Doesn't include system access control list info (SACL).
+        /// Doesn't include system access control list info (SACL). [READ_CONTROL]
         /// </summary>
-        READ_CONTROL = StandardAccessRights.ReadControl,
+        ReadControl = StandardAccessRights.ReadControl,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
-        /// object's security descriptor.
+        /// object's security descriptor. [WRITE_DAC]
         /// </summary>
-        WRITE_DAC = StandardAccessRights.WriteDac,
+        WriteDac = StandardAccessRights.WriteDac,
 
         /// <summary>
-        /// The right to change the owner in the object's security descriptor.
+        /// The right to change the owner in the object's security descriptor. [WRITE_OWNER]
         /// </summary>
-        WRITE_OWNER = StandardAccessRights.WriteOwner,
+        WriteOwner = StandardAccessRights.WriteOwner,
 
         /// <summary>
         /// The right to use the object for synchronization. Enables a thread to wait
-        /// until the object is in the signaled state.
+        /// until the object is in the signaled state. [SYNCHRONIZE]
         /// </summary>
-        SYNCHRONIZE = StandardAccessRights.Synchronize
+        Synchronize = StandardAccessRights.Synchronize
     }
 }

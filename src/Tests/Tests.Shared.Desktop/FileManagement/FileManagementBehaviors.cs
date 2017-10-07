@@ -93,7 +93,7 @@ namespace DesktopTests.FileManagementTests
                 path,
                 CreationDisposition.OpenExisting,
                 0,
-                ShareMode.ReadWrite,
+                ShareModes.ReadWrite,
                 FileAttributes.None,
                 FileFlags.BackupSemantics);
 

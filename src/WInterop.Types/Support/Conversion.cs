@@ -63,11 +63,11 @@ namespace WInterop.Support
             return fileAccess;
         }
 
-        public static ShareMode FileShareToShareMode(System.IO.FileShare fileShare)
+        public static ShareModes FileShareToShareMode(System.IO.FileShare fileShare)
         {
             // See additional comments on ShareMode
             fileShare &= ~System.IO.FileShare.Inheritable;
-            return unchecked((ShareMode)fileShare);
+            return unchecked((ShareModes)fileShare);
         }
 
         public static FileFlags FileOptionsToFileFlags(System.IO.FileOptions fileOptions)

@@ -29,7 +29,7 @@ namespace WInterop.FileManagement
             public unsafe static extern SafeFileHandle CreateFileW(
                 string lpFileName,
                 DesiredAccess dwDesiredAccess,
-                ShareMode dwShareMode,
+                ShareModes dwShareMode,
                 SECURITY_ATTRIBUTES* lpSecurityAttributes,
                 CreationDisposition dwCreationDisposition,
                 uint dwFlagsAndAttributes,
@@ -40,7 +40,7 @@ namespace WInterop.FileManagement
             public static extern IntPtr ReOpenFile(
                 SafeFileHandle hOriginalFile,
                 DesiredAccess dwDesiredAccess,
-                ShareMode dwShareMode,
+                ShareModes dwShareMode,
                 uint dwFlags);
 
             // Ex version is supported by WinRT apps
@@ -152,7 +152,7 @@ namespace WInterop.FileManagement
                 out IO_STATUS_BLOCK IoStatusBlock,
                 long* AllocationSize,
                 FileAttributes FileAttributes,
-                ShareMode ShareAccess,
+                ShareModes ShareAccess,
                 CreateDisposition CreateDisposition,
                 CreateOptions CreateOptions,
                 void* EaBuffer,

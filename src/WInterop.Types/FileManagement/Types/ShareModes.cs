@@ -18,7 +18,7 @@ namespace WInterop.FileManagement.Types
     /// will be set to 1 if Inheritable is set.
     /// </remarks>
     [Flags]
-    public enum ShareMode : uint
+    public enum ShareModes : uint
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363874.aspx
 

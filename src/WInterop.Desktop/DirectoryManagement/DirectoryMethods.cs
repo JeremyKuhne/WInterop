@@ -24,7 +24,7 @@ namespace WInterop.DirectoryManagement
                 rootDirectory,
                 CreateDisposition.Create,
                 DesiredAccess.ListDirectory | DesiredAccess.Synchronize,
-                ShareMode.ReadWrite | ShareMode.Delete,
+                ShareModes.ReadWrite | ShareModes.Delete,
                 FileAttributes.None,
                 CreateOptions.SynchronousIoNonalert | CreateOptions.DirectoryFile | CreateOptions.OpenForBackupIntent | CreateOptions.OpenReparsePoint);
         }
@@ -39,7 +39,7 @@ namespace WInterop.DirectoryManagement
                 rootDirectory,
                 CreateDisposition.Open,
                 DesiredAccess.ListDirectory | DesiredAccess.Synchronize,
-                ShareMode.ReadWrite | ShareMode.Delete,
+                ShareModes.ReadWrite | ShareModes.Delete,
                 FileAttributes.None,
                 CreateOptions.SynchronousIoNonalert | CreateOptions.DirectoryFile | CreateOptions.OpenForBackupIntent | CreateOptions.OpenReparsePoint);
         }
@@ -54,7 +54,7 @@ namespace WInterop.DirectoryManagement
                 rootDirectory,
                 CreateDisposition.Open,
                 DesiredAccess.ListDirectory | DesiredAccess.Synchronize,
-                ShareMode.ReadWrite | ShareMode.Delete,
+                ShareModes.ReadWrite | ShareModes.Delete,
                 FileAttributes.None,
                 CreateOptions.SynchronousIoNonalert | CreateOptions.DirectoryFile | CreateOptions.OpenForBackupIntent | CreateOptions.OpenReparsePoint);
         }

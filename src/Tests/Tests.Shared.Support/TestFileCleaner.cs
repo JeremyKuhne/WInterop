@@ -108,7 +108,7 @@ namespace Tests.Support
         {
             string testFile = GetTestPath(basePath);
             using (var stream = FileMethods.CreateFileStream(testFile,
-                DesiredAccess.GenericReadWrite, ShareMode.ReadWrite, CreationDisposition.CreateNew))
+                DesiredAccess.GenericReadWrite, ShareModes.ReadWrite, CreationDisposition.CreateNew))
             {
                 using (var writer = new StreamWriter(stream))
                 {
@@ -123,7 +123,7 @@ namespace Tests.Support
         {
             string testFile = GetTestPath(basePath);
             using (var stream = FileMethods.CreateFileStream(testFile,
-                DesiredAccess.GenericReadWrite, ShareMode.ReadWrite, CreationDisposition.CreateNew))
+                DesiredAccess.GenericReadWrite, ShareModes.ReadWrite, CreationDisposition.CreateNew))
             {
                 using (var writer = new BinaryWriter(stream))
                 {

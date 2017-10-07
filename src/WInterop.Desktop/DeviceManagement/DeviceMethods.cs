@@ -40,7 +40,7 @@ namespace WInterop.DeviceManagement
         public static string QueryDosVolumePath(string volume)
         {
             var mountManager = FileManagement.FileMethods.CreateFile(
-                @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0, ShareMode.ReadWrite, FileAttributes.Normal);
+                @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite, FileAttributes.Normal);
 
             uint controlCode = DeviceMacros.CTL_CODE(ControlCodeDeviceType.MOUNTMGRCONTROLTYPE, 12, ControlCodeMethod.METHOD_BUFFERED, ControlCodeAccess.FILE_ANY_ACCESS);
 

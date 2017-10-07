@@ -61,7 +61,7 @@ namespace WInterop.FileManagement
             FileFlags flags = FileFlags.BackupSemantics;
             if (!resolveLinks) flags |= FileFlags.OpenReparsePoint;
 
-            using (SafeFileHandle fileHandle = CreateFile(path, CreationDisposition.OpenExisting, 0, ShareMode.ReadWrite,
+            using (SafeFileHandle fileHandle = CreateFile(path, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
                 FileAttributes.None, flags))
             {
                 return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
@@ -96,7 +96,7 @@ namespace WInterop.FileManagement
         public unsafe static SafeFileHandle CreateFileW(
             string path,
             DesiredAccess desiredAccess,
-            ShareMode shareMode,
+            ShareModes shareMode,
             CreationDisposition creationDisposition,
             FileAttributes fileAttributes = FileAttributes.None,
             FileFlags fileFlags = FileFlags.None,
@@ -117,7 +117,7 @@ namespace WInterop.FileManagement
             string path,
             CreateDisposition createDisposition,
             DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
-            ShareMode shareAccess = ShareMode.ReadWrite,
+            ShareModes shareAccess = ShareModes.ReadWrite,
             FileAttributes fileAttributes = FileAttributes.None,
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
@@ -131,7 +131,7 @@ namespace WInterop.FileManagement
             SafeFileHandle rootDirectory,
             CreateDisposition createDisposition,
             DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
-            ShareMode shareAccess = ShareMode.ReadWrite,
+            ShareModes shareAccess = ShareModes.ReadWrite,
             FileAttributes fileAttributes = FileAttributes.None,
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
@@ -157,7 +157,7 @@ namespace WInterop.FileManagement
             IntPtr rootDirectory,
             CreateDisposition createDisposition,
             DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
-            ShareMode shareAccess = ShareMode.ReadWrite,
+            ShareModes shareAccess = ShareModes.ReadWrite,
             FileAttributes fileAttributes = FileAttributes.None,
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
@@ -309,12 +309,12 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Gets the file mode for the given handle.
         /// </summary>
-        public static FileAccessMode GetFileMode(SafeFileHandle fileHandle)
+        public static FileAccessModes GetFileMode(SafeFileHandle fileHandle)
         {
-            FileAccessMode info;
+            FileAccessModes info;
             unsafe
             {
-                GetFileInformation(fileHandle, FileInformationClass.FileModeInformation, &info, sizeof(FileAccessMode));
+                GetFileInformation(fileHandle, FileInformationClass.FileModeInformation, &info, sizeof(FileAccessModes));
             }
             return info;
         }

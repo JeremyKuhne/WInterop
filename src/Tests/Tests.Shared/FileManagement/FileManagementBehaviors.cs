@@ -244,7 +244,7 @@ namespace Tests.FileManagement
                 DirectoryMethods.CreateDirectory(directory);
                 FileMethods.DirectoryExists(directory).Should().BeTrue();
                 string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion), directory);
-                using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareMode.ReadWrite | ShareMode.Delete))
+                using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
@@ -260,7 +260,7 @@ namespace Tests.FileManagement
                         directory,
                         CreationDisposition.OpenExisting,
                         DesiredAccess.ListDirectory | DesiredAccess.Delete,
-                        ShareMode.ReadWrite | ShareMode.Delete,
+                        ShareModes.ReadWrite | ShareModes.Delete,
                         FileAttributes.None,
                         FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
                     {
@@ -279,7 +279,7 @@ namespace Tests.FileManagement
                     directory,
                     CreationDisposition.OpenExisting,
                     DesiredAccess.ListDirectory | DesiredAccess.Delete,
-                    ShareMode.ReadWrite | ShareMode.Delete,
+                    ShareModes.ReadWrite | ShareModes.Delete,
                     FileAttributes.None,
                     FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
                 {
@@ -301,7 +301,7 @@ namespace Tests.FileManagement
                 string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion2), directory);
 
                 SafeFileHandle directoryHandle = null;
-                using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareMode.ReadWrite | ShareMode.Delete))
+                using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
@@ -313,7 +313,7 @@ namespace Tests.FileManagement
                         directory,
                         CreationDisposition.OpenExisting,
                         DesiredAccess.ListDirectory | DesiredAccess.Delete,
-                        ShareMode.ReadWrite | ShareMode.Delete,
+                        ShareModes.ReadWrite | ShareModes.Delete,
                         FileAttributes.None,
                         FileFlags.BackupSemantics | FileFlags.DeleteOnClose);
                 }

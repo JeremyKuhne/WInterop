@@ -29,7 +29,7 @@ namespace WInterop.FileManagement
             public static extern SafeFileHandle CreateFile2(
                 string lpFileName,
                 DesiredAccess dwDesiredAccess,
-                ShareMode dwShareMode,
+                ShareModes dwShareMode,
                 CreationDisposition dwCreationDisposition,
                 [In] ref CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
 

@@ -44,7 +44,7 @@ namespace WInterop.DirectoryManagement
                 directoryPath,
                 CreationDisposition.OpenExisting,
                 DesiredAccess.ListDirectory,
-                ShareMode.ReadWrite | ShareMode.Delete,
+                ShareModes.ReadWrite | ShareModes.Delete,
                 FileAttributes.None,
                 FileFlags.BackupSemantics);
         }

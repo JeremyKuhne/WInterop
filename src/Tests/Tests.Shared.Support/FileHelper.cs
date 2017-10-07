@@ -18,7 +18,7 @@ namespace Tests.Support
         public static void WriteAllBytes(string path, byte[] data)
         {
             using (var stream = FileMethods.CreateFileStream(path,
-                DesiredAccess.GenericWrite, ShareMode.ReadWrite, CreationDisposition.OpenAlways))
+                DesiredAccess.GenericWrite, ShareModes.ReadWrite, CreationDisposition.OpenAlways))
             {
                 using (var writer = new System.IO.BinaryWriter(stream))
                 {
@@ -30,7 +30,7 @@ namespace Tests.Support
         public static void WriteAllText(string path, string text)
         {
             using (var stream = FileMethods.CreateFileStream(path,
-                DesiredAccess.GenericWrite, ShareMode.ReadWrite, CreationDisposition.OpenAlways))
+                DesiredAccess.GenericWrite, ShareModes.ReadWrite, CreationDisposition.OpenAlways))
             {
                 using (var writer = new System.IO.StreamWriter(stream))
                 {
@@ -42,7 +42,7 @@ namespace Tests.Support
         public static string ReadAllText(string path)
         {
             using (var stream = FileMethods.CreateFileStream(path,
-                DesiredAccess.GenericRead, ShareMode.ReadWrite, CreationDisposition.OpenExisting))
+                DesiredAccess.GenericRead, ShareModes.ReadWrite, CreationDisposition.OpenExisting))
             {
                 using (var reader = new System.IO.StreamReader(stream))
                 {

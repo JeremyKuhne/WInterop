@@ -103,7 +103,7 @@ namespace DesktopTests.FileManagementMethods
                 }
 
                 using (var handle = FileMethods.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead,
-                    ShareMode.ReadWrite, FileAttributes.None, FileFlags.OpenReparsePoint))
+                    ShareModes.ReadWrite, FileAttributes.None, FileFlags.OpenReparsePoint))
                 {
                     handle.IsInvalid.Should().BeFalse();
                     FileMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
@@ -329,7 +329,7 @@ namespace DesktopTests.FileManagementMethods
                 {
                     file.IsInvalid.Should().BeFalse();
                     var mode = FileMethods.GetFileMode(file);
-                    mode.Should().HaveFlag(FileAccessMode.SynchronousNotAlertable);
+                    mode.Should().HaveFlag(FileAccessModes.SynchronousNotAlertable);
                 }
             }
         }
@@ -345,8 +345,8 @@ namespace DesktopTests.FileManagementMethods
                 {
                     file.IsInvalid.Should().BeFalse();
                     var mode = FileMethods.GetFileMode(file);
-                    mode.Should().NotHaveFlag(FileAccessMode.SynchronousAlertable);
-                    mode.Should().NotHaveFlag(FileAccessMode.SynchronousNotAlertable);
+                    mode.Should().NotHaveFlag(FileAccessModes.SynchronousAlertable);
+                    mode.Should().NotHaveFlag(FileAccessModes.SynchronousNotAlertable);
                 }
             }
         }

@@ -32,7 +32,7 @@ namespace DesktopTests.Ipc.MailslotTests
                     var modeInfo = FileMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened synchronously
-                    modeInfo.Should().Be(FileAccessMode.SynchronousNotAlertable);
+                    modeInfo.Should().Be(FileAccessModes.SynchronousNotAlertable);
                 }
             }
         }
@@ -46,7 +46,7 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = FileMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0, ShareMode.ReadWrite,
+                using (var fileHandle = FileMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
                     FileAttributes.None, FileFlags.Overlapped))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
@@ -54,7 +54,7 @@ namespace DesktopTests.Ipc.MailslotTests
                     var modeInfo = FileMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened asynchronously (e.g. no synchronous flag)
-                    modeInfo.Should().Be((FileAccessMode)0);
+                    modeInfo.Should().Be((FileAccessModes)0);
                 }
             }
         }

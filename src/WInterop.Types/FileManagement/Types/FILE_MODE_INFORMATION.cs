@@ -13,6 +13,6 @@ namespace WInterop.FileManagement.Types
     /// </summary>
     public struct FILE_MODE_INFORMATION
     {
-        public FileAccessMode Mode;
+        public FileAccessModes Mode;
     }
 }
