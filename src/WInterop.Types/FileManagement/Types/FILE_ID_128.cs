@@ -5,21 +5,15 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
-    /// File identification information.
+    /// 128 bit file identifier.
     /// </summary>
-    /// <remarks>
-    /// Available in Windows 10 / Server 2012.
-    /// </remarks>
-    public struct FILE_ID_INFO
+    public struct FILE_ID_128
     {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/hh802691.aspx
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/hh965605.aspx
 
-        public ulong VolumeSerialNumber;
-        public Guid FileId;
+        private FixedByte.Size16 Identifier;
     }
 }

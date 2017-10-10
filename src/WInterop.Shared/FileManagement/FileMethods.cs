@@ -385,7 +385,7 @@ namespace WInterop.FileManagement
                 {
                     while (!Imports.GetFileInformationByHandleEx(
                         fileHandle,
-                        FILE_INFO_BY_HANDLE_CLASS.FileNameInfo,
+                        FileInfoClass.FileNameInfo,
                         buffer.VoidPointer,
                         checked((uint)buffer.ByteCapacity)))
                     {
@@ -410,7 +410,7 @@ namespace WInterop.FileManagement
             {
                 if (!Imports.GetFileInformationByHandleEx(
                     fileHandle,
-                    FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo,
+                    FileInfoClass.FileStandardInfo,
                     &info,
                     (uint)sizeof(FILE_STANDARD_INFORMATION)))
                     throw Errors.GetIoExceptionForLastError();
@@ -429,7 +429,7 @@ namespace WInterop.FileManagement
             {
                 if (!Imports.GetFileInformationByHandleEx(
                     fileHandle,
-                    FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo,
+                    FileInfoClass.FileBasicInfo,
                     &info,
                     (uint)sizeof(FILE_BASIC_INFORMATION)))
                     throw Errors.GetIoExceptionForLastError();
@@ -446,7 +446,7 @@ namespace WInterop.FileManagement
             {
                 unsafe
                 {
-                    while (!Imports.GetFileInformationByHandleEx(fileHandle, FILE_INFO_BY_HANDLE_CLASS.FileStreamInfo,
+                    while (!Imports.GetFileInformationByHandleEx(fileHandle, FileInfoClass.FileStreamInfo,
                         buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
                     {
                         WindowsError error = Errors.GetLastError();
@@ -721,7 +721,7 @@ namespace WInterop.FileManagement
                 {
                     while (!Imports.GetFileInformationByHandleEx(
                         directoryHandle,
-                        FILE_INFO_BY_HANDLE_CLASS.FileFullDirectoryInfo,
+                        FileInfoClass.FileFullDirectoryInfo,
                         buffer.VoidPointer,
                         (uint)buffer.ByteCapacity))
                     {
@@ -754,6 +754,7 @@ namespace WInterop.FileManagement
         /// </summary>
         public static bool IsReparseTagMicrosoft(ReparseTag reparseTag)
         {
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff549452.aspx
             return ((uint)reparseTag & 0x80000000) != 0;
         }
 
@@ -762,7 +763,16 @@ namespace WInterop.FileManagement
         /// </summary>
         public static bool IsReparseTagNameSurrogate(ReparseTag reparseTag)
         {
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff549462.aspx
             return ((uint)reparseTag & 0x20000000) != 0;
+        }
+
+        /// <summary>
+        /// Returns true if the reparse point can have children.
+        /// </summary>
+        public static bool IsReparseTagDirectory(ReparseTag reparseTag)
+        {
+            return ((uint)reparseTag & 0x10000000) != 0;
         }
     }
 }

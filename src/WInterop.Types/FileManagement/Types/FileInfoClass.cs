@@ -8,9 +8,9 @@
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
-    /// 
+    /// File information type for GetFileInformationByHandle() [FILE_INFO_BY_HANDLE_CLASS]
     /// </summary>
-    public enum FILE_INFO_BY_HANDLE_CLASS : uint
+    public enum FileInfoClass : uint
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364228.aspx
         // Note that OS support is gleaned from documentation & headers for the structures.

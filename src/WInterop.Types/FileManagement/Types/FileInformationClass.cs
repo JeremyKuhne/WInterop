@@ -73,6 +73,8 @@ namespace WInterop.FileManagement.Types
         FileCompletionInformation = 30,
         FileMoveClusterInformation = 31,
         FileQuotaInformation = 32,
+
+
         FileReparsePointInformation = 33,
         FileNetworkOpenInformation = 34,
         FileAttributeTagInformation = 35,

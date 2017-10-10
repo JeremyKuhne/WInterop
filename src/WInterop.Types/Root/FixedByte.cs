@@ -20,6 +20,14 @@ namespace WInterop
             public Span<byte> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (byte* c = _buffer) return new Span<byte>(c, Size); } }
         }
 
+        public struct Size16
+        {
+            private const int Size = 16;
+            private fixed byte _buffer[Size];
+
+            public Span<byte> Buffer { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { fixed (byte* c = _buffer) return new Span<byte>(c, Size); } }
+        }
+
         public struct Size32
         {
             private const int Size = 32;

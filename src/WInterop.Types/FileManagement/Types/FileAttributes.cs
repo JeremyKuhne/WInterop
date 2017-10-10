@@ -74,6 +74,7 @@ namespace WInterop.FileManagement.Types
 
         /// <summary>
         /// File is a reparse point and will be further parsed dependent on the reparse point type.
+        /// This is mutually exclusive with the ExtendedAttributes flag.
         /// [FILE_ATTRIBUTE_REPARSE_POINT]
         /// </summary>
         ReparsePoint = 0x00000400,
@@ -118,7 +119,9 @@ namespace WInterop.FileManagement.Types
         NoScrubData = 0x00020000,
 
         /// <summary>
-        /// File has extended attributes. (FILE_EA_INFORMATION) [FILE_ATTRIBUTE_EA]
+        /// File has extended attributes (FILE_EA_INFORMATION). This is mutually exclusive
+        /// with the ReparsePoint flag.
+        /// [FILE_ATTRIBUTE_EA]
         /// </summary>
         /// <remarks>
         /// Filtered out by CreateFile.

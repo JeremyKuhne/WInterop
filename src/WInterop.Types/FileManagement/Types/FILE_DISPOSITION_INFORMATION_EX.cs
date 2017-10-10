@@ -7,7 +7,7 @@
 
 namespace WInterop.FileManagement.Types
 {
-    public struct FILE_DISPOSITION_INFO_EX
+    public struct FILE_DISPOSITION_INFORMATION_EX
     {
         public FileDispositionFlags Flags;
     }

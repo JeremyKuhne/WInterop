@@ -9,12 +9,21 @@
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
-    /// For flagging a file handle for deletion using NtSetInformationFile.
+    /// For flagging a file handle for deletion using NtSetInformationFile. Also usable with
+    /// SetFileInformationByHandle and FileInfoClass.FileDispositionInfo.
     /// </summary>
     public struct FILE_DISPOSITION_INFORMATION
     {
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545765.aspx
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364221.aspx
 
+        // NOTE: This is defined differently in MSDN, but it is really a BOOLEAN, NOT
+        // a BOOL. SetFileInformationByHandle simply thunks to NtSetInformationFile.
+
+        /// <summary>
+        /// Whether or not the file should be deleted. This is ignored if the handle
+        /// was opened with the DeleteOnClose flag.
+        /// </summary>
         public BOOLEAN DeleteFile;
     }
 }

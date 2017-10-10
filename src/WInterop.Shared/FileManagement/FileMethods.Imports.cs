@@ -109,7 +109,7 @@ namespace WInterop.FileManagement
             [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool GetFileInformationByHandleEx(
                 SafeFileHandle hFile,
-                FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+                FileInfoClass FileInformationClass,
                 void* lpFileInformation,
                 uint dwBufferSize);
 
