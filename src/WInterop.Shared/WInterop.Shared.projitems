@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MemoryManagement\MemoryMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipes\PipeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipes\PipeMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ThreadMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Root\MoreCharSpanExtensions.cs" />

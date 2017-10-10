@@ -12,24 +12,6 @@ namespace WInterop.ProcessAndThreads
 {
     public static partial class ProcessMethods
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683179.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern ProcessHandle GetCurrentProcess();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683180.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern uint GetCurrentProcessId();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683156.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern string GetCommandLineW();
-        }
-
         public static ProcessHandle GetCurrentProcess()
         {
             return Imports.GetCurrentProcess();
