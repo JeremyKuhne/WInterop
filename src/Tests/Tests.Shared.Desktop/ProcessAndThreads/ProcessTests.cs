@@ -9,8 +9,9 @@ using System;
 using Xunit;
 using FluentAssertions;
 using WInterop.ProcessAndThreads;
+using WInterop.ProcessAndThreads.Types;
 
-namespace DesktopTests.ProcessAndThread
+namespace DesktopTests.ProcessAndThreads
 {
     public class ProcessTests
     {
@@ -88,6 +89,24 @@ namespace DesktopTests.ProcessAndThread
             // PagefileUsage is 0 on Win7, otherwise it is equal to PrivateUsage
             if (info.PagefileUsage.ToUInt64() != 0)
                 info.PagefileUsage.ToUInt64().Should().Be(info.PrivateUsage.ToUInt64());
+        }
+
+        [Fact]
+        public void GetCurrentProcessIdViaFakeHandle()
+        {
+            uint id = ProcessMethods.GetCurrentProcessId();
+            var handle = ProcessMethods.GetCurrentProcess();
+            ProcessMethods.GetProcessId(handle).Should().Be(id);
+        }
+
+        [Fact]
+        public void GetCurrentProcessIdViaRealHandle()
+        {
+            uint id = ProcessMethods.GetCurrentProcessId();
+            using (var handle = ProcessMethods.OpenProcess(id, ProcessAccessRights.QueryLimitedInfomration))
+            {
+                ProcessMethods.GetProcessId(handle).Should().Be(id);
+            }
         }
     }
 }

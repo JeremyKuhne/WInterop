@@ -5,7 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Runtime.InteropServices;
 using WInterop.SafeString.Types;
 
 namespace WInterop.Handles.Types
@@ -19,7 +18,6 @@ namespace WInterop.Handles.Types
     //          ULONG Reserved[22];    // reserved for internal use
     //      } PUBLIC_OBJECT_TYPE_INFORMATION, *PPUBLIC_OBJECT_TYPE_INFORMATION;
     //
-    [StructLayout(LayoutKind.Sequential)]
     public struct OBJECT_TYPE_INFORMATION
     {
         public UNICODE_STRING TypeName;

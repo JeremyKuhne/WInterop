@@ -7,6 +7,7 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
+using System.Collections.Generic;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.BufferWrappers;
@@ -269,15 +270,12 @@ namespace WInterop.FileManagement
                     // Add space for the FileNameLength
                     buffer.EnsureByteCapacity(byteLength + sizeof(uint));
 
-                    unsafe
-                    {
-                        status = Imports.NtQueryInformationFile(
-                            FileHandle: fileHandle,
-                            IoStatusBlock: out _,
-                            FileInformation: buffer.VoidPointer,
-                            Length: checked((uint)buffer.ByteCapacity),
-                            FileInformationClass: fileInformationClass);
-                    }
+                    status = Imports.NtQueryInformationFile(
+                        FileHandle: fileHandle,
+                        IoStatusBlock: out _,
+                        FileInformation: buffer.VoidPointer,
+                        Length: checked((uint)buffer.ByteCapacity),
+                        FileInformationClass: fileInformationClass);
 
                     if (status == NTSTATUS.STATUS_SUCCESS || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
                     {
@@ -361,6 +359,38 @@ namespace WInterop.FileManagement
             if (result != NTSTATUS.STATUS_SUCCESS)
                 throw ErrorMethods.GetIoExceptionForNTStatus(result);
             return access.AccessFlags;
+        }
+
+        /// <summary>
+        /// Get the ids for all processes that have a handle to this file system object.
+        /// Does not include the current process.
+        /// </summary>
+        public unsafe static IEnumerable<UIntPtr> GetProcessIds(SafeFileHandle fileHandle)
+        {
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
+            {
+                NTSTATUS status = NTSTATUS.STATUS_INFO_LENGTH_MISMATCH;
+
+                while (status == NTSTATUS.STATUS_INFO_LENGTH_MISMATCH)
+                {
+                    status = Imports.NtQueryInformationFile(fileHandle, out IO_STATUS_BLOCK statusBlock,
+                        buffer.VoidPointer, (uint)buffer.ByteCapacity, FileInformationClass.FileProcessIdsUsingFileInformation);
+
+                    switch (status)
+                    {
+                        case NTSTATUS.STATUS_SUCCESS:
+                            break;
+                        case NTSTATUS.STATUS_INFO_LENGTH_MISMATCH:
+                            // Not a big enough buffer
+                            buffer.EnsureByteCapacity((ulong)statusBlock.Information);
+                            break;
+                        default:
+                            throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                    }
+                }
+
+                return ((FILE_PROCESS_IDS_USING_FILE_INFORMATION*)buffer.VoidPointer)->ProcessIdList.ToArray();
+            });
         }
     }
 }

@@ -24,11 +24,10 @@ namespace WInterop.Handles
 
             // https://msdn.microsoft.com/en-us/library/bb432383.aspx
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567062.aspx
-            // The Zw version of this is documented as available to UWP, Nt has no clarifying restrictions and is not included in a header.
             [DllImport(Libraries.Ntdll, ExactSpelling = true)]
             public static extern NTSTATUS NtQueryObject(
                 SafeHandle Handle,
-                OBJECT_INFORMATION_CLASS ObjectInformationClass,
+                ObjectInformationClass ObjectInformationClass,
                 IntPtr ObjectInformation,
                 uint ObjectInformationLength,
                 out uint ReturnLength);

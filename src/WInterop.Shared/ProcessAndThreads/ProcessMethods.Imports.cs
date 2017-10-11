@@ -28,6 +28,13 @@ namespace WInterop.ProcessAndThreads
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683156.aspx
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
             public static extern string GetCommandLineW();
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684320.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern SafeProcessHandle OpenProcess(
+                ProcessAccessRights dwDesiredAccess,
+                bool bInheritHandle,
+                uint dwProcessId);
         }
     }
 }

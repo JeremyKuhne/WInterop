@@ -29,7 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\MailslotTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThread\ProcessTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Registry\RegistryTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\MenuTests.cs" />

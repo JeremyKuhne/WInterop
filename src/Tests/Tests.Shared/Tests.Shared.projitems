@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\ComparisonTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfoTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HandlesTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\BoolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\CharSpanExtensionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\ConversionTests.cs" />

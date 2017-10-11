@@ -6,7 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System.Diagnostics;
+using System.Linq;
 using Tests.Support;
+using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 using Xunit;
@@ -20,7 +23,7 @@ namespace DesktopTests.FileManagement
         {
             using (var cleaner = new TestFileCleaner())
             {
-                string testFile = cleaner.CreateTestFile("TestFileRights");
+                string testFile = cleaner.CreateTestFile(nameof(TestFileRights));
 
                 // CreateFile ALWAYS adds SYNCHRONIZE & FILE_READ_ATTRIBUTES.
                 using (var handle = FileMethods.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadControl))
@@ -60,6 +63,46 @@ namespace DesktopTests.FileManagement
                 using (var handle = FileMethods.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes | DesiredAccess.Synchronize, ShareModes.ReadWrite, 0, 0))
                 {
                     FileMethods.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
+                }
+            }
+        }
+
+        [Fact]
+        public void ProcessWithActiveHandle()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string testFile = cleaner.CreateTestFile(nameof(ProcessWithActiveHandle));
+
+                // Create an open handle on the test file. Note that this must come first as
+                // the redirect (>>) will refuse to execute if there is already an open handle.
+                Process process = null;
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd",
+                    Arguments = $"/K copy con >> {testFile}",
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
+
+                try
+                {
+                    process = Process.Start(startInfo);
+
+                    // The existing cmd handle won't let us access much
+                    using (var handle = FileMethods.CreateFile(testFile, CreationDisposition.OpenExisting,
+                        DesiredAccess.ReadAttributes, ShareModes.ReadWrite | ShareModes.Delete))
+                    {
+                        var ids = FileMethods.GetProcessIds(handle);
+                        // If this ends up being problematic (i.e. antivirus gets us a count of 2)
+                        // we can look to see we have an id that matches the known process and that we
+                        // don't contain our own process id.
+                        ids.Should().HaveCount(1);
+                        ((int)(ulong)ids.First()).Should().Be(process.Id);
+                    }
+                }
+                finally
+                {
+                    process?.CloseMainWindow();
                 }
             }
         }

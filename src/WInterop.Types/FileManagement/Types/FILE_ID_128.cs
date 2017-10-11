@@ -14,6 +14,6 @@ namespace WInterop.FileManagement.Types
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/hh965605.aspx
 
-        private FixedByte.Size16 Identifier;
+        public FixedByte.Size16 Identifier;
     }
 }

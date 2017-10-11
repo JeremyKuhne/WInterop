@@ -8,12 +8,13 @@
 namespace WInterop.Handles.Types
 {
     /// <summary>
-    /// Information types returned by NtQueryObject. See <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff550964.aspx">OBJECT_INFORMATION_CLASS</a>.
+    /// Information types returned by NtQueryObject.
+    /// See <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff550964.aspx">OBJECT_INFORMATION_CLASS</a>.
     /// </summary>
-    public enum OBJECT_INFORMATION_CLASS
+    public enum ObjectInformationClass
     {
         /// <summary>
-        /// Gets attributes, access info, and handle/pointer counts
+        /// Gets attributes, access info, and handle/pointer counts via OBJECT_BASIC_INFORMATION.
         /// </summary>
         ObjectBasicInformation,
 
@@ -24,7 +25,7 @@ namespace WInterop.Handles.Types
         ObjectNameInformation,
 
         /// <summary>
-        /// Gets the type of the object.
+        /// Gets the type of the object via OBJECT_TYPE_INFORMATION.
         /// </summary>
         ObjectTypeInformation,
 

@@ -10,6 +10,9 @@ using WInterop.Authorization.Types;
 
 namespace WInterop.FileManagement.Types
 {
+    /// <summary>
+    /// Security Quality of Service flags for CreateFile.
+    /// </summary>
     [Flags]
     public enum SecurityQosFlags : uint
     {
@@ -19,7 +22,7 @@ namespace WInterop.FileManagement.Types
         None = 0x0,
 
         /// <summary>
-        /// [SECURITY_SQOS_PRESENT]
+        /// States that security quality of service options are present. [SECURITY_SQOS_PRESENT]
         /// </summary>
         QosPresent = 0x00100000,
 

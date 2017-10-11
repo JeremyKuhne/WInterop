@@ -182,7 +182,7 @@ namespace WInterop.Handles
             //
             // The above definition means the API expects a buffer where it can stick a UNICODE_STRING with the buffer immediately following.
 
-            using (HeapBuffer buffer = new HeapBuffer())
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
                 uint returnLength = 260 * sizeof(char);
@@ -193,7 +193,7 @@ namespace WInterop.Handles
 
                     status = Imports.NtQueryObject(
                         Handle: handle,
-                        ObjectInformationClass: OBJECT_INFORMATION_CLASS.ObjectNameInformation,
+                        ObjectInformationClass: ObjectInformationClass.ObjectNameInformation,
                         ObjectInformation: buffer.DangerousGetHandle(),
                         ObjectInformationLength: checked((uint)buffer.ByteCapacity),
                         ReturnLength: out returnLength);
@@ -203,7 +203,7 @@ namespace WInterop.Handles
                     throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
                 return ((UNICODE_STRING*)(buffer.VoidPointer))->ToString();
-            }
+            });
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace WInterop.Handles
         /// </summary>
         public unsafe static string GetObjectType(SafeHandle handle)
         {
-            using (HeapBuffer buffer = new HeapBuffer())
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
 
@@ -224,7 +224,7 @@ namespace WInterop.Handles
 
                     status = Imports.NtQueryObject(
                         Handle: handle,
-                        ObjectInformationClass: OBJECT_INFORMATION_CLASS.ObjectTypeInformation,
+                        ObjectInformationClass: ObjectInformationClass.ObjectTypeInformation,
                         ObjectInformation: buffer.DangerousGetHandle(),
                         ObjectInformationLength: checked((uint)buffer.ByteCapacity),
                         ReturnLength: out returnLength);
@@ -234,7 +234,7 @@ namespace WInterop.Handles
                     throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
                 return ((OBJECT_TYPE_INFORMATION*)(buffer.VoidPointer))->TypeName.ToString();
-            }
+            });
         }
     }
 }

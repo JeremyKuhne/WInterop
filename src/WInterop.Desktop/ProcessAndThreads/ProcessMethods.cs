@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
 using WInterop.ProcessAndThreads.BufferWrappers;
 using WInterop.ProcessAndThreads.Types;
@@ -22,45 +21,6 @@ namespace WInterop.ProcessAndThreads
     /// </summary>
     public static partial class ProcessMethods
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683188.aspx
-            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern uint GetEnvironmentVariableW(
-                string lpName,
-                SafeHandle lpBuffer,
-                uint nSize);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms686206.aspx
-            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool SetEnvironmentVariableW(
-                string lpName,
-                string lpValue);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683187.aspx
-            // Note that this API does not document that it sets GetLastError
-            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern EnvironmentStringsHandle GetEnvironmentStringsW();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683151.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool FreeEnvironmentStringsW(
-                IntPtr lpszEnvironmentBlock);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683219.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool K32GetProcessMemoryInfo(
-                SafeProcessHandle process,
-                out PROCESS_MEMORY_COUNTERS_EX ppsmemCounters,
-                uint cb);
-        }
-
         /// <summary>
         /// Set the given enivronment variable.
         /// </summary>
@@ -134,12 +94,20 @@ namespace WInterop.ProcessAndThreads
         /// <param name="process">The process to get memory info for for or null for the current process.</param>
         public unsafe static PROCESS_MEMORY_COUNTERS_EX GetProcessMemoryInfo(SafeProcessHandle process = null)
         {
-            if (process == null) process = ProcessMethods.GetCurrentProcess();
+            if (process == null) process = GetCurrentProcess();
 
             if (!Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(PROCESS_MEMORY_COUNTERS_EX)))
                 throw Errors.GetIoExceptionForLastError();
 
             return info;
+        }
+
+        /// <summary>
+        /// Get the process id for the given process handle.
+        /// </summary>
+        public static uint GetProcessId(SafeProcessHandle processHandle)
+        {
+            return Imports.GetProcessId(processHandle);
         }
     }
 }

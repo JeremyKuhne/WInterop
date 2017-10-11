@@ -74,7 +74,9 @@ namespace WInterop.FileManagement.Types
         FileMoveClusterInformation = 31,
         FileQuotaInformation = 32,
 
-
+        /// <summary>
+        /// Returns the reparse point information in FILE_REPARSE_POINT_INFORMATION.
+        /// </summary>
         FileReparsePointInformation = 33,
         FileNetworkOpenInformation = 34,
         FileAttributeTagInformation = 35,

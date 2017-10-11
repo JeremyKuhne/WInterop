@@ -17,10 +17,9 @@ namespace WInterop
     /// to the string value.
     /// </summary>
     /// <remarks>
-    /// Accessing the string values is only safe when you have a pointer to the
-    /// containing struct in a buffer. If you have an actual struct (Foo, not Foo*),
-    /// the trailing characters will have been truncated as they aren't actually
-    /// part of the struct.
+    /// Accessing the values is only safe when you have a pointer to the containing struct in
+    /// a buffer. If you have an actual struct (Foo, not Foo*), the trailing array will have been
+    /// truncated as the values aren't actually part of the struct.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct TrailingString
@@ -30,6 +29,9 @@ namespace WInterop
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe ReadOnlySpan<char> GetBuffer(uint sizeInBytes)
         {
+            if (sizeInBytes == 0)
+                return new ReadOnlySpan<char>();
+
             fixed (char* c = &_firstChar)
                 return new ReadOnlySpan<char>(c, (int)(sizeInBytes / sizeof(char)));
         }
