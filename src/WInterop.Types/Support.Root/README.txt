@@ -1,0 +1,1 @@
+﻿This folder is for support APIs that we want in the root namespace (e.g. Winterop).
