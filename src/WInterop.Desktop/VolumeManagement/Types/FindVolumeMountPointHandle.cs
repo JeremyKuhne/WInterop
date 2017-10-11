@@ -10,17 +10,17 @@ using WInterop.Handles.Types;
 namespace WInterop.VolumeManagement.Types
 {
     /// <summary>
-    /// Handle for enumerating volumes.
+    /// Handle for enumerating volume mount points.
     /// </summary>
-    public class FindVolumeHandle : HandleZeroOrMinusOneIsInvalid
+    public class FindVolumeMountPointHandle : HandleZeroOrMinusOneIsInvalid
     {
-        public FindVolumeHandle() : base(ownsHandle: true)
+        public FindVolumeMountPointHandle() : base(ownsHandle: true)
         {
         }
 
         protected override bool ReleaseHandle()
         {
-            return VolumeMethods.Imports.FindVolumeClose(handle);
+            return VolumeMethods.Imports.FindVolumeMountPointClose(handle);
         }
     }
 }

@@ -6,6 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -125,7 +127,15 @@ namespace WInterop.VolumeManagement
                     }
                 }
 
-                buffer.Length = returnLength;
+                Debug.Assert(returnLength != 2, "this should never happen can't have a string array without at least 3 chars");
+
+                // If the return length is 1 there were no mount points. The buffer should be '\0'.
+                if (returnLength < 3)
+                    return Enumerable.Empty<string>();
+
+                // The return length will be the entire length of the buffer, including the final string's
+                // null and the string list's second null. Example: "Foo\0Bar\0\0" would be 9.
+                buffer.Length = returnLength - 2;
                 return buffer.Split('\0');
             });
         }
@@ -197,6 +207,28 @@ namespace WInterop.VolumeManagement
         {
             if (rootPath != null) rootPath = Paths.AddTrailingSeparator(rootPath);
             return Imports.GetDriveTypeW(rootPath);
+        }
+
+        /// <summary>
+        /// Get all volume names.
+        /// </summary>
+        public static IEnumerable<string> GetVolumes()
+        {
+            return new VolumeNamesEnumerable();
+        }
+
+        /// <summary>
+        /// Get all of the folder mount points for the given volume. Requires admin access.
+        /// </summary>
+        /// <remarks>
+        /// This API seems busted/flaky. Use GetVolumePathNamesForVolumeName() instead to
+        /// get all mount points (folders *and* drive letter mounts) without requiring admin
+        /// access.
+        /// </remarks>
+        /// <param name="volumeName">Volume name in the form "\\?\Volume{guid}\"</param>
+        public static IEnumerable<string> GetVolumeMountPoints(string volumeName)
+        {
+            return new VolumeMountPointsEnumerable(volumeName);
         }
     }
 }

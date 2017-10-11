@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System.Linq;
 using WInterop.ErrorHandling.Types;
 using WInterop.VolumeManagement;
 using Xunit;
@@ -47,6 +48,35 @@ namespace DesktopTests
             foreach (string drive in VolumeMethods.GetLogicalDriveStrings())
             {
                 var type = VolumeMethods.GetDriveType(drive);
+            }
+        }
+
+        [Fact]
+        public void GetVolumeNames()
+        {
+            var volumeNames = VolumeMethods.GetVolumes().ToArray();
+            volumeNames.Length.Should().BeGreaterThan(0);
+            volumeNames[0].Should().StartWith(@"\\?\Volume{");
+        }
+
+        [Fact(Skip = "Needs admin access and the API this is calling appears buggy.")]
+        public void GetVolumeMountPoints()
+        {
+            foreach (string volumeName in VolumeMethods.GetVolumes())
+            {
+                var mountPoints = VolumeMethods.GetVolumeMountPoints(volumeName).ToArray();
+            }
+        }
+
+        [Fact]
+        public void GetAllVolumeMountPoints()
+        {
+            foreach (string volumeName in VolumeMethods.GetVolumes())
+            {
+                foreach (string mountPoint in VolumeMethods.GetVolumePathNamesForVolumeName(volumeName))
+                {
+                    mountPoint.Should().NotBeNullOrWhiteSpace();
+                }
             }
         }
     }

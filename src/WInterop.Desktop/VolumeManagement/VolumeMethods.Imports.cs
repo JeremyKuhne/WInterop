@@ -18,6 +18,43 @@ namespace WInterop.VolumeManagement
         /// </summary>
         public static partial class Imports
         {
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364425.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern FindVolumeHandle FindFirstVolumeW(
+                SafeHandle lpszVolumeName,
+                uint cchBufferLength);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364431.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool FindNextVolumeW(
+                FindVolumeHandle hFindVolume,
+                SafeHandle lpszVolumeName,
+                uint cchBufferLength);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364433.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool FindVolumeClose(
+                IntPtr hFindVolume);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364426.aspx
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern FindVolumeMountPointHandle FindFirstVolumeMountPointW(
+                string lpszRootPathName,
+                SafeHandle lpszVolumeMountPoint,
+                uint cchBufferLength);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364432.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool FindNextVolumeMountPointW(
+                FindVolumeMountPointHandle hFindVolumeMountPoint,
+                SafeHandle lpszVolumeMountPoint,
+                uint cchBufferLength);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364435.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool FindVolumeMountPointClose(
+                IntPtr hFindVolumeMountPoint);
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365461.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern uint QueryDosDeviceW(
@@ -37,7 +74,6 @@ namespace WInterop.VolumeManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364996.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetVolumePathNameW(
                 string lpszFileName,
                 SafeHandle lpszVolumePathName,
@@ -45,7 +81,6 @@ namespace WInterop.VolumeManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364998.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetVolumePathNamesForVolumeNameW(
                 string lpszVolumeName,
                 SafeHandle lpszVolumePathNames,
@@ -54,7 +89,6 @@ namespace WInterop.VolumeManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364994.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetVolumeNameForVolumeMountPointW(
                 string lpszVolumeMountPoint,
                 SafeHandle lpszVolumeName,
@@ -76,12 +110,6 @@ namespace WInterop.VolumeManagement
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern DriveType GetDriveTypeW(
                 string lpRootPathName);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364433.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool FindVolumeClose(
-                IntPtr hFindVolume);
         }
     }
 }
