@@ -276,17 +276,22 @@ namespace WInterop.FileManagement
         /// Creates a wrapper for finding files.
         /// </summary>
         /// <param name="directory">The directory to search in.</param>
-        /// <param name="filter">
-        /// The filter. Can contain wildcards, full details can be found at
+        /// <param name="recursive">True to find files recursively.</param>
+        /// <param name="nameFilter">
+        /// The filename filter. Can contain wildcards, full details can be found at
         /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
+        /// If custom <paramref name="findFilter"/> is specified this parameter is ignored.
         /// </param>
-        /// <param name="getAlternateName">Returns the alternate (short) file name in the FindResult.AlternateName field if it exists.</param>
-        public static FindOperation CreateFindOperation(
+        /// <param name="findFilter">Custom filter, if default behavior isn't desired. (Which is no "." or "..", and use the filter string.)</param>
+        /// <param name="findTransform">Custom transform, if the default transform isn't desired.</param>
+        public static FindOperation<T> CreateFindOperation<T>(
             string directory,
-            string filter = "*",
-            bool getAlternateName = false)
+            string nameFilter = "*",
+            bool recursive = false,
+            IFindTransform<T> findTransform = null,
+            IFindFilter findFilter = null)
         {
-            return new FindOperation(directory, filter, getAlternateName);
+            return new FindOperation<T>(directory, nameFilter, recursive, findTransform, findFilter);
         }
 
         /// <summary>

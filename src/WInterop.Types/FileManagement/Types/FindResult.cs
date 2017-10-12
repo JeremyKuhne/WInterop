@@ -25,44 +25,15 @@ namespace WInterop.FileManagement.Types
         public ulong AllocatedBytes { get; private set; }
         public ReparseTag ReparseTag { get; private set; }
 
-        public FindResult(ref WIN32_FIND_DATA findData, string directory)
+        public FindResult(ref RawFindData findData)
         {
-            Directory = directory;
-            FileName = findData.cFileName.CreateString();
-            AlternateFileName = findData.cAlternateFileName.CreateString();
-            Attributes = findData.dwFileAttributes;
-
-            CreationUtc = findData.ftCreationTime.ToDateTimeUtc();
-            LastAccessUtc = findData.ftLastAccessTime.ToDateTimeUtc();
-            LastWriteUtc = findData.ftLastWriteTime.ToDateTimeUtc();
-            Length = findData.nFileSize;
-            ReparseTag = findData.dwReserved0;
-        }
-
-        public unsafe FindResult(FILE_DIRECTORY_INFORMATION* info, string directory)
-        {
-            Directory = directory;
-            FileName = info->FileName.CreateString();
-            Attributes = info->FileAttributes;
-            CreationUtc = info->CreationTime.ToDateTimeUtc();
-            LastAccessUtc = info->LastAccessTime.ToDateTimeUtc();
-            LastWriteUtc = info->ChangeTime.ToDateTimeUtc();
-            Length = (uint)info->EndOfFile;
-            AllocatedBytes = (uint)info->AllocationSize;
-        }
-
-        public unsafe FindResult(FILE_FULL_DIR_INFORMATION* info, string directory)
-        {
-            Directory = directory;
-            FileName = info->FileName.CreateString();
-            Attributes = info->FileAttributes;
-            CreationUtc = info->CreationTime.ToDateTimeUtc();
-            LastAccessUtc = info->LastAccessTime.ToDateTimeUtc();
-            LastWriteUtc = info->ChangeTime.ToDateTimeUtc();
-            Length = (uint)info->EndOfFile;
-            AllocatedBytes = (uint)info->AllocationSize;
-            if ((info->FileAttributes & FileAttributes.ReparsePoint) != 0)
-                ReparseTag = (ReparseTag)info->EaSize;
+            Directory = findData.Directory;
+            FileName = findData.FileName.CreateString();
+            Attributes = findData.FileAttributes;
+            CreationUtc = findData.CreationTimeUtc;
+            LastAccessUtc = findData.LastAccessTimeUtc;
+            LastWriteUtc = findData.LastWriteTimeUtc;
+            Length = (uint)findData.FileSize;
         }
 
         private string DebuggerDisplay => Paths.Combine(Directory, FileName);

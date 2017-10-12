@@ -31,9 +31,9 @@ namespace DesktopTests.FileManagementTests
 
                 string fullName = FileMethods.GetFullPathName(Paths.AddTrailingSeparator(testFile));
 
-                FindOperation find = new FindOperation(testFile);
+                FindOperation<string> find = new FindOperation<string>(testFile);
                 Action action = () => find.FirstOrDefault();
-                action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_DIRECTORY));
+                action.ShouldThrow<ArgumentException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_PARAMETER));
 
                 action = () => FileMethods.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes);
                 action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_NAME));

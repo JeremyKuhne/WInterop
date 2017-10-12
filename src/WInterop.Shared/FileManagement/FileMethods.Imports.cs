@@ -42,7 +42,6 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365512.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool ReplaceFileW(
                 string lpReplacedFileName,
                 string lpReplacementFileName,
@@ -53,7 +52,6 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364946.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetFileAttributesExW(
                 string lpFileName,
                 GET_FILEEX_INFO_LEVELS fInfoLevelId,
@@ -61,7 +59,6 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365535.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool SetFileAttributesW(
                 string lpFileName,
                 FileAttributes dwFileAttributes);
@@ -93,35 +90,44 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364428.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool FindNextFileW(
                 IntPtr hFindFile,
                 out WIN32_FIND_DATA lpFindFileData);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364413.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool FindClose(
                 IntPtr hFindFile);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364953.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l2_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool GetFileInformationByHandleEx(
-                SafeFileHandle hFile,
+                IntPtr hFile,
                 FileInfoClass FileInformationClass,
                 void* lpFileInformation,
                 uint dwBufferSize);
 
+            public unsafe static bool GetFileInformationByHandleEx(
+                SafeFileHandle hFile,
+                FileInfoClass FileInformationClass,
+                void* lpFileInformation,
+                uint dwBufferSize)
+            {
+                bool refAdded = false;
+                hFile.DangerousAddRef(ref refAdded);
+                bool result = GetFileInformationByHandleEx(hFile.DangerousGetHandle(), FileInformationClass, lpFileInformation, dwBufferSize);
+                if (refAdded)
+                    hFile.DangerousRelease();
+                return result;
+            }
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool DeleteFileW(
                 string lpFilename);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool ReadFile(
                 SafeFileHandle hFile,
                 byte* lpBuffer,
@@ -131,7 +137,6 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool WriteFile(
                 SafeFileHandle hFile,
                 byte* lpBuffer,
@@ -141,7 +146,6 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365542.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool SetFilePointerEx(
                 SafeFileHandle hFile,
                 long liDistanceToMove,
@@ -151,7 +155,6 @@ namespace WInterop.FileManagement
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364957.aspx
             // This returns FILE_STANDARD_INFO.EndOfFile
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetFileSizeEx(
                 SafeFileHandle hFile,
                 out long lpFileSize);
@@ -163,7 +166,6 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364439.aspx (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool FlushFileBuffers(
                 SafeFileHandle hFile);
 
@@ -183,14 +185,12 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363792.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool CancelIoEx(
                 SafeFileHandle hFile,
                 OVERLAPPED* lpOverlapped);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/hh448542.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetOverlappedResultEx(
                 SafeFileHandle hFile,
                 ref OVERLAPPED lpOverlapped,
@@ -200,7 +200,6 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365716.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool UnlockFileEx(
                 SafeFileHandle hFile,
                 uint dwReserved,
@@ -210,7 +209,6 @@ namespace WInterop.FileManagement
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365203.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool LockFileEx(
                 SafeFileHandle hFile,
                 uint dwFlags,

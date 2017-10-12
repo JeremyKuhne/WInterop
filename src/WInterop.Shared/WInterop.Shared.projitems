@@ -26,7 +26,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindFilters.All.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindFilters.DosMatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindFilters.Multiple.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindFilters.NormalDirectoryFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindTransforms.ToFileName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindTransforms.ToFindResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\SafeHandleStreamWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
@@ -43,5 +49,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\SynchronizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindTransforms.ToFullPath.cs" />
   </ItemGroup>
 </Project>

@@ -53,9 +53,9 @@ namespace WInterop.SafeString.Types
         /// <summary>
         /// Initialize the content of the string based on a fixed char from the given source string.
         /// </summary>
-        public unsafe UNICODE_STRING(char* buffer, int length)
+        public unsafe UNICODE_STRING(char* buffer, int lengthInChars)
         {
-            Length = checked((ushort)(length * sizeof(char)));
+            Length = checked((ushort)(lengthInChars * sizeof(char)));
             MaximumLength = Length;
             Buffer = buffer;
         }
