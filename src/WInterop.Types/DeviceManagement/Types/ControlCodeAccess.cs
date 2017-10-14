@@ -7,7 +7,7 @@
 
 namespace WInterop.DeviceManagement.Types
 {
-    public enum ControlCodeAccess
+    public enum ControlCodeAccess : byte
     {
         /// <summary>
         /// [FILE_ANY_ACCESS]
@@ -18,17 +18,17 @@ namespace WInterop.DeviceManagement.Types
         /// this value.
         /// https://msdn.microsoft.com/en-us/library/windows/hardware/dn614603.aspx
         /// </remarks>
-        Any = 0x0000,
+        Any = 0x00,
 
         /// <summary>
         /// [FILE_READ_ACCESS]
         /// </summary>
-        Read = 0x0001,
+        Read = 0x01,
 
         /// <summary>
         /// [FILE_WRITE_ACCES]
         /// </summary>
-        Write = 0x0002,
+        Write = 0x02,
 
         /// <summary>
         /// Both read and write access required.
@@ -37,6 +37,6 @@ namespace WInterop.DeviceManagement.Types
         /// Not defined in the DDK, but useful to do so as there are really only 4 states
         /// and the first "flag" is 0 (default).
         /// </remarks>
-        ReadWrite = 0x0003
+        ReadWrite = 0x03
     }
 }

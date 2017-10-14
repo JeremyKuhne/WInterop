@@ -19,9 +19,9 @@ namespace WInterop.DeviceManagement
         public unsafe static string QueryDosVolumePath(string volume)
         {
             var mountManager = FileManagement.FileMethods.CreateFile(
-                @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite, FileAttributes.Normal);
+                @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0);
 
-            ControlCode controlCode = new ControlCode(ControlCodeDeviceType.MountManager, 12, ControlCodeMethod.Buffered, ControlCodeAccess.Any);
+            ControlCode controlCode = ControlCodes.MountManager.QueryDosVolumePath;
 
             // Read ulong then get string
             string dosVolumePath = null;

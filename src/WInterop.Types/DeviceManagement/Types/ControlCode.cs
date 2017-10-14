@@ -5,10 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace WInterop.DeviceManagement.Types
 {
     /// <summary>
@@ -43,6 +39,7 @@ namespace WInterop.DeviceManagement.Types
         public ushort FunctionCode => (ushort)((Value & FunctionCodeMask) >> 2);
         public ControlCodeMethod TransferType => (ControlCodeMethod)(Value & TransferTypeMask);
 
+        public static implicit operator ControlCode(ControlCodes.MountManager code) => new ControlCode((uint)code);
 
         public override string ToString() => $"{DeviceType}, Function Code 0x{FunctionCode:X4}, {RequiredAccess}, {TransferType}";
     }

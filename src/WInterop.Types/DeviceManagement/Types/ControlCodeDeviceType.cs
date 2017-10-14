@@ -7,7 +7,7 @@
 
 namespace WInterop.DeviceManagement.Types
 {
-    public enum ControlCodeDeviceType
+    public enum ControlCodeDeviceType : ushort
     {
         // https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/specifying-device-types
         // See devioctl.h
@@ -15,232 +15,232 @@ namespace WInterop.DeviceManagement.Types
         /// <summary>
         /// Beep. [FILE_DEVICE_BEEP]
         /// </summary>
-        Beep = 0x00000001,
+        Beep = 0x0001,
 
         /// <summary>
         /// CD-ROM. [FILE_DEVICE_CD_ROM]
         /// </summary>
-        Cdrom = 0x00000002,
+        Cdrom = 0x0002,
 
         /// <summary>
         /// CD-ROM file system. [FILE_DEVICE_CD_ROM_FILE_SYSTEM]
         /// </summary>
-        CdromFileSystem = 0x00000003,
+        CdromFileSystem = 0x0003,
 
         /// <summary>
         /// Controller. [FILE_DEVICE_CONTROLLER]
         /// </summary>
-        Controller = 0x00000004,
+        Controller = 0x0004,
 
         /// <summary>
         /// Datalink. [FILE_DEVICE_DATALINK]
         /// </summary>
-        Datalink = 0x00000005,
+        Datalink = 0x0005,
 
         /// <summary>
         /// Distributed file system device. [FILE_DEVICE_DFS]
         /// </summary>
-        DistributedFileSystem = 0x00000006,
+        DistributedFileSystem = 0x0006,
 
         /// <summary>
         /// Disk. [FILE_DEVICE_DISK]
         /// </summary>
-        Disk = 0x00000007,
+        Disk = 0x0007,
 
         /// <summary>
         /// Disk file system. [FILE_DEVICE_DISK_FILE_SYSTEM]
         /// </summary>
-        DiskFileSystem = 0x00000008,
+        DiskFileSystem = 0x0008,
 
         /// <summary>
         /// File system. [FILE_DEVICE_FILE_SYSTEM]
         /// </summary>
-        FileSystem = 0x00000009,
+        FileSystem = 0x0009,
 
         /// <summary>
         /// [FILE_DEVICE_INPORT_PORT]
         /// </summary>
-        InPort = 0x0000000a,
+        InPort = 0x000a,
 
         /// <summary>
         /// [FILE_DEVICE_KEYBOARD]
         /// </summary>
-        Keyboard = 0x0000000b,
+        Keyboard = 0x000b,
 
         /// <summary>
         /// [FILE_DEVICE_MAILSLOT]
         /// </summary>
-        MailSlot = 0x0000000c,
+        MailSlot = 0x000c,
 
         /// <summary>
         /// [FILE_DEVICE_MIDI_IN]
         /// </summary>
-        MidiIn = 0x0000000d,
+        MidiIn = 0x000d,
 
         /// <summary>
         /// FILE_DEVICE_MIDI_OUT
         /// </summary>
-        MidiOut = 0x0000000e,
+        MidiOut = 0x000e,
 
         /// <summary>
         /// [FILE_DEVICE_MOUSE]
         /// </summary>
-        Mouse = 0x0000000f,
+        Mouse = 0x000f,
 
         /// <summary>
         /// [FILE_DEVICE_MULTI_UNC_PROVIDER]
         /// </summary>
-        MultiUncProvider = 0x00000010,
+        MultiUncProvider = 0x0010,
 
         /// <summary>
         /// [FILE_DEVICE_NAMED_PIPE]
         /// </summary>
-        NamedPipe = 0x00000011,
+        NamedPipe = 0x0011,
 
         /// <summary>
         /// [FILE_DEVICE_NETWORK]
         /// </summary>
-        Network = 0x00000012,
+        Network = 0x0012,
 
         /// <summary>
         /// [FILE_DEVICE_NETWORK_BROWSER]
         /// </summary>
-        NetworkBrowser = 0x00000013,
+        NetworkBrowser = 0x0013,
 
         /// <summary>
         /// [FILE_DEVICE_NETWORK_FILE_SYSTEM]
         /// </summary>
-        NetworkFileSystem = 0x00000014,
+        NetworkFileSystem = 0x0014,
 
         /// <summary>
         /// [FILE_DEVICE_NULL]
         /// </summary>
-        Null = 0x00000015,
+        Null = 0x0015,
 
         /// <summary>
         /// [FILE_DEVICE_PARALLEL_PORT]
         /// </summary>
-        ParallelPort = 0x00000016,
+        ParallelPort = 0x0016,
 
         /// <summary>
         /// [FILE_DEVICE_PHYSICAL_NETCARD]
         /// </summary>
-        PhysicalNetcard = 0x00000017,
+        PhysicalNetcard = 0x0017,
 
         /// <summary>
         /// [FILE_DEVICE_PRINTER]
         /// </summary>
-        Printer = 0x00000018,
+        Printer = 0x0018,
 
         /// <summary>
         /// [FILE_DEVICE_SCANNER]
         /// </summary>
-        Scanner = 0x00000019,
+        Scanner = 0x0019,
 
         /// <summary>
         /// [FILE_DEVICE_SERIAL_MOUSE_PORT]
         /// </summary>
-        SerialMousePort = 0x0000001a,
+        SerialMousePort = 0x001a,
 
         /// <summary>
         /// [FILE_DEVICE_SERIAL_PORT]
         /// </summary>
-        SerialPort = 0x0000001b,
+        SerialPort = 0x001b,
 
         /// <summary>
         /// [FILE_DEVICE_SCREEN]
         /// </summary>
-        Screen = 0x0000001c,
+        Screen = 0x001c,
 
         /// <summary>
         /// [FILE_DEVICE_SOUND]
         /// </summary>
-        Sound = 0x0000001d,
+        Sound = 0x001d,
 
         /// <summary>
         /// [FILE_DEVICE_STREAMS]
         /// </summary>
-        Streams = 0x0000001e,
+        Streams = 0x001e,
 
         /// <summary>
         /// [FILE_DEVICE_TAPE]
         /// </summary>
-        Tape = 0x0000001f,
+        Tape = 0x001f,
 
         /// <summary>
         /// [FILE_DEVICE_TAPE_FILE_SYSTEM]
         /// </summary>
-        TapeFileSystem = 0x00000020,
+        TapeFileSystem = 0x0020,
 
         /// <summary>
         /// [FILE_DEVICE_TRANSPORT]
         /// </summary>
-        Transport = 0x00000021,
+        Transport = 0x0021,
 
         /// <summary>
         /// Unknown or USB. [FILE_DEVICE_UNKNOWN] [FILE_DEVICE_USB]
         /// </summary>
-        Unknown = 0x00000022,
+        Unknown = 0x0022,
 
         /// <summary>
         /// Video. [FILE_DEVICE_VIDEO]
         /// </summary>
-        Video = 0x00000023,
+        Video = 0x0023,
 
         /// <summary>
         /// Virtual disk. [FILE_DEVICE_VIRTUAL_DISK]
         /// </summary>
-        VirtualDisk = 0x00000024,
+        VirtualDisk = 0x0024,
 
         /// <summary>
         /// [FILE_DEVICE_WAVE_IN]
         /// </summary>
-        WaveIn = 0x00000025,
+        WaveIn = 0x0025,
 
         /// <summary>
         /// Wave out. [FILE_DEVICE_WAVE_OUT]
         /// </summary>
-        WaveOut = 0x00000026,
+        WaveOut = 0x0026,
 
         /// <summary>
         /// 8042 port. [FILE_DEVICE_8042_PORT]
         /// </summary>
-        Ps2 = 0x00000027,
+        Ps2 = 0x0027,
 
         /// <summary>
         /// [FILE_DEVICE_NETWORK_REDIRECTOR]
         /// </summary>
-        NetworkRedirector = 0x00000028,
+        NetworkRedirector = 0x0028,
 
         /// <summary>
         /// Battery. [FILE_DEVICE_BATTERY]
         /// </summary>
-        Battery = 0x00000029,
+        Battery = 0x0029,
 
         /// <summary>
         /// Bus Extender. [FILE_DEVICE_BUS_EXTENDER]
         /// </summary>
-        BusExtender = 0x0000002a,
+        BusExtender = 0x002a,
 
         /// <summary>
         /// [FILE_DEVICE_MODEM]
         /// </summary>
-        Modem = 0x0000002b,
+        Modem = 0x002b,
 
         /// <summary>
         /// Virtual DOS machine. [FILE_DEVICE_VDM]
         /// </summary>
-        VirtualDosMachine = 0x0000002c,
+        VirtualDosMachine = 0x002c,
 
         /// <summary>
         /// [FILE_DEVICE_MASS_STORAGE]
         /// </summary>
-        MassStorage = 0x0000002d,
+        MassStorage = 0x002d,
 
         /// <summary>
         /// Server Message Block. [FILE_DEVICE_SMB]
         /// </summary>
-        ServerMessageBlock = 0x0000002e,
+        ServerMessageBlock = 0x002e,
 
         /// <summary>
         /// Kernel streaming. [FILE_DEVICE_KS]
@@ -248,87 +248,87 @@ namespace WInterop.DeviceManagement.Types
         /// <remarks>
         /// https://docs.microsoft.com/en-us/windows-hardware/drivers/stream/kernel-streaming
         /// </remarks>
-        KernelStreaming = 0x0000002f,
+        KernelStreaming = 0x002f,
 
         /// <summary>
         /// Changer. [FILE_DEVICE_CHANGER]
         /// </summary>
-        Changer = 0x00000030,
+        Changer = 0x0030,
 
         /// <summary>
         /// [FILE_DEVICE_SMARTCARD]
         /// </summary>
-        Smartcard = 0x00000031,
+        Smartcard = 0x0031,
 
         /// <summary>
         /// ACPI. [FILE_DEVICE_ACPI]
         /// </summary>
-        Acpi = 0x00000032,
+        Acpi = 0x0032,
 
         /// <summary>
         /// Dvd. [FILE_DEVICE_DVD]
         /// </summary>
-        Dvd = 0x00000033,
+        Dvd = 0x0033,
 
         /// <summary>
         /// [FILE_DEVICE_FULLSCREEN_VIDEO]
         /// </summary>
-        FullscreenVideo = 0x00000034,
+        FullscreenVideo = 0x0034,
 
         /// <summary>
         /// DFS file system. [FILE_DEVICE_DFS_FILE_SYSTEM]
         /// </summary>
-        DfsFileSystem = 0x00000035,
+        DfsFileSystem = 0x0035,
 
         /// <summary>
         /// DfsVolume. [FILE_DEVICE_DFS_VOLUME]
         /// </summary>
-        DfsVolume = 0x00000036,
+        DfsVolume = 0x0036,
 
         /// <summary>
         /// [FILE_DEVICE_SERENUM]
         /// </summary>
-        SerialEnumerator = 0x00000037,
+        SerialEnumerator = 0x0037,
 
         /// <summary>
         /// [FILE_DEVICE_TERMSRV]
         /// </summary>
-        TerminalServer = 0x00000038,
+        TerminalServer = 0x0038,
 
         /// <summary>
         /// [FILE_DEVICE_KSEC]
         /// </summary>
-        KernelSecurity = 0x00000039,
+        KernelSecurity = 0x0039,
 
         /// <summary>
         /// United States Federal Information Processing Standard (FIPS) [FILE_DEVICE_FIPS]
         /// </summary>
-        Fips = 0x0000003a,
+        Fips = 0x003a,
 
         /// <summary>
         /// [FILE_DEVICE_INFINIBAND]
         /// </summary>
-        Infiniband = 0x0000003B,
+        Infiniband = 0x003B,
 
         /// <summary>
         /// [FILE_DEVICE_VMBUS]
         /// </summary>
-        VirtualMachineBus = 0x0000003E,
+        VirtualMachineBus = 0x003E,
 
         /// <summary>
         /// [FILE_DEVICE_CRYPT_PROVIDER]
         /// </summary>
-        CryptographyProvider = 0x0000003F,
+        CryptographyProvider = 0x003F,
 
         /// <summary>
         /// [FILE_DEVICE_WPD]
         /// </summary>
-        WindowsPortableDevice = 0x00000040,
+        WindowsPortableDevice = 0x0040,
 
         /// <summary>
         /// [FILE_DEVICE_BLUETOOTH]
         /// </summary>
-        Bluetooth = 0x00000041,
+        Bluetooth = 0x0041,
 
         /// <summary>
         /// Multi-transport composite driver. [FILE_DEVICE_MT_COMPOSITE]
@@ -336,116 +336,119 @@ namespace WInterop.DeviceManagement.Types
         /// <remarks>
         /// https://blogs.msdn.microsoft.com/wpdblog/2009/09/04/multi-transport-devices-in-windows-7/
         /// </remarks>
-        MultiTransportComposite = 0x00000042,
+        MultiTransportComposite = 0x0042,
 
         /// <summary>
         /// Multi-transport transport driver.[FILE_DEVICE_MT_TRANSPORT]
         /// </summary>
-        MultiTransportTransport = 0x00000043,
+        MultiTransportTransport = 0x0043,
 
         /// <summary>
         /// [FILE_DEVICE_BIOMETRIC]
         /// </summary>
-        Biometric = 0x00000044,
+        Biometric = 0x0044,
 
         /// <summary>
         /// [FILE_DEVICE_PMI]
         /// </summary>
-        PowerMeter = 0x00000045,
+        PowerMeter = 0x0045,
 
         /// <summary>
         /// [FILE_DEVICE_EHSTOR]
         /// </summary>
-        EnhancedStorage = 0x00000046,
+        EnhancedStorage = 0x0046,
 
         /// <summary>
         /// DeviceApi? [FILE_DEVICE_DEVAPI]
         /// </summary>
-        DeviceApi = 0x00000047,
+        DeviceApi = 0x0047,
 
         /// <summary>
         /// General-purpose IO. [FILE_DEVICE_GPIO]
         /// </summary>
-        GeneralPurposeIo = 0x00000048,
+        GeneralPurposeIo = 0x0048,
 
         /// <summary>
         /// USB device. Previously these went [FILE_DEVICE_USBEX]
         /// </summary>
-        ExtendedUsb = 0x00000049,
+        ExtendedUsb = 0x0049,
 
         /// <summary>
-        /// [MOUNTDEVCONTROLTYPE]
+        /// These are messages that mountable devices must respond to to
+        /// work with with the mount point manager. [MOUNTDEVCONTROLTYPE]
         /// </summary>
-        MountDevice = 0x0000004d,
+        /// <remarks>Trivia: This value is upper case 'M'.</remarks>
+        MountDevice = 0x004d,
 
         /// <summary>
         /// [FILE_DEVICE_CONSOLE]
         /// </summary>
-        Console = 0x00000050,
+        Console = 0x0050,
 
         /// <summary>
         /// [FILE_DEVICE_NFP]
         /// </summary>
-        NearFieldProximity = 0x00000051,
+        NearFieldProximity = 0x0051,
 
         /// <summary>
         /// [FILE_DEVICE_SYSENV]
         /// </summary>
-        SystemEnvironment = 0x00000052,
+        SystemEnvironment = 0x0052,
 
         /// <summary>
         /// [FILE_DEVICE_VIRTUAL_BLOCK]
         /// </summary>
-        VirtualBlock = 0x00000053,
+        VirtualBlock = 0x0053,
 
         /// <summary>
         /// [FILE_DEVICE_POINT_OF_SERVICE]
         /// </summary>
-        PointOfService = 0x00000054,
+        PointOfService = 0x0054,
 
         /// <summary>
         /// [FILE_DEVICE_STORAGE_REPLICATION]
         /// </summary>
-        StorageReplication = 0x00000055,
+        StorageReplication = 0x0055,
 
         /// <summary>
         /// [FILE_DEVICE_TRUST_ENV]
         /// </summary>
-        TrustedExecutionEnvironment = 0x00000056,
+        TrustedExecutionEnvironment = 0x0056,
 
         /// <summary>
         /// USB Connector Manager. [FILE_DEVICE_UCM]
         /// </summary>
-        UsbConnectorManager = 0x00000057,
+        UsbConnectorManager = 0x0057,
 
         /// <summary>
         /// [FILE_DEVICE_UCMTCPCI]
         /// </summary>
-        UsbConnectorManagerTypeC = 0x00000058,
+        UsbConnectorManagerTypeC = 0x0058,
 
         /// <summary>
         /// [FILE_DEVICE_PERSISTENT_MEMORY]
         /// </summary>
-        PersistentMemory = 0x00000059,
+        PersistentMemory = 0x0059,
 
         /// <summary>
         /// [FILE_DEVICE_NVDIMM]
         /// </summary>
-        NonVolatileDimm = 0x0000005a,
+        NonVolatileDimm = 0x005a,
 
         /// <summary>
         /// [FILE_DEVICE_HOLOGRAPHIC]
         /// </summary>
-        Holographic = 0x0000005b,
+        Holographic = 0x005b,
 
         /// <summary>
         /// Mount manager. [MOUNTMGRCONTROLTYPE]
         /// </summary>
-        MountManager = 0x0000006d,
+        /// <remarks>Trivia: This value is lower case 'm'.</remarks>
+        MountManager = 0x006d,
 
         /// <summary>
         /// Infrared class driver. [FILE_DEVICE_IRCLASS]
         /// </summary>
-        Infrared = 0x00000f60
+        Infrared = 0x0f60
     }
 }

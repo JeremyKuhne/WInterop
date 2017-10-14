@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CacheTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptographyTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceControlCodeTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskManagementTests.cs" />
