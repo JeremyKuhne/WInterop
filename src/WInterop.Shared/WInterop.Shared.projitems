@@ -13,7 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Compression\Types\FdiHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\BufferWrappers\CurrentDirectoryWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryMethods.cs" />

@@ -5,8 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.Runtime.InteropServices;
 using WInterop.DeviceManagement.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
@@ -17,32 +15,13 @@ namespace WInterop.DeviceManagement
 {
     public static partial class DeviceMethods
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363216.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool DeviceIoControl(
-                IntPtr hDevice,
-                uint dwIoControlCode,
-                IntPtr lpInBuffer,
-                uint nInBufferSize,
-                IntPtr lpOutBuffer,
-                uint nOutBufferSize,
-                out uint lpBytesReturned,
-                IntPtr lpOverlapped);
-        }
-
         // Access to the MountPointManager is denied for store apps
-        public static string QueryDosVolumePath(string volume)
+        public unsafe static string QueryDosVolumePath(string volume)
         {
             var mountManager = FileManagement.FileMethods.CreateFile(
                 @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite, FileAttributes.Normal);
 
-            uint controlCode = DeviceMacros.CTL_CODE(ControlCodeDeviceType.MOUNTMGRCONTROLTYPE, 12, ControlCodeMethod.METHOD_BUFFERED, ControlCodeAccess.FILE_ANY_ACCESS);
+            ControlCode controlCode = new ControlCode(ControlCodeDeviceType.MountManager, 12, ControlCodeMethod.Buffered, ControlCodeAccess.Any);
 
             // Read ulong then get string
             string dosVolumePath = null;
@@ -61,14 +40,14 @@ namespace WInterop.DeviceManagement
                     outBuffer.EnsureCharCapacity(50);
 
                     while (!Imports.DeviceIoControl(
-                        hDevice: mountManager.DangerousGetHandle(),
+                        hDevice: mountManager,
                         dwIoControlCode: controlCode,
-                        lpInBuffer: inBuffer.DangerousGetHandle(),
+                        lpInBuffer: inBuffer.VoidPointer,
                         nInBufferSize: checked((uint)inBuffer.ByteCapacity),
-                        lpOutBuffer: outBuffer.DangerousGetHandle(),
+                        lpOutBuffer: outBuffer.VoidPointer,
                         nOutBufferSize: checked((uint)outBuffer.ByteCapacity),
                         lpBytesReturned: out _,
-                        lpOverlapped: IntPtr.Zero))
+                        lpOverlapped: null))
                     {
                         WindowsError error = Errors.GetLastError();
                         switch (error)
