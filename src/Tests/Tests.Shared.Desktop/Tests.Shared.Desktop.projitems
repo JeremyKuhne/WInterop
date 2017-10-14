@@ -22,7 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DISPLAY_DEVICE_Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\Methods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandlingTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementBehaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\Methods.cs" />
@@ -45,5 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Cryptography\" />
+    <Folder Include="$(MSBuildThisFileDirectory)ErrorHandling\" />
   </ItemGroup>
 </Project>

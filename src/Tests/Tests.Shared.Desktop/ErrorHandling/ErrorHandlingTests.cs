@@ -55,5 +55,14 @@ namespace DesktopTests
                 ErrorMethods.SetThreadErrorMode(mode).Should().Be(newMode);
             }
         }
+
+        [Theory,
+            InlineData(NTSTATUS.STATUS_OBJECT_NAME_NOT_FOUND, WindowsError.ERROR_FILE_NOT_FOUND),
+            InlineData(NTSTATUS.STATUS_IO_TIMEOUT, WindowsError.ERROR_SEM_TIMEOUT)
+            ]
+        public void ConvertNtStatus(NTSTATUS status, WindowsError expected)
+        {
+            ErrorMethods.NtStatusToWinError(status).Should().Be(expected);
+        }
     }
 }

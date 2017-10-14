@@ -144,6 +144,11 @@ namespace WInterop.ErrorHandling.Types
         STATUS_OBJECT_PATH_SYNTAX_BAD = unchecked((int)0xC000003B),
 
         /// <summary>
+        /// {Device Timeout} The specified I/O operation on %hs was not completed before the time-out period expired.
+        /// </summary>
+        STATUS_IO_TIMEOUT = unchecked((int)0xC00000B5),
+
+        /// <summary>
         /// Insufficient system resources exist to complete the API.
         /// </summary>
         STATUS_INSUFFICIENT_RESOURCES = unchecked((int)0xC000009A),
