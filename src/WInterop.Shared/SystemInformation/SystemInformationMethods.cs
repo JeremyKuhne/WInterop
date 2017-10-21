@@ -13,38 +13,6 @@ namespace WInterop.SystemInformation
     public static partial class SystemInformationMethods
     {
         /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724482.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern bool IsProcessorFeaturePresent(
-                ProcessorFeature ProcessorFeature);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/dn482415.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern bool CeipIsOptedIn();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644905.aspx
-            // This never returns false on XP or later
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern bool QueryPerformanceFrequency(
-                out long lpFrequency);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644904.aspx
-            // This never returns false on XP or later
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern bool QueryPerformanceCounter(
-                out long lpPerformanceCount);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724338.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern void GetLocalTime(
-                out SYSTEMTIME lpSystemTime);
-        }
-
-        /// <summary>
         /// Returns true if the specified processor feature is present.
         /// </summary>
         public static bool IsProcessorFeaturePresent(ProcessorFeature feature)

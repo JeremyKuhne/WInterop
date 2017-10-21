@@ -46,6 +46,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Root\MoreCharSpanExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StructuredStorage\StructuredStorageMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\SynchronizationMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
   </ItemGroup>
