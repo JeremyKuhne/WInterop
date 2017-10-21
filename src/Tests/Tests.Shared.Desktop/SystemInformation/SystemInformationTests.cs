@@ -60,12 +60,6 @@ namespace DesktopTests.SystemInformation
         }
 
         [Fact]
-        public void GetComputerName()
-        {
-            SystemInformationMethods.GetComputerName().Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
-        }
-
-        [Fact]
         public void GetComputerName_NetBIOS()
         {
             SystemInformationMethods.GetComputerName(COMPUTER_NAME_FORMAT.ComputerNameNetBIOS)

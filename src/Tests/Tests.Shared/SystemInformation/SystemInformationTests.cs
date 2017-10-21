@@ -41,5 +41,11 @@ namespace Tests.SystemInformation
             // Can't really validate this, just make sure it doesn't blow up.
             SystemInformationMethods.CeipIsOptedIn();
         }
+
+        [Fact]
+        public void GetComputerName()
+        {
+            SystemInformationMethods.GetComputerName().Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
+        }
     }
 }

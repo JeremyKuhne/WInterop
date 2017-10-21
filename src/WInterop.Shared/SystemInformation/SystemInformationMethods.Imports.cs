@@ -42,6 +42,19 @@ namespace WInterop.SystemInformation
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
             public static extern void GetLocalTime(
                 out SYSTEMTIME lpSystemTime);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724295.aspx
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetComputerNameW(
+                SafeHandle lpBuffer,
+                ref uint lpnSize);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724265.aspx
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern uint ExpandEnvironmentStringsW(
+                string lpSrc,
+                SafeHandle lpDst,
+                uint nSize);
         }
     }
 }

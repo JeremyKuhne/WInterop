@@ -71,24 +71,6 @@ namespace WInterop.SystemInformation
         }
 
         /// <summary>
-        /// Gets the NetBIOS computer name.
-        /// </summary>
-        public static string GetComputerName()
-        {
-            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
-            {
-                uint size = buffer.CharCapacity;
-                while (!Imports.GetComputerNameW(buffer, ref size))
-                {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_BUFFER_OVERFLOW);
-                    buffer.EnsureCharCapacity(size);
-                }
-                buffer.Length = size;
-                return buffer.ToString();
-            });
-        }
-
-        /// <summary>
         /// Get the computer name in the specified format.
         /// </summary>
         public static string GetComputerName(COMPUTER_NAME_FORMAT format)

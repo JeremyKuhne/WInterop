@@ -5,7 +5,9 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Runtime.InteropServices;
+using WInterop.ErrorHandling.Types;
+using WInterop.Support;
+using WInterop.Support.Buffers;
 using WInterop.SystemInformation.Types;
 
 namespace WInterop.SystemInformation
@@ -54,6 +56,24 @@ namespace WInterop.SystemInformation
         {
             Imports.GetLocalTime(out SYSTEMTIME time);
             return time;
+        }
+
+        /// <summary>
+        /// Gets the NetBIOS computer name.
+        /// </summary>
+        public static string GetComputerName()
+        {
+            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
+            {
+                uint size = buffer.CharCapacity;
+                while (!Imports.GetComputerNameW(buffer, ref size))
+                {
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_BUFFER_OVERFLOW);
+                    buffer.EnsureCharCapacity(size);
+                }
+                buffer.Length = size;
+                return buffer.ToString();
+            });
         }
     }
 }
