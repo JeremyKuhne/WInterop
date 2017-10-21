@@ -87,7 +87,7 @@ namespace WInterop.FileManagement
                 // Set the handle first to ensure we always dispose of it
                 _directory = directory;
                 _path = findOperation._directory;
-                _buffer = HeapBuffer.Cache.Acquire(4096);
+                _buffer = StringBuffer.Cache.Acquire(4096);
                 _findOperation = findOperation;
                 if (findOperation._recursive)
                     _pending = new Queue<ValueTuple<IntPtr, string>>();
@@ -179,7 +179,7 @@ namespace WInterop.FileManagement
             {
                 HeapBuffer buffer = Interlocked.Exchange(ref _buffer, null);
                 if (buffer != null)
-                    HeapBuffer.Cache.Release((StringBuffer)buffer);
+                    StringBuffer.Cache.Release((StringBuffer)buffer);
 
                 var queue = Interlocked.Exchange(ref _pending, null);
                 if (queue != null)

@@ -33,7 +33,7 @@ namespace WInterop.VolumeManagement
 
             public VolumeNamesEnumerator()
             {
-                _buffer = HeapBuffer.Cache.Acquire();
+                _buffer = StringBuffer.Cache.Acquire();
                 Reset();
             }
 
@@ -113,7 +113,7 @@ namespace WInterop.VolumeManagement
                 CloseHandle();
                 StringBuffer buffer = Interlocked.Exchange(ref _buffer, null);
                 if (buffer != null)
-                    HeapBuffer.Cache.Release(buffer);
+                    StringBuffer.Cache.Release(buffer);
             }
 
             private void CloseHandle()

@@ -17,15 +17,26 @@ namespace WInterop.Support.Buffers
         private static readonly StringBufferCache s_Instance = new StringBufferCache(0);
         private uint _maxSize;
 
-        public StringBufferCache(int maxBuffers, uint maxSize = 1024) : base(maxBuffers)
+        public StringBufferCache(int maxBuffers, uint maxSize = 4096) : base(maxBuffers)
         {
             _maxSize = maxSize;
         }
 
-        public StringBuffer Acquire(uint minCapacity)
+        public StringBuffer Acquire(uint minCharCapacity)
         {
-            StringBuffer item = Acquire();
-            item.EnsureCharCapacity(minCapacity: minCapacity);
+            StringBuffer item;
+
+            // Don't want to end up resizing a buffer we'll throw away
+            if (minCharCapacity > _maxSize)
+            {
+                item = new StringBuffer(minCharCapacity);
+                CacheEventSource.Log.ObjectCreated(s_type);
+            }
+            else
+            {
+                item = Acquire();
+                item.EnsureCharCapacity(minCapacity: minCharCapacity);
+            }
             return item;
         }
 

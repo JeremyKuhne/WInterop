@@ -202,7 +202,5 @@ namespace WInterop.Support.Buffers
             if (disposing)
                 ReleaseHandle();
         }
-
-        public static StringBufferCache Cache => StringBufferCache.Instance;
     }
 }

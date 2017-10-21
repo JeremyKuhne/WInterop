@@ -134,7 +134,7 @@ namespace WInterop.Support.Buffers
             const uint MinBufferSize = 128;
 #endif
 
-            var buffer = StringBufferCache.Instance.Acquire(minCapacity: MinBufferSize);
+            var buffer = StringBufferCache.Instance.Acquire(minCharCapacity: MinBufferSize);
             try
             {
                 action.Action(buffer as BufferType);
@@ -162,8 +162,8 @@ namespace WInterop.Support.Buffers
             const uint MinBufferSize = 128;
 #endif
 
-            var buffer1 = StringBufferCache.Instance.Acquire(minCapacity: MinBufferSize);
-            var buffer2 = StringBufferCache.Instance.Acquire(minCapacity: MinBufferSize);
+            var buffer1 = StringBufferCache.Instance.Acquire(minCharCapacity: MinBufferSize);
+            var buffer2 = StringBufferCache.Instance.Acquire(minCharCapacity: MinBufferSize);
             try
             {
                 action.Action(buffer1 as BufferType, buffer2 as BufferType);

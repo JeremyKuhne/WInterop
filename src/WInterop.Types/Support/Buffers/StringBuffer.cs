@@ -781,5 +781,8 @@ namespace WInterop.Support.Buffers
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UNICODE_STRING ToUnicodeString() => new UNICODE_STRING(this);
+
+
+        public static StringBufferCache Cache => StringBufferCache.Instance;
     }
 }

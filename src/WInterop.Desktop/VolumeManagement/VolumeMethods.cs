@@ -20,13 +20,17 @@ namespace WInterop.VolumeManagement
         /// <summary>
         /// Returns the mapping for the specified DOS device name or the full list of DOS device names if passed null.
         /// </summary>
+        /// <remarks>
+        /// This will look up the symbolic link target from the dos device namespace (\??\) when a name is specified.
+        /// It performs the equivalent of NtOpenDirectoryObject, NtOpenSymbolicLinkObject, then NtQuerySymbolicLinkObject.
+        /// </remarks>
         public static IEnumerable<string> QueryDosDevice(string deviceName)
         {
             if (deviceName != null) deviceName = Paths.TrimTrailingSeparators(deviceName);
 
             // Null will return everything defined- this list is quite large so set a higher initial allocation
 
-            var buffer = deviceName == null ? new StringBuffer(initialCharCapacity: 4096) : StringBufferCache.Instance.Acquire(minCapacity: 256);
+            var buffer = StringBuffer.Cache.Acquire(deviceName == null ? 16384u : 256);
 
             try
             {
@@ -46,7 +50,8 @@ namespace WInterop.VolumeManagement
                     }
                 }
 
-                buffer.Length = result;
+                // This API returns a szArray, which is terminated by two nulls
+                buffer.Length = checked(result - 2);
                 return buffer.Split('\0');
             }
             finally
