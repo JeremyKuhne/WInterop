@@ -39,13 +39,13 @@ namespace WInterop.Handles.Types
         /// Optional quality of service to be applied to the object. Used to indicate
         /// security impersonation level and context tracking mode (dynamic or static).
         /// </summary>
-        public void* SecurityQualityOfService;
+        public SECURITY_QUALITY_OF_SERVICE* SecurityQualityOfService;
 
         /// <summary>
         /// Equivalent of InitializeObjectAttributes macro with the exception that you can directly set SQOS.
         /// </summary>
         public unsafe OBJECT_ATTRIBUTES(UNICODE_STRING* objectName, ObjectAttributes attributes, IntPtr rootDirectory,
-            SECURITY_DESCRIPTOR* securityDescriptor = null, void* securityQualityOfService = null)
+            SECURITY_DESCRIPTOR* securityDescriptor = null, SECURITY_QUALITY_OF_SERVICE* securityQualityOfService = null)
         {
             Length = (uint)sizeof(OBJECT_ATTRIBUTES);
             RootDirectory = rootDirectory;

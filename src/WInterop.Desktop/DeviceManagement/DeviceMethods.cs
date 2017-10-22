@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Runtime.InteropServices;
 using WInterop.DeviceManagement.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
@@ -15,6 +17,132 @@ namespace WInterop.DeviceManagement
 {
     public static partial class DeviceMethods
     {
+        public unsafe static Guid QueryStableGuid(SafeHandle deviceHandle)
+        {
+            ControlCode controlCode = ControlCodes.MountDevice.QueryStableGuid;
+            MOUNTDEV_STABLE_GUID guid = new MOUNTDEV_STABLE_GUID();
+
+            if (!Imports.DeviceIoControl(
+                hDevice: deviceHandle,
+                dwIoControlCode: controlCode,
+                lpInBuffer: null,
+                nInBufferSize: 0,
+                lpOutBuffer: &guid,
+                nOutBufferSize: (uint)sizeof(MOUNTDEV_STABLE_GUID),
+                lpBytesReturned: out _,
+                lpOverlapped: null))
+            {
+                throw Errors.GetIoExceptionForLastError();
+            }
+
+            return guid.StableGuid;
+        }
+
+        public unsafe static string QueryDeviceName(SafeHandle deviceHandle)
+        {
+            return GetMountDevName(deviceHandle, ControlCodes.MountDevice.QueryDeviceName);
+        }
+
+        public unsafe static string QueryInterfacename(SafeHandle deviceHandle)
+        {
+            return GetMountDevName(deviceHandle, ControlCodes.MountDevice.QueryInterfaceName);
+        }
+
+        private unsafe static string GetMountDevName(SafeHandle deviceHandle, ControlCode controlCode)
+        {
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
+            {
+                buffer.EnsureByteCapacity((ulong)sizeof(MOUNTDEV_NAME));
+
+                while (!Imports.DeviceIoControl(
+                    hDevice: deviceHandle,
+                    dwIoControlCode: controlCode,
+                    lpInBuffer: null,
+                    nInBufferSize: 0,
+                    lpOutBuffer: buffer.VoidPointer,
+                    nOutBufferSize: checked((uint)buffer.ByteCapacity),
+                    lpBytesReturned: out _,
+                    lpOverlapped: null))
+                {
+                    WindowsError error = Errors.GetLastError();
+                    switch (error)
+                    {
+                        case WindowsError.ERROR_MORE_DATA:
+                            buffer.EnsureByteCapacity(((MOUNTDEV_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_NAME));
+                            break;
+                        default:
+                            throw Errors.GetIoExceptionForError(error);
+                    }
+                }
+
+                return ((MOUNTDEV_NAME*)buffer.VoidPointer)->Name.CreateString();
+            });
+        }
+
+        public unsafe static string QuerySuggestedLinkName(SafeHandle deviceHandle)
+        {
+            return BufferHelper.BufferInvoke(((HeapBuffer buffer) =>
+            {
+                buffer.EnsureByteCapacity((ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
+                ControlCode controlCode = ControlCodes.MountDevice.QuerySuggestedLinkName;
+
+                while (!Imports.DeviceIoControl(
+                    hDevice: deviceHandle,
+                    dwIoControlCode: controlCode,
+                    lpInBuffer: null,
+                    nInBufferSize: 0,
+                    lpOutBuffer: buffer.VoidPointer,
+                    nOutBufferSize: checked((uint)buffer.ByteCapacity),
+                    lpBytesReturned: out _,
+                    lpOverlapped: null))
+                {
+                    WindowsError error = Errors.GetLastError();
+                    switch (error)
+                    {
+                        case WindowsError.ERROR_MORE_DATA:
+                            buffer.EnsureByteCapacity(((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
+                            break;
+                        default:
+                            throw Errors.GetIoExceptionForError(error);
+                    }
+                }
+
+                return (((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->Name).CreateString();
+            }));
+        }
+
+        public unsafe static byte[] QueryUniqueId(SafeHandle deviceHandle)
+        {
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
+            {
+                buffer.EnsureByteCapacity((ulong)sizeof(MOUNTDEV_UNIQUE_ID));
+                ControlCode controlCode = ControlCodes.MountDevice.QueryUniqueId;
+
+                while (!Imports.DeviceIoControl(
+                    hDevice: deviceHandle,
+                    dwIoControlCode: controlCode,
+                    lpInBuffer: null,
+                    nInBufferSize: 0,
+                    lpOutBuffer: buffer.VoidPointer,
+                    nOutBufferSize: checked((uint)buffer.ByteCapacity),
+                    lpBytesReturned: out _,
+                    lpOverlapped: null))
+                {
+                    WindowsError error = Errors.GetLastError();
+                    switch (error)
+                    {
+                        case WindowsError.ERROR_MORE_DATA:
+                            buffer.EnsureByteCapacity(((MOUNTDEV_UNIQUE_ID*)buffer.VoidPointer)->UniqueIdLength + (ulong)sizeof(MOUNTDEV_UNIQUE_ID));
+                            break;
+                        default:
+                            throw Errors.GetIoExceptionForError(error);
+                    }
+                }
+
+                return ((MOUNTDEV_UNIQUE_ID*)buffer.VoidPointer)->UniqueId.ToArray();
+            });
+        }
+
         // Access to the MountPointManager is denied for store apps
         public unsafe static string QueryDosVolumePath(string volume)
         {

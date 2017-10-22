@@ -16,6 +16,23 @@ namespace DesktopTests
     public class VolumeManagementTests
     {
         [Fact]
+        public void QueryDosDevice_All()
+        {
+            var names = VolumeMethods.QueryDosDevice(null).ToArray();
+            names.Should().Contain("Global");
+            names.Should().Contain("C:");
+            names[names.Length - 1].Should().NotBeNullOrEmpty("we split correctly");
+        }
+
+        [Fact]
+        public void QueryDosDevice_C()
+        {
+            var names = VolumeMethods.QueryDosDevice("C:").ToArray();
+            names.Length.Should().Be(1);
+            names[0].Should().StartWith(@"\Device\HarddiskVolume");
+        }
+
+        [Fact]
         public void BasicLogicalDriveStrings()
         {
             var driveStrings = VolumeMethods.GetLogicalDriveStrings();

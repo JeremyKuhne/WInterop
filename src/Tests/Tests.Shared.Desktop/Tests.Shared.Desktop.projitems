@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Clipboard\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\LzTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CreateDirectTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileInformationTests.cs" />
@@ -38,7 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)VolumeManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\VolumeManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowClassTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsProcedureTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsTests.cs" />
@@ -46,5 +47,6 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Cryptography\" />
     <Folder Include="$(MSBuildThisFileDirectory)ErrorHandling\" />
+    <Folder Include="$(MSBuildThisFileDirectory)VolumeManagement\" />
   </ItemGroup>
 </Project>

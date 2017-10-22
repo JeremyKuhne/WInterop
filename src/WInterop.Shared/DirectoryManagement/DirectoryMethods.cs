@@ -38,12 +38,12 @@ namespace WInterop.DirectoryManagement
         /// <summary>
         /// Simple wrapper to allow creating a file handle for an existing directory.
         /// </summary>
-        public static SafeFileHandle CreateDirectoryHandle(string directoryPath)
+        public static SafeFileHandle CreateDirectoryHandle(string directoryPath, DesiredAccess desiredAccess = DesiredAccess.ListDirectory)
         {
             return FileMethods.CreateFile(
                 directoryPath,
                 CreationDisposition.OpenExisting,
-                DesiredAccess.ListDirectory,
+                desiredAccess,
                 ShareModes.ReadWrite | ShareModes.Delete,
                 FileAttributes.None,
                 FileFlags.BackupSemantics);
