@@ -10,7 +10,7 @@ namespace WInterop.DeviceManagement.Types
     public enum ControlCodeAccess : byte
     {
         /// <summary>
-        /// [FILE_ANY_ACCESS]
+        /// Any or special access. [FILE_ANY_ACCESS]
         /// </summary>
         /// <remarks>
         /// This is also defined (in ntddk.h) as FILE_SPECIAL_ACCESS with a comment that
@@ -21,12 +21,12 @@ namespace WInterop.DeviceManagement.Types
         Any = 0x00,
 
         /// <summary>
-        /// [FILE_READ_ACCESS]
+        /// Read access. [FILE_READ_ACCESS]
         /// </summary>
         Read = 0x01,
 
         /// <summary>
-        /// [FILE_WRITE_ACCES]
+        /// Write access. [FILE_WRITE_ACCES]
         /// </summary>
         Write = 0x02,
 
