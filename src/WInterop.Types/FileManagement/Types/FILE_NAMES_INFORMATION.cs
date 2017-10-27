@@ -9,8 +9,10 @@ using System;
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540329.aspx
-
+    /// <summary>
+    /// Used to query names of files in a directory.
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff540329.aspx"/></remarks>
     public struct FILE_NAMES_INFORMATION
     {
         public uint NextEntryOffset;

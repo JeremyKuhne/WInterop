@@ -5,19 +5,21 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
-    /// Used to get the reference number for a file.
+    /// Used to create an NTFS hard link to an existing file.
     /// </summary>
     /// <remarks>
-    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff540318.aspx"/>
+    /// https://msdn.microsoft.com/en-us/library/windows/hardware/ff540324.aspx
     /// </remarks>
-    public struct FILE_INTERNAL_INFORMATION
+    public struct FILE_LINK_INFORMATION
     {
-        /// <summary>
-        /// Reference number for the file.
-        /// </summary>
-        public long IndexNumber;
+        public BOOLEAN ReplaceIfExists;
+        public IntPtr RootDirectory;
+        public uint FileNameLength;
+        public TrailingString FileName;
     }
 }

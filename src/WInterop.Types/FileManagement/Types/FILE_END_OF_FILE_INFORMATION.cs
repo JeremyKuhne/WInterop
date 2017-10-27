@@ -8,16 +8,14 @@
 namespace WInterop.FileManagement.Types
 {
     /// <summary>
-    /// Used to get the reference number for a file.
+    /// Used to set the end of file position.
     /// </summary>
-    /// <remarks>
-    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff540318.aspx"/>
-    /// </remarks>
-    public struct FILE_INTERNAL_INFORMATION
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff545780(v=vs.85).aspx"/></remarks>
+    public struct FILE_END_OF_FILE_INFORMATION
     {
         /// <summary>
-        /// Reference number for the file.
+        /// The absolute new end of file position as a byte offset from the start of the file.
         /// </summary>
-        public long IndexNumber;
+        public long EndOfFile;
     }
 }

@@ -29,14 +29,14 @@ namespace WInterop.FileManagement.Types
         /// </summary>
         public ulong AllocationSize;
 
-        public unsafe StreamInformation(FILE_STREAM_INFO* info)
+        public unsafe StreamInformation(FILE_STREAM_INFORMATION* info)
         {
             Name = info->StreamName.CreateString();
             Size = info->StreamSize;
             AllocationSize = info->StreamAllocationSize;
         }
 
-        public static unsafe IEnumerable<StreamInformation> Create(FILE_STREAM_INFO* info)
+        public static unsafe IEnumerable<StreamInformation> Create(FILE_STREAM_INFORMATION* info)
         {
             var infos = new List<StreamInformation>();
             byte* start = (byte*)info;
@@ -44,7 +44,7 @@ namespace WInterop.FileManagement.Types
             {
                 infos.Add(new StreamInformation(info));
                 if (info->NextEntryOffset == 0) break;
-                info = (FILE_STREAM_INFO*)(start + info->NextEntryOffset);
+                info = (FILE_STREAM_INFORMATION*)(start + info->NextEntryOffset);
             }
             return infos;
         }

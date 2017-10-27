@@ -469,7 +469,7 @@ namespace WInterop.FileManagement
                     }
                 }
 
-                return StreamInformation.Create((FILE_STREAM_INFO*)buffer.VoidPointer);
+                return StreamInformation.Create((FILE_STREAM_INFORMATION*)buffer.VoidPointer);
             });
         }
 

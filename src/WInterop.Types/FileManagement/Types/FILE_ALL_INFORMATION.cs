@@ -7,7 +7,12 @@
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545743.aspx
+    /// <summary>
+    /// Combo struct for all file information.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff545743.aspx"/>
+    /// </remarks>
     public struct FILE_ALL_INFORMATION
     {
         public FILE_BASIC_INFORMATION BasicInformation;

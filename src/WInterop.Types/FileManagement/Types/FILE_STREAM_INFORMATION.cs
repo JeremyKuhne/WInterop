@@ -9,8 +9,14 @@ using System;
 
 namespace WInterop.FileManagement.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364406.aspx
-    public struct FILE_STREAM_INFO
+    /// <summary>
+    /// Used to enumerate streams for a file.
+    /// </summary>
+    /// <remarks>
+    /// Equivalent to <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364406.aspx">FILE_STREAM_INFO</a> structure.
+    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff540364.aspx"/>
+    /// </remarks>
+    public struct FILE_STREAM_INFORMATION
     {
         public uint NextEntryOffset;
         public uint StreamNameLength;
