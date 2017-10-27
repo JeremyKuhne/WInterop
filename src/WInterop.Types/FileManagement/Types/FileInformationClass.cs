@@ -33,14 +33,14 @@ namespace WInterop.FileManagement.Types
 
         /// <summary>
         /// Allows marking a file handle for deletion. Handle must have been opened with DesiredAccess.Delete.
-        /// You cannot change the state of a handle opened with DeleteOnClose. Use with FILE_DISPOSITION_INFORMATION.
+        /// You cannot change the state of a handle opened with DeleteOnClose. Use with <see cref="FILE_DISPOSITION_INFORMATION"/>.
         /// </summary>
         FileDispositionInformation = 13,
         FilePositionInformation = 14,
         FileFullEaInformation = 15,
 
         /// <summary>
-        /// Gets the file access mode (cannot set). Used with [FILE_MODE_INFORMATION].
+        /// Gets the file access mode (cannot set). Used with <see cref="FILE_MODE_INFORMATION"/>.
         /// </summary>
         /// <remarks>
         /// Sadly not available via GetFileInformationByHandle yet.
@@ -49,7 +49,7 @@ namespace WInterop.FileManagement.Types
         FileAlignmentInformation = 17,
 
         /// <summary>
-        /// Used with FILE_ALL_INFORMATION.
+        /// Used with <see cref="FILE_ALL_INFORMATION"/>.
         /// </summary>
         /// <remarks>
         /// Aggregate of FileBasicInformation, FileStandardInformation, FileInternalInformation,
@@ -75,7 +75,7 @@ namespace WInterop.FileManagement.Types
         FileQuotaInformation = 32,
 
         /// <summary>
-        /// Returns the reparse point information in FILE_REPARSE_POINT_INFORMATION.
+        /// Returns the reparse point information in <see cref="FILE_REPARSE_POINT_INFORMATION"/>.
         /// </summary>
         FileReparsePointInformation = 33,
         FileNetworkOpenInformation = 34,
@@ -84,16 +84,26 @@ namespace WInterop.FileManagement.Types
         FileIdBothDirectoryInformation = 37,
         FileIdFullDirectoryInformation = 38,
         FileValidDataLengthInformation = 39,
+
         /// <summary>
-        /// This is used for setting, not getting the short name
+        /// This is used for setting, not getting the short name.
         /// </summary>
         FileShortNameInformation = 40,
+
         FileIoCompletionNotificationInformation = 41,
         FileIoStatusBlockRangeInformation = 42,
         FileIoPriorityHintInformation = 43,
         FileSfioReserveInformation = 44,
         FileSfioVolumeInformation = 45,
         FileHardLinkInformation = 46,
+
+        /// <summary>
+        /// Returns the process ids (other than the current process) that have an active handle
+        /// to the same file. Uses <see cref="FILE_PROCESS_IDS_USING_FILE_INFORMATION"/>.
+        /// </summary>
+        /// <remarks>
+        /// Introduced in Windows Vista.
+        /// </remarks>
         FileProcessIdsUsingFileInformation = 47,
         FileNormalizedNameInformation = 48,
         FileNetworkPhysicalNameInformation = 49,
