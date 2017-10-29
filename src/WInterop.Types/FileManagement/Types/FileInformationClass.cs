@@ -149,18 +149,34 @@ namespace WInterop.FileManagement.Types
         FileStreamInformation = 22,
 
         /// <summary>
+        /// Used to query or set information that isn't specific to one end of a pipe.
         /// Uses <see cref="FILE_PIPE_INFORMATION"/>.
         /// </summary>
+        /// <remarks>
+        /// <see cref="https://msdn.microsoft.com/en-us/library/cc232082.aspx"/>
+        /// </remarks>
         FilePipeInformation = 23,
 
         /// <summary>
-        /// Uses <see cref="FILE_PIPE_LOCAL_INFORMATION"/>.
+        /// Used to get information on a named pipe that is associated with the end of the pipe
+        /// that is being queried. Uses <see cref="FILE_PIPE_LOCAL_INFORMATION"/>.
         /// </summary>
+        /// <remarks>
+        /// <see cref="https://msdn.microsoft.com/en-us/library/cc232083.aspx"/>
+        /// </remarks>
         FilePipeLocalInformation = 24,
 
         /// <summary>
+        /// Used to query information on a named pipe that is associated with the client end of the
+        /// pipe that is being queried. Remote information is not available for local pipes or for
+        /// the server end of a remote pipe. Therefore, this information class is usable only by the
+        /// client to retrieve information associated with its end of the pipe.
+        /// 
         /// Uses <see cref="FILE_PIPE_REMOTE_INFORMATION"/>.
         /// </summary>
+        /// <remarks>
+        /// <see cref="https://msdn.microsoft.com/en-us/library/cc232120.aspx"/>
+        /// </remarks>
         FilePipeRemoteInformation = 25,
 
         /// <summary>
