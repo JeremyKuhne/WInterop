@@ -183,7 +183,12 @@ namespace DesktopTests.Gdi
         {
             // System color brushes are special- they'll always give the same value
             BrushHandle brush = GdiMethods.GetSystemColorBrush(SystemColor.MenuBar);
-            brush.DangerousGetHandle().Should().Be((IntPtr)0x1000c5);
+            long handle = (long)brush.DangerousGetHandle();
+            handle = handle & 0xFFFF00;
+
+            // This changed in RS4 from C5 to BF for the last byte. Checking the first
+            // bytes to make sure we're in the right ballpark.
+            handle.Should().Be(0x100000);
         }
     }
 }
