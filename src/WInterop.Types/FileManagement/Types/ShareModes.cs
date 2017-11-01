@@ -33,13 +33,18 @@ namespace WInterop.FileManagement.Types
         Write = 0x00000002,
 
         /// <summary>
+        /// Allow others to delete the file.
+        /// </summary>
+        Delete = 0x00000004,
+
+        /// <summary>
         /// Not actually defined in Windows, for convenience.
         /// </summary>
         ReadWrite = Read | Write,
 
         /// <summary>
-        /// Allow others to delete the file.
+        /// Not actually defined in Windows, for convenience.
         /// </summary>
-        Delete = 0x00000004
+        All = Read | Write | Delete
     }
 }

@@ -15,6 +15,7 @@ using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
 using WInterop.FileManagement.Types;
 using WInterop.Support;
+using WInterop;
 using Xunit;
 
 namespace Tests.FileManagement
@@ -198,7 +199,7 @@ namespace Tests.FileManagement
         }
 
         [Fact]
-        public void GetFileAttributesBehaviors()
+        public void GetFileAttributesBehavior_Basic()
         {
             using (var cleaner = new TestFileCleaner())
             {
@@ -215,6 +216,43 @@ namespace Tests.FileManagement
                 error = Errors.GetLastError();
                 success.Should().BeFalse("non-existant subdir");
                 error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
+            }
+        }
+
+        [Fact]
+        public void GetFileAttributesBehavior_DeletedFile()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = cleaner.CreateTestFile(nameof(GetFileAttributesBehavior_DeletedFile));
+                using (var handle = FileMethods.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All))
+                {
+                    handle.IsInvalid.Should().BeFalse();
+                    FileMethods.FileExists(path).Should().BeTrue();
+                    FileMethods.DeleteFile(path);
+
+                    // With the file deleted and the handle still open the file will still physically exist.
+                    // Trying to access the file via a handle at this point will fail with access denied.
+
+                    Action action = () => FileMethods.FileExists(path);
+                    action.ShouldThrow<UnauthorizedAccessException>();
+
+                    action = () => FileMethods.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All,
+                        desiredAccess: DesiredAccess.ReadAttributes);
+                    action.ShouldThrow<UnauthorizedAccessException>();
+
+                    // Find file will work at this point.
+                    IntPtr findHandle = FileMethods.Imports.FindFirstFileW(path, out WIN32_FIND_DATA findData);
+                    findHandle.Should().NotBe(IntPtr.Zero);
+                    try
+                    {
+                        findData.cFileName.CreateString().Should().Be(Paths.GetLastSegment(path));
+                    }
+                    finally
+                    {
+                        FileMethods.Imports.FindClose(findHandle);
+                    }
+                }
             }
         }
 
