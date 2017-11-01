@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using FluentAssertions;
 using Tests.Support;
 using WInterop.DirectoryManagement;
@@ -54,8 +55,22 @@ namespace DesktopTests.FileManagement
         {
             using (var cleaner = new TestFileCleaner())
             {
-                string path = cleaner.CreateTestFile("OpenFileDirect");
+                string path = cleaner.CreateTestFile(nameof(OpenFileDirect));
                 using (var file = FileMethods.CreateFileDirect(@"\??\" + path, CreateDisposition.Open))
+                {
+                    file.IsInvalid.Should().BeFalse();
+                }
+            }
+        }
+
+        [Fact]
+        public void OpenFileDirect_WithSpan()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = @"\??\" + cleaner.CreateTestFile(nameof(OpenFileDirect_WithSpan));
+                string wrongPath =  path + "foo";
+                using (var file = FileMethods.CreateFileDirect(wrongPath.AsSpan().Slice(0, path.Length), CreateDisposition.Open))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }

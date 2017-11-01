@@ -127,6 +127,41 @@ namespace WInterop.FileManagement
                 fileAttributes, createOptions, objectAttributes);
         }
 
+        /// <summary>
+        /// NtCreateFile wrapper.
+        /// </summary>
+        public unsafe static SafeFileHandle CreateFileDirect(
+            ReadOnlySpan<char> path,
+            CreateDisposition createDisposition,
+            DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
+            ShareModes shareAccess = ShareModes.ReadWrite,
+            FileAttributes fileAttributes = FileAttributes.None,
+            CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
+            ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
+        {
+            return CreateFileRelative(path, null, createDisposition, desiredAccess, shareAccess,
+                fileAttributes, createOptions, objectAttributes);
+        }
+
+        public unsafe static SafeFileHandle CreateFileRelative(
+            ReadOnlySpan<char> path,
+            SafeFileHandle rootDirectory,
+            CreateDisposition createDisposition,
+            DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
+            ShareModes shareAccess = ShareModes.ReadWrite,
+            FileAttributes fileAttributes = FileAttributes.None,
+            CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
+            ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
+        {
+            using (var handle = new UnwrapHandle(rootDirectory))
+            {
+                return new SafeFileHandle(
+                    CreateFileRelative(path, handle, createDisposition, desiredAccess,
+                        shareAccess, fileAttributes, createOptions, objectAttributes),
+                    true);
+            }
+        }
+
         public unsafe static SafeFileHandle CreateFileRelative(
             string path,
             SafeFileHandle rootDirectory,
@@ -137,20 +172,8 @@ namespace WInterop.FileManagement
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
         {
-            bool refcounted = false;
-            try
-            {
-                rootDirectory?.DangerousAddRef(ref refcounted);
-                return new SafeFileHandle(
-                    CreateFileRelative(path, rootDirectory?.DangerousGetHandle() ?? IntPtr.Zero, createDisposition, desiredAccess,
-                        shareAccess, fileAttributes, createOptions, objectAttributes),
-                    true);
-            }
-            finally
-            {
-                if (refcounted)
-                    rootDirectory.DangerousRelease();
-            }
+            return CreateFileRelative(path.AsSpan(), rootDirectory, createDisposition, desiredAccess,
+                shareAccess, fileAttributes, createOptions, objectAttributes);
         }
 
         public unsafe static IntPtr CreateFileRelative(
@@ -163,7 +186,21 @@ namespace WInterop.FileManagement
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
         {
-            fixed (char* c = path)
+            return CreateFileRelative(path.AsSpan(), rootDirectory, createDisposition, desiredAccess,
+                shareAccess, fileAttributes, createOptions, objectAttributes);
+        }
+
+        public unsafe static IntPtr CreateFileRelative(
+            ReadOnlySpan<char> path,
+            IntPtr rootDirectory,
+            CreateDisposition createDisposition,
+            DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
+            ShareModes shareAccess = ShareModes.ReadWrite,
+            FileAttributes fileAttributes = FileAttributes.None,
+            CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
+            ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
+        {
+            fixed (char* c = &path.DangerousGetPinnableReference())
             {
                 UNICODE_STRING name = new UNICODE_STRING(c, path.Length);
                 OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES(
@@ -187,7 +224,7 @@ namespace WInterop.FileManagement
                     EaLength: 0);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status, path);
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status, path.ToString());
 
                 return handle;
             }

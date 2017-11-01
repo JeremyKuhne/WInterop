@@ -10,6 +10,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.Types;
+using WInterop.Handles.Types;
 using WInterop.Synchronization.Types;
 
 namespace WInterop.FileManagement
@@ -113,12 +114,10 @@ namespace WInterop.FileManagement
                 void* lpFileInformation,
                 uint dwBufferSize)
             {
-                bool refAdded = false;
-                hFile.DangerousAddRef(ref refAdded);
-                bool result = GetFileInformationByHandleEx(hFile.DangerousGetHandle(), FileInformationClass, lpFileInformation, dwBufferSize);
-                if (refAdded)
-                    hFile.DangerousRelease();
-                return result;
+                using (var handle = new UnwrapHandle(hFile))
+                {
+                    return GetFileInformationByHandleEx(handle, FileInformationClass, lpFileInformation, dwBufferSize);
+                }
             }
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915.aspx (kernel32)
