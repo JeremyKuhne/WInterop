@@ -226,6 +226,18 @@ namespace WInterop.FileManagement
                 out uint lpBytesReturned,
                 ref OVERLAPPED lpOverlapped,
                 FileIOCompletionRoutine lpCompletionRoutine);
+
+            // https://msdn.microsoft.com/en-us/library/cc512135.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern NTSTATUS NtQueryAttributesFile(
+                ref OBJECT_ATTRIBUTES ObjectAttributes,
+                out FILE_BASIC_INFORMATION FileInformation);
+
+            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567049.aspx
+            [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern NTSTATUS NtQueryFullAttributesFile(
+                ref OBJECT_ATTRIBUTES ObjectAttributes,
+                out FILE_NETWORK_OPEN_INFORMATION FileInformation);
         }
     }
 }

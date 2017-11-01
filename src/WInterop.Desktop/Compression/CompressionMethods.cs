@@ -134,7 +134,7 @@ namespace WInterop.Compression
 
             path = Paths.TrimTrailingSeparators(path);
             if (path[path.Length -1] != '_'
-                || FileMethods.GetFileAttributesEx(path).Size <= (ulong)sizeof(LzxHeader))
+                || FileMethods.GetFileAttributesEx(path).nFileSize <= (ulong)sizeof(LzxHeader))
                 return filenameOnly ? Paths.GetLastSegment(path) : path;
 
             char replacement;

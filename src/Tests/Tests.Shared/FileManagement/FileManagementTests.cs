@@ -123,7 +123,7 @@ namespace Tests.FileManagementTests
         {
             string tempPath = FileMethods.GetTempPath();
             var info = FileMethods.GetFileAttributesEx(tempPath);
-            info.Attributes.Should().HaveFlag(FileAttributes.Directory);
+            info.dwFileAttributes.Should().HaveFlag(FileAttributes.Directory);
         }
 
         [Fact]
@@ -269,13 +269,13 @@ namespace Tests.FileManagementTests
             try
             {
                 var originalInfo = FileMethods.GetFileAttributesEx(tempFileName);
-                originalInfo.Attributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
-                FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes | FileAttributes.ReadOnly);
+                originalInfo.dwFileAttributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
+                FileMethods.SetFileAttributes(tempFileName, originalInfo.dwFileAttributes | FileAttributes.ReadOnly);
                 var newInfo = FileMethods.GetFileAttributesEx(tempFileName);
-                newInfo.Attributes.Should().HaveFlag(FileAttributes.ReadOnly);
-                FileMethods.SetFileAttributes(tempFileName, originalInfo.Attributes);
+                newInfo.dwFileAttributes.Should().HaveFlag(FileAttributes.ReadOnly);
+                FileMethods.SetFileAttributes(tempFileName, originalInfo.dwFileAttributes);
                 newInfo = FileMethods.GetFileAttributesEx(tempFileName);
-                newInfo.Attributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
+                newInfo.dwFileAttributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
             }
             finally
             {
@@ -298,7 +298,7 @@ namespace Tests.FileManagementTests
                 FileMethods.CopyFile(source, destination);
 
                 var info = FileMethods.GetFileAttributesEx(destination);
-                info.Attributes.Should().NotHaveFlag(FileAttributes.Directory);
+                info.dwFileAttributes.Should().NotHaveFlag(FileAttributes.Directory);
             }
         }
 

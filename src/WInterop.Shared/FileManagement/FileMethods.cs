@@ -297,12 +297,12 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Gets the file attributes for the given path.
         /// </summary>
-        public static FileInformation GetFileAttributesEx(string path)
+        public static WIN32_FILE_ATTRIBUTE_DATA GetFileAttributesEx(string path)
         {
             if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
                 throw Errors.GetIoExceptionForLastError(path);
 
-            return new FileInformation(data);
+            return data;
         }
 
         /// <summary>
@@ -321,7 +321,7 @@ namespace WInterop.FileManagement
         public static bool FileExists(string path)
         {
             var data = TryGetFileInfo(path);
-            return data.HasValue && (data.Value.Attributes & FileAttributes.Directory) != FileAttributes.Directory;
+            return data.HasValue && (data.Value.dwFileAttributes & FileAttributes.Directory) != FileAttributes.Directory;
         }
 
         /// <summary>
@@ -331,14 +331,14 @@ namespace WInterop.FileManagement
         public static bool DirectoryExists(string path)
         {
             var data = TryGetFileInfo(path);
-            return data.HasValue && (data.Value.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
+            return data.HasValue && (data.Value.dwFileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
         /// <summary>
         /// Tries to get file info, returns null if the given path doesn't exist.
         /// </summary>
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
-        public static FileInformation? TryGetFileInfo(string path)
+        public static WIN32_FILE_ATTRIBUTE_DATA? TryGetFileInfo(string path)
         {
             if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
             {
@@ -354,7 +354,7 @@ namespace WInterop.FileManagement
                 }
             }
 
-            return new FileInformation(data);
+            return data;
         }
 
         /// <summary>

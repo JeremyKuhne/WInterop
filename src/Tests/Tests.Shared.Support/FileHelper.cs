@@ -72,20 +72,20 @@ namespace Tests.Support
                 throw Errors.GetIoExceptionForError(WindowsError.ERROR_PATH_NOT_FOUND, path);
             }
 
-            if ((data.Value.Attributes & FileAttributes.Directory) != FileAttributes.Directory)
+            if ((data.Value.dwFileAttributes & FileAttributes.Directory) != FileAttributes.Directory)
             {
                 // Not a directory, a file
                 throw Errors.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, path);
             }
 
-            if ((data.Value.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            if ((data.Value.dwFileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
             {
                 // Make it writable
-                FileMethods.SetFileAttributes(path, data.Value.Attributes & ~FileAttributes.ReadOnly);
+                FileMethods.SetFileAttributes(path, data.Value.dwFileAttributes & ~FileAttributes.ReadOnly);
             }
 
             // Reparse points don't need to be empty to be deleted. Deleting will simply disconnect the reparse point, which is what we want.
-            if ((data.Value.Attributes & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
+            if ((data.Value.dwFileAttributes & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
             {
                 foreach (FindResult findResult in new FindOperation<FindResult>(path))
                 {

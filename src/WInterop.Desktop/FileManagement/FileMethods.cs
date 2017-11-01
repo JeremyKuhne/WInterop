@@ -344,13 +344,10 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Gets the file mode for the given handle.
         /// </summary>
-        public static FileAccessModes GetFileMode(SafeFileHandle fileHandle)
+        public unsafe static FileAccessModes GetFileMode(SafeFileHandle fileHandle)
         {
             FileAccessModes info;
-            unsafe
-            {
-                GetFileInformation(fileHandle, FileInformationClass.FileModeInformation, &info, sizeof(FileAccessModes));
-            }
+            GetFileInformation(fileHandle, FileInformationClass.FileModeInformation, &info, sizeof(FileAccessModes));
             return info;
         }
 
@@ -388,6 +385,9 @@ namespace WInterop.FileManagement
             }
         }
 
+        /// <summary>
+        /// Get the access rights applied to the given file handle.
+        /// </summary>
         public unsafe static FileAccessRights GetRights(SafeFileHandle fileHandle)
         {
             FILE_ACCESS_INFORMATION access = new FILE_ACCESS_INFORMATION();
