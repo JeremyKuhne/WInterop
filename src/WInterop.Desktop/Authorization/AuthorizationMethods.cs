@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using WInterop.Authorization.BufferWrappers;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
@@ -219,16 +220,13 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the specified "well known" SID. Note that not all well known SIDs are available on all OSes.
         /// </summary>
-        public static SID CreateWellKnownSid(WELL_KNOWN_SID_TYPE sidType)
+        public unsafe static SID CreateWellKnownSid(WELL_KNOWN_SID_TYPE sidType)
         {
             SID sid = new SID();
 
-            unsafe
-            {
-                uint size = (uint)sizeof(SID);
-                if (!Imports.CreateWellKnownSid(sidType, null, &sid, ref size))
-                    throw Errors.GetIoExceptionForLastError();
-            }
+            uint size = (uint)sizeof(SID);
+            if (!Imports.CreateWellKnownSid(sidType, null, &sid, ref size))
+                throw Errors.GetIoExceptionForLastError();
 
             return sid;
         }

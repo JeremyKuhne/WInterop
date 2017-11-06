@@ -14,6 +14,6 @@ namespace WInterop.NetworkManagement.Types
     public struct MemberInfo
     {
         public string Name;
-        public SID_NAME_USE AccountType;
+        public SidNameUse AccountType;
     }
 }

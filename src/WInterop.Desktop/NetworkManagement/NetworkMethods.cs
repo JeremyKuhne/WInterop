@@ -90,7 +90,7 @@ namespace WInterop.NetworkManagement
             public struct LOCALGROUP_MEMBERS_INFO_1
             {
                 public IntPtr lgrmi1_sid;
-                public SID_NAME_USE lgrmi1_sidusage;
+                public SidNameUse lgrmi1_sidusage;
                 public IntPtr lgrmi1_name;
             }
 
@@ -99,7 +99,7 @@ namespace WInterop.NetworkManagement
             public struct LOCALGROUP_MEMBERS_INFO_2
             {
                 public IntPtr lgrmi2_sid;
-                public SID_NAME_USE lgrmi2_sidusage;
+                public SidNameUse lgrmi2_sidusage;
                 public IntPtr lgrmi2_domainandname;
             }
 
@@ -184,7 +184,7 @@ namespace WInterop.NetworkManagement
                 members.Add(new MemberInfo
                 {
                     Name = Marshal.PtrToStringUni(info.lgrmi1_name),
-                    AccountType = (SID_NAME_USE)info.lgrmi1_sidusage
+                    AccountType = (SidNameUse)info.lgrmi1_sidusage
                 });
             }
 

@@ -7,13 +7,35 @@
 
 namespace WInterop.Authorization.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374931.aspx
+    /// <summary>
+    /// Access control list (ACL) header.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374931.aspx"/>
+    /// </remarks>
     public struct ACL
     {
+        /// <summary>
+        /// Revision level of the ACL. Should be 2 (ACL_REVISION) or 4 (ACL_REVISION_DS)
+        /// if it contains an ojbect-specific ACE.
+        /// </summary>
         public byte AclRevision;
-        public byte Sbz1;
+
+        // Padding
+        private byte Sbz1;
+
+        /// <summary>
+        /// Size of the ACL in bytes. Includes the header and all access
+        /// control entries (ACEs).
+        /// </summary>
         public ushort AclSize;
+
+        /// <summary>
+        /// Number of access control entries (ACE) in the ACL.
+        /// </summary>
         public ushort AceCount;
-        public ushort Sbz2;
+
+        // Padding
+        private ushort Sbz2;
     }
 }

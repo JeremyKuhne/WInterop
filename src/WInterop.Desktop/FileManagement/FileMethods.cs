@@ -8,11 +8,14 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using WInterop.Authorization;
+using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.BufferWrappers;
 using WInterop.FileManagement.Types;
 using WInterop.Handles.Types;
+using WInterop.MemoryManagement;
 using WInterop.SafeString.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -428,6 +431,28 @@ namespace WInterop.FileManagement
 
                 return ((FILE_PROCESS_IDS_USING_FILE_INFORMATION*)buffer.VoidPointer)->ProcessIdList.ToArray();
             });
+        }
+
+        /// <summary>
+        /// Get the owner SID for the given handle.
+        /// </summary>
+        public unsafe static void QueryOwner(SafeFileHandle handle, out SID sid)
+        {
+            SID* sidp;
+            SECURITY_DESCRIPTOR* descriptor;
+
+            WindowsError result = AuthorizationMethods.Imports.GetSecurityInfo(
+                handle,
+                SecurityObjectType.File,
+                SecurityInformation.Owner,
+                ppsidOwner: &sidp,
+                ppSecurityDescriptor: &descriptor);
+
+            if (result != WindowsError.ERROR_SUCCESS)
+                throw Errors.GetIoExceptionForError(result);
+
+            SID.CopyFromNative(sidp, out sid);
+            MemoryMethods.LocalFree((IntPtr)(descriptor));
         }
     }
 }

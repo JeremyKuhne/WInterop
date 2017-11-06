@@ -38,7 +38,7 @@ namespace DesktopTests.Authorization
             SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinWorldSid);
             AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
             sid.Revision.Should().Be(1);
-            sid.IdentifierAuthority.Should().Be(SID_IDENTIFIER_AUTHORITY.SECURITY_WORLD_SID_AUTHORITY);
+            sid.IdentifierAuthority.Should().Be(SID_IDENTIFIER_AUTHORITY.WORLD);
 
             AuthorizationMethods.GetSidSubAuthorityCount(ref sid).Should().Be(1);
             AuthorizationMethods.GetSidSubAuthority(ref sid, 0).Should().Be(0);
@@ -49,7 +49,7 @@ namespace DesktopTests.Authorization
             AccountSidInfo info = AuthorizationMethods.LookupAccountSidLocal(ref sid);
             info.Name.Should().Be("Everyone");
             info.DomainName.Should().Be("");
-            info.Usage.Should().Be(SID_NAME_USE.SidTypeWellKnownGroup);
+            info.Usage.Should().Be(SidNameUse.WellKnownGroup);
         }
 
         [Fact]

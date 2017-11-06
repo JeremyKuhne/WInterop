@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\CreateDirectTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileInformationTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileSecurityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DEVMODE_Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DISPLAY_DEVICE_Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiTests.cs" />

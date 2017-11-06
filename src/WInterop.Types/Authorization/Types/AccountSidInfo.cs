@@ -11,6 +11,6 @@ namespace WInterop.Authorization.Types
     {
         public string Name;
         public string DomainName;
-        public SID_NAME_USE Usage;
+        public SidNameUse Usage;
     }
 }

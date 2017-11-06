@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
+using WInterop.ErrorHandling.Types;
 using WInterop.Handles.Types;
 using WInterop.MemoryManagement.Types;
 using WInterop.ProcessAndThreads.Types;
@@ -21,6 +22,13 @@ namespace WInterop.Authorization
         /// </summary>
         public static partial class Imports
         {
+            // Advapi (Advanced API) provides Win32 security and registry calls and as such hosts most
+            // of the Authorization APIs.
+            //
+            // Advapi usually calls the NT Marta provider (Windows NT Multiple Access RouTing Authority).
+            // https://msdn.microsoft.com/en-us/library/aa939264.aspx
+
+
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
@@ -120,7 +128,7 @@ namespace WInterop.Authorization
                 ref uint cchName,
                 SafeHandle lpReferencedDomainName,
                 ref uint cchReferencedDomainName,
-                out SID_NAME_USE peUse);
+                out SidNameUse peUse);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379159.aspx
             // LookupAccountName
@@ -165,11 +173,35 @@ namespace WInterop.Authorization
                 ref SID pSid,
                 uint nSubAuthority);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376404.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern bool CopySid(
                 uint nDestinationSidLength,
                 out SID pDestinationSid,
                 SID* pSourceSid);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374951.aspx
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern bool AddAccessAllowedAceEx(
+                ACL* pAcl,
+                uint dwAceRevision,
+                // This is AceInheritence
+                uint AceFlags,
+                ACCESS_MASK AccessMask,
+                SID* pSid);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446654.aspx
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern WindowsError GetSecurityInfo(
+                SafeHandle handle,
+                SecurityObjectType ObjectType,
+                SecurityInformation SecurityInfo,
+                SID** ppsidOwner = null,
+                SID** ppsidGroup = null,
+                ACL** ppDacl = null,
+                ACL** ppSacl = null,
+                SECURITY_DESCRIPTOR** ppSecurityDescriptor = null
+            );
         }
     }
 }

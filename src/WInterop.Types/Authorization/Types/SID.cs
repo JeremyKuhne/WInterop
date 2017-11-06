@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace WInterop.Authorization.Types
@@ -55,7 +56,12 @@ namespace WInterop.Authorization.Types
     /// <remarks>
     /// Per the documentation you're not supposed to access the SID fields directly. Given that the struct
     /// is publicly defined in the headers as above, it is unlikely to change. If you want to play safe
-    /// by MSDN use the methods for all data access. (TODO: Not implemented yet.)
+    /// by MSDN use the methods for all data access.
+    /// 
+    /// For ease of interaction and lifetime we simply define the struct at it's max size. This allows
+    /// passing the struct around easily. It does eat up more memory than needed for the sub authorities,
+    /// but that seems a decent tradeoff as we don't expect to create a large number of these. This does
+    /// also require using <see cref="CopyFromNative"/> to get SIDs allocated by Windows.
     /// </remarks>
     public struct SID
     {
@@ -68,5 +74,27 @@ namespace WInterop.Authorization.Types
 
         // Also known as Relative Identifiers
         public unsafe fixed uint SubAuthority[SID_MAX_SUB_AUTHORITIES];
+
+        /// <summary>
+        /// Use this to copy from a native buffer, as the defined SID will likely not have
+        /// a full set of SubAuthorities.
+        /// </summary>
+        public unsafe static void CopyFromNative(SID* native, out SID copy)
+        {
+            copy = new SID();
+            copy.Revision = native->Revision;
+            copy.SubAuthorityCount = native->SubAuthorityCount;
+            copy.IdentifierAuthority = native->IdentifierAuthority;
+
+            if (copy.SubAuthorityCount != 0)
+            {
+                ReadOnlySpan<uint> source = new ReadOnlySpan<uint>(native->SubAuthority, copy.SubAuthorityCount);
+                fixed (uint* c = copy.SubAuthority)
+                {
+                    Span<uint> destination = new Span<uint>(c, copy.SubAuthorityCount);
+                    source.CopyTo(destination);
+                }
+            }
+        }
     }
 }

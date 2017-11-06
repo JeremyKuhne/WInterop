@@ -18,7 +18,7 @@ namespace WInterop.Authorization.BufferWrappers
 
         AccountSidInfo ITwoBufferFunc<StringBuffer, AccountSidInfo>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
         {
-            SID_NAME_USE usage;
+            SidNameUse usage;
             uint nameCharCapacity = nameBuffer.CharCapacity;
             uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
 
