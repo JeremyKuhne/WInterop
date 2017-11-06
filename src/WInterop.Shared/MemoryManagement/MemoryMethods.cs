@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using Internal = WInterop.Support.Internal;
@@ -136,12 +137,8 @@ namespace WInterop.MemoryManagement
 
         public static void LocalFree(IntPtr memory)
         {
-            if (Imports.LocalFree(memory) != null)
-            {
-                var error = Errors.GetLastError();
-                if (error != WindowsError.ERROR_SUCCESS)
-                    throw Errors.GetIoExceptionForError(error);
-            }
+            if (Imports.LocalFree(memory) != IntPtr.Zero)
+                throw Errors.GetIoExceptionForLastError();
         }
     }
 }
