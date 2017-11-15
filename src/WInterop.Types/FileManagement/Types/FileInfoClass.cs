@@ -13,7 +13,7 @@ namespace WInterop.FileManagement.Types
     public enum FileInfoClass : uint
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364228.aspx
-        // Note that OS support is gleaned from documentation & headers for the structures.
+        // Note that some OS support is gleaned from documentation & headers for the structures.
 
         /// <summary>
         /// Returns basic information (timestamps and attributes) for a file in FILE_BASIC_INFO.
@@ -60,25 +60,25 @@ namespace WInterop.FileManagement.Types
         FileDispositionInfo,
 
         /// <summary>
-        /// 
+        /// Allows setting the allocated size of the file.
         /// </summary>
         /// <remarks>
-        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
-        /// Windows 7 and up. SetEndOfFile is more direct.
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile. Windows 7 and up.
+        /// SetEndOfFile sets this after setting the logical end of file to the current position via FileEndOfFileInfo.
         /// </remarks>
         FileAllocationInfo,
 
         /// <summary>
-        /// 
+        /// Allows setting the end of file.
         /// </summary>
         /// <remarks>
-        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
-        /// Windows 7 and up. SetEndOfFile is effectively the same API.
+        /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile. Windows 7 and up.
+        /// SetEndOfFile calls this to set the logical end of file to whatever the current position is.
         /// </remarks>
         FileEndOfFileInfo,
 
         /// <summary>
-        /// 
+        /// Gets stream information for the file.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryInformationFile & FileStreamInformation. Windows 7 and up.
@@ -86,7 +86,7 @@ namespace WInterop.FileManagement.Types
         FileStreamInfo,
 
         /// <summary>
-        /// 
+        /// Gets compression information for the file.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryInformationFile & FileCompressionInformation. Windows 7 and up.
@@ -94,7 +94,7 @@ namespace WInterop.FileManagement.Types
         FileCompressionInfo,
 
         /// <summary>
-        /// 
+        /// Gets the file attributes and reparse tag.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryInformationFile & FileAttributeTagInformation. Windows 7 and up.
@@ -102,7 +102,7 @@ namespace WInterop.FileManagement.Types
         FileAttributeTagInfo,
 
         /// <summary>
-        /// 
+        /// Starts a query for for file information in a directory.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryDirectoryFile & FileIdBothDirectoryInformation with RestartScan
@@ -111,7 +111,7 @@ namespace WInterop.FileManagement.Types
         FileIdBothDirectoryInfo,
 
         /// <summary>
-        /// 
+        /// Resumes a query for file information in a directory.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryDirectoryFile & FileIdBothDirectoryInformation with RestartScan
@@ -120,7 +120,7 @@ namespace WInterop.FileManagement.Types
         FileIdBothDirectoryRestartInfo,
 
         /// <summary>
-        /// 
+        /// Allows setting the priority hint for a file.
         /// </summary>
         /// <remarks>
         /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.
@@ -129,7 +129,7 @@ namespace WInterop.FileManagement.Types
         FileIoPriorityHintInfo,
 
         /// <summary>
-        /// 
+        /// Gets the file remote protocol information.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryInformationFile & FileRemoteProtocolInformation. Windows 7 and up.
@@ -137,7 +137,7 @@ namespace WInterop.FileManagement.Types
         FileRemoteProtocolInfo,
 
         /// <summary>
-        /// 
+        /// Starts a query for for file information in a directory.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryDirectoryFile & FileFullDirectoryInformation with RestartScan
@@ -146,7 +146,7 @@ namespace WInterop.FileManagement.Types
         FileFullDirectoryInfo,
 
         /// <summary>
-        /// 
+        /// Resumes a query for file information in a directory.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryDirectoryFile & FileFullDirectoryInformation with RestartScan
@@ -155,7 +155,7 @@ namespace WInterop.FileManagement.Types
         FileFullDirectoryRestartInfo,
 
         /// <summary>
-        /// 
+        /// Gets detailed information about how data is stored on the containing volume.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryVolumeInformationFile & FileFsSectorSizeInformation. Windows 8 and up.
@@ -163,7 +163,7 @@ namespace WInterop.FileManagement.Types
         FileStorageInfo,
 
         /// <summary>
-        /// 
+        /// Gets the alignment information for the file.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryInformationFile & FileAlignmentInformation. Windows 8 and up.
@@ -171,7 +171,7 @@ namespace WInterop.FileManagement.Types
         FileAlignmentInfo,
 
         /// <summary>
-        /// 
+        /// Gets the volume serial number and file id for the file.
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryInformationFile & FileIdInformation. Windows 8 and up.
