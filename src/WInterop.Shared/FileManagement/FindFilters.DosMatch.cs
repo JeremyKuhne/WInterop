@@ -52,7 +52,7 @@ namespace WInterop.FileManagement
                             switch (c[i])
                             {
                                 case '.':
-                                    if (i > 1 && i == length - 1 && c[i - 1] == '*')
+                                    if (i > 0 && i == length - 1 && c[i - 1] == '*')
                                     {
                                         buffer.Length--;
                                         buffer.Append('<'); // DOS_STAR (ends in *.)

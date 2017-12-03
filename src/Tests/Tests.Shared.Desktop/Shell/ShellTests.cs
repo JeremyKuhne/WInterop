@@ -191,7 +191,7 @@ namespace DesktopTests.ShellTests
         public void ExpandEnvironmentVariablesForUser()
         {
             ShellMethods.ExpandEnvironmentVariablesForUser(
-                AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_DUPLICATE),
+                AuthorizationMethods.OpenProcessToken(AccessTokenRights.Impersonate | AccessTokenRights.Query | AccessTokenRights.Duplicate),
                 @"%USERNAME%").
                 Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
         }

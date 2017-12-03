@@ -11,7 +11,6 @@ using System.Linq;
 using WInterop.Authorization.BufferWrappers;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.Handles.Types;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -23,8 +22,52 @@ namespace WInterop.Authorization
         // In winnt.h
         private const uint PRIVILEGE_SET_ALL_NECESSARY = 1;
 
+        private static Dictionary<Privilege, string> s_privileges;
+
+        static AuthorizationMethods()
+        {
+            s_privileges = new Dictionary<Privilege, string>
+            {
+                { Privilege.AssignPrimaryToken, "SeAssignPrimaryTokenPrivilege" },
+                { Privilege.Audit, "SeAuditPrivilege" },
+                { Privilege.Backup, "SeBackupPrivilege" },
+                { Privilege.ChangeNotify, "SeChangeNotifyPrivilege" },
+                { Privilege.CreateGlobal, "SeCreateGlobalPrivilege" },
+                { Privilege.CreatePagefile, "SeCreatePagefilePrivilege" },
+                { Privilege.CreatePermanent, "SeCreatePermanentPrivilege" },
+                { Privilege.CreateSymbolicLink, "SeCreateSymbolicLinkPrivilege" },
+                { Privilege.CreateToken, "SeCreateTokenPrivilege" },
+                { Privilege.Debug, "SeDebugPrivilege" },
+                { Privilege.EnableDelegation, "SeEnableDelegationPrivilege" },
+                { Privilege.Impersonate, "SeImpersonatePrivilege" },
+                { Privilege.IncreaseBasePriority, "SeIncreaseBasePriorityPrivilege" },
+                { Privilege.IncreaseQuota, "SeIncreaseQuotaPrivilege" },
+                { Privilege.IncreaseWorkingSet, "SeIncreaseWorkingSetPrivilege" },
+                { Privilege.LoadDriver, "SeLoadDriverPrivilege" },
+                { Privilege.LockMemory, "SeLockMemoryPrivilege" },
+                { Privilege.MachineAccount, "SeMachineAccountPrivilege" },
+                { Privilege.ManageVolume, "SeManageVolumePrivilege" },
+                { Privilege.ProfileSingleProcess, "SeProfileSingleProcessPrivilege" },
+                { Privilege.Relabel, "SeRelabelPrivilege" },
+                { Privilege.RemoteShutdown, "SeRemoteShutdownPrivilege" },
+                { Privilege.Restore, "SeRestorePrivilege" },
+                { Privilege.Security, "SeSecurityPrivilege" },
+                { Privilege.Shutdown, "SeShutdownPrivilege" },
+                { Privilege.SyncAgent, "SeSyncAgentPrivilege" },
+                { Privilege.SystemEnvironment, "SeSystemEnvironmentPrivilege" },
+                { Privilege.SystemProfile, "SeSystemProfilePrivilege" },
+                { Privilege.SystemTime, "SeSystemtimePrivilege" },
+                { Privilege.TakeOwnership, "SeTakeOwnershipPrivilege" },
+                { Privilege.TrustedComputerBase, "SeTcbPrivilege" },
+                { Privilege.TimeZone, "SeTimeZonePrivilege" },
+                { Privilege.TrustedCredentialManagerAccess, "SeTrustedCredManAccessPrivilege" },
+                { Privilege.Undock, "SeUndockPrivilege" },
+                { Privilege.UnsolicitedInput, "SeUnsolicitedInputPrivilege" }
+            };
+        }
+
         private unsafe static void TokenInformationInvoke(
-            TokenHandle token,
+            AccessToken token,
             TOKEN_INFORMATION_CLASS info,
             Action<IntPtr> action)
         {
@@ -45,7 +88,7 @@ namespace WInterop.Authorization
             });
         }
 
-        public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(TokenHandle token)
+        public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(AccessToken token)
         {
             var privileges = new List<PrivilegeSetting>();
 
@@ -75,7 +118,7 @@ namespace WInterop.Authorization
                         stringBuffer.Length = length;
 
                         PrivilegeAttributes attributes = (PrivilegeAttributes)(*u++);
-                        privileges.Add(new PrivilegeSetting(stringBuffer.ToString(), attributes));
+                        privileges.Add(new PrivilegeSetting(ParsePrivilege(stringBuffer.AsSpan()), attributes));
                         stringBuffer.Length = 0;
                     }
                 });
@@ -87,16 +130,15 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if the given token has the specified privilege. The privilege may or may not be enabled.
         /// </summary>
-        public static bool HasPrivilege(TokenHandle token, Privileges privilege)
+        public static bool HasPrivilege(AccessToken token, Privilege privilege)
         {
             return GetTokenPrivileges(token).Any(t => t.Privilege == privilege);
         }
 
-        private static LUID LookupPrivilegeValue(string name)
+        private static LUID LookupPrivilegeValue(Privilege privilege)
         {
-            LUID luid = new LUID();
-            if (!Imports.LookupPrivilegeValueW(null, name, ref luid))
-                throw Errors.GetIoExceptionForLastError(name);
+            if (!Imports.LookupPrivilegeValueW(null, GetPrivilegeConstant(privilege), out LUID luid))
+                throw Errors.GetIoExceptionForLastError(privilege.ToString());
 
             return luid;
         }
@@ -105,9 +147,9 @@ namespace WInterop.Authorization
         /// Checks if the given privilege is enabled. This does not tell you whether or not it
         /// is possible to get a privilege- most held privileges are not enabled by default.
         /// </summary>
-        public unsafe static bool IsPrivilegeEnabled(TokenHandle token, Privileges privilege)
+        public unsafe static bool IsPrivilegeEnabled(AccessToken token, Privilege privilege)
         {
-            LUID luid = LookupPrivilegeValue(privilege.ToString());
+            LUID luid = LookupPrivilegeValue(privilege);
 
             var luidAttributes = new LUID_AND_ATTRIBUTES { Luid = luid };
 
@@ -127,7 +169,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if all of the given privileges are enabled for the current process.
         /// </summary>
-        public static bool AreAllPrivilegesEnabled(TokenHandle token, params Privileges[] privileges)
+        public static bool AreAllPrivilegesEnabled(AccessToken token, params Privilege[] privileges)
         {
             return ArePrivilegesEnabled(token, all: true, privileges: privileges);
         }
@@ -135,12 +177,12 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if any of the given privileges are enabled for the current process.
         /// </summary>
-        public static bool AreAnyPrivilegesEnabled(TokenHandle token, params Privileges[] privileges)
+        public static bool AreAnyPrivilegesEnabled(AccessToken token, params Privilege[] privileges)
         {
             return ArePrivilegesEnabled(token, all: false, privileges: privileges);
         }
 
-        private unsafe static bool ArePrivilegesEnabled(TokenHandle token, bool all, Privileges[] privileges)
+        private unsafe static bool ArePrivilegesEnabled(AccessToken token, bool all, Privilege[] privileges)
         {
             if (privileges == null || privileges.Length == 0)
                 return true;
@@ -152,7 +194,7 @@ namespace WInterop.Authorization
             Span<LUID_AND_ATTRIBUTES> luids = new Span<LUID_AND_ATTRIBUTES>(&set->Privilege, privileges.Length);
             for (int i = 0; i < privileges.Length; i++)
             {
-                luids[i] = new LUID_AND_ATTRIBUTES { Luid = LookupPrivilegeValue(privileges[i].ToString()) };
+                luids[i] = new LUID_AND_ATTRIBUTES { Luid = LookupPrivilegeValue(privileges[i]) };
             }
 
             if (!Imports.PrivilegeCheck(token, set, out BOOL result))
@@ -164,7 +206,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Opens a process token.
         /// </summary>
-        public static TokenHandle OpenProcessToken(TokenRights desiredAccess)
+        public static AccessToken OpenProcessToken(AccessTokenRights desiredAccess)
         {
             if (!Imports.OpenProcessToken(ProcessMethods.GetCurrentProcess(), desiredAccess, out var processToken))
                 throw Errors.GetIoExceptionForLastError(desiredAccess.ToString());
@@ -175,7 +217,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Opens a thread token.
         /// </summary>
-        public static TokenHandle OpenThreadToken(TokenRights desiredAccess, bool openAsSelf)
+        public static AccessToken OpenThreadToken(AccessTokenRights desiredAccess, bool openAsSelf)
         {
             if (!Imports.OpenThreadToken(ThreadMethods.Imports.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
@@ -183,11 +225,11 @@ namespace WInterop.Authorization
                 if (error != WindowsError.ERROR_NO_TOKEN)
                     throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
 
-                using (TokenHandle processToken = OpenProcessToken(TokenRights.TOKEN_DUPLICATE))
+                using (AccessToken processToken = OpenProcessToken(AccessTokenRights.Duplicate))
                 {
                     if (!Imports.DuplicateTokenEx(
                         processToken,
-                        TokenRights.TOKEN_IMPERSONATE | TokenRights.TOKEN_QUERY | TokenRights.TOKEN_ADJUST_PRIVILEGES,
+                        AccessTokenRights.Impersonate | AccessTokenRights.Query | AccessTokenRights.AdjustPrivileges,
                         IntPtr.Zero,
                         SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation,
                         TOKEN_TYPE.TokenImpersonation,
@@ -206,7 +248,7 @@ namespace WInterop.Authorization
         /// </summary>
         public unsafe static bool IsProcessElevated()
         {
-            using (TokenHandle token = OpenProcessToken(TokenRights.TOKEN_READ))
+            using (AccessToken token = OpenProcessToken(AccessTokenRights.Read))
             {
                 TOKEN_ELEVATION elevation = new TOKEN_ELEVATION();
                 if (!Imports.GetTokenInformation(
@@ -226,7 +268,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the SID for the given token.
         /// </summary>
-        public unsafe static SID GetTokenSid(TokenHandle token)
+        public unsafe static SID GetTokenSid(AccessToken token)
         {
             SID sid = new SID();
             TokenInformationInvoke(token, TOKEN_INFORMATION_CLASS.TokenUser,
@@ -274,45 +316,36 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns the S-n-n-n... string version of the given SID.
         /// </summary>
-        public static string ConvertSidToString(ref SID sid)
+        public unsafe static string ConvertSidToString(ref SID sid)
         {
             if (!Imports.ConvertSidToStringSidW(ref sid, out var handle))
                 throw Errors.GetIoExceptionForLastError();
 
-            unsafe
-            {
-                return new string((char*)handle);
-            }
+            return new string((char*)handle);
         }
 
         /// <summary>
         /// Returns the count of sub authorities for the given SID.
         /// </summary>
-        public static byte GetSidSubAuthorityCount(ref SID sid)
+        public unsafe static byte GetSidSubAuthorityCount(ref SID sid)
         {
-            unsafe
-            {
-                byte* b = Imports.GetSidSubAuthorityCount(ref sid);
-                if (b == null)
-                    throw Errors.GetIoExceptionForLastError();
+            byte* b = Imports.GetSidSubAuthorityCount(ref sid);
+            if (b == null)
+                throw Errors.GetIoExceptionForLastError();
 
-                return *b;
-            }
+            return *b;
         }
 
         /// <summary>
         /// Get the sub authority at the specified index for the given SID.
         /// </summary>
-        public static uint GetSidSubAuthority(ref SID sid, uint nSubAuthority)
+        public unsafe static uint GetSidSubAuthority(ref SID sid, uint nSubAuthority)
         {
-            unsafe
-            {
-                uint* u = Imports.GetSidSubAuthority(ref sid, nSubAuthority);
-                if (u == null)
-                    throw Errors.GetIoExceptionForLastError();
+            uint* u = Imports.GetSidSubAuthority(ref sid, nSubAuthority);
+            if (u == null)
+                throw Errors.GetIoExceptionForLastError();
 
-                return *u;
-            }
+            return *u;
         }
 
         /// <summary>
@@ -322,6 +355,22 @@ namespace WInterop.Authorization
         {
             var wrapper = new LookupAccountSidLocalWrapper { Sid = sid };
             return BufferHelper.TwoBufferInvoke<LookupAccountSidLocalWrapper, StringBuffer, AccountSidInfo>(ref wrapper);
+        }
+
+        public static string GetPrivilegeConstant(Privilege privilege)
+        {
+            if (!s_privileges.TryGetValue(privilege, out string value))
+                throw new ArgumentOutOfRangeException(nameof(privilege));
+
+            return value;
+        }
+
+        internal static Privilege ParsePrivilege(ReadOnlySpan<char> privilege)
+        {
+            return s_privileges
+                .Where(x => x.Value.AsSpan().SequenceEqual(privilege))
+                .Select(x => x.Key)
+                .FirstOrDefault();
         }
     }
 }

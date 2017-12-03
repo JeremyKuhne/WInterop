@@ -13,15 +13,13 @@ namespace WInterop.Authorization.Types
     [DebuggerDisplay("{Privilege} : {Attributes}")]
     public struct PrivilegeSetting
     {
-        public PrivilegeSetting(string privilege, PrivilegeAttributes attributes)
+        public PrivilegeSetting(Privilege privilege, PrivilegeAttributes attributes)
         {
-            if (!Enum.TryParse(privilege, out Privilege))
-                Privilege = Privileges.UnknownPrivilege;
-
+            Privilege = privilege;
             Attributes = attributes;
         }
 
-        public Privileges Privilege;
+        public Privilege Privilege;
         public PrivilegeAttributes Attributes;
     }
 }

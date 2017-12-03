@@ -9,7 +9,6 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.Handles.Types;
 using WInterop.MemoryManagement.Types;
 using WInterop.ProcessAndThreads.Types;
 
@@ -32,7 +31,7 @@ namespace WInterop.Authorization
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public static extern BOOL AdjustTokenPrivileges(
-                TokenHandle TokenHandle,
+                AccessToken TokenHandle,
                 BOOL DisableAllPrivileges,
                 ref TOKEN_PRIVILEGES NewState,
                 uint BufferLength,
@@ -42,7 +41,7 @@ namespace WInterop.Authorization
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern BOOL GetTokenInformation(
-                TokenHandle TokenHandle,
+                AccessToken TokenHandle,
                 TOKEN_INFORMATION_CLASS TokenInformationClass,
                 void* TokenInformation,
                 uint TokenInformationLength,
@@ -61,12 +60,12 @@ namespace WInterop.Authorization
             public static extern BOOL LookupPrivilegeValueW(
                 string lpSystemName,
                 string lpName,
-                ref LUID lpLuid);
+                out LUID lpLuid);
 
             // https://msdn.microsoft.com/en-us/library/aa379304.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern BOOL PrivilegeCheck(
-                TokenHandle ClientToken,
+                AccessToken ClientToken,
                 PRIVILEGE_SET* RequiredPrivileges,
                 out BOOL pfResult);
 
@@ -74,7 +73,7 @@ namespace WInterop.Authorization
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public static extern BOOL SetThreadToken(
                 IntPtr Thread,
-                TokenHandle Token);
+                AccessToken Token);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -83,27 +82,27 @@ namespace WInterop.Authorization
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public static extern BOOL DuplicateTokenEx(
-                TokenHandle hExistingToken,
-                TokenRights dwDesiredAccess,
+                AccessToken hExistingToken,
+                AccessTokenRights dwDesiredAccess,
                 IntPtr lpTokenAttributes,
                 SECURITY_IMPERSONATION_LEVEL ImpersonationLevel,
                 TOKEN_TYPE TokenType,
-                ref TokenHandle phNewToken);
+                ref AccessToken phNewToken);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379295.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public static extern BOOL OpenProcessToken(
                 IntPtr ProcessHandle,
-                TokenRights DesiredAccesss,
-                out TokenHandle TokenHandle);
+                AccessTokenRights DesiredAccesss,
+                out AccessToken TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public static extern bool OpenThreadToken(
                 SafeThreadHandle ThreadHandle,
-                TokenRights DesiredAccess,
+                AccessTokenRights DesiredAccess,
                 BOOL OpenAsSelf,
-                out TokenHandle TokenHandle);
+                out AccessToken TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379166.aspx
             // LookupAccountSid

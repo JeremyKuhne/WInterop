@@ -746,6 +746,14 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
+        /// Gets a span representing the current value.
+        /// </summary>
+        public unsafe ReadOnlySpan<char> AsSpan()
+        {
+            return new ReadOnlySpan<char>(CharPointer, checked((int)_length));
+        }
+
+        /// <summary>
         /// Get the given substring in the buffer.
         /// </summary>
         /// <param name="count">Count of characters to take, or remaining characters from <paramref name="nameof(startIndex)"/> if -1.</param>

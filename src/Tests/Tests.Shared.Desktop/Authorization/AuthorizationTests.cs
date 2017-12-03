@@ -92,7 +92,7 @@ namespace DesktopTests.Authorization
         public void GetTokenSid_ForCurrentProcess()
         {
             SID sid;
-            using (var token = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_READ))
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 sid = AuthorizationMethods.GetTokenSid(token);
@@ -106,42 +106,42 @@ namespace DesktopTests.Authorization
         [Fact]
         public void GetTokenPrivileges_ForCurrentProcess()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_READ))
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 var privileges = AuthorizationMethods.GetTokenPrivileges(token);
                 privileges.Should().NotBeEmpty();
 
                 // This Privilege should always exist
-                privileges.Should().Contain(s => s.Privilege == Privileges.SeChangeNotifyPrivilege);
+                privileges.Should().Contain(s => s.Privilege == Privilege.ChangeNotify);
 
                 // Check the helper
-                AuthorizationMethods.HasPrivilege(token, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
+                AuthorizationMethods.HasPrivilege(token, Privilege.ChangeNotify).Should().BeTrue();
             }
         }
 
         [Fact]
         public void IsPrivilegeEnabled_ForCurrentProcess()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_READ))
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                AuthorizationMethods.IsPrivilegeEnabled(token, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
-                AuthorizationMethods.IsPrivilegeEnabled(token, Privileges.SeBackupPrivilege).Should().BeFalse();
+                AuthorizationMethods.IsPrivilegeEnabled(token, Privilege.ChangeNotify).Should().BeTrue();
+                AuthorizationMethods.IsPrivilegeEnabled(token, Privilege.Backup).Should().BeFalse();
             }
         }
 
         [Fact]
         public void AreAllPrivilegesEnabled_ForCurrentProcess()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_READ))
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privileges.SeChangeNotifyPrivilege, Privileges.SeBackupPrivilege).Should().BeFalse();
-                AuthorizationMethods.AreAnyPrivilegesEnabled(token, Privileges.SeChangeNotifyPrivilege, Privileges.SeBackupPrivilege).Should().BeTrue();
-                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privileges.SeBackupPrivilege).Should().BeFalse();
-                AuthorizationMethods.AreAnyPrivilegesEnabled(token, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
-                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privileges.SeChangeNotifyPrivilege, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
+                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privilege.ChangeNotify, Privilege.Backup).Should().BeFalse();
+                AuthorizationMethods.AreAnyPrivilegesEnabled(token, Privilege.ChangeNotify, Privilege.Backup).Should().BeTrue();
+                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privilege.Backup).Should().BeFalse();
+                AuthorizationMethods.AreAnyPrivilegesEnabled(token, Privilege.ChangeNotify).Should().BeTrue();
+                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privilege.ChangeNotify, Privilege.ChangeNotify).Should().BeTrue();
             }
         }
     }

@@ -15,6 +15,7 @@ using WInterop.Handles.Types;
 using WInterop.Shell.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
+using WInterop.Authorization.Types;
 
 namespace WInterop.Shell
 {
@@ -58,7 +59,7 @@ namespace WInterop.Shell
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762275.aspx
             [DllImport(Libraries.Userenv, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern bool ExpandEnvironmentStringsForUserW(
-                TokenHandle hToken,
+                AccessToken hToken,
                 string lpSrc,
                 SafeHandle lpDst,
                 uint dwSize);
@@ -223,7 +224,7 @@ namespace WInterop.Shell
         /// Expands environment variables for the given user token. If the token is
         /// null, returns the system variables.
         /// </summary>
-        public static string ExpandEnvironmentVariablesForUser(TokenHandle token, string value)
+        public static string ExpandEnvironmentVariablesForUser(AccessToken token, string value)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {

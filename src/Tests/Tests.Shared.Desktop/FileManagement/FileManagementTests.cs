@@ -68,9 +68,9 @@ namespace DesktopTests.FileManagementMethods
         private static bool CanCreateSymbolicLinks()
         {
             // Assuming that the current thread can replicate rights from the process
-            using (var processToken = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_QUERY | TokenRights.TOKEN_READ))
+            using (var processToken = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Query | AccessTokenRights.Read))
             {
-                return AuthorizationMethods.HasPrivilege(processToken, Privileges.SeCreateSymbolicLinkPrivilege);
+                return AuthorizationMethods.HasPrivilege(processToken, Privilege.CreateSymbolicLink);
             }
         }
 
@@ -256,6 +256,16 @@ namespace DesktopTests.FileManagementMethods
             {
                 file.IsInvalid.Should().BeFalse();
                 FileMethods.GetFileType(file).Should().Be(FileType.Disk);
+            }
+        }
+
+        [Fact]
+        public void CreateFileComPort()
+        {
+            using (var file = FileMethods.CreateFile(@"COM4", CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
+            {
+                file.IsInvalid.Should().BeFalse();
+                FileMethods.GetFileType(file).Should().Be(FileType.Character);
             }
         }
 
