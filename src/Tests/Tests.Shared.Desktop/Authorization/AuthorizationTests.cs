@@ -13,11 +13,19 @@ using WInterop.Authorization.Types;
 using System;
 using System.Diagnostics;
 using WInterop.SystemInformation;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DesktopTests.Authorization
 {
     public class AuthorizationTests
     {
+        [Fact]
+        public unsafe void SidSize()
+        {
+            sizeof(SID).Should().Be(68);
+        }
+
         [Fact]
         public void IsElevated()
         {
@@ -46,7 +54,7 @@ namespace DesktopTests.Authorization
             AuthorizationMethods.IsWellKnownSid(ref sid, WELL_KNOWN_SID_TYPE.WinWorldSid).Should().BeTrue();
             AuthorizationMethods.ConvertSidToString(ref sid).Should().Be("S-1-1-0");
 
-            AccountSidInfo info = AuthorizationMethods.LookupAccountSidLocal(ref sid);
+            AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
             info.Name.Should().Be("Everyone");
             info.DomainName.Should().Be("");
             info.Usage.Should().Be(SidNameUse.WellKnownGroup);
@@ -68,7 +76,7 @@ namespace DesktopTests.Authorization
                 try
                 {
                     SID sid = AuthorizationMethods.CreateWellKnownSid(type);
-                    AccountSidInfo info = AuthorizationMethods.LookupAccountSidLocal(ref sid);
+                    AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
                     Debug.WriteLine($"/// {info.Name} ({AuthorizationMethods.ConvertSidToString(ref sid)}) [{info.Usage}]");
                 }
                 catch
@@ -89,18 +97,32 @@ namespace DesktopTests.Authorization
         }
 
         [Fact]
-        public void GetTokenSid_ForCurrentProcess()
+        public void GetTokenUserSid_ForCurrentProcess()
         {
             SID sid;
             using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                sid = AuthorizationMethods.GetTokenSid(token);
+                sid = AuthorizationMethods.GetTokenUserSid(token);
             }
             AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
 
-            AccountSidInfo info = AuthorizationMethods.LookupAccountSidLocal(ref sid);
+            AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
             info.Name.Should().Be(SystemInformationMethods.GetUserName());
+        }
+
+        [Fact]
+        public void GetTokenGroupSids_ForCurrentProcess()
+        {
+            List<GroupSidInformation> groupSids;
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            {
+                token.IsInvalid.Should().BeFalse();
+                groupSids = AuthorizationMethods.GetTokenGroupSids(token).ToList();
+            }
+
+            groupSids.Should().NotBeEmpty();
+            groupSids.Should().Contain((sid) => AuthorizationMethods.LookupAccountSidLocal(sid.Sid).Name.Equals("Everyone"));
         }
 
         [Fact]

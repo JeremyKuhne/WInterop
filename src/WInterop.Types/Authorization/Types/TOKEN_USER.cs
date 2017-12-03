@@ -7,10 +7,12 @@
 
 namespace WInterop.Authorization.Types
 {
-    public struct AccountSidInfo
+    /// <summary>
+    /// Identifies the user associated with an access token.
+    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379634.aspx"/>
+    /// </summary>
+    public struct TOKEN_USER
     {
-        public string Name;
-        public string DomainName;
-        public SidNameUse Usage;
+        public SID_AND_ATTRIBUTES User;
     }
 }

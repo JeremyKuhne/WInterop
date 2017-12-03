@@ -30,29 +30,29 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            public static extern BOOL AdjustTokenPrivileges(
+            public unsafe static extern BOOL AdjustTokenPrivileges(
                 AccessToken TokenHandle,
                 BOOL DisableAllPrivileges,
-                ref TOKEN_PRIVILEGES NewState,
+                TOKEN_PRIVILEGES* NewState,
                 uint BufferLength,
-                out TOKEN_PRIVILEGES PreviousState,
+                TOKEN_PRIVILEGES* PreviousState,
                 out uint ReturnLength);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern BOOL GetTokenInformation(
                 AccessToken TokenHandle,
-                TOKEN_INFORMATION_CLASS TokenInformationClass,
+                TokenInformation TokenInformationClass,
                 void* TokenInformation,
                 uint TokenInformationLength,
                 out uint ReturnLength);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379176.aspx
-            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern BOOL LookupPrivilegeNameW(
                 IntPtr lpSystemName,
                 ref LUID lpLuid,
-                SafeHandle lpName,
+                ref char lpName,
                 ref uint cchName);
 
             // https://msdn.microsoft.com/en-us/library/aa379180.aspx

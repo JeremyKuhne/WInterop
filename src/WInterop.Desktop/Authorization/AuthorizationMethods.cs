@@ -68,7 +68,7 @@ namespace WInterop.Authorization
 
         private unsafe static void TokenInformationInvoke(
             AccessToken token,
-            TOKEN_INFORMATION_CLASS info,
+            TokenInformation info,
             Action<IntPtr> action)
         {
             BufferHelper.BufferInvoke<HeapBuffer>(buffer =>
@@ -88,43 +88,45 @@ namespace WInterop.Authorization
             });
         }
 
+        /// <summary>
+        /// Get all privilege information for the given access token.
+        /// </summary>
         public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(AccessToken token)
         {
             var privileges = new List<PrivilegeSetting>();
 
-            TokenInformationInvoke(token, TOKEN_INFORMATION_CLASS.TokenPrivileges,
+            TokenInformationInvoke(token, TokenInformation.TokenPrivileges,
             buffer =>
             {
-                uint* u = (uint*)buffer;
+                ReadOnlySpan<LUID_AND_ATTRIBUTES> data = new ReadOnlySpan<LUID_AND_ATTRIBUTES>(
+                    &((TOKEN_PRIVILEGES*)buffer)->Privileges, (int)((TOKEN_PRIVILEGES*)buffer)->PrivilegeCount);
 
-                // Loop through and get our privileges
-                uint count = *u++;
-
-                BufferHelper.BufferInvoke((StringBuffer stringBuffer) =>
+                for (int i = 0; i < data.Length; i++)
                 {
-                    for (int i = 0; i < count; i++)
-                    {
-                        LUID luid = new LUID
-                        {
-                            LowPart = *u++,
-                            HighPart = *u++,
-                        };
-
-                        uint length = stringBuffer.CharCapacity;
-
-                        if (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, stringBuffer, ref length))
-                            throw Errors.GetIoExceptionForLastError();
-
-                        stringBuffer.Length = length;
-
-                        PrivilegeAttributes attributes = (PrivilegeAttributes)(*u++);
-                        privileges.Add(new PrivilegeSetting(ParsePrivilege(stringBuffer.AsSpan()), attributes));
-                        stringBuffer.Length = 0;
-                    }
-                });
+                    privileges.Add(new PrivilegeSetting(LookupPrivilege(data[i].Luid), (PrivilegeAttributes)data[i].Attributes));
+                }
             });
 
             return privileges;
+        }
+
+        /// <summary>
+        /// Get the privilege for the specified LUID.
+        /// </summary>
+        public unsafe static Privilege LookupPrivilege(LUID luid)
+        {
+            char* c = stackalloc char[32];
+            Span<char> nameBuffer = new Span<char>(c, 32);
+
+            uint length = (uint)nameBuffer.Length;
+            while (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, ref nameBuffer.DangerousGetPinnableReference(), ref length))
+            {
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                char* n = stackalloc char[(int)length];
+                nameBuffer = new Span<char>(n, (int)length);
+            }
+
+            return ParsePrivilege(nameBuffer.Slice(0, (int)length));
         }
 
         /// <summary>
@@ -253,7 +255,7 @@ namespace WInterop.Authorization
                 TOKEN_ELEVATION elevation = new TOKEN_ELEVATION();
                 if (!Imports.GetTokenInformation(
                     token,
-                    TOKEN_INFORMATION_CLASS.TokenElevation,
+                    TokenInformation.TokenElevation,
                     &elevation,
                     (uint)sizeof(TOKEN_ELEVATION),
                     out _))
@@ -265,22 +267,49 @@ namespace WInterop.Authorization
             }
         }
 
+        private static unsafe SID CopySid(IntPtr source)
+        {
+            if (!Imports.CopySid((uint)sizeof(SID), out SID destination, (SID*)source))
+                throw Errors.GetIoExceptionForLastError();
+            return destination;
+        }
+
         /// <summary>
-        /// Get the SID for the given token.
+        /// Get the user SID for the given token.
         /// </summary>
-        public unsafe static SID GetTokenSid(AccessToken token)
+        public unsafe static SID GetTokenUserSid(AccessToken token)
         {
             SID sid = new SID();
-            TokenInformationInvoke(token, TOKEN_INFORMATION_CLASS.TokenUser,
+            TokenInformationInvoke(token, TokenInformation.User,
             buffer =>
             {
-                if (!Imports.CopySid((uint)sizeof(SID), out sid, ((SID_AND_ATTRIBUTES*)buffer)->Sid))
-                {
-                    throw Errors.GetIoExceptionForLastError();
-                }
+                sid = CopySid(((TOKEN_USER*)buffer)->User.Sid);
             });
 
             return sid;
+        }
+
+        /// <summary>
+        /// Gets the group SIDs associated with the current token.
+        /// </summary>
+        public unsafe static IEnumerable<GroupSidInformation> GetTokenGroupSids(AccessToken token)
+        {
+            SID sid = new SID();
+            List<GroupSidInformation> info = null;
+
+            TokenInformationInvoke(token, TokenInformation.Groups,
+            buffer =>
+            {
+                TOKEN_GROUPS* groups = (TOKEN_GROUPS*)buffer;
+                ReadOnlySpan<SID_AND_ATTRIBUTES> data = new ReadOnlySpan<SID_AND_ATTRIBUTES>(&groups->Groups, (int)groups->GroupCount);
+                info = new List<GroupSidInformation>(data.Length);
+                for (int i = 0; i < data.Length; i++)
+                {
+                    info.Add(new GroupSidInformation(CopySid(data[i].Sid), (GroupSidAttributes)data[i].Attributes));
+                }
+            });
+
+            return info;
         }
 
         /// <summary>
@@ -351,10 +380,10 @@ namespace WInterop.Authorization
         /// <summary>
         /// Gets the info (name, domain name, usage) for the given SID.
         /// </summary>
-        public static AccountSidInfo LookupAccountSidLocal(ref SID sid)
+        public static AccountSidInformation LookupAccountSidLocal(SID sid)
         {
             var wrapper = new LookupAccountSidLocalWrapper { Sid = sid };
-            return BufferHelper.TwoBufferInvoke<LookupAccountSidLocalWrapper, StringBuffer, AccountSidInfo>(ref wrapper);
+            return BufferHelper.TwoBufferInvoke<LookupAccountSidLocalWrapper, StringBuffer, AccountSidInformation>(ref wrapper);
         }
 
         public static string GetPrivilegeConstant(Privilege privilege)

@@ -12,11 +12,11 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Authorization.BufferWrappers
 {
-    public struct LookupAccountSidLocalWrapper : ITwoBufferFunc<StringBuffer, AccountSidInfo>
+    public struct LookupAccountSidLocalWrapper : ITwoBufferFunc<StringBuffer, AccountSidInformation>
     {
         public SID Sid;
 
-        AccountSidInfo ITwoBufferFunc<StringBuffer, AccountSidInfo>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
+        AccountSidInformation ITwoBufferFunc<StringBuffer, AccountSidInformation>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
         {
             SidNameUse usage;
             uint nameCharCapacity = nameBuffer.CharCapacity;
@@ -38,7 +38,7 @@ namespace WInterop.Authorization.BufferWrappers
             nameBuffer.SetLengthToFirstNull();
             domainNameBuffer.SetLengthToFirstNull();
 
-            return new AccountSidInfo
+            return new AccountSidInformation
             {
                 Name = nameBuffer.ToString(),
                 DomainName = domainNameBuffer.ToString(),
