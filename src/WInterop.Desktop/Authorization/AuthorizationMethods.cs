@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using WInterop.Authorization.BufferWrappers;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
@@ -106,25 +105,58 @@ namespace WInterop.Authorization
         /// Checks if the given privilege is enabled. This does not tell you whether or not it
         /// is possible to get a privilege- most held privileges are not enabled by default.
         /// </summary>
-        public static bool IsPrivilegeEnabled(TokenHandle token, Privileges privilege)
+        public unsafe static bool IsPrivilegeEnabled(TokenHandle token, Privileges privilege)
         {
             LUID luid = LookupPrivilegeValue(privilege.ToString());
 
-            var luidAttributes = new LUID_AND_ATTRIBUTES
-            {
-                Luid = luid,
-                Attributes = (uint)PrivilegeAttributes.SE_PRIVILEGE_ENABLED
-            };
+            var luidAttributes = new LUID_AND_ATTRIBUTES { Luid = luid };
 
             var set = new PRIVILEGE_SET
             {
                 Control = PRIVILEGE_SET_ALL_NECESSARY,
                 PrivilegeCount = 1,
-                Privilege = new[] { luidAttributes }
+                Privilege = new LUID_AND_ATTRIBUTES { Luid = luid }
             };
 
-            if (!Imports.PrivilegeCheck(token, ref set, out bool result))
+            if (!Imports.PrivilegeCheck(token, &set, out BOOL result))
                 throw Errors.GetIoExceptionForLastError(privilege.ToString());
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns true if all of the given privileges are enabled for the current process.
+        /// </summary>
+        public static bool AreAllPrivilegesEnabled(TokenHandle token, params Privileges[] privileges)
+        {
+            return ArePrivilegesEnabled(token, all: true, privileges: privileges);
+        }
+
+        /// <summary>
+        /// Returns true if any of the given privileges are enabled for the current process.
+        /// </summary>
+        public static bool AreAnyPrivilegesEnabled(TokenHandle token, params Privileges[] privileges)
+        {
+            return ArePrivilegesEnabled(token, all: false, privileges: privileges);
+        }
+
+        private unsafe static bool ArePrivilegesEnabled(TokenHandle token, bool all, Privileges[] privileges)
+        {
+            if (privileges == null || privileges.Length == 0)
+                return true;
+
+            byte* buffer = stackalloc byte[sizeof(PRIVILEGE_SET) + (sizeof(LUID_AND_ATTRIBUTES) * (privileges.Length - 1))];
+            PRIVILEGE_SET* set = (PRIVILEGE_SET*)buffer;
+            set->Control = all ? PRIVILEGE_SET_ALL_NECESSARY : 0;
+            set->PrivilegeCount = (uint)privileges.Length;
+            Span<LUID_AND_ATTRIBUTES> luids = new Span<LUID_AND_ATTRIBUTES>(&set->Privilege, privileges.Length);
+            for (int i = 0; i < privileges.Length; i++)
+            {
+                luids[i] = new LUID_AND_ATTRIBUTES { Luid = LookupPrivilegeValue(privileges[i].ToString()) };
+            }
+
+            if (!Imports.PrivilegeCheck(token, set, out BOOL result))
+                throw Errors.GetIoExceptionForLastError();
 
             return result;
         }

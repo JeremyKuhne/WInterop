@@ -12,13 +12,10 @@ namespace WInterop.Authorization.Types
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/aa379307.aspx">PRIVILEGE_SET</a> structure.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
     public struct PRIVILEGE_SET
     {
         public uint PrivilegeCount;
         public uint Control;
-
-        [MarshalAs(UnmanagedType.ByValArray)]
-        public LUID_AND_ATTRIBUTES[] Privilege;
+        public LUID_AND_ATTRIBUTES Privilege;
     }
 }

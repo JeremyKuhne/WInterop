@@ -130,5 +130,19 @@ namespace DesktopTests.Authorization
                 AuthorizationMethods.IsPrivilegeEnabled(token, Privileges.SeBackupPrivilege).Should().BeFalse();
             }
         }
+
+        [Fact]
+        public void AreAllPrivilegesEnabled_ForCurrentProcess()
+        {
+            using (var token = AuthorizationMethods.OpenProcessToken(TokenRights.TOKEN_READ))
+            {
+                token.IsInvalid.Should().BeFalse();
+                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privileges.SeChangeNotifyPrivilege, Privileges.SeBackupPrivilege).Should().BeFalse();
+                AuthorizationMethods.AreAnyPrivilegesEnabled(token, Privileges.SeChangeNotifyPrivilege, Privileges.SeBackupPrivilege).Should().BeTrue();
+                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privileges.SeBackupPrivilege).Should().BeFalse();
+                AuthorizationMethods.AreAnyPrivilegesEnabled(token, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
+                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privileges.SeChangeNotifyPrivilege, Privileges.SeChangeNotifyPrivilege).Should().BeTrue();
+            }
+        }
     }
 }

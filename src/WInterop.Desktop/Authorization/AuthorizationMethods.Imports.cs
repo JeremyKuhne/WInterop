@@ -31,10 +31,9 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool AdjustTokenPrivileges(
+            public static extern BOOL AdjustTokenPrivileges(
                 TokenHandle TokenHandle,
-                [MarshalAs(UnmanagedType.Bool)] bool DisableAllPrivileges,
+                BOOL DisableAllPrivileges,
                 ref TOKEN_PRIVILEGES NewState,
                 uint BufferLength,
                 out TOKEN_PRIVILEGES PreviousState,
@@ -42,8 +41,7 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public unsafe static extern bool GetTokenInformation(
+            public unsafe static extern BOOL GetTokenInformation(
                 TokenHandle TokenHandle,
                 TOKEN_INFORMATION_CLASS TokenInformationClass,
                 void* TokenInformation,
@@ -52,8 +50,7 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379176.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool LookupPrivilegeNameW(
+            public static extern BOOL LookupPrivilegeNameW(
                 IntPtr lpSystemName,
                 ref LUID lpLuid,
                 SafeHandle lpName,
@@ -61,36 +58,31 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/aa379180.aspx
             [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool LookupPrivilegeValueW(
+            public static extern BOOL LookupPrivilegeValueW(
                 string lpSystemName,
                 string lpName,
                 ref LUID lpLuid);
 
             // https://msdn.microsoft.com/en-us/library/aa379304.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool PrivilegeCheck(
+            public unsafe static extern BOOL PrivilegeCheck(
                 TokenHandle ClientToken,
-                ref PRIVILEGE_SET RequiredPrivileges,
-                [MarshalAs(UnmanagedType.Bool)] out bool pfResult);
+                PRIVILEGE_SET* RequiredPrivileges,
+                out BOOL pfResult);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379590.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool SetThreadToken(
+            public static extern BOOL SetThreadToken(
                 IntPtr Thread,
                 TokenHandle Token);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool RevertToSelf();
+            public static extern BOOL RevertToSelf();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool DuplicateTokenEx(
+            public static extern BOOL DuplicateTokenEx(
                 TokenHandle hExistingToken,
                 TokenRights dwDesiredAccess,
                 IntPtr lpTokenAttributes,
@@ -100,19 +92,17 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379295.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool OpenProcessToken(
+            public static extern BOOL OpenProcessToken(
                 IntPtr ProcessHandle,
                 TokenRights DesiredAccesss,
                 out TokenHandle TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool OpenThreadToken(
                 SafeThreadHandle ThreadHandle,
                 TokenRights DesiredAccess,
-                [MarshalAs(UnmanagedType.Bool)] bool OpenAsSelf,
+                BOOL OpenAsSelf,
                 out TokenHandle TokenHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379166.aspx
@@ -121,8 +111,7 @@ namespace WInterop.Authorization
             // https://msdn.microsoft.com/en-us/library/windows/desktop/mt779143.aspx
             // The docs claim that it is in Advapi.dll, but it actually lives in sechost.dll
             [DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool LookupAccountSidLocalW(
+            public static extern BOOL LookupAccountSidLocalW(
                 ref SID lpSid,
                 SafeHandle lpName,
                 ref uint cchName,
@@ -135,8 +124,7 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446585.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public unsafe static extern bool CreateWellKnownSid(
+            public unsafe static extern BOOL CreateWellKnownSid(
                 WELL_KNOWN_SID_TYPE WellKnownSidType,
                 SID* DomainSid,
                 SID* pSid,
@@ -144,21 +132,18 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379151.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public unsafe static extern bool IsValidSid(
+            public unsafe static extern BOOL IsValidSid(
                 ref SID pSid);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379154.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public unsafe static extern bool IsWellKnownSid(
+            public unsafe static extern BOOL IsWellKnownSid(
                 ref SID pSid,
                 WELL_KNOWN_SID_TYPE WellKnownSidType);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376399.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool ConvertSidToStringSidW(
+            public static extern BOOL ConvertSidToStringSidW(
                 ref SID Sid,
                 out LocalHandle StringSid);
 
@@ -175,14 +160,14 @@ namespace WInterop.Authorization
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376404.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            public unsafe static extern bool CopySid(
+            public unsafe static extern BOOL CopySid(
                 uint nDestinationSidLength,
                 out SID pDestinationSid,
                 SID* pSourceSid);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374951.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            public unsafe static extern bool AddAccessAllowedAceEx(
+            public unsafe static extern BOOL AddAccessAllowedAceEx(
                 ACL* pAcl,
                 uint dwAceRevision,
                 // This is AceInheritence
