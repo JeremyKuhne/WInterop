@@ -13,7 +13,6 @@ namespace WInterop.Synchronization.Types
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms684342.aspx">OVERLAPPED</a> structure.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
     public struct OVERLAPPED
     {
         /// <summary>

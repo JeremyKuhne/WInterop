@@ -24,7 +24,6 @@ namespace WInterop.Handles.Types
     // ACCESS_MASK
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374892.aspx
     //
-    [StructLayout(LayoutKind.Sequential)]
     public struct OBJECT_BASIC_INFORMATION
     {
         public ObjectAttributes Attributes;

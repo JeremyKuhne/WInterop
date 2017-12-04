@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Cryptography.Types
 {
-    [StructLayout(LayoutKind.Sequential)]
     public struct CERT_PHYSICAL_STORE_INFO
     {
         public uint cbSize;

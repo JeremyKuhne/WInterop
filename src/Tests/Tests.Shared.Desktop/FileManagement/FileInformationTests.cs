@@ -72,7 +72,7 @@ namespace DesktopTests.FileManagement
         {
             using (var cleaner = new TestFileCleaner())
             {
-                const int MAX_TRIES = 5;
+                const int MAX_TRIES = 10;
 
                 // It is tricky to get an open handle conflict- give it a few tries
                 for (int i = 0; i < MAX_TRIES; i++)

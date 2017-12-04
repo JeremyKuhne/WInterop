@@ -21,7 +21,6 @@ namespace WInterop.FileManagement.Types
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364032.aspx">ENCRYPTION_CERTIFICATE</a> structure.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
     public struct ENCRYPTION_CERTIFICATE
     {
         /// <summary>

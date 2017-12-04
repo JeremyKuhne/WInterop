@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 namespace WInterop.Modules.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684229.aspx
-    [StructLayout(LayoutKind.Sequential)]
     public struct MODULEINFO
     {
         /// <summary>

@@ -86,7 +86,6 @@ namespace WInterop.NetworkManagement
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370278.aspx
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370279.aspx
-            [StructLayout(LayoutKind.Sequential)]
             public struct LOCALGROUP_MEMBERS_INFO_1
             {
                 public IntPtr lgrmi1_sid;
@@ -95,7 +94,6 @@ namespace WInterop.NetworkManagement
             }
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370280.aspx
-            [StructLayout(LayoutKind.Sequential)]
             public struct LOCALGROUP_MEMBERS_INFO_2
             {
                 public IntPtr lgrmi2_sid;

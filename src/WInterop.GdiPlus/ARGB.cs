@@ -10,7 +10,7 @@ using WInterop.Gdi.Types;
 
 namespace WInterop.GdiPlus
 {
-    [StructLayout(LayoutKind.Explicit, Size = 4)]
+    [StructLayout(LayoutKind.Explicit)]
     public struct ARGB
     {
         [FieldOffset(0)]
