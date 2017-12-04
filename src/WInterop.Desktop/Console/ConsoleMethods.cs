@@ -19,29 +19,24 @@ namespace WInterop.Console
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681952.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool AttachConsole(
                 uint dwProcessId);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683150.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool FreeConsole();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681944.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool AllocConsole();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683231.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetStdHandle(
                 StandardHandleType nStdHandle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms686244.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool SetStdHandle(
                 StandardHandleType nStdHandle,
                 SafeHandle hHandle);

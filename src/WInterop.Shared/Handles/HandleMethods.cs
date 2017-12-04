@@ -24,14 +24,13 @@ namespace WInterop.Handles
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724251.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool DuplicateHandle(
                 SafeProcessHandle hSourceProcessHandle,
                 IntPtr hSourceHandle,
                 SafeProcessHandle hTargetProcessHandle,
                 SafeHandle lpTargetHandle,
                 uint dwDesiredAccess,
-                [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle,
+                bool bInheritHandle,
                 uint dwOptions);
         }
 

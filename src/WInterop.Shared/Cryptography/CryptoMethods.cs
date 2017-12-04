@@ -39,7 +39,6 @@ namespace WInterop.Cryptography
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376060.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool CertEnumSystemStoreLocation(
                 uint dwFlags,
                 IntPtr pvArg,
@@ -47,7 +46,6 @@ namespace WInterop.Cryptography
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376058.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool CertEnumSystemStore(
                 uint dwFlags,
                 IntPtr pvSystemStoreLocationPara,
@@ -56,7 +54,6 @@ namespace WInterop.Cryptography
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376055.aspx
             [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool CertEnumPhysicalStore(
                 IntPtr pvSystemStore,
                 uint dwFlags,
@@ -183,9 +180,11 @@ namespace WInterop.Cryptography
             GCHandle handle = GCHandle.FromIntPtr(pvArg);
             var infos = (List<PhysicalStoreInformation>)handle.Target;
 
-            PhysicalStoreInformation info = new PhysicalStoreInformation();
-            info.SystemStoreInformation = GetSystemNameAndKey(dwFlags, pvSystemStore);
-            info.PhysicalStoreName = Marshal.PtrToStringUni(pwszStoreName);
+            PhysicalStoreInformation info = new PhysicalStoreInformation
+            {
+                SystemStoreInformation = GetSystemNameAndKey(dwFlags, pvSystemStore),
+                PhysicalStoreName = Marshal.PtrToStringUni(pwszStoreName)
+            };
             var physicalInfo = Marshal.PtrToStructure<CERT_PHYSICAL_STORE_INFO>(pStoreInfo);
             info.ProviderType = physicalInfo.pszOpenStoreProvider;
             infos.Add(info);

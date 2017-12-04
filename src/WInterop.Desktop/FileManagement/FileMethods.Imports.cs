@@ -52,7 +52,6 @@ namespace WInterop.FileManagement
             // Ex version is supported by WinRT apps
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetFileInformationByHandle(
                 SafeFileHandle hFile,
                 out BY_HANDLE_FILE_INFORMATION lpFileInformation);
@@ -83,33 +82,28 @@ namespace WInterop.FileManagement
             // CopyFile calls CopyFileEx with COPY_FILE_FAIL_IF_EXISTS if fail if exists is set
             // (Neither are available in WinRT- use CopyFile2)
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool CopyFileExW(
                 string lpExistingFileName,
                 string lpNewFileName,
                 CopyProgressRoutine lpProgressRoutine,
                 IntPtr lpData,
-                [MarshalAs(UnmanagedType.Bool)] ref bool pbCancel,
+                ref bool pbCancel,
                 CopyFileFlags dwCopyFlags);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363866.aspx
-            // Note that CreateSymbolicLinkW returns a BOOLEAN (byte), not a BOOL (int)
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.U1)]
-            public static extern bool CreateSymbolicLinkW(
+            public static extern BOOLEAN CreateSymbolicLinkW(
                 string lpSymlinkFileName,
                 string lpTargetFileName,
                 SYMBOLIC_LINK_FLAG dwFlags);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364021.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool EncryptFileW(
                 string lpFileName);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363903.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool DecryptFileW(
                 string lpFileName,
                 uint dwReserved);

@@ -19,7 +19,6 @@ namespace WInterop.DiskManagement
         public static partial class Imports
         {
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool GetDiskFreeSpaceW(
                 string lpRootPathName,
                 uint* lpSectorsPerCluster,

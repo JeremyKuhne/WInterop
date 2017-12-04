@@ -34,21 +34,18 @@ namespace WInterop.ErrorHandling
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680621.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool SetThreadErrorMode(
                 ErrorMode dwNewMode,
                 out ErrorMode lpOldMode);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679277.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool Beep(
                 uint dwFreq,
                 uint dwDurations);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679277.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool MessageBeep(
                 BeepType uType);
         }
@@ -95,8 +92,7 @@ namespace WInterop.ErrorHandling
         /// <returns>The old error mode for the thread.</returns>
         public static ErrorMode SetThreadErrorMode(ErrorMode mode)
         {
-            ErrorMode oldMode;
-            if (!Imports.SetThreadErrorMode(mode, out oldMode))
+            if (!Imports.SetThreadErrorMode(mode, out ErrorMode oldMode))
                 throw Errors.GetIoExceptionForLastError();
 
             return oldMode;

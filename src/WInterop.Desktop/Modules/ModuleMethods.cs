@@ -36,7 +36,6 @@ namespace WInterop.Modules
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683152.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool FreeLibrary(
                 IntPtr hModule);
 
@@ -49,7 +48,6 @@ namespace WInterop.Modules
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool GetModuleHandleExW(
                 GetModuleFlags dwFlags,
                 IntPtr lpModuleName,
@@ -73,7 +71,6 @@ namespace WInterop.Modules
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683201.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool K32GetModuleInformation(
                 SafeProcessHandle hProcess,
                 ModuleInstance hModule,
@@ -90,7 +87,6 @@ namespace WInterop.Modules
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682633.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool K32EnumProcessModulesEx(
                 SafeProcessHandle hProcess,
                 SafeHandle lphModule,

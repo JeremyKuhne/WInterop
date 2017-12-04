@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 namespace WInterop.Cryptography.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376056.aspx
-    [return: MarshalAs(UnmanagedType.Bool)]
     public delegate bool CertEnumPhysicalStoreCallback(
         IntPtr pvSystemStore,
         uint dwFlags,

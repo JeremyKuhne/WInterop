@@ -24,23 +24,19 @@ namespace WInterop.Clipboard
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649048.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool OpenClipboard(
                 WindowHandle hWndNewOwner);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649035.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool CloseClipboard();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649037.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool EmptyClipboard();
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649047.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool IsClipboardFormatAvailable(
                 uint format);
 
@@ -65,7 +61,6 @@ namespace WInterop.Clipboard
                 int cchMaxCount);
 
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
             public unsafe static extern bool GetUpdatedClipboardFormats(
                 uint* lpuiFormats,
                 uint cFormats,

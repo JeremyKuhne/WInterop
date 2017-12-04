@@ -62,8 +62,8 @@ namespace WInterop.Handles
                 DirectoryObjectHandle DirectoryHandle,
                 SafeHandle Buffer,
                 uint Length,
-                [MarshalAs(UnmanagedType.U1)] bool ReturnSingleEntry,
-                [MarshalAs(UnmanagedType.U1)] bool RestartScan,
+                BOOLEAN ReturnSingleEntry,
+                BOOLEAN RestartScan,
                 ref uint Context,
                 out uint ReturnLength);
 
