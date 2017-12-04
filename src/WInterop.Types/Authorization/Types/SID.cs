@@ -82,10 +82,12 @@ namespace WInterop.Authorization.Types
         /// </summary>
         public unsafe static void CopyFromNative(SID* native, out SID copy)
         {
-            copy = new SID();
-            copy.Revision = native->Revision;
-            copy.SubAuthorityCount = native->SubAuthorityCount;
-            copy.IdentifierAuthority = native->IdentifierAuthority;
+            copy = new SID
+            {
+                Revision = native->Revision,
+                SubAuthorityCount = native->SubAuthorityCount,
+                IdentifierAuthority = native->IdentifierAuthority
+            };
 
             if (copy.SubAuthorityCount != 0)
             {

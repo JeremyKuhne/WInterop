@@ -143,6 +143,36 @@ namespace DesktopTests.Authorization
         }
 
         [Fact]
+        public void GetTokenOwnerSid_ForCurrentProcess()
+        {
+            SID sid;
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            {
+                token.IsInvalid.Should().BeFalse();
+                sid = AuthorizationMethods.GetTokenOwnerSid(token);
+            }
+            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
+
+            AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
+            info.Name.Should().Be(SystemInformationMethods.GetUserName());
+        }
+
+        [Fact]
+        public void GetTokenPrimaryGroupSid_ForCurrentProcess()
+        {
+            SID sid;
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            {
+                token.IsInvalid.Should().BeFalse();
+                sid = AuthorizationMethods.GetTokenPrimaryGroupSid(token);
+            }
+            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
+
+            AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
+            info.Name.Should().Be(SystemInformationMethods.GetUserName());
+        }
+
+        [Fact]
         public void IsPrivilegeEnabled_ForCurrentProcess()
         {
             using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))

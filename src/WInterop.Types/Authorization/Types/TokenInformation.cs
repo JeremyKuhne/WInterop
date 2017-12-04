@@ -21,198 +21,198 @@ namespace WInterop.Authorization.Types
         User = 1,
 
         /// <summary>
-        /// [TokenGroups]
+        /// The groups for the given token. [TokenGroups]
         /// </summary>
         Groups,
 
         /// <summary>
-        /// [TokenPrivileges]
+        /// Privileges for the given token. [TokenPrivileges]
         /// </summary>
-        TokenPrivileges,
+        Privileges,
 
         /// <summary>
-        /// [TokenOwner]
+        /// Default owner for newly created objects. [TokenOwner]
         /// </summary>
-        TokenOwner,
+        Owner,
 
         /// <summary>
-        /// [TokenPrimaryGroup]
+        /// Primary group for newly created objects. [TokenPrimaryGroup]
         /// </summary>
-        TokenPrimaryGroup,
+        PrimaryGroup,
 
         /// <summary>
         /// [TokenDefaultDacl]
         /// </summary>
-        TokenDefaultDacl,
+        DefaultDacl,
 
         /// <summary>
         /// [TokenSource]
         /// </summary>
-        TokenSource,
+        Source,
 
         /// <summary>
         /// [TokenType]
         /// </summary>
-        TokenType,
+        Type,
 
         /// <summary>
         /// [TokenImpersonationLevel]
         /// </summary>
-        TokenImpersonationLevel,
+        ImpersonationLevel,
 
         /// <summary>
         /// [TokenStatistics]
         /// </summary>
-        TokenStatistics,
+        Statistics,
 
         /// <summary>
         /// [TokenRestrictedSids]
         /// </summary>
-        TokenRestrictedSids,
+        RestrictedSids,
 
         /// <summary>
         /// [TokenSessionId]
         /// </summary>
-        TokenSessionId,
+        SessionId,
 
         /// <summary>
         /// [TokenGroupsAndPrivileges]
         /// </summary>
-        TokenGroupsAndPrivileges,
+        GroupsAndPrivileges,
 
         /// <summary>
         /// [TokenSessionReference]
         /// </summary>
-        TokenSessionReference,
+        SessionReference,
 
         /// <summary>
         /// [TokenSandBoxInert]
         /// </summary>
-        TokenSandBoxInert,
+        SandBoxInert,
 
         /// <summary>
         /// [TokenAuditPolicy]
         /// </summary>
-        TokenAuditPolicy,
+        AuditPolicy,
 
         /// <summary>
         /// [TokenOrigin]
         /// </summary>
-        TokenOrigin,
+        Origin,
 
         /// <summary>
         /// [TokenElevationType]
         /// </summary>
-        TokenElevationType,
+        ElevationType,
 
         /// <summary>
         /// [TokenLinkedToken]
         /// </summary>
-        TokenLinkedToken,
+        LinkedToken,
 
         /// <summary>
         /// [TokenElevation]
         /// </summary>
-        TokenElevation,
+        Elevation,
 
         /// <summary>
         /// [TokenHasRestrictions]
         /// </summary>
-        TokenHasRestrictions,
+        HasRestrictions,
 
         /// <summary>
         /// [TokenAccessInformation]
         /// </summary>
-        TokenAccessInformation,
+        AccessInformation,
 
         /// <summary>
         /// [TokenVirtualizationAllowed]
         /// </summary>
-        TokenVirtualizationAllowed,
+        VirtualizationAllowed,
 
         /// <summary>
         /// [TokenVirtualizationEnabled]
         /// </summary>
-        TokenVirtualizationEnabled,
+        VirtualizationEnabled,
 
         /// <summary>
         /// [TokenIntegrityLevel]
         /// </summary>
-        TokenIntegrityLevel,
+        IntegrityLevel,
 
         /// <summary>
         /// [TokenUIAccess]
         /// </summary>
-        TokenUIAccess,
+        UIAccess,
 
         /// <summary>
         /// [TokenMandatoryPolicy]
         /// </summary>
-        TokenMandatoryPolicy,
+        MandatoryPolicy,
 
         /// <summary>
         /// [TokenLogonSid]
         /// </summary>
-        TokenLogonSid,
+        LogonSid,
 
         /// <summary>
         /// [TokenIsAppContainer]
         /// </summary>
-        TokenIsAppContainer,
+        IsAppContainer,
 
         /// <summary>
         /// [TokenCapabilities]
         /// </summary>
-        TokenCapabilities,
+        Capabilities,
 
         /// <summary>
         /// [TokenAppContainerSid]
         /// </summary>
-        TokenAppContainerSid,
+        AppContainerSid,
 
         /// <summary>
         /// [TokenAppContainerNumber]
         /// </summary>
-        TokenAppContainerNumber,
+        AppContainerNumber,
 
         /// <summary>
         /// [TokenUserClaimAttributes]
         /// </summary>
-        TokenUserClaimAttributes,
+        UserClaimAttributes,
 
         /// <summary>
         /// [TokenDeviceClaimAttributes]
         /// </summary>
-        TokenDeviceClaimAttributes,
+        DeviceClaimAttributes,
 
         /// <summary>
         /// [TokenRestrictedUserClaimAttributes]
         /// </summary>
-        TokenRestrictedUserClaimAttributes,
+        RestrictedUserClaimAttributes,
 
         /// <summary>
         /// [TokenRestrictedDeviceClaimAttributes]
         /// </summary>
-        TokenRestrictedDeviceClaimAttributes,
+        RestrictedDeviceClaimAttributes,
 
         /// <summary>
         /// [TokenDeviceGroups]
         /// </summary>
-        TokenDeviceGroups,
+        DeviceGroups,
 
         /// <summary>
         /// [TokenRestrictedDeviceGroups]
         /// </summary>
-        TokenRestrictedDeviceGroups,
+        RestrictedDeviceGroups,
 
         /// <summary>
         /// [TokenSecurityAttributes]
         /// </summary>
-        TokenSecurityAttributes,
+        SecurityAttributes,
 
         /// <summary>
         /// [TokenIsRestricted]
         /// </summary>
-        TokenIsRestricted
+        IsRestricted
     }
 }

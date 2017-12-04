@@ -95,7 +95,7 @@ namespace WInterop.Authorization
         {
             var privileges = new List<PrivilegeSetting>();
 
-            TokenInformationInvoke(token, TokenInformation.TokenPrivileges,
+            TokenInformationInvoke(token, TokenInformation.Privileges,
             buffer =>
             {
                 ReadOnlySpan<LUID_AND_ATTRIBUTES> data = new ReadOnlySpan<LUID_AND_ATTRIBUTES>(
@@ -255,7 +255,7 @@ namespace WInterop.Authorization
                 TOKEN_ELEVATION elevation = new TOKEN_ELEVATION();
                 if (!Imports.GetTokenInformation(
                     token,
-                    TokenInformation.TokenElevation,
+                    TokenInformation.Elevation,
                     &elevation,
                     (uint)sizeof(TOKEN_ELEVATION),
                     out _))
@@ -279,14 +279,44 @@ namespace WInterop.Authorization
         /// </summary>
         public unsafe static SID GetTokenUserSid(AccessToken token)
         {
-            SID sid = new SID();
-            TokenInformationInvoke(token, TokenInformation.User,
-            buffer =>
-            {
-                sid = CopySid(((TOKEN_USER*)buffer)->User.Sid);
-            });
+            // This size should always be sufficient as SID alignment is uint.
+            int size = sizeof(TOKEN_USER) + sizeof(SID);
+            byte* buffer = stackalloc byte[size];
 
-            return sid;
+            if (!Imports.GetTokenInformation(token, TokenInformation.User, buffer, (uint)size, out uint _))
+                throw Errors.GetIoExceptionForLastError();
+
+            return CopySid(((TOKEN_USER*)buffer)->User.Sid);
+        }
+
+        /// <summary>
+        /// Get the SID that will be used as the owner for objects created by the given token.
+        /// </summary>
+        public unsafe static SID GetTokenOwnerSid(AccessToken token)
+        {
+            // This size should always be sufficient as SID alignment is uint.
+            int size = sizeof(TOKEN_OWNER) + sizeof(SID);
+            byte* buffer = stackalloc byte[size];
+
+            if (!Imports.GetTokenInformation(token, TokenInformation.Owner, buffer, (uint)size, out uint _))
+                throw Errors.GetIoExceptionForLastError();
+
+            return CopySid((IntPtr)((TOKEN_OWNER*)buffer)->Owner);
+        }
+
+        /// <summary>
+        /// Get the SID that will be used as the primary group for objects created by the given token.
+        /// </summary>
+        public unsafe static SID GetTokenPrimaryGroupSid(AccessToken token)
+        {
+            // This size should always be sufficient as SID alignment is uint.
+            int size = sizeof(TOKEN_PRIMARY_GROUP) + sizeof(SID);
+            byte* buffer = stackalloc byte[size];
+
+            if (!Imports.GetTokenInformation(token, TokenInformation.PrimaryGroup, buffer, (uint)size, out uint _))
+                throw Errors.GetIoExceptionForLastError();
+
+            return CopySid((IntPtr)((TOKEN_PRIMARY_GROUP*)buffer)->PrimaryGroup);
         }
 
         /// <summary>
@@ -294,7 +324,6 @@ namespace WInterop.Authorization
         /// </summary>
         public unsafe static IEnumerable<GroupSidInformation> GetTokenGroupSids(AccessToken token)
         {
-            SID sid = new SID();
             List<GroupSidInformation> info = null;
 
             TokenInformationInvoke(token, TokenInformation.Groups,
