@@ -27,7 +27,7 @@ namespace Tests.SystemInformation
         }
 
         // [Fact]
-        public void DumpProcessorFeatures()
+        private void DumpProcessorFeatures()
         {
             foreach (ProcessorFeature feature in Enum.GetValues(typeof(ProcessorFeature)))
             {

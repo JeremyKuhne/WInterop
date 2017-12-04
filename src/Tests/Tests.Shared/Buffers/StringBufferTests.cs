@@ -960,7 +960,7 @@ namespace Tests.Buffers
         }
 
         // [Fact]
-        public void AppendCharCountPerf()
+        private void AppendCharCountPerf()
         {
             using (var buffer = new StringBuffer())
             {

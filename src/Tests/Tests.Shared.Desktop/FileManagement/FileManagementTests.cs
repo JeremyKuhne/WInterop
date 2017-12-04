@@ -249,7 +249,7 @@ namespace DesktopTests.FileManagementMethods
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Need to look up an available path")]
         public void CreateFileHarddiskVolume()
         {
             using (var file = FileMethods.CreateFile(@"\\?\GLOBALROOT\Device\HarddiskVolume1", CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
@@ -259,7 +259,7 @@ namespace DesktopTests.FileManagementMethods
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Need to add parsing for existing COM ports")]
         public void CreateFileComPort()
         {
             using (var file = FileMethods.CreateFile(@"COM4", CreationDisposition.OpenExisting, DesiredAccess.GenericRead))

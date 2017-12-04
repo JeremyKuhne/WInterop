@@ -17,7 +17,7 @@ namespace WInterop.Authorization.Types
     /// <see cref="https://msdn.microsoft.com/en-us/library/dd302645.aspx"/>
     /// <seealso cref="https://msdn.microsoft.com/en-us/library/cc980032.aspx"/>
     /// </remarks>
-    public struct SID_IDENTIFIER_AUTHORITY
+    public struct SID_IDENTIFIER_AUTHORITY : IEquatable<SID_IDENTIFIER_AUTHORITY>
     {
         private FixedByte.Size6 _Value;
         public Span<byte> Value => _Value.Buffer;

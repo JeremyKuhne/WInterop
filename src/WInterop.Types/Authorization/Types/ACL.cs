@@ -7,6 +7,7 @@
 
 namespace WInterop.Authorization.Types
 {
+#pragma warning disable CS0169
     /// <summary>
     /// Access control list (ACL) header.
     /// </summary>
@@ -38,4 +39,5 @@ namespace WInterop.Authorization.Types
         // Padding
         private ushort Sbz2;
     }
+#pragma warning restore CS0169
 }

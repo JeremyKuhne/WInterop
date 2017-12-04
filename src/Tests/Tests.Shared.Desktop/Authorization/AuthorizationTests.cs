@@ -68,7 +68,7 @@ namespace DesktopTests.Authorization
         }
 
         // [Fact]
-        public void DumpAllWellKnownSids()
+        private void DumpAllWellKnownSids()
         {
             foreach (WELL_KNOWN_SID_TYPE type in Enum.GetValues(typeof(WELL_KNOWN_SID_TYPE)))
             {

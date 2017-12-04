@@ -69,7 +69,7 @@ namespace DesktopTests.ProcessAndThreads
             ]
         public void ListEnvironmentVariables_Basic(string prefix)
         {
-            string name = System.IO.Path.GetRandomFileName();
+            string name = prefix + System.IO.Path.GetRandomFileName();
             ProcessMethods.SetEnvironmentVariable(name, "test");
             ProcessMethods.GetEnvironmentVariable(name).Should().Be("test");
             var variables = ProcessMethods.GetEnvironmentVariables();

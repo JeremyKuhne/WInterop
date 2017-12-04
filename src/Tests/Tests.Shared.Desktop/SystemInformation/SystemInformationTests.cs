@@ -43,7 +43,7 @@ namespace DesktopTests.SystemInformation
         }
 
         // [Fact]
-        public void DumpUserNameFormats()
+        private void DumpUserNameFormats()
         {
             foreach (EXTENDED_NAME_FORMAT format in Enum.GetValues(typeof(EXTENDED_NAME_FORMAT)))
             {
@@ -67,7 +67,7 @@ namespace DesktopTests.SystemInformation
         }
 
         // [Fact]
-        public void DumpComputerNameFormats()
+        private void DumpComputerNameFormats()
         {
             foreach (COMPUTER_NAME_FORMAT format in Enum.GetValues(typeof(COMPUTER_NAME_FORMAT)))
             {

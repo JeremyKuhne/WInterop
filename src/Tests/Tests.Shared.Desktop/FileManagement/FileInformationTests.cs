@@ -72,38 +72,50 @@ namespace DesktopTests.FileManagement
         {
             using (var cleaner = new TestFileCleaner())
             {
-                string testFile = cleaner.CreateTestFile(nameof(ProcessWithActiveHandle));
+                const int MAX_TRIES = 5;
 
-                // Create an open handle on the test file. Note that this must come first as
-                // the redirect (>>) will refuse to execute if there is already an open handle.
-                Process process = null;
-                ProcessStartInfo startInfo = new ProcessStartInfo
+                // It is tricky to get an open handle conflict- give it a few tries
+                for (int i = 0; i < MAX_TRIES; i++)
                 {
-                    FileName = "cmd",
-                    Arguments = $"/K copy con >> {testFile}",
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
+                    string testFile = cleaner.CreateTestFile(nameof(ProcessWithActiveHandle));
 
-                try
-                {
-                    process = Process.Start(startInfo);
-
-                    // The existing cmd handle won't let us access much
-                    using (var handle = FileMethods.CreateFile(testFile, CreationDisposition.OpenExisting,
-                        DesiredAccess.ReadAttributes, ShareModes.ReadWrite | ShareModes.Delete))
+                    // Create an open handle on the test file. Note that this must come first as
+                    // the redirect (>>) will refuse to execute if there is already an open handle.
+                    Process process = null;
+                    ProcessStartInfo startInfo = new ProcessStartInfo
                     {
-                        var ids = FileMethods.GetProcessIds(handle);
-                        // If this ends up being problematic (i.e. antivirus gets us a count of 2)
-                        // we can look to see we have an id that matches the known process and that we
-                        // don't contain our own process id.
-                        ids.Should().HaveCount(1);
-                        ((int)(ulong)ids.First()).Should().Be(process.Id);
+                        FileName = "cmd",
+                        Arguments = $"/K copy con >> {testFile}",
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    };
+
+                    try
+                    {
+                        process = Process.Start(startInfo);
+
+                        // The existing cmd handle won't let us access much
+                        using (var handle = FileMethods.CreateFile(testFile, CreationDisposition.OpenExisting,
+                            DesiredAccess.ReadAttributes, ShareModes.ReadWrite | ShareModes.Delete))
+                        {
+                            var ids = FileMethods.GetProcessIds(handle);
+                            if (ids.Count() == 0)
+                                continue;
+
+                            // If this ends up being problematic (i.e. antivirus gets us a count of 2)
+                            // we can look to see we have an id that matches the known process and that we
+                            // don't contain our own process id.
+                            ids.Should().HaveCount(1);
+                            ((int)(ulong)ids.First()).Should().Be(process.Id);
+                            return;
+                        }
+                    }
+                    finally
+                    {
+                        process?.CloseMainWindow();
                     }
                 }
-                finally
-                {
-                    process?.CloseMainWindow();
-                }
+
+                false.Should().BeTrue($"Did not get a locked file in {MAX_TRIES} tries.");
             }
         }
     }
