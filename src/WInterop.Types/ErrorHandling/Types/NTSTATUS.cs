@@ -154,6 +154,11 @@ namespace WInterop.ErrorHandling.Types
         STATUS_INSUFFICIENT_RESOURCES = unchecked((int)0xC000009A),
 
         /// <summary>
+        /// A specified name string is too long for its intended use.
+        /// </summary>
+        STATUS_NAME_TOO_LONG = unchecked((int)0xC0000106),
+
+        /// <summary>
         /// The operation did not complete successfully because it would cause an oplock
         /// to be broken. The caller has requested that existing oplocks not be broken.
         /// </summary>

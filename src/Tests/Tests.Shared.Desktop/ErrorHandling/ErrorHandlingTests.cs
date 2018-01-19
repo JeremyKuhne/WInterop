@@ -58,7 +58,8 @@ namespace DesktopTests
 
         [Theory,
             InlineData(NTSTATUS.STATUS_OBJECT_NAME_NOT_FOUND, WindowsError.ERROR_FILE_NOT_FOUND),
-            InlineData(NTSTATUS.STATUS_IO_TIMEOUT, WindowsError.ERROR_SEM_TIMEOUT)
+            InlineData(NTSTATUS.STATUS_IO_TIMEOUT, WindowsError.ERROR_SEM_TIMEOUT),
+            InlineData(NTSTATUS.STATUS_NAME_TOO_LONG, WindowsError.ERROR_FILENAME_EXCED_RANGE)
             ]
         public void ConvertNtStatus(NTSTATUS status, WindowsError expected)
         {
