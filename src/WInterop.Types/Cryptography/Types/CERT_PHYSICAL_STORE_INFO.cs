@@ -15,8 +15,8 @@ namespace WInterop.Cryptography.Types
         public string pszOpenStoreProvider;
         public uint dwOpenEncodingType;
         public uint dwOpenFlags;
-        CRYPT_DATA_BLOB OpenParameters;
-        uint dwFlags;
-        uint dwPriority;
+        public CRYPT_DATA_BLOB OpenParameters;
+        public uint dwFlags;
+        public uint dwPriority;
     }
 }

@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 namespace WInterop.Modules.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684229.aspx
+    [StructLayout(LayoutKind.Sequential)]
     public struct MODULEINFO
     {
         /// <summary>
@@ -21,7 +22,7 @@ namespace WInterop.Modules.Types
         /// <summary>
         /// Size of the linear space that the module occupies, in bytes. From the PE header.
         /// </summary>
-        uint SizeOfImage;
+        public uint SizeOfImage;
 
         /// <summary>
         /// The entry point for the module. From the PE header.
