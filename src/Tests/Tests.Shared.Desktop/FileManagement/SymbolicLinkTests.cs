@@ -10,6 +10,7 @@ using System;
 using Tests.Support;
 using WInterop.Authorization;
 using WInterop.Authorization.Types;
+using WInterop.DeviceManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
@@ -84,6 +85,50 @@ namespace DesktopTests.FileManagement
                     action();
                     var attributes = FileMethods.GetFileAttributes(symbolicLink);
                     attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
+
+                    using (var handle = FileMethods.CreateFile(symbolicLink, CreationDisposition.OpenExisting, DesiredAccess.ReadExtendedAttributes,
+                        ShareModes.All, fileFlags: FileFlags.OpenReparsePoint))
+                    {
+                        handle.IsInvalid.Should().BeFalse();
+                        var (printName, substituteName, tag) = DeviceMethods.GetReparsePointNames(handle);
+                        tag.Should().Be(ReparseTag.SymbolicLink);
+                        printName.Should().Be(filePath);
+                        substituteName.Should().Be(@"\??\" + filePath);
+                    }
+                }
+                else
+                {
+                    // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
+                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                }
+            }
+        }
+
+        [Fact]
+        public void CreateRelativeSymbolicLinkToFile()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string filePath = cleaner.CreateTestFile("CreateRelativeSymbolicLinkToFile");
+                string fileName = Paths.GetLastSegment(filePath);
+                string symbolicLink = cleaner.GetTestPath();
+                Action action = () => FileMethods.CreateSymbolicLink(symbolicLink, fileName);
+
+                if (CanCreateSymbolicLinks())
+                {
+                    action();
+                    var attributes = FileMethods.GetFileAttributes(symbolicLink);
+                    attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
+
+                    using (var handle = FileMethods.CreateFile(symbolicLink, CreationDisposition.OpenExisting, DesiredAccess.ReadExtendedAttributes,
+                        ShareModes.All, fileFlags: FileFlags.OpenReparsePoint))
+                    {
+                        handle.IsInvalid.Should().BeFalse();
+                        var (printName, substituteName, tag) = DeviceMethods.GetReparsePointNames(handle);
+                        tag.Should().Be(ReparseTag.SymbolicLink);
+                        printName.Should().Be(fileName);
+                        substituteName.Should().Be(fileName);
+                    }
                 }
                 else
                 {

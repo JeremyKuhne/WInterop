@@ -27,13 +27,13 @@ namespace WInterop
         private char _firstChar;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe ReadOnlySpan<char> GetBuffer(uint sizeInBytes)
+        public unsafe ReadOnlySpan<char> GetBuffer(uint sizeInBytes, ushort offsetInBytes = 0)
         {
             if (sizeInBytes == 0)
                 return new ReadOnlySpan<char>();
 
             fixed (char* c = &_firstChar)
-                return new ReadOnlySpan<char>(c, (int)(sizeInBytes / sizeof(char)));
+                return new ReadOnlySpan<char>(c + (offsetInBytes / sizeof(char)), (int)(sizeInBytes / sizeof(char)));
         }
     }
 }

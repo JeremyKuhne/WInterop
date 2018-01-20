@@ -334,10 +334,11 @@ namespace WInterop.DeviceManagement.Types
             SetReparsePoint = 0x000900a4,
 
             /// <summary>
-            /// REPARSE_DATA_BUFFER
-            /// [FSCTL_GET_REPARSE_POINT]
+            /// Retrieves the reparse point data associated with the file or directory identified by the specified handle.
+            /// <see cref="REPARSE_DATA_BUFFER"/> [FSCTL_GET_REPARSE_POINT]
             /// </summary>
             /// <remarks>
+            /// https://msdn.microsoft.com/en-us/library/windows/desktop/aa364571.aspx
             /// CTL_CODE(FILE_DEVICE_FILE_SYSTEM, 42, METHOD_BUFFERED, FILE_ANY_ACCESS)
             /// </remarks>
             GetReparsePoint = 0x000900a8,
