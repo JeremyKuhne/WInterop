@@ -7,6 +7,7 @@
 
 using FluentAssertions;
 using System;
+using System.Linq;
 using Tests.Support;
 using WInterop.DirectoryManagement;
 using WInterop.FileManagement;
@@ -256,6 +257,38 @@ namespace DesktopTests.FileManagement
                     var mode = FileMethods.GetFileMode(file);
                     mode.Should().NotHaveFlag(FileAccessModes.SynchronousAlertable);
                     mode.Should().NotHaveFlag(FileAccessModes.SynchronousNotAlertable);
+                }
+            }
+        }
+
+
+        [Fact]
+        public void GetDirectoryFilenames_SpecialDirectories()
+        {
+            // The "." and ".." entries returned vary quite a bit
+            using (var handle = DirectoryMethods.CreateDirectoryHandle(@"C:\"))
+            {
+                string[] names = FileMethods.GetDirectoryFilenames(handle).ToArray();
+                names.Should().NotContain(".");
+                names.Should().NotContain("..");
+            }
+
+            using (var handle = DirectoryMethods.CreateDirectoryHandle(FileMethods.GetTempPath()))
+            {
+                string[] names = FileMethods.GetDirectoryFilenames(handle).ToArray();
+                names.Should().Contain(".");
+                names.Should().NotContain("..");
+            }
+
+            using (var cleaner = new TestFileCleaner())
+            {
+                string directory = cleaner.GetTestPath();
+                DirectoryMethods.CreateDirectory(directory);
+                using (var handle = DirectoryMethods.CreateDirectoryHandle(FileMethods.GetTempPath()))
+                {
+                    string[] names = FileMethods.GetDirectoryFilenames(handle).ToArray();
+                    names.Should().Contain(".");
+                    names.Should().Contain("..");
                 }
             }
         }

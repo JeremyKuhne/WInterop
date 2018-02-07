@@ -180,16 +180,43 @@ namespace Tests.FileManagement
             using (var cleaner = new TestFileCleaner())
             {
                 IntPtr result = FileMethods.Imports.FindFirstFileW(cleaner.TempFolder, out WIN32_FIND_DATA findData);
-                IsValid(result).Should().BeTrue("root location exists");
-                FileMethods.Imports.FindClose(result);
+                try
+                {
+                    IsValid(result).Should().BeTrue("root location exists");
+                }
+                finally
+                {
+                    if (IsValid(result))
+                        FileMethods.Imports.FindClose(result);
+                }
+
                 result = FileMethods.Imports.FindFirstFileW(cleaner.GetTestPath(), out findData);
                 WindowsError error = Errors.GetLastError();
-                IsValid(result).Should().BeFalse("non-existant file");
-                error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
+
+                try
+                {
+                    IsValid(result).Should().BeFalse("non-existant file");
+                    error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
+                }
+                finally
+                {
+                    if (IsValid(result))
+                        FileMethods.Imports.FindClose(result);
+                }
+
                 result = FileMethods.Imports.FindFirstFileW(Paths.Combine(cleaner.GetTestPath(), "NotHere"), out findData);
                 error = Errors.GetLastError();
-                IsValid(result).Should().BeFalse("non-existant subdir");
-                error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
+
+                try
+                {
+                    IsValid(result).Should().BeFalse("non-existant subdir");
+                    error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
+                }
+                finally
+                {
+                    if (IsValid(result))
+                        FileMethods.Imports.FindClose(result);
+                }
             }
 
             bool IsValid(IntPtr value)

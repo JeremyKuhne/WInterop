@@ -117,6 +117,24 @@ namespace DesktopTests.FileManagementTests
         }
 
         [Fact]
+        public void CreateFileWithTrailingForwardSlash()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = @"\\?\" + cleaner.GetTestPath() + "/";
+                Action action = () => FileMethods.CreateFile(
+                    path,
+                    CreationDisposition.OpenExisting,
+                    0,
+                    ShareModes.ReadWrite,
+                    FileAttributes.None,
+                    FileFlags.BackupSemantics);
+
+                action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x8007007B));
+            }
+        }
+
+        [Fact]
         public void File_CopyNonExistantBehaviors()
         {
             using (var cleaner = new TestFileCleaner())
