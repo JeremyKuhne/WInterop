@@ -14,6 +14,7 @@ namespace WInterop.FileManagement.Types
     {
         /// <summary>
         /// Default. Replace or create. Deletes existing file instead of overwriting.
+        /// [FILE_SUPERSEDE]
         /// </summary>
         /// <remarks>
         /// As this potentially deletes it requires that DesiredAccess must include Delete.
@@ -22,7 +23,8 @@ namespace WInterop.FileManagement.Types
         Supersede = 0,
 
         /// <summary>
-        /// Open if exists or fail if doesn't exist. Equivalent to OpenExisting.
+        /// Open if exists or fail if doesn't exist. Equivalent to <see cref="CreationDisposition.OpenExisting"/>.
+        /// [FILE_OPEN]
         /// </summary>
         /// <remarks>
         /// TruncateExisting also uses Open and then manually truncates the file
@@ -32,26 +34,26 @@ namespace WInterop.FileManagement.Types
         Open = 1,
 
         /// <summary>
-        /// Create if doesn't exist or fail if does exist. Equivalent to CreateNew.
+        /// Create if doesn't exist or fail if does exist. Equivalent to <see cref="CreationDisposition.CreateNew"/>.
+        /// [FILE_CREATE]
         /// </summary>
         Create = 2,
 
         /// <summary>
-        /// Open if exists or create if doesn't exist. Equivalent to OpenAlways.
+        /// Open if exists or create if doesn't exist. Equivalent to <see cref="CreationDisposition.OpenAlways"/>.
+        /// [FILE_OPEN_IF]
         /// </summary>
         OpenIf = 3,
 
         /// <summary>
-        /// Open and overwrite if exists or fail if doesn't exist.
+        /// Open and overwrite if exists or fail if doesn't exist. Equivalent to <see cref="CreationDisposition.TruncateExisting"/>
+        /// [FILE_OVERWRITE]
         /// </summary>
-        /// <remarks>
-        /// This has no equivalent in CreateFile.
-        /// </remarks>
         Overwrite = 4,
 
         /// <summary>
-        /// Open and overwrite if exists or create if doesn't exist. Euivalent to
-        /// CreateAlways.
+        /// Open and overwrite if exists or create if doesn't exist. Equivalent to <see cref="CreationDisposition.CreateAlways"/>.
+        /// [FILE_OVERWRITE_IF]
         /// </summary>
         OverwriteIf = 5
     }

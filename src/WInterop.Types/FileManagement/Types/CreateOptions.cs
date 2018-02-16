@@ -13,19 +13,21 @@ namespace WInterop.FileManagement.Types
     public enum CreateOptions : uint
     {
         /// <summary>
-        /// File being created or opened must be a directory file. Disposition must be Create, Open,
-        /// or OpenIf. [FILE_DIRECTORY_FILE]
+        /// File being created or opened must be a directory file. Disposition must be <see cref="CreateDisposition.Create"/>,
+        /// <see cref="CreateDisposition.Open"/>, or <see cref="CreateDisposition.OpenIf"/>.
+        /// [FILE_DIRECTORY_FILE]
         /// </summary>
         /// <remarks>
-        /// Can only be used with SynchronousIoAlert/NonAlert, WriteThrough, OpenForBackupIntent,
-        /// and FileOpenByFileId flags.
+        /// Can only be used with <see cref="SynchronousIoAlert"/>, <see cref="SynchronousIoNonalert"/>, <see cref="WriteThrough"/>,
+        /// <see cref="OpenForBackupIntent"/>, and <see cref="FileOpenByFileId"/> flags.
         /// </remarks>
         DirectoryFile = 0x00000001,
 
         /// <summary>
         /// Applications that write data to the file must actually transfer the data into
         /// the file before any requested write operation is considered complete. This flag
-        /// is set automatically if NoIntermediateBuffering is set. [FILE_WRITE_THROUGH]
+        /// is set automatically if <see cref="NoIntermediateBuffering"/> is set.
+        /// [FILE_WRITE_THROUGH]
         /// </summary>
         WriteThrough = 0x00000002,
 
@@ -35,7 +37,7 @@ namespace WInterop.FileManagement.Types
         SequentialOnly = 0x00000004,
 
         /// <summary>
-        /// File cannot be cached in driver buffers. Cannot use with AppendData desired access.
+        /// File cannot be cached in driver buffers. Cannot use with <see cref="DesiredAccess.AppendData"/>.
         /// [FILE_NO_INTERMEDIATE_BUFFERING]
         /// </summary>
         NoIntermediateBuffering = 0x00000008,
@@ -45,7 +47,7 @@ namespace WInterop.FileManagement.Types
         /// subject to premature termination from alerts. [FILE_SYNCHRONOUS_IO_ALERT]
         /// </summary>
         /// <remarks>
-        /// Cannot be used with SynchronousIoNonalert.
+        /// Cannot be used with <see cref="SynchronousIoNonalert"/>.
         /// Synchronous DesiredAccess flag is required. I/O system will maintain file position context.
         /// </remarks>
         SynchronousIoAlert = 0x00000010,
@@ -55,8 +57,8 @@ namespace WInterop.FileManagement.Types
         /// and completion are not subject to alerts. [FILE_SYNCHRONOUS_IO_NONALERT]
         /// </summary>
         /// <remarks>
-        /// Cannot be used with SynchronousIoAlert.
-        /// Synchronous DesiredAccess flag is required. I/O system will maintain file position context.
+        /// Cannot be used with <see cref="SynchronousIoAlert"/>.
+        /// Requires <see cref="DesiredAccess.Synchronize"/>. I/O system will maintain file position context.
         /// </remarks>
         SynchronousIoNonalert = 0x00000020,
 
@@ -80,14 +82,15 @@ namespace WInterop.FileManagement.Types
         /// the target file is oplocked. [FILE_COMPLETE_IF_OPLOCKED]
         /// </summary>
         /// <remarks>
-        /// Not compatible with ReserveOpfilter or OpenRequiringOplock.
+        /// Not compatible with <see cref="ReserveOpfilter"/> or <see cref="OpenRequiringOplock"/>.
         /// Not used by device and intermediate drivers.
         /// </remarks>
         CompleteIfOplocked = 0x00000100,
 
         /// <summary>
         /// If the extended attributes on an existing file being opened indicate that the caller must
-        /// understand extended attributes to properly interpret the file, fail the request. [FILE_NO_EA_KNOWLEDGE]
+        /// understand extended attributes to properly interpret the file, fail the request.
+        /// [FILE_NO_EA_KNOWLEDGE]
         /// </summary>
         /// <remarks>
         /// Not used by device and intermediate drivers.
@@ -106,8 +109,8 @@ namespace WInterop.FileManagement.Types
         RandomAccess = 0x00000800,
 
         /// <summary>
-        /// Delete the file when the last handle to it is passed to NtClose. Requires Delete flag in
-        /// DesiredAccess parameter. [FILE_DELETE_ON_CLOSE]
+        /// Delete the file when the last handle to it is passed to NtClose. Requires <see cref="DesiredAccess.Delete"/>.
+        /// [FILE_DELETE_ON_CLOSE]
         /// </summary>
         DeleteOnClose = 0x00001000,
 
@@ -140,6 +143,7 @@ namespace WInterop.FileManagement.Types
         OpenForBackupIntent = 0x00004000,
 
         /// <summary>
+        /// When creating a file, specifies that it should not inherit the compression bit from the parent directory.
         /// [FILE_NO_COMPRESSION]
         /// </summary>
         NoCompression = 0x00008000,
@@ -156,6 +160,8 @@ namespace WInterop.FileManagement.Types
         OpenRequiringOplock = 0x00010000,
 
         /// <summary>
+        /// CreateFile2 uses this flag to prevent opening a file that you don't have access to without specifying
+        /// <see cref="ShareModes.Read"/>. (Preventing users that can only read a file from denying access to other readers.)
         /// [FILE_DISALLOW_EXCLUSIVE]
         /// </summary>
         /// <remarks>
@@ -164,7 +170,8 @@ namespace WInterop.FileManagement.Types
         DisallowExclusive = 0x00020000,
 
         /// <summary>
-        /// The client opening the file or device is session aware and per session access is validated if necessary. [FILE_SESSION_AWARE]
+        /// The client opening the file or device is session aware and per session access is validated if necessary.
+        /// [FILE_SESSION_AWARE]
         /// </summary>
         /// <remarks>
         /// Windows 8 and up.
@@ -176,7 +183,7 @@ namespace WInterop.FileManagement.Types
         /// from getting share violations. [FILE_RESERVE_OPFILTER]
         /// </summary>
         /// <remarks>
-        /// Not compatible with CompleteIfOplocked or OpenRequiringOplock.
+        /// Not compatible with <see cref="CompleteIfOplocked"/> or <see cref="OpenRequiringOplock"/>.
         /// If there are already open handles, the create request will fail with STATUS_OPLOCK_NOT_GRANTED.
         /// </remarks>
         ReserveOpfilter = 0x00100000,
@@ -188,8 +195,8 @@ namespace WInterop.FileManagement.Types
         OpenReparsePoint = 0x00200000,
 
         /// <summary>
-        /// Causes files that are marked with the Offline attribute not to be recalled from remote storage.
-        /// [FILE_OPEN_NO_RECALL]
+        /// Causes files that are marked with the <see cref="FileAttributes.Offline"/> attribute are not to be recalled
+        /// from remote storage. [FILE_OPEN_NO_RECALL]
         /// </summary>
         /// <remarks>
         /// More details can be found in Remote Storage documentation (see Basic Concepts).
