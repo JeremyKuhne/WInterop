@@ -27,13 +27,45 @@ namespace Tests.DirectoryManagement
         {
             string currentDirectory = DirectoryMethods.GetCurrentDirectory();
 
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+            try
             {
-                DirectoryMethods.SetCurrentDirectory(@"C:\");
-                DirectoryMethods.GetCurrentDirectory().Should().Be(@"C:\");
-            });
-            DirectoryMethods.SetCurrentDirectory(currentDirectory);
-            DirectoryMethods.GetCurrentDirectory().Should().Be(currentDirectory);
+                StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+                {
+                    DirectoryMethods.SetCurrentDirectory(@"C:\");
+                    DirectoryMethods.GetCurrentDirectory().Should().Be(@"C:\");
+                });
+            }
+            finally
+            {
+                if (currentDirectory != DirectoryMethods.GetCurrentDirectory())
+                {
+                    DirectoryMethods.SetCurrentDirectory(currentDirectory);
+                    DirectoryMethods.GetCurrentDirectory().Should().Be(currentDirectory);
+                }
+            }
+        }
+
+        [Fact]
+        public void SetCurrentDirectoryShortName()
+        {
+            string currentDirectory = DirectoryMethods.GetCurrentDirectory();
+
+            try
+            {
+                StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
+                {
+                    DirectoryMethods.SetCurrentDirectory(@"C:\PROGRA~1");
+                    DirectoryMethods.GetCurrentDirectory().Should().Be(@"C:\PROGRA~1");
+                });
+            }
+            finally
+            {
+                if (currentDirectory != DirectoryMethods.GetCurrentDirectory())
+                {
+                    DirectoryMethods.SetCurrentDirectory(currentDirectory);
+                    DirectoryMethods.GetCurrentDirectory().Should().Be(currentDirectory);
+                }
+            }
         }
 
         [Fact]
