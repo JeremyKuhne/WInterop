@@ -196,5 +196,11 @@ namespace DesktopTests.Authorization
                 AuthorizationMethods.AreAllPrivilegesEnabled(token, Privilege.ChangeNotify, Privilege.ChangeNotify).Should().BeTrue();
             }
         }
+
+        [Fact]
+        public void GetDomainName()
+        {
+            AuthorizationMethods.GetDomainName().Should().NotBeNull();
+        }
     }
 }

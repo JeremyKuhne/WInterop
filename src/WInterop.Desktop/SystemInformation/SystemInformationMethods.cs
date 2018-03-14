@@ -21,16 +21,22 @@ namespace WInterop.SystemInformation
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
-                uint sizeInChars = buffer.CharCapacity;
-                while (!Imports.GetUserNameW(buffer, ref sizeInChars))
-                {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
-                    buffer.EnsureCharCapacity(sizeInChars);
-                }
-
-                buffer.Length = sizeInChars - 1;
+                GetUserName(buffer);
                 return buffer.ToString();
             });
+        }
+
+        public static void GetUserName(StringBuffer buffer)
+        {
+            uint sizeInChars = buffer.CharCapacity;
+            while (!Imports.GetUserNameW(buffer, ref sizeInChars))
+            {
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                buffer.EnsureCharCapacity(sizeInChars);
+            }
+
+            // Returned size includes the null
+            buffer.Length = sizeInChars - 1;
         }
 
         /// <summary>

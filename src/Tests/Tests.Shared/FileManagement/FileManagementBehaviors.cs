@@ -79,6 +79,7 @@ namespace Tests.FileManagement
             InlineData(@"\\Server\Share\ ", @"\\Server\Share\"),
             InlineData(@"\\Server\Share\.", @"\\Server\Share"),                      // UNCs can eat trailing separator
             InlineData(@"\\Server\Share\..", @"\\Server\Share"),                     // UNCs can eat trailing separator
+            InlineData(@"\\Server\Share\..\foo", @"\\Server\Share\foo"),
             InlineData(@"\\Server\Share\...", @"\\Server\Share\"),
             InlineData(@"\\Server\Share\ .", @"\\Server\Share\"),
             InlineData(@"\\Server\Share\ ..", @"\\Server\Share\"),
