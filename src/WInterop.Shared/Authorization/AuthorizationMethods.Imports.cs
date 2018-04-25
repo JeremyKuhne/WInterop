@@ -25,12 +25,12 @@ namespace WInterop.Authorization
 
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379159.aspx
-            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
             public unsafe static extern bool LookupAccountNameW(
                 string lpSystemName,
-                char* lpAccountName,
+                string lpAccountName,
                 SID* Sid,
-                uint* cbSid,
+                ref uint cbSid,
                 char* ReferencedDomainName,
                 ref uint cchReferencedDomainName,
                 out SID_NAME_USE peUse);

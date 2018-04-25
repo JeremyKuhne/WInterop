@@ -15,6 +15,7 @@ using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
+using WInterop.SystemInformation.Types;
 
 namespace WInterop.Authorization
 {
@@ -442,16 +443,16 @@ namespace WInterop.Authorization
         {
             unsafe string ITwoBufferFunc<StringBuffer, string>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
             {
-                SystemInformationMethods.GetUserName(nameBuffer);
+                string name = SystemInformationMethods.GetUserName(EXTENDED_NAME_FORMAT.NameSamCompatible);
 
                 SID sid = new SID();
                 uint sidLength = (uint)sizeof(SID);
                 uint domainNameLength = domainNameBuffer.CharCapacity;
                 while (!Imports.LookupAccountNameW(
                     lpSystemName: null,
-                    lpAccountName: domainNameBuffer.CharPointer,
+                    lpAccountName: name,
                     Sid: &sid,
-                    cbSid: &sidLength,
+                    cbSid: ref sidLength,
                     ReferencedDomainName: domainNameBuffer.CharPointer,
                     cchReferencedDomainName: ref domainNameLength,
                     peUse: out _))
