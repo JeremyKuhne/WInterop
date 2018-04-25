@@ -99,6 +99,17 @@ namespace WInterop.Support.Buffers
         /// <summary>
         /// Invoke the given action on a set of cached buffers.
         /// </summary>
+        public static T TwoBufferInvoke<BufferType, T>(Func<BufferType, BufferType, T> func)
+            where BufferType : HeapBuffer
+        {
+            var wrapper = new TwoBufferFuncWrapper<BufferType, T> { Func = func };
+            TwoBufferInvoke<TwoBufferFuncWrapper<BufferType, T>, BufferType>(ref wrapper);
+            return wrapper.Result;
+        }
+
+        /// <summary>
+        /// Invoke the given action on a set of cached buffers.
+        /// </summary>
         public static T TwoBufferInvoke<TBufferFunc, BufferType, T>(ref TBufferFunc func)
             where TBufferFunc : ITwoBufferFunc<BufferType, T>
             where BufferType : HeapBuffer

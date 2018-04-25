@@ -261,11 +261,11 @@ namespace DesktopTests.FileManagement
             }
         }
 
-
         [Fact]
         public void GetDirectoryFilenames_SpecialDirectories()
         {
             // The "." and ".." entries returned vary quite a bit
+            // (they seem to variant over multiple runs too??)
             using (var handle = DirectoryMethods.CreateDirectoryHandle(@"C:\"))
             {
                 string[] names = FileMethods.GetDirectoryFilenames(handle).ToArray();

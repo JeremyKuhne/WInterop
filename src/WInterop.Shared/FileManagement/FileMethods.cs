@@ -10,10 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using WInterop.Authorization;
+using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement.BufferWrappers;
 using WInterop.FileManagement.Types;
+using WInterop.MemoryManagement;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Synchronization.Types;
@@ -778,6 +781,28 @@ namespace WInterop.FileManagement
         public static bool IsReparseTagDirectory(ReparseTag reparseTag)
         {
             return ((uint)reparseTag & 0x10000000) != 0;
+        }
+
+        /// <summary>
+        /// Get the owner SID for the given handle.
+        /// </summary>
+        public unsafe static void QueryOwner(SafeFileHandle handle, out SID sid)
+        {
+            SID* sidp;
+            SECURITY_DESCRIPTOR* descriptor;
+
+            WindowsError result = AuthorizationMethods.Imports.GetSecurityInfo(
+                handle,
+                SecurityObjectType.File,
+                SecurityInformation.Owner,
+                ppsidOwner: &sidp,
+                ppSecurityDescriptor: &descriptor);
+
+            if (result != WindowsError.ERROR_SUCCESS)
+                throw Errors.GetIoExceptionForError(result);
+
+            SID.CopyFromNative(sidp, out sid);
+            MemoryMethods.LocalFree((IntPtr)(descriptor));
         }
     }
 }

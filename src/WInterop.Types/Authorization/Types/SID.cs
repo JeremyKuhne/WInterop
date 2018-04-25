@@ -71,7 +71,7 @@ namespace WInterop.Authorization.Types
 
         public byte Revision;
         public byte SubAuthorityCount;
-        public SID_IDENTIFIER_AUTHORITY IdentifierAuthority;
+        public IdentifierAuthority IdentifierAuthority;
 
         // Also known as Relative Identifiers
         public unsafe fixed uint SubAuthority[SID_MAX_SUB_AUTHORITIES];

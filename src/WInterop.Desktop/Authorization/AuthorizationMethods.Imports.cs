@@ -104,9 +104,6 @@ namespace WInterop.Authorization
                 BOOL OpenAsSelf,
                 out AccessToken TokenHandle);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379166.aspx
-            // LookupAccountSid
-
             // https://msdn.microsoft.com/en-us/library/windows/desktop/mt779143.aspx
             // The docs claim that it is in Advapi.dll, but it actually lives in sechost.dll
             [DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
@@ -117,9 +114,6 @@ namespace WInterop.Authorization
                 SafeHandle lpReferencedDomainName,
                 ref uint cchReferencedDomainName,
                 out SidNameUse peUse);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379159.aspx
-            // LookupAccountName
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446585.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -174,18 +168,6 @@ namespace WInterop.Authorization
                 ACCESS_MASK AccessMask,
                 SID* pSid);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446654.aspx
-            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            public unsafe static extern WindowsError GetSecurityInfo(
-                SafeHandle handle,
-                SecurityObjectType ObjectType,
-                SecurityInformation SecurityInfo,
-                SID** ppsidOwner = null,
-                SID** ppsidGroup = null,
-                ACL** ppDacl = null,
-                ACL** ppSacl = null,
-                SECURITY_DESCRIPTOR** ppSecurityDescriptor = null
-            );
         }
     }
 }

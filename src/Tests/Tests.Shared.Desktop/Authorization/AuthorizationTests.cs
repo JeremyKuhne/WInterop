@@ -46,7 +46,7 @@ namespace DesktopTests.Authorization
             SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinWorldSid);
             AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
             sid.Revision.Should().Be(1);
-            sid.IdentifierAuthority.Should().Be(SID_IDENTIFIER_AUTHORITY.WORLD);
+            sid.IdentifierAuthority.Should().Be(IdentifierAuthority.World);
 
             AuthorizationMethods.GetSidSubAuthorityCount(ref sid).Should().Be(1);
             AuthorizationMethods.GetSidSubAuthority(ref sid, 0).Should().Be(0);

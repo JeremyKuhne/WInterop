@@ -14,7 +14,7 @@ using WInterop.FileManagement.Types;
 using WInterop.SystemInformation;
 using Xunit;
 
-namespace DesktopTests.FileManagement
+namespace Tests.FileManagement
 {
     public class FileSecurityTests
     {
@@ -28,7 +28,7 @@ namespace DesktopTests.FileManagement
                     handle.IsInvalid.Should().BeFalse();
                     FileMethods.QueryOwner(handle, out SID sid);
                     sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
-                    AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
+                    AccountSidInformation info = AuthorizationMethods.LookupAccountSid(sid);
                     info.Usage.Should().Be(SidNameUse.User);
                     info.Name.Should().Be(SystemInformationMethods.GetUserName());
                 }

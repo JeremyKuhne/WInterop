@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\DateTimeTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileSecurityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FindOperationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\DosMatcherTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManagement\FileManagementBehaviors.cs" />
