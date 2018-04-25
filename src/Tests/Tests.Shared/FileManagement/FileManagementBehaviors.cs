@@ -165,6 +165,8 @@ namespace Tests.FileManagement
             InlineData(@"CON", @"\\.\CON"),
             InlineData(@"CON:Alt", @"\\.\CON"),
             InlineData(@"LPT9", @"\\.\LPT9"),
+            InlineData(@"prn.json", @"\\.\prn"),
+            InlineData(@"C:\foo\prn.json", @"\\.\prn"),
             InlineData(@"C:\CON", @"\\.\CON"),
             InlineData(@"\\.\C:\CON", @"\\.\C:\CON"),
 
