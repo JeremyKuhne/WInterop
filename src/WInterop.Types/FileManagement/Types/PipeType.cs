@@ -18,6 +18,9 @@ namespace WInterop.FileManagement.Types
         /// <summary>
         /// Data is read from the pipe as a stream of bytes. [FILE_PIPE_BYTE_STREAM_TYPE]
         /// </summary>
+        /// <remarks>
+        /// To use this type, <see cref="PipeReadMode"/> must not be <see cref="PipeReadMode.MessageMode"/>.
+        /// </remarks>
         ByteStreamType = 0x0,
 
         /// <summary>

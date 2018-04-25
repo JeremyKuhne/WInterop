@@ -308,7 +308,7 @@ namespace WInterop.DeviceManagement.Types
             SetObjectId = 0x00090098,
 
             /// <summary>
-            /// FILE_OBJECTID_BUFFER
+            /// Retrieves the object identifier for the specified file or directory. FILE_OBJECTID_BUFFER
             /// [FSCTL_GET_OBJECT_ID]
             /// </summary>
             /// <remarks>
@@ -335,7 +335,7 @@ namespace WInterop.DeviceManagement.Types
 
             /// <summary>
             /// Retrieves the reparse point data associated with the file or directory identified by the specified handle.
-            /// <see cref="REPARSE_DATA_BUFFER"/> [FSCTL_GET_REPARSE_POINT]
+            /// Uses <see cref="REPARSE_DATA_BUFFER"/>. [FSCTL_GET_REPARSE_POINT]
             /// </summary>
             /// <remarks>
             /// https://msdn.microsoft.com/en-us/library/windows/desktop/aa364571.aspx

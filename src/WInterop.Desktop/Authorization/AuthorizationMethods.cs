@@ -14,6 +14,8 @@ using WInterop.ErrorHandling.Types;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using WInterop.Support.Buffers;
+using WInterop.SystemInformation;
+using WInterop.SystemInformation.Types;
 
 namespace WInterop.Authorization
 {
@@ -429,6 +431,39 @@ namespace WInterop.Authorization
                 .Where(x => x.Value.AsSpan().SequenceEqual(privilege))
                 .Select(x => x.Key)
                 .FirstOrDefault();
+        }
+
+        public static string GetDomainName()
+        {
+            var wrapper = new GetDomainNameWrapper();
+            return BufferHelper.TwoBufferInvoke<GetDomainNameWrapper, StringBuffer, string>(ref wrapper);
+        }
+
+        private struct GetDomainNameWrapper : ITwoBufferFunc<StringBuffer, string>
+        {
+            unsafe string ITwoBufferFunc<StringBuffer, string>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
+            {
+                string name = SystemInformationMethods.GetUserName(EXTENDED_NAME_FORMAT.NameSamCompatible);
+
+                SID sid = new SID();
+                uint sidLength = (uint)sizeof(SID);
+                uint domainNameLength = domainNameBuffer.CharCapacity;
+                while (!Imports.LookupAccountNameW(
+                    lpSystemName: null,
+                    lpAccountName: name,
+                    Sid: &sid,
+                    cbSid: ref sidLength,
+                    ReferencedDomainName: domainNameBuffer.CharPointer,
+                    cchReferencedDomainName: ref domainNameLength,
+                    peUse: out _))
+                {
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    domainNameBuffer.EnsureCharCapacity(domainNameLength);
+                }
+
+                domainNameBuffer.Length = domainNameLength;
+                return domainNameBuffer.ToString();
+            }
         }
     }
 }

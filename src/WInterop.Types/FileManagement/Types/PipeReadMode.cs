@@ -19,6 +19,9 @@ namespace WInterop.FileManagement.Types
         /// <summary>
         /// Data is read from the pipe as a stream of messages. [FILE_PIPE_MESSAGE_MODE]
         /// </summary>
+        /// <remarks>
+        /// To use this mode <see cref="PipeType"/> must be <see cref="PipeType.PipeMessageType"/>.
+        /// </remarks>
         MessageMode = 0x1
     }
 }

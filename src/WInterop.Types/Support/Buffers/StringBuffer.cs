@@ -754,6 +754,14 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
+        /// Gets a reference to the first char.
+        /// </summary>
+        public ref char GetReference()
+        {
+            return ref AsSpan().DangerousGetPinnableReference();
+        }
+
+        /// <summary>
         /// Get the given substring in the buffer.
         /// </summary>
         /// <param name="count">Count of characters to take, or remaining characters from <paramref name="nameof(startIndex)"/> if -1.</param>
