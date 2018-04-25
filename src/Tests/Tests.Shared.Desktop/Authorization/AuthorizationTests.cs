@@ -43,7 +43,7 @@ namespace DesktopTests.Authorization
         [Fact]
         public void CreateWellKnownSid_Everyone()
         {
-            SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinWorldSid);
+            SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.World);
             AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
             sid.Revision.Should().Be(1);
             sid.IdentifierAuthority.Should().Be(IdentifierAuthority.World);
@@ -51,7 +51,7 @@ namespace DesktopTests.Authorization
             AuthorizationMethods.GetSidSubAuthorityCount(ref sid).Should().Be(1);
             AuthorizationMethods.GetSidSubAuthority(ref sid, 0).Should().Be(0);
 
-            AuthorizationMethods.IsWellKnownSid(ref sid, WELL_KNOWN_SID_TYPE.WinWorldSid).Should().BeTrue();
+            AuthorizationMethods.IsWellKnownSid(ref sid, WellKnownSID.World).Should().BeTrue();
             AuthorizationMethods.ConvertSidToString(ref sid).Should().Be("S-1-1-0");
 
             AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
@@ -63,14 +63,14 @@ namespace DesktopTests.Authorization
         [Fact]
         public void IsValidSid_GoodSid()
         {
-            SID sid = AuthorizationMethods.CreateWellKnownSid(WELL_KNOWN_SID_TYPE.WinBuiltinIUsersSid);
+            SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.IISUser);
             AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
         }
 
         // [Fact]
         private void DumpAllWellKnownSids()
         {
-            foreach (WELL_KNOWN_SID_TYPE type in Enum.GetValues(typeof(WELL_KNOWN_SID_TYPE)))
+            foreach (WellKnownSID type in Enum.GetValues(typeof(WellKnownSID)))
             {
                 Debug.WriteLine(@"/// <summary>");
                 try
