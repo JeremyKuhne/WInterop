@@ -163,7 +163,7 @@ namespace DesktopTests.HandlesTests
 
             // Not sure why this is- probably the source of why so many other things go wrong
             Action action = () => FileMethods.GetFileName(fileHandle);
-            action.ShouldThrow<ArgumentException>().And.HResult.Should().Be(unchecked((int)0x80070057));
+            action.Should().Throw<ArgumentException>().And.HResult.Should().Be(unchecked((int)0x80070057));
         }
     }
 }

@@ -19,10 +19,10 @@ namespace WInterop.FileManagement.Types
         /// </summary>
         public uint FileIndex;
 
-        public DateTime CreationTimeUtc;
-        public DateTime LastAccessTimeUtc;
-        public DateTime LastWriteTimeUtc;
-        public DateTime ChangeTimeUtc;
+        public DateTimeOffset CreationTimeUtc;
+        public DateTimeOffset LastAccessTimeUtc;
+        public DateTimeOffset LastWriteTimeUtc;
+        public DateTimeOffset ChangeTimeUtc;
 
         public long EndOfFile;
         public long AllocationSize;

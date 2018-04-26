@@ -367,7 +367,7 @@ namespace Tests.FileManagementTests
                     FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.Begin);
                     byte[] outBuffer = new byte[data.Length];
                     FileMethods.ReadFile(fileHandle, outBuffer, (uint)data.Length).Should().Be((uint)data.Length);
-                    outBuffer.ShouldBeEquivalentTo(data);
+                    outBuffer.Should().BeEquivalentTo(data);
                 }
             }
         }
@@ -595,7 +595,7 @@ namespace Tests.FileManagementTests
         public void FullPathErrorCases(string value)
         {
             Action action = () => FileMethods.GetFullPathName(value);
-            action.ShouldThrow<System.IO.IOException>();
+            action.Should().Throw<System.IO.IOException>();
         }
 
         [Fact]

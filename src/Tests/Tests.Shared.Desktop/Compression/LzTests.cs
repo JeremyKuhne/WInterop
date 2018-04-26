@@ -109,7 +109,7 @@ namespace DesktopTests.Compression
                 string destination = cleaner.CreateTestFile($"CopyFile_NotOverExisting({useCreateFile})");
 
                 Action action = () => CompressionMethods.LzCopyFile(source, destination, overwrite: false, useCreateFile: useCreateFile);
-                action.ShouldThrow<IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_FILE_EXISTS));
+                action.Should().Throw<IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_FILE_EXISTS));
             }
         }
 
@@ -223,7 +223,7 @@ namespace DesktopTests.Compression
                 string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
                 Action action = () => CompressionMethods.GetExpandedName(path);
-                action.ShouldThrow<LzException>().And.Error.Should().Be(LzError.BadValue);
+                action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadValue);
             }
         }
 
@@ -236,7 +236,7 @@ namespace DesktopTests.Compression
                 string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
                 Action action = () => CompressionMethods.LzOpenFile(path);
-                action.ShouldThrow<LzException>().And.Error.Should().Be(LzError.BadInHandle);
+                action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadInHandle);
             }
         }
 
@@ -266,7 +266,7 @@ namespace DesktopTests.Compression
                 FileHelper.EnsurePathDirectoryExists(path);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
                 Action action = () => CompressionMethods.LzCreateFile(path);
-                action.ShouldThrow<LzException>().And.Error.Should().Be(LzError.BadValue);
+                action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadValue);
             }
         }
 

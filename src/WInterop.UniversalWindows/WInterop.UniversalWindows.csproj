@@ -17,7 +17,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.0-preview2-26406-04" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0-preview2-26406-04" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WInterop.Types\WInterop.Types.csproj" />
   </ItemGroup>

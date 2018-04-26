@@ -135,7 +135,7 @@ namespace DesktopTests.FileManagement
         {
             string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(@"C:\", 300);
             Action action = () => FileMethods.GetFileAttributes(longPath);
-            action.ShouldThrow<System.IO.DirectoryNotFoundException>();
+            action.Should().Throw<System.IO.DirectoryNotFoundException>();
         }
 
         [Fact]

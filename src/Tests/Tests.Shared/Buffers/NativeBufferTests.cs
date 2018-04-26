@@ -34,7 +34,7 @@ namespace Tests.Buffers
             using (var buffer = new HeapBuffer())
             {
                 Action action = () => { byte c = buffer[buffer.ByteCapacity]; };
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -44,7 +44,7 @@ namespace Tests.Buffers
             using (var buffer = new HeapBuffer())
             {
                 Action action = () => { buffer[buffer.ByteCapacity] = 0; };
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -79,7 +79,7 @@ namespace Tests.Buffers
             if (!WInterop.Support.Environment.Is64BitProcess)
             {
                 Action action = () => new HeapBuffer(uint.MaxValue + 1ul);
-                action.ShouldThrow<OverflowException>();
+                action.Should().Throw<OverflowException>();
             }
         }
 
@@ -94,7 +94,7 @@ namespace Tests.Buffers
                 using (var buffer = new HeapBuffer(initialBufferSize))
                 {
                     Action action = () => buffer.EnsureByteCapacity(uint.MaxValue + 1ul);
-                    action.ShouldThrow<OverflowException>();
+                    action.Should().Throw<OverflowException>();
                 }
             }
         }

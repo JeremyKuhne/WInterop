@@ -17,6 +17,11 @@ namespace WInterop.Authorization.Types
         public uint PrivilegeCount;
 
         // This is an ANYSIZE_ARRAY
-        public LUID_AND_ATTRIBUTES Privileges;
+        private LUID_AND_ATTRIBUTES _Privileges;
+
+        unsafe public ReadOnlySpan<LUID_AND_ATTRIBUTES> Privileges
+        {
+            get { fixed (LUID_AND_ATTRIBUTES* p = &_Privileges) { return new ReadOnlySpan<LUID_AND_ATTRIBUTES>(p, (int)PrivilegeCount); } }
+        }
     }
 }

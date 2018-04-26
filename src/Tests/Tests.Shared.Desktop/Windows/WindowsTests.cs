@@ -81,7 +81,7 @@ namespace DesktopTests.Windows
             Action action = () => WindowMethods.GetClassName(WindowHandle.Null);
 
             // Invalid window handle. (1400)
-            action.ShouldThrow<IOException>().And.HResult.Should().Be(unchecked((int)0x80070578));
+            action.Should().Throw<IOException>().And.HResult.Should().Be(unchecked((int)0x80070578));
         }
 
         [Fact]

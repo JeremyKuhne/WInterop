@@ -54,7 +54,7 @@ namespace Tests.Support
         {
             // Demonstrating that an embedded bool isn't pinnable, and validating the behavior doesn't change
             Action action = () => GCHandle.Alloc(new BoolTest(), GCHandleType.Pinned);
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
         }
 
         [Fact]

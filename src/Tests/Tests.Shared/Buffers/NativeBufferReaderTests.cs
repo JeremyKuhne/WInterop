@@ -18,7 +18,7 @@ namespace Tests.Buffers
         public void NullConstructorThrows()
         {
             Action action = () => new CheckedReader(null);
-            action.ShouldThrow<ArgumentNullException>();
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Tests.Buffers
                 reader.ByteOffset = buffer.ByteCapacity;
 
                 Action action = () => reader.ByteOffset = buffer.ByteCapacity + 1;
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -46,7 +46,7 @@ namespace Tests.Buffers
                 for (uint i = 1; i < sizeof(short); i++)
                 {
                     reader.ByteOffset = buffer.ByteCapacity - i;
-                    action.ShouldThrow<System.IO.EndOfStreamException>();
+                    action.Should().Throw<System.IO.EndOfStreamException>();
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace Tests.Buffers
                 for (uint i = 1; i < sizeof(int); i++)
                 {
                     reader.ByteOffset = buffer.ByteCapacity - i;
-                    action.ShouldThrow<System.IO.EndOfStreamException>();
+                    action.Should().Throw<System.IO.EndOfStreamException>();
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace Tests.Buffers
                 for (uint i = 1; i < sizeof(long); i++)
                 {
                     reader.ByteOffset = buffer.ByteCapacity - i;
-                    action.ShouldThrow<System.IO.EndOfStreamException>();
+                    action.Should().Throw<System.IO.EndOfStreamException>();
                 }
             }
         }
@@ -244,7 +244,7 @@ namespace Tests.Buffers
                 Action action = () => reader.ReadString(1);
 
                 reader.ByteOffset = buffer.ByteCapacity - 1;
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 

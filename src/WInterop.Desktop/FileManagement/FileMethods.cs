@@ -8,6 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using WInterop.Authorization;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
@@ -203,7 +204,7 @@ namespace WInterop.FileManagement
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
         {
-            fixed (char* c = &path.DangerousGetPinnableReference())
+            fixed (char* c = &MemoryMarshal.GetReference(path))
             {
                 UNICODE_STRING name = new UNICODE_STRING(c, path.Length);
                 OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES(

@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.ProcessAndThreads;
@@ -75,10 +76,15 @@ namespace WInterop.Authorization
 
         internal static Privilege ParsePrivilege(ReadOnlySpan<char> privilege)
         {
-            return s_privileges
-                .Where(x => x.Value.AsSpan().SequenceEqual(privilege))
-                .Select(x => x.Key)
-                .FirstOrDefault();
+            foreach (var pair in s_privileges)
+            {
+                if (privilege.SequenceEqual(pair.Value.AsSpan()))
+                {
+                    return pair.Key;
+                }
+            }
+
+            return default;
         }
 
         private static LUID LookupPrivilegeValue(Privilege privilege)
@@ -98,7 +104,7 @@ namespace WInterop.Authorization
             Span<char> nameBuffer = new Span<char>(c, 32);
 
             uint length = (uint)nameBuffer.Length;
-            while (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, ref nameBuffer.DangerousGetPinnableReference(), ref length))
+            while (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, ref MemoryMarshal.GetReference(nameBuffer), ref length))
             {
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                 char* n = stackalloc char[(int)length];
@@ -148,12 +154,9 @@ namespace WInterop.Authorization
             TokenInformationInvoke(token, TokenInformation.Privileges,
             buffer =>
             {
-                ReadOnlySpan<LUID_AND_ATTRIBUTES> data = new ReadOnlySpan<LUID_AND_ATTRIBUTES>(
-                    &((TOKEN_PRIVILEGES*)buffer)->Privileges, (int)((TOKEN_PRIVILEGES*)buffer)->PrivilegeCount);
-
-                for (int i = 0; i < data.Length; i++)
+                foreach (LUID_AND_ATTRIBUTES privilege in ((TOKEN_PRIVILEGES*)buffer)->Privileges)
                 {
-                    privileges.Add(new PrivilegeSetting(LookupPrivilege(data[i].Luid), (PrivilegeAttributes)data[i].Attributes));
+                    privileges.Add(new PrivilegeSetting(LookupPrivilege(privilege.Luid), privilege.Attributes));
                 }
             });
 

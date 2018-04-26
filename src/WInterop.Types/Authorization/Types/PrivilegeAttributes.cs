@@ -13,9 +13,25 @@ namespace WInterop.Authorization.Types
     public enum PrivilegeAttributes : uint
     {
         // Values aren't defined in MSDN, taken from winnt.h.
-        SE_PRIVILEGE_ENABLED_BY_DEFAULT = 0x00000001,
-        SE_PRIVILEGE_ENABLED = 0x00000002,
-        SE_PRIVILEGE_REMOVED = 0x00000004,
-        SE_PRIVILEGE_USED_FOR_ACCESS = 0x80000000
+
+        /// <summary>
+        /// [SE_PRIVILEGE_ENABLED_BY_DEFAULT]
+        /// </summary>
+        EnabledByDefault = 0x00000001,
+
+        /// <summary>
+        /// [SE_PRIVILEGE_ENABLED]
+        /// </summary>
+        Enabled = 0x00000002,
+
+        /// <summary>
+        /// [SE_PRIVILEGE_REMOVED]
+        /// </summary>
+        Removed = 0x00000004,
+
+        /// <summary>
+        /// [SE_PRIVILEGE_USED_FOR_ACCESS]
+        /// </summary>
+        UsedForAccess = 0x80000000
     }
 }

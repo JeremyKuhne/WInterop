@@ -13,6 +13,6 @@ namespace WInterop.Authorization.Types
     public struct LUID_AND_ATTRIBUTES
     {
         public LUID Luid;
-        public uint Attributes;
+        public PrivilegeAttributes Attributes;
     }
 }

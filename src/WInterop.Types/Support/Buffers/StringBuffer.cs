@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using WInterop.SafeString.Types;
 
 namespace WInterop.Support.Buffers
@@ -758,7 +759,7 @@ namespace WInterop.Support.Buffers
         /// </summary>
         public ref char GetReference()
         {
-            return ref AsSpan().DangerousGetPinnableReference();
+            return ref MemoryMarshal.GetReference(AsSpan());
         }
 
         /// <summary>

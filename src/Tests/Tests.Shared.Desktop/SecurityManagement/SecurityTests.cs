@@ -34,7 +34,7 @@ namespace DesktopTests.SecurityManagement
             LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.Users);
             Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
-            action.ShouldThrow<UnauthorizedAccessException>();
+            action.Should().Throw<UnauthorizedAccessException>();
         }
 
         [Fact(Skip = "Need to conditionalize on admin access")]
@@ -43,7 +43,7 @@ namespace DesktopTests.SecurityManagement
             LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             SID sid = new SID();
             Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
         }
 
         [Fact(Skip = "Need to conditionalize on admin access")]

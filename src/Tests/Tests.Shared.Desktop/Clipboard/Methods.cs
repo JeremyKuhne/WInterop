@@ -21,7 +21,7 @@ namespace DesktopTests.ClipboardTests
             Action action = () => ClipboardMethods.GetClipboardFormatName((uint)ClipboardFormat.CF_TEXT);
 
             // You can't get the name for built-in types
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
         }
 
         [Fact]

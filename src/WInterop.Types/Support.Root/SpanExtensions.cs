@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace WInterop
 {
@@ -40,7 +41,7 @@ namespace WInterop
         public static int IndexOfAny<T>(this ReadOnlySpan<T> buffer, T first, T second)
             where T : struct, IEquatable<T>
         {
-            return IndexOfAnyHelper<T>(ref buffer.DangerousGetPinnableReference(), first, second, buffer.Length);
+            return IndexOfAnyHelper<T>(ref MemoryMarshal.GetReference(buffer), first, second, buffer.Length);
         }
 
         internal static int IndexOfAnyHelper<T>(ref T buffer, T first, T second, T third, int length)
@@ -71,7 +72,7 @@ namespace WInterop
         public unsafe static int IndexOfAny<T>(this ReadOnlySpan<T> buffer, T first, T second, T third)
             where T : struct, IEquatable<T>
         {
-            return IndexOfAnyHelper<T>(ref buffer.DangerousGetPinnableReference(), first, second, third, buffer.Length);
+            return IndexOfAnyHelper<T>(ref MemoryMarshal.GetReference(buffer), first, second, third, buffer.Length);
         }
     }
 }

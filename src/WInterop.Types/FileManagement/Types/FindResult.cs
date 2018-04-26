@@ -18,9 +18,9 @@ namespace WInterop.FileManagement.Types
         public string FileName { get; private set; }
         public string AlternateFileName { get; private set; }
         public FileAttributes Attributes { get; private set; }
-        public DateTime CreationUtc { get; private set; }
-        public DateTime LastAccessUtc { get; private set; }
-        public DateTime LastWriteUtc { get; private set; }
+        public DateTimeOffset CreationUtc { get; private set; }
+        public DateTimeOffset LastAccessUtc { get; private set; }
+        public DateTimeOffset LastWriteUtc { get; private set; }
         public ulong Length { get; private set; }
         public ulong AllocatedBytes { get; private set; }
         public ReparseTag ReparseTag { get; private set; }

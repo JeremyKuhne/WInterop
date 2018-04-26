@@ -33,10 +33,10 @@ namespace DesktopTests.FileManagementTests
 
                 FindOperation<string> find = new FindOperation<string>(testFile);
                 Action action = () => find.FirstOrDefault();
-                action.ShouldThrow<ArgumentException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_PARAMETER));
+                action.Should().Throw<ArgumentException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_PARAMETER));
 
                 action = () => FileMethods.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes);
-                action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_NAME));
+                action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_NAME));
             }
         }
 
@@ -75,7 +75,7 @@ namespace DesktopTests.FileManagementTests
         {
             string path = System.IO.Path.GetRandomFileName();
             Action action = () => FileMethods.GetLongPathName(path);
-            action.ShouldThrow<System.IO.FileNotFoundException>();
+            action.Should().Throw<System.IO.FileNotFoundException>();
         }
 
         [Theory,
@@ -109,10 +109,10 @@ namespace DesktopTests.FileManagementTests
                 string destination = cleaner.GetTestPath();
 
                 Action action = () => FileMethods.CopyFileEx(source, destination);
-                action.ShouldThrow<System.IO.FileNotFoundException>();
+                action.Should().Throw<System.IO.FileNotFoundException>();
 
                 source = Paths.Combine(source, "file");
-                action.ShouldThrow<System.IO.DirectoryNotFoundException>();
+                action.Should().Throw<System.IO.DirectoryNotFoundException>();
             }
         }
 
@@ -130,7 +130,7 @@ namespace DesktopTests.FileManagementTests
                     FileAttributes.None,
                     FileFlags.BackupSemantics);
 
-                action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x8007007B));
+                action.Should().Throw<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x8007007B));
             }
         }
 
@@ -143,10 +143,10 @@ namespace DesktopTests.FileManagementTests
                 string destination = cleaner.GetTestPath();
 
                 Action action = () => System.IO.File.Copy(source, destination);
-                action.ShouldThrow<System.IO.FileNotFoundException>();
+                action.Should().Throw<System.IO.FileNotFoundException>();
 
                 source = Paths.Combine(source, "file");
-                action.ShouldThrow<System.IO.DirectoryNotFoundException>();
+                action.Should().Throw<System.IO.DirectoryNotFoundException>();
             }
         }
 

@@ -52,9 +52,8 @@ namespace Tests.Support
         [Fact]
         public void NoSpaceForNullThrows()
         {
-            Span<char> span = new Span<char>(new char[0]);
-            Action action = () => span.CopyFrom("");
-            action.ShouldThrow<ArgumentException>().And.ParamName.Should().Be("nullTerminate");
+            Action action = () => { new Span<char>(new char[0]).CopyFrom(""); };
+            action.Should().Throw<ArgumentException>().And.ParamName.Should().Be("nullTerminate");
         }
 
         [Theory,

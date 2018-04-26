@@ -12,18 +12,24 @@ namespace WInterop.FileManagement.Types
     /// <summary>
     /// Used for processing and filtering find results.
     /// </summary>
-    public struct RawFindData
+    public unsafe ref struct RawFindData
     {
-        public ReadOnlySpan<char> FileName;
-        public string Directory;
-        public FileAttributes FileAttributes;
-        public ulong FileSize;
-        public long RawCreationTimeUtc;
-        public long RawLastAccessTimeUtc;
-        public long RawLastWriteTimeUtc;
+        private FILE_FULL_DIR_INFORMATION* _info;
+        private string _directory;
 
-        public DateTime CreationTimeUtc => DateTime.FromFileTimeUtc(RawCreationTimeUtc);
-        public DateTime LastAccessTimeUtc => DateTime.FromFileTimeUtc(RawLastAccessTimeUtc);
-        public DateTime LastWriteTimeUtc => DateTime.FromFileTimeUtc(RawLastWriteTimeUtc);
+        public RawFindData(FILE_FULL_DIR_INFORMATION* info, string directory)
+        {
+            _info = info;
+            _directory = directory;
+        }
+
+        public ReadOnlySpan<char> FileName => _info->FileName;
+        public string Directory => _directory;
+        public FileAttributes FileAttributes => _info->FileAttributes;
+        public ulong FileSize => (ulong)_info->AllocationSize;
+
+        public DateTimeOffset CreationTimeUtc => _info->CreationTime.ToDateTimeUtc();
+        public DateTimeOffset LastAccessTimeUtc => _info->LastAccessTime.ToDateTimeUtc();
+        public DateTimeOffset LastWriteTimeUtc => _info->LastWriteTime.ToDateTimeUtc();
     }
 }

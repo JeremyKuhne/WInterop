@@ -27,7 +27,7 @@ namespace DesktopTests.Authentication
         public void LsaOpenPolicy_GenericRead()
         {
             Action action = () => AuthenticationMethods.LsaOpenLocalPolicy((PolicyAccessRights)GenericAccessRights.Read);
-            action.ShouldThrow<UnauthorizedAccessException>();
+            action.Should().Throw<UnauthorizedAccessException>();
         }
     }
 }

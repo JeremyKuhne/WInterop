@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using WInterop.Globalization.Types;
 using WInterop.Support;
 using WInterop.Windows.Types;
@@ -45,9 +46,9 @@ namespace WInterop.Globalization
         public static unsafe int CompareStringOrdinal(ReadOnlySpan<char> first, ReadOnlySpan<char> second, bool ignoreCase = false)
         {
             int result = Imports.CompareStringOrdinal(
-                ref first.DangerousGetPinnableReference(),
+                ref MemoryMarshal.GetReference(first),
                 first.Length,
-                ref second.DangerousGetPinnableReference(),
+                ref MemoryMarshal.GetReference(second),
                 second.Length,
                 ignoreCase);
 

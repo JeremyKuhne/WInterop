@@ -35,7 +35,7 @@ namespace DesktopTests.DeviceManagement
             using (var handle = FileMethods.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
                 Action action = () => DeviceMethods.QuerySuggestedLinkName(handle);
-                action.ShouldThrow<WInteropIOException>("this is an optional query, not aware of which drivers support this").
+                action.Should().Throw<WInteropIOException>("this is an optional query, not aware of which drivers support this").
                     And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_NOT_FOUND));
             }
         }

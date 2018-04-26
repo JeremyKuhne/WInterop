@@ -265,11 +265,11 @@ namespace Tests.FileManagement
                     // Trying to access the file via a handle at this point will fail with access denied.
 
                     Action action = () => FileMethods.FileExists(path);
-                    action.ShouldThrow<UnauthorizedAccessException>();
+                    action.Should().Throw<UnauthorizedAccessException>();
 
                     action = () => FileMethods.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All,
                         desiredAccess: DesiredAccess.ReadAttributes);
-                    action.ShouldThrow<UnauthorizedAccessException>();
+                    action.Should().Throw<UnauthorizedAccessException>();
 
                     // Find file will work at this point.
                     IntPtr findHandle = FileMethods.Imports.FindFirstFileW(path, out WIN32_FIND_DATA findData);
@@ -321,7 +321,7 @@ namespace Tests.FileManagement
 
                     // RemoveDirectory API call will throw
                     Action action = () => DirectoryMethods.RemoveDirectory(directory);
-                    action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_DIR_NOT_EMPTY));
+                    action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_DIR_NOT_EMPTY));
 
                     // Opening the directory for deletion will succeed, but have no impact
                     using (var directoryHandle = FileMethods.CreateFile(

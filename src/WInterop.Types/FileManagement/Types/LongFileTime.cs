@@ -24,6 +24,6 @@ namespace WInterop.FileManagement.Types
         /// </summary>
         public long TicksSince1601;
 
-        public DateTime ToDateTimeUtc() => DateTime.FromFileTimeUtc(TicksSince1601);
+        public DateTimeOffset ToDateTimeUtc() => DateTimeOffset.FromFileTime(TicksSince1601);
     }
 }

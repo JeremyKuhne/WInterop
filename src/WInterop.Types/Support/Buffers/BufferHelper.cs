@@ -64,11 +64,11 @@ namespace WInterop.Support.Buffers
             if (source.Length == 0)
                 return string.Empty;
 
-            int length = source.IndexOf(0x00);
+            int length = source.IndexOf((byte)0x00);
             if (length == 0)
                 return string.Empty;
 
-            fixed (byte* start = &source.DangerousGetPinnableReference())
+            fixed (byte* start = &MemoryMarshal.GetReference(source))
                 return Encoding.ASCII.GetString(start, length == -1 ? source.Length : length);
         }
 

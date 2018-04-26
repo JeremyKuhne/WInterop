@@ -75,7 +75,7 @@ namespace Tests.DirectoryManagement
             {
                 string directoryPath = cleaner.GetTestPath();
                 Action action = () => DirectoryMethods.SetCurrentDirectory(directoryPath);
-                action.ShouldThrow<System.IO.FileNotFoundException>();
+                action.Should().Throw<System.IO.FileNotFoundException>();
             }
         }
 
@@ -114,7 +114,7 @@ namespace Tests.DirectoryManagement
                     }
                 };
 
-                action.ShouldThrow<System.IO.FileNotFoundException>();
+                action.Should().Throw<System.IO.FileNotFoundException>();
             }
         }
     }

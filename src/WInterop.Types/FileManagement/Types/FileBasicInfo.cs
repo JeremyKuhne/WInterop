@@ -12,10 +12,10 @@ namespace WInterop.FileManagement.Types
     public struct FileBasicInfo
     {
         public FileAttributes Attributes;
-        public DateTime CreationTimeUtc;
-        public DateTime LastAccessTimeUtc;
-        public DateTime LastWriteTimeUtc;
-        public DateTime ChangeTimeUtc;
+        public DateTimeOffset CreationTimeUtc;
+        public DateTimeOffset LastAccessTimeUtc;
+        public DateTimeOffset LastWriteTimeUtc;
+        public DateTimeOffset ChangeTimeUtc;
 
         public FileBasicInfo(FILE_BASIC_INFORMATION data)
         {

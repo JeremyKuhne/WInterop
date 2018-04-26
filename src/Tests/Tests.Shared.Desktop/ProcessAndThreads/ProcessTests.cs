@@ -19,21 +19,21 @@ namespace DesktopTests.ProcessAndThreads
         public void GetEnvironmentVariable_GetNullStringThrows()
         {
             Action action = () => ProcessMethods.GetEnvironmentVariable(null);
-            action.ShouldThrow<ArgumentNullException>();
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
         public void SetEnvironmentVariable_SetNullStringThrows()
         {
             Action action = () => ProcessMethods.SetEnvironmentVariable(null, "invalid");
-            action.ShouldThrow<ArgumentNullException>();
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
         public void SetEnvironmentVariable_SetEmptyStringNotValid()
         {
             Action action = () => ProcessMethods.SetEnvironmentVariable("", "invalid");
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
         }
 
         [Theory,
@@ -45,7 +45,7 @@ namespace DesktopTests.ProcessAndThreads
             // Anything past the first character in the name isn't allowed to be an equals character.
             // If this does change we'd need to change the logic in GetEnvironmentVariables().
             Action action = () => ProcessMethods.SetEnvironmentVariable(name, "invalid");
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
         }
 
         [Theory,

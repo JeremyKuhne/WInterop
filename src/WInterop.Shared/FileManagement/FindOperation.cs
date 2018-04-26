@@ -70,7 +70,6 @@ namespace WInterop.FileManagement
 
         private unsafe partial class FindEnumerator : CriticalFinalizerObject, IEnumerator<T>
         {
-            private RawFindData _current = new RawFindData();
             private FILE_FULL_DIR_INFORMATION* _info;
             private HeapBuffer _buffer;
             private IntPtr _directory;
@@ -78,6 +77,7 @@ namespace WInterop.FileManagement
             private bool _lastEntryFound;
             private Queue<ValueTuple<IntPtr, string>> _pending;
             private FindOperation<T> _findOperation;
+            private T _current;
 
             public FindEnumerator(IntPtr directory, FindOperation<T> findOperation)
             {
@@ -90,7 +90,7 @@ namespace WInterop.FileManagement
                     _pending = new Queue<ValueTuple<IntPtr, string>>();
             }
 
-            public T Current => _findOperation._transform.TransformResult(ref _current);
+            public T Current => _current;
 
             object IEnumerator.Current => Current;
 
@@ -98,33 +98,34 @@ namespace WInterop.FileManagement
             {
                 if (_lastEntryFound) return false;
 
+                RawFindData data = default;
                 do
                 {
                     FindNextFile();
                     if (!_lastEntryFound && _info != null)
                     {
-                        _current.FileName = _info->FileName;
-                        _current.Directory = _path;
-                        _current.FileAttributes = _info->FileAttributes;
-                        _current.RawCreationTimeUtc = _info->CreationTime.TicksSince1601;
-                        _current.RawLastAccessTimeUtc = _info->CreationTime.TicksSince1601;
-                        _current.RawLastWriteTimeUtc = _info->CreationTime.TicksSince1601;
-                        _current.FileSize = _info->FileNameLength;
+                        data = new RawFindData(_info, _path);
 
-                        if (_pending != null && (_current.FileAttributes & FileAttributes.Directory) != 0
-                            && FindFilters.NormalDirectory.NotSpecialDirectory(ref _current))
+                        if (_pending != null && (data.FileAttributes & FileAttributes.Directory) != 0
+                            && FindFilters.NormalDirectory.NotSpecialDirectory(ref data))
                         {
                             // Stash directory to recurse into
-                            string fileName = _current.FileName.CreateString();
+                            string fileName = data.FileName.CreateString();
                             string subDirectory = string.Concat(_path, "\\", fileName);
                             _pending.Enqueue(ValueTuple.Create(
                                 CreateDirectoryHandle(fileName, subDirectory),
                                 subDirectory));
                         }
                     }
-                } while (!_lastEntryFound && !_findOperation._filter.Match(ref _current));
+                } while (!_lastEntryFound && !_findOperation._filter.Match(ref data));
 
-                return !_lastEntryFound;
+                if (!_lastEntryFound)
+                {
+                    _current = _findOperation._transform.TransformResult(ref data);
+                    return true;
+                }
+
+                return false;
             }
 
             private unsafe void FindNextFile()

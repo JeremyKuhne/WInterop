@@ -99,7 +99,7 @@ namespace DesktopTests.FileManagement
                 else
                 {
                     // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
-                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace DesktopTests.FileManagement
                 else
                 {
                     // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
-                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }
@@ -158,7 +158,7 @@ namespace DesktopTests.FileManagement
                 }
                 else
                 {
-                    action.ShouldThrow<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }

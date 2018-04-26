@@ -62,7 +62,7 @@ namespace DesktopTests.ShellTests
         {
             Action action = () => ShellMethods.AssocQueryString(ASSOCF.NoUserSettings, ASSOCSTR.AppId, ".txt", null);
             // No application is associated with the specified file for this operation.
-            action.ShouldThrow<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x80070483));
+            action.Should().Throw<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x80070483));
         }
 
         [Fact]

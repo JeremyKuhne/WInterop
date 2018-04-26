@@ -102,7 +102,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => { char c = buffer[0]; };
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -112,7 +112,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => { buffer[0] = 'Q'; };
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -176,7 +176,7 @@ namespace Tests.Buffers
                 using (var buffer = new StringBuffer(initialBufferSize))
                 {
                     Action action = () => buffer.EnsureCharCapacity(int.MaxValue + 1u);
-                    action.ShouldThrow<OverflowException>();
+                    action.Should().Throw<OverflowException>();
                 }
             }
         }
@@ -227,7 +227,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.StartsWithOrdinal(null);
-                action.ShouldThrow<ArgumentNullException>();
+                action.Should().Throw<ArgumentNullException>();
             }
         }
 
@@ -237,7 +237,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.SubStringEquals("", startIndex: 0, count: -2);
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -247,7 +247,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.SubStringEquals("", startIndex: 0, count: 1);
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -257,7 +257,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer("A"))
             {
                 Action action = () => buffer.SubStringEquals("", startIndex: 1, count: 1);
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -386,7 +386,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.Append((string)null);
-                action.ShouldThrow<ArgumentNullException>();
+                action.Should().Throw<ArgumentNullException>();
             }
         }
 
@@ -396,7 +396,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.Append((StringBuffer)null, 0);
-                action.ShouldThrow<ArgumentNullException>();
+                action.Should().Throw<ArgumentNullException>();
             }
         }
 
@@ -406,7 +406,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.Append((StringBuffer)null, 0, 0);
-                action.ShouldThrow<ArgumentNullException>();
+                action.Should().Throw<ArgumentNullException>();
             }
         }
 
@@ -416,7 +416,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.Append("a", startIndex: -1);
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -426,7 +426,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.Append("", startIndex: 1);
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -436,7 +436,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.Append("", startIndex: 0, count: 1);
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -446,7 +446,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.Append("A", startIndex: 1, count: 1);
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -456,13 +456,13 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.SubString(startIndex: 1);
-                action.ShouldThrow<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
+                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
 
                 buffer.Append("a");
-                action.ShouldThrow<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
+                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
 
                 buffer.Append("b");
-                action.ShouldNotThrow();
+                action.Should().NotThrow();
             }
         }
 
@@ -472,7 +472,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.SubString(startIndex: 0, count: -2);
-                action.ShouldThrow<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
+                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
             }
         }
 
@@ -482,7 +482,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => buffer.SubString(startIndex: 0, count: 1);
-                action.ShouldThrow<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
+                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
             }
         }
 
@@ -495,7 +495,7 @@ namespace Tests.Buffers
 
                 length.SetValue(buffer, (uint)int.MaxValue + 1);
                 Action action = () => buffer.SubString(startIndex: 0, count: -1);
-                action.ShouldThrow<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
+                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
             }
         }
 
@@ -505,13 +505,13 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer("a"))
             {
                 Action action = () => buffer.SubString(startIndex: 1, count: 1);
-                action.ShouldThrow<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
+                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
 
                 buffer.Append("b");
-                action.ShouldNotThrow<ArgumentOutOfRangeException>();
+                action.Should().NotThrow<ArgumentOutOfRangeException>();
 
                 action = () => buffer.SubString(startIndex: 1, count: 2);
-                action.ShouldThrow<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
+                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
             }
         }
 
@@ -542,7 +542,7 @@ namespace Tests.Buffers
 
                 length.SetValue(buffer, (uint)int.MaxValue + 1);
                 Action action = () => buffer.ToString();
-                action.ShouldThrow<OverflowException>();
+                action.Should().Throw<OverflowException>();
             }
         }
 
@@ -613,7 +613,7 @@ namespace Tests.Buffers
             // We want equivalence with built-in string behavior
             using (var buffer = new StringBuffer(content))
             {
-                buffer.Split(splitChar).ShouldAllBeEquivalentTo(content?.Split(splitChar) ?? new string[] { "" });
+                buffer.Split(splitChar).Should().BeEquivalentTo(content?.Split(splitChar) ?? new string[] { "" });
             }
         }
 
@@ -699,7 +699,7 @@ namespace Tests.Buffers
             // We want equivalence with built-in string behavior
             using (var buffer = new StringBuffer(content))
             {
-                buffer.Split(splitChars).ShouldAllBeEquivalentTo(content?.Split(splitChars) ?? new string[] { "" });
+                buffer.Split(splitChars).Should().BeEquivalentTo(content?.Split(splitChars) ?? new string[] { "" });
             }
         }
 
@@ -762,7 +762,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => { buffer.CopyFrom(0, null); };
-                action.ShouldThrow<ArgumentNullException>();
+                action.Should().Throw<ArgumentNullException>();
             }
         }
 
@@ -772,7 +772,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => { buffer.CopyFrom(2, "a"); };
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -789,7 +789,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => { buffer.CopyFrom(0, value, index, count); };
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
@@ -818,7 +818,7 @@ namespace Tests.Buffers
             using (var destinationBuffer = new StringBuffer())
             {
                 Action action = () => buffer.CopyTo(0, destinationBuffer, 1, 0);
-                action.ShouldThrow<ArgumentOutOfRangeException>().And.ParamName.Should().Be("destinationIndex");
+                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("destinationIndex");
             }
         }
 
@@ -828,7 +828,7 @@ namespace Tests.Buffers
             using (var buffer = new StringBuffer())
             {
                 Action action = () => { buffer.CopyTo(0, null, 0, 0); };
-                action.ShouldThrow<ArgumentNullException>();
+                action.Should().Throw<ArgumentNullException>();
             }
         }
 
@@ -845,7 +845,7 @@ namespace Tests.Buffers
             using (var targetBuffer = new StringBuffer())
             {
                 Action action = () => { buffer.CopyTo(index, targetBuffer, 0, count); };
-                action.ShouldThrow<ArgumentOutOfRangeException>();
+                action.Should().Throw<ArgumentOutOfRangeException>();
             }
         }
 
