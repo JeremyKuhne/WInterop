@@ -64,39 +64,50 @@ namespace WInterop.Authorization.Types
     /// 
     /// The size of SID is 68 bytes.
     /// </remarks>
-    public struct SID
+    public readonly struct SID
     {
-        // From winnt.h
-        private const int SID_MAX_SUB_AUTHORITIES = 15;
-
-        public byte Revision;
-        public byte SubAuthorityCount;
-        public IdentifierAuthority IdentifierAuthority;
+        public readonly byte Revision;
+        public readonly byte SubAuthorityCount;
+        public readonly IdentifierAuthority IdentifierAuthority;
 
         // Also known as Relative Identifiers
-        public unsafe fixed uint SubAuthority[SID_MAX_SUB_AUTHORITIES];
+        private readonly SubAuthorities _subAuthorities;
+
+        // TODO: For some reason this doesn't give the right bits back
+        // public ReadOnlySpan<uint> SubAuthority => _subAuthorities.GetAuthorities(SubAuthorityCount);
 
         /// <summary>
         /// Use this to copy from a native buffer, as the defined SID will likely not have
         /// a full set of SubAuthorities.
         /// </summary>
-        public unsafe static void CopyFromNative(SID* native, out SID copy)
+        public unsafe SID(SID* native)
         {
-            copy = new SID
-            {
-                Revision = native->Revision,
-                SubAuthorityCount = native->SubAuthorityCount,
-                IdentifierAuthority = native->IdentifierAuthority
-            };
+            Revision = native->Revision;
+            SubAuthorityCount = native->SubAuthorityCount;
+            IdentifierAuthority = native->IdentifierAuthority;
+            _subAuthorities.CopyAuthorities(in native->_subAuthorities, SubAuthorityCount);
+        }
 
-            if (copy.SubAuthorityCount != 0)
+        private struct SubAuthorities
+        {
+            // From winnt.h
+            private const int SID_MAX_SUB_AUTHORITIES = 15;
+
+            private unsafe fixed uint _authorities[SID_MAX_SUB_AUTHORITIES];
+
+            private unsafe Span<uint> GetAuthorities(int count)
             {
-                ReadOnlySpan<uint> source = new ReadOnlySpan<uint>(native->SubAuthority, copy.SubAuthorityCount);
-                fixed (uint* c = copy.SubAuthority)
+                fixed (uint* a = _authorities)
                 {
-                    Span<uint> destination = new Span<uint>(c, copy.SubAuthorityCount);
-                    source.CopyTo(destination);
+                    return new Span<uint>(a, count);
                 }
+            }
+
+            public unsafe void CopyAuthorities(in SubAuthorities source, int count)
+            {
+                if (count == 0) return;
+
+                source.GetAuthorities(count).CopyTo(GetAuthorities(count));
             }
         }
     }

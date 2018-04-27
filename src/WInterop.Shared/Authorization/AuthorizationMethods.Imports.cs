@@ -38,29 +38,29 @@ namespace WInterop.Authorization
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379154.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
             public unsafe static extern BOOL IsWellKnownSid(
-                ref SID pSid,
+                in SID pSid,
                 WellKnownSID WellKnownSidType);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379151.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
             public unsafe static extern BOOL IsValidSid(
-                ref SID pSid);
+                in SID pSid);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376399.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public static extern BOOL ConvertSidToStringSidW(
-                ref SID Sid,
+                in SID Sid,
                 out LocalHandle StringSid);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446658.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern byte* GetSidSubAuthorityCount(
-                ref SID pSid);
+                in SID pSid);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446657.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern uint* GetSidSubAuthority(
-                ref SID pSid,
+                in SID pSid,
                 uint nSubAuthority);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376404.aspx
@@ -86,7 +86,7 @@ namespace WInterop.Authorization
 
             public unsafe static extern bool LookupAccountSidW(
                 string lpSystemName,
-                ref SID lpSid,
+                in SID lpSid,
                 SafeHandle lpName,
                 ref uint cchName,
                 SafeHandle lpReferencedDomainName,
@@ -103,8 +103,19 @@ namespace WInterop.Authorization
                 SID** ppsidGroup = null,
                 ACL** ppDacl = null,
                 ACL** ppSacl = null,
-                SECURITY_DESCRIPTOR** ppSecurityDescriptor = null
-            );
+                SECURITY_DESCRIPTOR** ppSecurityDescriptor = null);
+
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446645.aspx
+            [DllImport(Libraries.Advapi32, ExactSpelling = true, CharSet = CharSet.Unicode)]
+            public unsafe static extern WindowsError GetNamedSecurityInfoW(
+                string pObjectName,
+                SecurityObjectType ObjectType,
+                SecurityInformation SecurityInfo,
+                SID** ppsidOwner = null,
+                SID** ppsidGroup = null,
+                ACL** ppDacl = null,
+                ACL** ppSacl = null,
+                SECURITY_DESCRIPTOR** ppSecurityDescriptor = null);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379588.aspx
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
@@ -117,6 +128,13 @@ namespace WInterop.Authorization
                 ACL* pDacl,
                 ACL* pSacl);
 
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446635.aspx
+            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern BOOL GetAclInformation(
+                ACL* pAcl,
+                void* pAclInformation,
+                uint nAclInformationLength,
+                AclInformationClass dwAclInformationClass);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374951.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]

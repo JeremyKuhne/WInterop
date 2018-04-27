@@ -44,15 +44,15 @@ namespace DesktopTests.Authorization
         public void CreateWellKnownSid_Everyone()
         {
             SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.World);
-            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
+            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
             sid.Revision.Should().Be(1);
             sid.IdentifierAuthority.Should().Be(IdentifierAuthority.World);
 
-            AuthorizationMethods.GetSidSubAuthorityCount(ref sid).Should().Be(1);
-            AuthorizationMethods.GetSidSubAuthority(ref sid, 0).Should().Be(0);
+            AuthorizationMethods.GetSidSubAuthorityCount(in sid).Should().Be(1);
+            AuthorizationMethods.GetSidSubAuthority(in sid, 0).Should().Be(0);
 
-            AuthorizationMethods.IsWellKnownSid(ref sid, WellKnownSID.World).Should().BeTrue();
-            AuthorizationMethods.ConvertSidToString(ref sid).Should().Be("S-1-1-0");
+            AuthorizationMethods.IsWellKnownSid(in sid, WellKnownSID.World).Should().BeTrue();
+            AuthorizationMethods.ConvertSidToString(in sid).Should().Be("S-1-1-0");
 
             AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
             info.Name.Should().Be("Everyone");
@@ -64,7 +64,7 @@ namespace DesktopTests.Authorization
         public void IsValidSid_GoodSid()
         {
             SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.IISUser);
-            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
+            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
         }
 
         // [Fact]
@@ -77,7 +77,7 @@ namespace DesktopTests.Authorization
                 {
                     SID sid = AuthorizationMethods.CreateWellKnownSid(type);
                     AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
-                    Debug.WriteLine($"/// {info.Name} ({AuthorizationMethods.ConvertSidToString(ref sid)}) [{info.Usage}]");
+                    Debug.WriteLine($"/// {info.Name} ({AuthorizationMethods.ConvertSidToString(in sid)}) [{info.Usage}]");
                 }
                 catch
                 {
@@ -93,7 +93,7 @@ namespace DesktopTests.Authorization
         public void IsValidSid_BadSid()
         {
             SID sid = new SID();
-            AuthorizationMethods.IsValidSid(ref sid).Should().BeFalse();
+            AuthorizationMethods.IsValidSid(in sid).Should().BeFalse();
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace DesktopTests.Authorization
                 token.IsInvalid.Should().BeFalse();
                 sid = AuthorizationMethods.GetTokenUserSid(token);
             }
-            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
+            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
 
             AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
             info.Name.Should().Be(SystemInformationMethods.GetUserName());
@@ -151,7 +151,7 @@ namespace DesktopTests.Authorization
                 token.IsInvalid.Should().BeFalse();
                 sid = AuthorizationMethods.GetTokenOwnerSid(token);
             }
-            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
+            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
 
             AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
             info.Name.Should().Be(SystemInformationMethods.GetUserName());
@@ -166,7 +166,7 @@ namespace DesktopTests.Authorization
                 token.IsInvalid.Should().BeFalse();
                 sid = AuthorizationMethods.GetTokenPrimaryGroupSid(token);
             }
-            AuthorizationMethods.IsValidSid(ref sid).Should().BeTrue();
+            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
 
             AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
             info.Name.Should().Be(SystemInformationMethods.GetUserName());

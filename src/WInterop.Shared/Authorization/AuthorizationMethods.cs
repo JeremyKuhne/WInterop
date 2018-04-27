@@ -247,20 +247,20 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if the given SID is the specified "well known" SID type.
         /// </summary>
-        public static bool IsWellKnownSid(ref SID sid, WellKnownSID sidType)
-            => Imports.IsWellKnownSid(ref sid, sidType);
+        public static bool IsWellKnownSid(in SID sid, WellKnownSID sidType)
+            => Imports.IsWellKnownSid(in sid, sidType);
 
         /// <summary>
         /// Returns true if the given SID is valid.
         /// </summary>
-        public static bool IsValidSid(ref SID sid) => Imports.IsValidSid(ref sid);
+        public static bool IsValidSid(in SID sid) => Imports.IsValidSid(in sid);
 
         /// <summary>
         /// Returns the S-n-n-n... string version of the given SID.
         /// </summary>
-        public unsafe static string ConvertSidToString(ref SID sid)
+        public unsafe static string ConvertSidToString(in SID sid)
         {
-            if (!Imports.ConvertSidToStringSidW(ref sid, out var handle))
+            if (!Imports.ConvertSidToStringSidW(sid, out var handle))
                 throw Errors.GetIoExceptionForLastError();
 
             return new string((char*)handle);
@@ -269,9 +269,9 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns the count of sub authorities for the given SID.
         /// </summary>
-        public unsafe static byte GetSidSubAuthorityCount(ref SID sid)
+        public unsafe static byte GetSidSubAuthorityCount(in SID sid)
         {
-            byte* b = Imports.GetSidSubAuthorityCount(ref sid);
+            byte* b = Imports.GetSidSubAuthorityCount(sid);
             if (b == null)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -281,9 +281,9 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the sub authority at the specified index for the given SID.
         /// </summary>
-        public unsafe static uint GetSidSubAuthority(ref SID sid, uint nSubAuthority)
+        public unsafe static uint GetSidSubAuthority(in SID sid, uint nSubAuthority)
         {
-            uint* u = Imports.GetSidSubAuthority(ref sid, nSubAuthority);
+            uint* u = Imports.GetSidSubAuthority(sid, nSubAuthority);
             if (u == null)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -304,17 +304,32 @@ namespace WInterop.Authorization
         /// The target computer to look up the SID on. When null will look on the local machine
         /// then trusted domain controllers.
         /// </param>
-        public static AccountSidInformation LookupAccountSid(SID sid, string systemName = null)
+        public unsafe static AccountSidInformation LookupAccountSid(in SID sid, string systemName = null)
         {
-            return BufferHelper.TwoBufferInvoke((StringBuffer nameBuffer, StringBuffer domainNameBuffer) =>
+            var wrapper = new LookupAccountSidWrapper(in sid, systemName);
+            return BufferHelper.TwoBufferInvoke<LookupAccountSidWrapper, StringBuffer, AccountSidInformation>(ref wrapper);
+        }
+
+        private readonly struct LookupAccountSidWrapper : ITwoBufferFunc<StringBuffer, AccountSidInformation>
+        {
+            private readonly string _systemName;
+            private readonly SID _sid;
+
+            public LookupAccountSidWrapper(in SID sid, string systemName)
+            {
+                _systemName = systemName;
+                _sid = sid;
+            }
+
+            AccountSidInformation ITwoBufferFunc<StringBuffer, AccountSidInformation>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
             {
                 SidNameUse usage;
                 uint nameCharCapacity = nameBuffer.CharCapacity;
                 uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
 
                 while (!Imports.LookupAccountSidW(
-                    systemName,
-                    ref sid,
+                    _systemName,
+                    _sid,
                     nameBuffer,
                     ref nameCharCapacity,
                     domainNameBuffer,
@@ -337,7 +352,7 @@ namespace WInterop.Authorization
                 };
 
                 return info;
-            });
+            }
         }
 
         /// <summary>

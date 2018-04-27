@@ -786,7 +786,7 @@ namespace WInterop.FileManagement
         /// <summary>
         /// Get the owner SID for the given handle.
         /// </summary>
-        public unsafe static void QueryOwner(SafeFileHandle handle, out SID sid)
+        public unsafe static SID QueryOwner(SafeFileHandle handle)
         {
             SID* sidp;
             SECURITY_DESCRIPTOR* descriptor;
@@ -801,8 +801,9 @@ namespace WInterop.FileManagement
             if (result != WindowsError.ERROR_SUCCESS)
                 throw Errors.GetIoExceptionForError(result);
 
-            SID.CopyFromNative(sidp, out sid);
+            SID sid = new SID(sidp);
             MemoryMethods.LocalFree((IntPtr)(descriptor));
+            return sid;
         }
     }
 }

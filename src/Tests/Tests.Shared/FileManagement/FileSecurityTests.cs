@@ -26,9 +26,10 @@ namespace Tests.FileManagement
                 using (var handle = FileMethods.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    FileMethods.QueryOwner(handle, out SID sid);
+                    SID sid = FileMethods.QueryOwner(handle);
                     sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
-                    AccountSidInformation info = AuthorizationMethods.LookupAccountSid(sid);
+                    string sidString = AuthorizationMethods.ConvertSidToString(in sid);
+                    AccountSidInformation info = AuthorizationMethods.LookupAccountSid(in sid);
                     info.Usage.Should().Be(SidNameUse.User);
                     info.Name.Should().Be(SystemInformationMethods.GetUserName());
                 }

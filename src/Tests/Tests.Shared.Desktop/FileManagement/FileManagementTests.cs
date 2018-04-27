@@ -261,7 +261,7 @@ namespace DesktopTests.FileManagement
             }
         }
 
-        [Fact]
+        [Fact(Skip = "The behavior here is seemingly random.")]
         public void GetDirectoryFilenames_SpecialDirectories()
         {
             // The "." and ".." entries returned vary quite a bit

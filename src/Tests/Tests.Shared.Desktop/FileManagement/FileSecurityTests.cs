@@ -26,7 +26,7 @@ namespace DesktopTests.FileManagement
                 using (var handle = FileMethods.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    FileMethods.QueryOwner(handle, out SID sid);
+                    SID sid = FileMethods.QueryOwner(handle);
                     sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
                     AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
                     info.Usage.Should().Be(SidNameUse.User);

@@ -17,10 +17,10 @@ namespace WInterop.Authorization.Types
     /// <see cref="https://msdn.microsoft.com/en-us/library/dd302645.aspx"/>
     /// <seealso cref="https://msdn.microsoft.com/en-us/library/cc980032.aspx"/>
     /// </remarks>
-    public struct IdentifierAuthority : IEquatable<IdentifierAuthority>
+    public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
     {
-        private FixedByte.Size6 _Value;
-        public Span<byte> Value => _Value.Buffer;
+        private readonly FixedByte.Size6 _Value;
+        public ReadOnlySpan<byte> Value => _Value.Buffer;
 
         /// <summary>
         /// Null SID authority. Only valid with the NULL well-known SID (S-1-0-0). [SECURITY_NULL_SID_AUTHORITY]
@@ -87,7 +87,7 @@ namespace WInterop.Authorization.Types
 
         private IdentifierAuthority(byte knownAuthority)
         {
-            Value[5] = knownAuthority;
+            _Value.Buffer[5] = knownAuthority;
         }
 
         public override bool Equals(object obj)
