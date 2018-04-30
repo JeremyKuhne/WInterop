@@ -50,15 +50,6 @@ namespace WInterop.Support.Buffers
             return strings;
         }
 
-        public static unsafe void CopyUintArray(uint* source, uint[] destination)
-        {
-            long bytesToCopy = destination.Length * sizeof(uint);
-            fixed (uint* destinationPointer = destination)
-            {
-                Buffer.MemoryCopy(source, destinationPointer, bytesToCopy, bytesToCopy);
-            }
-        }
-
         public static unsafe string GetNullTerminatedAsciiString(ReadOnlySpan<byte> source)
         {
             if (source.Length == 0)

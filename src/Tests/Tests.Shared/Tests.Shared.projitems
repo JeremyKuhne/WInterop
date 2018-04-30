@@ -9,11 +9,11 @@
     <Import_RootNamespace>Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferReaderTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Buffers\NativeBufferTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Buffers\StreamBufferTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferCacheTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Buffers\StringBufferTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\NativeBufferReaderTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\NativeBufferTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\StreamBufferTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\StringBufferCacheTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\StringBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CacheTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptographyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceControlCodeTests.cs" />
@@ -44,6 +44,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\PointersTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\StructsTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\UlongTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\ValueBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Support\Buffers\" />
   </ItemGroup>
 </Project>

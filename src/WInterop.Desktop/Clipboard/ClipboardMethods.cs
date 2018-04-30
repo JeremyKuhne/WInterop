@@ -62,9 +62,9 @@ namespace WInterop.Clipboard
 
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern bool GetUpdatedClipboardFormats(
-                uint* lpuiFormats,
+                ref uint lpuiFormats,
                 uint cFormats,
-                uint* pcFormatsOut);
+                out uint pcFormatsOut);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649045.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -98,25 +98,18 @@ namespace WInterop.Clipboard
         /// </summary>
         public unsafe static uint[] GetAvailableClipboardFormats()
         {
-            uint countOut;
-            uint countIn = 5;
-            uint* array;
+            uint count;
 
-            realloc:
+            Span<uint> initialBuffer = stackalloc uint[5];
+            ValueBuffer<uint> buffer = new ValueBuffer<uint>(initialBuffer);
+
+            while (!Imports.GetUpdatedClipboardFormats(ref MemoryMarshal.GetReference(buffer.Span), (uint)buffer.Length, out count))
             {
-                uint* alloc = stackalloc uint[(int)countIn];
-                array = alloc;
-                if (!Imports.GetUpdatedClipboardFormats(array, countIn, &countOut))
-                {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
-                    countIn = countOut;
-                    goto realloc;
-                }
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                buffer.EnsureCapacity((int)count);
             }
 
-            uint[] result = new uint[countOut];
-            BufferHelper.CopyUintArray(array, result);
-            return result;
+            return buffer.Span.Slice(0, (int)count).ToArray();
         }
 
         /// <summary>

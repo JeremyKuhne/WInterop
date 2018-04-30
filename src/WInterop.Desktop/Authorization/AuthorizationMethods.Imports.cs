@@ -38,7 +38,7 @@ namespace WInterop.Authorization
             // The docs claim that it is in Advapi.dll, but it actually lives in sechost.dll
             [DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
             public static extern BOOL LookupAccountSidLocalW(
-                ref SID lpSid,
+                in SID lpSid,
                 SafeHandle lpName,
                 ref uint cchName,
                 SafeHandle lpReferencedDomainName,

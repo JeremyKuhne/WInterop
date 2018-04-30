@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Authorization.BufferWrappers;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.Support;
@@ -84,10 +83,50 @@ namespace WInterop.Authorization
         /// <summary>
         /// Gets the info (name, domain name, usage) for the given SID.
         /// </summary>
-        public static AccountSidInformation LookupAccountSidLocal(SID sid)
+        public static AccountSidInformation LookupAccountSidLocal(in SID sid)
         {
-            var wrapper = new LookupAccountSidLocalWrapper { Sid = sid };
+            var wrapper = new LookupAccountSidLocalWrapper(in sid);
             return BufferHelper.TwoBufferInvoke<LookupAccountSidLocalWrapper, StringBuffer, AccountSidInformation>(ref wrapper);
+        }
+
+        private readonly struct LookupAccountSidLocalWrapper : ITwoBufferFunc<StringBuffer, AccountSidInformation>
+        {
+            private readonly SID _sid;
+
+            public LookupAccountSidLocalWrapper(in SID sid)
+            {
+                _sid = sid;
+            }
+
+            AccountSidInformation ITwoBufferFunc<StringBuffer, AccountSidInformation>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
+            {
+                SidNameUse usage;
+                uint nameCharCapacity = nameBuffer.CharCapacity;
+                uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
+
+                while (!Imports.LookupAccountSidLocalW(
+                    in _sid,
+                    nameBuffer,
+                    ref nameCharCapacity,
+                    domainNameBuffer,
+                    ref domainNameCharCapacity,
+                    out usage))
+                {
+                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    nameBuffer.EnsureCharCapacity(nameCharCapacity);
+                    domainNameBuffer.EnsureCharCapacity(domainNameCharCapacity);
+                }
+
+                nameBuffer.SetLengthToFirstNull();
+                domainNameBuffer.SetLengthToFirstNull();
+
+                return new AccountSidInformation
+                {
+                    Name = nameBuffer.ToString(),
+                    DomainName = domainNameBuffer.ToString(),
+                    Usage = usage
+                };
+            }
         }
 
         /// <summary>
