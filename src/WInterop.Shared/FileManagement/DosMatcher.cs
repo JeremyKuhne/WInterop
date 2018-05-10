@@ -42,7 +42,7 @@ namespace WInterop.FileManagement
                         return false;
 
                     // See if we end with the expression (minus the *, of course)
-                    return name.EndsWithOrdinal(expression.AsSpan().Slice(1), ignoreCase);
+                    return name.EndsWith(expression.AsSpan().Slice(1), ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
                 }
             }
 

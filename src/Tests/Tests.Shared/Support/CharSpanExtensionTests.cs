@@ -28,10 +28,10 @@ namespace Tests.Support
             InlineData(new char[] { 'a', '\0', 'b' }, "a", true),
             InlineData(new char[] { 'a', 'b' }, "ab", true)
             ]
-        public void EqualsOrdinal(char[] buffer, string compareTo, bool expected)
+        public void BufferEquals(char[] buffer, string compareTo, bool expected)
         {
             ReadOnlySpan<char> span = new ReadOnlySpan<char>(buffer);
-            span.EqualsOrdinal(compareTo).Should().Be(expected);
+            span.BufferEquals(compareTo).Should().Be(expected);
         }
 
         [Theory,
@@ -72,27 +72,6 @@ namespace Tests.Support
             Span<char> span = new Span<char>(buffer);
             span.CopyFrom(source, nullTerminate);
             buffer.Should().Equal(expected);
-        }
-
-        [Theory,
-            InlineData("", "", true, true),
-            InlineData("", "", false, true),
-            InlineData("", "a", true, false),
-            InlineData("", "a", false, false),
-            InlineData("a", "", true, true),
-            InlineData("a", "", false, true),
-            InlineData("a", "a", false, true),
-            InlineData("a", "a", true, true),
-            InlineData("a", "A", false, false),
-            InlineData("a", "A", true, true),
-            InlineData("a", "ab", false, false),
-            InlineData("a", "ab", true, false),
-            InlineData("abbacab", "cab", false, true),
-            InlineData("abbacab", "aca", true, false)
-            ]
-        public void EndsWith(string buffer, string value, bool ignoreCase, bool expected)
-        {
-            buffer.AsSpan().EndsWithOrdinal(value.AsSpan(), ignoreCase).Should().Be(expected);
         }
     }
 }

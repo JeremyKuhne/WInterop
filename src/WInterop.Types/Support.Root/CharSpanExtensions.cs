@@ -67,13 +67,13 @@ namespace WInterop
         /// Returns true if the buffer equals the given value, presuming the buffer contents either
         /// terminate at null or has an implicit null at the end of the buffer.
         /// </summary>
-        public static bool EqualsOrdinal(this Span<char> buffer, string value) => EqualsOrdinal((ReadOnlySpan<char>)buffer, value);
+        public static bool BufferEquals(this Span<char> buffer, string value) => BufferEquals((ReadOnlySpan<char>)buffer, value);
 
         /// <summary>
         /// Returns true if the buffer equals the given value, presuming the buffer contents either
         /// terminate at null or has an implicit null at the end of the buffer.
         /// </summary>
-        public static bool EqualsOrdinal(this ReadOnlySpan<char> buffer, string value)
+        public static bool BufferEquals(this ReadOnlySpan<char> buffer, string value)
         {
             if (value == null || value.Length > buffer.Length)
                 return false;

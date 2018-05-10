@@ -121,7 +121,7 @@ namespace Tests.Support
                 Buffer.MemoryCopy(c, (char*)&s, sizeof(FixedString.Size12) * sizeof(char), buffer.Length * sizeof(char));
             }
 
-            s.Buffer.EqualsOrdinal(compareTo).Should().Be(expected);
+            s.Buffer.BufferEquals(compareTo).Should().Be(expected);
         }
     }
 }
