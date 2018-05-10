@@ -35,7 +35,7 @@ namespace WInterop.Support.Buffers
             // We want to align to highest power of 2 less than the size/ up to
             // 128 bits (16 bytes), which should handle all alignment cases.
             int sizeOfT = Unsafe.SizeOf<T>();
-            int alignTo = (sizeOfT & 16) != 0 ? 16
+            int alignTo = sizeOfT >= 16 ? 16
                 : (sizeOfT & 8) != 0 ? 8
                 : (sizeOfT & 4) != 0 ? 4
                 : (sizeOfT & 2) != 0 ? 2
