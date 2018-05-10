@@ -12,24 +12,38 @@ using System.Runtime.CompilerServices;
 
 namespace WInterop.Support.Buffers
 {
+    /// <summary>
+    /// Growable Span(T) buffer wrapper.
+    /// </summary>
     public ref struct ValueBuffer<T> where T : struct
     {
-        private Span<T> _span;
         private byte[] _buffer;
 
+        /// <summary>
+        /// Create the buffer with an initial span.
+        /// </summary>
+        /// <remarks>
+        /// This is particularly useful when you have an initial stack allocated
+        /// buffer that you want to use.
+        /// </remarks>
         public ValueBuffer(Span<T> span)
         {
-            _span = span;
+            Span = span;
             _buffer = null;
         }
 
-        public Span<T> Span => _span;
+        public Span<T> Span { get; private set; }
 
-        public int Length => _span.Length;
+        public int Length => Span.Length;
 
+        /// <summary>
+        /// Ensure that the buffer has enough space for <paramref name="capacity"/>
+        /// number of elements.
+        /// </summary>
+        /// <param name="copy">True to copy the existing elements when new space is allocated.</param>
         public unsafe void EnsureCapacity(int capacity, bool copy = false)
         {
-            if (capacity <= _span.Length)
+            if (capacity <= Span.Length)
                 return;
 
             // We want to align to highest power of 2 less than the size/ up to
@@ -61,13 +75,13 @@ namespace WInterop.Support.Buffers
             Debug.Assert(((int)((ulong)p % (uint)alignTo)) == 0);
 
             Span<T> newSpan = new Span<T>(p, (newBuffer.Length - offset) / sizeOfT);
-            _span.CopyTo(newSpan);
+            Span.CopyTo(newSpan);
             Dispose();
             _buffer = newBuffer;
-            _span = newSpan;
+            Span = newSpan;
         }
 
-        public ref T this[int index] => ref _span[index];
+        public ref T this[int index] => ref Span[index];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
