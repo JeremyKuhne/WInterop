@@ -11,7 +11,7 @@ using WInterop.Authorization.Types;
 namespace WInterop.FileManagement.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449426.aspx
-    public struct CREATEFILE2_EXTENDED_PARAMETERS
+    public ref struct CREATEFILE2_EXTENDED_PARAMETERS
     {
         public uint dwSize;
         public FileAttributes dwFileAttributes;

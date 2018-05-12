@@ -14,7 +14,7 @@ namespace WInterop.FileManagement.Types
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365740.aspx">WIN32_FIND_DATA</a> structure.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct WIN32_FIND_DATA
+    public ref struct WIN32_FIND_DATA
     {
         public FileAttributes dwFileAttributes;
         public FILETIME ftCreationTime;
@@ -25,7 +25,7 @@ namespace WInterop.FileManagement.Types
         public uint dwReserved1;
         private FixedString.Size260 _cFileName;
         private FixedString.Size14 _cAlternateFileName;
-        public Span<char> cFileName => _cFileName.Buffer;
-        public Span<char> cAlternateFileName => _cAlternateFileName.Buffer;
+        public ReadOnlySpan<char> cFileName => _cFileName.Buffer;
+        public ReadOnlySpan<char> cAlternateFileName => _cAlternateFileName.Buffer;
     }
 }

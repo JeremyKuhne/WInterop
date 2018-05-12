@@ -11,9 +11,9 @@ namespace WInterop
     /// Using bool in a struct prevents the struct from being blittable.
     /// This allows structs to marshal more effectively.
     /// </summary>
-    public struct BOOL
+    public readonly struct BOOL
     {
-        public uint RawValue;
+        public uint RawValue { get; }
 
         public BOOL(bool b)
         {

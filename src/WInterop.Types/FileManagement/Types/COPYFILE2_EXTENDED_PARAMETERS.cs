@@ -10,12 +10,13 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.FileManagement.Types
 {
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449411.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct COPYFILE2_EXTENDED_PARAMETERS
+    public ref struct COPYFILE2_EXTENDED_PARAMETERS
     {
         public uint dwSize;
         public CopyFileFlags dwCopyFlags;
-        public unsafe int* pfCanel;
+        public unsafe BOOL* pfCancel;
         public IntPtr pProgressRoutine;
         public IntPtr pvCallbackContext;
     }

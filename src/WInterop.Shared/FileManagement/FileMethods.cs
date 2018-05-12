@@ -257,22 +257,19 @@ namespace WInterop.FileManagement
         /// <summary>
         /// CopyFile2 wrapper. Only available on Windows8 and above.
         /// </summary>
-        public static void CopyFile2(string source, string destination, bool overwrite = false)
+        public unsafe static void CopyFile2(string source, string destination, bool overwrite = false)
         {
-            unsafe
+            BOOL cancel = false;
+            COPYFILE2_EXTENDED_PARAMETERS parameters = new COPYFILE2_EXTENDED_PARAMETERS()
             {
-                int cancel = 0;
-                COPYFILE2_EXTENDED_PARAMETERS parameters = new COPYFILE2_EXTENDED_PARAMETERS()
-                {
-                    dwSize = (uint)sizeof(COPYFILE2_EXTENDED_PARAMETERS),
-                    pfCanel = &cancel,
-                    dwCopyFlags = overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS
-                };
+                dwSize = (uint)sizeof(COPYFILE2_EXTENDED_PARAMETERS),
+                pfCancel = &cancel,
+                dwCopyFlags = overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS
+            };
 
-                HRESULT hr = Imports.CopyFile2(source, destination, &parameters);
-                if (ErrorMacros.FAILED(hr))
-                    throw Errors.GetIoExceptionForHResult(hr, source);
-            }
+            HRESULT hr = Imports.CopyFile2(source, destination,  ref parameters);
+            if (ErrorMacros.FAILED(hr))
+                throw Errors.GetIoExceptionForHResult(hr, source);
         }
 
         /// <summary>

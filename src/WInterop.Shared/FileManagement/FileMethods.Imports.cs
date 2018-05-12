@@ -32,14 +32,14 @@ namespace WInterop.FileManagement
                 DesiredAccess dwDesiredAccess,
                 ShareModes dwShareMode,
                 CreationDisposition dwCreationDisposition,
-                [In] ref CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
+                ref CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449404.aspx (kernel32)
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern HRESULT CopyFile2(
+            public static extern HRESULT CopyFile2(
                 string pwszExistingFileName,
                 string pwszNewFileName,
-                COPYFILE2_EXTENDED_PARAMETERS* pExtendedParameters);
+                ref COPYFILE2_EXTENDED_PARAMETERS pExtendedParameters);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365512.aspx
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
