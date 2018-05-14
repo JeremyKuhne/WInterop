@@ -8,9 +8,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using WInterop.Com.Types;
 
-namespace WInterop.StructuredStorage.Types
+namespace WInterop.Com.Types
 {
     public class PROPVARIANT : VARIANT
     {

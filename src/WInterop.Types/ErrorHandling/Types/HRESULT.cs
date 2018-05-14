@@ -12,12 +12,14 @@ namespace WInterop.ErrorHandling.Types
     {
         S_OK = 0,
         S_FALSE = 1,
-        E_FAIL = unchecked((int)0x80004005),
+        E_NOINTERFACE = unchecked((int)0x80004002),
         E_POINTER = unchecked((int)0x80004003),
+        E_FAIL = unchecked((int)0x80004005),
+        STG_E_FILENOTFOUND = unchecked((int)0x80030002),
+        STG_E_ACCESSDENIED = unchecked((int)0x80030005),
+        STG_E_INVALIDPARAMETER = unchecked((int)0x80030057),
+        STG_E_INVALIDFLAG = unchecked((int)0x800300FF),
         E_ACCESSDENIED = unchecked((int)0x80070005L),
         E_INVALIDARG = unchecked((int)0x80070057),
-        E_NOINTERFACE = unchecked((int)0x80004002),
-        STG_E_INVALIDFLAG = unchecked((int)0x800300FF),
-        STG_E_INVALIDPARAMETER = unchecked((int)0x80030057),
     }
 }

@@ -8,13 +8,13 @@
 using System;
 using WInterop.Com.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement.Types;
-using WInterop.Support;
 
 namespace WInterop.Com
 {
     public static partial class ComMethods
     {
+        public static HRESULT PropVariantClear(IntPtr pvar) => Support.Internal.Imports.PropVariantClear(pvar);
+
         public unsafe static object CreateStorage(
             string path,
             Guid riid,

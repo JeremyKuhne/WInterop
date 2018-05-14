@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop.Com;
 using WInterop.Com.Types;
+using WInterop.ErrorHandling.Types;
 using WInterop.FileManagement;
 using Xunit;
 
@@ -31,17 +32,9 @@ namespace Tests.Com
                 FileMethods.FileExists(path).Should().BeTrue();
 
                 storage.Stat(out var stats, StatFlag.Default);
-                try
-                {
-                    string name = new string(stats.pwcsName);
-                    name.Should().Be(path);
-                    stats.type.Should().Be(StorageType.Storage);
-                    stats.clsid.Should().Be(Guid.Empty, "should be null for newly created objects");
-                }
-                finally
-                {
-                    Marshal.FreeCoTaskMem((IntPtr)stats.pwcsName);
-                }
+                stats.GetAndFreeString().Should().Be(path);
+                stats.type.Should().Be(StorageType.Storage);
+                stats.clsid.Should().Be(Guid.Empty, "should be null for newly created objects");
             }
         }
 
@@ -52,23 +45,113 @@ namespace Tests.Com
             {
                 string path = cleaner.GetTestPath();
                 IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                Guid guid = new Guid();
+                storage.SetClass(ref guid);
                 storage.Commit(StorageCommit.Default);
                 Marshal.ReleaseComObject(storage);
                 storage = (IStorage)ComMethods.OpenStorage(path, InterfaceIds.IID_IStorage);
                 storage.Should().NotBeNull();
 
                 storage.Stat(out var stats, StatFlag.Default);
-                try
+                stats.GetAndFreeString().Should().Be(path);
+                stats.type.Should().Be(StorageType.Storage);
+                stats.clsid.Should().Be(guid);
+            }
+        }
+
+        [Fact]
+        public unsafe void CreateSubStorage()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = cleaner.GetTestPath();
+                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStorage subStorage = storage.CreateStorage("substorage", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
+                subStorage.Should().NotBeNull();
+
+                subStorage.Stat(out var stats, StatFlag.Default);
+                stats.GetAndFreeString().Should().Be("substorage");
+                stats.type.Should().Be(StorageType.Storage);
+            }
+        }
+
+        [Fact]
+        public unsafe void CreateStream()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = cleaner.GetTestPath();
+                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStream stream = storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
+                stream.Should().NotBeNull();
+
+                stream.Stat(out var stats, StatFlag.Default);
+                stats.GetAndFreeString().Should().Be("mystream");
+                stats.type.Should().Be(StorageType.Stream);
+            }
+        }
+
+        [Fact]
+        public unsafe void RenameStream()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = cleaner.GetTestPath();
+                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStream stream = storage.CreateStream("name", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
+                stream.Should().NotBeNull();
+
+                stream.Stat(out var stats, StatFlag.Default);
+                stats.GetAndFreeString().Should().Be("name");
+                stats.type.Should().Be(StorageType.Stream);
+
+                Action action = () => storage.RenameElement("name", "newname");
+
+                // Can't rename until after we close the stream
+                action.Should().Throw<COMException>().And.HResult.Should().Be((int)HRESULT.STG_E_ACCESSDENIED);
+                Marshal.ReleaseComObject(stream);
+                action();
+
+                action = () => stream = storage.OpenStream("name", IntPtr.Zero, StorageMode.ShareExclusive);
+                action.Should().Throw<COMException>().And.HResult.Should().Be((int)HRESULT.STG_E_FILENOTFOUND);
+
+                stream = storage.OpenStream("newname", IntPtr.Zero, StorageMode.ShareExclusive);
+                stream.Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        public unsafe void EnumStorage()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = cleaner.GetTestPath();
+                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStream stream = storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
+                IStorage subStorage = storage.CreateStorage("substorage", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
+                storage.Commit();
+
+                IEnumSTATSTG e = storage.EnumElements();
+                WInterop.Com.Types.STATSTG stat = default;
+                int count = 0;
+                while (e.Next(1, ref stat) > 0)
                 {
-                    string name = new string(stats.pwcsName);
-                    name.Should().Be(path);
-                    stats.type.Should().Be(StorageType.Storage);
-                    stats.clsid.Should().Be(Guid.Empty, "should be null for newly created objects");
+                    count++;
+                    switch (stat.type)
+                    {
+                        case StorageType.Storage:
+                            stat.GetAndFreeString().Should().Be("substorage");
+                            break;
+                        case StorageType.Stream:
+                            stat.GetAndFreeString().Should().Be("mystream");
+                            break;
+                        default:
+                            false.Should().BeTrue($"unexpected type {stat.type}");
+                            break;
+                    }
                 }
-                finally
-                {
-                    Marshal.FreeCoTaskMem((IntPtr)stats.pwcsName);
-                }
+
+                count.Should().Be(2);
             }
         }
     }

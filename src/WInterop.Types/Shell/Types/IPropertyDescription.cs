@@ -8,7 +8,6 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Com.Types;
-using WInterop.StructuredStorage.Types;
 
 namespace WInterop.Shell.Types
 {

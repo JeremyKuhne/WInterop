@@ -32,5 +32,12 @@ namespace WInterop.Com.Types
         public Guid clsid;
         public uint grfStateBits;
         public uint reserved;
+
+        public string GetAndFreeString()
+        {
+            string value = new string(pwcsName);
+            Marshal.FreeCoTaskMem((IntPtr)pwcsName);
+            return value;
+        }
     }
 }

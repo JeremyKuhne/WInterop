@@ -44,7 +44,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ThreadMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StructuredStorage\StructuredStorageMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\SynchronizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.cs" />

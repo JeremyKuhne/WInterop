@@ -19,27 +19,27 @@ namespace WInterop.Com.Types
         IStream CreateStream(
             string pwcsName,
             StorageMode grfMode,
-            uint reserved1,
-            uint reserved2);
+            uint reserved1 = 0,
+            uint reserved2 = 0);
 
         IStream OpenStream(
             string pwcsName,
             IntPtr reserved1,
             StorageMode grfMode,
-            uint reserved2);
+            uint reserved2 = 0);
 
         IStorage CreateStorage(
             string pwcsName,
             StorageMode grfMode,
-            uint reserved1,
-            uint reserved2);
+            uint reserved1 = 0,
+            uint reserved2 = 0);
 
         IStorage OpenStorage(
             string pwcsName,
             IStorage pstgPriority,
             StorageMode grfMode,
             IntPtr snbExclude,
-            uint reserved);
+            uint reserved = 0);
 
         void CopyTo(
             uint ciidExclude,
@@ -54,14 +54,14 @@ namespace WInterop.Com.Types
             StorageMove grfFlags);
 
         void Commit(
-            StorageCommit grfCommitFlags);
+            StorageCommit grfCommitFlags = StorageCommit.Default);
 
         void Revert();
 
-        IEnumSTATSTG EnumElements(
-            uint reserved1,
-            IntPtr reserved2,
-            uint reserved3);
+        unsafe IEnumSTATSTG EnumElements(
+            uint reserved1 = 0,
+            void* reserved2 = null,
+            uint reserved3 = 0);
 
         void DestroyElement(
             string pwcsName);
