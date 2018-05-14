@@ -9,6 +9,7 @@
     <Import_RootNamespace>Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Com\StorageTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\NativeBufferReaderTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\NativeBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\StreamBufferTests.cs" />

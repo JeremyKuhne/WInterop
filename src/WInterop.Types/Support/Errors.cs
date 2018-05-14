@@ -67,7 +67,9 @@ namespace WInterop.Support
                 message = exception.Message;
             }
 
-            return $"HRESULT {(int)hr:D} [0x{(int)hr:X}]: {message}";
+            return Enum.IsDefined(typeof(HRESULT), hr)
+                ? $"HRESULT {hr} [0x{(int)hr:X} ({(int)hr:D})]: {message}"
+                : $"HRESULT [0x{(int)hr:X} ({(int)hr:D})]: {message}";
         }
 
         /// <summary>

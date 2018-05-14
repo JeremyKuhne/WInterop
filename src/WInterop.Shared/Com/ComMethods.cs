@@ -6,18 +6,65 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Com.Types;
 using WInterop.ErrorHandling.Types;
+using WInterop.FileManagement.Types;
+using WInterop.Support;
 
 namespace WInterop.Com
 {
-    public static class ComMethods
+    public static partial class ComMethods
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
+        public unsafe static object CreateStorage(
+            string path,
+            Guid riid,
+            StorageMode mode = StorageMode.ReadWrite | StorageMode.Create | StorageMode.ShareExclusive,
+            StorageFormat format = StorageFormat.DocFile)
         {
-            public static HRESULT VariantClear(IntPtr pvarg) => Support.Internal.Imports.VariantClear(pvarg);
+            STGOPTIONS options = new STGOPTIONS
+            {
+                usVersion = 1,
+
+                // If possible, we want the larger 4096 sector size
+                ulSectorSize = (mode & StorageMode.Simple) != 0  ? 512u : 4096
+            };
+
+            Imports.StgCreateStorageEx(
+                path,
+                mode,
+                format,
+                0,
+                format == StorageFormat.DocFile ? &options : null,
+                null,
+                ref riid,
+                out object created).ThrowIfFailed(path);
+
+            return created;
+        }
+
+        public unsafe static object OpenStorage(
+            string path,
+            Guid riid,
+            StorageMode mode = StorageMode.ReadWrite | StorageMode.ShareExclusive,
+            StorageFormat format = StorageFormat.Any)
+        {
+            STGOPTIONS options = new STGOPTIONS
+            {
+                // Must have version set before using
+                usVersion = 1
+            };
+
+            Imports.StgOpenStorageEx(
+                path,
+                mode,
+                format,
+                0,
+                format == StorageFormat.DocFile ? &options : null,
+                null,
+                ref riid,
+                out object created).ThrowIfFailed(path);
+
+            return created;
         }
     }
 }

@@ -11,12 +11,13 @@ Guidelines
 4. Don't use `SetLastError` where not appropriate
 5. Be careful of `BOOL` vs `BOOLEAN`
 6. Watch for buffer size for output strings (null/no null)
+
 Attributes
 ----------
 
 **Implicit attributes applied to parameter and return values:**
 
-|                  | Implicit Attribute |
+| C#               | Implicit Attribute |
 |------------------|--------------------|
 | parameter        | `[In]`             |
 | `out` parameter  | `[Out]`            |
