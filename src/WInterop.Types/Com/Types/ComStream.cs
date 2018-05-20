@@ -99,8 +99,8 @@ namespace WInterop.Com.Types
             if (Stream == null)
                 throw new ObjectDisposedException(nameof(ComStream));
 
-            Span<byte> span = new Span<byte>(buffer, offset, buffer.Length - offset);
-            Stream.Write(ref span[0], (uint)count);
+            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(buffer, offset, buffer.Length - offset);
+            Stream.Write(in span[0], (uint)count);
         }
 
         public override long Seek(long offset, SeekOrigin origin)

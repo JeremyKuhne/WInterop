@@ -32,7 +32,7 @@ namespace WInterop.Com.Types
         /// <param name="cb">The number of bytes of data to attempt to write into the stream.</param>
         /// <returns>The actual number of bytes written to the stream object. </returns>
         uint Write(
-            ref byte pv,
+            in byte pv,
             uint cb);
 
         /// <summary>
