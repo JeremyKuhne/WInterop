@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Com\StorageTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Com\StreamTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\NativeBufferReaderTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\NativeBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\StreamBufferTests.cs" />

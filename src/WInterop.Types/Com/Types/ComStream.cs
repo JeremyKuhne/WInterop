@@ -13,9 +13,17 @@ namespace WInterop.Com.Types
 {
     public class ComStream : Stream
     {
-        public ComStream(IStream stream)
+        private readonly bool _ownsStream;
+
+        /// <summary>
+        /// Construct a Stream wrapper around an IStream object.
+        /// </summary>
+        /// <param name="stream">The COM stream to wrap.</param>
+        /// <param name="ownsStream">If true (default), will release the IStream object when disposed.</param>
+        public ComStream(IStream stream, bool ownsStream = true)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            _ownsStream = ownsStream;
             stream.Stat(out STATSTG stat, StatFlag.NoName);
             StorageType = stat.type;
             StorageMode = stat.grfMode;
@@ -28,7 +36,7 @@ namespace WInterop.Com.Types
 
         public Guid ClassId { get; }
 
-        public IStream Stream { get; }
+        public IStream Stream { get; private set; }
 
         public override bool CanRead
             // Can read is the default, only can't if in Write only mode
@@ -43,6 +51,9 @@ namespace WInterop.Com.Types
         {
             get
             {
+                if (Stream == null)
+                    throw new ObjectDisposedException(nameof(ComStream));
+
                 Stream.Stat(out STATSTG stat, StatFlag.NoName);
                 return (long)stat.cbSize;
             }
@@ -50,26 +61,53 @@ namespace WInterop.Com.Types
 
         public override long Position
         {
-            get => Stream.Seek(0, StreamSeek.Current);
-            set => Stream.Seek(value, StreamSeek.Set);
+            get
+            {
+                if (Stream == null)
+                    throw new ObjectDisposedException(nameof(ComStream));
+
+                return Stream.Seek(0, StreamSeek.Current);
+            }
+            set
+            {
+                if (Stream == null)
+                    throw new ObjectDisposedException(nameof(ComStream));
+
+                Stream.Seek(value, StreamSeek.Set);
+            }
         }
 
-        public override void Flush() => Stream.Commit(StorageCommit.Default);
+        public override void Flush()
+        {
+            if (Stream == null)
+                throw new ObjectDisposedException(nameof(ComStream));
+
+            Stream.Commit(StorageCommit.Default);
+        }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(buffer, offset, buffer.Length - offset);
-            return (int)Stream.Read(span[0], (uint)count);
+            if (Stream == null)
+                throw new ObjectDisposedException(nameof(ComStream));
+
+            Span<byte> span = new Span<byte>(buffer, offset, buffer.Length - offset);
+            return (int)Stream.Read(ref span[0], (uint)count);
         }
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(buffer, offset, buffer.Length - offset);
-            Stream.Write(span[0], (uint)count);
+            if (Stream == null)
+                throw new ObjectDisposedException(nameof(ComStream));
+
+            Span<byte> span = new Span<byte>(buffer, offset, buffer.Length - offset);
+            Stream.Write(ref span[0], (uint)count);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
+            if (Stream == null)
+                throw new ObjectDisposedException(nameof(ComStream));
+
             // Not surprisingly SeekOrigin is the same as STREAM_SEEK
             // (given the history of .NET and COM)
             return Stream.Seek(offset, (StreamSeek)origin);
@@ -77,15 +115,29 @@ namespace WInterop.Com.Types
 
         public override void SetLength(long value)
         {
+            if (Stream == null)
+                throw new ObjectDisposedException(nameof(ComStream));
             Stream.SetSize(value);
         }
 
         public unsafe override string ToString()
         {
+            if (Stream == null)
+                throw new ObjectDisposedException(nameof(ComStream));
+
             Stream.Stat(out STATSTG stat, StatFlag.Default);
             string name = new string(stat.pwcsName);
             Marshal.FreeCoTaskMem((IntPtr)stat.pwcsName);
             return name;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _ownsStream)
+            {
+                Marshal.ReleaseComObject(Stream);
+            }
+            Stream = null;
         }
     }
 }
