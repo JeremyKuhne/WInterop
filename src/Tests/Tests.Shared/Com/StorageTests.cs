@@ -39,6 +39,17 @@ namespace Tests.Com
         }
 
         [Fact]
+        public unsafe void IsIStorage()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string path = cleaner.GetTestPath();
+                object created = ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                ComMethods.IsStorageFile(path).Should().BeTrue();
+            }
+        }
+
+        [Fact]
         public unsafe void OpenIStorage()
         {
             using (var cleaner = new TestFileCleaner())

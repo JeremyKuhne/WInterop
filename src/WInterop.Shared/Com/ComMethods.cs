@@ -66,5 +66,10 @@ namespace WInterop.Com
 
             return created;
         }
+
+        public static bool IsStorageFile(string path)
+        {
+            return Imports.StgIsStorageFile(path) == HRESULT.S_OK;
+        }
     }
 }
