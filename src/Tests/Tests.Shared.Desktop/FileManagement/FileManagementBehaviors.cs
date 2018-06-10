@@ -43,7 +43,7 @@ namespace DesktopTests.FileManagementTests
         [Theory,
             Trait("Environment", "CurrentDirectory"),
             InlineData(@"C:", @"C:\Users"),
-            InlineData(@"C", @"E:\C")
+            InlineData(@"C", @"D:\C")
             ]
         public void ValidateKnownRelativeBehaviors(string value, string expected)
         {
@@ -52,7 +52,7 @@ namespace DesktopTests.FileManagementTests
 
             // Set the current directory to D: and the hidden env for C:'s last current directory
             ProcessMethods.SetEnvironmentVariable(@"=C:", @"C:\Users");
-            using (new TempCurrentDirectory(@"E:\"))
+            using (new TempCurrentDirectory(@"D:\"))
             {
                 FileMethods.GetFullPathName(value).Should().Be(expected);
             }

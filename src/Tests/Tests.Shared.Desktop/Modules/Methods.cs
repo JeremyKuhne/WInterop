@@ -10,14 +10,14 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Tests.Support;
+using WInterop.FileManagement;
+using WInterop.Gdi.Types;
 using WInterop.Modules;
 using WInterop.Modules.Types;
-using ModuleTypes = WInterop.Modules.Types;
-using WInterop.FileManagement;
 using WInterop.Resources;
 using WInterop.Support;
 using Xunit;
-using WInterop.Gdi.Types;
+using ModuleTypes = WInterop.Modules.Types;
 
 namespace DesktopTests.ModuleTests
 {
@@ -177,7 +177,7 @@ namespace DesktopTests.ModuleTests
         }
 
         [DllImport(NativeTestLibrary, EntryPoint = "IntPointerCheck")]
-        public static extern IntPtr CheckIntAsArray(int[] values);
+        public static extern IntPtr CheckIntAsArray(int[] values, int count);
 
         [Fact]
         public unsafe void AsIntArrayInvoke()
@@ -187,15 +187,62 @@ namespace DesktopTests.ModuleTests
             fixed (int* v = values)
             {
                 IntPtr current = (IntPtr)v;
-                IntPtr result = CheckIntAsArray(values);
+                IntPtr result = CheckIntAsArray(values, values.Length);
+                values[0].Should().Be(6);
 
-                // Simple array declaration creates a copy in
+                // Simple array declaration pins, so we get the same value back
                 current.Should().Be(result);
             }
         }
 
+        [DllImport(NativeTestLibrary, EntryPoint = "IntPointerCheck")]
+        public static extern IntPtr CheckIntAsRef(ref int values, int count);
+
+        [Fact]
+        public unsafe void AsRefIntInvoke()
+        {
+            int[] values = { 5, 6 };
+
+            fixed (int* v = values)
+            {
+                IntPtr current = (IntPtr)v;
+
+                ReadOnlySpan<int> span = new ReadOnlySpan<int>(values);
+                IntPtr result = CheckIntAsRef(ref MemoryMarshal.GetReference(span), values.Length);
+
+                // By ref doesn't copy, so we get the same result back
+                current.Should().Be(result);
+                values[0].Should().Be(10);
+
+                // Same goes if we take ref[0]
+                result = CheckIntAsRef(ref values[0], values.Length);
+                current.Should().Be(result);
+            }
+        }
+
+        [Fact]
+        public unsafe void EmptyArrayBehavior()
+        {
+            int[] values = new int[0];
+
+            fixed (int* v = values)
+            {
+                // Fixing an empty array gives null
+                IntPtr current = (IntPtr)v;
+                current.Should().Be(IntPtr.Zero);
+
+                Action action = () => CheckIntAsRef(ref values[0], 0);
+                action.Should().Throw<IndexOutOfRangeException>();
+
+                // While you can't fix an empty array, you can GetReference for a wrapping span
+                ReadOnlySpan<int> span = new ReadOnlySpan<int>(values);
+                IntPtr result = CheckIntAsRef(ref MemoryMarshal.GetReference(span), 0);
+                result.Should().NotBe(IntPtr.Zero);
+            }
+        }
+
         [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-        public static extern IntPtr CheckStructAsArray(POINT[] points);
+        public static extern IntPtr CheckStructAsArray(POINT[] points, int count);
 
         [Fact]
         public unsafe void AsArrayInvoke()
@@ -205,7 +252,7 @@ namespace DesktopTests.ModuleTests
             fixed(void* p = &points[0])
             {
                 IntPtr current = (IntPtr)p;
-                IntPtr result = CheckStructAsArray(points);
+                IntPtr result = CheckStructAsArray(points, points.Length);
 
                 // Simple struct array declaration creates a copy in
                 // (even though it is blittable)
@@ -215,7 +262,7 @@ namespace DesktopTests.ModuleTests
         }
 
         [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-        public static extern IntPtr CheckStructAsInOutArray([In, Out]POINT[] points);
+        public static extern IntPtr CheckStructAsInOutArray([In, Out]POINT[] points, int count);
 
         [Fact]
         public unsafe void AsInOutArrayInvoke()
@@ -225,7 +272,7 @@ namespace DesktopTests.ModuleTests
             fixed (void* p = &points[0])
             {
                 IntPtr current = (IntPtr)p;
-                IntPtr result = CheckStructAsInOutArray(points);
+                IntPtr result = CheckStructAsInOutArray(points, points.Length);
 
                 // Simple struct array declaration creates a copy both ways
                 // (even though it is blittable)
@@ -235,7 +282,7 @@ namespace DesktopTests.ModuleTests
         }
 
         [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-        public unsafe static extern IntPtr CheckStructAsPointerArray(POINT* points);
+        public unsafe static extern IntPtr CheckStructAsPointerArray(POINT* points, int count);
 
         [Fact]
         public unsafe void AsPointerArrayInvoke()
@@ -245,7 +292,7 @@ namespace DesktopTests.ModuleTests
             fixed (POINT* p = &points[0])
             {
                 IntPtr current = (IntPtr)p;
-                IntPtr result = CheckStructAsPointerArray(p);
+                IntPtr result = CheckStructAsPointerArray(p, points.Length);
 
                 // No copy for simple struct array when we send a pointer, modification
                 // is as expected
