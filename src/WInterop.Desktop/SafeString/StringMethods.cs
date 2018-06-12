@@ -8,7 +8,6 @@
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.SafeString.Types;
-using WInterop.Support;
 
 namespace WInterop.SafeString
 {
@@ -16,8 +15,7 @@ namespace WInterop.SafeString
     {
         public static unsafe void ToUpperInvariant(ref UNICODE_STRING value)
         {
-            NTSTATUS status = Imports.RtlUpcaseUnicodeString(
-                (UNICODE_STRING*)Structs.AddressOf(ref value), (UNICODE_STRING*)Structs.AddressOf(ref value), false);
+            NTSTATUS status = Imports.RtlUpcaseUnicodeString(ref value, ref value, false);
 
             if (!ErrorMacros.NT_SUCCESS(status))
                 ErrorMethods.GetIoExceptionForNTStatus(status);

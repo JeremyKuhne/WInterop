@@ -301,6 +301,22 @@ namespace DesktopTests.ModuleTests
             }
         }
 
+        [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
+        public unsafe static extern IntPtr CheckStructAsRef(ref POINT points, int count);
+
+        [Fact]
+        public unsafe void AsSingleRefInvoke()
+        {
+            POINT point = new POINT(4, 6);
+            POINT* p = &point;
+
+            IntPtr current = (IntPtr)p;
+            IntPtr result = CheckStructAsRef(ref point, 1);
+
+            // Should not have gotten a copy
+            current.Should().Be(result);
+        }
+
         [Fact]
         public void GetEntryModuleFileName()
         {

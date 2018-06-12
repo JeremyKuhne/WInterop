@@ -21,14 +21,14 @@ namespace WInterop.SafeString
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff563005.aspx
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static unsafe extern NTSTATUS RtlUpcaseUnicodeString(
-                UNICODE_STRING* DestinationString,
-                UNICODE_STRING* SourceString,
+                ref UNICODE_STRING DestinationString,
+                ref UNICODE_STRING SourceString,
                 BOOLEAN AllocateDestinationString);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff561903.aspx
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static unsafe extern void RtlFreeUnicodeString(
-                UNICODE_STRING* UnicodeString);
+                ref UNICODE_STRING UnicodeString);
         }
     }
 }
