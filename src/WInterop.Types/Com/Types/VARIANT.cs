@@ -76,7 +76,7 @@ namespace WInterop.Com.Types
                 throw new NotImplementedException();
             }
 
-            void* data = ((byte*)handle.ToPointer() + DataOffset);
+            void* data = handle.Offset(DataOffset);
 
             if (IsByRef)
             {
