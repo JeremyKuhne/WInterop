@@ -33,6 +33,7 @@ namespace WInterop.DeviceManagement.Types
         [FieldOffset(8)]
         public GenericReparseBuffer GenericData;
 
+        [StructLayout(LayoutKind.Sequential)]
         public struct SymbolicLinkReparseBuffer
         {
             private ushort SubstituteNameOffset;
@@ -45,6 +46,7 @@ namespace WInterop.DeviceManagement.Types
             public ReadOnlySpan<char> PrintName => _PathBuffer.GetBuffer(PrintNameLength, PrintNameOffset);
         }
 
+        [StructLayout(LayoutKind.Sequential)]
         public struct MountPointReparseBuffer
         {
             private ushort SubstituteNameOffset;
