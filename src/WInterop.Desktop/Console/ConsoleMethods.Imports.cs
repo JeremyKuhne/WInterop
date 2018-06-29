@@ -30,16 +30,30 @@ namespace WInterop.Desktop.Console
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool AllocConsole();
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683231.aspx
+            // https://docs.microsoft.com/en-us/windows/console/getstdhandle
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool GetStdHandle(
+            public static extern SafeHandle GetStdHandle(
                 StandardHandleType nStdHandle);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms686244.aspx
+            // https://docs.microsoft.com/en-us/windows/console/setstdhandle
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool SetStdHandle(
                 StandardHandleType nStdHandle,
                 SafeHandle hHandle);
+
+            // https://docs.microsoft.com/en-us/windows/console/getconsolemode
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetConsoleMode(
+                SafeHandle hConsoleHandle,
+                out uint lpMode);
+
+            // https://docs.microsoft.com/en-us/windows/console/getconsolecp
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+            public static extern uint GetConsoleCP();
+
+            // https://docs.microsoft.com/en-us/windows/console/getconsoleoutputcp
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+            public static extern uint GetConsoleOutputCP();
         }
     }
 }
