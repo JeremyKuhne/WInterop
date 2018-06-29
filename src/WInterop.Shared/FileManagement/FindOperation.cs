@@ -128,7 +128,7 @@ namespace WInterop.FileManagement
                 return false;
             }
 
-            private unsafe void FindNextFile()
+            private void FindNextFile()
             {
                 FILE_FULL_DIR_INFORMATION* info = _info;
                 if (info != null && info->NextEntryOffset != 0)

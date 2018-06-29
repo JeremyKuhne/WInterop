@@ -61,7 +61,8 @@ namespace WInterop.ProcessAndThreads
 
                 foreach (var entry in BufferHelper.SplitNullTerminatedStringList(buffer.DangerousGetHandle()))
                 {
-                    // Hidden environment variables start with an equals
+                    // Hidden environment variables start with an equals, and can't be empty anyways, so
+                    // we always look for the key/value equals separator from index 1.
                     int separator = entry.IndexOf('=', startIndex: 1);
                     if (separator == -1) throw new InvalidOperationException("There should never be a string given back from Windows without an equals sign");
 
