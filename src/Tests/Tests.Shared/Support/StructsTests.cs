@@ -18,7 +18,7 @@ namespace Tests.Support
         {
             int foo = 6;
             int* directAddress = &foo;
-            int* helper = (int*)Structs.AddressOf(ref foo);
+            int* helper = Structs.AddressOf(ref foo);
             (directAddress == helper).Should().BeTrue("Address should be the same");
             helper->Should().Be(*directAddress);
         }

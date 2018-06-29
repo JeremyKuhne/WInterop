@@ -7,16 +7,16 @@
 
 .class public abstract sealed WInterop.Support.Pointers
 {
-    .method public hidebysig static void* Offset<valuetype .ctor (System.ValueType) T> (
-            void* pointer,
-            !!T offset
-        ) cil managed
-    {
-        .maxstack 2
-
-        ldarg.0;
-        ldarg.1;
-        add;
-        ret;
-    }
+//    .method public hidebysig static void* Offset<valuetype .ctor (System.ValueType) T> (
+//            void* pointer,
+//            !!T offset
+//        ) cil managed
+//    {
+//        .maxstack 2
+//
+//        ldarg.0;
+//        ldarg.1;
+//        add;
+//        ret;
+//    }
 }

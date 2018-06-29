@@ -15,23 +15,29 @@ namespace WInterop.Support
         /// <summary>
         /// Returns the address of the given target struct.
         /// </summary>
-        /// <remarks>
-        /// The implementation returns a void*, which is functionally identical to IntPtr.
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern unsafe IntPtr AddressOf<T>(ref T target) where T : struct;
+        public static unsafe T* AddressOf<T>(ref T target) where T : unmanaged
+        {
+            fixed (T* p = &target)
+            {
+                return p;
+            }
+        }
 
         /// <summary>
         /// Get the size (in bytes) of the given struct type.
         /// </summary>
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern unsafe uint SizeInBytes<T>() where T : struct;
+        public static unsafe uint SizeInBytes<T>() where T : unmanaged
+        {
+            return (uint)sizeof(T);
+        }
 
         /// <summary>
         /// Get the size (in bytes) of the given struct.
         /// </summary>
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern unsafe uint SizeInBytes<T>(ref T target) where T : struct;
+        public static unsafe uint SizeInBytes<T>(ref T target) where T : unmanaged
+        {
+            return (uint)sizeof(T);
+        }
 
         /// <summary>
         /// Helper method to skip initialization of a struct.
