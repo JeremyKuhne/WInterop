@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Console.Types;
 
-namespace WInterop.Console
+namespace WInterop.Desktop.Console
 {
     public static partial class ConsoleMethods
     {
