@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     /// <summary>
     /// Used to create an NTFS hard link to an existing file.

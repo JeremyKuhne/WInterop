@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Win32.SafeHandles;
-using WInterop.FileManagement.Types;
+using WInterop.File.Types;
 using WInterop.Support.Buffers;
 
-namespace WInterop.FileManagement.BufferWrappers
+namespace WInterop.File.BufferWrappers
 {
     public struct FinalPathNameByHandleWrapper : IBufferFunc<StringBuffer, uint>
     {

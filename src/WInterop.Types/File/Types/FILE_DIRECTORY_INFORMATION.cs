@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540248.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

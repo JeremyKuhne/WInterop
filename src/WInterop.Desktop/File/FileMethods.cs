@@ -13,15 +13,15 @@ using WInterop.Authorization;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement.BufferWrappers;
-using WInterop.FileManagement.Types;
+using WInterop.File.BufferWrappers;
+using WInterop.File.Types;
 using WInterop.Handles.Types;
 using WInterop.MemoryManagement;
 using WInterop.SafeString.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     public static partial class FileMethods
     {
@@ -95,7 +95,7 @@ namespace WInterop.FileManagement
         }
 
         /// <summary>
-        /// CreateFile wrapper. Desktop only. Prefer FileManagement.CreateFile() as it will handle all supported platforms.
+        /// CreateFile wrapper. Desktop only. Prefer File.CreateFile() as it will handle all supported platforms.
         /// </summary>
         /// <remarks>Not available in Windows Store applications.</remarks>
         public unsafe static SafeFileHandle CreateFileW(
@@ -235,7 +235,7 @@ namespace WInterop.FileManagement
         }
 
         /// <summary>
-        /// CopyFileEx wrapper. Desktop only. Prefer FileManagement.CopyFile() as it will handle all supported platforms.
+        /// CopyFileEx wrapper. Desktop only. Prefer File.CopyFile() as it will handle all supported platforms.
         /// </summary>
         /// <param name="overwrite">Overwrite an existing file if true.</param>
         public static void CopyFileEx(string source, string destination, bool overwrite = false)

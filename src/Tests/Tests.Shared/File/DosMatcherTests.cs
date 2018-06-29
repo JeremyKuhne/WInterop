@@ -7,10 +7,10 @@
 
 using FluentAssertions;
 using System;
-using WInterop.FileManagement;
+using WInterop.File;
 using Xunit;
 
-namespace Tests.FileManagement
+namespace Tests.File
 {
     public class DosMatcherTests
     {

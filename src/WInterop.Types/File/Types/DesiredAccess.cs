@@ -8,7 +8,7 @@
 using System;
 using WInterop.Authorization.Types;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     /// <summary>
     /// System.IO.FileAccess looks up these values when creating handles

@@ -10,8 +10,8 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.DeviceManagement.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

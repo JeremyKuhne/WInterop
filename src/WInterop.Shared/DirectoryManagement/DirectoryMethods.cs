@@ -8,8 +8,8 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using WInterop.DirectoryManagement.BufferWrappers;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

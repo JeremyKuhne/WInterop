@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365739.aspx">WIN32_FILE_ATTRIBUTE_DATA</a> structure.

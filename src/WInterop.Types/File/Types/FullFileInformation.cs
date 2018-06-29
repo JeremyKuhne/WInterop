@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     /// <summary>
     /// Managed wrapper for FILE_FULL_DIR_INFORMATION.

@@ -7,8 +7,8 @@
 
 using FluentAssertions;
 using Tests.Support;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using WInterop.Ipc;
 using Xunit;
 

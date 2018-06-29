@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.FileManagement.Types;
+using WInterop.File.Types;
 using WInterop.Support;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     public static partial class FindTransforms
     {

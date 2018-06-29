@@ -8,7 +8,7 @@
 using WInterop.ErrorHandling.Types;
 using WInterop.Synchronization.Types;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364052.aspx">FileIOCompletionRoutine</a> callback used by

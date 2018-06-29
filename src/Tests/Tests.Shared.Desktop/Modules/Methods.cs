@@ -10,7 +10,7 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Tests.Support;
-using WInterop.FileManagement;
+using WInterop.File;
 using WInterop.Gdi.Types;
 using WInterop.Modules;
 using WInterop.Modules.Types;

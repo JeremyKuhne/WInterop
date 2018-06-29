@@ -8,7 +8,7 @@
 using FluentAssertions;
 using Tests.Support;
 using WInterop.DiskManagement;
-using WInterop.FileManagement;
+using WInterop.File;
 using Xunit;
 
 namespace Tests.DiskManagement

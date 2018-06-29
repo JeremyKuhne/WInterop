@@ -9,11 +9,11 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement.Types;
+using WInterop.File.Types;
 using WInterop.Handles.Types;
 using WInterop.Synchronization.Types;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     public static partial class FileMethods
     {

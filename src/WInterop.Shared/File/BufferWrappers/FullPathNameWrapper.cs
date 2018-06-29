@@ -8,7 +8,7 @@
 using System;
 using WInterop.Support.Buffers;
 
-namespace WInterop.FileManagement.BufferWrappers
+namespace WInterop.File.BufferWrappers
 {
     public struct FullPathNameWrapper : IBufferFunc<StringBuffer, uint>
     {

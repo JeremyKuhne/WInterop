@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     /// <summary>
     /// Used with GetFileInformationByHandleEx and FileIdBothDirectoryInfo/RestartInfo.

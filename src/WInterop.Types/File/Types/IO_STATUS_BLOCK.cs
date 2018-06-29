@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff550671.aspx
     [StructLayout(LayoutKind.Sequential)]

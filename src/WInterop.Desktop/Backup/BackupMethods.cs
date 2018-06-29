@@ -10,8 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Backup.Types;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 
 namespace WInterop.Backup
 {

@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.FileManagement.Types;
+using WInterop.File.Types;
 using Xunit;
 
-namespace Tests.FileManagement
+namespace Tests.File
 {
     public class DateTimeTests
     {

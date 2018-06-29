@@ -12,13 +12,13 @@ using Tests.Support;
 using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using WInterop.Support;
 using WInterop;
 using Xunit;
 
-namespace Tests.FileManagement
+namespace Tests.File
 {
     public partial class FileManagementBehaviors
     {
@@ -300,7 +300,7 @@ namespace Tests.FileManagement
             FileMethods.GetFullPathName(PathGenerator.CreatePathOfLength(FileMethods.GetTempPath(), short.MaxValue - 2));
 
             // Works
-            // NativeMethods.FileManagement.GetFullPathName(PathGenerator.CreatePathOfLength(@"C:\", short.MaxValue - 2));
+            // NativeMethods.File.GetFullPathName(PathGenerator.CreatePathOfLength(@"C:\", short.MaxValue - 2));
         }
 
         [Fact]

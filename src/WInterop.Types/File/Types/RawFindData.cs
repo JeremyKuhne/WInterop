@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     /// <summary>
     /// Used for processing and filtering find results.

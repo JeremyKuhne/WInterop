@@ -9,12 +9,12 @@ using FluentAssertions;
 using Tests.Support;
 using WInterop.Authorization;
 using WInterop.Authorization.Types;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using WInterop.SystemInformation;
 using Xunit;
 
-namespace DesktopTests.FileManagement
+namespace DesktopTests.File
 {
     public class FileSecurityTests
     {

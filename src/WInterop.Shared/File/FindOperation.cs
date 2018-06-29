@@ -13,11 +13,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Threading;
 using WInterop.DirectoryManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File.Types;
 using WInterop.Handles;
 using WInterop.Support.Buffers;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     public partial class FindOperation<T> : IEnumerable<T>
     {

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 using WInterop.Com.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement.Types;
+using WInterop.File.Types;
 
 namespace WInterop.Com
 {

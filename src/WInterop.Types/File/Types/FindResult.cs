@@ -9,7 +9,7 @@ using System;
 using System.Diagnostics;
 using WInterop.Support;
 
-namespace WInterop.FileManagement.Types
+namespace WInterop.File.Types
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class FindResult

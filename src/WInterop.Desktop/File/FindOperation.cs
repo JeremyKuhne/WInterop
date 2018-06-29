@@ -13,9 +13,9 @@ using System.Runtime.ConstrainedExecution;
 using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement.Types;
+using WInterop.File.Types;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     public partial class FindOperation<T> : IEnumerable<T>
     {

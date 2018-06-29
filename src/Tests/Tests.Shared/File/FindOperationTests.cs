@@ -9,12 +9,12 @@ using FluentAssertions;
 using System.Linq;
 using Tests.Support;
 using WInterop.DirectoryManagement;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using WInterop.Support;
 using Xunit;
 
-namespace FileManagement
+namespace File
 {
     public class FindOperationTests
     {

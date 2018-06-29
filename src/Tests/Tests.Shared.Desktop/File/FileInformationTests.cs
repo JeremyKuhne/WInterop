@@ -10,11 +10,11 @@ using System.Diagnostics;
 using System.Linq;
 using Tests.Support;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using Xunit;
 
-namespace DesktopTests.FileManagement
+namespace DesktopTests.File
 {
     public class FileInformationTests
     {

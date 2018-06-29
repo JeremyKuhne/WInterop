@@ -13,12 +13,12 @@ using WInterop.Authorization.Types;
 using WInterop.DeviceManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using WInterop.Support;
 using Xunit;
 
-namespace DesktopTests.FileManagement
+namespace DesktopTests.File
 {
     public class SymbolicLinkTests
     {

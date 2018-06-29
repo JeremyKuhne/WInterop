@@ -5,8 +5,8 @@
 // a specific target and scoped to a namespace, type, member, etc.
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.Backup.Types.WIN32_STREAM_ID.cStreamName")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.FileManagement.Types.OFSTRUCT.szPathName")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.FileManagement.Types.WIN32_FIND_DATA.cAlternateFileName")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.File.Types.OFSTRUCT.szPathName")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.File.Types.WIN32_FIND_DATA.cAlternateFileName")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.Gdi.Types.AXESLIST.axlAxisInfo")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.Gdi.Types.AXISINFO.axAxisName")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.Gdi.Types.DESIGNVECTOR.dvValues")]
@@ -17,5 +17,5 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.Gdi.Types.ENUMLOGFONTEX.elfStyle")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.Gdi.Types.LOGFONT.lfFaceName")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.Gdi.Types.PAINTSTRUCT.rgbReserved")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.FileManagement.Types.WIN32_FIND_DATA.cFileName")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "match native signature", Scope = "member", Target = "~P:WInterop.File.Types.WIN32_FIND_DATA.cFileName")]
 

@@ -12,8 +12,8 @@ using System.Linq;
 using Tests.Support;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using Xunit;
@@ -157,6 +157,6 @@ namespace DesktopTests.FileManagementTests
                 $"'{expression ?? "<null>"}' in '{name ?? "<null>"}' with ignoreCase of {ignoreCase}");
         }
 
-        public static TheoryData<string, string, bool, bool> DosMatchData => Tests.FileManagement.DosMatcherTests.DosMatchData;
+        public static TheoryData<string, string, bool, bool> DosMatchData => Tests.File.DosMatcherTests.DosMatchData;
     }
 }

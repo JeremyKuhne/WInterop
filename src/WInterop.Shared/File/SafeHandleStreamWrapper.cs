@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     /// <summary>
     /// Use to tie lifetime of a stream to a handle.

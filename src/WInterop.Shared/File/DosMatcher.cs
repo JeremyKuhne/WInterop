@@ -13,7 +13,7 @@
 using System;
 using WInterop.Support;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     public static class DosMatcher
     {

@@ -10,8 +10,8 @@ using System;
 using WInterop.DeviceManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement;
-using WInterop.FileManagement.Types;
+using WInterop.File;
+using WInterop.File.Types;
 using Xunit;
 
 namespace DesktopTests.DeviceManagement

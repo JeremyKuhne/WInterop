@@ -7,7 +7,7 @@
 
 using WInterop.Support.Buffers;
 
-namespace WInterop.FileManagement.BufferWrappers
+namespace WInterop.File.BufferWrappers
 {
     public struct ShortPathNameWrapper : IBufferFunc<StringBuffer, uint>
     {

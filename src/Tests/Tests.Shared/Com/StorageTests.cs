@@ -12,7 +12,7 @@ using Tests.Support;
 using WInterop.Com;
 using WInterop.Com.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement;
+using WInterop.File;
 using Xunit;
 
 namespace Tests.Com

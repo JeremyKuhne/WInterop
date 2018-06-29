@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Tests.FileManagement
+namespace Tests.File
 {
     using FluentAssertions;
-    using WInterop.FileManagement.Types;
+    using WInterop.File.Types;
     using Xunit;
 
     public class FileManagementTypes

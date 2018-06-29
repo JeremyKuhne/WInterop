@@ -14,14 +14,14 @@ using WInterop.Authorization;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.FileManagement.BufferWrappers;
-using WInterop.FileManagement.Types;
+using WInterop.File.BufferWrappers;
+using WInterop.File.Types;
 using WInterop.MemoryManagement;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Synchronization.Types;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     public static partial class FileMethods
     {
@@ -181,7 +181,7 @@ namespace WInterop.FileManagement
                 catch (EntryPointNotFoundException)
                 {
                     s_createFileDelegate = Delegates.CreateDelegate<CreateFileDelegate>(
-                        "WInterop.FileManagement.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
+                        "WInterop.File.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
                         "CreateFileW");
                 }
             }
@@ -246,7 +246,7 @@ namespace WInterop.FileManagement
                 catch (EntryPointNotFoundException)
                 {
                     s_copyFileDelegate = Delegates.CreateDelegate<CopyFileDelegate>(
-                        "WInterop.FileManagement.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
+                        "WInterop.File.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
                         "CopyFileEx");
                 }
             }

@@ -5,9 +5,9 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.FileManagement.Types;
+using WInterop.File.Types;
 
-namespace WInterop.FileManagement
+namespace WInterop.File
 {
     public static partial class FindTransforms
     {
