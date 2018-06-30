@@ -17,20 +17,20 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\BufferWrappers\FullPathNameWrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\BufferWrappers\TempPathWrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\DosMatcher.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FileManagementExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FileMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FileMethods.Imports.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FindFilters.All.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FindFilters.DosMatch.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FindFilters.Multiple.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FindFilters.NormalDirectoryFilter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FindOperation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FindTransforms.ToFileName.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\FindTransforms.ToFindResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)File\SafeHandleStreamWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\BufferWrappers\FullPathNameWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\BufferWrappers\TempPathWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\DosMatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileManagementExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.All.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.DosMatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.Multiple.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.NormalDirectoryFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFileName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFindResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\SafeHandleStreamWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfo.cs" />
@@ -47,7 +47,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)File\FindTransforms.ToFullPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFullPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.Imports.cs" />
