@@ -22,16 +22,21 @@ namespace DesktopTests.ShellTests
         public void GetTextAssociation_ProgID()
         {
             string value = ShellMethods.AssocQueryString(ASSOCF.NoUserSettings, ASSOCSTR.ProgId, ".txt", null);
-            // Example: Applications\notepad++.exe
-            value.Should().StartWith("Applications\\").And.EndWith(".exe");
+
+            if (!string.Equals(value, "txtfile"))
+            {
+                // Example: Applications\notepad++.exe
+                value.Should().StartWith("Applications\\").And.EndWith(".exe");
+            }
         }
 
         [Fact]
         public void GetTextAssociation_OpenCommand()
         {
             string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.Command, ".txt", "open");
+
             // Example: "C:\Program Files (x86)\Notepad++\notepad++.exe" "%1"
-            value.Should().EndWith("\"%1\"");
+            value.Should().Contain("%1");
         }
 
         [Fact]
@@ -39,14 +44,14 @@ namespace DesktopTests.ShellTests
         {
             string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.Executable, ".txt", "open");
             // Example: C:\Program Files (x86)\Notepad++\notepad++.exe
-            value.Should().EndWith(".exe");
+            value.Should().EndWithEquivalent(".exe");
         }
 
         [Fact]
         public void GetTextAssociation_FriendlyDocName()
         {
             string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.FriendlyDocName, ".txt", null);
-            value.Should().Be("TXT File");
+            value.Should().BeOneOf("TXT File", "Text Document");
         }
 
         [Fact]
@@ -93,9 +98,19 @@ namespace DesktopTests.ShellTests
         {
             RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.App, ".txt", null);
 
-            // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
             string name = RegistryMethods.QueryKeyName(key);
-            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+
+            if (name.StartsWith(@"\REGISTRY\MACHINE"))
+            {
+                // No user overrides.
+                name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\Applications\notepad.exe");
+            }
+            else
+            {
+                // Has a user setting, should be something like:
+                // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
+                name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+            }
         }
 
         [Fact]
@@ -103,8 +118,9 @@ namespace DesktopTests.ShellTests
         {
             RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.BaseClass, ".txt", null);
 
-            // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\*
             string name = RegistryMethods.QueryKeyName(key);
+
+            // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\*
             name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(@"_Classes\*");
         }
 
@@ -115,7 +131,17 @@ namespace DesktopTests.ShellTests
 
             // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
             string name = RegistryMethods.QueryKeyName(key);
-            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+
+            if (name.StartsWith(@"\REGISTRY\MACHINE"))
+            {
+                // No user overrides.
+                name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\txtfile");
+            }
+            else
+            {
+                // Has a user setting, should be something like:
+                name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+            }
         }
 
         [Fact]
@@ -123,9 +149,18 @@ namespace DesktopTests.ShellTests
         {
             RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.ShellExecClass, ".txt", null);
 
-            // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
             string name = RegistryMethods.QueryKeyName(key);
-            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+
+            if (name.StartsWith(@"\REGISTRY\MACHINE"))
+            {
+                // No user overrides.
+                name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\txtfile");
+            }
+            else
+            {
+                // Has a user setting, should be something like:
+                name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+            }
         }
     }
 }
