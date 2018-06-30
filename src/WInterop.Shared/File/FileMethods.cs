@@ -831,5 +831,54 @@ namespace WInterop.File
             if (!Imports.SetCurrentDirectoryW(path))
                 throw Errors.GetIoExceptionForLastError(path);
         }
+
+        /// <summary>
+        /// Get the drive type for the given root path.
+        /// </summary>
+        public static DriveType GetDriveType(string rootPath)
+        {
+            if (rootPath != null) rootPath = Paths.AddTrailingSeparator(rootPath);
+            return Imports.GetDriveTypeW(rootPath);
+        }
+
+        /// <summary>
+        /// Gets volume information for the given volume root path.
+        /// </summary>
+        public static VolumeInformation GetVolumeInformation(string rootPath)
+        {
+            rootPath = Paths.AddTrailingSeparator(rootPath);
+
+            using (var volumeName = new StringBuffer(initialCharCapacity: Paths.MaxPath + 1))
+            using (var fileSystemName = new StringBuffer(initialCharCapacity: Paths.MaxPath + 1))
+            {
+                // Documentation claims that removable (floppy/optical) drives will prompt for media when calling this API and say to
+                // set the error mode to prevent it. I can't replicate this behavior or find any documentation on when it might have
+                // changed. I'm guessing this changed in Windows 7 when they added support for setting the thread's error mode (as
+                // opposed to the entire process).
+                if (!Imports.GetVolumeInformationW(
+                    rootPath,
+                    volumeName,
+                    volumeName.CharCapacity,
+                    out uint serialNumber,
+                    out uint maxComponentLength,
+                    out FileSystemFeature flags,
+                    fileSystemName,
+                    fileSystemName.CharCapacity))
+                    throw Errors.GetIoExceptionForLastError(rootPath);
+
+                volumeName.SetLengthToFirstNull();
+                fileSystemName.SetLengthToFirstNull();
+
+                return new VolumeInformation
+                {
+                    RootPathName = rootPath,
+                    VolumeName = volumeName.ToString(),
+                    VolumeSerialNumber = serialNumber,
+                    MaximumComponentLength = maxComponentLength,
+                    FileSystemFlags = flags,
+                    FileSystemName = fileSystemName.ToString()
+                };
+            }
+        }
     }
 }

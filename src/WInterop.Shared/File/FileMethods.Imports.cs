@@ -281,6 +281,27 @@ namespace WInterop.File
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern bool SetCurrentDirectoryW(
                 string lpPathName);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getlogicaldrives
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetLogicalDrives();
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getvolumeinformationw
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetVolumeInformationW(
+                string lpRootPathName,
+                SafeHandle lpVolumeNameBuffer,
+                uint nVolumeNameSize,
+                out uint lpVolumeSerialNumber,
+                out uint lpMaximumComponentLength,
+                out FileSystemFeature lpFileSystemFlags,
+                SafeHandle lpFileSystemNameBuffer,
+                uint nFileSystemNameSize);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getdrivetypew
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern DriveType GetDriveTypeW(
+                string lpRootPathName);
         }
     }
 }

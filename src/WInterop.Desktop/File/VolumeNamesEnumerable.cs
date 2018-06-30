@@ -10,44 +10,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using WInterop.ErrorHandling.Types;
+using WInterop.File.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.VolumeManagement.Types;
 
-namespace WInterop.VolumeManagement
+namespace WInterop.File
 {
     /// <summary>
-    /// Encapsulates a finding volume mount points.
+    /// Encapsulates a finding volume names.
     /// </summary>
-    /// <remarks>
-    /// Can't fully validate this yet. It only returns mount points for folders-
-    /// on the one drive I have set up this way it always returns FILE_NOT_FOUND.
-    /// Drives without folder mounts return NO_MORE_FILES as expected.
-    /// </remarks>
-    public class VolumeMountPointsEnumerable : IEnumerable<string>
+    public class VolumeNamesEnumerable : IEnumerable<string>
     {
-        public string VolumeName { get; private set; }
-
-        public VolumeMountPointsEnumerable(string volumeName)
-        {
-            VolumeName = volumeName;
-        }
-
-        public IEnumerator<string> GetEnumerator() => new VolumeMountPointsEnumerator(VolumeName);
+        public IEnumerator<string> GetEnumerator() => new VolumeNamesEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private class VolumeMountPointsEnumerator : IEnumerator<string>
+        private class VolumeNamesEnumerator : IEnumerator<string>
         {
-            private FindVolumeMountPointHandle _findHandle;
-            private string _volumeName;
+            private FindVolumeHandle _findHandle;
             private bool _lastEntryFound;
             private StringBuffer _buffer;
 
-            public VolumeMountPointsEnumerator(string volumeName)
+            public VolumeNamesEnumerator()
             {
                 _buffer = StringBuffer.Cache.Acquire();
-                _volumeName = volumeName;
                 Reset();
             }
 
@@ -68,30 +54,20 @@ namespace WInterop.VolumeManagement
 
             private string FindFirstVolume()
             {
-                // Need at least some length on initial call or we'll get ERROR_INVALID_PARAMETER
-                _buffer.EnsureCharCapacity(400);
-
-                _findHandle = VolumeMethods.Imports.FindFirstVolumeMountPointW(
-                    _volumeName,
+                _findHandle = FileMethods.Imports.FindFirstVolumeW(
                     _buffer,
                     _buffer.CharCapacity);
 
                 if (_findHandle.IsInvalid)
                 {
                     WindowsError error = Errors.GetLastError();
-                    switch (error)
+                    if (error == WindowsError.ERROR_FILENAME_EXCED_RANGE)
                     {
-                        // Not positive on this case as I haven't been able to get this API
-                        // to fully work correctly yet.
-                        case WindowsError.ERROR_MORE_DATA:
-                            _buffer.EnsureCharCapacity(_buffer.CharCapacity + 64);
-                            return FindFirstVolume();
-                        case WindowsError.ERROR_NO_MORE_FILES:
-                            _lastEntryFound = true;
-                            return null;
-                        default:
-                            throw Errors.GetIoExceptionForError(error);
+                        _buffer.EnsureCharCapacity(_buffer.CharCapacity + 64);
+                        return FindFirstVolume();
                     }
+
+                    throw Errors.GetIoExceptionForError(error);
                 }
 
                 _buffer.SetLengthToFirstNull();
@@ -100,14 +76,12 @@ namespace WInterop.VolumeManagement
 
             private string FindNextVolume()
             {
-                if (!VolumeMethods.Imports.FindNextVolumeMountPointW(_findHandle, _buffer, _buffer.CharCapacity))
+                if (!FileMethods.Imports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
                     WindowsError error = Errors.GetLastError();
                     switch (error)
                     {
-                        // Not positive on this case as I haven't been able to get this API
-                        // to fully work correctly yet.
-                        case WindowsError.ERROR_MORE_DATA:
+                        case WindowsError.ERROR_FILENAME_EXCED_RANGE:
                             _buffer.EnsureCharCapacity(_buffer.CharCapacity + 64);
                             return FindNextVolume();
                         case WindowsError.ERROR_NO_MORE_FILES:
@@ -148,7 +122,7 @@ namespace WInterop.VolumeManagement
                 _findHandle = null;
             }
 
-            ~VolumeMountPointsEnumerator()
+            ~VolumeNamesEnumerator()
             {
                 Dispose(disposing: false);
             }

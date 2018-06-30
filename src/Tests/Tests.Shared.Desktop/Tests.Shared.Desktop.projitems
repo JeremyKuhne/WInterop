@@ -41,7 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)VolumeManagement\VolumeManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)File\VolumeManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowClassTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsProcedureTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsTests.cs" />
@@ -49,6 +49,5 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Cryptography\" />
     <Folder Include="$(MSBuildThisFileDirectory)ErrorHandling\" />
-    <Folder Include="$(MSBuildThisFileDirectory)VolumeManagement\" />
   </ItemGroup>
 </Project>

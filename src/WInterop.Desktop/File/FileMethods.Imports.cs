@@ -101,6 +101,78 @@ namespace WInterop.File
                 /// </summary>
                 IntPtr pUsers);
 
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findfirstvolumew
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern FindVolumeHandle FindFirstVolumeW(
+                SafeHandle lpszVolumeName,
+                uint cchBufferLength);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findnextvolumew
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool FindNextVolumeW(
+                FindVolumeHandle hFindVolume,
+                SafeHandle lpszVolumeName,
+                uint cchBufferLength);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findvolumeclose
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool FindVolumeClose(
+                IntPtr hFindVolume);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-findfirstvolumemountpointw
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern FindVolumeMountPointHandle FindFirstVolumeMountPointW(
+                string lpszRootPathName,
+                SafeHandle lpszVolumeMountPoint,
+                uint cchBufferLength);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-findnextvolumemountpointw
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool FindNextVolumeMountPointW(
+                FindVolumeMountPointHandle hFindVolumeMountPoint,
+                SafeHandle lpszVolumeMountPoint,
+                uint cchBufferLength);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-findvolumemountpointclose
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool FindVolumeMountPointClose(
+                IntPtr hFindVolumeMountPoint);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-querydosdevicew
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern uint QueryDosDeviceW(
+                string lpDeviceName,
+                SafeHandle lpTargetPath,
+                uint ucchMax);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getlogicaldrivestringsw
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetLogicalDriveStringsW(
+                uint nBufferLength,
+                SafeHandle lpBuffer);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getvolumepathnamew
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetVolumePathNameW(
+                string lpszFileName,
+                SafeHandle lpszVolumePathName,
+                uint cchBufferLength);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getvolumepathnamesforvolumenamew
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetVolumePathNamesForVolumeNameW(
+                string lpszVolumeName,
+                SafeHandle lpszVolumePathNames,
+                uint cchBuferLength,
+                ref uint lpcchReturnLength);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getvolumenameforvolumemountpointw
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool GetVolumeNameForVolumeMountPointW(
+                string lpszVolumeMountPoint,
+                SafeHandle lpszVolumeName,
+                uint cchBufferLength);
+
             // https://docs.microsoft.com/en-us/windows/desktop/api/winternl/nf-winternl-ntcreatefile
             // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntcreatefile
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
