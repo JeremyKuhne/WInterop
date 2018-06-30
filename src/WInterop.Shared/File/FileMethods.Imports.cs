@@ -161,18 +161,18 @@ namespace WInterop.File
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern bool ReadFile(
                 SafeFileHandle hFile,
-                byte* lpBuffer,
+                ref byte lpBuffer,
                 uint nNumberOfBytesToRead,
-                uint* lpNumberOfBytesRead,
+                out uint lpNumberOfBytesRead,
                 OVERLAPPED* lpOverlapped);
 
             // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-writefile
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern bool WriteFile(
                 SafeFileHandle hFile,
-                byte* lpBuffer,
+                ref byte lpBuffer,
                 uint nNumberOfBytesToWrite,
-                uint* lpNumberOfBytesWritten,
+                out uint lpNumberOfBytesWritten,
                 OVERLAPPED* lpOverlapped);
 
             // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-setfilepointerex

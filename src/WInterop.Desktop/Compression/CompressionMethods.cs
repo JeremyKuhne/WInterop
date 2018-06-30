@@ -142,7 +142,7 @@ namespace WInterop.Compression
             {
                 LzxHeader header = new LzxHeader();
 
-                if (FileMethods.ReadFile(file, (byte*)&header, (uint)sizeof(LzxHeader)) < sizeof(LzxHeader))
+                if (FileMethods.ReadFile(file, Structs.AsByteSpan(ref header)) < sizeof(LzxHeader))
                     return path;
 
                 replacement = char.ToUpperInvariant((char)header.extensionChar);

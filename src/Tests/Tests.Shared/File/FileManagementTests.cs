@@ -365,7 +365,7 @@ namespace Tests.FileManagementTests
                     FileMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
                     FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.Begin);
                     byte[] outBuffer = new byte[data.Length];
-                    FileMethods.ReadFile(fileHandle, outBuffer, (uint)data.Length).Should().Be((uint)data.Length);
+                    FileMethods.ReadFile(fileHandle, outBuffer).Should().Be((uint)data.Length);
                     outBuffer.Should().BeEquivalentTo(data);
                 }
             }

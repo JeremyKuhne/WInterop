@@ -39,6 +39,11 @@ namespace WInterop.Support
             return (uint)sizeof(T);
         }
 
+        public static unsafe Span<byte> AsByteSpan<T>(ref T target) where T : unmanaged
+        {
+            return new Span<byte>(AddressOf(ref target), (int)SizeInBytes(ref target));
+        }
+
         /// <summary>
         /// Helper method to skip initialization of a struct.
         /// </summary>
