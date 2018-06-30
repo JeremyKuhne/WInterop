@@ -7,20 +7,19 @@
 
 using FluentAssertions;
 using Tests.Support;
-using WInterop.DiskManagement;
 using WInterop.Storage;
 using Xunit;
 
 namespace Tests.DiskManagement
 {
-    public class DiskManagementTests
+    public class DiskTests
     {
         [Fact]
         public void GetDiskFreeSpaceForCurrentDrive()
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                var freeSpace = DiskMethods.GetDiskFreeSpaceExtended(null);
+                var freeSpace = StorageMethods.GetDiskFreeSpaceExtended(null);
                 freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfBytes);
                 freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfFreeBytes);
             });
@@ -30,7 +29,7 @@ namespace Tests.DiskManagement
         public void GetDiskFreeSpaceForTempDirectory()
         {
             string tempPath = StorageMethods.GetTempPath();
-            var freeSpace = DiskMethods.GetDiskFreeSpaceExtended(tempPath);
+            var freeSpace = StorageMethods.GetDiskFreeSpaceExtended(tempPath);
             freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfBytes);
             freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfFreeBytes);
         }

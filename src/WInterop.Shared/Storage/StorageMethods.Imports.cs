@@ -302,6 +302,23 @@ namespace WInterop.Storage
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern DriveType GetDriveTypeW(
                 string lpRootPathName);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getdiskfreespacew
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern bool GetDiskFreeSpaceW(
+                string lpRootPathName,
+                uint* lpSectorsPerCluster,
+                uint* lpBytesPerSector,
+                uint* lpNumberOfFreeClusters,
+                uint* lpTotalNumberOfClusters);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getdiskfreespaceexw
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern bool GetDiskFreeSpaceExW(
+                string lpDirectoryName,
+                ulong* lpFreeBytesAvailable,
+                ulong* lpTotalNumberOfBytes,
+                ulong* lpTotalNumberOfFreeBytes);
         }
     }
 }

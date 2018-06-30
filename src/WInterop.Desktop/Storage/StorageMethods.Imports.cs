@@ -173,6 +173,27 @@ namespace WInterop.Storage
                 SafeHandle lpszVolumeName,
                 uint cchBufferLength);
 
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-backupread
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern bool BackupRead(
+                SafeFileHandle hFile,
+                void* lpBuffer,
+                uint nNumberOfBytesToRead,
+                out uint lpNumberOfBytesRead,
+                bool bAbort,
+                bool bProcessSecurity,
+                ref IntPtr context);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-backupseek
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool BackupSeek(
+                SafeFileHandle hFile,
+                uint dwLowBytesToSeek,
+                uint dwHighBytesToSeek,
+                out uint lpdwLowByteSeeked,
+                out uint lpdwHighByteSeeked,
+                ref IntPtr context);
+
             // https://docs.microsoft.com/en-us/windows/desktop/api/winternl/nf-winternl-ntcreatefile
             // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntcreatefile
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]

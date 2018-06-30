@@ -604,5 +604,33 @@ namespace WInterop.Storage
         {
             return new VolumeMountPointsEnumerable(volumeName);
         }
+
+        public static IEnumerable<BackupStreamInformation> GetAlternateStreamInformation(string path)
+        {
+            List<BackupStreamInformation> streams = new List<BackupStreamInformation>();
+            using (var fileHandle = CreateFile(
+                path: path,
+                // To look at metadata we don't need read or write access
+                desiredAccess: 0,
+                shareMode: ShareModes.ReadWrite,
+                creationDisposition: CreationDisposition.OpenExisting,
+                fileAttributes: FileAttributes.None,
+                fileFlags: FileFlags.BackupSemantics))
+            {
+                using (BackupReader reader = new BackupReader(fileHandle))
+                {
+                    BackupStreamInformation? info;
+                    while ((info = reader.GetNextInfo()).HasValue)
+                    {
+                        if (info.Value.StreamType == BackupStreamType.AlternateData)
+                        {
+                            streams.Add(new BackupStreamInformation { Name = info.Value.Name, Size = info.Value.Size });
+                        }
+                    }
+                }
+            }
+
+            return streams;
+        }
     }
 }

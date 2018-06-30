@@ -15,7 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Compression\Types\FdiHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\BufferWrappers\FullPathNameWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\BufferWrappers\TempPathWrapper.cs" />

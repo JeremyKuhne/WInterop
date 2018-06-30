@@ -6,19 +6,19 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.DiskManagement;
+using WInterop.Storage;
 using Xunit;
 
 namespace DesktopTests.DiskManagementTests
 {
-    public class Methods
+    public class DiskTests
     {
         [Fact]
         public void GetDiskFreeSpaceForCurrentDrive()
         {
-            var freeSpace = DiskMethods.GetDiskFreeSpace(null);
+            var freeSpace = StorageMethods.GetDiskFreeSpace(null);
             freeSpace.NumberOfFreeClusters.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfClusters);
-            var extendedFreeSpace = DiskMethods.GetDiskFreeSpaceExtended(null);
+            var extendedFreeSpace = StorageMethods.GetDiskFreeSpaceExtended(null);
             extendedFreeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(extendedFreeSpace.TotalNumberOfBytes);
             extendedFreeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(extendedFreeSpace.TotalNumberOfFreeBytes);
             extendedFreeSpace.TotalNumberOfBytes.Should().Be(freeSpace.SectorsPerCluster * (ulong)freeSpace.BytesPerSector * freeSpace.TotalNumberOfClusters);

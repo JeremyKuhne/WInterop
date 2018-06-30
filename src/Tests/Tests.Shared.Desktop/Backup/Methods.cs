@@ -7,20 +7,20 @@
 
 using System.Linq;
 using FluentAssertions;
-using WInterop.Backup;
 using Tests.Support;
+using WInterop.Storage;
 using Xunit;
 
-namespace DesktopTests.BackupTests
+namespace DesktopTests.StorageTests
 {
-    public class Methods
+    public class BackupTests
     {
         [Fact]
         public void NoAlternateStreamData()
         {
             using (var cleaner = new TestFileCleaner())
             {
-                BackupMethods.GetAlternateStreamInformation(cleaner.CreateTestFile("NoAlternateStreamData")).Should().BeEmpty();
+                StorageMethods.GetAlternateStreamInformation(cleaner.CreateTestFile("NoAlternateStreamData")).Should().BeEmpty();
             }
         }
 
@@ -33,7 +33,7 @@ namespace DesktopTests.BackupTests
                 string firstStream = testFile + ":First";
                 FileHelper.WriteAllText(firstStream, "First alternate data stream");
 
-                var info = BackupMethods.GetAlternateStreamInformation(testFile);
+                var info = StorageMethods.GetAlternateStreamInformation(testFile);
                 info.Should().HaveCount(1);
                 info.First().Name.Should().Be(":First:$DATA");
             }

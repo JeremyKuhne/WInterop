@@ -880,5 +880,44 @@ namespace WInterop.Storage
                 };
             }
         }
+
+        public static DiskFreeSpace GetDiskFreeSpace(string directory)
+        {
+            DiskFreeSpace freeSpace;
+
+            unsafe
+            {
+                if (!Imports.GetDiskFreeSpaceW(
+                    lpRootPathName: directory,
+                    lpSectorsPerCluster: &freeSpace.SectorsPerCluster,
+                    lpBytesPerSector: &freeSpace.BytesPerSector,
+                    lpNumberOfFreeClusters: &freeSpace.NumberOfFreeClusters,
+                    lpTotalNumberOfClusters: &freeSpace.TotalNumberOfClusters))
+                {
+                    throw Errors.GetIoExceptionForLastError(directory);
+                }
+            }
+
+            return freeSpace;
+        }
+
+        public static ExtendedDiskFreeSpace GetDiskFreeSpaceExtended(string directory)
+        {
+            ExtendedDiskFreeSpace freeSpace;
+
+            unsafe
+            {
+                if (!Imports.GetDiskFreeSpaceExW(
+                    lpDirectoryName: directory,
+                    lpFreeBytesAvailable: &freeSpace.FreeBytesAvailable,
+                    lpTotalNumberOfBytes: &freeSpace.TotalNumberOfBytes,
+                    lpTotalNumberOfFreeBytes: &freeSpace.TotalNumberOfFreeBytes))
+                {
+                    throw Errors.GetIoExceptionForLastError(directory);
+                }
+            }
+
+            return freeSpace;
+        }
     }
 }

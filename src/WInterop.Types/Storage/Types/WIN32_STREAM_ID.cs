@@ -8,10 +8,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Backup.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa362667.aspx">WIN32_STREAM_ID</a> structure.
+    /// <a href="https://docs.microsoft.com/en-us/windows/desktop/api/winbase/ns-winbase-_win32_stream_id">WIN32_STREAM_ID</a> structure.
     /// See <a href="https://msdn.microsoft.com/en-us/library/dd303907.aspx">[MS-BKUP]</a> specification.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
