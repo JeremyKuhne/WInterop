@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// File types returned by the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364960.aspx">GetFileType</a> API.

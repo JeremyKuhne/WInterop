@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// Equivalent to <see cref="System.IO.FileShare"/>.

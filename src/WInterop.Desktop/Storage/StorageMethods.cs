@@ -13,15 +13,15 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
-    public static partial class FileMethods
+    public static partial class StorageMethods
     {
         private struct ShortPathNameWrapper : IBufferFunc<StringBuffer, uint>
         {

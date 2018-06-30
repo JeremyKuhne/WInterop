@@ -9,8 +9,8 @@ using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using WInterop.DeviceManagement;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Handles;
 using WInterop.Handles.Types;
 using WInterop.Support;
@@ -23,8 +23,8 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void GetHandleTypeBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
+            string tempPath = StorageMethods.GetTempPath();
+            using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
             {
                 string name = HandleMethods.GetObjectType(directory);
                 name.Should().Be("File");
@@ -34,8 +34,8 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void GetHandleNameBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
+            string tempPath = StorageMethods.GetTempPath();
+            using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string name = HandleMethods.GetObjectName(directory);
@@ -105,12 +105,12 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void QueryDosVolumePathBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
+            string tempPath = StorageMethods.GetTempPath();
+            using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string fullName = HandleMethods.GetObjectName(directory);
-                string fileName = FileMethods.GetFileName(directory);
+                string fileName = StorageMethods.GetFileName(directory);
                 string deviceName = fullName.Substring(0, fullName.Length - fileName.Length);
 
                 string dosVolumePath = DeviceMethods.QueryDosVolumePath(deviceName);
@@ -123,7 +123,7 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void GetPipeObjectInfo()
         {
-            var fileHandle = FileMethods.CreateFileSystemIo(
+            var fileHandle = StorageMethods.CreateFileSystemIo(
                 @"\\.\pipe\",
                 0,                  // We don't care about read or write, we're just getting metadata with this handle
                 System.IO.FileShare.ReadWrite,
@@ -138,14 +138,14 @@ namespace DesktopTests.HandlesTests
             string typeName = HandleMethods.GetObjectType(fileHandle);
             typeName.Should().Be(@"File");
 
-            string fileName = FileMethods.GetFileName(fileHandle);
+            string fileName = StorageMethods.GetFileName(fileHandle);
             fileName.Should().Be(@"\");
         }
 
         [Fact]
         public void GetPipeObjectInfoNoTrailingSlash()
         {
-            var fileHandle = FileMethods.CreateFileSystemIo(
+            var fileHandle = StorageMethods.CreateFileSystemIo(
                 @"\\.\pipe",
                 0,                  // We don't care about read or write, we're just getting metadata with this handle
                 System.IO.FileShare.ReadWrite,
@@ -161,7 +161,7 @@ namespace DesktopTests.HandlesTests
             typeName.Should().Be(@"File");
 
             // Not sure why this is- probably the source of why so many other things go wrong
-            Action action = () => FileMethods.GetFileName(fileHandle);
+            Action action = () => StorageMethods.GetFileName(fileHandle);
             action.Should().Throw<ArgumentException>().And.HResult.Should().Be(unchecked((int)0x80070057));
         }
     }

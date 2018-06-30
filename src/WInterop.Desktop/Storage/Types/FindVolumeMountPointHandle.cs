@@ -7,7 +7,7 @@
 
 using WInterop.Handles.Types;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// Handle for enumerating volume mount points.
@@ -20,7 +20,7 @@ namespace WInterop.File.Types
 
         protected override bool ReleaseHandle()
         {
-            return FileMethods.Imports.FindVolumeMountPointClose(handle);
+            return StorageMethods.Imports.FindVolumeMountPointClose(handle);
         }
     }
 }

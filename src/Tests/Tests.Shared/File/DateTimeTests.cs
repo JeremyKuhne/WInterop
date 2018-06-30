@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using Xunit;
 
 namespace Tests.File

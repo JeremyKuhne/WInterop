@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using WInterop.Support;
 using Xunit;
 

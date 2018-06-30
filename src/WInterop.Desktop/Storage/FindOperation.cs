@@ -12,9 +12,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
     public partial class FindOperation<T> : IEnumerable<T>
     {
@@ -23,13 +23,13 @@ namespace WInterop.File
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private IntPtr CreateDirectoryHandle(string fileName, string subDirectory)
             {
-                return FileMethods.CreateDirectoryHandle(_directory, fileName);
+                return StorageMethods.CreateDirectoryHandle(_directory, fileName);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void GetData()
             {
-                NTSTATUS status = FileMethods.Imports.NtQueryDirectoryFile(
+                NTSTATUS status = StorageMethods.Imports.NtQueryDirectoryFile(
                     FileHandle: _directory,
                     Event: IntPtr.Zero,
                     ApcRoutine: null,

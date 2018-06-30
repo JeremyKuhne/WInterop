@@ -8,7 +8,7 @@
 using FluentAssertions;
 using Tests.Support;
 using WInterop.DiskManagement;
-using WInterop.File;
+using WInterop.Storage;
 using Xunit;
 
 namespace Tests.DiskManagement
@@ -29,7 +29,7 @@ namespace Tests.DiskManagement
         [Fact]
         public void GetDiskFreeSpaceForTempDirectory()
         {
-            string tempPath = FileMethods.GetTempPath();
+            string tempPath = StorageMethods.GetTempPath();
             var freeSpace = DiskMethods.GetDiskFreeSpaceExtended(tempPath);
             freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfBytes);
             freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfFreeBytes);

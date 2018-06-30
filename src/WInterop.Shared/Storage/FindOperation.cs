@@ -12,11 +12,11 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Threading;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using WInterop.Handles;
 using WInterop.Support.Buffers;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
     public partial class FindOperation<T> : IEnumerable<T>
     {
@@ -60,7 +60,7 @@ namespace WInterop.File
 
         public IEnumerator<T> GetEnumerator()
         {
-            SafeFileHandle handle = FileMethods.CreateDirectoryHandle(_directory);
+            SafeFileHandle handle = StorageMethods.CreateDirectoryHandle(_directory);
             IntPtr phandle = handle.DangerousGetHandle();
             handle.SetHandleAsInvalid();
             handle.Dispose();

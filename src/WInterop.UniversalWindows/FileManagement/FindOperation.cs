@@ -11,10 +11,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using WInterop.ErrorHandling.Types;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using WInterop.Support;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
     public partial class FindOperation<T> : IEnumerable<T>
     {
@@ -23,7 +23,7 @@ namespace WInterop.File
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private IntPtr CreateDirectoryHandle(string fileName, string subDirectory)
             {
-                SafeFileHandle safeHandle = FileMethods.CreateDirectoryHandle(subDirectory);
+                SafeFileHandle safeHandle = StorageMethods.CreateDirectoryHandle(subDirectory);
 
                 // Ideally we'd never wrap in a SafeFileHandle, but for now this is reasonable.
                 IntPtr handle = safeHandle.DangerousGetHandle();
@@ -34,7 +34,7 @@ namespace WInterop.File
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void GetData()
             {
-                if (!FileMethods.Imports.GetFileInformationByHandleEx(
+                if (!StorageMethods.Imports.GetFileInformationByHandleEx(
                    _directory,
                    FileInfoClass.FileFullDirectoryInfo,
                    _buffer.VoidPointer,

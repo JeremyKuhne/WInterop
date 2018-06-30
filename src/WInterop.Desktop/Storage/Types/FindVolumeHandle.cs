@@ -7,7 +7,7 @@
 
 using WInterop.Handles.Types;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// Handle for enumerating volumes.
@@ -20,7 +20,7 @@ namespace WInterop.File.Types
 
         protected override bool ReleaseHandle()
         {
-            return FileMethods.Imports.FindVolumeClose(handle);
+            return StorageMethods.Imports.FindVolumeClose(handle);
         }
     }
 }

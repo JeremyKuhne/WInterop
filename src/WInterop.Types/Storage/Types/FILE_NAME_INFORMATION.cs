@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff545817.aspx">FILE_NAME_INFORMATION</a> structure.

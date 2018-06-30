@@ -11,8 +11,8 @@ using System;
 using Tests.Support;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop;
 using Xunit;
@@ -173,7 +173,7 @@ namespace Tests.File
             ]
         public void ValidateKnownFixedBehaviors(string value, string expected)
         {
-            FileMethods.GetFullPathName(value).Should().Be(expected, $"source was {value}");
+            StorageMethods.GetFullPathName(value).Should().Be(expected, $"source was {value}");
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Tests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                IntPtr result = FileMethods.Imports.FindFirstFileW(cleaner.TempFolder, out WIN32_FIND_DATA findData);
+                IntPtr result = StorageMethods.Imports.FindFirstFileW(cleaner.TempFolder, out WIN32_FIND_DATA findData);
                 try
                 {
                     IsValid(result).Should().BeTrue("root location exists");
@@ -189,10 +189,10 @@ namespace Tests.File
                 finally
                 {
                     if (IsValid(result))
-                        FileMethods.Imports.FindClose(result);
+                        StorageMethods.Imports.FindClose(result);
                 }
 
-                result = FileMethods.Imports.FindFirstFileW(cleaner.GetTestPath(), out findData);
+                result = StorageMethods.Imports.FindFirstFileW(cleaner.GetTestPath(), out findData);
                 WindowsError error = Errors.GetLastError();
 
                 try
@@ -203,10 +203,10 @@ namespace Tests.File
                 finally
                 {
                     if (IsValid(result))
-                        FileMethods.Imports.FindClose(result);
+                        StorageMethods.Imports.FindClose(result);
                 }
 
-                result = FileMethods.Imports.FindFirstFileW(Paths.Combine(cleaner.GetTestPath(), "NotHere"), out findData);
+                result = StorageMethods.Imports.FindFirstFileW(Paths.Combine(cleaner.GetTestPath(), "NotHere"), out findData);
                 error = Errors.GetLastError();
 
                 try
@@ -217,7 +217,7 @@ namespace Tests.File
                 finally
                 {
                     if (IsValid(result))
-                        FileMethods.Imports.FindClose(result);
+                        StorageMethods.Imports.FindClose(result);
                 }
             }
 
@@ -232,15 +232,15 @@ namespace Tests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                bool success = FileMethods.Imports.GetFileAttributesExW(cleaner.TempFolder,
+                bool success = StorageMethods.Imports.GetFileAttributesExW(cleaner.TempFolder,
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA attributeData);
                 success.Should().BeTrue("root location exists");
-                success = FileMethods.Imports.GetFileAttributesExW(cleaner.GetTestPath(),
+                success = StorageMethods.Imports.GetFileAttributesExW(cleaner.GetTestPath(),
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
                 WindowsError error = Errors.GetLastError();
                 success.Should().BeFalse("non-existant file");
                 error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
-                success = FileMethods.Imports.GetFileAttributesExW(Paths.Combine(cleaner.GetTestPath(), "NotHere"),
+                success = StorageMethods.Imports.GetFileAttributesExW(Paths.Combine(cleaner.GetTestPath(), "NotHere"),
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
                 error = Errors.GetLastError();
                 success.Should().BeFalse("non-existant subdir");
@@ -254,24 +254,24 @@ namespace Tests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.CreateTestFile(nameof(GetFileAttributesBehavior_DeletedFile));
-                using (var handle = FileMethods.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All))
+                using (var handle = StorageMethods.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    FileMethods.FileExists(path).Should().BeTrue();
-                    FileMethods.DeleteFile(path);
+                    StorageMethods.FileExists(path).Should().BeTrue();
+                    StorageMethods.DeleteFile(path);
 
                     // With the file deleted and the handle still open the file will still physically exist.
                     // Trying to access the file via a handle at this point will fail with access denied.
 
-                    Action action = () => FileMethods.FileExists(path);
+                    Action action = () => StorageMethods.FileExists(path);
                     action.Should().Throw<UnauthorizedAccessException>();
 
-                    action = () => FileMethods.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All,
+                    action = () => StorageMethods.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All,
                         desiredAccess: DesiredAccess.ReadAttributes);
                     action.Should().Throw<UnauthorizedAccessException>();
 
                     // Find file will work at this point.
-                    IntPtr findHandle = FileMethods.Imports.FindFirstFileW(path, out WIN32_FIND_DATA findData);
+                    IntPtr findHandle = StorageMethods.Imports.FindFirstFileW(path, out WIN32_FIND_DATA findData);
                     findHandle.Should().NotBe(IntPtr.Zero);
                     try
                     {
@@ -279,7 +279,7 @@ namespace Tests.File
                     }
                     finally
                     {
-                        FileMethods.Imports.FindClose(findHandle);
+                        StorageMethods.Imports.FindClose(findHandle);
                     }
                 }
             }
@@ -290,13 +290,13 @@ namespace Tests.File
         {
             // ERROR_FILENAME_EXCED_RANGE (206)
             // GetFullPathName will fail if the passed in patch is longer than short.MaxValue - 2, even if the path will normalize below that value.
-            // FileMethods.GetFullPathName(PathGenerator.CreatePathOfLength(@"C:\..\..\..\..", short.MaxValue - 2));
+            // StorageMethods.GetFullPathName(PathGenerator.CreatePathOfLength(@"C:\..\..\..\..", short.MaxValue - 2));
 
             // ERROR_INVALID_NAME (123)
             // GetFullPathName will fail if the passed in path normalizes over short.MaxValue - 2
-            // FileMethods.GetFullPathName(new string('a', short.MaxValue - 2));
+            // StorageMethods.GetFullPathName(new string('a', short.MaxValue - 2));
 
-            FileMethods.GetFullPathName(PathGenerator.CreatePathOfLength(FileMethods.GetTempPath(), short.MaxValue - 2));
+            StorageMethods.GetFullPathName(PathGenerator.CreatePathOfLength(StorageMethods.GetTempPath(), short.MaxValue - 2));
 
             // Works
             // NativeMethods.File.GetFullPathName(PathGenerator.CreatePathOfLength(@"C:\", short.MaxValue - 2));
@@ -308,22 +308,22 @@ namespace Tests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string directory = cleaner.GetTestPath();
-                FileMethods.CreateDirectory(directory);
-                FileMethods.DirectoryExists(directory).Should().BeTrue();
+                StorageMethods.CreateDirectory(directory);
+                StorageMethods.DirectoryExists(directory).Should().BeTrue();
                 string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion), directory);
-                using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
+                using (var handle = StorageMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
                     // Mark the file for deletion
-                    FileMethods.DeleteFile(file);
+                    StorageMethods.DeleteFile(file);
 
                     // RemoveDirectory API call will throw
-                    Action action = () => FileMethods.RemoveDirectory(directory);
+                    Action action = () => StorageMethods.RemoveDirectory(directory);
                     action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_DIR_NOT_EMPTY));
 
                     // Opening the directory for deletion will succeed, but have no impact
-                    using (var directoryHandle = FileMethods.CreateFile(
+                    using (var directoryHandle = StorageMethods.CreateFile(
                         directory,
                         CreationDisposition.OpenExisting,
                         DesiredAccess.ListDirectory | DesiredAccess.Delete,
@@ -336,13 +336,13 @@ namespace Tests.File
                 }
 
                 // File will be gone now that the handle is closed
-                FileMethods.FileExists(file).Should().BeFalse();
+                StorageMethods.FileExists(file).Should().BeFalse();
 
                 // But the directory will still exist as it doesn't respect DeleteOnClose with an open handle when it is closed
-                FileMethods.DirectoryExists(directory).Should().BeTrue();
+                StorageMethods.DirectoryExists(directory).Should().BeTrue();
 
                 // Create a handle to the directory again with DeleteOnClose and it will actually delete the directory
-                using (var directoryHandle = FileMethods.CreateFile(
+                using (var directoryHandle = StorageMethods.CreateFile(
                     directory,
                     CreationDisposition.OpenExisting,
                     DesiredAccess.ListDirectory | DesiredAccess.Delete,
@@ -352,7 +352,7 @@ namespace Tests.File
                 {
                     directoryHandle.IsInvalid.Should().BeFalse();
                 }
-                FileMethods.DirectoryExists(directory).Should().BeFalse();
+                StorageMethods.DirectoryExists(directory).Should().BeFalse();
             }
         }
 
@@ -363,20 +363,20 @@ namespace Tests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string directory = cleaner.GetTestPath();
-                FileMethods.CreateDirectory(directory);
-                FileMethods.DirectoryExists(directory).Should().BeTrue();
+                StorageMethods.CreateDirectory(directory);
+                StorageMethods.DirectoryExists(directory).Should().BeTrue();
                 string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion2), directory);
 
                 SafeFileHandle directoryHandle = null;
-                using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
+                using (var handle = StorageMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
                 {
                     handle.IsInvalid.Should().BeFalse();
 
                     // Mark the file for deletion
-                    FileMethods.DeleteFile(file);
+                    StorageMethods.DeleteFile(file);
 
                     // Open the directory handle
-                    directoryHandle = FileMethods.CreateFile(
+                    directoryHandle = StorageMethods.CreateFile(
                         directory,
                         CreationDisposition.OpenExisting,
                         DesiredAccess.ListDirectory | DesiredAccess.Delete,
@@ -388,12 +388,12 @@ namespace Tests.File
                 try
                 {
                     // File will be gone now that the handle is closed
-                    FileMethods.FileExists(file).Should().BeFalse();
+                    StorageMethods.FileExists(file).Should().BeFalse();
 
                     directoryHandle.Close();
 
                     // The directory will not exist as the open handle was closed before it was closed
-                    FileMethods.DirectoryExists(directory).Should().BeFalse();
+                    StorageMethods.DirectoryExists(directory).Should().BeFalse();
 
                 }
                 finally

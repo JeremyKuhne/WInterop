@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// File access mode information.

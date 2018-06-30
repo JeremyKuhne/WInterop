@@ -8,7 +8,7 @@
 using System;
 using WInterop.Authorization.Types;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// Security Quality of Service flags for CreateFile.

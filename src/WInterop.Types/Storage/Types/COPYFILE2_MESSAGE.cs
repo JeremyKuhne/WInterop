@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449413.aspx
     public struct COPYFILE2_MESSAGE

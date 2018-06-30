@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// Used to query names of files in a directory.

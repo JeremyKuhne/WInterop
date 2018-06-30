@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 
 namespace WInterop.DeviceManagement.Types
 {

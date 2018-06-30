@@ -10,8 +10,8 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 
 namespace Tests.Support
 {
@@ -42,7 +42,7 @@ namespace Tests.Support
                 FileHelper.CreateDirectoryRecursive(TempFolder);
 
                 // Create a flag file and leave it open- this way we can track and clean abandoned (crashed/terminated) processes
-                _flagFile = FileMethods.CreateFileStream(flagFile,
+                _flagFile = StorageMethods.CreateFileStream(flagFile,
                     DesiredAccess.GenericReadWrite, 0, CreationDisposition.CreateNew);
 
                 var writer = new StreamWriter(_flagFile);
@@ -83,7 +83,7 @@ namespace Tests.Support
                         try
                         {
                             // If we can't delete the flag file (open handle) we'll throw and move on
-                            FileMethods.DeleteFile(@"\\?\" + flagFile.File);
+                            StorageMethods.DeleteFile(@"\\?\" + flagFile.File);
 
                             FileHelper.DeleteDirectoryRecursive(@"\\?\" + flagFile.Directory);
                         }
@@ -107,7 +107,7 @@ namespace Tests.Support
         public string CreateTestFile(string content, string basePath = null)
         {
             string testFile = GetTestPath(basePath);
-            using (var stream = FileMethods.CreateFileStream(testFile,
+            using (var stream = StorageMethods.CreateFileStream(testFile,
                 DesiredAccess.GenericReadWrite, ShareModes.ReadWrite, CreationDisposition.CreateNew))
             {
                 using (var writer = new StreamWriter(stream))
@@ -122,7 +122,7 @@ namespace Tests.Support
         public string CreateTestFile(byte[] content, string basePath = null)
         {
             string testFile = GetTestPath(basePath);
-            using (var stream = FileMethods.CreateFileStream(testFile,
+            using (var stream = StorageMethods.CreateFileStream(testFile,
                 DesiredAccess.GenericReadWrite, ShareModes.ReadWrite, CreationDisposition.CreateNew))
             {
                 using (var writer = new BinaryWriter(stream))
@@ -173,7 +173,7 @@ namespace Tests.Support
 
                     try
                     {
-                        FileMethods.DeleteFile(@"\\?\" + file);
+                        StorageMethods.DeleteFile(@"\\?\" + file);
                     }
                     catch (Exception)
                     {

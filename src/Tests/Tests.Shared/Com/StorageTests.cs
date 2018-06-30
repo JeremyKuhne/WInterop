@@ -12,7 +12,7 @@ using Tests.Support;
 using WInterop.Com;
 using WInterop.Com.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.File;
+using WInterop.Storage;
 using Xunit;
 
 namespace Tests.Com
@@ -29,7 +29,7 @@ namespace Tests.Com
                 created.Should().NotBeNull();
                 IStorage storage = created as IStorage;
                 storage.Should().NotBeNull();
-                FileMethods.FileExists(path).Should().BeTrue();
+                StorageMethods.FileExists(path).Should().BeTrue();
 
                 storage.Stat(out var stats, StatFlag.Default);
                 stats.GetAndFreeString().Should().Be(path);

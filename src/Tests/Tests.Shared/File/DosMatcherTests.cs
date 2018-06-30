@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System;
-using WInterop.File;
+using WInterop.Storage;
 using Xunit;
 
 namespace Tests.File

@@ -7,8 +7,8 @@
 
 using FluentAssertions;
 using Tests.Support;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using Xunit;
 
 namespace Tests
@@ -20,7 +20,7 @@ namespace Tests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var mountPointManager = FileMethods.CreateFile(
+                using (var mountPointManager = StorageMethods.CreateFile(
                     @"\\.\MountPointManager", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite, FileAttributes.Normal))
                 {
                     mountPointManager.IsInvalid.Should().BeFalse();

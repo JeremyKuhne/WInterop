@@ -10,11 +10,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using WInterop.ErrorHandling.Types;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
     /// <summary>
     /// Encapsulates a finding volume mount points.
@@ -71,7 +71,7 @@ namespace WInterop.File
                 // Need at least some length on initial call or we'll get ERROR_INVALID_PARAMETER
                 _buffer.EnsureCharCapacity(400);
 
-                _findHandle = FileMethods.Imports.FindFirstVolumeMountPointW(
+                _findHandle = StorageMethods.Imports.FindFirstVolumeMountPointW(
                     _volumeName,
                     _buffer,
                     _buffer.CharCapacity);
@@ -100,7 +100,7 @@ namespace WInterop.File
 
             private string FindNextVolume()
             {
-                if (!FileMethods.Imports.FindNextVolumeMountPointW(_findHandle, _buffer, _buffer.CharCapacity))
+                if (!StorageMethods.Imports.FindNextVolumeMountPointW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
                     WindowsError error = Errors.GetLastError();
                     switch (error)

@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System.Linq;
 using WInterop.ErrorHandling.Types;
-using WInterop.File;
+using WInterop.Storage;
 using Xunit;
 
 namespace DesktopTests
@@ -18,7 +18,7 @@ namespace DesktopTests
         [Fact]
         public void QueryDosDevice_All()
         {
-            var names = FileMethods.QueryDosDevice(null).ToArray();
+            var names = StorageMethods.QueryDosDevice(null).ToArray();
             names.Should().Contain("Global");
             names.Should().Contain("C:");
             names[names.Length - 1].Should().NotBeNullOrEmpty("we split correctly");
@@ -27,7 +27,7 @@ namespace DesktopTests
         [Fact]
         public void QueryDosDevice_C()
         {
-            var names = FileMethods.QueryDosDevice("C:").ToArray();
+            var names = StorageMethods.QueryDosDevice("C:").ToArray();
             names.Length.Should().Be(1);
             names[0].Should().StartWith(@"\Device\HarddiskVolume");
         }
@@ -35,7 +35,7 @@ namespace DesktopTests
         [Fact]
         public void BasicLogicalDriveStrings()
         {
-            var driveStrings = FileMethods.GetLogicalDriveStrings();
+            var driveStrings = StorageMethods.GetLogicalDriveStrings();
             driveStrings.Should().NotBeEmpty();
             driveStrings.Should().OnlyContain(t => t.Length == 3 && t[0] >= 'A' && t[0] <= 'Z' && t[1] == ':' && t[2] == '\\');
         }
@@ -43,11 +43,11 @@ namespace DesktopTests
         [Fact]
         public void BasicGetVolumeInformation()
         {
-            foreach (string drive in FileMethods.GetLogicalDriveStrings())
+            foreach (string drive in StorageMethods.GetLogicalDriveStrings())
             {
                 try
                 {
-                    var info = FileMethods.GetVolumeInformation(drive);
+                    var info = StorageMethods.GetVolumeInformation(drive);
                     info.RootPathName.Should().Be(drive);
                 }
                 catch (DriveNotReadyException)
@@ -62,16 +62,16 @@ namespace DesktopTests
         [Fact]
         public void BasicGetDriveType()
         {
-            foreach (string drive in FileMethods.GetLogicalDriveStrings())
+            foreach (string drive in StorageMethods.GetLogicalDriveStrings())
             {
-                var type = FileMethods.GetDriveType(drive);
+                var type = StorageMethods.GetDriveType(drive);
             }
         }
 
         [Fact]
         public void GetVolumeNames()
         {
-            var volumeNames = FileMethods.GetVolumes().ToArray();
+            var volumeNames = StorageMethods.GetVolumes().ToArray();
             volumeNames.Length.Should().BeGreaterThan(0);
             volumeNames[0].Should().StartWith(@"\\?\Volume{");
         }
@@ -79,18 +79,18 @@ namespace DesktopTests
         [Fact(Skip = "Needs admin access and the API this is calling appears buggy.")]
         public void GetVolumeMountPoints()
         {
-            foreach (string volumeName in FileMethods.GetVolumes())
+            foreach (string volumeName in StorageMethods.GetVolumes())
             {
-                var mountPoints = FileMethods.GetVolumeMountPoints(volumeName).ToArray();
+                var mountPoints = StorageMethods.GetVolumeMountPoints(volumeName).ToArray();
             }
         }
 
         [Fact]
         public void GetAllVolumeMountPoints()
         {
-            foreach (string volumeName in FileMethods.GetVolumes())
+            foreach (string volumeName in StorageMethods.GetVolumes())
             {
-                foreach (string mountPoint in FileMethods.GetVolumePathNamesForVolumeName(volumeName))
+                foreach (string mountPoint in StorageMethods.GetVolumePathNamesForVolumeName(volumeName))
                 {
                     mountPoint.Should().NotBeNullOrWhiteSpace();
                 }

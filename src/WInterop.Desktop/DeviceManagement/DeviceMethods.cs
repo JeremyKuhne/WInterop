@@ -10,8 +10,8 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.DeviceManagement.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -165,7 +165,7 @@ namespace WInterop.DeviceManagement
         /// </summary>
         public unsafe static string QueryDosVolumePath(string volume)
         {
-            var mountManager = FileMethods.CreateFile(
+            var mountManager = StorageMethods.CreateFile(
                 @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0);
 
             ControlCode controlCode = ControlCodes.MountManager.QueryDosVolumePath;

@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using WInterop.Support.Buffers;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
     public static partial class FindFilters
     {

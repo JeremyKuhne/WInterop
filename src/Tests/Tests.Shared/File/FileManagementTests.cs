@@ -9,8 +9,8 @@ using FluentAssertions;
 using System;
 using System.Linq;
 using Tests.Support;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Support;
 using Xunit;
 
@@ -21,20 +21,20 @@ namespace Tests.FileManagementTests
         [Fact]
         public void GetTempPathBasic()
         {
-            FileMethods.GetTempPath().Should().NotBeNullOrWhiteSpace();
+            StorageMethods.GetTempPath().Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void GetFullPathBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            FileMethods.GetFullPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+            string tempPath = StorageMethods.GetTempPath();
+            StorageMethods.GetFullPathName(tempPath).Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void GetFullPathNameForCurrent()
         {
-            string fullPath = FileMethods.GetFullPathName(".");
+            string fullPath = StorageMethods.GetFullPathName(".");
             fullPath.Length.Should().BeGreaterThan(2);
             fullPath[1].Should().Be(':');
         }
@@ -42,30 +42,30 @@ namespace Tests.FileManagementTests
         [Fact]
         public void GetTempFileNameBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = FileMethods.GetTempFileName(tempPath, "tfn");
+            string tempPath = StorageMethods.GetTempPath();
+            string tempFileName = StorageMethods.GetTempFileName(tempPath, "tfn");
             try
             {
                 tempFileName.Should().StartWith(tempPath);
             }
             finally
             {
-                FileMethods.DeleteFile(tempFileName);
+                StorageMethods.DeleteFile(tempFileName);
             }
         }
 
         [Fact]
         public void DeleteFileBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = FileMethods.GetTempFileName(tempPath, "tfn");
+            string tempPath = StorageMethods.GetTempPath();
+            string tempFileName = StorageMethods.GetTempFileName(tempPath, "tfn");
             try
             {
                 System.IO.File.Exists(tempFileName).Should().BeTrue();
             }
             finally
             {
-                FileMethods.DeleteFile(tempFileName);
+                StorageMethods.DeleteFile(tempFileName);
                 System.IO.File.Exists(tempFileName).Should().BeFalse();
             }
         }
@@ -73,18 +73,18 @@ namespace Tests.FileManagementTests
         [Fact]
         public void CreateFileBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = FileMethods.GetTempFileName(tempPath, "tfn");
+            string tempPath = StorageMethods.GetTempPath();
+            string tempFileName = StorageMethods.GetTempFileName(tempPath, "tfn");
             try
             {
-                using (var file = FileMethods.CreateFile(tempFileName, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
+                using (var file = StorageMethods.CreateFile(tempFileName, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
             }
             finally
             {
-                FileMethods.DeleteFile(tempFileName);
+                StorageMethods.DeleteFile(tempFileName);
             }
         }
 
@@ -93,7 +93,7 @@ namespace Tests.FileManagementTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var file = FileMethods.CreateFile(@"C:\.", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
+                using (var file = StorageMethods.CreateFile(@"C:\.", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
                     FileAttributes.None, FileFlags.BackupSemantics))
                 {
                     file.IsInvalid.Should().BeFalse();
@@ -109,7 +109,7 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var file = FileMethods.CreateFile(tempFileName, CreationDisposition.CreateNew, DesiredAccess.GenericRead))
+                using (var file = StorageMethods.CreateFile(tempFileName, CreationDisposition.CreateNew, DesiredAccess.GenericRead))
                 {
                     file.IsInvalid.Should().BeFalse();
                     System.IO.File.Exists(tempFileName).Should().BeTrue();
@@ -120,8 +120,8 @@ namespace Tests.FileManagementTests
         [Fact]
         public void GetFileAttributesExBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            var info = FileMethods.GetFileAttributesEx(tempPath);
+            string tempPath = StorageMethods.GetTempPath();
+            var info = StorageMethods.GetFileAttributesEx(tempPath);
             info.dwFileAttributes.Should().HaveFlag(FileAttributes.Directory);
         }
 
@@ -133,9 +133,9 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var file = FileMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
+                using (var file = StorageMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
                 {
-                    FileMethods.FlushFileBuffers(file);
+                    StorageMethods.FlushFileBuffers(file);
                 }
             }
         }
@@ -148,9 +148,9 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var file = FileMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
+                using (var file = StorageMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
                 {
-                    string fileName = FileMethods.GetFileNameLegacy(file);
+                    string fileName = StorageMethods.GetFileNameLegacy(file);
                     tempFileName.Should().EndWith(fileName);
                 }
             }
@@ -164,15 +164,15 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
+                using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
                 {
-                    var info = FileMethods.GetFileStandardInformation(directory);
+                    var info = StorageMethods.GetFileStandardInformation(directory);
                     info.Directory.Should().BeTrue();
                 }
 
-                using (var file = FileMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
+                using (var file = StorageMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
                 {
-                    var info = FileMethods.GetFileStandardInformation(file);
+                    var info = StorageMethods.GetFileStandardInformation(file);
                     info.Directory.Should().BeFalse();
                     info.NumberOfLinks.Should().Be(1);
                     info.DeletePending.Should().BeFalse();
@@ -190,14 +190,14 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
+                using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
                 {
-                    var directoryInfo = FileMethods.GetFileBasicInformation(directory);
+                    var directoryInfo = StorageMethods.GetFileBasicInformation(directory);
                     directoryInfo.Attributes.Should().HaveFlag(FileAttributes.Directory);
 
-                    using (var file = FileMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
+                    using (var file = StorageMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
                     {
-                        var fileInfo = FileMethods.GetFileBasicInformation(file);
+                        var fileInfo = StorageMethods.GetFileBasicInformation(file);
                         fileInfo.Attributes.Should().NotHaveFlag(FileAttributes.Directory);
                         fileInfo.CreationTimeUtc.Should().BeAfter(directoryInfo.CreationTimeUtc);
                     }
@@ -213,14 +213,14 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
+                using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
                 {
-                    var directoryInfo = FileMethods.GetStreamInformation(directory);
+                    var directoryInfo = StorageMethods.GetStreamInformation(directory);
                     directoryInfo.Should().BeEmpty();
 
-                    using (var file = FileMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
+                    using (var file = StorageMethods.CreateFile(tempFileName, CreationDisposition.CreateNew))
                     {
-                        var fileInfo = FileMethods.GetStreamInformation(file);
+                        var fileInfo = StorageMethods.GetStreamInformation(file);
                         fileInfo.Should().HaveCount(1);
                         var info = fileInfo.First();
                         info.Name.Should().Be(@"::$DATA");
@@ -237,20 +237,20 @@ namespace Tests.FileManagementTests
             using (var temp = new TestFileCleaner())
             {
                 string source = temp.GetTestPath();
-                using (var file = FileMethods.CreateFile(source, CreationDisposition.CreateNew))
+                using (var file = StorageMethods.CreateFile(source, CreationDisposition.CreateNew))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
 
                 string destination = temp.GetTestPath();
-                FileMethods.CopyFile(source, destination);
+                StorageMethods.CopyFile(source, destination);
 
                 string alternateStream = destination + @":Foo:$DATA";
-                FileMethods.CopyFile(source, alternateStream);
+                StorageMethods.CopyFile(source, alternateStream);
 
-                using (var file = FileMethods.CreateFile(destination, CreationDisposition.OpenExisting))
+                using (var file = StorageMethods.CreateFile(destination, CreationDisposition.OpenExisting))
                 {
-                    var fileInfo = FileMethods.GetStreamInformation(file);
+                    var fileInfo = StorageMethods.GetStreamInformation(file);
                     fileInfo.Should().BeEquivalentTo(new StreamInformation[]
                     {
                         new StreamInformation { Name = @"::$DATA" },
@@ -263,22 +263,22 @@ namespace Tests.FileManagementTests
         [Fact]
         public void SetFileAttributesBasic()
         {
-            string tempPath = FileMethods.GetTempPath();
-            string tempFileName = FileMethods.GetTempFileName(tempPath, "tfn");
+            string tempPath = StorageMethods.GetTempPath();
+            string tempFileName = StorageMethods.GetTempFileName(tempPath, "tfn");
             try
             {
-                var originalInfo = FileMethods.GetFileAttributesEx(tempFileName);
+                var originalInfo = StorageMethods.GetFileAttributesEx(tempFileName);
                 originalInfo.dwFileAttributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
-                FileMethods.SetFileAttributes(tempFileName, originalInfo.dwFileAttributes | FileAttributes.ReadOnly);
-                var newInfo = FileMethods.GetFileAttributesEx(tempFileName);
+                StorageMethods.SetFileAttributes(tempFileName, originalInfo.dwFileAttributes | FileAttributes.ReadOnly);
+                var newInfo = StorageMethods.GetFileAttributesEx(tempFileName);
                 newInfo.dwFileAttributes.Should().HaveFlag(FileAttributes.ReadOnly);
-                FileMethods.SetFileAttributes(tempFileName, originalInfo.dwFileAttributes);
-                newInfo = FileMethods.GetFileAttributesEx(tempFileName);
+                StorageMethods.SetFileAttributes(tempFileName, originalInfo.dwFileAttributes);
+                newInfo = StorageMethods.GetFileAttributesEx(tempFileName);
                 newInfo.dwFileAttributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
             }
             finally
             {
-                FileMethods.DeleteFile(tempFileName);
+                StorageMethods.DeleteFile(tempFileName);
             }
         }
 
@@ -288,15 +288,15 @@ namespace Tests.FileManagementTests
             using (var temp = new TestFileCleaner())
             {
                 string source = temp.GetTestPath();
-                using (var file = FileMethods.CreateFile(source, CreationDisposition.CreateNew, DesiredAccess.GenericRead))
+                using (var file = StorageMethods.CreateFile(source, CreationDisposition.CreateNew, DesiredAccess.GenericRead))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
 
                 string destination = temp.GetTestPath();
-                FileMethods.CopyFile(source, destination);
+                StorageMethods.CopyFile(source, destination);
 
-                var info = FileMethods.GetFileAttributesEx(destination);
+                var info = StorageMethods.GetFileAttributesEx(destination);
                 info.dwFileAttributes.Should().NotHaveFlag(FileAttributes.Directory);
             }
         }
@@ -304,7 +304,7 @@ namespace Tests.FileManagementTests
         [Fact]
         public void FindFirstFileNoFiles()
         {
-            FileMethods.CreateFindOperation<string>(FileMethods.GetTempPath(), nameFilter: System.IO.Path.GetRandomFileName())
+            StorageMethods.CreateFindOperation<string>(StorageMethods.GetTempPath(), nameFilter: System.IO.Path.GetRandomFileName())
                 .Should().BeEmpty();
         }
 
@@ -316,9 +316,9 @@ namespace Tests.FileManagementTests
             using (var temp = new TestFileCleaner())
             {
                 string subdir = Paths.Combine(temp.TempFolder, "Subdir");
-                FileMethods.CreateDirectory(subdir);
+                StorageMethods.CreateDirectory(subdir);
 
-                FileMethods.CreateFindOperation(subdir, nameFilter: pattern,
+                StorageMethods.CreateFindOperation(subdir, nameFilter: pattern,
                     findTransform: FindTransforms.ToFileName.Instance, findFilter: FindFilters.All.Instance)
                     .Should().Contain(new string[] { ".", ".." });
             }
@@ -331,10 +331,10 @@ namespace Tests.FileManagementTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
+                using (var fileHandle = StorageMethods.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
                 {
-                    FileMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
-                    FileMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
+                    StorageMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
+                    StorageMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
                 }
             }
         }
@@ -344,9 +344,9 @@ namespace Tests.FileManagementTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
+                using (var fileHandle = StorageMethods.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
                 {
-                    FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.Current).Should().Be(0);
+                    StorageMethods.SetFilePointer(fileHandle, 0, MoveMethod.Current).Should().Be(0);
                 }
             }
         }
@@ -359,13 +359,13 @@ namespace Tests.FileManagementTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
+                using (var fileHandle = StorageMethods.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
                 {
-                    FileMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
-                    FileMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
-                    FileMethods.SetFilePointer(fileHandle, 0, MoveMethod.Begin);
+                    StorageMethods.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
+                    StorageMethods.GetFilePointer(fileHandle).Should().Be(data.Length);
+                    StorageMethods.SetFilePointer(fileHandle, 0, MoveMethod.Begin);
                     byte[] outBuffer = new byte[data.Length];
-                    FileMethods.ReadFile(fileHandle, outBuffer).Should().Be((uint)data.Length);
+                    StorageMethods.ReadFile(fileHandle, outBuffer).Should().Be((uint)data.Length);
                     outBuffer.Should().BeEquivalentTo(data);
                 }
             }
@@ -376,9 +376,9 @@ namespace Tests.FileManagementTests
         {
             using (var temp = new TestFileCleaner())
             {
-                using (var fileHandle = FileMethods.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
+                using (var fileHandle = StorageMethods.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
                 {
-                    FileMethods.GetFileSize(fileHandle).Should().Be(0);
+                    StorageMethods.GetFileSize(fileHandle).Should().Be(0);
                 }
             }
         }
@@ -386,10 +386,10 @@ namespace Tests.FileManagementTests
         [Fact]
         public void GetFileTypeDisk()
         {
-            string tempPath = FileMethods.GetTempPath();
-            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
+            string tempPath = StorageMethods.GetTempPath();
+            using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
             {
-                FileMethods.GetFileType(directory).Should().Be(FileType.Disk);
+                StorageMethods.GetFileType(directory).Should().Be(FileType.Disk);
             }
         }
 
@@ -404,10 +404,10 @@ namespace Tests.FileManagementTests
             using (var cleaner = new TestFileCleaner())
             {
                 string filePath = Paths.Combine(cleaner.TempFolder, fileName);
-                using (var handle = FileMethods.CreateFile(filePath, CreationDisposition.CreateNew))
+                using (var handle = StorageMethods.CreateFile(filePath, CreationDisposition.CreateNew))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    FileMethods.FileExists(filePath).Should().BeTrue();
+                    StorageMethods.FileExists(filePath).Should().BeTrue();
                 }
             }
         }
@@ -423,11 +423,11 @@ namespace Tests.FileManagementTests
             using (var cleaner = new TestFileCleaner())
             {
                 string filePath = @"\\?\" + Paths.Combine(cleaner.TempFolder, fileName);
-                using (var handle = FileMethods.CreateFile(filePath, CreationDisposition.CreateNew))
+                using (var handle = StorageMethods.CreateFile(filePath, CreationDisposition.CreateNew))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    FileMethods.FlushFileBuffers(handle);
-                    FileMethods.FileExists(filePath).Should().BeTrue();
+                    StorageMethods.FlushFileBuffers(handle);
+                    StorageMethods.FileExists(filePath).Should().BeTrue();
                 }
             }
         }
@@ -439,9 +439,9 @@ namespace Tests.FileManagementTests
             {
                 string filePath = cleaner.GetTestPath();
                 FileHelper.WriteAllText(filePath, "FileExists");
-                FileMethods.FileExists(filePath).Should().BeTrue();
-                FileMethods.PathExists(filePath).Should().BeTrue();
-                FileMethods.DirectoryExists(filePath).Should().BeFalse();
+                StorageMethods.FileExists(filePath).Should().BeTrue();
+                StorageMethods.PathExists(filePath).Should().BeTrue();
+                StorageMethods.DirectoryExists(filePath).Should().BeFalse();
             }
         }
 
@@ -451,9 +451,9 @@ namespace Tests.FileManagementTests
             using (var cleaner = new TestFileCleaner())
             {
                 string filePath = cleaner.GetTestPath();
-                FileMethods.FileExists(filePath).Should().BeFalse();
-                FileMethods.PathExists(filePath).Should().BeFalse();
-                FileMethods.DirectoryExists(filePath).Should().BeFalse();
+                StorageMethods.FileExists(filePath).Should().BeFalse();
+                StorageMethods.PathExists(filePath).Should().BeFalse();
+                StorageMethods.DirectoryExists(filePath).Should().BeFalse();
             }
         }
 
@@ -467,9 +467,9 @@ namespace Tests.FileManagementTests
 
                 string filePath = cleaner.CreateTestFile("FileExists", longPath);
 
-                FileMethods.FileExists(filePath).Should().BeTrue();
-                FileMethods.PathExists(filePath).Should().BeTrue();
-                FileMethods.DirectoryExists(filePath).Should().BeFalse();
+                StorageMethods.FileExists(filePath).Should().BeTrue();
+                StorageMethods.PathExists(filePath).Should().BeTrue();
+                StorageMethods.DirectoryExists(filePath).Should().BeFalse();
             }
         }
 
@@ -481,9 +481,9 @@ namespace Tests.FileManagementTests
                 string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
                 string filePath = cleaner.GetTestPath();
 
-                FileMethods.FileExists(filePath).Should().BeFalse();
-                FileMethods.PathExists(filePath).Should().BeFalse();
-                FileMethods.DirectoryExists(filePath).Should().BeFalse();
+                StorageMethods.FileExists(filePath).Should().BeFalse();
+                StorageMethods.PathExists(filePath).Should().BeFalse();
+                StorageMethods.DirectoryExists(filePath).Should().BeFalse();
             }
         }
 
@@ -495,9 +495,9 @@ namespace Tests.FileManagementTests
                 string directoryPath = cleaner.GetTestPath();
                 FileHelper.CreateDirectoryRecursive(directoryPath);
 
-                FileMethods.FileExists(directoryPath).Should().BeFalse();
-                FileMethods.PathExists(directoryPath).Should().BeTrue();
-                FileMethods.DirectoryExists(directoryPath).Should().BeTrue();
+                StorageMethods.FileExists(directoryPath).Should().BeFalse();
+                StorageMethods.PathExists(directoryPath).Should().BeTrue();
+                StorageMethods.DirectoryExists(directoryPath).Should().BeTrue();
             }
         }
 
@@ -508,9 +508,9 @@ namespace Tests.FileManagementTests
             {
                 string directoryPath = cleaner.GetTestPath();
 
-                FileMethods.FileExists(directoryPath).Should().BeFalse();
-                FileMethods.PathExists(directoryPath).Should().BeFalse();
-                FileMethods.DirectoryExists(directoryPath).Should().BeFalse();
+                StorageMethods.FileExists(directoryPath).Should().BeFalse();
+                StorageMethods.PathExists(directoryPath).Should().BeFalse();
+                StorageMethods.DirectoryExists(directoryPath).Should().BeFalse();
             }
         }
 
@@ -520,7 +520,7 @@ namespace Tests.FileManagementTests
             using (var cleaner = new TestFileCleaner())
             {
                 string longPath = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
-                FileMethods.TryGetFileInfo(longPath).Should().BeNull();
+                StorageMethods.TryGetFileInfo(longPath).Should().BeNull();
             }
         }
 
@@ -530,9 +530,9 @@ namespace Tests.FileManagementTests
         {
             using (var cleaner = new TestFileCleaner())
             {
-                using (var testFile = FileMethods.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
+                using (var testFile = StorageMethods.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
                 {
-                    FileMethods.GetFileType(testFile).Should().Be(FileType.Disk);
+                    StorageMethods.GetFileType(testFile).Should().Be(FileType.Disk);
                 }
             }
         }
@@ -543,8 +543,8 @@ namespace Tests.FileManagementTests
             ]
         public void FindFirstFileHandlesRoots(string path)
         {
-            FileMethods.CreateFindOperation<string>(path).Should().NotBeEmpty();
-            FileMethods.CreateFindOperation<string>(path, null).Should().NotBeEmpty();
+            StorageMethods.CreateFindOperation<string>(path).Should().NotBeEmpty();
+            StorageMethods.CreateFindOperation<string>(path, null).Should().NotBeEmpty();
         }
 
         [Fact]
@@ -554,7 +554,7 @@ namespace Tests.FileManagementTests
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
                 // @"C:\" -> @"\"
-                var fileHandle = FileMethods.CreateFileSystemIo(
+                var fileHandle = StorageMethods.CreateFileSystemIo(
                     @"C:\Users",
                     0,                  // We don't care about read or write, we're just getting metadata with this handle
                     System.IO.FileShare.ReadWrite,
@@ -563,7 +563,7 @@ namespace Tests.FileManagementTests
                     FileFlags.OpenReparsePoint           // To avoid traversing links
                         | FileFlags.BackupSemantics);    // To open directories
 
-                string name = FileMethods.GetFileNameLegacy(fileHandle);
+                string name = StorageMethods.GetFileNameLegacy(fileHandle);
                 name.Should().Be(@"\Users");
             });
         }
@@ -574,7 +574,7 @@ namespace Tests.FileManagementTests
             using (var cleaner = new TestFileCleaner())
             {
                 string filePath = cleaner.GetTestPath();
-                using (var stream = FileMethods.CreateFileStream(
+                using (var stream = StorageMethods.CreateFileStream(
                     path: filePath,
                     fileAccess: System.IO.FileAccess.Write,
                     fileShare: System.IO.FileShare.ReadWrite,
@@ -593,7 +593,7 @@ namespace Tests.FileManagementTests
             InlineData("")]
         public void FullPathErrorCases(string value)
         {
-            Action action = () => FileMethods.GetFullPathName(value);
+            Action action = () => StorageMethods.GetFullPathName(value);
             action.Should().Throw<System.IO.IOException>();
         }
 
@@ -604,11 +604,11 @@ namespace Tests.FileManagementTests
             {
                 string tempDirectory = cleaner.GetTestPath();
 
-                FileMethods.CreateDirectory(tempDirectory);
+                StorageMethods.CreateDirectory(tempDirectory);
                 FileHelper.WriteAllText(Paths.Combine(tempDirectory, "GetDirectoryFilenamesFromHandle"), "GetDirectoryFilenamesFromHandle");
-                using (var handle = FileMethods.CreateDirectoryHandle(tempDirectory))
+                using (var handle = StorageMethods.CreateDirectoryHandle(tempDirectory))
                 {
-                    FileMethods.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", "..", "GetDirectoryFilenamesFromHandle" });
+                    StorageMethods.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", "..", "GetDirectoryFilenamesFromHandle" });
                 }
             }
         }
@@ -620,10 +620,10 @@ namespace Tests.FileManagementTests
             {
                 string tempDirectory = cleaner.GetTestPath();
 
-                FileMethods.CreateDirectory(tempDirectory);
-                using (var handle = FileMethods.CreateDirectoryHandle(tempDirectory))
+                StorageMethods.CreateDirectory(tempDirectory);
+                using (var handle = StorageMethods.CreateDirectoryHandle(tempDirectory))
                 {
-                    FileMethods.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", ".." });
+                    StorageMethods.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", ".." });
                 }
             }
         }

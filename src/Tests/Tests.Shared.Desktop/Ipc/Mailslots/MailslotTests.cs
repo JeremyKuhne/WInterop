@@ -7,8 +7,8 @@
 
 using FluentAssertions;
 using Tests.Support;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Ipc;
 using Xunit;
 
@@ -25,11 +25,11 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = FileMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0))
+                using (var fileHandle = StorageMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
-                    FileMethods.GetFileType(fileHandle).Should().Be(FileType.Unknown);
-                    var modeInfo = FileMethods.GetFileMode(fileHandle);
+                    StorageMethods.GetFileType(fileHandle).Should().Be(FileType.Unknown);
+                    var modeInfo = StorageMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened synchronously
                     modeInfo.Should().Be(FileAccessModes.SynchronousNotAlertable);
@@ -46,12 +46,12 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = FileMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
+                using (var fileHandle = StorageMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
                     FileAttributes.None, FileFlags.Overlapped))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
-                    FileMethods.GetFileType(fileHandle).Should().Be(FileType.Unknown);
-                    var modeInfo = FileMethods.GetFileMode(fileHandle);
+                    StorageMethods.GetFileType(fileHandle).Should().Be(FileType.Unknown);
+                    var modeInfo = StorageMethods.GetFileMode(fileHandle);
 
                     // The mailslot was opened asynchronously (e.g. no synchronous flag)
                     modeInfo.Should().Be((FileAccessModes)0);

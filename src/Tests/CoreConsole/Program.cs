@@ -3,7 +3,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using WInterop.File;
+using WInterop.Storage;
 
 namespace ConsoleApp1
 {

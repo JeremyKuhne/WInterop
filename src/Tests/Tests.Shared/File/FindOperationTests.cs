@@ -8,8 +8,8 @@
 using FluentAssertions;
 using System.Linq;
 using Tests.Support;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Support;
 using Xunit;
 
@@ -57,13 +57,13 @@ namespace File
             using (var cleaner = new TestFileCleaner())
             {
                 string subdirA = Paths.Combine(cleaner.TempFolder, "A");
-                FileMethods.CreateDirectory(subdirA);
+                StorageMethods.CreateDirectory(subdirA);
                 string fileB = Paths.Combine(subdirA, "B");
                 FileHelper.WriteAllText(fileB, "B file");
                 string subdirC = Paths.Combine(subdirA, "C");
-                FileMethods.CreateDirectory(subdirC);
+                StorageMethods.CreateDirectory(subdirC);
                 string subdirD = Paths.Combine(subdirA, "D");
-                FileMethods.CreateDirectory(subdirD);
+                StorageMethods.CreateDirectory(subdirD);
                 string fileE = Paths.Combine(subdirD, "E");
                 FileHelper.WriteAllText(fileE, "E file");
 

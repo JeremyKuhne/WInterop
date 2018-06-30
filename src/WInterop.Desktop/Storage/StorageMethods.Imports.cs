@@ -10,13 +10,13 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling.Types;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
-    public static partial class FileMethods
+    public static partial class StorageMethods
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

@@ -12,8 +12,8 @@ using System.Runtime.InteropServices;
 using WInterop.Desktop.Communications.Types;
 using WInterop.Registry;
 using WInterop.Registry.Types;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop.Synchronization.Types;
 using WInterop.Windows.Types;
@@ -170,7 +170,7 @@ namespace WInterop.Desktop.Communications
             FileAttributes fileAttributes = FileAttributes.None,
             FileFlags fileFlags = FileFlags.None)
         {
-            return FileMethods.CreateFile(
+            return StorageMethods.CreateFile(
                 path,
                 CreationDisposition.OpenExisting,
                 DesiredAccess.GenericReadWrite,

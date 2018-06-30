@@ -8,7 +8,7 @@
 using System;
 using WInterop.Authorization.Types;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449426.aspx
     public ref struct CREATEFILE2_EXTENDED_PARAMETERS

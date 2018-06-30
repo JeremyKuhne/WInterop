@@ -9,8 +9,8 @@ using FluentAssertions;
 using Tests.Support;
 using WInterop.Authorization;
 using WInterop.Authorization.Types;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.SystemInformation;
 using Xunit;
 
@@ -23,10 +23,10 @@ namespace DesktopTests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                using (var handle = FileMethods.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
+                using (var handle = StorageMethods.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    SID sid = FileMethods.QueryOwner(handle);
+                    SID sid = StorageMethods.QueryOwner(handle);
                     sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
                     AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
                     info.Usage.Should().Be(SidNameUse.User);

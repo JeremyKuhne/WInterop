@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     //  typedef struct _ENCRYPTION_CERTIFICATE
     //  {

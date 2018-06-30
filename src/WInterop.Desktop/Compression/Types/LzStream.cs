@@ -7,7 +7,7 @@
 
 using System;
 using System.IO;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 
 namespace WInterop.Compression.Types
 {

@@ -10,8 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Backup.Types;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 
 namespace WInterop.Backup
 {
@@ -47,7 +47,7 @@ namespace WInterop.Backup
         public static IEnumerable<BackupStreamInformation> GetAlternateStreamInformation(string path)
         {
             List<BackupStreamInformation> streams = new List<BackupStreamInformation>();
-            using (var fileHandle = FileMethods.CreateFile(
+            using (var fileHandle = StorageMethods.CreateFile(
                 path: path,
                 // To look at metadata we don't need read or write access
                 desiredAccess: 0,

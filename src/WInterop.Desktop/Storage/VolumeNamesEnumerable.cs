@@ -10,11 +10,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using WInterop.ErrorHandling.Types;
-using WInterop.File.Types;
+using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
     /// <summary>
     /// Encapsulates a finding volume names.
@@ -54,7 +54,7 @@ namespace WInterop.File
 
             private string FindFirstVolume()
             {
-                _findHandle = FileMethods.Imports.FindFirstVolumeW(
+                _findHandle = StorageMethods.Imports.FindFirstVolumeW(
                     _buffer,
                     _buffer.CharCapacity);
 
@@ -76,7 +76,7 @@ namespace WInterop.File
 
             private string FindNextVolume()
             {
-                if (!FileMethods.Imports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
+                if (!StorageMethods.Imports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
                     WindowsError error = Errors.GetLastError();
                     switch (error)

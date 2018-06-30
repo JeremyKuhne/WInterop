@@ -15,16 +15,16 @@ using WInterop.Authorization;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.File.BufferWrappers;
-using WInterop.File.Types;
+using WInterop.Storage.BufferWrappers;
+using WInterop.Storage.Types;
 using WInterop.MemoryManagement;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Synchronization.Types;
 
-namespace WInterop.File
+namespace WInterop.Storage
 {
-    public static partial class FileMethods
+    public static partial class StorageMethods
     {
         // Asynchronous Disk I/O Appears as Synchronous on Windows
         // https://support.microsoft.com/en-us/kb/156932
@@ -242,7 +242,7 @@ namespace WInterop.File
                 catch (EntryPointNotFoundException)
                 {
                     s_createFileDelegate = Delegates.CreateDelegate<CreateFileDelegate>(
-                        "WInterop.File.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
+                        "WInterop.Storage.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
                         "CreateFileW");
                 }
             }
@@ -307,7 +307,7 @@ namespace WInterop.File
                 catch (EntryPointNotFoundException)
                 {
                     s_copyFileDelegate = Delegates.CreateDelegate<CopyFileDelegate>(
-                        "WInterop.File.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
+                        "WInterop.Storage.Desktop.NativeMethods, " + Delegates.DesktopLibrary,
                         "CopyFileEx");
                 }
             }

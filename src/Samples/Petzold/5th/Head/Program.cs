@@ -10,8 +10,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using WInterop.Extensions.WindowExtensions;
-using WInterop.File;
-using WInterop.File.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
@@ -99,7 +99,7 @@ namespace Head
                         baseUnits.cx, baseUnits.cy * 3, baseUnits.cx * 13 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.cy * 10,
                         window, (IntPtr)ID_LIST, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
-                    hwndText = Windows.CreateWindow("static", FileMethods.GetCurrentDirectory(),
+                    hwndText = Windows.CreateWindow("static", StorageMethods.GetCurrentDirectory(),
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left, ExtendedWindowStyles.None,
                         baseUnits.cx, baseUnits.cy, baseUnits.cx * 260, baseUnits.cy,
                         window, (IntPtr)ID_TEXT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
@@ -132,13 +132,13 @@ namespace Head
                         SafeFileHandle hFile = null;
                         try
                         {
-                            using (hFile = FileMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
+                            using (hFile = StorageMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
                                 DesiredAccess.GenericRead, ShareModes.Read))
                             {
                                 if (!hFile.IsInvalid)
                                 {
                                     bValidFile = true;
-                                    hwndText.SetWindowText(FileMethods.GetCurrentDirectory());
+                                    hwndText.SetWindowText(StorageMethods.GetCurrentDirectory());
                                 }
                             }
                             hFile = null;
@@ -152,15 +152,15 @@ namespace Head
                             bValidFile = false;
 
                             // If setting the directory doesn’t work, maybe it’s a drive change, so try that.
-                            try { FileMethods.SetCurrentDirectory(szFile.Substring(1, szFile.Length - 2)); }
+                            try { StorageMethods.SetCurrentDirectory(szFile.Substring(1, szFile.Length - 2)); }
                             catch
                             {
-                                try { FileMethods.SetCurrentDirectory($"{szFile[2]}:"); }
+                                try { StorageMethods.SetCurrentDirectory($"{szFile[2]}:"); }
                                 catch { }
                             }
 
                             // Get the new directory name and fill the list box.
-                            hwndText.SetWindowText(FileMethods.GetCurrentDirectory());
+                            hwndText.SetWindowText(StorageMethods.GetCurrentDirectory());
                             hwndList.SendMessage(ListBoxMessage.ResetContent, 0, 0);
                             fixed (char* f = filter)
                                 hwndList.SendMessage(ListBoxMessage.Directory, (uint)DIRATTR, f);
@@ -174,7 +174,7 @@ namespace Head
                         break;
 
                     uint bytesRead;
-                    using (var hFile = FileMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
+                    using (var hFile = StorageMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
                         DesiredAccess.GenericRead, ShareModes.Read))
                     {
                         if (hFile.IsInvalid)
@@ -183,7 +183,7 @@ namespace Head
                             break;
                         }
 
-                        bytesRead = FileMethods.ReadFile(hFile, buffer, MAXREAD);
+                        bytesRead = StorageMethods.ReadFile(hFile, buffer, MAXREAD);
                     }
 
                     using (DeviceContext dc = window.BeginPaint())

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// Flags used by the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363852.aspx">CopyFileEx</a> and

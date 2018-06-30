@@ -7,13 +7,13 @@
 
 using WInterop.Support.Buffers;
 
-namespace WInterop.File.BufferWrappers
+namespace WInterop.Storage.BufferWrappers
 {
     public struct TempPathWrapper : IBufferFunc<StringBuffer, uint>
     {
         uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
         {
-            return FileMethods.Imports.GetTempPathW(buffer.CharCapacity, buffer);
+            return StorageMethods.Imports.GetTempPathW(buffer.CharCapacity, buffer);
         }
     }
 }

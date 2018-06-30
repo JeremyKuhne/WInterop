@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.File.Types
+namespace WInterop.Storage.Types
 {
     /// <summary>
     /// 100-nanosecond intervals (ticks) since January 1, 1601 (UTC).
