@@ -9,7 +9,6 @@ using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using WInterop.DeviceManagement;
-using WInterop.DirectoryManagement;
 using WInterop.File;
 using WInterop.File.Types;
 using WInterop.Handles;
@@ -25,7 +24,7 @@ namespace DesktopTests.HandlesTests
         public void GetHandleTypeBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
             {
                 string name = HandleMethods.GetObjectType(directory);
                 name.Should().Be("File");
@@ -36,7 +35,7 @@ namespace DesktopTests.HandlesTests
         public void GetHandleNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string name = HandleMethods.GetObjectName(directory);
@@ -107,7 +106,7 @@ namespace DesktopTests.HandlesTests
         public void QueryDosVolumePathBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string fullName = HandleMethods.GetObjectName(directory);

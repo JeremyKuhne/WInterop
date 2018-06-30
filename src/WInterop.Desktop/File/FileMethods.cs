@@ -202,6 +202,51 @@ namespace WInterop.File
         }
 
         /// <summary>
+        /// Wrapper to create a directory within another directory
+        /// </summary>
+        public static SafeFileHandle CreateDirectory(SafeFileHandle rootDirectory, string name)
+        {
+            return CreateFileRelative(
+                name,
+                rootDirectory,
+                CreateDisposition.Create,
+                DesiredAccess.ListDirectory | DesiredAccess.Synchronize,
+                ShareModes.ReadWrite | ShareModes.Delete,
+                FileAttributes.None,
+                CreateOptions.SynchronousIoNonalert | CreateOptions.DirectoryFile | CreateOptions.OpenForBackupIntent | CreateOptions.OpenReparsePoint);
+        }
+
+        /// <summary>
+        /// Creates a directory handle from an existing directory handle.
+        /// </summary>
+        public static SafeFileHandle CreateDirectoryHandle(SafeFileHandle rootDirectory, string subdirectoryPath)
+        {
+            return CreateFileRelative(
+                subdirectoryPath,
+                rootDirectory,
+                CreateDisposition.Open,
+                DesiredAccess.ListDirectory | DesiredAccess.Synchronize,
+                ShareModes.ReadWrite | ShareModes.Delete,
+                FileAttributes.None,
+                CreateOptions.SynchronousIoNonalert | CreateOptions.DirectoryFile | CreateOptions.OpenForBackupIntent | CreateOptions.OpenReparsePoint);
+        }
+
+        /// <summary>
+        /// Creates a raw directory handle from an existing directory handle.
+        /// </summary>
+        public static IntPtr CreateDirectoryHandle(IntPtr rootDirectory, string subdirectoryPath)
+        {
+            return CreateFileRelative(
+                subdirectoryPath,
+                rootDirectory,
+                CreateDisposition.Open,
+                DesiredAccess.ListDirectory | DesiredAccess.Synchronize,
+                ShareModes.ReadWrite | ShareModes.Delete,
+                FileAttributes.None,
+                CreateOptions.SynchronousIoNonalert | CreateOptions.DirectoryFile | CreateOptions.OpenForBackupIntent | CreateOptions.OpenReparsePoint);
+        }
+
+        /// <summary>
         /// CopyFileEx wrapper. Desktop only. Prefer File.CopyFile() as it will handle all supported platforms.
         /// </summary>
         /// <param name="overwrite">Overwrite an existing file if true.</param>

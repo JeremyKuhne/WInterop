@@ -259,6 +259,28 @@ namespace WInterop.File
                 out uint lpBytesReturned,
                 ref OVERLAPPED lpOverlapped,
                 FileIOCompletionRoutine lpCompletionRoutine);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-removedirectoryw
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool RemoveDirectoryW(
+                string lpPathName);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createdirectoryw
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool CreateDirectoryW(
+                string lpPathName,
+                IntPtr lpSecurityAttributes);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-getcurrentdirectory
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetCurrentDirectoryW(
+                uint nBufferLength,
+                SafeHandle lpBuffer);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-setcurrentdirectory
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetCurrentDirectoryW(
+                string lpPathName);
         }
     }
 }

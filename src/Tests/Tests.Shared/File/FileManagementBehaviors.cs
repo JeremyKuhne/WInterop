@@ -9,7 +9,6 @@ using FluentAssertions;
 using Microsoft.Win32.SafeHandles;
 using System;
 using Tests.Support;
-using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.File;
@@ -309,7 +308,7 @@ namespace Tests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string directory = cleaner.GetTestPath();
-                DirectoryMethods.CreateDirectory(directory);
+                FileMethods.CreateDirectory(directory);
                 FileMethods.DirectoryExists(directory).Should().BeTrue();
                 string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion), directory);
                 using (var handle = FileMethods.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
@@ -320,7 +319,7 @@ namespace Tests.File
                     FileMethods.DeleteFile(file);
 
                     // RemoveDirectory API call will throw
-                    Action action = () => DirectoryMethods.RemoveDirectory(directory);
+                    Action action = () => FileMethods.RemoveDirectory(directory);
                     action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_DIR_NOT_EMPTY));
 
                     // Opening the directory for deletion will succeed, but have no impact
@@ -364,7 +363,7 @@ namespace Tests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string directory = cleaner.GetTestPath();
-                DirectoryMethods.CreateDirectory(directory);
+                FileMethods.CreateDirectory(directory);
                 FileMethods.DirectoryExists(directory).Should().BeTrue();
                 string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion2), directory);
 

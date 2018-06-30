@@ -8,7 +8,6 @@
 using FluentAssertions;
 using System.Linq;
 using Tests.Support;
-using WInterop.DirectoryManagement;
 using WInterop.File;
 using WInterop.File.Types;
 using WInterop.Support;
@@ -58,13 +57,13 @@ namespace File
             using (var cleaner = new TestFileCleaner())
             {
                 string subdirA = Paths.Combine(cleaner.TempFolder, "A");
-                DirectoryMethods.CreateDirectory(subdirA);
+                FileMethods.CreateDirectory(subdirA);
                 string fileB = Paths.Combine(subdirA, "B");
                 FileHelper.WriteAllText(fileB, "B file");
                 string subdirC = Paths.Combine(subdirA, "C");
-                DirectoryMethods.CreateDirectory(subdirC);
+                FileMethods.CreateDirectory(subdirC);
                 string subdirD = Paths.Combine(subdirA, "D");
-                DirectoryMethods.CreateDirectory(subdirD);
+                FileMethods.CreateDirectory(subdirD);
                 string fileE = Paths.Combine(subdirD, "E");
                 FileHelper.WriteAllText(fileE, "E file");
 

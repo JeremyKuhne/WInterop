@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
-using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling.Types;
 using WInterop.File.Types;
 using WInterop.Support;
@@ -24,7 +23,7 @@ namespace WInterop.File
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private IntPtr CreateDirectoryHandle(string fileName, string subDirectory)
             {
-                SafeFileHandle safeHandle = DirectoryMethods.CreateDirectoryHandle(subDirectory);
+                SafeFileHandle safeHandle = FileMethods.CreateDirectoryHandle(subDirectory);
 
                 // Ideally we'd never wrap in a SafeFileHandle, but for now this is reasonable.
                 IntPtr handle = safeHandle.DangerousGetHandle();

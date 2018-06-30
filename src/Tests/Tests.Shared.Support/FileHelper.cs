@@ -5,7 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling.Types;
 using WInterop.File;
 using WInterop.File.Types;
@@ -57,7 +56,7 @@ namespace Tests.Support
             {
                 int lastSeparator = path.LastIndexOfAny(new char[] { Paths.DirectorySeparator, Paths.AltDirectorySeparator });
                 CreateDirectoryRecursive(path.Substring(0, lastSeparator));
-                DirectoryMethods.CreateDirectory(path);
+                FileMethods.CreateDirectory(path);
             }
 
             return path;
@@ -97,7 +96,7 @@ namespace Tests.Support
             }
 
             // We've either emptied or we're a reparse point, delete the directory
-            DirectoryMethods.RemoveDirectory(path);
+            FileMethods.RemoveDirectory(path);
         }
 
         public static void EnsurePathDirectoryExists(string path)

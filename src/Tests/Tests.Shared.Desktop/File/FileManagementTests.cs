@@ -9,7 +9,6 @@ using FluentAssertions;
 using System;
 using System.Linq;
 using Tests.Support;
-using WInterop.DirectoryManagement;
 using WInterop.File;
 using WInterop.File.Types;
 using WInterop.Support;
@@ -173,7 +172,7 @@ namespace DesktopTests.File
         public void GetFileNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the local path (minus the device, eg \Users\... or \Server\Share\...)
                 string name = FileMethods.GetFileName(directory);
@@ -186,7 +185,7 @@ namespace DesktopTests.File
         public void GetVolumeNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
                 try
@@ -206,7 +205,7 @@ namespace DesktopTests.File
         public void GetShortNameBasic()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT volume path (\Device\HarddiskVolumen\)
                 string directoryName = FileMethods.GetShortName(directory);
@@ -266,14 +265,14 @@ namespace DesktopTests.File
         {
             // The "." and ".." entries returned vary quite a bit
             // (they seem to variant over multiple runs too??)
-            using (var handle = DirectoryMethods.CreateDirectoryHandle(@"C:\"))
+            using (var handle = FileMethods.CreateDirectoryHandle(@"C:\"))
             {
                 string[] names = FileMethods.GetDirectoryFilenames(handle).ToArray();
                 names.Should().NotContain(".");
                 names.Should().NotContain("..");
             }
 
-            using (var handle = DirectoryMethods.CreateDirectoryHandle(FileMethods.GetTempPath()))
+            using (var handle = FileMethods.CreateDirectoryHandle(FileMethods.GetTempPath()))
             {
                 string[] names = FileMethods.GetDirectoryFilenames(handle).ToArray();
                 names.Should().Contain(".");
@@ -283,8 +282,8 @@ namespace DesktopTests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string directory = cleaner.GetTestPath();
-                DirectoryMethods.CreateDirectory(directory);
-                using (var handle = DirectoryMethods.CreateDirectoryHandle(FileMethods.GetTempPath()))
+                FileMethods.CreateDirectory(directory);
+                using (var handle = FileMethods.CreateDirectoryHandle(FileMethods.GetTempPath()))
                 {
                     string[] names = FileMethods.GetDirectoryFilenames(handle).ToArray();
                     names.Should().Contain(".");

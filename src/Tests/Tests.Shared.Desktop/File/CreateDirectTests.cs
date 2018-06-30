@@ -8,7 +8,6 @@
 using System;
 using FluentAssertions;
 using Tests.Support;
-using WInterop.DirectoryManagement;
 using WInterop.File;
 using WInterop.File.Types;
 using WInterop.Support;
@@ -24,7 +23,7 @@ namespace DesktopTests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string fileName = System.IO.Path.GetRandomFileName();
-                using (var directory = DirectoryMethods.CreateDirectoryHandle(cleaner.TempFolder))
+                using (var directory = FileMethods.CreateDirectoryHandle(cleaner.TempFolder))
                 {
                     directory.IsInvalid.Should().BeFalse();
 
@@ -82,15 +81,15 @@ namespace DesktopTests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                using (var directory = DirectoryMethods.CreateDirectoryHandle(cleaner.TempFolder))
+                using (var directory = FileMethods.CreateDirectoryHandle(cleaner.TempFolder))
                 {
                     directory.IsInvalid.Should().BeFalse("can open the root directory");
 
                     string name = System.IO.Path.GetRandomFileName();
                     string path = Paths.Combine(cleaner.TempFolder, name);
-                    DirectoryMethods.CreateDirectory(path);
+                    FileMethods.CreateDirectory(path);
 
-                    using (var subdir = DirectoryMethods.CreateDirectoryHandle(directory, name))
+                    using (var subdir = FileMethods.CreateDirectoryHandle(directory, name))
                     {
                         subdir.IsInvalid.Should().BeFalse("can open subdir from handle");
                     }
@@ -103,12 +102,12 @@ namespace DesktopTests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                using (var directory = DirectoryMethods.CreateDirectoryHandle(cleaner.TempFolder))
+                using (var directory = FileMethods.CreateDirectoryHandle(cleaner.TempFolder))
                 {
                     directory.IsInvalid.Should().BeFalse();
 
                     string name = System.IO.Path.GetRandomFileName();
-                    using (var subdir = DirectoryMethods.CreateDirectory(directory, name))
+                    using (var subdir = FileMethods.CreateDirectory(directory, name))
                     {
                         subdir.IsInvalid.Should().BeFalse();
                         FileMethods.DirectoryExists(Paths.Combine(cleaner.TempFolder, name)).Should().BeTrue();

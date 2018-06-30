@@ -874,5 +874,63 @@ namespace WInterop.File
             MemoryMethods.LocalFree((IntPtr)(descriptor));
             return sid;
         }
+
+        /// <summary>
+        /// Remove the given directory.
+        /// </summary>
+        public static void RemoveDirectory(string path)
+        {
+            if (!Imports.RemoveDirectoryW(path))
+                throw Errors.GetIoExceptionForLastError(path);
+        }
+
+        /// <summary>
+        /// Create the given directory.
+        /// </summary>
+        public static void CreateDirectory(string path)
+        {
+            if (!Imports.CreateDirectoryW(path, IntPtr.Zero))
+                throw Errors.GetIoExceptionForLastError(path);
+        }
+
+        /// <summary>
+        /// Simple wrapper to allow creating a file handle for an existing directory.
+        /// </summary>
+        public static SafeFileHandle CreateDirectoryHandle(string directoryPath, DesiredAccess desiredAccess = DesiredAccess.ListDirectory)
+        {
+            return CreateFile(
+                directoryPath,
+                CreationDisposition.OpenExisting,
+                desiredAccess,
+                ShareModes.ReadWrite | ShareModes.Delete,
+                FileAttributes.None,
+                FileFlags.BackupSemantics);
+        }
+
+        private struct GetCurrentDirectoryWrapper : IBufferFunc<StringBuffer, uint>
+        {
+            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
+            {
+                return Imports.GetCurrentDirectoryW(buffer.CharCapacity, buffer);
+            }
+        }
+
+        /// <summary>
+        /// Get the current directory.
+        /// </summary>
+        public static string GetCurrentDirectory()
+        {
+            var wrapper = new GetCurrentDirectoryWrapper();
+            return BufferHelper.ApiInvoke(ref wrapper);
+        }
+
+        /// <summary>
+        /// Set the current directory.
+        /// </summary>
+        public static void SetCurrentDirectory(string path)
+        {
+            if (!Imports.SetCurrentDirectoryW(path))
+                throw Errors.GetIoExceptionForLastError(path);
+        }
     }
 }

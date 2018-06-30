@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
-using WInterop.DirectoryManagement;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.File.Types;
@@ -24,7 +23,7 @@ namespace WInterop.File
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private IntPtr CreateDirectoryHandle(string fileName, string subDirectory)
             {
-                return DirectoryMethods.CreateDirectoryHandle(_directory, fileName);
+                return FileMethods.CreateDirectoryHandle(_directory, fileName);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

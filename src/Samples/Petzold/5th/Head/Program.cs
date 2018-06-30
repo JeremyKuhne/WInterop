@@ -9,7 +9,6 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using WInterop.DirectoryManagement;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.File;
 using WInterop.File.Types;
@@ -100,7 +99,7 @@ namespace Head
                         baseUnits.cx, baseUnits.cy * 3, baseUnits.cx * 13 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.cy * 10,
                         window, (IntPtr)ID_LIST, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
-                    hwndText = Windows.CreateWindow("static", DirectoryMethods.GetCurrentDirectory(),
+                    hwndText = Windows.CreateWindow("static", FileMethods.GetCurrentDirectory(),
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left, ExtendedWindowStyles.None,
                         baseUnits.cx, baseUnits.cy, baseUnits.cx * 260, baseUnits.cy,
                         window, (IntPtr)ID_TEXT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
@@ -139,7 +138,7 @@ namespace Head
                                 if (!hFile.IsInvalid)
                                 {
                                     bValidFile = true;
-                                    hwndText.SetWindowText(DirectoryMethods.GetCurrentDirectory());
+                                    hwndText.SetWindowText(FileMethods.GetCurrentDirectory());
                                 }
                             }
                             hFile = null;
@@ -153,15 +152,15 @@ namespace Head
                             bValidFile = false;
 
                             // If setting the directory doesn’t work, maybe it’s a drive change, so try that.
-                            try { DirectoryMethods.SetCurrentDirectory(szFile.Substring(1, szFile.Length - 2)); }
+                            try { FileMethods.SetCurrentDirectory(szFile.Substring(1, szFile.Length - 2)); }
                             catch
                             {
-                                try { DirectoryMethods.SetCurrentDirectory($"{szFile[2]}:"); }
+                                try { FileMethods.SetCurrentDirectory($"{szFile[2]}:"); }
                                 catch { }
                             }
 
                             // Get the new directory name and fill the list box.
-                            hwndText.SetWindowText(DirectoryMethods.GetCurrentDirectory());
+                            hwndText.SetWindowText(FileMethods.GetCurrentDirectory());
                             hwndList.SendMessage(ListBoxMessage.ResetContent, 0, 0);
                             fixed (char* f = filter)
                                 hwndList.SendMessage(ListBoxMessage.Directory, (uint)DIRATTR, f);

@@ -9,7 +9,6 @@ using FluentAssertions;
 using System;
 using System.Linq;
 using Tests.Support;
-using WInterop.DirectoryManagement;
 using WInterop.File;
 using WInterop.File.Types;
 using WInterop.Support;
@@ -165,7 +164,7 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+                using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
                 {
                     var info = FileMethods.GetFileStandardInformation(directory);
                     info.Directory.Should().BeTrue();
@@ -191,7 +190,7 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+                using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
                 {
                     var directoryInfo = FileMethods.GetFileBasicInformation(directory);
                     directoryInfo.Attributes.Should().HaveFlag(FileAttributes.Directory);
@@ -214,7 +213,7 @@ namespace Tests.FileManagementTests
                 string tempPath = cleaner.TempFolder;
                 string tempFileName = cleaner.GetTestPath();
 
-                using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+                using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
                 {
                     var directoryInfo = FileMethods.GetStreamInformation(directory);
                     directoryInfo.Should().BeEmpty();
@@ -317,7 +316,7 @@ namespace Tests.FileManagementTests
             using (var temp = new TestFileCleaner())
             {
                 string subdir = Paths.Combine(temp.TempFolder, "Subdir");
-                DirectoryMethods.CreateDirectory(subdir);
+                FileMethods.CreateDirectory(subdir);
 
                 FileMethods.CreateFindOperation(subdir, nameFilter: pattern,
                     findTransform: FindTransforms.ToFileName.Instance, findFilter: FindFilters.All.Instance)
@@ -388,7 +387,7 @@ namespace Tests.FileManagementTests
         public void GetFileTypeDisk()
         {
             string tempPath = FileMethods.GetTempPath();
-            using (var directory = DirectoryMethods.CreateDirectoryHandle(tempPath))
+            using (var directory = FileMethods.CreateDirectoryHandle(tempPath))
             {
                 FileMethods.GetFileType(directory).Should().Be(FileType.Disk);
             }
@@ -605,9 +604,9 @@ namespace Tests.FileManagementTests
             {
                 string tempDirectory = cleaner.GetTestPath();
 
-                DirectoryMethods.CreateDirectory(tempDirectory);
+                FileMethods.CreateDirectory(tempDirectory);
                 FileHelper.WriteAllText(Paths.Combine(tempDirectory, "GetDirectoryFilenamesFromHandle"), "GetDirectoryFilenamesFromHandle");
-                using (var handle = DirectoryMethods.CreateDirectoryHandle(tempDirectory))
+                using (var handle = FileMethods.CreateDirectoryHandle(tempDirectory))
                 {
                     FileMethods.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", "..", "GetDirectoryFilenamesFromHandle" });
                 }
@@ -621,8 +620,8 @@ namespace Tests.FileManagementTests
             {
                 string tempDirectory = cleaner.GetTestPath();
 
-                DirectoryMethods.CreateDirectory(tempDirectory);
-                using (var handle = DirectoryMethods.CreateDirectoryHandle(tempDirectory))
+                FileMethods.CreateDirectory(tempDirectory);
+                using (var handle = FileMethods.CreateDirectoryHandle(tempDirectory))
                 {
                     FileMethods.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", ".." });
                 }
