@@ -49,6 +49,66 @@ namespace WInterop.File
             return BufferHelper.ApiInvoke(ref wrapper, path);
         }
 
+        private struct FinalPathNameByHandleWrapper : IBufferFunc<StringBuffer, uint>
+        {
+            public SafeFileHandle FileHandle;
+            public GetFinalPathNameByHandleFlags Flags;
+
+            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
+            {
+                return Imports.GetFinalPathNameByHandleW(FileHandle, buffer, buffer.CharCapacity, Flags);
+            }
+        }
+
+        /// <summary>
+        /// Gets a canonical version of the given handle's path.
+        /// </summary>
+        public static string GetFinalPathNameByHandle(
+            SafeFileHandle fileHandle,
+            GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED | GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+        {
+            var wrapper = new FinalPathNameByHandleWrapper { FileHandle = fileHandle, Flags = flags };
+            return BufferHelper.ApiInvoke(ref wrapper);
+        }
+
+        /// <summary>
+        /// Gets a canonical version of the given file's path.
+        /// </summary>
+        /// <param name="resolveLinks">True to get the destination of links rather than the link itself.</param>
+        public static string GetFinalPathName(string path, GetFinalPathNameByHandleFlags finalPathFlags, bool resolveLinks)
+        {
+            if (path == null) return null;
+
+            // BackupSemantics is needed to get directory handles
+            FileFlags flags = FileFlags.BackupSemantics;
+            if (!resolveLinks) flags |= FileFlags.OpenReparsePoint;
+
+            using (SafeFileHandle fileHandle = CreateFile(path, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
+                FileAttributes.None, flags))
+            {
+                return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
+            }
+        }
+
+        private struct LongPathNameWrapper : IBufferFunc<StringBuffer, uint>
+        {
+            public string Path;
+
+            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
+            {
+                return Imports.GetLongPathNameW(Path, buffer, buffer.CharCapacity);
+            }
+        }
+
+        /// <summary>
+        /// Get the long (non 8.3) path version of the given path.
+        /// </summary>
+        public static string GetLongPathName(string path)
+        {
+            var wrapper = new LongPathNameWrapper { Path = path };
+            return BufferHelper.ApiInvoke(ref wrapper, path);
+        }
+
         /// <summary>
         /// Get a temporary file name. Creates a 0 length file.
         /// </summary>
@@ -292,6 +352,18 @@ namespace WInterop.File
             IFindFilter findFilter = null)
         {
             return new FindOperation<T>(directory, nameFilter, recursive, findTransform, findFilter);
+        }
+
+        /// <summary>
+        /// Gets file attributes for the given path.
+        /// </summary>
+        public static FileAttributes GetFileAttributes(string path)
+        {
+            FileAttributes attributes = Imports.GetFileAttributesW(path);
+            if (attributes == FileAttributes.Invalid)
+                throw Errors.GetIoExceptionForLastError(path);
+
+            return attributes;
         }
 
         /// <summary>

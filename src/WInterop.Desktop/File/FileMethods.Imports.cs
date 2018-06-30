@@ -13,7 +13,6 @@ using WInterop.ErrorHandling.Types;
 using WInterop.File.Types;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
-using WInterop.Synchronization.Types;
 
 namespace WInterop.File
 {
@@ -24,7 +23,7 @@ namespace WInterop.File
         /// </summary>
         public static partial class Imports
         {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createfilew
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern SafeFileHandle CreateFileW(
                 string lpFileName,
@@ -35,7 +34,7 @@ namespace WInterop.File
                 uint dwFlagsAndAttributes,
                 IntPtr hTemplateFile);
 
-            // https://https://msdn.microsoft.com/en-us/library/windows/desktop/aa365497.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-reopenfile
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern IntPtr ReOpenFile(
                 SafeFileHandle hOriginalFile,
@@ -44,72 +43,38 @@ namespace WInterop.File
                 uint dwFlags);
 
             // Ex version is supported by WinRT apps
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364944.aspx
-            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern FileAttributes GetFileAttributesW(
-                string lpFileName);
-
-            // Ex version is supported by WinRT apps
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364952.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfileinformationbyhandle
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool GetFileInformationByHandle(
                 SafeFileHandle hFile,
                 out BY_HANDLE_FILE_INFORMATION lpFileInformation);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364980.aspx (kernel32)
-            [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern uint GetLongPathNameW(
-                string lpszShortPath,
-                SafeHandle lpszLongPath,
-                uint cchBuffer);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364989.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getshortpathnamew (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern uint GetShortPathNameW(
                 string lpszLongPath,
                 SafeHandle lpszShortPath,
                 uint cchBuffer);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364962.aspx (kernel32)
-            [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-            public static extern uint GetFinalPathNameByHandleW(
-                SafeFileHandle hFile,
-                SafeHandle lpszFilePath,
-                uint cchFilePath,
-                GetFinalPathNameByHandleFlags dwFlags);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363852.aspx
-            // CopyFile calls CopyFileEx with COPY_FILE_FAIL_IF_EXISTS if fail if exists is set
-            // (Neither are available in WinRT- use CopyFile2)
-            [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public static extern bool CopyFileExW(
-                string lpExistingFileName,
-                string lpNewFileName,
-                CopyProgressRoutine lpProgressRoutine,
-                IntPtr lpData,
-                ref bool pbCancel,
-                CopyFileFlags dwCopyFlags);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363866.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-createsymboliclinkw
             [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern BOOLEAN CreateSymbolicLinkW(
                 string lpSymlinkFileName,
                 string lpTargetFileName,
                 SYMBOLIC_LINK_FLAG dwFlags);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364021.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-encryptfilew
             [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool EncryptFileW(
                 string lpFileName);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363903.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-decryptfilew
             [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool DecryptFileW(
                 string lpFileName,
                 uint dwReserved);
 
-            // Adding Users to an Encrypted File
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363765.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/FileIO/adding-users-to-an-encrypted-file
             //
             // 1. LookupAccountName() to get SID
             // 2. CertOpenSystemStore((HCRYPTPROV)NULL,L"TrustedPeople") to get cert store
@@ -121,7 +86,7 @@ namespace WInterop.File
             //   EFS_CERTIFICATE.pCertBlob.cbData = CCERT_CONTEXT.cbCertEncoded
             //   EFS_CERTIFICATE.pCertBlob.pbData = CCERT_CONTEXT.pbCertEncoded
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363770.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winefs/nf-winefs-adduserstoencryptedfile
             //
             //  DWORD WINAPI AddUsersToEncryptedFile(
             //      _In_ LPCWSTR lpFileName,
@@ -136,8 +101,8 @@ namespace WInterop.File
                 /// </summary>
                 IntPtr pUsers);
 
-            // https://msdn.microsoft.com/en-us/library/bb432380.aspx
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566424.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winternl/nf-winternl-ntcreatefile
+            // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntcreatefile
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern NTSTATUS NtCreateFile(
                 out IntPtr FileHandle,
@@ -152,7 +117,7 @@ namespace WInterop.File
                 void* EaBuffer,
                 uint EaLength);
 
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567052.aspx
+            // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntqueryinformationfile
             // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern NTSTATUS NtQueryInformationFile(
@@ -162,7 +127,7 @@ namespace WInterop.File
                 uint Length,
                 FileInformationClass FileInformationClass);
 
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567096.aspx
+            // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntsetinformationfile
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern NTSTATUS NtSetInformationFile(
                 SafeFileHandle FileHandle,
@@ -170,8 +135,7 @@ namespace WInterop.File
                 void* FileInformation,
                 FileInformationClass FileInformationClass);
 
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556633.aspx
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567047.aspx
+            // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntquerydirectoryfile
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern NTSTATUS NtQueryDirectoryFile(
                 IntPtr FileHandle,
@@ -201,7 +165,7 @@ namespace WInterop.File
                 BOOLEAN RestartScan);
 
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff546850.aspx
-            // https://msdn.microsoft.com/en-us/library/hh551132.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/rtlisnameinexpression
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern BOOLEAN RtlIsNameInExpression(
                 UNICODE_STRING* Expression,
@@ -209,25 +173,13 @@ namespace WInterop.File
                 BOOLEAN IgnoreCase,
                 IntPtr UpcaseTable);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365465.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public unsafe static extern bool ReadDirectoryChangesW(
-                SafeFileHandle hDirectory,
-                void* lpBuffer,
-                uint nBufferLength,
-                bool bWatchSubtree,
-                FileNotifyChange dwNotifyFilter,
-                out uint lpBytesReturned,
-                ref OVERLAPPED lpOverlapped,
-                FileIOCompletionRoutine lpCompletionRoutine);
-
-            // https://msdn.microsoft.com/en-us/library/cc512135.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/ntqueryattributesfile
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern NTSTATUS NtQueryAttributesFile(
                 ref OBJECT_ATTRIBUTES ObjectAttributes,
                 out FILE_BASIC_INFORMATION FileInformation);
 
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567049.aspx
+            // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/wdm/nf-wdm-zwqueryfullattributesfile
             [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern NTSTATUS NtQueryFullAttributesFile(
                 ref OBJECT_ATTRIBUTES ObjectAttributes,

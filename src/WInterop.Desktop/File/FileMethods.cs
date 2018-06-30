@@ -9,14 +9,10 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Authorization;
-using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.File.BufferWrappers;
 using WInterop.File.Types;
 using WInterop.Handles.Types;
-using WInterop.MemoryManagement;
 using WInterop.SafeString.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -25,13 +21,14 @@ namespace WInterop.File
 {
     public static partial class FileMethods
     {
-        /// <summary>
-        /// Get the long (non 8.3) path version of the given path.
-        /// </summary>
-        public static string GetLongPathName(string path)
+        private struct ShortPathNameWrapper : IBufferFunc<StringBuffer, uint>
         {
-            var wrapper = new LongPathNameWrapper { Path = path };
-            return BufferHelper.ApiInvoke(ref wrapper, path);
+            public string Path;
+
+            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
+            {
+                return Imports.GetShortPathNameW(Path, buffer, buffer.CharCapacity);
+            }
         }
 
         /// <summary>
@@ -41,36 +38,6 @@ namespace WInterop.File
         {
             var wrapper = new ShortPathNameWrapper { Path = path };
             return BufferHelper.ApiInvoke(ref wrapper, path);
-        }
-
-        /// <summary>
-        /// Gets a canonical version of the given handle's path.
-        /// </summary>
-        public static string GetFinalPathNameByHandle(
-            SafeFileHandle fileHandle,
-            GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED | GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
-        {
-            var wrapper = new FinalPathNameByHandleWrapper { FileHandle = fileHandle, Flags = flags };
-            return BufferHelper.ApiInvoke(ref wrapper);
-        }
-
-        /// <summary>
-        /// Gets a canonical version of the given file's path.
-        /// </summary>
-        /// <param name="resolveLinks">True to get the destination of links rather than the link itself.</param>
-        public static string GetFinalPathName(string path, GetFinalPathNameByHandleFlags finalPathFlags, bool resolveLinks)
-        {
-            if (path == null) return null;
-
-            // BackupSemantics is needed to get directory handles
-            FileFlags flags = FileFlags.BackupSemantics;
-            if (!resolveLinks) flags |= FileFlags.OpenReparsePoint;
-
-            using (SafeFileHandle fileHandle = CreateFile(path, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
-                FileAttributes.None, flags))
-            {
-                return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
-            }
         }
 
         /// <summary>
@@ -109,7 +76,7 @@ namespace WInterop.File
         {
             uint flags = (uint)fileAttributes | (uint)fileFlags | (uint)securityQosFlags;
 
-            SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, null, creationDisposition, flags, IntPtr.Zero);
+            SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, lpSecurityAttributes: null, creationDisposition, flags, hTemplateFile: IntPtr.Zero);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError(path);
             return handle;
@@ -252,19 +219,6 @@ namespace WInterop.File
             {
                 throw Errors.GetIoExceptionForLastError(source);
             }
-        }
-
-        /// <summary>
-        /// Gets file attributes for the given path.
-        /// </summary>
-        /// <remarks>Not available in Store apps, use FileMethods.GetFileInfo instead.</remarks>
-        public static FileAttributes GetFileAttributes(string path)
-        {
-            FileAttributes attributes = Imports.GetFileAttributesW(path);
-            if (attributes == FileAttributes.Invalid)
-                throw Errors.GetIoExceptionForLastError(path);
-
-            return attributes;
         }
 
         public static string GetFileName(SafeFileHandle fileHandle)

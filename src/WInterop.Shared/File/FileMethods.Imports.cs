@@ -25,7 +25,7 @@ namespace WInterop.File
             // NTFS Technical Reference
             // https://technet.microsoft.com/en-us/library/cc758691.aspx
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449422.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createfile2 (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern SafeFileHandle CreateFile2(
                 string lpFileName,
@@ -34,14 +34,26 @@ namespace WInterop.File
                 CreationDisposition dwCreationDisposition,
                 ref CREATEFILE2_EXTENDED_PARAMETERS pCreateExParams);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449404.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-copyfileexw
+            // CopyFile calls CopyFileEx with COPY_FILE_FAIL_IF_EXISTS if fail if exists is set
+            // (Neither are available in WinRT- use CopyFile2)
+            [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern bool CopyFileExW(
+                string lpExistingFileName,
+                string lpNewFileName,
+                CopyProgressRoutine lpProgressRoutine,
+                IntPtr lpData,
+                ref bool pbCancel,
+                CopyFileFlags dwCopyFlags);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-copyfile2 (kernel32)
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT CopyFile2(
                 string pwszExistingFileName,
                 string pwszNewFileName,
                 ref COPYFILE2_EXTENDED_PARAMETERS pExtendedParameters);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365512.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-replacefilew
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool ReplaceFileW(
                 string lpReplacedFileName,
@@ -51,20 +63,25 @@ namespace WInterop.File
                 IntPtr lpExclude,
                 IntPtr lpReserved);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364946.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfileattributesw
+            [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern FileAttributes GetFileAttributesW(
+                string lpFileName);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfileattributesexw (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetFileAttributesExW(
                 string lpFileName,
                 GET_FILEEX_INFO_LEVELS fInfoLevelId,
                 out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365535.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-setfileattributesw (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern bool SetFileAttributesW(
                 string lpFileName,
                 FileAttributes dwFileAttributes);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364963.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfullpathnamew (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern uint GetFullPathNameW(
                 string lpFileName,
@@ -72,13 +89,28 @@ namespace WInterop.File
                 SafeHandle lpBuffer,
                 IntPtr lpFilePart);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364418.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfinalpathnamebyhandlew (kernel32)
+            [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetFinalPathNameByHandleW(
+                SafeFileHandle hFile,
+                SafeHandle lpszFilePath,
+                uint cchFilePath,
+                GetFinalPathNameByHandleFlags dwFlags);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getlongpathnamew (kernel32)
+            [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            public static extern uint GetLongPathNameW(
+                string lpszShortPath,
+                SafeHandle lpszLongPath,
+                uint cchBuffer);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findfirstfilew
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern IntPtr FindFirstFileW(
                 string lpFileName,
                 out WIN32_FIND_DATA lpFindFileData);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findfirstfileexw (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern IntPtr FindFirstFileExW(
                     string lpFileName,
@@ -89,18 +121,18 @@ namespace WInterop.File
                     IntPtr lpSearchFilter,                 // Reserved
                     FindFirstFileExFlags dwAdditionalFlags);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364428.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findnextfilew (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool FindNextFileW(
                 IntPtr hFindFile,
                 out WIN32_FIND_DATA lpFindFileData);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364413.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findclose (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]
             public static extern bool FindClose(
                 IntPtr hFindFile);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364953.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-getfileinformationbyhandleex (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l2_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern bool GetFileInformationByHandleEx(
                 IntPtr hFile,
@@ -120,12 +152,12 @@ namespace WInterop.File
                 }
             }
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363915.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-deletefilew (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool DeleteFileW(
                 string lpFilename);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-readfile
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern bool ReadFile(
                 SafeFileHandle hFile,
@@ -134,7 +166,7 @@ namespace WInterop.File
                 uint* lpNumberOfBytesRead,
                 OVERLAPPED* lpOverlapped);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-writefile
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern bool WriteFile(
                 SafeFileHandle hFile,
@@ -143,7 +175,7 @@ namespace WInterop.File
                 uint* lpNumberOfBytesWritten,
                 OVERLAPPED* lpOverlapped);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365542.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-setfilepointerex
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool SetFilePointerEx(
                 SafeFileHandle hFile,
@@ -151,30 +183,30 @@ namespace WInterop.File
                 out long lpNewFilePointer,
                 MoveMethod dwMoveMethod);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364957.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfilesizeex
             // This returns FILE_STANDARD_INFO.EndOfFile
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetFileSizeEx(
                 SafeFileHandle hFile,
                 out long lpFileSize);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364960.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfiletype
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern FileType GetFileType(
                 SafeFileHandle hFile);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364439.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-flushfilebuffers (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]
             public static extern bool FlushFileBuffers(
                 SafeFileHandle hFile);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364992.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-gettemppathw (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, SetLastError = true, ExactSpelling = true)]
             public static extern uint GetTempPathW(
                 uint nBufferLength,
                 SafeHandle lpBuffer);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364991.aspx (kernel32)
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-gettempfilenamew (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern uint GetTempFileNameW(
                 string lpPathName,
@@ -182,13 +214,13 @@ namespace WInterop.File
                 uint uUnique,
                 SafeHandle lpTempFileName);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363792.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/FileIO/cancelioex-func
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public unsafe static extern bool CancelIoEx(
                 SafeFileHandle hFile,
                 OVERLAPPED* lpOverlapped);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/hh448542.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/ioapiset/nf-ioapiset-getoverlappedresultex
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetOverlappedResultEx(
                 SafeFileHandle hFile,
@@ -197,7 +229,7 @@ namespace WInterop.File
                 uint dwMilliseconds,
                 bool bAlertable);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365716.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-unlockfileex
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool UnlockFileEx(
                 SafeFileHandle hFile,
@@ -206,7 +238,7 @@ namespace WInterop.File
                 uint nNumberOfBytesToUnlockHigh,
                 ref OVERLAPPED lpOverlapped);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365203.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-lockfileex
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool LockFileEx(
                 SafeFileHandle hFile,
@@ -215,6 +247,18 @@ namespace WInterop.File
                 uint nNumberOfBytesToUnlockLow,
                 uint nNumberOfBytesToUnlockHigh,
                 ref OVERLAPPED lpOverlapped);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-readdirectorychangesw
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+            public unsafe static extern bool ReadDirectoryChangesW(
+                SafeFileHandle hDirectory,
+                void* lpBuffer,
+                uint nBufferLength,
+                bool bWatchSubtree,
+                FileNotifyChange dwNotifyFilter,
+                out uint lpBytesReturned,
+                ref OVERLAPPED lpOverlapped,
+                FileIOCompletionRoutine lpCompletionRoutine);
         }
     }
 }
