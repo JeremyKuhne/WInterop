@@ -5,14 +5,16 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.DeviceManagement.Types
+namespace WInterop.Devices.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562275.aspx
-    public struct MOUNTMGR_CREATE_POINT_INPUT
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562286.aspx
+    public struct MOUNTMGR_MOUNT_POINT
     {
-        public ushort SymbolicLinkNameOffset;
+        public uint SymbolicLinkNameOffset;
         public ushort SymbolicLinkNameLength;
-        public ushort DeviceNameOffset;
+        public uint UniqueIdOffset;
+        public ushort UniqueIdLength;
+        public uint DeviceNameOffset;
         public ushort DeviceNameLength;
     }
 }

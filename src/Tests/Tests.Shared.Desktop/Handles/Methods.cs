@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
-using WInterop.DeviceManagement;
+using WInterop.Devices;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.Handles;

@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.DeviceManagement.Types;
+using WInterop.Devices.Types;
 using WInterop.Synchronization.Types;
 
-namespace WInterop.DeviceManagement
+namespace WInterop.Devices
 {
     public static partial class DeviceMethods
     {

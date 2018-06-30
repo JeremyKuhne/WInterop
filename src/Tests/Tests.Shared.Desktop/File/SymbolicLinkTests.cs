@@ -10,7 +10,7 @@ using System;
 using Tests.Support;
 using WInterop.Authorization;
 using WInterop.Authorization.Types;
-using WInterop.DeviceManagement;
+using WInterop.Devices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Storage;

@@ -5,13 +5,12 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
-namespace WInterop.DeviceManagement.Types
+namespace WInterop.Devices.Types
 {
-    // Defined in mountdev.h
-    public struct MOUNTDEV_STABLE_GUID
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562281.aspx
+    public struct MOUNTMGR_DRIVE_LETTER_INFORMATION
     {
-        public Guid StableGuid;
+        public BOOLEAN DriveLetterWasAssigned;
+        public UCHAR CurrentDriveLetter;
     }
 }

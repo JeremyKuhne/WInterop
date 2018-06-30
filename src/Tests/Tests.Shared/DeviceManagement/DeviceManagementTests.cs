@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.DeviceManagement.Types;
+using WInterop.Devices.Types;
 using Xunit;
 
-namespace Tests.DeviceManagement
+namespace Tests.Devices
 {
     public class DeviceManagementTests
     {

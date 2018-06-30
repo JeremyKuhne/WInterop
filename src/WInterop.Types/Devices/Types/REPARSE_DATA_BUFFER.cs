@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Storage.Types;
 
-namespace WInterop.DeviceManagement.Types
+namespace WInterop.Devices.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff552012.aspx
     [StructLayout(LayoutKind.Explicit)]

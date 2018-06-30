@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.DeviceManagement.Types
+namespace WInterop.Devices.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562256.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

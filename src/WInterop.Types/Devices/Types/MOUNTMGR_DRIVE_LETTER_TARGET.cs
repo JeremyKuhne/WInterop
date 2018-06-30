@@ -8,11 +8,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.DeviceManagement.Types
+namespace WInterop.Devices.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562289.aspx
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562285.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct MOUNTMGR_TARGET_NAME
+    public struct MOUNTMGR_DRIVE_LETTER_TARGET
     {
         public ushort DeviceNameLength;
         private TrailingString _DeviceName;

@@ -7,10 +7,10 @@
 
 
 using FluentAssertions;
-using WInterop.DeviceManagement.Types;
+using WInterop.Devices.Types;
 using Xunit;
 
-namespace Tests.DeviceManagement
+namespace Tests.Devices
 {
     public class DeviceControlCodeTests
     {

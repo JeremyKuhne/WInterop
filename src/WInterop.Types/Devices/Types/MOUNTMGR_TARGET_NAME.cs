@@ -8,14 +8,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.DeviceManagement.Types
+namespace WInterop.Devices.Types
 {
-    // Defined in mountmgr.h
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562289.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct MOUNTMGR_VOLUME_PATHS
+    public struct MOUNTMGR_TARGET_NAME
     {
-        public uint MultiSzLength;
-        private TrailingString _MultiSz;
-        public ReadOnlySpan<char> MultiSz => _MultiSz.GetBuffer(MultiSzLength);
+        public ushort DeviceNameLength;
+        private TrailingString _DeviceName;
+        public ReadOnlySpan<char> DeviceName => _DeviceName.GetBuffer(DeviceNameLength);
     }
 }

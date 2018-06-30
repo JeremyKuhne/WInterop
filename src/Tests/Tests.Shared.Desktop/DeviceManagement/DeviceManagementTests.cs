@@ -7,14 +7,14 @@
 
 using FluentAssertions;
 using System;
-using WInterop.DeviceManagement;
+using WInterop.Devices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using Xunit;
 
-namespace DesktopTests.DeviceManagement
+namespace DesktopTests.Devices
 {
     public class DeviceManagementTests
     {

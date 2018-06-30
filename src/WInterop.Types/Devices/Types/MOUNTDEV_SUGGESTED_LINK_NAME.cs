@@ -8,14 +8,15 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.DeviceManagement.Types
+namespace WInterop.Devices.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562285.aspx
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562258.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct MOUNTMGR_DRIVE_LETTER_TARGET
+    public struct MOUNTDEV_SUGGESTED_LINK_NAME
     {
-        public ushort DeviceNameLength;
-        private TrailingString _DeviceName;
-        public ReadOnlySpan<char> DeviceName => _DeviceName.GetBuffer(DeviceNameLength);
+        public BOOLEAN UseOnlyIfThereAreNoOtherLinks;
+        public ushort NameLength;
+        private TrailingString _Name;
+        public ReadOnlySpan<char> Name => _Name.GetBuffer(NameLength);
     }
 }

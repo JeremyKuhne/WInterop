@@ -8,14 +8,14 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.DeviceManagement.Types;
+using WInterop.Devices.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
-namespace WInterop.DeviceManagement
+namespace WInterop.Devices
 {
     public static partial class DeviceMethods
     {
