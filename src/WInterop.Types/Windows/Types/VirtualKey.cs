@@ -7,8 +7,8 @@
 
 namespace WInterop.Windows.Types
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731.aspx
-    public enum VirtualKey : int
+    // https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes
+    public enum VirtualKey : ushort
     {
         /// <summary>
         /// (VK_LBUTTON)

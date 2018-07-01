@@ -598,6 +598,7 @@ namespace WInterop.Windows
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646293.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern short GetAsyncKeyState(
+                [MarshalAs(UnmanagedType.I4)]
                 VirtualKey vKey);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646294.aspx
@@ -624,6 +625,7 @@ namespace WInterop.Windows
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646301.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern KeyState GetKeyState(
+                [MarshalAs(UnmanagedType.I4)]
                 VirtualKey vKey);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646302.aspx
