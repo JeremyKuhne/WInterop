@@ -42,7 +42,7 @@ namespace Tests.Support.Buffers
             CheckAlignment<SID>(16);
         }
 
-        private unsafe void CheckAlignment<T>(int alignment) where T : struct
+        private unsafe void CheckAlignment<T>(int alignment) where T : unmanaged
         {
             ValueBuffer<T> t = new ValueBuffer<T>();
             try

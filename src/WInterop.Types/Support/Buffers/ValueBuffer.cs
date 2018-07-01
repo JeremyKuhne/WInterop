@@ -9,15 +9,18 @@ using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace WInterop.Support.Buffers
 {
     /// <summary>
     /// Growable Span(T) buffer wrapper.
     /// </summary>
-    public ref struct ValueBuffer<T> where T : struct
+    public ref struct ValueBuffer<T> where T : unmanaged
     {
-        private byte[] _buffer;
+        // We need to pin our backing byte array so our reinterpreted spans don't get mistracked
+        // if the backing byte[] array gets moved by the GC.
+        private GCHandle _handle;
 
         /// <summary>
         /// Create the buffer with an initial span.
@@ -29,7 +32,6 @@ namespace WInterop.Support.Buffers
         public ValueBuffer(Span<T> span)
         {
             Span = span;
-            _buffer = null;
         }
 
         public Span<T> Span { get; private set; }
@@ -58,10 +60,8 @@ namespace WInterop.Support.Buffers
             // Get extra for possible realignment
             int byteCapacity = capacity * sizeOfT + alignTo;
 
-            byte[] oldBuffer = _buffer;
-            byte[] newBuffer = null;
-
-            newBuffer = ArrayPool<byte>.Shared.Rent(byteCapacity);
+            byte[] newBuffer = ArrayPool<byte>.Shared.Rent(byteCapacity);
+            GCHandle newHandle = GCHandle.Alloc(newBuffer, GCHandleType.Pinned);
 
             // Align if necessary
             byte* p = (byte*)Unsafe.AsPointer(ref newBuffer[0]);
@@ -77,7 +77,7 @@ namespace WInterop.Support.Buffers
             Span<T> newSpan = new Span<T>(p, (newBuffer.Length - offset) / sizeOfT);
             Span.CopyTo(newSpan);
             Dispose();
-            _buffer = newBuffer;
+            _handle = newHandle;
             Span = newSpan;
         }
 
@@ -86,10 +86,11 @@ namespace WInterop.Support.Buffers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            byte[] buffer = _buffer;
-            this = default;
-            if (buffer != null)
-                ArrayPool<byte>.Shared.Return(buffer);
+            if (_handle.IsAllocated)
+            {
+                ArrayPool<byte>.Shared.Return((byte[])_handle.Target);
+                _handle.Free();
+            }
         }
     }
 }
