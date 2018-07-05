@@ -8,10 +8,11 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using WInterop.Console.Types;
 using WInterop.Support;
 
-namespace WInterop.Desktop.Console
+namespace WInterop.Console
 {
     public static partial class ConsoleMethods
     {
@@ -61,6 +62,17 @@ namespace WInterop.Desktop.Console
                 yield return buffer;
             }
             throw Errors.GetIoExceptionForLastError();
+        }
+
+        public unsafe static uint WriteConsole(SafeFileHandle outputHandle, ReadOnlySpan<char> text)
+        {
+            fixed (char* c = &MemoryMarshal.GetReference(text))
+            {
+                if (!Imports.WriteConsoleW(outputHandle, c, (uint)text.Length, out uint charsWritten))
+                    throw Errors.GetIoExceptionForLastError();
+
+                return charsWritten;
+            }
         }
     }
 }

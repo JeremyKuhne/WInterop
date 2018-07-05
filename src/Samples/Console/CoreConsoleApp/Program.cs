@@ -1,6 +1,15 @@
-﻿using System;
+﻿// ------------------------
+//    WInterop Framework
+// ------------------------
+
+// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
+using System.Diagnostics;
+using System.Text;
+using WInterop.Console;
 using WInterop.Console.Types;
-using WInterop.Desktop.Console;
 using WInterop.Windows.Types;
 
 namespace CoreConsoleApp
@@ -9,10 +18,30 @@ namespace CoreConsoleApp
     {
         static void Main(string[] args)
         {
-            uint inputCodePage = ConsoleMethods.GetConsoleInputCodePage();
-            uint ouputCodePage = ConsoleMethods.GetConsoleOuputCodePage();
+            // Performance();
+            // ReadInputExample();
+        }
 
-            ReadInputExample();
+        static void Performance()
+        {
+            var writer = ConsoleWriter.Create(StandardHandleType.Output, autoFlush: false);
+
+            Stopwatch stopwatch = new Stopwatch();
+            long prebytes = GC.GetAllocatedBytesForCurrentThread();
+            stopwatch.Start();
+            for (int i = 0; i < 10000; i++)
+            {
+                writer.Write(i);
+                // Console.Write(i);
+
+                // writer.WriteLine("Line {0}: {1}", i, "Lorem ipsum dolor sit amet, consectetur adipiscing.");
+                // Console.WriteLine("Line {0}: {1}", "State", "Lorem ipsum dolor sit amet, consectetur adipiscing.");
+            }
+            writer.Flush();
+            stopwatch.Stop();
+            long used = GC.GetAllocatedBytesForCurrentThread() - prebytes;
+
+            Console.WriteLine($"Time: {stopwatch.ElapsedMilliseconds}, Allocated Bytes: {used}");
         }
 
         static void ReadInputExample()

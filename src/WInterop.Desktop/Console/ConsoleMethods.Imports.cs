@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Console.Types;
 
-namespace WInterop.Desktop.Console
+namespace WInterop.Console
 {
     public static partial class ConsoleMethods
     {
@@ -62,6 +62,16 @@ namespace WInterop.Desktop.Console
             [DllImport(Libraries.Kernel32, ExactSpelling = true)]
             public static extern uint GetConsoleOutputCP();
 
+            // https://docs.microsoft.com/en-us/windows/console/setconsolecp
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetConsoleCP(
+                uint wCodePageID);
+
+            // https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public static extern bool SetConsoleOutputCP(
+                uint wCodePageID);
+
             // https://docs.microsoft.com/en-us/windows/console/peekconsoleinput
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool PeekConsoleInputW(
@@ -83,6 +93,24 @@ namespace WInterop.Desktop.Console
             public static extern bool GetNumberOfConsoleInputEvents(
                 SafeHandle hConsoleInput,
                 out uint lpcNumberOfEvents);
+
+            // https://docs.microsoft.com/en-us/windows/console/readconsole
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern bool ReadConsoleW(
+              SafeHandle hConsoleInput,
+              void* lpBuffer,
+              uint nNumberOfCharsToRead,
+              out uint lpNumberOfCharsRead,
+              CONSOLE_READCONSOLE_CONTROL* pInputControl);
+
+            // https://docs.microsoft.com/en-us/windows/console/writeconsole
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+            public unsafe static extern bool WriteConsoleW(
+                SafeHandle hConsoleOutput,
+                void* lpBuffer,
+                uint nNumberOfCharsToWrite,
+                out uint lpNumberOfCharsWritten,
+                void* lpReserved = null);
         }
     }
 }

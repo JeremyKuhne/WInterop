@@ -150,6 +150,6 @@ Licensed under the MIT license. See LICENSE file in the project root for full li
     <ItemGroup>
       <FileWrites Include="$(ILSourceDirectory)ilasm.log" />
     </ItemGroup>
-    <Touch Files="$(ILFile)" />
+    <Touch Files="$(ILFile)" Condition="Exists('$(ILFile)')"/>
   </Target>
 </Project>
