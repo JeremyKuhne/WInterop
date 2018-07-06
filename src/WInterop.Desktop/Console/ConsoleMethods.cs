@@ -16,6 +16,17 @@ namespace WInterop.Console
 {
     public static partial class ConsoleMethods
     {
+        public static void FreeConsole()
+        {
+            if (!Imports.FreeConsole())
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static bool TryFreeConsole()
+        {
+            return Imports.FreeConsole();
+        }
+
         public static uint GetConsoleInputCodePage()
         {
             return Imports.GetConsoleCP();

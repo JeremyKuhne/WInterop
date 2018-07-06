@@ -21,6 +21,7 @@ using WInterop.Resources.Types;
 using WInterop.SystemInformation.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
+using WInterop.Console;
 
 namespace Clock
 {
@@ -34,6 +35,9 @@ namespace Clock
         [STAThread]
         static void Main()
         {
+            // Hack for launching as a .NET Core Windows Application
+            ConsoleMethods.TryFreeConsole();
+
 #if GDIPLUS
             UIntPtr token = GdiPlusMethods.Startup();
 #endif

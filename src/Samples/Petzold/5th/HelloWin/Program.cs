@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Console;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
@@ -28,6 +29,9 @@ namespace HelloWin
         [STAThread]
         static void Main()
         {
+            // Hack for launching as a .NET Core Windows Application
+            ConsoleMethods.TryFreeConsole();
+
             const string szAppName = "HelloWin";
 
             ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
