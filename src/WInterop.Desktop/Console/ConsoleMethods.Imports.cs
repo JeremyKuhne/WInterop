@@ -111,6 +111,16 @@ namespace WInterop.Console
                 uint nNumberOfCharsToWrite,
                 out uint lpNumberOfCharsWritten,
                 void* lpReserved = null);
+
+            // https://docs.microsoft.com/en-us/windows/console/getconsolealiasexeslength
+            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+            public static extern uint GetConsoleAliasExesLength();
+
+            // https://docs.microsoft.com/en-us/windows/console/getconsolealiasexes
+            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
+            public static extern uint GetConsoleAliasExesW(
+                ref char lpExeNameBuffer,
+                uint ExeNameBufferLength);
         }
     }
 }

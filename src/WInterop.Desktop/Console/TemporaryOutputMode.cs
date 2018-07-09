@@ -1,0 +1,31 @@
+﻿// ------------------------
+//    WInterop Framework
+// ------------------------
+
+// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Microsoft.Win32.SafeHandles;
+using System;
+using WInterop.Console.Types;
+
+namespace WInterop.Console
+{
+    public readonly struct TemporaryOutputMode : IDisposable
+    {
+        readonly ConsoleOuputMode _mode;
+        readonly SafeFileHandle _handle;
+
+        public TemporaryOutputMode(ConsoleOuputMode mode, bool addFlag = false)
+        {
+            _handle = ConsoleMethods.GetStandardHandle(StandardHandleType.Output);
+            _mode = ConsoleMethods.GetConsoleOutputMode(_handle);
+            ConsoleMethods.SetConsoleOutputMode(_handle, addFlag ? mode | _mode : mode);
+        }
+
+        public void Dispose()
+        {
+            ConsoleMethods.SetConsoleOutputMode(_handle, _mode);
+        }
+    }
+}
