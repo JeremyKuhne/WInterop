@@ -13,6 +13,7 @@
     <DelaySign>False</DelaySign>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
+    <RootNamespace>WInterop</RootNamespace>
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\WInterop.Shared\WInterop.Shared.projitems" Label="Shared" />

@@ -38,13 +38,16 @@ namespace WInterop.Console
 
         public override Encoding Encoding => _encoding;
 
-        public static ConsoleWriter Create(StandardHandleType type, bool autoFlush = true)
+        /// <summary>
+        /// Creates a <see cref="TextWriter"/> for the console's standard output or error.
+        /// </summary>
+        /// <param name="output">True for console stardard output, otherwise standard error.</param>
+        public static TextWriter Create(bool output = true, bool autoFlush = true)
         {
-            Encoding encoding = type == StandardHandleType.Input
-                ? System.Console.InputEncoding
-                : System.Console.OutputEncoding;
-
-            return new ConsoleWriter(new ConsoleStream(type), encoding, autoFlush);
+            return new ConsoleWriter(
+                new ConsoleStream(output ? StandardHandleType.Output : StandardHandleType.Error),
+                System.Console.OutputEncoding,
+                autoFlush);
         }
 
         public unsafe override void Write(char value) => InternalWrite(value);

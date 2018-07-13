@@ -16,15 +16,53 @@ namespace CoreConsoleApp
 {
     class Program
     {
+        // ␛
+        const char Esc = (char)27;
+
+
         static void Main(string[] args)
         {
             // Performance();
             // ReadInputExample();
+            VirtualTerminalColor();
+        }
+
+        static void VirtualTerminalColor()
+        {
+            var writer = ConsoleWriter.Create(autoFlush: false);
+
+            using (new TemporaryOutputMode(ConsoleOuputMode.EnableVirtualTerminalProcessing, addFlag: true))
+            {
+                for (int r = 30; r < 256; r += 30)
+                for (int g = 30; g < 256; g += 30)
+                for (int b = 30; b < 256; b += 30)
+                {
+                    //Console.Write($"{Esc}[38;2;{r};{g};{b}m");
+                    //Console.Write("Color!");
+
+                    writer.Write($"{Esc}[38;2;{r};{g};{b}m");
+                    writer.Write("Color!");
+                    writer.Write($"{Esc}[7m");
+                    writer.Write("Color!");
+                    writer.Write($"{Esc}[27m");
+                }
+
+                writer.Flush();
+
+                // Tangerine
+                Console.WriteLine();
+                Console.Write($"{Esc}[38;2;242;133;0m");
+                Console.WriteLine("In living color!");
+                Console.Write($"{Esc}[4m");
+                Console.WriteLine("In living color!");
+            }
+
+            Console.WriteLine("After exiting terminal mode.");
         }
 
         static void Performance()
         {
-            var writer = ConsoleWriter.Create(StandardHandleType.Output, autoFlush: false);
+            var writer = ConsoleWriter.Create(autoFlush: false);
 
             Stopwatch stopwatch = new Stopwatch();
             long prebytes = GC.GetAllocatedBytesForCurrentThread();
