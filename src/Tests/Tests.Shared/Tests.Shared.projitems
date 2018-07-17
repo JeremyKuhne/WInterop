@@ -27,9 +27,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileSecurityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindOperationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\DosMatcherTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileManagementBehaviors.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileManagementTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\StorageBehaviors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\StorageTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\StorageTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\CasingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\ComparisonTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfoTests.cs" />
