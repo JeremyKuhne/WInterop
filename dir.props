@@ -65,6 +65,9 @@
   <PropertyGroup>
     <!-- We're generating our own assembly info in our common project -->
     <GenerateAssemblyInfo Condition="'$(GenerateAssemblyInfo)' == ''">false</GenerateAssemblyInfo>
+
+    <!-- Latest and greatest C# please -->
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <!-- https://github.com/Microsoft/msbuild/issues/1392 -->
