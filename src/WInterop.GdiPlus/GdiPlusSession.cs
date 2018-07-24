@@ -5,18 +5,23 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.GdiPlus
 {
-    // https://msdn.microsoft.com/en-us/library/ms534487.aspx
-    public struct GpPoint
+    public class GdiPlusSession : IDisposable
     {
-        public int X;
-        public int Y;
+        private UIntPtr _token;
 
-        public GpPoint(int x, int y)
+        public GdiPlusSession()
         {
-            X = x;
-            Y = y;
+            _token = GdiPlusMethods.Startup();
+        }
+
+        public void Dispose()
+        {
+            GdiPlusMethods.Shutdown(_token);
+            _token = UIntPtr.Zero;
         }
     }
 }

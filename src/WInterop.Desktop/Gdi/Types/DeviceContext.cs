@@ -6,27 +6,83 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Handles.Types;
+using WInterop.Support;
+using WInterop.Windows.Types;
 
 namespace WInterop.Gdi.Types
 {
     /// <summary>
     /// DeviceContext handle (HDC)
     /// </summary>
-    public class DeviceContext : HandleZeroIsInvalid
+    public readonly struct DeviceContext : IDisposable
     {
-        public static DeviceContext Null = new DeviceContext(IntPtr.Zero, ownsHandle: false);
+        public HDC Handle => _paint.hdc;
+        private readonly WindowHandle _window;
+        private readonly CollectionType _type;
+        private readonly PAINTSTRUCT _paint;
 
-        public DeviceContext() : base(ownsHandle: true) { }
-
-        public DeviceContext(IntPtr handle, bool ownsHandle) : base(ownsHandle)
+        public DeviceContext(HDC handle)
         {
-            SetHandle(handle);
+            _window = default;
+            _paint = default;
+            _paint.hdc = handle;
+            _type = CollectionType.None;
         }
 
-        protected override bool ReleaseHandle()
+        public DeviceContext(HDC handle, WindowHandle windowHandle)
         {
-            return GdiMethods.Imports.DeleteDC(handle);
+            _window = windowHandle;
+            _paint = default;
+            _paint.hdc = handle;
+            _type = windowHandle.HWND == IntPtr.Zero
+                ? CollectionType.Release : CollectionType.Delete;
+        }
+
+        public DeviceContext(HDC handle, WindowHandle windowHandle, PAINTSTRUCT paint)
+        {
+            _window = windowHandle;
+            _paint = paint;
+            _type = CollectionType.EndPaint;
+        }
+
+        public void Dispose()
+        {
+            switch (_type)
+            {
+                case CollectionType.Delete:
+                    if (!GdiMethods.Imports.DeleteDC(Handle))
+                        throw Errors.GetIoExceptionForLastError();
+                    break;
+                case CollectionType.Release:
+                    if (!GdiMethods.Imports.ReleaseDC(_window, Handle))
+                        throw Errors.GetIoExceptionForLastError();
+                    break;
+                case CollectionType.EndPaint:
+                    if (!GdiMethods.Imports.EndPaint(_window, in _paint))
+                        throw Errors.GetIoExceptionForLastError();
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        public bool IsInvalid => Handle.IsInvalid;
+
+        public static implicit operator HDC(DeviceContext context) => context.Handle;
+        public static explicit operator DeviceContext(WPARAM wparam) => new DeviceContext(new HDC((IntPtr)wparam));
+
+        private enum CollectionType
+        {
+            None,
+            Delete,
+            Release,
+            EndPaint
+        }
+
+        public struct DeleteHDC
+        {
+            private HDC _handle;
+            public static implicit operator DeviceContext(DeleteHDC handle) => new DeviceContext(handle._handle, default);
         }
     }
 }

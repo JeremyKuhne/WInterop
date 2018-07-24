@@ -12,7 +12,7 @@ namespace WInterop.Gdi.Types
     // https://msdn.microsoft.com/en-us/library/dd162768.aspx
     public struct PAINTSTRUCT
     {
-        public IntPtr hdc;
+        public HDC hdc;
         public BOOL fErase;
         public RECT rcPaint;
         public BOOL fRestore;

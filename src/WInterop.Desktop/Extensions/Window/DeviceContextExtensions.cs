@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 
@@ -52,9 +53,9 @@ namespace WInterop.Extensions.WindowExtensions
             => GdiMethods.GetPolyFillMode(deviceContext);
         public static PolyFillMode SetPolyFillMode(this DeviceContext deviceContext, PolyFillMode fillMode)
             => GdiMethods.SetPolyFillMode(deviceContext, fillMode);
-        public unsafe static bool Polygon(this DeviceContext deviceContext, params POINT[] points)
+        public unsafe static bool Polygon(this DeviceContext deviceContext, params Point[] points)
             => GdiMethods.Polygon(deviceContext, points);
-        public static bool Polyline(this DeviceContext deviceContext, params POINT[] points)
+        public static bool Polyline(this DeviceContext deviceContext, params Point[] points)
             => GdiMethods.Polyline(deviceContext, points);
         public static bool Rectangle(this DeviceContext deviceContext, int left, int top, int right, int bottom)
             => GdiMethods.Rectangle(deviceContext, left, top, right, bottom);
@@ -71,14 +72,14 @@ namespace WInterop.Extensions.WindowExtensions
             => GdiMethods.Ellipse(deviceContext, left, top, right, bottom);
         public static bool RoundRectangle(this DeviceContext deviceContext, int left, int top, int right, int bottom, int cornerWidth, int cornerHeight)
             => GdiMethods.RoundRectangle(deviceContext, left, top, right, bottom, cornerWidth, cornerHeight);
-        public static bool PolyBezier(this DeviceContext deviceContext, params POINT[] points)
+        public static bool PolyBezier(this DeviceContext deviceContext, params Point[] points)
             => GdiMethods.PolyBezier(deviceContext, points);
         public static COLORREF GetPixel(this DeviceContext deviceContext, int x, int y) => GdiMethods.GetPixel(deviceContext, x, y);
-        public static COLORREF GetPixel(this DeviceContext deviceContext, POINT point) => GdiMethods.GetPixel(deviceContext, point.x, point.y);
-        public static bool SetPixel(this DeviceContext deviceContext, POINT point, COLORREF color) => GdiMethods.SetPixel(deviceContext, point.x, point.y, color);
+        public static COLORREF GetPixel(this DeviceContext deviceContext, Point point) => GdiMethods.GetPixel(deviceContext, point.X, point.Y);
+        public static bool SetPixel(this DeviceContext deviceContext, Point point, COLORREF color) => GdiMethods.SetPixel(deviceContext, point.X, point.Y, color);
         public static bool SetPixel(this DeviceContext deviceContext, int x, int y, COLORREF color) => GdiMethods.SetPixel(deviceContext, x, y, color);
-        public static bool DeviceToLogical(this DeviceContext deviceContext, params POINT[] points) => GdiMethods.DeviceToLogical(deviceContext, points);
-        public static bool LogicalToDevice(this DeviceContext deviceContext, params POINT[] points) => GdiMethods.LogicalToDevice(deviceContext, points);
+        public static bool DeviceToLogical(this DeviceContext deviceContext, params Point[] points) => GdiMethods.DeviceToLogical(deviceContext, points);
+        public static bool LogicalToDevice(this DeviceContext deviceContext, params Point[] points) => GdiMethods.LogicalToDevice(deviceContext, points);
         public static bool SetViewportOrigin(this DeviceContext deviceContext, int x, int y) => GdiMethods.SetViewportOrigin(deviceContext, x, y);
         public static bool SetWindowOrigin(this DeviceContext deviceContext, int x, int y) => GdiMethods.SetWindowOrigin(deviceContext, x, y);
         public static bool OffsetWindowOrigin(this DeviceContext deviceContext, int x, int y) => GdiMethods.OffsetWindowOrigin(deviceContext, x, y);

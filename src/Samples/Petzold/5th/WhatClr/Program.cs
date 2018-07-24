@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
@@ -83,7 +84,7 @@ namespace WhatClr
                     window.SetTimer(ID_TIMER, 100);
                     return 0;
                 case WindowMessage.Timer:
-                    POINT pt = Windows.GetCursorPosition();
+                    Point pt = Windows.GetCursorPosition();
                     cr = dcScreen.GetPixel(pt);
                     // Not sure why the sample did this
                     // dcScreen.SetPixel(pt, 0);

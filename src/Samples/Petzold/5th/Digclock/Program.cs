@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop;
 using WInterop.Extensions.WindowExtensions;
@@ -74,15 +75,15 @@ namespace DigClock
             { 1, 1, 1, 1, 0, 1, 1 }  // 9
         };
 
-        static POINT[][] ptSegment =
+        static Point[][] ptSegment =
         {
-            new POINT[] { new POINT(7, 6), new POINT(11, 2), new POINT(31, 2), new POINT(35, 6), new POINT(31, 10), new POINT(11, 10) },
-            new POINT[] { new POINT(6, 7), new POINT(10, 11), new POINT(10, 31), new POINT(6, 35), new POINT(2, 31), new POINT(2, 11) },
-            new POINT[] { new POINT(36, 7), new POINT(40, 11), new POINT(40, 31), new POINT(36, 35), new POINT(32, 31), new POINT(32, 11) },
-            new POINT[] { new POINT(7, 36), new POINT(11, 32), new POINT(31, 32), new POINT(35, 36), new POINT(31, 40), new POINT(11, 40) },
-            new POINT[] { new POINT(6, 37), new POINT(10, 41), new POINT(10, 61), new POINT(6, 65), new POINT(2, 61), new POINT(2, 41) },
-            new POINT[] { new POINT(36, 37), new POINT(40, 41), new POINT(40, 61), new POINT(36, 65), new POINT(32, 61), new POINT(32, 41) },
-            new POINT[] { new POINT(7, 66), new POINT(11, 62), new POINT(31, 62), new POINT(35, 66), new POINT(31, 70), new POINT(11, 70) }
+            new Point[] { new Point(7, 6), new Point(11, 2), new Point(31, 2), new Point(35, 6), new Point(31, 10), new Point(11, 10) },
+            new Point[] { new Point(6, 7), new Point(10, 11), new Point(10, 31), new Point(6, 35), new Point(2, 31), new Point(2, 11) },
+            new Point[] { new Point(36, 7), new Point(40, 11), new Point(40, 31), new Point(36, 35), new Point(32, 31), new Point(32, 11) },
+            new Point[] { new Point(7, 36), new Point(11, 32), new Point(31, 32), new Point(35, 36), new Point(31, 40), new Point(11, 40) },
+            new Point[] { new Point(6, 37), new Point(10, 41), new Point(10, 61), new Point(6, 65), new Point(2, 61), new Point(2, 41) },
+            new Point[] { new Point(36, 37), new Point(40, 41), new Point(40, 61), new Point(36, 65), new Point(32, 61), new Point(32, 41) },
+            new Point[] { new Point(7, 66), new Point(11, 62), new Point(31, 62), new Point(35, 66), new Point(31, 70), new Point(11, 70) }
         };
 
         static void DisplayDigit(DeviceContext hdc, int iNumber)
@@ -103,10 +104,10 @@ namespace DigClock
 
         static void DisplayColon(DeviceContext hdc)
         {
-            POINT[][] ptColon =
+            Point[][] ptColon =
             {
-                new POINT[] { new POINT(2, 21), new POINT(6, 17), new POINT(10, 21), new POINT(6, 25) },
-                new POINT[] { new POINT(2, 51), new POINT(6, 47), new POINT(10, 51), new POINT(6, 55) }
+                new Point[] { new Point(2, 21), new Point(6, 17), new Point(10, 21), new Point(6, 25) },
+                new Point[] { new Point(2, 51), new Point(6, 47), new Point(10, 51), new Point(6, 55) }
             };
             hdc.Polygon(ptColon[0]);
             hdc.Polygon(ptColon[1]);

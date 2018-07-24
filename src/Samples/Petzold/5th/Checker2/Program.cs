@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.Extensions.WindowExtensions;
@@ -78,10 +79,10 @@ namespace Checker2
                     Windows.ShowCursor(false);
                     return 0;
                 case WindowMessage.KeyDown:
-                    POINT point = Windows.GetCursorPosition();
+                    Point point = Windows.GetCursorPosition();
                     window.ScreenToClient(ref point);
-                    int x = Math.Max(0, Math.Min(DIVISIONS - 1, point.x / cxBlock));
-                    int y = Math.Max(0, Math.Min(DIVISIONS - 1, point.y / cyBlock));
+                    int x = Math.Max(0, Math.Min(DIVISIONS - 1, point.X / cxBlock));
+                    int y = Math.Max(0, Math.Min(DIVISIONS - 1, point.Y / cyBlock));
                     switch ((VirtualKey)wParam)
                     {
                         case VirtualKey.Up:
@@ -110,10 +111,10 @@ namespace Checker2
                     }
                     x = (x + DIVISIONS) % DIVISIONS;
                     y = (y + DIVISIONS) % DIVISIONS;
-                    point.x = x * cxBlock + cxBlock / 2;
-                    point.y = y * cyBlock + cyBlock / 2;
+                    point.X = x * cxBlock + cxBlock / 2;
+                    point.Y = y * cyBlock + cyBlock / 2;
                     window.ClientToScreen(ref point);
-                    Windows.SetCursorPosition(point.x, point.y);
+                    Windows.SetCursorPosition(point.X, point.Y);
                     return 0;
                 case WindowMessage.LeftButtonDown:
                     x = lParam.LowWord / cxBlock;

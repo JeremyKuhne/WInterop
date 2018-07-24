@@ -12,13 +12,44 @@ namespace WInterop.Multimedia.Types
         // #define SND_ALIAS_START 0           /* alias base */
         // #define sndAlias(ch0, ch1)      (SND_ALIAS_START + (DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8))
 
-        SND_ALIAS_SYSTEMASTERISK        = 'S' | (((uint)'*') << 8),
-        SND_ALIAS_SYSTEMQUESTION        = 'S' | (((uint)'?') << 8),
-        SND_ALIAS_SYSTEMHAND            = 'S' | (((uint)'H') << 8),
-        SND_ALIAS_SYSTEMEXIT            = 'S' | (((uint)'E') << 8),
-        SND_ALIAS_SYSTEMSTART           = 'S' | (((uint)'S') << 8),
-        SND_ALIAS_SYSTEMWELCOME         = 'S' | (((uint)'W') << 8),
-        SND_ALIAS_SYSTEMEXCLAMATION     = 'S' | (((uint)'!') << 8),
-        SND_ALIAS_SYSTEMDEFAULT         = 'S' | (((uint)'D') << 8),
+        /// <summary>
+        /// [SND_ALIAS_SYSTEMASTERISK]
+        /// </summary>
+        SystemAsterisk = 'S' | (((uint)'*') << 8),
+
+        /// <summary>
+        /// [SND_ALIAS_SYSTEMQUESTION]
+        /// </summary>
+        SystemQuestion = 'S' | (((uint)'?') << 8),
+
+        /// <summary>
+        /// [SND_ALIAS_SYSTEMHAND]
+        /// </summary>
+        SystemHand = 'S' | (((uint)'H') << 8),
+
+        /// <summary>
+        /// [SND_ALIAS_SYSTEMEXIT]
+        /// </summary>
+        SystemExit = 'S' | (((uint)'E') << 8),
+
+        /// <summary>
+        /// [SND_ALIAS_SYSTEMSTART]
+        /// </summary>
+        SystemStart = 'S' | (((uint)'S') << 8),
+
+        /// <summary>
+        /// [SND_ALIAS_SYSTEMWELCOME]
+        /// </summary>
+        SystemWelcome = 'S' | (((uint)'W') << 8),
+
+        /// <summary>
+        /// [SND_ALIAS_SYSTEMEXCLAMATION]
+        /// </summary>
+        SystemExclamation = 'S' | (((uint)'!') << 8),
+
+        /// <summary>
+        /// [SND_ALIAS_SYSTEMDEFAULT]
+        /// </summary>
+        SystemDefault = 'S' | (((uint)'D') << 8),
     }
 }

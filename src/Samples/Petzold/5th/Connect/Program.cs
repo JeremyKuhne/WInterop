@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
@@ -59,7 +60,7 @@ namespace Connect
         }
 
         const int MAXPOINTS = 1000;
-        static POINT[] pt = new POINT[MAXPOINTS];
+        static Point[] pt = new Point[MAXPOINTS];
         static int iCount;
         static int sampleCount;
         const int TakeEvery = 10;
@@ -76,8 +77,8 @@ namespace Connect
                     // Machines are way to fast to make this look interesting now, adding TakeEvery
                     if ((MouseKey)wParam == MouseKey.LeftButton && iCount < MAXPOINTS && (sampleCount++ % TakeEvery == 0))
                     {
-                        pt[iCount].x = lParam.LowWord;
-                        pt[iCount++].y = lParam.HighWord;
+                        pt[iCount].X = lParam.LowWord;
+                        pt[iCount++].Y = lParam.HighWord;
 
                         using (DeviceContext dc = window.GetDeviceContext())
                         {
@@ -97,8 +98,8 @@ namespace Connect
                         for (int i = 0; i < iCount - 1; i++)
                             for (int j = i + 1; j < iCount; j++)
                             {
-                                dc.MoveTo(pt[i].x, pt[i].y);
-                                dc.LineTo(pt[j].x, pt[j].y);
+                                dc.MoveTo(pt[i].X, pt[i].Y);
+                                dc.LineTo(pt[j].X, pt[j].Y);
                             }
 
                         Windows.ShowCursor(false);

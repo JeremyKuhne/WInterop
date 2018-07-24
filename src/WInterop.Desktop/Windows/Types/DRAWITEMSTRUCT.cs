@@ -22,7 +22,6 @@ namespace WInterop.Windows.Types
         public IntPtr hDC;
         public RECT rcItem;
         public IntPtr itemData;
-
-        public DeviceContext DeviceContext => new DeviceContext(hDC, ownsHandle: false);
+        public DeviceContext DeviceContext;
     }
 }

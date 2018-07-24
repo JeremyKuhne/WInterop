@@ -69,7 +69,7 @@ namespace HelloWin
             switch (message)
             {
                 case WindowMessage.Create:
-                    MultimediaMethods.PlaySound(PlaySoundAlias.SND_ALIAS_SYSTEMHAND, PlaySoundOptions.SND_ASYNC | PlaySoundOptions.SND_NODEFAULT);
+                    MultimediaMethods.PlaySound(PlaySoundAlias.SystemHand, PlaySoundOptions.Async | PlaySoundOptions.NoDefault);
                     return 0;
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())

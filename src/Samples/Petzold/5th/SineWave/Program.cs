@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
@@ -72,11 +73,11 @@ namespace SineWave
                         dc.MoveTo(0, cyClient / 2);
                         dc.LineTo(cxClient, cyClient / 2);
 
-                        POINT[] apt = new POINT[1000];
+                        Point[] apt = new Point[1000];
                         for (int i = 0; i < apt.Length; i++)
                         {
-                            apt[i].x = i * cxClient / apt.Length;
-                            apt[i].y = (int)(cyClient / 2 * (1 - Math.Sin(Math.PI * 2 * i / apt.Length)));
+                            apt[i].X = i * cxClient / apt.Length;
+                            apt[i].Y = (int)(cyClient / 2 * (1 - Math.Sin(Math.PI * 2 * i / apt.Length)));
                         }
                         dc.Polyline(apt);
                     }

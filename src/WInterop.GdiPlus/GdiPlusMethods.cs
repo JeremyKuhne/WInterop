@@ -6,6 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
 using WInterop.Gdi.Types;
 using WInterop.Support;
@@ -29,31 +31,28 @@ namespace WInterop.GdiPlus
             }
         }
 
-        public static GpGraphics CreateGraphics(DeviceContext deviceContext)
+        public static void ThrowIfFailed(GpStatus status)
         {
-            GpStatus status = Imports.GdipCreateFromHDC(deviceContext, out GpGraphics graphics);
             if (status != GpStatus.Ok)
                 throw GetExceptionForStatus(status);
+        }
+
+        public static GpGraphics CreateGraphics(DeviceContext deviceContext)
+        {
+            ThrowIfFailed(Imports.GdipCreateFromHDC(deviceContext, out GpGraphics graphics));
             return graphics;
         }
 
         public static void SetSmoothingMode(GpGraphics graphics, SmoothingMode smoothingMode)
-        {
-            GpStatus status = Imports.GdipSetSmoothingMode(graphics, smoothingMode);
-            if (status != GpStatus.Ok)
-                throw GetExceptionForStatus(status);
-        }
+            => ThrowIfFailed(Imports.GdipSetSmoothingMode(graphics, smoothingMode));
 
         public static UIntPtr Startup()
         {
             var input = new GdiplusStartupInput { GdiplusVersion = 1 };
-            GpStatus status = Imports.GdiplusStartup(
+            ThrowIfFailed(Imports.GdiplusStartup(
                 out UIntPtr token,
                 ref input,
-                out GdiplusStartupOutput _ );
-
-            if (status != GpStatus.Ok)
-                throw GetExceptionForStatus(status);
+                out GdiplusStartupOutput _ ));
 
             return token;
         }
@@ -65,46 +64,23 @@ namespace WInterop.GdiPlus
 
         public static GpPen CreatePen(ARGB color, float width = 1.0f, GpUnit unit = GpUnit.UnitWorld)
         {
-            GpStatus status = Imports.GdipCreatePen1(color, width, unit, out GpPen pen);
-            if (status != GpStatus.Ok)
-                throw GetExceptionForStatus(status);
-
+            ThrowIfFailed(Imports.GdipCreatePen1(color, width, unit, out GpPen pen));
             return pen;
         }
 
-        public static GpSolidBrush CreateSolidBrush(ARGB color)
+        public static GpBrush CreateSolidBrush(ARGB color)
         {
-            GpStatus status = Imports.GdipCreateSolidFill(color, out GpSolidBrush brush);
-            if (status != GpStatus.Ok)
-                throw GetExceptionForStatus(status);
-
+            ThrowIfFailed(Imports.GdipCreateSolidFill(color, out GpBrush brush));
             return brush;
         }
 
-        public unsafe static void DrawLines(GpGraphics graphics, GpPen pen, POINT[] points)
-        {
-            fixed (POINT* p = points)
-                DrawLines(graphics, pen, (GpPoint*)p, points.Length);
-        }
-
-        public unsafe static void DrawLines(GpGraphics graphics, GpPen pen, GpPoint[] points)
-        {
-            fixed (GpPoint* p = points)
-                DrawLines(graphics, pen, p, points.Length);
-        }
-
-        private unsafe static void DrawLines(GpGraphics graphics, GpPen pen, GpPoint* points, int count)
-        {
-            GpStatus status = Imports.GdipDrawLinesI(graphics, pen, points, count);
-            if (status != GpStatus.Ok)
-                throw GetExceptionForStatus(status);
-        }
+        public unsafe static void DrawLines(GpGraphics graphics, GpPen pen, ReadOnlySpan<Point> points)
+            => ThrowIfFailed(Imports.GdipDrawLinesI(graphics, pen, ref MemoryMarshal.GetReference(points), points.Length));
 
         public static void FillEllipse(GpGraphics graphics, GpBrush brush, int x, int y, int width, int height)
-        {
-            GpStatus status = Imports.GdipFillEllipseI(graphics, brush, x, y, width, height);
-            if (status != GpStatus.Ok)
-                throw GetExceptionForStatus(status);
-        }
+            => ThrowIfFailed(Imports.GdipFillEllipseI(graphics, brush, x, y, width, height));
+
+        public static void GraphicsClear(GpGraphics graphics, ARGB color)
+            => ThrowIfFailed(Imports.GdipGraphicsClear(graphics, color));
     }
 }

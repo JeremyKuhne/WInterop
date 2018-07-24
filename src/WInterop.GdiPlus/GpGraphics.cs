@@ -5,18 +5,17 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Handles.Types;
+using System;
 
 namespace WInterop.GdiPlus
 {
-    public class GpGraphics : HandleZeroOrMinusOneIsInvalid
+    public struct GpGraphics : IDisposable
     {
-        public GpGraphics()
-            : base(ownsHandle: true) { }
+        public IntPtr Handle;
 
-        protected override bool ReleaseHandle()
+        public void Dispose()
         {
-            return GdiPlusMethods.Imports.GdipDeleteGraphics(handle) == GpStatus.Ok;
+            GdiPlusMethods.ThrowIfFailed(GdiPlusMethods.Imports.GdipDeleteGraphics(Handle));
         }
     }
 }

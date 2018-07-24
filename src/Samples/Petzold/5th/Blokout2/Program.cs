@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
@@ -58,26 +59,26 @@ namespace Blokout2
             }
         }
 
-        static void DrawBoxOutline(WindowHandle window, POINT ptBeg, POINT ptEnd)
+        static void DrawBoxOutline(WindowHandle window, Point ptBeg, Point ptEnd)
         {
             using (DeviceContext dc = window.GetDeviceContext())
             {
                 dc.SetRasterOperation(PenMixMode.Not);
                 dc.SelectObject(StockBrush.Null);
-                dc.Rectangle(ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y);
+                dc.Rectangle(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y);
             }
         }
 
         static bool fBlocking, fValidBox;
-        static POINT ptBeg, ptEnd, ptBoxBeg, ptBoxEnd;
+        static Point ptBeg, ptEnd, ptBoxBeg, ptBoxEnd;
 
         static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case WindowMessage.LeftButtonDown:
-                    ptBeg.x = ptEnd.x = lParam.LowWord;
-                    ptBeg.y = ptEnd.y = lParam.HighWord;
+                    ptBeg.X = ptEnd.X = lParam.LowWord;
+                    ptBeg.Y = ptEnd.Y = lParam.HighWord;
                     DrawBoxOutline(window, ptBeg, ptEnd);
                     window.SetCapture();
                     Windows.SetCursor(CursorId.Cross);
@@ -88,8 +89,8 @@ namespace Blokout2
                     {
                         Windows.SetCursor(CursorId.Cross);
                         DrawBoxOutline(window, ptBeg, ptEnd);
-                        ptEnd.x = lParam.LowWord;
-                        ptEnd.y = lParam.HighWord;
+                        ptEnd.X = lParam.LowWord;
+                        ptEnd.Y = lParam.HighWord;
                         DrawBoxOutline(window, ptBeg, ptEnd);
                     }
                     return 0;
@@ -98,8 +99,8 @@ namespace Blokout2
                     {
                         DrawBoxOutline(window, ptBeg, ptEnd);
                         ptBoxBeg = ptBeg;
-                        ptBoxEnd.x = lParam.LowWord;
-                        ptBoxEnd.y = lParam.HighWord;
+                        ptBoxEnd.X = lParam.LowWord;
+                        ptBoxEnd.Y = lParam.HighWord;
                         Windows.ReleaseCapture();
                         Windows.SetCursor(CursorId.Arrow);
                         fBlocking = false;
@@ -113,14 +114,14 @@ namespace Blokout2
                         if (fValidBox)
                         {
                             dc.SelectObject(StockBrush.Black);
-                            dc.Rectangle(ptBoxBeg.x, ptBoxBeg.y,
-                                ptBoxEnd.x, ptBoxEnd.y);
+                            dc.Rectangle(ptBoxBeg.X, ptBoxBeg.Y,
+                                ptBoxEnd.X, ptBoxEnd.Y);
                         }
                         if (fBlocking)
                         {
                             dc.SetRasterOperation(PenMixMode.Not);
                             dc.SelectObject(StockBrush.Null);
-                            dc.Rectangle(ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y);
+                            dc.Rectangle(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y);
                         }
                     }
                     return 0;

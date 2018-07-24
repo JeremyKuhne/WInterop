@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
@@ -777,7 +778,7 @@ namespace WInterop.Windows
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool DragDetect(
                 WindowHandle hwnd,
-                POINT pt);
+                Point pt);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646257.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -881,7 +882,7 @@ namespace WInterop.Windows
             [DllImport(Libraries.Comctl32, ExactSpelling = true)]
             public static extern int LBItemFromPt(
                 WindowHandle hLB,
-                POINT pt,
+                Point pt,
                 bool bAutoScroll);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761725.aspx

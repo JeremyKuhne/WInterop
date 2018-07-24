@@ -22,6 +22,7 @@ using WInterop.SystemInformation.Types;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 using WInterop.Console;
+using System.Drawing;
 
 namespace Clock
 {
@@ -85,23 +86,22 @@ namespace Clock
             hdc.SetViewportOrigin(cxClient / 2, cyClient / 2);
         }
 
-        static void RotatePoint(POINT[] pt, int iNum, int iAngle)
+        static void RotatePoint(Point[] pt, int iNum, int iAngle)
         {
-            POINT ptTemp;
-            for (int i = 0; i < iNum; i++)
+             for (int i = 0; i < iNum; i++)
             {
-                ptTemp.x = (int)(pt[i].x * Math.Cos(TWOPI * iAngle / 360) +
-                pt[i].y * Math.Sin(TWOPI * iAngle / 360));
-                ptTemp.y = (int)(pt[i].y * Math.Cos(TWOPI * iAngle / 360) -
-                pt[i].x * Math.Sin(TWOPI * iAngle / 360));
-                pt[i] = ptTemp;
+                pt[i] = new Point
+                (
+                    (int)(pt[i].X * Math.Cos(TWOPI * iAngle / 360) + pt[i].Y * Math.Sin(TWOPI * iAngle / 360)),
+                    (int)(pt[i].Y * Math.Cos(TWOPI * iAngle / 360) - pt[i].X * Math.Sin(TWOPI * iAngle / 360))
+                );
             }
         }
 
         static void DrawClock(DeviceContext dc)
         {
             int iAngle;
-            POINT[] pt = new POINT[3];
+            Point[] pt = new Point[3];
 
 #if GDIPLUS
             using (var graphics = GdiPlusMethods.CreateGraphics(dc))
@@ -113,19 +113,19 @@ namespace Clock
 #endif
                 for (iAngle = 0; iAngle < 360; iAngle += 6)
                 {
-                    pt[0].x = 0;
-                    pt[0].y = 900;
+                    pt[0].X = 0;
+                    pt[0].Y = 900;
                     RotatePoint(pt, 1, iAngle);
-                    pt[2].x = pt[2].y = iAngle % 5 != 0 ? 33 : 100;
-                    pt[0].x -= pt[2].x / 2;
-                    pt[0].y -= pt[2].y / 2;
-                    pt[1].x = pt[0].x + pt[2].x;
-                    pt[1].y = pt[0].y + pt[2].y;
+                    pt[2].X = pt[2].Y = iAngle % 5 != 0 ? 33 : 100;
+                    pt[0].X -= pt[2].X / 2;
+                    pt[0].Y -= pt[2].Y / 2;
+                    pt[1].X = pt[0].X + pt[2].X;
+                    pt[1].Y = pt[0].Y + pt[2].Y;
 
 #if GDIPLUS
-                    GdiPlusMethods.FillEllipse(graphics, brush, pt[0].x, pt[0].y, pt[1].x - pt[0].x, pt[1].y - pt[0].y);
+                    GdiPlusMethods.FillEllipse(graphics, brush, pt[0].X, pt[0].Y, pt[1].X - pt[0].X, pt[1].Y - pt[0].Y);
 #else
-                    dc.Ellipse(pt[0].x, pt[0].y, pt[1].x, pt[1].y);
+                    dc.Ellipse(pt[0].X, pt[0].Y, pt[1].X, pt[1].Y);
 #endif
                 }
 #if GDIPLUS
@@ -142,11 +142,11 @@ namespace Clock
                 pst.wSecond * 6
             };
 
-            POINT[][] pt =
+            Point[][] pt =
             {
-                new POINT[] { new POINT(0, -150), new POINT(100, 0), new POINT(0, 600), new POINT(-100, 0), new POINT(0, -150) },
-                new POINT[] { new POINT(0, -200), new POINT(50, 0), new POINT(0, 800), new POINT(-50, 0), new POINT(0, -200), },
-                new POINT[] { new POINT(0, 0), new POINT(0, 0), new POINT(0, 0), new POINT(0, 0), new POINT(0, 800) }
+                new Point[] { new Point(0, -150), new Point(100, 0), new Point(0, 600), new Point(-100, 0), new Point(0, -150) },
+                new Point[] { new Point(0, -200), new Point(50, 0), new Point(0, 800), new Point(-50, 0), new Point(0, -200), },
+                new Point[] { new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 800) }
             };
 
             COLORREF color = GdiMethods.GetPenColor(dc.GetCurrentPen());

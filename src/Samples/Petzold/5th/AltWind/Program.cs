@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
@@ -56,18 +57,18 @@ namespace AltWind
             }
         }
 
-        static POINT[] aptFigure =
+        static Point[] aptFigure =
         {
-            new POINT(10, 70),
-            new POINT(50, 70),
-            new POINT(50, 10),
-            new POINT(90, 10),
-            new POINT(90, 50),
-            new POINT(30, 50),
-            new POINT(30, 90),
-            new POINT(70, 90),
-            new POINT(70, 30),
-            new POINT(10, 30)
+            new Point(10, 70),
+            new Point(50, 70),
+            new Point(50, 10),
+            new Point(90, 10),
+            new Point(90, 50),
+            new Point(30, 50),
+            new Point(30, 90),
+            new Point(70, 90),
+            new Point(70, 30),
+            new Point(10, 30)
         };
 
         static int cxClient, cyClient;
@@ -81,14 +82,14 @@ namespace AltWind
                     cyClient = lParam.HighWord;
                     return 0;
                 case WindowMessage.Paint:
-                    POINT[] apt = new POINT[10];
+                    Point[] apt = new Point[10];
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SelectObject(StockBrush.Gray);
                         for (int i = 0; i < 10; i++)
                         {
-                            apt[i].x = cxClient * aptFigure[i].x / 200;
-                            apt[i].y = cyClient * aptFigure[i].y / 100;
+                            apt[i].X = cxClient * aptFigure[i].X / 200;
+                            apt[i].Y = cyClient * aptFigure[i].Y / 100;
                         }
 
                         dc.SetPolyFillMode(PolyFillMode.Alternate);
@@ -96,7 +97,7 @@ namespace AltWind
 
                         for (int i = 0; i < 10; i++)
                         {
-                            apt[i].x += cxClient / 2;
+                            apt[i].X += cxClient / 2;
                         }
                         dc.SetPolyFillMode(PolyFillMode.Winding);
                         dc.Polygon(apt);

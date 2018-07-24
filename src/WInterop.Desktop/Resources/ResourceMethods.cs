@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
@@ -56,9 +57,18 @@ namespace WInterop.Resources
             return handle;
         }
 
-        public static CursorHandle LoadCursor(CursorId id)
+        public static unsafe CursorHandle LoadCursor(CursorId id)
         {
-            CursorHandle handle = Imports.LoadCursorW(ModuleInstance.Null, (IntPtr)id);
+            CursorHandle handle = Imports.LoadCursorW(ModuleInstance.Null, (char*)(IntPtr)id);
+            if (handle.IsInvalid)
+                throw Errors.GetIoExceptionForLastError();
+
+            return handle;
+        }
+
+        public static CursorHandle LoadCursorFromFile(string path)
+        {
+            CursorHandle handle = Imports.LoadCursorFromFileW(path);
             if (handle.IsInvalid)
                 throw Errors.GetIoExceptionForLastError();
 
@@ -98,17 +108,17 @@ namespace WInterop.Resources
             return copy;
         }
 
-        public static POINT GetCursorPosition()
+        public static Point GetCursorPosition()
         {
-            if (!Imports.GetCursorPos(out POINT point))
+            if (!Imports.GetCursorPos(out Point point))
                 throw Errors.GetIoExceptionForLastError();
 
             return point;
         }
 
-        public static POINT GetPhysicalCursorPosition()
+        public static Point GetPhysicalCursorPosition()
         {
-            if (!Imports.GetPhysicalCursorPos(out POINT point))
+            if (!Imports.GetPhysicalCursorPos(out Point point))
                 throw Errors.GetIoExceptionForLastError();
 
             return point;

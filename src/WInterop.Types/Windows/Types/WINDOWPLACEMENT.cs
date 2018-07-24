@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Drawing;
 using WInterop.Gdi.Types;
 
 namespace WInterop.Windows.Types
@@ -15,8 +16,8 @@ namespace WInterop.Windows.Types
         public uint length;
         public uint flags;
         public ShowWindow showCmd;
-        public POINT ptMinPosition;
-        public POINT ptMaxPosition;
+        public Point ptMinPosition;
+        public Point ptMaxPosition;
         public RECT rcNormalPosition;
     }
 }

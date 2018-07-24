@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
@@ -58,7 +59,7 @@ namespace OwnDraw
             }
         }
 
-        static void Triangle(DeviceContext dc, POINT[] pt)
+        static void Triangle(DeviceContext dc, Point[] pt)
         {
             dc.SelectObject(StockBrush.Black);
             dc.Polygon(pt);
@@ -144,44 +145,44 @@ namespace OwnDraw
                         int cx = rect.right - rect.left;
                         int cy = rect.bottom - rect.top;
 
-                        POINT[] pt = new POINT[3];
+                        Point[] pt = new Point[3];
 
                         switch((int)pdis->CtlID)
                         {
                             case ID_SMALLER:
-                                pt[0].x = 3 * cx / 8; pt[0].y = 1 * cy / 8;
-                                pt[1].x = 5 * cx / 8; pt[1].y = 1 * cy / 8;
-                                pt[2].x = 4 * cx / 8; pt[2].y = 3 * cy / 8;
+                                pt[0].X = 3 * cx / 8; pt[0].Y = 1 * cy / 8;
+                                pt[1].X = 5 * cx / 8; pt[1].Y = 1 * cy / 8;
+                                pt[2].X = 4 * cx / 8; pt[2].Y = 3 * cy / 8;
                                 Triangle(dc, pt);
-                                pt[0].x = 7 * cx / 8; pt[0].y = 3 * cy / 8;
-                                pt[1].x = 7 * cx / 8; pt[1].y = 5 * cy / 8;
-                                pt[2].x = 5 * cx / 8; pt[2].y = 4 * cy / 8;
+                                pt[0].X = 7 * cx / 8; pt[0].Y = 3 * cy / 8;
+                                pt[1].X = 7 * cx / 8; pt[1].Y = 5 * cy / 8;
+                                pt[2].X = 5 * cx / 8; pt[2].Y = 4 * cy / 8;
                                 Triangle(dc, pt);
-                                pt[0].x = 5 * cx / 8; pt[0].y = 7 * cy / 8;
-                                pt[1].x = 3 * cx / 8; pt[1].y = 7 * cy / 8;
-                                pt[2].x = 4 * cx / 8; pt[2].y = 5 * cy / 8;
+                                pt[0].X = 5 * cx / 8; pt[0].Y = 7 * cy / 8;
+                                pt[1].X = 3 * cx / 8; pt[1].Y = 7 * cy / 8;
+                                pt[2].X = 4 * cx / 8; pt[2].Y = 5 * cy / 8;
                                 Triangle(dc, pt);
-                                pt[0].x = 1 * cx / 8; pt[0].y = 5 * cy / 8;
-                                pt[1].x = 1 * cx / 8; pt[1].y = 3 * cy / 8;
-                                pt[2].x = 3 * cx / 8; pt[2].y = 4 * cy / 8;
+                                pt[0].X = 1 * cx / 8; pt[0].Y = 5 * cy / 8;
+                                pt[1].X = 1 * cx / 8; pt[1].Y = 3 * cy / 8;
+                                pt[2].X = 3 * cx / 8; pt[2].Y = 4 * cy / 8;
                                 Triangle(dc, pt);
                                 break;
                             case ID_LARGER:
-                                pt[0].x = 5 * cx / 8; pt[0].y = 3 * cy / 8;
-                                pt[1].x = 3 * cx / 8; pt[1].y = 3 * cy / 8;
-                                pt[2].x = 4 * cx / 8; pt[2].y = 1 * cy / 8;
+                                pt[0].X = 5 * cx / 8; pt[0].Y = 3 * cy / 8;
+                                pt[1].X = 3 * cx / 8; pt[1].Y = 3 * cy / 8;
+                                pt[2].X = 4 * cx / 8; pt[2].Y = 1 * cy / 8;
                                 Triangle(dc, pt);
-                                pt[0].x = 5 * cx / 8; pt[0].y = 5 * cy / 8;
-                                pt[1].x = 5 * cx / 8; pt[1].y = 3 * cy / 8;
-                                pt[2].x = 7 * cx / 8; pt[2].y = 4 * cy / 8;
+                                pt[0].X = 5 * cx / 8; pt[0].Y = 5 * cy / 8;
+                                pt[1].X = 5 * cx / 8; pt[1].Y = 3 * cy / 8;
+                                pt[2].X = 7 * cx / 8; pt[2].Y = 4 * cy / 8;
                                 Triangle(dc, pt);
-                                pt[0].x = 3 * cx / 8; pt[0].y = 5 * cy / 8;
-                                pt[1].x = 5 * cx / 8; pt[1].y = 5 * cy / 8;
-                                pt[2].x = 4 * cx / 8; pt[2].y = 7 * cy / 8;
+                                pt[0].X = 3 * cx / 8; pt[0].Y = 5 * cy / 8;
+                                pt[1].X = 5 * cx / 8; pt[1].Y = 5 * cy / 8;
+                                pt[2].X = 4 * cx / 8; pt[2].Y = 7 * cy / 8;
                                 Triangle(dc, pt);
-                                pt[0].x = 3 * cx / 8; pt[0].y = 3 * cy / 8;
-                                pt[1].x = 3 * cx / 8; pt[1].y = 5 * cy / 8;
-                                pt[2].x = 1 * cx / 8; pt[2].y = 4 * cy / 8;
+                                pt[0].X = 3 * cx / 8; pt[0].Y = 3 * cy / 8;
+                                pt[1].X = 3 * cx / 8; pt[1].Y = 5 * cy / 8;
+                                pt[2].X = 1 * cx / 8; pt[2].Y = 4 * cy / 8;
                                 Triangle(dc, pt);
                                 break;
                         }

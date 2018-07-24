@@ -198,7 +198,7 @@ namespace Colors1
 
                     if (id >= 3 && id <= 8)
                     {
-                        DeviceContext dc = new DeviceContext((IntPtr)wParam, false);
+                        DeviceContext dc = (DeviceContext)wParam;
                         dc.SetTextColor(crPrim[id % 3]);
                         dc.SetBackgroundColor(Windows.GetSystemColor(SystemColor.ButtonHighlight));
                         return hBrushStatic.DangerousGetHandle();

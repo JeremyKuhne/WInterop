@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Gdi;
@@ -68,7 +69,7 @@ namespace WInterop.Windows
         public static LRESULT DefaultWindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
             => WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
         public static int ShowCursor(bool show) => ResourceMethods.ShowCursor(show);
-        public static POINT GetCursorPosition() => ResourceMethods.GetCursorPosition();
+        public static Point GetCursorPosition() => ResourceMethods.GetCursorPosition();
         public static CursorHandle SetCursor(CursorHandle cursor) => ResourceMethods.SetCursor(cursor);
         public static CursorHandle SetCursor(CursorId id) => ResourceMethods.SetCursor(ResourceMethods.LoadCursor(id));
         public static void SetCursorPosition(int x, int y) => ResourceMethods.SetCursorPosition(x, y);

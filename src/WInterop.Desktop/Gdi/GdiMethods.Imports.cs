@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 using WInterop.Windows.Types;
@@ -22,55 +23,55 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd144877.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int GetDeviceCaps(
-                DeviceContext hdc,
+                HDC hdc,
                 DeviceCapability nIndex);
 
-            // https://msdn.microsoft.com/en-us/library/dd144947.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getwindowdc
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern IntPtr GetWindowDC(
+            public static extern HDC GetWindowDC(
                 WindowHandle hWnd);
 
-            // https://msdn.microsoft.com/en-us/library/dd144871.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getdc
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern IntPtr GetDC(
+            public static extern HDC GetDC(
                 WindowHandle hWnd);
 
-            // https://msdn.microsoft.com/en-us/library/dd183490.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createdcw
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern DeviceContext CreateDCW(
-                string lpszDriver,
-                string lpszDevice,
-                string lpszOutput,
-                DEVMODE* lpInitData);
+            public unsafe static extern DeviceContext.DeleteHDC CreateDCW(
+                string pwszDriver,
+                string pwszDevice,
+                string pszPort,
+                DEVMODE* pdm);
 
-            // https://msdn.microsoft.com/en-us/library/dd183505.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createicw
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern DeviceContext CreateICW(
-                string lpszDriver,
-                string lpszDevice,
-                string lpszOutput,
-                DEVMODE* lpInitData);
+            public unsafe static extern DeviceContext.DeleteHDC CreateICW(
+                string pwszDriver,
+                string pwszDevice,
+                string pszPort,
+                DEVMODE* pdm);
 
             // https://msdn.microsoft.com/en-us/library/dd183489.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern DeviceContext CreateCompatibleDC(
-                DeviceContext hdc);
+            public static extern DeviceContext.DeleteHDC CreateCompatibleDC(
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd183533.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool DeleteDC(
-                IntPtr hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/dd162920.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool ReleaseDC(
                 WindowHandle hWnd,
-                IntPtr hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd183399.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool CancelDC(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd183533.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -85,7 +86,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd144869.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern IntPtr GetCurrentObject(
-                DeviceContext hdc,
+                HDC hdc,
                 ObjectType uObjectType);
 
             // https://msdn.microsoft.com/en-us/library/dd144904.aspx
@@ -98,7 +99,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162957.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern IntPtr SelectObject(
-                DeviceContext hdc,
+                HDC hdc,
                 GdiObjectHandle hgdiobj);
 
             // https://msdn.microsoft.com/en-us/library/dd183539.aspx
@@ -133,7 +134,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd183488.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern BitmapHandle CreateCompatibleBitmap(
-                DeviceContext hdc,
+                HDC hdc,
                 int nWidth,
                 int nHeight);
 
@@ -160,7 +161,7 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183362.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern IntPtr BeginPaint(
+            public static extern HDC BeginPaint(
                 WindowHandle hwnd,
                 out PAINTSTRUCT lpPaint);
 
@@ -175,12 +176,12 @@ namespace WInterop.Gdi
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool EndPaint(
                 WindowHandle hwnd,
-                [In] ref PAINTSTRUCT lpPaint);
+                in PAINTSTRUCT lpPaint);
 
             // https://msdn.microsoft.com/en-us/library/dd162498.aspx
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static unsafe extern int DrawTextW(
-                DeviceContext hDC,
+                HDC hDC,
                 char* lpchText,
                 int nCount,
                 ref RECT lpRect,
@@ -189,7 +190,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd145133.aspx
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public unsafe static extern bool TextOutW(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXStart,
                 int nYStart,
                 char* lpString,
@@ -198,7 +199,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd145129.aspx
             [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern int TabbedTextOutW(
-                DeviceContext hdc,
+                HDC hdc,
                 int X,
                 int Y,
                 string lpString,
@@ -210,48 +211,48 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd144941.aspx
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern bool GetTextMetricsW(
-                DeviceContext hdc,
+                HDC hdc,
                 out TEXTMETRIC lptm);
 
             // https://msdn.microsoft.com/en-us/library/dd145091.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern TextAlignment SetTextAlign(
-                DeviceContext hdc,
+                HDC hdc,
                 TextAlignment fMode);
 
             // https://msdn.microsoft.com/en-us/library/dd144932.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern TextAlignment GetTextAlign(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd145094.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool SetTextJustification(
-                DeviceContext hdc,
+                HDC hdc,
                 int nBreakExtra,
                 int nBreakCount);
 
             // https://msdn.microsoft.com/en-us/library/dd145092.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int SetTextCharacterExtra(
-                DeviceContext hdc,
+                HDC hdc,
                 int nCharExtra);
 
             // https://msdn.microsoft.com/en-us/library/dd144933.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int GetTextCharacterExtra(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd145093.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF SetTextColor(
-                DeviceContext hdc,
+                HDC hdc,
                 COLORREF crColor);
 
             // https://msdn.microsoft.com/en-us/library/dd144934.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF GetTextColor(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd183499.aspx
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -273,7 +274,7 @@ namespace WInterop.Gdi
 
             [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern int EnumFontFamiliesExW(
-                DeviceContext hdc,
+                HDC hdc,
                 ref LOGFONT lpLogfont,
                 EnumFontFamExProc lpEnumFonFamExProc,
                 LPARAM lParam,
@@ -282,7 +283,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd183354.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool AngleArc(
-                DeviceContext hdc,
+                HDC hdc,
                 int X,
                 int Y,
                 uint dwRadius,
@@ -292,7 +293,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd183357.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool Arc(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -305,7 +306,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd183358.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool ArcTo(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -318,19 +319,19 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd144848.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern ArcDirection GetArcDirection(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd144909.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF GetPixel(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXPos,
                 int nYPos);
 
             // https://msdn.microsoft.com/en-us/library/dd145078.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF SetPixel(
-                DeviceContext hdc,
+                HDC hdc,
                 int X,
                 int Y,
                 COLORREF crColor);
@@ -338,7 +339,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd145079.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool SetPixelV(
-                DeviceContext hdc,
+                HDC hdc,
                 int X,
                 int Y,
                 COLORREF crColor);
@@ -346,83 +347,83 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd145029.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool LineTo(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXEnd,
                 int nYEnd);
 
             // https://msdn.microsoft.com/en-us/library/dd145069.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern bool MoveToEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int X,
                 int Y,
-                POINT* lpPoint);
+                Point* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd144910.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern PolyFillMode GetPolyFillMode(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd145080.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern PolyFillMode SetPolyFillMode(
-                DeviceContext hdc,
+                HDC hdc,
                 PolyFillMode iPolyFillMode);
 
             // https://msdn.microsoft.com/en-us/library/dd162811.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool PolyBezier(
-                DeviceContext hdc,
-                POINT* lppt,
+            public static extern bool PolyBezier(
+                HDC hdc,
+                ref Point lppt,
                 uint cPoints);
 
             // https://msdn.microsoft.com/en-us/library/dd162812.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool PolyBezierTo(
-                DeviceContext hdc,
-                POINT* lppt,
+            public static extern bool PolyBezierTo(
+                HDC hdc,
+                ref Point lppt,
                 uint cCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162813.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool PolyDraw(
-                DeviceContext hdc,
-                POINT* lppt,
-                PointType* lpbTypes,
+            public static extern bool PolyDraw(
+                HDC hdc,
+                ref Point lppt,
+                ref PointType lpbTypes,
                 int cCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162815.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool Polyline(
-                DeviceContext hdc,
-                POINT[] lppt,
+            public static extern bool Polyline(
+                HDC hdc,
+                ref Point lppt,
                 int cPoints);
 
             // https://msdn.microsoft.com/en-us/library/dd162816.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool PolylineTo(
-                DeviceContext hdc,
-                POINT* lppt,
+            public static extern bool PolylineTo(
+                HDC hdc,
+                ref Point lppt,
                 uint cCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162819.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool PolyPolyline(
-                DeviceContext hdc,
-                POINT* lppt,
+            public static extern bool PolyPolyline(
+                HDC hdc,
+                ref Point lppt,
                 uint[] lpdwPolyPoints,
                 uint cCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162961.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern ArcDirection SetArcDirection(
-                DeviceContext hdc,
+                HDC hdc,
                 ArcDirection ArcDirection);
 
             // https://msdn.microsoft.com/en-us/library/dd183428.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool Chord(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -435,7 +436,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162510(v=vs.85).aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool Ellipse(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -444,33 +445,33 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162719.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool FillRect(
-                DeviceContext hDC,
+                HDC hDC,
                 [In] ref RECT lprc,
                 BrushHandle hbr);
 
             // https://msdn.microsoft.com/en-us/library/dd144838.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool FrameRect(
-                DeviceContext hDC,
+                HDC hDC,
                 [In] ref RECT lprc,
                 BrushHandle hbr);
 
             // https://msdn.microsoft.com/en-us/library/dd145007.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool InvertRect(
-                DeviceContext hDC,
+                HDC hDC,
                 [In] ref RECT lprc);
 
             // https://msdn.microsoft.com/en-us/library/dd162479.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool DrawFocusRect(
-                DeviceContext hDC,
+                HDC hDC,
                 [In] ref RECT lprc);
 
             // https://msdn.microsoft.com/en-us/library/dd162799.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool Pie(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -482,23 +483,23 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd162814.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool Polygon(
-                DeviceContext hdc,
-                POINT* lpPoints,
+            public static extern bool Polygon(
+                HDC hdc,
+                ref Point lpPoints,
                 int nCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162818.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool PolyPolygon(
-                DeviceContext hdc,
-                POINT* lpPoints,
+            public static extern bool PolyPolygon(
+                HDC hdc,
+                ref Point lpPoints,
                 int[] lpPolyCounts,
                 int nCount);
 
             // https://msdn.microsoft.com/en-us/library/dd162898.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool Rectangle(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -507,7 +508,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162944.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool RoundRect(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -519,7 +520,7 @@ namespace WInterop.Gdi
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool ClientToScreen(
                 WindowHandle hWnd,
-                ref POINT lpPoint);
+                ref Point lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd183466.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -531,15 +532,15 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162474.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern bool DPtoLP(
-                DeviceContext hdc,
-                POINT* lpPoints,
+                HDC hdc,
+                ref Point lpPoints,
                 int nCount);
 
             // https://msdn.microsoft.com/en-us/library/dd144870.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool GetCurrentPositionEx(
-                DeviceContext hdc,
-                out POINT lpPoint);
+                HDC hdc,
+                out Point lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dn376360.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -549,85 +550,85 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd144892.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern GraphicsMode GetGraphicsMode(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd144897.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern MapMode GetMapMode(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd144945.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool GetViewportExtEx(
-                DeviceContext hdc,
+                HDC hdc,
                 out SIZE lpSize);
 
             // https://msdn.microsoft.com/en-us/library/dd144946.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool GetViewportOrgEx(
-                DeviceContext hdc,
-                out POINT lpPoint);
+                HDC hdc,
+                out Point lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd144948.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool GetWindowExtEx(
-                DeviceContext hdc,
+                HDC hdc,
                 out SIZE lpSize);
 
             // https://msdn.microsoft.com/en-us/library/dd144949.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool GetWindowOrgEx(
-                DeviceContext hdc,
-                out POINT lpPoint);
+                HDC hdc,
+                out Point lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd144953.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool GetWorldTransform(
-                DeviceContext hdc,
+                HDC hdc,
                 out XFORM lpXform);
 
             // https://msdn.microsoft.com/en-us/library/dd145042.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern bool LPtoDP(
-                DeviceContext hdc,
-                POINT* lpPoints,
+            public static extern bool LPtoDP(
+                HDC hdc,
+                ref Point lpPoints,
                 int nCount);
 
             // https://msdn.microsoft.com/en-us/library/dd145046.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public unsafe static extern int MapWindowPoints(
+            public static extern int MapWindowPoints(
                 WindowHandle hWndFrom,
                 WindowHandle hWndTo,
-                POINT* lpPoints,
+                ref Point lpPoints,
                 uint cPoints);
 
             // https://msdn.microsoft.com/en-us/library/dd145060.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool ModifyWorldTransform(
-                DeviceContext hdc,
+                HDC hdc,
                 [In] ref XFORM lpXform,
                 WorldTransformMode iMode);
 
             // https://msdn.microsoft.com/en-us/library/dd162748.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern bool OffsetViewportOrgEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXOffset,
                 int nYOffset,
-                POINT* lpPoint);
+                Point* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd162749.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern bool OffsetWindowOrgEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXOffset,
                 int nYOffset,
-                POINT* lpPoint);
+                Point* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd162947.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool ScaleViewportExtEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int Xnum,
                 int Xdenom,
                 int Ynum,
@@ -637,7 +638,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162948.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool ScaleWindowExtEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int Xnum,
                 int Xdenom,
                 int Ynum,
@@ -648,7 +649,7 @@ namespace WInterop.Gdi
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool ScreenToClient(
                 WindowHandle hWnd,
-                ref POINT lpPoint);
+                ref Point lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dn376361.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -658,19 +659,19 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162977.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool SetGraphicsMode(
-                DeviceContext hdc,
+                HDC hdc,
                 GraphicsMode iMode);
 
             // https://msdn.microsoft.com/en-us/library/dd162980.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern MapMode SetMapMode(
-                DeviceContext hdc,
+                HDC hdc,
                 MapMode fnMapMode);
 
             // https://msdn.microsoft.com/en-us/library/dd145098.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern bool SetViewportExtEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXExtent,
                 int nYExtent,
                 SIZE* lpSize);
@@ -678,15 +679,15 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd145099.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern bool SetViewportOrgEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXExtent,
                 int nYExtent,
-                POINT* lpPoint);
+                Point* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd145100.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern bool SetWindowExtEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXExtent,
                 int nYExtent,
                 SIZE* lpSize);
@@ -694,15 +695,15 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd145101.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern bool SetWindowOrgEx(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXExtent,
                 int nYExtent,
-                POINT* lpPoint);
+                Point* lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/dd145104.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool SetWorldTransform(
-                DeviceContext hdc,
+                HDC hdc,
                 [In] ref XFORM lpXform);
 
             // https://msdn.microsoft.com/en-us/library/dd183481.aspx
@@ -747,7 +748,7 @@ namespace WInterop.Gdi
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool PtInRect(
                 [In] ref RECT lprc,
-                POINT pt);
+                Point pt);
 
             // https://msdn.microsoft.com/en-us/library/dd145085.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -801,14 +802,14 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd183511.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern RegionHandle CreatePolygonRgn(
-                POINT* lppt,
+                Point* lppt,
                 int cPoints,
                 PolyFillMode fnPolyFillMode);
 
             // https://msdn.microsoft.com/en-us/library/dd183512.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern RegionHandle CreatePolyPolygonRgn(
-                POINT* lppt,
+                Point* lppt,
                 int[] lpPolyCounts,
                 int nCount,
                 PolyFillMode fnPolyFillMode);
@@ -852,14 +853,14 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162720.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool FillRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn,
                 BrushHandle hbr);
 
             // https://msdn.microsoft.com/en-us/library/dd144839.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool FrameRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn,
                 BrushHandle hbr,
                 int nWidth,
@@ -881,7 +882,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd145008.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool InvertRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd162747.aspx
@@ -894,7 +895,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162767.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool PaintRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd162883.aspx
@@ -922,7 +923,7 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162702.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType ExcludeClipRect(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -931,39 +932,39 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162712.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType ExtSelectClipRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn,
                 CombineRegionMode fnMode);
 
             // https://msdn.microsoft.com/en-us/library/dd144865.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType GetClipBox(
-                DeviceContext hdc,
+                HDC hdc,
                 [In] ref RECT lprc);
 
             // https://msdn.microsoft.com/en-us/library/dd144866.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int GetClipRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd144899.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int GetMetaRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd144918.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int GetRandomRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn,
                 int iNum);
 
             // https://msdn.microsoft.com/en-us/library/dd144998.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType IntersectClipRect(
-                DeviceContext hdc,
+                HDC hdc,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -972,82 +973,82 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162745.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType OffsetClipRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 int nXOffset,
                 int nYOffset);
 
             // https://msdn.microsoft.com/en-us/library/dd162890.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern BOOL PtVisible(
-                DeviceContext hdc,
+                HDC hdc,
                 int X,
                 int Y);
 
             // https://msdn.microsoft.com/en-us/library/dd162908.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern BOOL RectVisible(
-                DeviceContext hdc,
+                HDC hdc,
                 [In] ref RECT lprc);
 
             // https://msdn.microsoft.com/en-us/library/dd162954(v=vs.85).aspx
             [DllImport(Libraries.Gdi32, SetLastError = true, ExactSpelling = true)]
             public static extern bool SelectClipPath(
-                DeviceContext hdc,
+                HDC hdc,
                 CombineRegionMode iMode);
 
             // https://msdn.microsoft.com/en-us/library/dd162955.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType SelectClipRgn(
-                DeviceContext hdc,
+                HDC hdc,
                 RegionHandle hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd145075.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType SetMetaRgn(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd144853.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern BackgroundMode GetBkMode(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd162965.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern BackgroundMode SetBkMode(
-                DeviceContext hdc,
+                HDC hdc,
                 BackgroundMode iBkMode);
 
             // https://msdn.microsoft.com/en-us/library/dd144922.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern PenMixMode GetROP2(
-                DeviceContext hdc);
+                HDC hdc);
 
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern PenMixMode SetROP2(
-                DeviceContext hdc,
+                HDC hdc,
                 PenMixMode fnDrawMode);
 
             // https://msdn.microsoft.com/en-us/library/dd144852.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF GetBkColor(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd162964.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF SetBkColor(
-                DeviceContext hdc,
+                HDC hdc,
                 COLORREF crColor);
 
             // https://msdn.microsoft.com/en-us/library/dd162969.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF SetDCBrushColor(
-                DeviceContext hdc,
+                HDC hdc,
                 COLORREF crColor);
 
             // https://msdn.microsoft.com/en-us/library/dd144872.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern COLORREF GetDCBrushColor(
-                DeviceContext hdc);
+                HDC hdc);
 
             // https://msdn.microsoft.com/en-us/library/dd144927.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -1086,12 +1087,12 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd183370.aspx
             [DllImport(Libraries.Gdi32, SetLastError = true, ExactSpelling = true)]
             public static extern bool BitBlt(
-                DeviceContext hdcDest,
+                HDC hdcDest,
                 int nXDest,
                 int nYDest,
                 int nWidth,
                 int nHeight,
-                DeviceContext hdcSrc,
+                HDC hdcSrc,
                 int nXSrc,
                 int nYSrc,
                 uint dwRop);

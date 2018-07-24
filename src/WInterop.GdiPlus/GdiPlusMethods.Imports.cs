@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 
@@ -42,7 +43,7 @@ namespace WInterop.GdiPlus
             // https://msdn.microsoft.com/en-us/library/ms536160.aspx
             [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
             public static extern GpStatus GdipCreateFromHDC(
-                DeviceContext hdc,
+                HDC hdc,
                 out GpGraphics graphics);
 
             [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
@@ -68,7 +69,7 @@ namespace WInterop.GdiPlus
             [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
             public static extern GpStatus GdipCreateSolidFill(
                 ARGB color,
-                out GpSolidBrush brush);
+                out GpBrush brush);
 
             [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
             public static extern GpStatus GdipDeleteBrush(
@@ -78,17 +79,22 @@ namespace WInterop.GdiPlus
             public unsafe static extern GpStatus GdipDrawLinesI(
                 GpGraphics graphics,
                 GpPen pen,
-                GpPoint* points,
+                ref Point points,
                 int count);
 
             [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
-            public unsafe static extern GpStatus GdipFillEllipseI(
+            public static extern GpStatus GdipFillEllipseI(
                 GpGraphics graphics,
                 GpBrush brush,
                 int x,
                 int y,
                 int width,
                 int height);
+
+            [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+            public static extern GpStatus GdipGraphicsClear(
+                GpGraphics graphics,
+                ARGB color);
         }
     }
 }

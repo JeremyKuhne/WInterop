@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 using WInterop.Support;
@@ -30,11 +31,11 @@ namespace WInterop.Gdi
         /// <summary>
         /// Returns an in memory device context that is compatible with the specified device.
         /// </summary>
-        /// <param name="deviceContext">An existing device context or null for the application's current screen.</param>
+        /// <param name="deviceContext">An existing device context or new DeviceContext() for the application's current screen.</param>
         /// <returns>A 1 by 1 monochrome memory device context.</returns>
         public unsafe static DeviceContext CreateCompatibleDeviceContext(DeviceContext deviceContext)
         {
-            return Imports.CreateCompatibleDC(deviceContext ?? DeviceContext.Null);
+            return Imports.CreateCompatibleDC(deviceContext);
         }
 
         public unsafe static DeviceContext CreateInformationContext(string driver, string device)
@@ -48,7 +49,7 @@ namespace WInterop.Gdi
         /// <param name="window">The window handle, or null for the entire screen.</param>
         public static DeviceContext GetDeviceContext(WindowHandle window)
         {
-            return new WindowDeviceContext(window, Imports.GetDC(window));
+            return new DeviceContext(Imports.GetDC(window), window);
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace WInterop.Gdi
         /// <returns>Returns a device context for the entire window, not just the client area.</returns>
         public static DeviceContext GetWindowDeviceContext(WindowHandle window)
         {
-            return new WindowDeviceContext(window, Imports.GetWindowDC(window));
+            return new DeviceContext(Imports.GetWindowDC(window), window);
         }
 
         /// <summary>
@@ -229,8 +230,7 @@ namespace WInterop.Gdi
         /// </summary>
         public static DeviceContext BeginPaint(WindowHandle window)
         {
-            IntPtr handle = Imports.BeginPaint(window, out PAINTSTRUCT paintStruct);
-            return new PaintDeviceContext(window, paintStruct, handle);
+            return new DeviceContext(Imports.BeginPaint(window, out PAINTSTRUCT paintStruct), window, paintStruct);
         }
 
         /// <summary>
@@ -238,8 +238,7 @@ namespace WInterop.Gdi
         /// </summary>
         public static DeviceContext BeginPaint(WindowHandle window, out PAINTSTRUCT paintStruct)
         {
-            IntPtr handle = Imports.BeginPaint(window, out paintStruct);
-            return new PaintDeviceContext(window, paintStruct, handle);
+            return new DeviceContext(Imports.BeginPaint(window, out paintStruct), window, paintStruct);
         }
 
         public static COLORREF GetTextColor(DeviceContext deviceContext)
@@ -332,17 +331,24 @@ namespace WInterop.Gdi
             return Imports.SetPolyFillMode(deviceContext, fillMode);
         }
 
-        public unsafe static bool Polygon(DeviceContext deviceContext, params POINT[] points)
+        public unsafe static bool Polygon(DeviceContext deviceContext, params Point[] points)
         {
-            fixed (POINT* p = points)
-            {
-                return Imports.Polygon(deviceContext, p, points.Length);
-            }
+            return Polygon(deviceContext, points.AsSpan());
         }
 
-        public static bool Polyline(DeviceContext deviceContext, params POINT[] points)
+        public unsafe static bool Polygon(DeviceContext deviceContext, ReadOnlySpan<Point> points)
         {
-            return Imports.Polyline(deviceContext, points, points.Length);
+            return Imports.Polygon(deviceContext, ref MemoryMarshal.GetReference(points), points.Length);
+        }
+
+        public static bool Polyline(DeviceContext deviceContext, params Point[] points)
+        {
+            return Polyline(deviceContext, points);
+        }
+
+        public static bool Polyline(DeviceContext deviceContext, ReadOnlySpan<Point> points)
+        {
+            return Imports.Polyline(deviceContext, ref MemoryMarshal.GetReference(points), points.Length);
         }
 
         public static bool Rectangle(DeviceContext deviceContext, int left, int top, int right, int bottom)
@@ -390,12 +396,14 @@ namespace WInterop.Gdi
             return Imports.DrawFocusRect(deviceContext, ref rectangle);
         }
 
-        public unsafe static bool PolyBezier(DeviceContext deviceContext, params POINT[] points)
+        public unsafe static bool PolyBezier(DeviceContext deviceContext, params Point[] points)
         {
-            fixed (POINT* p = points)
-            {
-                return Imports.PolyBezier(deviceContext, p, (uint)points.Length);
-            }
+            return PolyBezier(deviceContext, points.AsSpan());
+        }
+
+        public unsafe static bool PolyBezier(DeviceContext deviceContext, ReadOnlySpan<Point> points)
+        {
+             return Imports.PolyBezier(deviceContext, ref MemoryMarshal.GetReference(points), (uint)points.Length);
         }
 
         public static RegionHandle CreateEllipticRegion(int left, int top, int right, int bottom)
@@ -526,26 +534,34 @@ namespace WInterop.Gdi
             return info;
         }
 
-        public static bool ScreenToClient(WindowHandle window, ref POINT point)
+        public static bool ScreenToClient(WindowHandle window, ref Point point)
         {
             return Imports.ScreenToClient(window, ref point);
         }
 
-        public static bool ClientToScreen(WindowHandle window, ref POINT point)
+        public static bool ClientToScreen(WindowHandle window, ref Point point)
         {
             return Imports.ClientToScreen(window, ref point);
         }
 
-        public unsafe static bool DeviceToLogical(DeviceContext deviceContext, params POINT[] points)
+        public static bool DeviceToLogical(DeviceContext deviceContext, params Point[] points)
         {
-            fixed (POINT* p = points)
-                return Imports.DPtoLP(deviceContext, p, points.Length);
+            return DeviceToLogical(deviceContext, points.AsSpan());
         }
 
-        public unsafe static bool LogicalToDevice(DeviceContext deviceContext, params POINT[] points)
+        public static bool DeviceToLogical(DeviceContext deviceContext, ReadOnlySpan<Point> points)
         {
-            fixed (POINT* p = points)
-                return Imports.LPtoDP(deviceContext, p, points.Length);
+            return Imports.DPtoLP(deviceContext, ref MemoryMarshal.GetReference(points), points.Length);
+        }
+
+        public unsafe static bool LogicalToDevice(DeviceContext deviceContext, params Point[] points)
+        {
+            return LogicalToDevice(deviceContext, points);
+        }
+
+        public unsafe static bool LogicalToDevice(DeviceContext deviceContext, ReadOnlySpan<Point> points)
+        {
+            return Imports.LPtoDP(deviceContext, ref MemoryMarshal.GetReference(points), points.Length);
         }
 
         public unsafe static bool OffsetWindowOrigin(DeviceContext deviceContext, int x, int y)

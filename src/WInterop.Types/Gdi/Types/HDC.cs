@@ -5,18 +5,19 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.Gdi.Types
 {
-    // https://msdn.microsoft.com/en-us/library/dd162805.aspx
-    public struct POINT
+    public readonly struct HDC
     {
-        public int x;
-        public int y;
+        public IntPtr Handle { get; }
 
-        public POINT(int x, int y)
+        public HDC(IntPtr handle)
         {
-            this.x = x;
-            this.y = y;
+            Handle = handle;
         }
+
+        public bool IsInvalid => Handle == IntPtr.Zero || Handle == (IntPtr)(-1);
     }
 }

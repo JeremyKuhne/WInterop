@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 
@@ -41,5 +42,6 @@ namespace WInterop.GdiPlus
 
         public static implicit operator ARGB(COLORREF color) => new ARGB(color.R, color.G, color.B);
         public static implicit operator COLORREF(ARGB color) => new COLORREF(color.R, color.G, color.B);
+        public static implicit operator ARGB(Color color) => new ARGB(color.R, color.G, color.B);
     }
 }

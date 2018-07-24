@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Drawing;
+
 namespace WInterop.Gdi.Types
 {
     // https://msdn.microsoft.com/en-us/library/dd162897.aspx
@@ -31,10 +33,10 @@ namespace WInterop.Gdi.Types
             this.bottom = bottom;
         }
 
-        public bool PointIsInside(POINT point)
+        public bool PointIsInside(Point point)
         {
-            return ((point.x >= left) && (point.x < right) &&
-                (point.y >= top) && (point.y < bottom));
+            return ((point.X >= left) && (point.X < right) &&
+                (point.Y >= top) && (point.Y < bottom));
         }
 
         public void Offset(int cx, int cy)

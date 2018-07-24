@@ -18,6 +18,7 @@ using WInterop.Resources;
 using WInterop.Support;
 using Xunit;
 using ModuleTypes = WInterop.Modules.Types;
+using System.Drawing;
 
 namespace DesktopTests.ModuleTests
 {
@@ -242,12 +243,12 @@ namespace DesktopTests.ModuleTests
         }
 
         [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-        public static extern IntPtr CheckStructAsArray(POINT[] points, int count);
+        public static extern IntPtr CheckStructAsArray(Point[] points, int count);
 
         [Fact]
         public unsafe void AsArrayInvoke()
         {
-            POINT[] points = { new POINT(1, 2), new POINT(3, 4) };
+            Point[] points = { new Point(1, 2), new Point(3, 4) };
 
             fixed(void* p = &points[0])
             {
@@ -257,17 +258,17 @@ namespace DesktopTests.ModuleTests
                 // Simple struct array declaration creates a copy in
                 // (even though it is blittable)
                 current.Should().NotBe(result);
-                points[0].x.Should().Be(1);
+                points[0].X.Should().Be(1);
             }
         }
 
         [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-        public static extern IntPtr CheckStructAsInOutArray([In, Out]POINT[] points, int count);
+        public static extern IntPtr CheckStructAsInOutArray([In, Out]Point[] points, int count);
 
         [Fact]
         public unsafe void AsInOutArrayInvoke()
         {
-            POINT[] points = { new POINT(1, 2), new POINT(3, 4) };
+            Point[] points = { new Point(1, 2), new Point(3, 4) };
 
             fixed (void* p = &points[0])
             {
@@ -277,19 +278,19 @@ namespace DesktopTests.ModuleTests
                 // Simple struct array declaration creates a copy both ways
                 // (even though it is blittable)
                 current.Should().NotBe(result);
-                points[0].x.Should().Be(3);
+                points[0].X.Should().Be(3);
             }
         }
 
         [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-        public unsafe static extern IntPtr CheckStructAsPointerArray(POINT* points, int count);
+        public unsafe static extern IntPtr CheckStructAsPointerArray(Point* points, int count);
 
         [Fact]
         public unsafe void AsPointerArrayInvoke()
         {
-            POINT[] points = { new POINT(1, 2), new POINT(3, 4) };
+            Point[] points = { new Point(1, 2), new Point(3, 4) };
 
-            fixed (POINT* p = &points[0])
+            fixed (Point* p = &points[0])
             {
                 IntPtr current = (IntPtr)p;
                 IntPtr result = CheckStructAsPointerArray(p, points.Length);
@@ -297,18 +298,18 @@ namespace DesktopTests.ModuleTests
                 // No copy for simple struct array when we send a pointer, modification
                 // is as expected
                 current.Should().Be(result);
-                points[0].x.Should().Be(3);
+                points[0].X.Should().Be(3);
             }
         }
 
         [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-        public unsafe static extern IntPtr CheckStructAsRef(ref POINT points, int count);
+        public unsafe static extern IntPtr CheckStructAsRef(ref Point points, int count);
 
         [Fact]
         public unsafe void AsSingleRefInvoke()
         {
-            POINT point = new POINT(4, 6);
-            POINT* p = &point;
+            Point point = new Point(4, 6);
+            Point* p = &point;
 
             IntPtr current = (IntPtr)p;
             IntPtr result = CheckStructAsRef(ref point, 1);

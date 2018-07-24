@@ -12,9 +12,9 @@ namespace WInterop.Windows.Types
     /// <summary>
     /// Simple struct to encapsulate a Window handle (HWND).
     /// </summary>
-    public struct WindowHandle
+    public readonly struct WindowHandle
     {
-        public IntPtr HWND;
+        public IntPtr HWND { get; }
 
         public static WindowHandle Null = new WindowHandle(IntPtr.Zero);
 

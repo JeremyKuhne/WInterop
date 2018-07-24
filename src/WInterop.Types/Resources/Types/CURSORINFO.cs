@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Gdi.Types;
+using System.Drawing;
 
 namespace WInterop.Resources.Types
 {
@@ -16,6 +16,6 @@ namespace WInterop.Resources.Types
         public uint cbSize;
         public CursorState flags;
         public IntPtr hCursor;
-        public POINT ptScreenPos;
+        public Point ptScreenPos;
     }
 }

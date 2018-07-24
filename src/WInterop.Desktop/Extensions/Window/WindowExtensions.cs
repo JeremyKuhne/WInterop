@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Resources;
@@ -75,8 +76,8 @@ namespace WInterop.Extensions.WindowExtensions
             => WindowMethods.SendMessage(window, message, wParam, lParam);
         public static LRESULT SendMessage(this WindowHandle window, ListBoxMessage message, WPARAM wParam, LPARAM lParam)
             => WindowMethods.SendMessage(window, (WindowMessage)message, wParam, lParam);
-        public static bool ScreenToClient(this WindowHandle window, ref POINT point) => GdiMethods.ScreenToClient(window, ref point);
-        public static bool ClientToScreen(this WindowHandle window, ref POINT point) => GdiMethods.ClientToScreen(window, ref point);
+        public static bool ScreenToClient(this WindowHandle window, ref Point point) => GdiMethods.ScreenToClient(window, ref point);
+        public static bool ClientToScreen(this WindowHandle window, ref Point point) => GdiMethods.ClientToScreen(window, ref point);
         public static void CreateCaret(this WindowHandle window, BitmapHandle bitmap, int width, int height) =>
             ResourceMethods.CreateCaret(window, bitmap, width, height);
         public static void ShowCaret(this WindowHandle window) => ResourceMethods.ShowCaret(window);

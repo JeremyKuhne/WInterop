@@ -5,74 +5,77 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace WInterop.Multimedia.Types
 {
     // https://msdn.microsoft.com/en-us/library/dd743680.aspx
+    [Flags]
     public enum PlaySoundOptions : uint
     {
         /// <summary>
-        /// Play the sound synchronously (default).
+        /// Play the sound synchronously (default). [SND_SYNC]
         /// </summary>
-        SND_SYNC            = 0x00000000,
+        Sync = 0x00000000,
 
         /// <summary>
-        /// Play the sound asynchronously.
+        /// Play the sound asynchronously. [SND_ASYNC]
         /// </summary>
-        SND_ASYNC           = 0x00000001,
+        Async = 0x00000001,
 
         /// <summary>
-        /// Don't play the default sound if the specified sound cannot be found.
+        /// Don't play the default sound if the specified sound cannot be found. [SND_NODEFAULT]
         /// </summary>
-        SND_NODEFAULT       = 0x00000002,
+        NoDefault = 0x00000002,
 
         /// <summary>
-        /// The specified sound is a resource handle.
+        /// The specified sound is a resource handle. [SND_MEMORY]
         /// </summary>
-        SND_MEMORY          = 0x00000004,
+        Memory = 0x00000004,
 
         /// <summary>
-        /// Loop the sound until PlaySound is called again with null. Requires SND_ASYNC flag.
+        /// Loop the sound until PlaySound is called again with null. Requires <see cref="Async"/> flag. [SND_LOOP]
         /// </summary>
-        SND_LOOP            = 0x00000008,
+        Loop = 0x00000008,
 
         /// <summary>
-        /// Doesn't stop currently playing sounds, even if it can't play the specified one.
+        /// Doesn't stop currently playing sounds, even if it can't play the specified one. [SND_NOSTOP]
         /// </summary>
-        SND_NOSTOP          = 0x00000010,
+        NoStop = 0x00000010,
 
         /// <summary>
-        /// The sound is an application specific alias as defined in the registry.
+        /// The sound is an application specific alias as defined in the registry. [SND_APPLICATION]
         /// </summary>
-        SND_APPLICATION     = 0x00000080,
+        Application = 0x00000080,
 
         /// <summary>
-        /// System event alias in the registry or WIN.INI. Don't use with SND_FILENAME or SND_RESOURCE.
+        /// System event alias in the registry or WIN.INI. Don't use with <see cref="FileName"/> or <see cref="Resource"/>. [SND_ALIAS]
         /// </summary>
-        SND_ALIAS           = 0x00010000,
+        Alias = 0x00010000,
 
         /// <summary>
-        /// The specified sound is a filename.
+        /// The specified sound is a filename. [SND_FILENAME]
         /// </summary>
-        SND_FILENAME        = 0x00020000,
+        FileName = 0x00020000,
 
         /// <summary>
-        /// The specified sound is a resource identifier in the specified module.
+        /// The specified sound is a resource identifier in the specified module. [SND_RESOURCE]
         /// </summary>
-        SND_RESOURCE        = 0x00040004,
+        Resource = 0x00040004,
 
         /// <summary>
-        /// Generates a visual cue if the SoundSentry accessibility feature is enabled.
+        /// Generates a visual cue if the SoundSentry accessibility feature is enabled. [SND_SENTRY]
         /// </summary>
-        SND_SENTRY          = 0x00080000,
+        Sentry = 0x00080000,
 
         /// <summary>
-        /// The specified sound is a predefined id (PlaySoundAlias).
+        /// The specified sound is a predefined id (PlaySoundAlias). [SND_ALIAS_ID]
         /// </summary>
-        SND_ALIAS_ID        = 0x00110000,
+        AliasId = 0x00110000,
 
         /// <summary>
-        /// Plays the sound in the system notification sounds session. (Plays at the "System Sounds" volume.)
+        /// Plays the sound in the system notification sounds session. (Plays at the "System Sounds" volume.) [SND_SYSTEM]
         /// </summary>
-        SND_SYSTEM          = 0x00200000
+        System = 0x00200000
     }
 }

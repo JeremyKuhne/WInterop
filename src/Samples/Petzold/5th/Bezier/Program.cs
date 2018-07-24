@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Extensions.WindowExtensions;
 using WInterop.Gdi.Types;
@@ -56,16 +57,16 @@ namespace Bezier
             }
         }
 
-        static void DrawBezier(DeviceContext dc, POINT[] apt)
+        static void DrawBezier(DeviceContext dc, Point[] apt)
         {
             dc.PolyBezier(apt);
-            dc.MoveTo(apt[0].x, apt[0].y);
-            dc.LineTo(apt[1].x, apt[1].y);
-            dc.MoveTo(apt[2].x, apt[2].y);
-            dc.LineTo(apt[3].x, apt[3].y);
+            dc.MoveTo(apt[0].X, apt[0].Y);
+            dc.LineTo(apt[1].X, apt[1].Y);
+            dc.MoveTo(apt[2].X, apt[2].Y);
+            dc.LineTo(apt[3].X, apt[3].Y);
         }
 
-        static POINT[] apt = new POINT[4];
+        static Point[] apt = new Point[4];
 
         static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
@@ -75,14 +76,14 @@ namespace Bezier
                     int cxClient = lParam.LowWord;
                     int cyClient = lParam.HighWord;
 
-                    apt[0].x = cxClient / 4;
-                    apt[0].y = cyClient / 2;
-                    apt[1].x = cxClient / 2;
-                    apt[1].y = cyClient / 4;
-                    apt[2].x = cxClient / 2;
-                    apt[2].y = 3 * cyClient / 4;
-                    apt[3].x = 3 * cxClient / 4;
-                    apt[3].y = cyClient / 2;
+                    apt[0].X = cxClient / 4;
+                    apt[0].Y = cyClient / 2;
+                    apt[1].X = cxClient / 2;
+                    apt[1].Y = cyClient / 4;
+                    apt[2].X = cxClient / 2;
+                    apt[2].Y = 3 * cyClient / 4;
+                    apt[3].X = 3 * cxClient / 4;
+                    apt[3].Y = cyClient / 2;
 
                     return 0;
 
@@ -99,14 +100,14 @@ namespace Bezier
 
                             if ((mk & MouseKey.LeftButton) != 0)
                             {
-                                apt[1].x = lParam.LowWord;
-                                apt[1].y = lParam.HighWord;
+                                apt[1].X = lParam.LowWord;
+                                apt[1].Y = lParam.HighWord;
                             }
 
                             if ((mk & MouseKey.RightButton) != 0)
                             {
-                                apt[2].x = lParam.LowWord;
-                                apt[2].y = lParam.HighWord;
+                                apt[2].X = lParam.LowWord;
+                                apt[2].Y = lParam.HighWord;
                             }
 
                             dc.SelectObject(StockPen.Black);

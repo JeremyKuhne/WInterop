@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
@@ -32,7 +33,7 @@ namespace WInterop.Resources
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648402.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetCaretPos(
-                out POINT lpPoint);
+                out Point lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648405.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -126,23 +127,23 @@ namespace WInterop.Resources
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648390.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetCursorPos(
-                out POINT lpPoint);
+                out Point lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa969464.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetPhysicalCursorPos(
-                out POINT lpPoint);
+                out Point lpPoint);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648391.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern SharedCursorHandle LoadCursorW(
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
+            public unsafe static extern SharedCursorHandle LoadCursorW(
                 ModuleInstance hInstance,
-                IntPtr lpCursorName);
+                char* lpCursorName);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648392.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern SharedCursorHandle LoadCursorFromFileW(
-                IntPtr lpFileName);
+            // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-loadcursorfromfilew
+            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
+            public static extern CursorHandle LoadCursorFromFileW(
+                string lpFileName);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648393.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -350,7 +351,7 @@ namespace WInterop.Resources
             public static extern int MenuItemFromPoint(
                 WindowHandle hWnd,
                 MenuHandle hMenu,
-                POINT ptScreen);
+                Point ptScreen);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647994.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
