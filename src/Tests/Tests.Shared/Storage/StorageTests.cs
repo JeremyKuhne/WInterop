@@ -634,21 +634,26 @@ namespace Tests.FileManagementTests
         }
 
         [Fact]
-        public unsafe void GetCompressed()
+        public unsafe void ReadWithOpenHandle()
         {
             using (var cleaner = new TestFileCleaner())
             {
                 string cursorPath = cleaner.GetTestPath() + ".cur";
+
+                // Create a handle with read only sharing and leave open
                 using (IO.FileStream file = new IO.FileStream(cursorPath, IO.FileMode.Create, IO.FileAccess.ReadWrite, IO.FileShare.Read))
                 {
+                    // Write out a valid file
                     using (IO.Stream data = TestFiles.GetTestCursor())
                     {
                         data.CopyTo(file);
                     }
                     file.Flush();
 
+                    // See that we can open a handle on it directly
                     using (IO.FileStream file2 = new IO.FileStream(cursorPath, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.ReadWrite)) { }
 
+                    // Try letting the OS read it in
                     using (ResourceMethods.LoadCursorFromFile(cursorPath)) { };
                 }
             }
