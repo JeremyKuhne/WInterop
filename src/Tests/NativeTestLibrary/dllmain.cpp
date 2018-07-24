@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "commctrl.h"
 #include "accctrl.h"
+#include "shellapi.h"
+#include "shlobj.h"
 
 BOOL APIENTRY DllMain(
     HMODULE hModule,
