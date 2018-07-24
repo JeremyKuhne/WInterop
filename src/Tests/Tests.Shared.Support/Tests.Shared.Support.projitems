@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)FileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PathGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\TestFiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StoreHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestFileCleaner.cs" />
   </ItemGroup>

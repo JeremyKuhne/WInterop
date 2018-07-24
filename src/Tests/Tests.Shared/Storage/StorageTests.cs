@@ -7,12 +7,17 @@
 
 using FluentAssertions;
 using System;
+using IO = System.IO;
+using System.IO.Compression;
 using System.Linq;
 using Tests.Support;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.Support;
 using Xunit;
+using System.Text;
+using Tests.Shared.Support.Resources;
+using WInterop.Resources;
 
 namespace Tests.FileManagementTests
 {
@@ -624,6 +629,27 @@ namespace Tests.FileManagementTests
                 using (var handle = StorageMethods.CreateDirectoryHandle(tempDirectory))
                 {
                     StorageMethods.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", ".." });
+                }
+            }
+        }
+
+        [Fact]
+        public unsafe void GetCompressed()
+        {
+            using (var cleaner = new TestFileCleaner())
+            {
+                string cursorPath = cleaner.GetTestPath() + ".cur";
+                using (IO.FileStream file = new IO.FileStream(cursorPath, IO.FileMode.Create, IO.FileAccess.ReadWrite, IO.FileShare.Read))
+                {
+                    using (IO.Stream data = TestFiles.GetTestCursor())
+                    {
+                        data.CopyTo(file);
+                    }
+                    file.Flush();
+
+                    using (IO.FileStream file2 = new IO.FileStream(cursorPath, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.ReadWrite)) { }
+
+                    using (ResourceMethods.LoadCursorFromFile(cursorPath)) { };
                 }
             }
         }
