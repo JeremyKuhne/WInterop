@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     // https://msdn.microsoft.com/en-us/library/dd183361.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

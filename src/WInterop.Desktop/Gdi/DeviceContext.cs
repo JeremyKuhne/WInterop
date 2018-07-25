@@ -8,9 +8,9 @@
 using System;
 using System.Diagnostics;
 using WInterop.Support;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     /// <summary>
     /// DeviceContext handle (HDC)

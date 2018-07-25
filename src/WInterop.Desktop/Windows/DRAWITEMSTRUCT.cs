@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 
-namespace WInterop.Windows.Types
+namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb775802.aspx
     public struct DRAWITEMSTRUCT

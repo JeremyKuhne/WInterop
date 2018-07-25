@@ -8,7 +8,7 @@
 using System;
 using WInterop.Modules.Types;
 
-namespace WInterop.Windows.Types
+namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632603.aspx
     public struct CREATESTRUCT

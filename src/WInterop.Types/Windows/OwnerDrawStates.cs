@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Windows.Types
+namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb775802.aspx
     [Flags]

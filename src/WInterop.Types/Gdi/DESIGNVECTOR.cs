@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     // https://msdn.microsoft.com/en-us/library/dd183551.aspx
     public struct DESIGNVECTOR

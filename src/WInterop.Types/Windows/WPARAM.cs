@@ -8,7 +8,7 @@
 using System;
 using WInterop.Support;
 
-namespace WInterop.Windows.Types
+namespace WInterop.Windows
 {
     public struct WPARAM
     {

@@ -13,12 +13,10 @@ using WInterop.GdiPlus;
 
 using System;
 using WInterop.Gdi;
-using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
 using WInterop.SystemInformation.Types;
 using WInterop.Windows;
-using WInterop.Windows.Types;
 using WInterop.Console;
 using System.Drawing;
 

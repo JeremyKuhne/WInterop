@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     // https://msdn.microsoft.com/en-us/library/cc669448.aspx
     // https://msdn.microsoft.com/en-us/library/dd183499.aspx

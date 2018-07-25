@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Windows.Types
+namespace WInterop.Windows
 {
     public struct TimerId
     {

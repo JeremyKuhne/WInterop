@@ -8,7 +8,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     // https://msdn.microsoft.com/en-us/library/dd183449.aspx
     [StructLayout(LayoutKind.Explicit)]

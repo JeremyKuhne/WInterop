@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     /// <summary>
     /// Text alignment

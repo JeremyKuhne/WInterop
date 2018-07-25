@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Support.Buffers;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Windows.BufferWrappers
 {

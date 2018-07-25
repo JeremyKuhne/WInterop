@@ -8,7 +8,7 @@
 using System;
 using System.Diagnostics;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     public readonly struct FontHandle : IDisposable
     {

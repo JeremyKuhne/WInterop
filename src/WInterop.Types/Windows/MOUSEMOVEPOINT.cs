@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Windows.Types
+namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645603.aspx
     public struct MOUSEMOVEPOINT

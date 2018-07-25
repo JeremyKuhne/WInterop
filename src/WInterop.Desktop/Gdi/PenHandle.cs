@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     public readonly struct PenHandle : IDisposable
     {

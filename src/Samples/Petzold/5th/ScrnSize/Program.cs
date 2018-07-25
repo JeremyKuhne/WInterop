@@ -7,7 +7,6 @@
 
 using System;
 using WInterop.Windows;
-using WInterop.Windows.Types;
 
 namespace ScrnSize
 {

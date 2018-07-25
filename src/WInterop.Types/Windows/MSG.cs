@@ -7,7 +7,7 @@
 
 using System.Drawing;
 
-namespace WInterop.Windows.Types
+namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644958.aspx
     public struct MSG

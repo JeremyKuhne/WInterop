@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using Xunit;
 
 namespace DesktopTests.Gdi

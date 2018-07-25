@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     /// <summary>
     /// Whether or not the characters in a font have a fixed or variable width (pitch).

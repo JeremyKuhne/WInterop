@@ -11,9 +11,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop;
 using WInterop.Gdi;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using WInterop.Windows;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 using Xunit;
 
 namespace DesktopTests.Gdi

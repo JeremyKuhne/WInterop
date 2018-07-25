@@ -8,10 +8,10 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Resources
 {

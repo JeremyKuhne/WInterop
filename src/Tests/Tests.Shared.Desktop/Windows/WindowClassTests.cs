@@ -12,7 +12,7 @@ using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Modules;
 using WInterop.Windows;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 using Xunit;
 
 namespace DesktopTests.Windows

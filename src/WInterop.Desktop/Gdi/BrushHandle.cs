@@ -7,9 +7,9 @@
 
 using System;
 using System.Diagnostics;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     public readonly struct BrushHandle : IDisposable
     {

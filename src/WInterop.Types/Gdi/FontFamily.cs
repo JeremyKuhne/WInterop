@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     /// <summary>
     /// Used to describe the desired font in a general way.

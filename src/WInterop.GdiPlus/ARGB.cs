@@ -7,7 +7,7 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 
 namespace WInterop.GdiPlus
 {

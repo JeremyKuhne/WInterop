@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Com.Types;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Shell.Types
 {

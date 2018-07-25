@@ -9,12 +9,11 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using WInterop.Modules.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Windows.BufferWrappers;
-using WInterop.Windows.Types;
 
 namespace WInterop.Windows
 {

@@ -8,11 +8,9 @@
 using System;
 using System.Threading;
 using WInterop.Gdi;
-using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
 using WInterop.Windows;
-using WInterop.Windows.Types;
 
 namespace RandRect
 {

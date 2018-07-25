@@ -11,7 +11,7 @@ using WInterop.Clipboard.Types;
 using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Clipboard
 {

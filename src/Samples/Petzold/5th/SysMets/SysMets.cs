@@ -7,7 +7,7 @@
 
 
 using System.Collections.Generic;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace SysMets4
 {

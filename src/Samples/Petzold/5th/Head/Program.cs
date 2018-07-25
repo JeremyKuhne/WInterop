@@ -9,13 +9,11 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Text;
 using WInterop.Gdi;
-using WInterop.Storage;
-using WInterop.Storage.Types;
-using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
+using WInterop.Storage;
+using WInterop.Storage.Types;
 using WInterop.Windows;
-using WInterop.Windows.Types;
 
 namespace Head
 {

@@ -8,13 +8,11 @@
 using System;
 using WInterop.Console;
 using WInterop.Gdi;
-using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Multimedia;
 using WInterop.Multimedia.Types;
 using WInterop.Resources.Types;
 using WInterop.Windows;
-using WInterop.Windows.Types;
 
 namespace HelloWin
 {

@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 
-namespace WInterop.Windows.Types
+namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

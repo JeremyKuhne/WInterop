@@ -10,14 +10,14 @@ using System.Drawing;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Gdi;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using WInterop.Globalization;
 using WInterop.Modules.Types;
 using WInterop.Resources;
 using WInterop.Resources.Types;
 using WInterop.SystemInformation;
 using WInterop.SystemInformation.Types;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Windows
 {

@@ -16,7 +16,7 @@ using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop.Synchronization.Types;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Desktop.Communications
 {

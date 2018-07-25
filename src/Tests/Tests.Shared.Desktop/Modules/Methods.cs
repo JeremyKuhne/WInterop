@@ -11,7 +11,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop.Storage;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Modules.Types;
 using WInterop.Resources;

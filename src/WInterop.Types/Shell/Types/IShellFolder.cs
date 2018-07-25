@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using WInterop.ErrorHandling.Types;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Shell.Types
 {

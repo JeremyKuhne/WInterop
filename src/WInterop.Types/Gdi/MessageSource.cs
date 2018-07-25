@@ -1,4 +1,4 @@
-﻿namespace WInterop.Gdi.Types
+﻿namespace WInterop.Gdi
 {
     class MessageSource
     {

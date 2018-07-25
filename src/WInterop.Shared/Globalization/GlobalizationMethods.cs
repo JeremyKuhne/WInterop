@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Globalization.Types;
 using WInterop.Support;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Globalization
 {

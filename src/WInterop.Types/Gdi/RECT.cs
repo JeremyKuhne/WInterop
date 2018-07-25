@@ -7,7 +7,7 @@
 
 using System.Drawing;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     // https://msdn.microsoft.com/en-us/library/dd162897.aspx
     public struct RECT

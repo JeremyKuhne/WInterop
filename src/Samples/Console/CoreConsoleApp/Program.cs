@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Text;
 using WInterop.Console;
 using WInterop.Console.Types;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace CoreConsoleApp
 {

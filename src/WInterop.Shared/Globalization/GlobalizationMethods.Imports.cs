@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 using WInterop.Globalization.Types;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Globalization
 {

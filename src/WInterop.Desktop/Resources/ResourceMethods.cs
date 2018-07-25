@@ -7,11 +7,11 @@
 
 using System;
 using System.Drawing;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
 using WInterop.Support;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Resources
 {

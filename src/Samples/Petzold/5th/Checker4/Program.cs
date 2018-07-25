@@ -9,11 +9,9 @@ using System;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
 using WInterop.Gdi;
-using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
 using WInterop.Windows;
-using WInterop.Windows.Types;
 
 namespace Checker4
 {

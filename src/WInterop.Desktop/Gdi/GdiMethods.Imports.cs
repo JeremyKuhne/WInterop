@@ -8,8 +8,8 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Types;
-using WInterop.Windows.Types;
+using WInterop.Gdi;
+using WInterop.Windows;
 
 namespace WInterop.Gdi
 {
@@ -131,7 +131,8 @@ namespace WInterop.Gdi
                 uint cBitsPerPel,
                 IntPtr lpvBits);
 
-            // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createcompatiblebitmap            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createcompatiblebitmap
+            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern HBITMAP CreateCompatibleBitmap(
                 HDC hdc,
                 int cx,

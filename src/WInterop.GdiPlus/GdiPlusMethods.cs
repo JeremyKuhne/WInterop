@@ -9,7 +9,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling.Types;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using WInterop.Support;
 
 namespace WInterop.GdiPlus

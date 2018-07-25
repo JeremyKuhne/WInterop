@@ -9,10 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Types;
+using WInterop.Gdi;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Windows.Types;
+using WInterop.Windows;
 
 namespace WInterop.Gdi
 {

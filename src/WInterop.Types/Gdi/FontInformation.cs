@@ -7,7 +7,7 @@
 
 using WInterop.Support;
 
-namespace WInterop.Gdi.Types
+namespace WInterop.Gdi
 {
     public class FontInformation
     {
