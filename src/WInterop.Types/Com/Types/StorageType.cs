@@ -8,8 +8,8 @@
 namespace WInterop.Com.Types
 {
     /// <summary>
-    /// Type of the storage element.
-    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa380348.aspx"/>
+    /// Type of the storage element. [STGTY]
+    /// <see cref="https://docs.microsoft.com/en-us/windows/desktop/api/objidl/ne-objidl-tagstgty"/>
     /// </summary>
     public enum StorageType : uint
     {

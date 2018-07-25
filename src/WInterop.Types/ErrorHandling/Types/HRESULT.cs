@@ -15,6 +15,7 @@ namespace WInterop.ErrorHandling.Types
         E_NOINTERFACE = unchecked((int)0x80004002),
         E_POINTER = unchecked((int)0x80004003),
         E_FAIL = unchecked((int)0x80004005),
+        STG_E_INVALIDFUNCTION = unchecked((int)0x80030001L),
         STG_E_FILENOTFOUND = unchecked((int)0x80030002),
         STG_E_ACCESSDENIED = unchecked((int)0x80030005),
         STG_E_INVALIDPARAMETER = unchecked((int)0x80030057),

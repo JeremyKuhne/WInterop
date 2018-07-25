@@ -7,9 +7,14 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.ErrorHandling.Types;
 
 namespace WInterop.Com.Types
 {
+    /// <summary>
+    /// COM IStream.
+    /// </summary>
+    /// <remarks><see cref="https://docs.microsoft.com/en-us/windows/desktop/api/objidl/nn-objidl-istream"/></remarks>
     [ComImport,
         Guid("0000000c-0000-0000-C000-000000000046"),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -21,8 +26,8 @@ namespace WInterop.Com.Types
         /// <param name="pv">A pointer to the buffer which the stream data is read into.</param>
         /// <param name="cb">The number of bytes of data to read from the stream object.</param>
         /// <returns>The actual number of bytes read from the stream object.</returns>
-        uint Read(
-            ref byte pv,
+        unsafe uint Read(
+            byte* pv,
             uint cb);
 
         /// <summary>
@@ -31,8 +36,8 @@ namespace WInterop.Com.Types
         /// <param name="pv">A pointer to the buffer that contains the data that is to be written to the stream.</param>
         /// <param name="cb">The number of bytes of data to attempt to write into the stream.</param>
         /// <returns>The actual number of bytes written to the stream object. </returns>
-        uint Write(
-            in byte pv,
+        unsafe uint Write(
+            byte* pv,
             uint cb);
 
         /// <summary>
@@ -57,12 +62,14 @@ namespace WInterop.Com.Types
 
         void Revert();
 
-        void LockRegion(
+        [PreserveSig]
+        HRESULT LockRegion(
             long libOffset,
             long cb,
             uint dwLockType);
 
-        void UnlockRegion(
+        [PreserveSig]
+        HRESULT UnlockRegion(
             long libOffset,
             long cb,
             uint dwLockType);
