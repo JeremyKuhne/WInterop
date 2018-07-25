@@ -57,7 +57,7 @@ namespace WInterop.Gdi
             public static extern DeviceContext.DeleteHDC CreateCompatibleDC(
                 HDC hdc);
 
-            // https://msdn.microsoft.com/en-us/library/dd183533.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-deletedc
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool DeleteDC(
                 HDC hdc);
@@ -131,12 +131,11 @@ namespace WInterop.Gdi
                 uint cBitsPerPel,
                 IntPtr lpvBits);
 
-            // https://msdn.microsoft.com/en-us/library/dd183488.aspx
-            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+            // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createcompatiblebitmap            [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern HBITMAP CreateCompatibleBitmap(
                 HDC hdc,
-                int nWidth,
-                int nHeight);
+                int cx,
+                int cy);
 
             // https://msdn.microsoft.com/en-us/library/dd144905.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -936,11 +935,11 @@ namespace WInterop.Gdi
                 HRGN hrgn,
                 CombineRegionMode fnMode);
 
-            // https://msdn.microsoft.com/en-us/library/dd144865.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-getclipbox
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType GetClipBox(
                 HDC hdc,
-                [In] ref RECT lprc);
+                out RECT lprect);
 
             // https://msdn.microsoft.com/en-us/library/dd144866.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -1095,7 +1094,7 @@ namespace WInterop.Gdi
                 HDC hdcSrc,
                 int nXSrc,
                 int nYSrc,
-                uint dwRop);
+                RasterOperation dwRop);
         }
     }
 }

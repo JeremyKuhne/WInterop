@@ -7,9 +7,8 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
-using System.Runtime.InteropServices;
 using System.Text;
-using WInterop.Extensions.WindowExtensions;
+using WInterop.Gdi;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.Gdi.Types;
@@ -32,7 +31,7 @@ namespace Head
         {
             const string szAppName = "head";
 
-            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,

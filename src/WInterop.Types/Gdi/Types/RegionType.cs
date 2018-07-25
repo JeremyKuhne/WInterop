@@ -9,9 +9,24 @@ namespace WInterop.Gdi.Types
 {
     public enum RegionType : int
     {
-        ERROR              = 0,
-        NULLREGION         = 1,
-        SIMPLEREGION       = 2,
-        COMPLEXREGION      = 3
+        /// <summary>
+        /// An error occurred. [ERROR]
+        /// </summary>
+        Error = 0,
+
+        /// <summary>
+        /// Region is empty. [NULLREGION]
+        /// </summary>
+        Null = 1,
+
+        /// <summary>
+        /// Region is a single rectangle. [SIMPLEREGION]
+        /// </summary>
+        Simple = 2,
+
+        /// <summary>
+        /// Region is more than one rectangle. [COMPLEXREGION]
+        /// </summary>
+        Complex = 3
     }
 }

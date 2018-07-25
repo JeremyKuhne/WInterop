@@ -13,7 +13,7 @@ using WInterop.Resources;
 using WInterop.Windows;
 using WInterop.Windows.Types;
 
-namespace WInterop.Extensions.WindowExtensions
+namespace WInterop.Windows
 {
     /// <summary>
     /// Extension methods for Window handles

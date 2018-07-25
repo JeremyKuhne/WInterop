@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
 using WInterop.Support;
 using WInterop.Windows.Types;
 
@@ -51,15 +52,15 @@ namespace WInterop.Gdi.Types
             {
                 case CollectionType.Delete:
                     if (!GdiMethods.Imports.DeleteDC(Handle))
-                        throw Errors.GetIoExceptionForLastError();
+                    { } // Debug.Fail("Failed to delete DC");
                     break;
                 case CollectionType.Release:
                     if (!GdiMethods.Imports.ReleaseDC(_window, Handle))
-                        throw Errors.GetIoExceptionForLastError();
+                    { } // Debug.Fail("Failed to release DC");
                     break;
                 case CollectionType.EndPaint:
                     if (!GdiMethods.Imports.EndPaint(_window, in _paint))
-                        throw Errors.GetIoExceptionForLastError();
+                    { } // Debug.Fail("Failed to end paint");
                     break;
                 default:
                     throw new InvalidOperationException();

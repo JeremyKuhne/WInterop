@@ -18,9 +18,9 @@ namespace WInterop.Gdi
 {
     public static partial class GdiMethods
     {
-        public static int GetDeviceCapability(in DeviceContext deviceContext, DeviceCapability capability)
+        public static int GetDeviceCapability(in DeviceContext context, DeviceCapability capability)
         {
-            return Imports.GetDeviceCaps(deviceContext, capability);
+            return Imports.GetDeviceCaps(context, capability);
         }
 
         public unsafe static DeviceContext CreateDeviceContext(string driver, string device)
@@ -31,11 +31,38 @@ namespace WInterop.Gdi
         /// <summary>
         /// Returns an in memory device context that is compatible with the specified device.
         /// </summary>
-        /// <param name="deviceContext">An existing device context or new DeviceContext() for the application's current screen.</param>
+        /// <param name="context">An existing device context or new DeviceContext() for the application's current screen.</param>
         /// <returns>A 1 by 1 monochrome memory device context.</returns>
-        public unsafe static DeviceContext CreateCompatibleDeviceContext(in DeviceContext deviceContext)
+        public static DeviceContext CreateCompatibleDeviceContext(in DeviceContext context)
         {
-            return Imports.CreateCompatibleDC(deviceContext);
+            return Imports.CreateCompatibleDC(context);
+        }
+
+        public static BitmapHandle CreateCompatibleBitmap(in DeviceContext context, Size size)
+        {
+            return Imports.CreateCompatibleBitmap(context, size.Width, size.Height);
+        }
+
+        public static void BitBlt(
+            in DeviceContext source,
+            in DeviceContext destination,
+            Point sourceOrigin,
+            Rectangle destinationRect,
+            RasterOperation operation)
+        {
+            if (!Imports.BitBlt(
+                destination,
+                destinationRect.X,
+                destinationRect.Y,
+                destinationRect.Width,
+                destinationRect.Height,
+                source,
+                sourceOrigin.X,
+                sourceOrigin.Y,
+                operation))
+            {
+                throw Errors.GetIoExceptionForLastError();
+            }
         }
 
         public unsafe static DeviceContext CreateInformationContext(string driver, string device)
@@ -115,9 +142,9 @@ namespace WInterop.Gdi
         /// Selects the given object into the specified device context.
         /// </summary>
         /// <returns>The previous object or null if failed OR null if the given object was a region.</returns>
-        public static GdiObjectHandle SelectObject(in DeviceContext deviceContext, GdiObjectHandle @object)
+        public static GdiObjectHandle SelectObject(in DeviceContext context, GdiObjectHandle @object)
         {
-            HGDIOBJ handle = Imports.SelectObject(deviceContext, @object);
+            HGDIOBJ handle = Imports.SelectObject(context, @object);
             if (handle.IsInvalid)
                 return default;
 
@@ -128,9 +155,9 @@ namespace WInterop.Gdi
             return new GdiObjectHandle(handle, ownsHandle: false);
         }
 
-        public static PenHandle GetCurrentPen(in DeviceContext deviceContext)
+        public static PenHandle GetCurrentPen(in DeviceContext context)
         {
-            return new PenHandle(Imports.GetCurrentObject(deviceContext, ObjectType.Pen), ownsHandle: false);
+            return new PenHandle(Imports.GetCurrentObject(context, ObjectType.Pen), ownsHandle: false);
         }
 
         public static BrushHandle GetStockBrush(StockBrush brush)
@@ -233,39 +260,39 @@ namespace WInterop.Gdi
             return new DeviceContext(Imports.BeginPaint(window, out paintStruct), window, paintStruct);
         }
 
-        public static COLORREF GetTextColor(in DeviceContext deviceContext)
+        public static COLORREF GetTextColor(in DeviceContext context)
         {
-            return Imports.GetTextColor(deviceContext);
+            return Imports.GetTextColor(context);
         }
 
-        public static COLORREF SetTextColor(in DeviceContext deviceContext, COLORREF color)
+        public static COLORREF SetTextColor(in DeviceContext context, COLORREF color)
         {
-            return Imports.SetTextColor(deviceContext, color);
+            return Imports.SetTextColor(context, color);
         }
 
-        public static unsafe bool TextOut(in DeviceContext deviceContext, int x, int y, string text)
+        public static unsafe bool TextOut(in DeviceContext context, int x, int y, string text)
         {
             fixed (char* s = text)
-                return Imports.TextOutW(deviceContext, x, y, s, text.Length);
+                return Imports.TextOutW(context, x, y, s, text.Length);
         }
 
-        public static unsafe bool TextOut(in DeviceContext deviceContext, int x, int y, char* text, int length)
+        public static unsafe bool TextOut(in DeviceContext context, int x, int y, char* text, int length)
         {
-            return Imports.TextOutW(deviceContext, x, y, text, length);
+            return Imports.TextOutW(context, x, y, text, length);
         }
 
-        public static unsafe int DrawText(in DeviceContext deviceContext, string text, RECT rect, TextFormat format)
+        public static unsafe int DrawText(in DeviceContext context, string text, RECT rect, TextFormat format)
         {
             if ((format & TextFormat.ModifyString) == 0)
             {
                 // The string won't be changed, we can just pin
                 fixed (char* c = text)
                 {
-                    return Imports.DrawTextW(deviceContext, c, text.Length, ref rect, format);
+                    return Imports.DrawTextW(context, c, text.Length, ref rect, format);
                 }
             }
 
-            HDC hDC = deviceContext;
+            HDC hDC = context;
 
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
@@ -275,14 +302,14 @@ namespace WInterop.Gdi
             });
         }
 
-        public static TextAlignment SetTextAlignment(in DeviceContext deviceContext, TextAlignment alignment)
+        public static TextAlignment SetTextAlignment(in DeviceContext context, TextAlignment alignment)
         {
-            return Imports.SetTextAlign(deviceContext, alignment);
+            return Imports.SetTextAlign(context, alignment);
         }
 
-        public static bool GetTextMetrics(in DeviceContext deviceContext, out TEXTMETRIC metrics)
+        public static bool GetTextMetrics(in DeviceContext context, out TEXTMETRIC metrics)
         {
-            return Imports.GetTextMetricsW(deviceContext, out metrics);
+            return Imports.GetTextMetricsW(context, out metrics);
         }
 
         public unsafe static bool InvalidateRectangle(WindowHandle window, RECT rect, bool erase)
@@ -295,109 +322,109 @@ namespace WInterop.Gdi
             return Imports.InvalidateRect(window, null, erase);
         }
 
-        public static COLORREF GetPixel(in DeviceContext deviceContext, int x, int y)
+        public static COLORREF GetPixel(in DeviceContext context, int x, int y)
         {
-            return Imports.GetPixel(deviceContext, x, y);
+            return Imports.GetPixel(context, x, y);
         }
 
-        public static bool SetPixel(in DeviceContext deviceContext, int x, int y, COLORREF color)
+        public static bool SetPixel(in DeviceContext context, int x, int y, COLORREF color)
         {
-            return Imports.SetPixelV(deviceContext, x, y, color);
+            return Imports.SetPixelV(context, x, y, color);
         }
 
-        public unsafe static bool MoveTo(in DeviceContext deviceContext, int x, int y)
+        public unsafe static bool MoveTo(in DeviceContext context, int x, int y)
         {
-            return Imports.MoveToEx(deviceContext, x, y, null);
+            return Imports.MoveToEx(context, x, y, null);
         }
 
-        public static bool LineTo(in DeviceContext deviceContext, int x, int y)
+        public static bool LineTo(in DeviceContext context, int x, int y)
         {
-            return Imports.LineTo(deviceContext, x, y);
+            return Imports.LineTo(context, x, y);
         }
 
-        public static PolyFillMode GetPolyFillMode(in DeviceContext deviceContext)
+        public static PolyFillMode GetPolyFillMode(in DeviceContext context)
         {
-            return Imports.GetPolyFillMode(deviceContext);
+            return Imports.GetPolyFillMode(context);
         }
 
-        public static PolyFillMode SetPolyFillMode(in DeviceContext deviceContext, PolyFillMode fillMode)
+        public static PolyFillMode SetPolyFillMode(in DeviceContext context, PolyFillMode fillMode)
         {
-            return Imports.SetPolyFillMode(deviceContext, fillMode);
+            return Imports.SetPolyFillMode(context, fillMode);
         }
 
-        public unsafe static bool Polygon(in DeviceContext deviceContext, params Point[] points)
+        public unsafe static bool Polygon(in DeviceContext context, params Point[] points)
         {
-            return Polygon(deviceContext, points.AsSpan());
+            return Polygon(context, points.AsSpan());
         }
 
-        public unsafe static bool Polygon(in DeviceContext deviceContext, ReadOnlySpan<Point> points)
+        public unsafe static bool Polygon(in DeviceContext context, ReadOnlySpan<Point> points)
         {
-            return Imports.Polygon(deviceContext, ref MemoryMarshal.GetReference(points), points.Length);
+            return Imports.Polygon(context, ref MemoryMarshal.GetReference(points), points.Length);
         }
 
-        public static bool Polyline(in DeviceContext deviceContext, params Point[] points)
+        public static bool Polyline(in DeviceContext context, params Point[] points)
         {
-            return Polyline(deviceContext, points);
+            return Polyline(context, points);
         }
 
-        public static bool Polyline(in DeviceContext deviceContext, ReadOnlySpan<Point> points)
+        public static bool Polyline(in DeviceContext context, ReadOnlySpan<Point> points)
         {
-            return Imports.Polyline(deviceContext, ref MemoryMarshal.GetReference(points), points.Length);
+            return Imports.Polyline(context, ref MemoryMarshal.GetReference(points), points.Length);
         }
 
-        public static bool Rectangle(in DeviceContext deviceContext, int left, int top, int right, int bottom)
+        public static bool Rectangle(in DeviceContext context, int left, int top, int right, int bottom)
         {
-            return Imports.Rectangle(deviceContext, left, top, right, bottom);
+            return Imports.Rectangle(context, left, top, right, bottom);
         }
 
-        public static bool Rectangle(in DeviceContext deviceContext, RECT rectangle)
+        public static bool Rectangle(in DeviceContext context, RECT rectangle)
         {
-            return Imports.Rectangle(deviceContext, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom);
+            return Imports.Rectangle(context, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom);
         }
 
-        public static bool Ellipse(in DeviceContext deviceContext, int left, int top, int right, int bottom)
+        public static bool Ellipse(in DeviceContext context, int left, int top, int right, int bottom)
         {
-            return Imports.Ellipse(deviceContext, left, top, right, bottom);
+            return Imports.Ellipse(context, left, top, right, bottom);
         }
 
-        public static bool RoundRectangle(in DeviceContext deviceContext, RECT rectangle, int cornerWidth, int cornerHeight)
+        public static bool RoundRectangle(in DeviceContext context, RECT rectangle, int cornerWidth, int cornerHeight)
         {
-            return Imports.RoundRect(deviceContext, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom, cornerWidth, cornerHeight);
+            return Imports.RoundRect(context, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom, cornerWidth, cornerHeight);
         }
 
-        public static bool RoundRectangle(in DeviceContext deviceContext, int left, int top, int right, int bottom, int cornerWidth, int cornerHeight)
+        public static bool RoundRectangle(in DeviceContext context, int left, int top, int right, int bottom, int cornerWidth, int cornerHeight)
         {
-            return Imports.RoundRect(deviceContext, left, top, right, bottom, cornerWidth, cornerHeight);
+            return Imports.RoundRect(context, left, top, right, bottom, cornerWidth, cornerHeight);
         }
 
-        public static bool FillRectangle(in DeviceContext deviceContext, RECT rectangle, BrushHandle brush)
+        public static bool FillRectangle(in DeviceContext context, RECT rectangle, BrushHandle brush)
         {
-            return Imports.FillRect(deviceContext, ref rectangle, brush);
+            return Imports.FillRect(context, ref rectangle, brush);
         }
 
-        public static bool FrameRectangle(in DeviceContext deviceContext, RECT rectangle, BrushHandle brush)
+        public static bool FrameRectangle(in DeviceContext context, RECT rectangle, BrushHandle brush)
         {
-            return Imports.FrameRect(deviceContext, ref rectangle, brush);
+            return Imports.FrameRect(context, ref rectangle, brush);
         }
 
-        public static bool InvertRectangle(in DeviceContext deviceContext, RECT rectangle)
+        public static bool InvertRectangle(in DeviceContext context, RECT rectangle)
         {
-            return Imports.InvertRect(deviceContext, ref rectangle);
+            return Imports.InvertRect(context, ref rectangle);
         }
 
-        public static bool DrawFocusRectangle(in DeviceContext deviceContext, RECT rectangle)
+        public static bool DrawFocusRectangle(in DeviceContext context, RECT rectangle)
         {
-            return Imports.DrawFocusRect(deviceContext, ref rectangle);
+            return Imports.DrawFocusRect(context, ref rectangle);
         }
 
-        public unsafe static bool PolyBezier(in DeviceContext deviceContext, params Point[] points)
+        public unsafe static bool PolyBezier(in DeviceContext context, params Point[] points)
         {
-            return PolyBezier(deviceContext, points.AsSpan());
+            return PolyBezier(context, points.AsSpan());
         }
 
-        public unsafe static bool PolyBezier(in DeviceContext deviceContext, ReadOnlySpan<Point> points)
+        public unsafe static bool PolyBezier(in DeviceContext context, ReadOnlySpan<Point> points)
         {
-             return Imports.PolyBezier(deviceContext, ref MemoryMarshal.GetReference(points), (uint)points.Length);
+             return Imports.PolyBezier(context, ref MemoryMarshal.GetReference(points), (uint)points.Length);
         }
 
         public static RegionHandle CreateEllipticRegion(int left, int top, int right, int bottom)
@@ -415,19 +442,19 @@ namespace WInterop.Gdi
             return Imports.CombineRgn(destination, sourceOne, sourceTwo, mode);
         }
 
-        public static RegionType SelectClippingRegion(in DeviceContext deviceContext, RegionHandle region)
+        public static RegionType SelectClippingRegion(in DeviceContext context, RegionHandle region)
         {
-            return Imports.SelectClipRgn(deviceContext, region);
+            return Imports.SelectClipRgn(context, region);
         }
 
-        public static unsafe bool SetViewportOrigin(in DeviceContext deviceContext, int x, int y)
+        public static unsafe bool SetViewportOrigin(in DeviceContext context, int x, int y)
         {
-            return Imports.SetViewportOrgEx(deviceContext, x, y, null);
+            return Imports.SetViewportOrgEx(context, x, y, null);
         }
 
-        public static unsafe bool SetWindowOrigin(in DeviceContext deviceContext, int x, int y)
+        public static unsafe bool SetWindowOrigin(in DeviceContext context, int x, int y)
         {
-            return Imports.SetWindowOrgEx(deviceContext, x, y, null);
+            return Imports.SetWindowOrgEx(context, x, y, null);
         }
 
         /// <summary>
@@ -438,39 +465,39 @@ namespace WInterop.Gdi
             return new BrushHandle(Imports.GetSysColorBrush(systemColor), ownsHandle: false);
         }
 
-        public static COLORREF GetBackgroundColor(in DeviceContext deviceContext)
+        public static COLORREF GetBackgroundColor(in DeviceContext context)
         {
-            return Imports.GetBkColor(deviceContext);
+            return Imports.GetBkColor(context);
         }
 
-        public static COLORREF GetBrushColor(in DeviceContext deviceContext)
+        public static COLORREF GetBrushColor(in DeviceContext context)
         {
-            return Imports.GetDCBrushColor(deviceContext);
+            return Imports.GetDCBrushColor(context);
         }
 
-        public static COLORREF SetBackgroundColor(in DeviceContext deviceContext, COLORREF color)
+        public static COLORREF SetBackgroundColor(in DeviceContext context, COLORREF color)
         {
-            return Imports.SetBkColor(deviceContext, color);
+            return Imports.SetBkColor(context, color);
         }
 
-        public static BackgroundMode SetBackgroundMode(in DeviceContext deviceContext, BackgroundMode mode)
+        public static BackgroundMode SetBackgroundMode(in DeviceContext context, BackgroundMode mode)
         {
-            return Imports.SetBkMode(deviceContext, mode);
+            return Imports.SetBkMode(context, mode);
         }
 
-        public static BackgroundMode GetBackgroundMode(in DeviceContext deviceContext)
+        public static BackgroundMode GetBackgroundMode(in DeviceContext context)
         {
-            return Imports.GetBkMode(deviceContext);
+            return Imports.GetBkMode(context);
         }
 
-        public static PenMixMode SetRasterOperation(in DeviceContext deviceContext, PenMixMode foregroundMixMode)
+        public static PenMixMode SetRasterOperation(in DeviceContext context, PenMixMode foregroundMixMode)
         {
-            return Imports.SetROP2(deviceContext, foregroundMixMode);
+            return Imports.SetROP2(context, foregroundMixMode);
         }
 
-        public static PenMixMode GetRasterOperation(in DeviceContext deviceContext)
+        public static PenMixMode GetRasterOperation(in DeviceContext context)
         {
-            return Imports.GetROP2(deviceContext);
+            return Imports.GetROP2(context);
         }
 
         public static FontHandle CreateFont(
@@ -505,7 +532,7 @@ namespace WInterop.Gdi
             return 1;
         }
 
-        public static IEnumerable<FontInformation> EnumerateFontFamilies(in DeviceContext deviceContext, CharacterSet characterSet, string faceName)
+        public static IEnumerable<FontInformation> EnumerateFontFamilies(in DeviceContext context, CharacterSet characterSet, string faceName)
         {
             LOGFONT logFont = new LOGFONT
             {
@@ -518,7 +545,7 @@ namespace WInterop.Gdi
             GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);
             try
             {
-                int result = Imports.EnumFontFamiliesExW(deviceContext, ref logFont, EnumerateFontCallback, GCHandle.ToIntPtr(gch), 0);
+                int result = Imports.EnumFontFamiliesExW(context, ref logFont, EnumerateFontCallback, GCHandle.ToIntPtr(gch), 0);
             }
             finally
             {
@@ -538,49 +565,55 @@ namespace WInterop.Gdi
             return Imports.ClientToScreen(window, ref point);
         }
 
-        public static bool DeviceToLogical(in DeviceContext deviceContext, params Point[] points)
+        public static bool DeviceToLogical(in DeviceContext context, params Point[] points)
         {
-            return DeviceToLogical(deviceContext, points.AsSpan());
+            return DeviceToLogical(context, points.AsSpan());
         }
 
-        public static bool DeviceToLogical(in DeviceContext deviceContext, ReadOnlySpan<Point> points)
+        public static bool DeviceToLogical(in DeviceContext context, ReadOnlySpan<Point> points)
         {
-            return Imports.DPtoLP(deviceContext, ref MemoryMarshal.GetReference(points), points.Length);
+            return Imports.DPtoLP(context, ref MemoryMarshal.GetReference(points), points.Length);
         }
 
-        public unsafe static bool LogicalToDevice(in DeviceContext deviceContext, params Point[] points)
+        public unsafe static bool LogicalToDevice(in DeviceContext context, params Point[] points)
         {
-            return LogicalToDevice(deviceContext, points);
+            return LogicalToDevice(context, points);
         }
 
-        public unsafe static bool LogicalToDevice(in DeviceContext deviceContext, ReadOnlySpan<Point> points)
+        public unsafe static bool LogicalToDevice(in DeviceContext context, ReadOnlySpan<Point> points)
         {
-            return Imports.LPtoDP(deviceContext, ref MemoryMarshal.GetReference(points), points.Length);
+            return Imports.LPtoDP(context, ref MemoryMarshal.GetReference(points), points.Length);
         }
 
-        public unsafe static bool OffsetWindowOrigin(in DeviceContext deviceContext, int x, int y)
+        public unsafe static bool OffsetWindowOrigin(in DeviceContext context, int x, int y)
         {
-            return Imports.OffsetWindowOrgEx(deviceContext, x, y, null);
+            return Imports.OffsetWindowOrgEx(context, x, y, null);
         }
 
-        public unsafe static bool OffsetViewportOrigin(in DeviceContext deviceContext, int x, int y)
+        public unsafe static bool OffsetViewportOrigin(in DeviceContext context, int x, int y)
         {
-            return Imports.OffsetViewportOrgEx(deviceContext, x, y, null);
+            return Imports.OffsetViewportOrgEx(context, x, y, null);
         }
 
-        public unsafe static bool SetWindowExtents(in DeviceContext deviceContext, int x, int y)
+        public unsafe static bool SetWindowExtents(in DeviceContext context, int x, int y)
         {
-            return Imports.SetWindowExtEx(deviceContext, x, y, null);
+            return Imports.SetWindowExtEx(context, x, y, null);
         }
 
-        public unsafe static bool SetViewportExtents(in DeviceContext deviceContext, int x, int y)
+        public unsafe static bool SetViewportExtents(in DeviceContext context, int x, int y)
         {
-            return Imports.SetViewportExtEx(deviceContext, x, y, null);
+            return Imports.SetViewportExtEx(context, x, y, null);
         }
 
-        public static MapMode SetMapMode(in DeviceContext deviceContext, MapMode mapMode)
+        public static MapMode SetMapMode(in DeviceContext context, MapMode mapMode)
         {
-            return Imports.SetMapMode(deviceContext, mapMode);
+            return Imports.SetMapMode(context, mapMode);
+        }
+
+        public static Rectangle GetClipBox(in DeviceContext context, out RegionType complexity)
+        {
+            complexity = Imports.GetClipBox(context, out RECT rect);
+            return rect;
         }
     }
 }

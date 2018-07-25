@@ -84,5 +84,9 @@ namespace WInterop.Gdi.Types
         {
             return ((left >= right) || (top >= bottom));
         }
+
+        public static implicit operator Rectangle(RECT rect) => Rectangle.FromLTRB(rect.left, rect.top, rect.right, rect.bottom);
+        public static implicit operator RECT(Rectangle rectangle)
+            => new RECT(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
     }
 }

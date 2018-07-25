@@ -7,12 +7,12 @@
 
 namespace WInterop.Gdi.Types
 {
-    public struct RasterOperation
+    public readonly struct RasterOperation
     {
         // https://msdn.microsoft.com/en-us/library/dd145130.aspx
         // https://msdn.microsoft.com/en-us/library/dd183370.aspx
 
-        public uint Value;
+        public readonly uint Value;
 
         public RasterOperation(Common operation)
         {

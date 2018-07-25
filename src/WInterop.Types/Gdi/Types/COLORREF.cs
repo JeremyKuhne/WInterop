@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi.Types
@@ -39,8 +40,6 @@ namespace WInterop.Gdi.Types
             Value = value & 0x00FFFFFF;
         }
 
-        public static implicit operator COLORREF(uint value) => new COLORREF(value);
-
         public static COLORREF DIB_RGB_COLORS => 0;
         public static COLORREF DIB_PAL_COLORS => 1;
 
@@ -61,5 +60,7 @@ namespace WInterop.Gdi.Types
         public bool Equals(COLORREF other) => other.Value == Value;
         public static bool operator ==(COLORREF a, COLORREF b) => a.Value == b.Value;
         public static bool operator !=(COLORREF a, COLORREF b) => a.Value != b.Value;
+        public static implicit operator COLORREF(uint value) => new COLORREF(value);
+        public static implicit operator COLORREF(Color color) => new COLORREF(color.R, color.G, color.B);
     }
 }

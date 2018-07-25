@@ -6,9 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Runtime.InteropServices;
 using WInterop.Console;
-using WInterop.Extensions.WindowExtensions;
+using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Multimedia;
@@ -34,7 +33,7 @@ namespace HelloWin
 
             const string szAppName = "HelloWin";
 
-            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,

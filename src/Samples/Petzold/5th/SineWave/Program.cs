@@ -7,8 +7,7 @@
 
 using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
-using WInterop.Extensions.WindowExtensions;
+using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
@@ -27,7 +26,7 @@ namespace SineWave
         [STAThread]
         static void Main()
         {
-            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,

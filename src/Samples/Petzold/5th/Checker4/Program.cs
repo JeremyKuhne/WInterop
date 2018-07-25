@@ -6,10 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.ErrorHandling.Types;
-using WInterop.Extensions.WindowExtensions;
+using WInterop.Gdi;
 using WInterop.Gdi.Types;
 using WInterop.Modules.Types;
 using WInterop.Resources.Types;
@@ -32,7 +31,7 @@ namespace Checker4
         {
             const string szAppName = "Checker4";
 
-            ModuleInstance module = Marshal.GetHINSTANCE(typeof(Program).Module);
+            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
             WindowClass wndclass = new WindowClass
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
