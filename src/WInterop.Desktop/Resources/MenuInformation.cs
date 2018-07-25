@@ -8,7 +8,7 @@
 using System;
 using WInterop.Gdi;
 
-namespace WInterop.Resources.Types
+namespace WInterop.Resources
 {
     public struct MenuInformation
     {

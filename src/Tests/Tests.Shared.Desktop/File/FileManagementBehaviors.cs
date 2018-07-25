@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using Tests.Support;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.ProcessAndThreads;

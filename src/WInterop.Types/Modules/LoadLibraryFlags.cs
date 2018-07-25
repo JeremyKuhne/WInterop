@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Modules.Types
+namespace WInterop.Modules
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684179.aspx
     [Flags]

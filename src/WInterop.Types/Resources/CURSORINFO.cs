@@ -8,7 +8,7 @@
 using System;
 using System.Drawing;
 
-namespace WInterop.Resources.Types
+namespace WInterop.Resources
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648381.aspx
     public struct CURSORINFO

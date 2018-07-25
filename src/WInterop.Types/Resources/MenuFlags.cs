@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WInterop.Resources.Types
+namespace WInterop.Resources
 {
     [Flags]
     public enum MenuFlags : uint

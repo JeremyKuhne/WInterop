@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
 using WInterop.Support.Buffers;

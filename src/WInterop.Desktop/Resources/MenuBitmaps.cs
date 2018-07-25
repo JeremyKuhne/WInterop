@@ -8,7 +8,7 @@
 using System;
 using WInterop.Gdi;
 
-namespace WInterop.Resources.Types
+namespace WInterop.Resources
 {
     /// <summary>
     /// Only valid when calling menu APIs (in MenuItemInformation [MENUITEMINFO])

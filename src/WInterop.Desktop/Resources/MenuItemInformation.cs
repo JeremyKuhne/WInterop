@@ -8,7 +8,7 @@
 using System;
 using WInterop.Gdi;
 
-namespace WInterop.Resources.Types
+namespace WInterop.Resources
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647578.aspx
     public struct MenuItemInformation

@@ -8,7 +8,6 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using Internal = WInterop.Support.Internal;

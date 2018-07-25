@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using WInterop.Handles.Types;
 
-namespace WInterop.Modules.Types
+namespace WInterop.Modules
 {
     /// <summary>
     /// Module handle. This is synonymous with HINSTANCE and HMODULE.

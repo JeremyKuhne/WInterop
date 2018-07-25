@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Support;
 using Internal = WInterop.Support.Internal;
 

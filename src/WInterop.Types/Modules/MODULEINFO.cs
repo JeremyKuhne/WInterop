@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Modules.Types
+namespace WInterop.Modules
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684229.aspx
     [StructLayout(LayoutKind.Sequential)]

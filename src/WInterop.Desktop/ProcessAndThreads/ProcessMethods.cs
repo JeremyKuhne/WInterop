@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.ProcessAndThreads.BufferWrappers;
 using WInterop.ProcessAndThreads.Types;
 using WInterop.Support;

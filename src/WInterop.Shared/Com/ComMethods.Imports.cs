@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 using WInterop.Com.Types;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Storage.Types;
 
 namespace WInterop.Com

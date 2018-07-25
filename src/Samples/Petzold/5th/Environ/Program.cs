@@ -7,9 +7,9 @@
 
 using System;
 using WInterop.Gdi;
-using WInterop.Modules.Types;
+using WInterop.Modules;
 using WInterop.ProcessAndThreads;
-using WInterop.Resources.Types;
+using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Environ

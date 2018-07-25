@@ -8,7 +8,7 @@
 using System;
 using WInterop.Support.Internal;
 
-namespace WInterop.ErrorHandling.Types
+namespace WInterop.ErrorHandling
 {
     public class DriveNotReadyException : WInteropIOException
     {

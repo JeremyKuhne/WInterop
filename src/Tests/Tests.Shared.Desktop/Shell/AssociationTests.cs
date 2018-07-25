@@ -9,7 +9,7 @@ using FluentAssertions;
 using System;
 using WInterop.Registry;
 using WInterop.Registry.Types;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Shell;
 using WInterop.Shell.Types;
 using Xunit;

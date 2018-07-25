@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.ErrorHandling.Types
+namespace WInterop.ErrorHandling
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680356.aspx
     [Flags]

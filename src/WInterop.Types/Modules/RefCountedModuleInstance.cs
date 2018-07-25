@@ -8,7 +8,7 @@
 using System;
 using WInterop.Support.Internal;
 
-namespace WInterop.Modules.Types
+namespace WInterop.Modules
 {
     /// <summary>
     /// Use this ModuleHandle when you want to decrement the module ref count when disposed.

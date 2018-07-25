@@ -10,7 +10,7 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using Tests.Support;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.Support;

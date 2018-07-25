@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Com.Types;
 using WInterop.Registry.Types;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Handles.Types;
 using WInterop.Shell.Types;
 using WInterop.Support;

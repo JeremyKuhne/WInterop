@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Registry.Types;
 using WInterop.Shell.Types;
 

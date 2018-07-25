@@ -8,7 +8,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Gdi;
 using WInterop.Support;
 

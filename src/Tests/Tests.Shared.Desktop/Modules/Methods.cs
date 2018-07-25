@@ -13,11 +13,11 @@ using Tests.Support;
 using WInterop.Storage;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Modules.Types;
+using WInterop.Modules;
 using WInterop.Resources;
 using WInterop.Support;
 using Xunit;
-using ModuleTypes = WInterop.Modules.Types;
+using ModuleTypes = WInterop.Modules;
 using System.Drawing;
 
 namespace DesktopTests.ModuleTests

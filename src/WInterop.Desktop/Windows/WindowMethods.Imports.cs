@@ -9,7 +9,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
-using WInterop.Modules.Types;
+using WInterop.Modules;
 using WInterop.Windows;
 
 namespace WInterop.Windows

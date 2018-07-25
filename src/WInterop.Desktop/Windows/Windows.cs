@@ -8,13 +8,13 @@
 using System;
 using System.Drawing;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Gdi;
 using WInterop.Gdi;
 using WInterop.Globalization;
-using WInterop.Modules.Types;
+using WInterop.Modules;
 using WInterop.Resources;
-using WInterop.Resources.Types;
+using WInterop.Resources;
 using WInterop.SystemInformation;
 using WInterop.SystemInformation.Types;
 using WInterop.Windows;

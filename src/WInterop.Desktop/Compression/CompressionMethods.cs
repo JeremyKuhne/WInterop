@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using WInterop.Compression.Types;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.Handles.Types;

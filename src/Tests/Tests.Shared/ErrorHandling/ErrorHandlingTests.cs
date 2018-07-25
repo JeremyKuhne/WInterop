@@ -9,7 +9,7 @@ using FluentAssertions;
 using System;
 using System.IO;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Support;
 using Xunit;
 

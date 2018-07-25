@@ -9,7 +9,7 @@ using WInterop.Windows;
 using WInterop.Windows;
 using Xunit;
 using FluentAssertions;
-using WInterop.Resources.Types;
+using WInterop.Resources;
 using WInterop.Resources;
 
 namespace DesktopTests.Resources

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using WInterop.Support.Buffers;

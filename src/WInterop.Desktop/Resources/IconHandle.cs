@@ -8,7 +8,7 @@
 using System;
 using WInterop.Handles.Types;
 
-namespace WInterop.Resources.Types
+namespace WInterop.Resources
 {
     public class IconHandle : HandleZeroIsInvalid
     {

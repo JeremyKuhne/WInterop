@@ -10,7 +10,7 @@ using System.IO;
 using WInterop.Support;
 using WInterop.Support.Internal;
 
-namespace WInterop.ErrorHandling.Types
+namespace WInterop.ErrorHandling
 {
     public class WInteropIOException : IOException
     {

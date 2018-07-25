@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Resources.Types
+namespace WInterop.Resources
 {
     public class SharedMenuHandle : MenuHandle
     {

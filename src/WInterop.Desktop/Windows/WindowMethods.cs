@@ -8,9 +8,9 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Gdi;
-using WInterop.Modules.Types;
+using WInterop.Modules;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Windows.BufferWrappers;

@@ -13,8 +13,8 @@ using WInterop.GdiPlus;
 
 using System;
 using WInterop.Gdi;
-using WInterop.Modules.Types;
-using WInterop.Resources.Types;
+using WInterop.Modules;
+using WInterop.Resources;
 using WInterop.SystemInformation.Types;
 using WInterop.Windows;
 using WInterop.Console;

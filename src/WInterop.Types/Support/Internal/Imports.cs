@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 
 namespace WInterop.Support.Internal
 {

@@ -9,7 +9,7 @@ using System;
 using WInterop.Gdi;
 using WInterop.Windows;
 
-namespace WInterop.Resources.Types
+namespace WInterop.Resources
 {
     public struct MenuBarInformation
     {

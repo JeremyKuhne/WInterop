@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Modules.Types;
+using WInterop.Modules;
 using WInterop.Multimedia.Types;
 
 namespace WInterop.Multimedia

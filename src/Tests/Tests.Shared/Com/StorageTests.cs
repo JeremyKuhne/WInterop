@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop.Com;
 using WInterop.Com.Types;
-using WInterop.ErrorHandling.Types;
+using WInterop.ErrorHandling;
 using WInterop.Storage;
 using Xunit;
 

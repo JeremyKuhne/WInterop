@@ -8,8 +8,8 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules.Types;
-using WInterop.Resources.Types;
+using WInterop.Modules;
+using WInterop.Resources;
 using WInterop.Windows;
 
 namespace AltWind
