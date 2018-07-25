@@ -12,7 +12,7 @@ namespace WInterop.ErrorHandling.Types
     /// <summary>
     /// Simple helper class to temporarily enable thread error flag modes if necessary.
     /// </summary>
-    public class TemporaryErrorMode : IDisposable
+    public struct TemporaryErrorMode : IDisposable
     {
         bool _restoreOldMode;
         ErrorMode _oldMode;
@@ -24,6 +24,10 @@ namespace WInterop.ErrorHandling.Types
             {
                 _oldMode = ErrorMethods.SetThreadErrorMode(_oldMode | modesToEnable);
                 _restoreOldMode = true;
+            }
+            else
+            {
+                _restoreOldMode = false;
             }
         }
 
