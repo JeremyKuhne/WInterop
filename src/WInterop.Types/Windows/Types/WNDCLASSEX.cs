@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Gdi.Types;
 
 namespace WInterop.Windows.Types
 {
@@ -22,7 +23,7 @@ namespace WInterop.Windows.Types
         public IntPtr hInstance;
         public IntPtr hIcon;
         public IntPtr hCursor;
-        public IntPtr hbrBackground;
+        public HBRUSH hbrBackground;
         public IntPtr lpszMenuName;
         public IntPtr lpszClassName;
         public IntPtr hIconSm;

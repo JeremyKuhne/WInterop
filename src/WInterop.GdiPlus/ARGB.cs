@@ -12,19 +12,19 @@ using WInterop.Gdi.Types;
 namespace WInterop.GdiPlus
 {
     [StructLayout(LayoutKind.Explicit)]
-    public struct ARGB
+    public readonly struct ARGB
     {
         [FieldOffset(0)]
-        public byte B;
+        public readonly byte B;
         [FieldOffset(1)]
-        public byte G;
+        public readonly byte G;
         [FieldOffset(2)]
-        public byte R;
+        public readonly byte R;
         [FieldOffset(3)]
-        public byte A;
+        public readonly byte A;
 
         [FieldOffset(0)]
-        public uint Value;
+        public readonly uint Value;
 
         public ARGB(byte red, byte green, byte blue)
             : this(255, red, green, blue)
@@ -43,5 +43,6 @@ namespace WInterop.GdiPlus
         public static implicit operator ARGB(COLORREF color) => new ARGB(color.R, color.G, color.B);
         public static implicit operator COLORREF(ARGB color) => new COLORREF(color.R, color.G, color.B);
         public static implicit operator ARGB(Color color) => new ARGB(color.R, color.G, color.B);
+        public static implicit operator Color(ARGB color) => Color.FromArgb((int)color.Value);
     }
 }

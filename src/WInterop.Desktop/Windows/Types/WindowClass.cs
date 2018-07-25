@@ -45,7 +45,7 @@ namespace WInterop.Windows.Types
                 Instance = nativeClass.hInstance,
                 Icon = nativeClass.hIcon,
                 Cursor = nativeClass.hCursor,
-                Background = nativeClass.hCursor,
+                Background = new BrushHandle(nativeClass.hbrBackground, ownsHandle: false),
                 SmallIcon = nativeClass.hIconSm
             };
 
@@ -87,7 +87,7 @@ namespace WInterop.Windows.Types
                 native.hInstance = (IntPtr)managed.Instance;
                 native.hIcon = (IntPtr)managed.Icon;
                 native.hCursor = (IntPtr)managed.Cursor;
-                native.hbrBackground = (IntPtr)managed.Background;
+                native.hbrBackground = managed.Background.Handle;
                 native.hIconSm = (IntPtr)managed.SmallIcon;
 
                 if (managed.ClassName != null)

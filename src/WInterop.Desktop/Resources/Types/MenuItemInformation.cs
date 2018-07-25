@@ -18,11 +18,11 @@ namespace WInterop.Resources.Types
         public MenuStates State;
         public uint Id;
         public MenuHandle SubMenu;
-        public BitmapHandle Checked;
-        public BitmapHandle Unchecked;
+        public HBITMAP Checked;
+        public HBITMAP Unchecked;
         public UIntPtr ItemData;
-        public object TypeData;
+        public IntPtr TypeData;
         public uint Length;
-        public BitmapHandle Item;
+        public HBITMAP Item;
     }
 }

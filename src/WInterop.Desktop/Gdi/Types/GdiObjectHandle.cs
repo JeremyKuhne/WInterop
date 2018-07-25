@@ -8,52 +8,44 @@
 using System;
 using System.Diagnostics;
 using WInterop.Handles.Types;
+using WInterop.Windows.Types;
 
 namespace WInterop.Gdi.Types
 {
     /// <summary>
     /// GDI object handle (HGDIOBJ)
     /// </summary>
-    public class GdiObjectHandle : HandleZeroIsInvalid
+    public readonly struct GdiObjectHandle : IDisposable
     {
-        public static GdiObjectHandle Null = new GdiObjectHandle(IntPtr.Zero);
+        public HGDIOBJ Handle { get; }
+        private readonly bool _ownsHandle;
 
-        protected GdiObjectHandle() : base(ownsHandle: true) { }
+        public static GdiObjectHandle Null = new GdiObjectHandle(default);
 
-        protected GdiObjectHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle) { }
-
-        protected override bool ReleaseHandle()
+        public GdiObjectHandle(HGDIOBJ handle, bool ownsHandle = true)
         {
-            return GdiMethods.Imports.DeleteObject(handle);
+            Handle = handle;
+            _ownsHandle = ownsHandle;
         }
 
         public ObjectType GetObjectType()
         {
-            return GdiMethods.Imports.GetObjectType(handle);
+            return GdiMethods.Imports.GetObjectType(Handle);
         }
 
-        public static implicit operator GdiObjectHandle(StockFont font) => (FontHandle)font;
-        public static implicit operator GdiObjectHandle(StockPen pen) => (PenHandle)pen;
-        public static implicit operator GdiObjectHandle(StockBrush brush) => (BrushHandle)brush;
+        public static implicit operator GdiObjectHandle(StockFont font) => new GdiObjectHandle(GdiMethods.GetStockFont(font).Handle, false);
+        public static implicit operator GdiObjectHandle(StockBrush brush) => new GdiObjectHandle(GdiMethods.GetStockBrush(brush), false);
+        public static implicit operator GdiObjectHandle(SystemColor color) => new GdiObjectHandle(GdiMethods.GetSystemColorBrush(color), false);
+        public static implicit operator GdiObjectHandle(StockPen pen) => new GdiObjectHandle(GdiMethods.GetStockPen(pen), false);
 
-        public static GdiObjectHandle Create(IntPtr handle, bool ownsHandle = false)
+        public static implicit operator HGDIOBJ(GdiObjectHandle handle) => handle.Handle;
+
+        public bool IsInvalid => Handle.IsInvalid;
+
+        public void Dispose()
         {
-            ObjectType type = GdiMethods.Imports.GetObjectType(handle);
-            switch (type)
-            {
-                case ObjectType.Brush:
-                    return new BrushHandle(handle, ownsHandle);
-                case ObjectType.Pen:
-                case ObjectType.ExtendedPen:
-                    return new PenHandle(handle, ownsHandle);
-                case ObjectType.Bitmap:
-                    return new BitmapHandle(handle, ownsHandle);
-                case ObjectType.Font:
-                    return new FontHandle(handle, ownsHandle);
-                default:
-                    Debug.Fail($"Object type {type} not handled yet.");
-                    return new GdiObjectHandle(handle, ownsHandle);
-            }
+            if (_ownsHandle)
+                GdiMethods.Imports.DeleteObject(Handle);
         }
     }
 }

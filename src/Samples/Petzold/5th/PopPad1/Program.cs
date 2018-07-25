@@ -70,7 +70,7 @@ namespace PopPad1
                         WindowStyles.Child | WindowStyles.Visible | WindowStyles.HorizontalScroll | WindowStyles.VerticalScroll
                         | WindowStyles.Border | (WindowStyles)EditStyles.Left | (WindowStyles)EditStyles.Multiline
                         | (WindowStyles)EditStyles.AutoHorizontalScroll | (WindowStyles)EditStyles.AutoVerticalScroll,
-                        ExtendedWindowStyles.None, 0, 0, 0, 0, window, (IntPtr)ID_EDIT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
+                        ExtendedWindowStyles.Default, 0, 0, 0, 0, window, (IntPtr)ID_EDIT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
                     return 0;
                 case WindowMessage.SetFocus:
                     hwndEdit.SetFocus();

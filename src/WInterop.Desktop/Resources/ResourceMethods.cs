@@ -138,7 +138,7 @@ namespace WInterop.Resources
 
         public static void CreateCaret(WindowHandle window, BitmapHandle bitmap, int width, int height)
         {
-            if (!Imports.CreateCaret(window, bitmap ?? BitmapHandle.Null, width, height))
+            if (!Imports.CreateCaret(window, bitmap, width, height))
                 throw Errors.GetIoExceptionForLastError();
         }
 

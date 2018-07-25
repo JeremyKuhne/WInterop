@@ -32,7 +32,7 @@ namespace WInterop.GdiPlus
             [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
             public static extern GpStatus GdiplusStartup(
                 out UIntPtr token,
-                [In] ref GdiplusStartupInput input,
+                in GdiplusStartupInput input,
                 out GdiplusStartupOutput output);
 
             // https://msdn.microsoft.com/en-us/library/ms534076.aspx
@@ -64,7 +64,7 @@ namespace WInterop.GdiPlus
 
             [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
             public static extern GpStatus GdipDeletePen(
-                IntPtr pen);
+                GpPen pen);
 
             [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
             public static extern GpStatus GdipCreateSolidFill(

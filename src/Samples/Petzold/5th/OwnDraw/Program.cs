@@ -88,13 +88,13 @@ namespace OwnDraw
 
                     hwndSmaller = Windows.CreateWindow("button", "",
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
-                        ExtendedWindowStyles.None,
+                        ExtendedWindowStyles.Default,
                         0, 0, btnWidth, btnHeight,
                         window, (IntPtr)ID_SMALLER, create->Instance, IntPtr.Zero);
 
                     hwndLarger = Windows.CreateWindow("button", "",
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
-                        ExtendedWindowStyles.None,
+                        ExtendedWindowStyles.Default,
                         0, 0, btnWidth, btnHeight,
                         window, (IntPtr)ID_LARGER, create->Instance, IntPtr.Zero);
                     return 0;

@@ -6,19 +6,35 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
 
 namespace WInterop.Gdi.Types
 {
-    public class FontHandle : GdiObjectHandle
+    public readonly struct FontHandle : IDisposable
     {
-        public new static FontHandle Null = new FontHandle(IntPtr.Zero);
+        public HGDIOBJ Handle { get; }
+        private readonly bool _ownsHandle;
 
-        public FontHandle() : base() { }
+        public static RegionHandle Null = new RegionHandle(default);
 
-        public FontHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
+        public FontHandle(HGDIOBJ handle, bool ownsHandle = true)
+        {
+            Debug.Assert(handle.IsInvalid || GdiMethods.Imports.GetObjectType(handle) == ObjectType.Font);
 
-        public static implicit operator FontHandle(IntPtr handle) => new FontHandle(handle);
+            Handle = handle;
+            _ownsHandle = ownsHandle;
+        }
+
+        public bool IsInvalid => Handle.IsInvalid || GdiMethods.Imports.GetObjectType(Handle) != ObjectType.Font;
+
+        public void Dispose()
+        {
+            if (_ownsHandle)
+                GdiMethods.Imports.DeleteObject(Handle);
+        }
 
         public static implicit operator FontHandle(StockFont font) => GdiMethods.GetStockFont(font);
+        public static implicit operator HGDIOBJ(FontHandle handle) => handle.Handle;
+        public static implicit operator GdiObjectHandle(FontHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
     }
 }

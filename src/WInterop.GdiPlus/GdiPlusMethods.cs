@@ -37,7 +37,7 @@ namespace WInterop.GdiPlus
                 throw GetExceptionForStatus(status);
         }
 
-        public static GpGraphics CreateGraphics(DeviceContext deviceContext)
+        public static GpGraphics CreateGraphics(in DeviceContext deviceContext)
         {
             ThrowIfFailed(Imports.GdipCreateFromHDC(deviceContext, out GpGraphics graphics));
             return graphics;
@@ -51,7 +51,7 @@ namespace WInterop.GdiPlus
             var input = new GdiplusStartupInput { GdiplusVersion = 1 };
             ThrowIfFailed(Imports.GdiplusStartup(
                 out UIntPtr token,
-                ref input,
+                in input,
                 out GdiplusStartupOutput _ ));
 
             return token;

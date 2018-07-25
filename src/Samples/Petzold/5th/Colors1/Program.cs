@@ -87,7 +87,7 @@ namespace Colors1
 
                     hwndRect = Windows.CreateWindow("static", null,
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.WhiteRectangle,
-                        ExtendedWindowStyles.None,
+                        ExtendedWindowStyles.Default,
                         0, 0, 0, 0,
                         window, (IntPtr)9, hInstance, IntPtr.Zero);
 
@@ -97,7 +97,7 @@ namespace Colors1
                         // scroll bar ranges from 0 through 255.
                         hwndScroll[i] = Windows.CreateWindow("scrollbar", null,
                             WindowStyles.Child | WindowStyles.Visible | WindowStyles.TabStop | (WindowStyles)ScrollBarStyles.Veritcal,
-                            ExtendedWindowStyles.None,
+                            ExtendedWindowStyles.Default,
                             0, 0, 0, 0,
                             window, (IntPtr)i, hInstance, IntPtr.Zero);
 
@@ -108,7 +108,7 @@ namespace Colors1
                         // and text strings “Red”, “Green”, and “Blue”.
                         hwndLabel[i] = Windows.CreateWindow("static", szColorLabel[i],
                             WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
-                            ExtendedWindowStyles.None,
+                            ExtendedWindowStyles.Default,
                             0, 0, 0, 0,
                             window, (IntPtr)i + 3, hInstance, IntPtr.Zero);
 
@@ -116,7 +116,7 @@ namespace Colors1
                         // and 8, and initial text strings of “0”.
                         hwndValue[i] = Windows.CreateWindow("static", "0",
                             WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
-                            ExtendedWindowStyles.None,
+                            ExtendedWindowStyles.Default,
                             0, 0, 0, 0,
                             window, (IntPtr)i + 6, hInstance, IntPtr.Zero);
 
@@ -185,14 +185,14 @@ namespace Colors1
 
                     hwndValue[id].SetWindowText(color[id].ToString());
 
+                    // We'll dispose when we set the next brush
                     BrushHandle brush = Windows.CreateSolidBrush((byte)color[0], (byte)color[1], (byte)color[2]);
-                    brush.SetHandleAsInvalid(); // We'll dispose when we set the next brush
 
                     window.SetClassBackgroundBrush(brush).Dispose();
                     window.InvalidateRectangle(rcColor, true);
                     return 0;
                 case WindowMessage.ControlColorScrollBar:
-                    return (IntPtr)hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)];
+                    return hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)];
                 case WindowMessage.ControlColorStatic:
                     id = (int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id);
 
@@ -201,7 +201,7 @@ namespace Colors1
                         DeviceContext dc = (DeviceContext)wParam;
                         dc.SetTextColor(crPrim[id % 3]);
                         dc.SetBackgroundColor(Windows.GetSystemColor(SystemColor.ButtonHighlight));
-                        return hBrushStatic.DangerousGetHandle();
+                        return hBrushStatic;
                     }
                     break;
                 case WindowMessage.SystemColorChange:

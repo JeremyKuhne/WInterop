@@ -197,7 +197,7 @@ namespace WInterop.Windows
             string className,
             string windowName,
             WindowStyles style,
-            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.None,
+            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             int x = WindowDefines.CW_USEDEFAULT,
             int y = WindowDefines.CW_USEDEFAULT,
             int width = WindowDefines.CW_USEDEFAULT,
@@ -211,7 +211,7 @@ namespace WInterop.Windows
             Atom className,
             string windowName,
             WindowStyles style,
-            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.None,
+            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             int x = WindowDefines.CW_USEDEFAULT,
             int y = WindowDefines.CW_USEDEFAULT,
             int width = WindowDefines.CW_USEDEFAULT,
@@ -364,6 +364,19 @@ namespace WInterop.Windows
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
             return result;
+        }
+
+        /// <summary>
+        /// Sets the background brush for the window class. Returns the previous background brush.
+        /// </summary>
+        /// <param name="ownsHandle">
+        /// Whether or not the returned brush should own the handle. If true the brush handle
+        /// will be deleted when disposed / finalized.
+        /// </param>
+        public static BrushHandle SetClassBackgroundBrush(WindowHandle window, BrushHandle value, bool ownsHandle = true)
+        {
+            IntPtr result = SetClassLong(window, ClassLong.BackgroundBrush, value.Handle.Handle);
+            return new BrushHandle(new HGDIOBJ(result), ownsHandle);
         }
 
         public static bool ShowWindow(WindowHandle window, ShowWindow command)

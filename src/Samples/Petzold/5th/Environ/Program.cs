@@ -84,12 +84,12 @@ namespace Environ
 
                     // Create listbox and static text windows.
                     hwndList = Windows.CreateWindow("listbox", null,
-                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard, ExtendedWindowStyles.None,
+                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard, ExtendedWindowStyles.Default,
                         baseUnits.cx, baseUnits.cy * 3, baseUnits.cx * 64 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.cy * 20,
                         window, (IntPtr)ID_LIST, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
                     hwndText = Windows.CreateWindow("static", null,
-                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left, ExtendedWindowStyles.None,
+                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left, ExtendedWindowStyles.Default,
                         baseUnits.cx, baseUnits.cy, Windows.GetSystemMetrics(SystemMetric.CYSCREEN), baseUnits.cy,
                         window, (IntPtr)ID_TEXT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 

@@ -107,7 +107,7 @@ namespace Typer
                     return 0;
                 case WindowMessage.SetFocus:
                     // create and show the caret
-                    window.CreateCaret(null, cxChar, cyChar);
+                    window.CreateCaret(default, cxChar, cyChar);
                     Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
                     window.ShowCaret();
                     return 0;

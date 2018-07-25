@@ -7,16 +7,17 @@
 
 using System;
 
-namespace WInterop.GdiPlus
+namespace WInterop.Gdi.Types
 {
-    public readonly struct GpPen : IDisposable
+    public readonly struct HGDIOBJ
     {
         public IntPtr Handle { get; }
 
-        public void Dispose()
+        public HGDIOBJ(IntPtr handle)
         {
-            if (Handle != IntPtr.Zero)
-                GdiPlusMethods.ThrowIfFailed(GdiPlusMethods.Imports.GdipDeletePen(this));
+            Handle = handle;
         }
+
+        public bool IsInvalid => Handle == IntPtr.Zero;
     }
 }

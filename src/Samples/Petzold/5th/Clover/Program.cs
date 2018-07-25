@@ -73,7 +73,7 @@ namespace Clover
                     CursorHandle hCursor = Windows.SetCursor(CursorId.Wait);
                     Windows.ShowCursor(true);
 
-                    hRgnClip?.Dispose();
+                    hRgnClip.Dispose();
 
                     RegionHandle[] hRgnTemp = new RegionHandle[6];
 
@@ -88,7 +88,7 @@ namespace Clover
                     hRgnTemp[5].CombineRegion(hRgnTemp[2], hRgnTemp[3], CombineRegionMode.Or);
                     hRgnClip.CombineRegion(hRgnTemp[4], hRgnTemp[5], CombineRegionMode.Xor);
                     for (int i = 0; i < 6; i++)
-                        hRgnTemp[i]?.Dispose();
+                        hRgnTemp[i].Dispose();
 
                     Windows.SetCursor(hCursor);
                     Windows.ShowCursor(false);
@@ -112,7 +112,7 @@ namespace Clover
                     }
                     return 0;
                 case WindowMessage.Destroy:
-                    hRgnClip?.Dispose();
+                    hRgnClip.Dispose();
                     Windows.PostQuitMessage(0);
                     return 0;
             }

@@ -9,13 +9,14 @@ using System;
 
 namespace WInterop.GdiPlus
 {
-    public struct GpBrush : IDisposable
+    public readonly struct GpBrush : IDisposable
     {
-        public IntPtr Handle;
+        public IntPtr Handle { get; }
 
         public void Dispose()
         {
-            GdiPlusMethods.ThrowIfFailed(GdiPlusMethods.Imports.GdipDeleteBrush(Handle));
+            if (Handle != IntPtr.Zero)
+                GdiPlusMethods.ThrowIfFailed(GdiPlusMethods.Imports.GdipDeleteBrush(Handle));
         }
     }
 }

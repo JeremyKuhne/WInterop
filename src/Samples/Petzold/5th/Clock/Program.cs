@@ -153,20 +153,20 @@ namespace Clock
             bool erase = (color != new COLORREF());
 
 #if GDIPLUS
-            using (var graphics = GdiPlusMethods.CreateGraphics(dc))
+            using (var graphics = GdiPlus.CreateGraphics(dc))
             {
                 if (erase)
                 {
-                    using (var brush = GdiPlusMethods.CreateSolidBrush(color))
+                    using (var brush = graphics.CreateSolidBrush(color))
                     {
-                        GdiPlusMethods.FillEllipse(graphics, brush, -830, -830, 1660, 1660);
+                        graphics.FillEllipse(brush, -830, -830, 1660, 1660);
                     }
                     return;
                 }
 
-                using (var pen = GdiPlusMethods.CreatePen(color))
+                using (var pen = graphics.CreatePen(color))
                 {
-                    GdiPlusMethods.SetSmoothingMode(graphics, SmoothingMode.HighQuality);
+                    graphics.SetSmoothingMode(SmoothingMode.HighQuality);
 
 #endif
 
@@ -175,7 +175,7 @@ namespace Clock
                         RotatePoint(pt[i], 5, iAngle[i]);
 
 #if GDIPLUS
-                        GdiPlusMethods.DrawLines(graphics, pen, pt[i]);
+                        graphics.DrawLines(pen, pt[i]);
 #else
                         dc.Polyline(pt[i]);
 #endif

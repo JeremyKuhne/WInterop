@@ -26,7 +26,7 @@ namespace WInterop.Resources.Types
                 Mask = info.fMask,
                 Style = info.dwStyle,
                 MaxHeight = info.cyMax,
-                Background = info.hbrBack,
+                Background = new BrushHandle(info.hbrBack, ownsHandle: false),
                 ContextHelpId = info.dwContextHelpID,
                 MenuData = info.dwMenuData
             };
@@ -40,7 +40,7 @@ namespace WInterop.Resources.Types
                 fMask = info.Mask,
                 dwStyle = info.Style,
                 cyMax = info.MaxHeight,
-                hbrBack = (IntPtr)info.Background,
+                hbrBack = info.Background.Handle,
                 dwContextHelpID = info.ContextHelpId,
                 dwMenuData = info.MenuData
             };

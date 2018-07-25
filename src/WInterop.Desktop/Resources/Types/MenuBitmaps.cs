@@ -18,56 +18,56 @@ namespace WInterop.Resources.Types
         /// <summary>
         /// [HBMMENU_CALLBACK]
         /// </summary>
-        public static BitmapHandle CallBack = new BitmapHandle((IntPtr)(-1));
+        public static HBITMAP CallBack = new HBITMAP((IntPtr)(-1));
 
         /// <summary>
         /// [HBMMENU_MBAR_CLOSE]
         /// </summary>
-        public static BitmapHandle Close = new BitmapHandle((IntPtr)5);
+        public static HBITMAP Close = new HBITMAP((IntPtr)5);
 
         /// <summary>
         /// [HBMMENU_MBAR_CLOSE_D]
         /// </summary>
-        public static BitmapHandle DisabledClose = new BitmapHandle((IntPtr)6);
+        public static HBITMAP DisabledClose = new HBITMAP((IntPtr)6);
 
         /// <summary>
         /// [HBMMENU_MBAR_MINIMIZE]
         /// </summary>
-        public static BitmapHandle Minimize = new BitmapHandle((IntPtr)3);
+        public static HBITMAP Minimize = new HBITMAP((IntPtr)3);
 
         /// <summary>
         /// [HBMMENU_MBAR_MINIMIZE_D]
         /// </summary>
-        public static BitmapHandle DisabledMinimize = new BitmapHandle((IntPtr)7);
+        public static HBITMAP DisabledMinimize = new HBITMAP((IntPtr)7);
 
         /// <summary>
         /// [HBMMENU_MBAR_RESTORE]
         /// </summary>
-        public static BitmapHandle Restore = new BitmapHandle((IntPtr)2);
+        public static HBITMAP Restore = new HBITMAP((IntPtr)2);
 
         /// <summary>
         /// [HBMMENU_POPUP_CLOSE]
         /// </summary>
-        public static BitmapHandle PopupClose = new BitmapHandle((IntPtr)8);
+        public static HBITMAP PopupClose = new HBITMAP((IntPtr)8);
 
         /// <summary>
         /// [HBMMENU_POPUP_MAXIMIZE]
         /// </summary>
-        public static BitmapHandle PopupMaximize = new BitmapHandle((IntPtr)10);
+        public static HBITMAP PopupMaximize = new HBITMAP((IntPtr)10);
 
         /// <summary>
         /// [HBMMENU_POPUP_MINIMIZE]
         /// </summary>
-        public static BitmapHandle PopupMinimize = new BitmapHandle((IntPtr)11);
+        public static HBITMAP PopupMinimize = new HBITMAP((IntPtr)11);
 
         /// <summary>
         /// [HBMMENU_POPUP_RESTORE]
         /// </summary>
-        public static BitmapHandle PopupRestore = new BitmapHandle((IntPtr)9);
+        public static HBITMAP PopupRestore = new HBITMAP((IntPtr)9);
 
         /// <summary>
         /// [HBMMENU_SYSTEM]
         /// </summary>
-        public static BitmapHandle System = new BitmapHandle((IntPtr)1);
+        public static HBITMAP System = new HBITMAP((IntPtr)1);
     }
 }

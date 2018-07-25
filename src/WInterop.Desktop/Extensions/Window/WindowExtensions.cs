@@ -60,16 +60,8 @@ namespace WInterop.Extensions.WindowExtensions
             => WindowMethods.SetWindowProcedure(window, newCallback);
         public static void SetWindowText(this WindowHandle window, string text) => WindowMethods.SetWindowText(window, text);
         public static IntPtr SetClassLong(this WindowHandle window, ClassLong index, IntPtr value) => WindowMethods.SetClassLong(window, index, value);
-
-        /// <summary>
-        /// Sets the background brush for the window class. Returns the previous background brush.
-        /// </summary>
-        /// <param name="ownsHandle">
-        /// Whether or not the returned brush should own the handle. If true the brush handle
-        /// will be deleted when disposed / finalized.
-        /// </param>
         public static BrushHandle SetClassBackgroundBrush(this WindowHandle window, BrushHandle brush, bool ownsHandle = true)
-            => new BrushHandle(window.SetClassLong(ClassLong.BackgroundBrush, brush.DangerousGetHandle()), ownsHandle);
+            => WindowMethods.SetClassBackgroundBrush(window, brush, ownsHandle);
         public static bool GetMessage(this WindowHandle window, out MSG message, uint minMessage = 0, uint maxMessage = 0)
             => WindowMethods.GetMessage(out message, window, minMessage, maxMessage);
         public static LRESULT SendMessage(this WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)

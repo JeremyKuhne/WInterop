@@ -83,7 +83,7 @@ namespace Checker3
                                 szChildClass,
                                 null,
                                 WindowStyles.ChildWindow | WindowStyles.Visible,
-                                ExtendedWindowStyles.None,
+                                ExtendedWindowStyles.Default,
                                 0, 0, 0, 0,
                                 window,
                                 (IntPtr)(y << 8 | x),

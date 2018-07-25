@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Gdi.Types;
 
 namespace WInterop.Resources.Types
 {
@@ -16,7 +17,7 @@ namespace WInterop.Resources.Types
         public MenuInfoMembers fMask;
         public MenuStyles dwStyle;
         public uint cyMax;
-        public IntPtr hbrBack;
+        public HBRUSH hbrBack;
         public uint dwContextHelpID;
         public UIntPtr dwMenuData;
     }

@@ -6,20 +6,38 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
+using WInterop.Windows.Types;
 
 namespace WInterop.Gdi.Types
 {
-    public class BitmapHandle : GdiObjectHandle
+    public readonly struct BitmapHandle : IDisposable
     {
-        public new static BitmapHandle Null = new BitmapHandle(IntPtr.Zero);
+        public HBITMAP Handle { get; }
+        private readonly bool _ownsHandle;
 
-        public BitmapHandle() : base() { }
+        public static BitmapHandle Null = new BitmapHandle(default);
 
-        public BitmapHandle(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
-
-        static public implicit operator BitmapHandle(IntPtr handle)
+        public BitmapHandle(HGDIOBJ handle, bool ownsHandle = true)
         {
-            return new BitmapHandle(handle);
+            Debug.Assert(handle.IsInvalid || GdiMethods.Imports.GetObjectType(handle) == ObjectType.Bitmap);
+
+            Handle = new HBITMAP(handle.Handle);
+            _ownsHandle = ownsHandle;
         }
+
+        public bool IsInvalid => Handle.IsInvalid || GdiMethods.Imports.GetObjectType(Handle) != ObjectType.Bitmap;
+
+        public void Dispose()
+        {
+            if (_ownsHandle)
+                GdiMethods.Imports.DeleteObject(Handle);
+        }
+
+        public static implicit operator HGDIOBJ(BitmapHandle handle) => handle.Handle;
+        public static implicit operator HBITMAP(BitmapHandle handle) => handle.Handle;
+        public static implicit operator BitmapHandle(HBITMAP handle) => new BitmapHandle(handle, ownsHandle: true);
+        public static implicit operator LRESULT(BitmapHandle handle) => handle.Handle.Handle;
+        public static implicit operator GdiObjectHandle(BitmapHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
     }
 }

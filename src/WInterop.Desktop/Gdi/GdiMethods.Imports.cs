@@ -75,37 +75,37 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183533.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern GdiObjectHandle GetStockObject(
+            public static extern HGDIOBJ GetStockObject(
                 StockObject stockObject);
 
             // https://msdn.microsoft.com/en-us/library/dd183518.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern BrushHandle CreateSolidBrush(
+            public static extern HBRUSH CreateSolidBrush(
                 COLORREF crColor);
 
             // https://msdn.microsoft.com/en-us/library/dd144869.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern IntPtr GetCurrentObject(
+            public static extern HGDIOBJ GetCurrentObject(
                 HDC hdc,
                 ObjectType uObjectType);
 
             // https://msdn.microsoft.com/en-us/library/dd144904.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public unsafe static extern int GetObjectW(
-                GdiObjectHandle hgdiobj,
+                HGDIOBJ hgdiobj,
                 int cbBuffer,
                 void* lpvObject);
 
             // https://msdn.microsoft.com/en-us/library/dd162957.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern IntPtr SelectObject(
+            public static extern HGDIOBJ SelectObject(
                 HDC hdc,
-                GdiObjectHandle hgdiobj);
+                HGDIOBJ h);
 
             // https://msdn.microsoft.com/en-us/library/dd183539.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool DeleteObject(
-                IntPtr hObject);
+                HGDIOBJ hObject);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/dd162609.aspx
             [DllImport(Libraries.User32, ExactSpelling = true, CharSet = CharSet.Unicode)]
@@ -124,7 +124,7 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183485.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern BitmapHandle CreateBitmap(
+            public static extern HBITMAP CreateBitmap(
                 int nWidth,
                 int nHeight,
                 uint cPlanes,
@@ -133,7 +133,7 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183488.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern BitmapHandle CreateCompatibleBitmap(
+            public static extern HBITMAP CreateCompatibleBitmap(
                 HDC hdc,
                 int nWidth,
                 int nHeight);
@@ -141,11 +141,11 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd144905.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern ObjectType GetObjectType(
-                IntPtr h);
+                HGDIOBJ h);
 
             // https://msdn.microsoft.com/en-us/library/dd144925.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern IntPtr GetStockObject(
+            public static extern HGDIOBJ GetStockObject(
                 int fnObject);
 
             // https://msdn.microsoft.com/en-us/library/dd145167.aspx
@@ -447,14 +447,14 @@ namespace WInterop.Gdi
             public static extern bool FillRect(
                 HDC hDC,
                 [In] ref RECT lprc,
-                BrushHandle hbr);
+                HBRUSH hbr);
 
             // https://msdn.microsoft.com/en-us/library/dd144838.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
             public static extern bool FrameRect(
                 HDC hDC,
                 [In] ref RECT lprc,
-                BrushHandle hbr);
+                HBRUSH hbr);
 
             // https://msdn.microsoft.com/en-us/library/dd145007.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -781,14 +781,14 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd183465.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType CombineRgn(
-                RegionHandle hrgnDest,
-                RegionHandle hrgnSrc1,
-                RegionHandle hrgnSrc2,
+                HRGN hrgnDest,
+                HRGN hrgnSrc1,
+                HRGN hrgnSrc2,
                 CombineRegionMode fnCombineMode);
 
             // https://msdn.microsoft.com/en-us/library/dd183496.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern RegionHandle CreateEllipticRgn(
+            public static extern HRGN CreateEllipticRgn(
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -796,19 +796,19 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183497.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern RegionHandle CreateEllipticRgnIndirect(
+            public static extern HRGN CreateEllipticRgnIndirect(
                 [In] ref RECT lprc);
 
             // https://msdn.microsoft.com/en-us/library/dd183511.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern RegionHandle CreatePolygonRgn(
+            public unsafe static extern HRGN CreatePolygonRgn(
                 Point* lppt,
                 int cPoints,
                 PolyFillMode fnPolyFillMode);
 
             // https://msdn.microsoft.com/en-us/library/dd183512.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern RegionHandle CreatePolyPolygonRgn(
+            public unsafe static extern HRGN CreatePolyPolygonRgn(
                 Point* lppt,
                 int[] lpPolyCounts,
                 int nCount,
@@ -816,7 +816,7 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183514.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern RegionHandle CreateRectRgn(
+            public static extern HRGN CreateRectRgn(
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -824,12 +824,12 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd183515.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern RegionHandle CreateRectRgnIndirect(
+            public static extern HRGN CreateRectRgnIndirect(
                 [In] ref RECT lprc);
 
             // https://msdn.microsoft.com/en-us/library/dd183516.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern RegionHandle CreateRoundRectRgn(
+            public static extern HRGN CreateRoundRectRgn(
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -840,12 +840,12 @@ namespace WInterop.Gdi
             // https://msdn.microsoft.com/en-us/library/dd162700.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool EqualRgn(
-                RegionHandle hSrcRgn1,
-                RegionHandle hSrcRgn2);
+                HRGN hSrcRgn1,
+                HRGN hSrcRgn2);
 
             // https://msdn.microsoft.com/en-us/library/dd162706.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public unsafe static extern RegionHandle ExtCreateRegion(
+            public unsafe static extern HRGN ExtCreateRegion(
                 [In] ref XFORM lpXform,
                 uint nCount,
                 RGNDATA* lpRgnData);
@@ -854,41 +854,41 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool FillRgn(
                 HDC hdc,
-                RegionHandle hrgn,
-                BrushHandle hbr);
+                HRGN hrgn,
+                HBRUSH hbr);
 
             // https://msdn.microsoft.com/en-us/library/dd144839.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool FrameRgn(
                 HDC hdc,
-                RegionHandle hrgn,
-                BrushHandle hbr,
+                HRGN hrgn,
+                HBRUSH hbr,
                 int nWidth,
                 int nHeight);
 
             // https://msdn.microsoft.com/en-us/library/dd144920.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern uint GetRegionData(
-                RegionHandle hRgn,
+                HRGN hRgn,
                 uint dwCount,
                 IntPtr lpRgnData);
 
             // https://msdn.microsoft.com/en-us/library/dd144921.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType GetRgnBox(
-                RegionHandle hrgn,
+                HRGN hrgn,
                 out RECT lprc);
 
             // https://msdn.microsoft.com/en-us/library/dd145008.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool InvertRgn(
                 HDC hdc,
-                RegionHandle hrgn);
+                HRGN hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd162747.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType OffsetRgn(
-                RegionHandle hrgn,
+                HRGN hrgn,
                 int nXOffset,
                 int nYOffset);
 
@@ -896,25 +896,25 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool PaintRgn(
                 HDC hdc,
-                RegionHandle hrgn);
+                HRGN hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd162883.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool PtInRegion(
-                RegionHandle hrgn,
+                HRGN hrgn,
                 int X,
                 int Y);
 
             // https://msdn.microsoft.com/en-us/library/dd162906.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool RectInRegion(
-                RegionHandle hrgn,
+                HRGN hrgn,
                 [In] ref RECT lprc);
 
             // https://msdn.microsoft.com/en-us/library/dd145087.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern bool SetRectRgn(
-                RegionHandle hrgn,
+                HRGN hrgn,
                 int nLeftRect,
                 int nTopRect,
                 int nRightRect,
@@ -933,7 +933,7 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType ExtSelectClipRgn(
                 HDC hdc,
-                RegionHandle hrgn,
+                HRGN hrgn,
                 CombineRegionMode fnMode);
 
             // https://msdn.microsoft.com/en-us/library/dd144865.aspx
@@ -946,19 +946,19 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int GetClipRgn(
                 HDC hdc,
-                RegionHandle hrgn);
+                HRGN hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd144899.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int GetMetaRgn(
                 HDC hdc,
-                RegionHandle hrgn);
+                HRGN hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd144918.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern int GetRandomRgn(
                 HDC hdc,
-                RegionHandle hrgn,
+                HRGN hrgn,
                 int iNum);
 
             // https://msdn.microsoft.com/en-us/library/dd144998.aspx
@@ -1000,7 +1000,7 @@ namespace WInterop.Gdi
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
             public static extern RegionType SelectClipRgn(
                 HDC hdc,
-                RegionHandle hrgn);
+                HRGN hrgn);
 
             // https://msdn.microsoft.com/en-us/library/dd145075.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -1052,24 +1052,24 @@ namespace WInterop.Gdi
 
             // https://msdn.microsoft.com/en-us/library/dd144927.aspx
             [DllImport(Libraries.User32, ExactSpelling = true)]
-            public static extern IntPtr GetSysColorBrush(
+            public static extern HGDIOBJ GetSysColorBrush(
                 SystemColor nIndex);
 
             // https://msdn.microsoft.com/en-us/library/dd183509.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern PenHandle CreatePen(
+            public static extern HPEN CreatePen(
                 PenStyle fnPenStyle,
                 int nWidth,
                 COLORREF crColor);
 
-            // https://msdn.microsoft.com/en-us/library/dd162705.aspx
+            // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-extcreatepen
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-            public static extern PenHandle ExtCreatePen(
-                uint dwPenStyle,
-                uint dwWidth,
-                [In] ref LOGBRUSH lplb,
-                uint dwStyleCount,
-                uint[] lpStyle);
+            public static extern HPEN ExtCreatePen(
+                uint iPenStyle,
+                uint cWidth,
+                in LOGBRUSH plbrush,
+                uint cStyle,
+                uint[] pstyle);
 
             // https://msdn.microsoft.com/en-us/library/dd144844.aspx
             [DllImport(Libraries.Gdi32, ExactSpelling = true)]

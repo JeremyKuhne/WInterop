@@ -55,7 +55,7 @@ namespace WInterop.Resources
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool CreateCaret(
                 WindowHandle hWnd,
-                BitmapHandle hBitmap,
+                HBITMAP hBitmap,
                 int nWidth,
                 int nHeight);
 
