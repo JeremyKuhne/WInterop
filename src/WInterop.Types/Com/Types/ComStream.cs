@@ -11,15 +11,18 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Com.Types
 {
+    /// <summary>
+    /// Stream that wraps a COM <see cref="IStream"/>
+    /// </summary>
     public class ComStream : Stream
     {
         private readonly bool _ownsStream;
 
         /// <summary>
-        /// Construct a Stream wrapper around an IStream object.
+        /// Construct a Stream wrapper around an <see cref="IStream"/> object.
         /// </summary>
         /// <param name="stream">The COM stream to wrap.</param>
-        /// <param name="ownsStream">If true (default), will release the IStream object when disposed.</param>
+        /// <param name="ownsStream">If true (default), will release the <see cref="IStream"/> object when disposed.</param>
         public ComStream(IStream stream, bool ownsStream = true)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
@@ -85,22 +88,26 @@ namespace WInterop.Com.Types
             Stream.Commit(StorageCommit.Default);
         }
 
-        public override int Read(byte[] buffer, int offset, int count)
+        public unsafe override int Read(byte[] buffer, int offset, int count)
         {
             if (Stream == null)
                 throw new ObjectDisposedException(nameof(ComStream));
 
-            Span<byte> span = new Span<byte>(buffer, offset, buffer.Length - offset);
-            return (int)Stream.Read(ref span[0], (uint)count);
+            fixed (byte* b = buffer)
+            {
+                return (int)Stream.Read(b, (uint)count);
+            }
         }
 
-        public override void Write(byte[] buffer, int offset, int count)
+        public unsafe override void Write(byte[] buffer, int offset, int count)
         {
             if (Stream == null)
                 throw new ObjectDisposedException(nameof(ComStream));
 
-            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(buffer, offset, buffer.Length - offset);
-            Stream.Write(in span[0], (uint)count);
+            fixed (byte* b = buffer)
+            {
+                Stream.Write(b, (uint)count);
+            }
         }
 
         public override long Seek(long offset, SeekOrigin origin)
