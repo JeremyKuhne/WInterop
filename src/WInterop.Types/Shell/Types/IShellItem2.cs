@@ -21,8 +21,8 @@ namespace WInterop.Shell.Types
         [return: MarshalAs(UnmanagedType.Interface)]
         new object BindToHandler(
             IBindCtx pbc,
-            [MarshalAs(UnmanagedType.LPStruct)] Guid bhid,
-            [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
+            ref Guid bhid,
+            ref Guid riid);
 
         new IShellItem GetParent();
 
@@ -45,7 +45,7 @@ namespace WInterop.Shell.Types
         [return: MarshalAs(UnmanagedType.Interface)]
         object GetPropertyStoreWithCreateObject(
             GETPROPERTYSTOREFLAGS flags,
-            [MarshalAs(UnmanagedType.IUnknown)] object punkCreateObject,
+            [MarshalAs(UnmanagedType.Interface)] object punkCreateObject,
             [In] ref Guid riid);
 
         [return: MarshalAs(UnmanagedType.Interface)]
@@ -76,7 +76,7 @@ namespace WInterop.Shell.Types
             [In] ref PROPERTYKEY key);
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
-        void GetString(
+        string GetString(
             [In] ref PROPERTYKEY key);
 
         uint GetUInt32(

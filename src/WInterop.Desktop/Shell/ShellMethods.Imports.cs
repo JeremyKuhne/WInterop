@@ -94,6 +94,19 @@ namespace WInterop.Shell
                 string pszPropList,
                 [MarshalAs(UnmanagedType.LPStruct)] Guid riid,
                 [MarshalAs(UnmanagedType.Interface)] out IPropertyDescriptionList ppv);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/shlobj_core/nf-shlobj_core-shbrowseforfolderw
+            [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public static extern ItemIdList SHBrowseForFolderW(
+                ref BROWSEINFO lpbi);
+
+            // https://docs.microsoft.com/en-us/windows/desktop/api/shlobj_core/nf-shlobj_core-shgetpathfromidlistex
+            [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+            public unsafe static extern bool SHGetPathFromIDListEx(
+                ItemIdList pidl,
+                char* pszPath,
+                uint cchPath,
+                uint uOpts);
         }
     }
 }

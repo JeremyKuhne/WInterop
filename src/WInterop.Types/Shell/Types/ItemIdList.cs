@@ -9,6 +9,14 @@ using WInterop.Com.Types;
 
 namespace WInterop.Shell.Types
 {
+    /// <summary>
+    /// List of item ids in the shell.
+    /// </summary>
+    /// <remarks>
+    /// Includes [LPITEMIDLIST], [LPCITEMIDLIST], [PIDLIST_ABSOLUTE], [PCIDLIST_ABSOLUTE], [PCUIDLIST_ABSOLUTE],
+    /// [PIDLIST_RELATIVE], [PCIDLIST_RELATIVE], [PUIDLIST_RELATIVE], [PCUIDLIST_RELATIVE], [PITEMID_CHILD],
+    /// [PCITEMID_CHILD], [PUITEMID_CHILD], [PCUITEMID_CHILD]
+    /// </remarks>
     public class ItemIdList : SafeComHandle
     {
         public ItemIdList() : this (ownsHandle: true)

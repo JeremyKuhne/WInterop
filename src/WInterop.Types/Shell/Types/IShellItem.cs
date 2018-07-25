@@ -20,8 +20,8 @@ namespace WInterop.Shell.Types
         [return: MarshalAs(UnmanagedType.Interface)]
         object BindToHandler(
             IBindCtx pbc,
-            [MarshalAs(UnmanagedType.LPStruct)] Guid bhid,
-            [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
+            ref Guid bhid,
+            ref Guid riid);
 
         IShellItem GetParent();
 
