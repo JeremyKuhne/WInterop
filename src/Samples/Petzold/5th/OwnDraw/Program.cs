@@ -66,7 +66,7 @@ namespace OwnDraw
         static WindowHandle hwndSmaller, hwndLarger;
         static int cxClient, cyClient;
         static int btnWidth, btnHeight;
-        static SIZE baseUnits;
+        static Size baseUnits;
 
         const int ID_SMALLER = 1;
         const int ID_LARGER = 2;
@@ -77,8 +77,8 @@ namespace OwnDraw
             {
                 case WindowMessage.Create:
                     baseUnits = Windows.GetDialogBaseUnits();
-                    btnWidth = baseUnits.cx * 8;
-                    btnHeight = baseUnits.cy * 4;
+                    btnWidth = baseUnits.Width * 8;
+                    btnHeight = baseUnits.Height * 4;
 
                     // Create the owner-draw pushbuttons
                     CREATESTRUCT* create = (CREATESTRUCT*)lParam;
@@ -86,13 +86,13 @@ namespace OwnDraw
                     hwndSmaller = Windows.CreateWindow("button", "",
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
                         ExtendedWindowStyles.Default,
-                        0, 0, btnWidth, btnHeight,
+                        new Rectangle(0, 0, btnWidth, btnHeight),
                         window, (IntPtr)ID_SMALLER, create->Instance, IntPtr.Zero);
 
                     hwndLarger = Windows.CreateWindow("button", "",
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
                         ExtendedWindowStyles.Default,
-                        0, 0, btnWidth, btnHeight,
+                        new Rectangle(0, 0, btnWidth, btnHeight),
                         window, (IntPtr)ID_LARGER, create->Instance, IntPtr.Zero);
                     return 0;
                 case WindowMessage.Size:
@@ -100,47 +100,43 @@ namespace OwnDraw
                     cyClient = lParam.HighWord;
 
                     // Move the buttons to the new center
-                    hwndSmaller.MoveWindow(cxClient / 2 - 3 * btnWidth / 2, cyClient / 2 - btnHeight / 2,
-                        btnWidth, btnHeight, true);
-                    hwndLarger.MoveWindow(cxClient / 2 + btnWidth / 2, cyClient / 2 - btnHeight / 2,
-                        btnWidth, btnHeight, true);
+                    hwndSmaller.MoveWindow(
+                        new Rectangle(cxClient / 2 - 3 * btnWidth / 2, cyClient / 2 - btnHeight / 2, btnWidth, btnHeight),
+                        repaint: true);
+                    hwndLarger.MoveWindow(
+                        new Rectangle(cxClient / 2 + btnWidth / 2, cyClient / 2 - btnHeight / 2, btnWidth, btnHeight),
+                        repaint: true);
                     return 0;
                 case WindowMessage.Command:
-                    RECT rc = window.GetWindowRectangle();
+                    Rectangle rc = window.GetWindowRectangle();
 
                     // Make the window 10% smaller or larger
                     switch ((int)(uint)wParam)
                     {
                         case ID_SMALLER:
-                            rc.left += cxClient / 20;
-                            rc.right -= cxClient / 20;
-                            rc.top += cyClient / 20;
-                            rc.bottom -= cyClient / 20;
+                            rc.Inflate(rc.Width / -10, rc.Height / -10);
                             break;
                         case ID_LARGER:
-                            rc.left -= cxClient / 20;
-                            rc.right += cxClient / 20;
-                            rc.top -= cyClient / 20;
-                            rc.bottom += cyClient / 20;
+                            rc.Inflate(rc.Width / 10, rc.Height / 10);
                             break;
                     }
 
-                    window.MoveWindow(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
+                    window.MoveWindow(new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top), repaint: true);
                     return 0;
                 case WindowMessage.DrawItem:
                     DRAWITEMSTRUCT* pdis = (DRAWITEMSTRUCT*)lParam;
 
                     // Fill area with white and frame it black
-                    using (DeviceContext dc = pdis->DeviceContext)
+                    using (DeviceContext dc = new DeviceContext(pdis->hDC))
                     {
-                        RECT rect = pdis->rcItem;
+                        Rectangle rect = pdis->rcItem;
 
                         dc.FillRectangle(rect, StockBrush.White);
                         dc.FrameRectangle(rect, StockBrush.Black);
 
                         // Draw inward and outward black triangles
-                        int cx = rect.right - rect.left;
-                        int cy = rect.bottom - rect.top;
+                        int cx = rect.Right - rect.Left;
+                        int cy = rect.Bottom - rect.Top;
 
                         Point[] pt = new Point[3];
 
@@ -190,10 +186,11 @@ namespace OwnDraw
 
                         if ((pdis->itemState & OwnerDrawStates.Focus) != 0)
                         {
-                            rect.left += cx / 16;
-                            rect.top += cy / 16;
-                            rect.right -= cx / 16;
-                            rect.bottom -= cy / 16;
+                            rect = Rectangle.FromLTRB(
+                                rect.Left + cx / 16,
+                                rect.Top + cy / 16,
+                                rect.Right - cx / 16,
+                                rect.Bottom - cy / 16);
 
                             dc.DrawFocusRectangle(rect);
                         }

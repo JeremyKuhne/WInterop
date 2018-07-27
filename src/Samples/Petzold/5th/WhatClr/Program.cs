@@ -59,7 +59,7 @@ namespace WhatClr
         static void FindWindowSize(ref int cxWindow, ref int cyWindow)
         {
             TEXTMETRIC tm;
-            using (DeviceContext dcScreen = Windows.CreateInformationContext("DISPLAY", null))
+            using (DeviceContext dcScreen = Gdi.CreateInformationContext("DISPLAY", null))
             {
                 dcScreen.GetTextMetrics(out tm);
             }
@@ -69,7 +69,7 @@ namespace WhatClr
         }
 
         static DeviceContext dcScreen;
-        static COLORREF cr, crLast;
+        static Color cr, crLast;
         const int ID_TIMER = 1;
 
         static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
@@ -77,7 +77,7 @@ namespace WhatClr
             switch (message)
             {
                 case WindowMessage.Create:
-                    dcScreen = Windows.CreateDeviceContext("DISPLAY", null);
+                    dcScreen = Gdi.CreateDeviceContext("DISPLAY", null);
                     window.SetTimer(ID_TIMER, 100);
                     return 0;
                 case WindowMessage.Timer:
@@ -95,8 +95,8 @@ namespace WhatClr
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SelectObject(StockFont.SystemFixed);
-                        RECT rc = window.GetClientRectangle();
-                        dc.DrawText($"0x{cr.R:X2} 0x{cr.G:X2} 0x{cr.B:X2}", rc,
+                        Rectangle rc = window.GetClientRectangle();
+                        dc.DrawText($"0x{cr.R:X2} 0x{cr.G:X2} 0x{cr.B:X2}".AsSpan(), rc,
                             TextFormat.SingleLine | TextFormat.Center | TextFormat.VerticallyCenter);
                     }
                     return 0;

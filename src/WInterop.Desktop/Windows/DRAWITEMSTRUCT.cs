@@ -7,11 +7,11 @@
 
 using System;
 using WInterop.Gdi;
+using WInterop.Gdi.Native;
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb775802.aspx
-    public struct DRAWITEMSTRUCT
+    // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/ns-winuser-tagdrawitemstruct    public struct DRAWITEMSTRUCT
     {
         public OwnerDrawType CtlType;
         public uint CtlID;
@@ -19,9 +19,8 @@ namespace WInterop.Windows
         public OwnerDrawActions itemAction;
         public OwnerDrawStates itemState;
         public WindowHandle hwndItem;
-        public IntPtr hDC;
+        public HDC hDC;
         public RECT rcItem;
         public IntPtr itemData;
-        public DeviceContext DeviceContext;
     }
 }

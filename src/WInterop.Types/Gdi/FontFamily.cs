@@ -10,8 +10,10 @@ namespace WInterop.Gdi
     /// <summary>
     /// Used to describe the desired font in a general way.
     /// </summary>
-    public enum FontFamily : byte
+    public enum FontFamilyType : byte
     {
+        // FontFamily collides with System.Drawing.FontFamily
+
         // https://msdn.microsoft.com/en-us/library/cc250389.aspx
         // https://msdn.microsoft.com/en-us/library/dd145132.aspx
 

@@ -7,6 +7,7 @@
 
 using System;
 using System.Diagnostics;
+using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -18,27 +19,27 @@ namespace WInterop.Gdi
 
         public static BrushHandle Null = new BrushHandle(default);
 
-        public BrushHandle(HGDIOBJ handle, bool ownsHandle = true)
+        public BrushHandle(HBRUSH handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || GdiMethods.Imports.GetObjectType(handle) == ObjectType.Brush);
+            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Brush);
 
-            Handle = new HBRUSH(handle.Handle);
+            Handle = handle;
             _ownsHandle = ownsHandle;
         }
 
-        public bool IsInvalid => Handle.IsInvalid || GdiMethods.Imports.GetObjectType(Handle) != ObjectType.Brush;
+        public bool IsInvalid => Handle.IsInvalid || Imports.GetObjectType(Handle) != ObjectType.Brush;
 
         public void Dispose()
         {
             if (_ownsHandle)
-                GdiMethods.Imports.DeleteObject(Handle);
+                Imports.DeleteObject(Handle);
         }
 
-        public static implicit operator BrushHandle(StockBrush brush) => GdiMethods.GetStockBrush(brush);
-        public static implicit operator BrushHandle(SystemColor color) => GdiMethods.GetSystemColorBrush(color);
         public static implicit operator HGDIOBJ(BrushHandle handle) => handle.Handle;
         public static implicit operator HBRUSH(BrushHandle handle) => handle.Handle;
         public static implicit operator LRESULT(BrushHandle handle) => handle.Handle.Handle;
         public static implicit operator GdiObjectHandle(BrushHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
+        public static implicit operator BrushHandle(StockBrush brush) => Gdi.GetStockBrush(brush);
+        public static implicit operator BrushHandle(SystemColor color) => Gdi.GetSystemColorBrush(color);
     }
 }

@@ -7,6 +7,7 @@
 
 using System;
 using System.Diagnostics;
+using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -18,25 +19,24 @@ namespace WInterop.Gdi
 
         public static BitmapHandle Null = new BitmapHandle(default);
 
-        public BitmapHandle(HGDIOBJ handle, bool ownsHandle = true)
+        public BitmapHandle(HBITMAP handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || GdiMethods.Imports.GetObjectType(handle) == ObjectType.Bitmap);
+            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Bitmap);
 
-            Handle = new HBITMAP(handle.Handle);
+            Handle = handle;
             _ownsHandle = ownsHandle;
         }
 
-        public bool IsInvalid => Handle.IsInvalid || GdiMethods.Imports.GetObjectType(Handle) != ObjectType.Bitmap;
+        public bool IsInvalid => Handle.IsInvalid || Imports.GetObjectType(Handle) != ObjectType.Bitmap;
 
         public void Dispose()
         {
             if (_ownsHandle)
-                GdiMethods.Imports.DeleteObject(Handle);
+                Imports.DeleteObject(Handle);
         }
 
         public static implicit operator HGDIOBJ(BitmapHandle handle) => handle.Handle;
         public static implicit operator HBITMAP(BitmapHandle handle) => handle.Handle;
-        public static implicit operator BitmapHandle(HBITMAP handle) => new BitmapHandle(handle, ownsHandle: true);
         public static implicit operator LRESULT(BitmapHandle handle) => handle.Handle.Handle;
         public static implicit operator GdiObjectHandle(BitmapHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
     }

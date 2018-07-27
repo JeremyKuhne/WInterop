@@ -6,14 +6,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Gdi;
+using System.Drawing;
+using WInterop.Resources.Native;
 using WInterop.Windows;
 
 namespace WInterop.Resources
 {
     public struct MenuBarInformation
     {
-        public RECT Bar;
+        public Rectangle Bar;
         public MenuHandle Menu;
         public WindowHandle SubMenu;
         public bool BarFocused;

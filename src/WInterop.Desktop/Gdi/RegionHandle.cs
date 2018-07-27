@@ -7,6 +7,7 @@
 
 using System;
 using System.Diagnostics;
+using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -18,25 +19,24 @@ namespace WInterop.Gdi
 
         public static RegionHandle Null = new RegionHandle(default);
 
-        public RegionHandle(HGDIOBJ handle, bool ownsHandle = true)
+        public RegionHandle(HRGN handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || GdiMethods.Imports.GetObjectType(handle) == ObjectType.Region);
+            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Region);
 
-            Handle = new HRGN(handle.Handle);
+            Handle = handle;
             _ownsHandle = ownsHandle;
         }
 
-        public bool IsInvalid => Handle.IsInvalid || GdiMethods.Imports.GetObjectType(Handle) != ObjectType.Region;
+        public bool IsInvalid => Handle.IsInvalid || Imports.GetObjectType(Handle) != ObjectType.Region;
 
         public void Dispose()
         {
             if (_ownsHandle)
-                GdiMethods.Imports.DeleteObject(Handle);
+                Imports.DeleteObject(Handle);
         }
 
         public static implicit operator HGDIOBJ(RegionHandle handle) => handle.Handle;
         public static implicit operator HRGN(RegionHandle handle) => handle.Handle;
-        public static implicit operator RegionHandle(HRGN handle) => new RegionHandle(handle, ownsHandle: true);
         public static implicit operator LRESULT(RegionHandle handle) => handle.Handle.Handle;
         public static implicit operator GdiObjectHandle(RegionHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
     }

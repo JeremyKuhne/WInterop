@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Resources;
@@ -69,8 +70,8 @@ namespace Typer
                 case WindowMessage.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                            OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamily.DoNotCare, null))
+                        using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                            OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
                         {
                             dc.SelectObject(font);
                             dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -148,14 +149,16 @@ namespace Typer
                             window.HideCaret();
                             using (DeviceContext dc = window.GetDeviceContext())
                             {
-                                using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                                    OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamily.DoNotCare, null))
+                                using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                                    OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
                                 {
                                     dc.SelectObject(font);
                                     unsafe
                                     {
                                         fixed (char* c = &pBuffer[xCaret, yCaret])
-                                            dc.TextOut(xCaret * cxChar, yCaret * cyChar, c, cxBuffer - xCaret);
+                                            dc.TextOut(
+                                                new Point(xCaret * cxChar, yCaret * cyChar),
+                                                new ReadOnlySpan<char>(c, cxBuffer - xCaret));
                                     }
                                     dc.SelectObject(StockFont.System);
                                 }
@@ -207,14 +210,16 @@ namespace Typer
                                 window.HideCaret();
                                 using (DeviceContext dc = window.GetDeviceContext())
                                 {
-                                    using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                                        OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamily.DoNotCare, null))
+                                    using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                                        OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
                                     {
                                         dc.SelectObject(font);
                                         unsafe
                                         {
                                             fixed (char* c = &pBuffer[xCaret, yCaret])
-                                                dc.TextOut(xCaret * cxChar, yCaret * cyChar, c, 1);
+                                                dc.TextOut(
+                                                    new Point(xCaret * cxChar, yCaret * cyChar),
+                                                    new ReadOnlySpan<char>(c, 1));
                                         }
                                         dc.SelectObject(StockFont.System);
                                     }
@@ -236,15 +241,15 @@ namespace Typer
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        using (FontHandle font = Windows.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                            OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamily.DoNotCare, null))
+                        using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                            OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
                         {
                             dc.SelectObject(font);
                             unsafe
                             {
                                 for (int y = 0; y < cyBuffer; y++)
                                     fixed (char* c = &pBuffer[0, y])
-                                        dc.TextOut(0, y * cyChar, c, cxBuffer);
+                                        dc.TextOut(new Point(0, y * cyChar), new ReadOnlySpan<char>(c, cxBuffer));
                             }
                             dc.SelectObject(StockFont.System);
                         }

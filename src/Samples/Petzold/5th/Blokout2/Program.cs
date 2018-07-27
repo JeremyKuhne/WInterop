@@ -62,7 +62,7 @@ namespace Blokout2
             {
                 dc.SetRasterOperation(PenMixMode.Not);
                 dc.SelectObject(StockBrush.Null);
-                dc.Rectangle(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y);
+                dc.Rectangle(Rectangle.FromLTRB(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y));
             }
         }
 
@@ -111,14 +111,13 @@ namespace Blokout2
                         if (fValidBox)
                         {
                             dc.SelectObject(StockBrush.Black);
-                            dc.Rectangle(ptBoxBeg.X, ptBoxBeg.Y,
-                                ptBoxEnd.X, ptBoxEnd.Y);
+                            dc.Rectangle(Rectangle.FromLTRB(ptBoxBeg.X, ptBoxBeg.Y, ptBoxEnd.X, ptBoxEnd.Y));
                         }
                         if (fBlocking)
                         {
                             dc.SetRasterOperation(PenMixMode.Not);
                             dc.SelectObject(StockBrush.Null);
-                            dc.Rectangle(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y);
+                            dc.Rectangle(Rectangle.FromLTRB(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y));
                         }
                     }
                     return 0;

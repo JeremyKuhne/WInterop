@@ -101,7 +101,7 @@ namespace Clock
 
 #if GDIPLUS
             using (var graphics = GdiPlusMethods.CreateGraphics(dc))
-            using (var brush = GdiPlusMethods.CreateSolidBrush(new ARGB(0, 0, 0)))
+            using (var brush = GdiPlusMethods.CreateSolidBrush(Color.Black))
             {
                 GdiPlusMethods.SetSmoothingMode(graphics, SmoothingMode.AntiAlias);
 #else
@@ -121,7 +121,7 @@ namespace Clock
 #if GDIPLUS
                     GdiPlusMethods.FillEllipse(graphics, brush, pt[0].X, pt[0].Y, pt[1].X - pt[0].X, pt[1].Y - pt[0].Y);
 #else
-                    dc.Ellipse(pt[0].X, pt[0].Y, pt[1].X, pt[1].Y);
+                    dc.Ellipse(Rectangle.FromLTRB(pt[0].X, pt[0].Y, pt[1].X, pt[1].Y));
 #endif
                 }
 #if GDIPLUS
@@ -145,8 +145,8 @@ namespace Clock
                 new Point[] { new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 800) }
             };
 
-            COLORREF color = GdiMethods.GetPenColor(dc.GetCurrentPen());
-            bool erase = (color != new COLORREF());
+            Color color = Gdi.GetPenColor(dc.GetCurrentPen());
+            bool erase = color.Is(Color.White);
 
 #if GDIPLUS
             using (var graphics = GdiPlus.CreateGraphics(dc))

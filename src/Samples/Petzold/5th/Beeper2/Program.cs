@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Resources;
@@ -80,10 +81,9 @@ namespace Beeper2
             fFlipFlop = !fFlipFlop;
             using (DeviceContext dc = window.GetDeviceContext())
             {
-                RECT rect = window.GetClientRectangle();
-                using (BrushHandle brush = fFlipFlop ? Windows.CreateSolidBrush(255, 0, 0) : Windows.CreateSolidBrush(0, 0, 255))
+                using (BrushHandle brush = Gdi.CreateSolidBrush(fFlipFlop ? Color.Red : Color.Blue))
                 {
-                    dc.FillRectangle(rect, brush);
+                    dc.FillRectangle(window.GetClientRectangle(), brush);
                 }
             }
         }

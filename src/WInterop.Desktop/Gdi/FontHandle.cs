@@ -7,34 +7,38 @@
 
 using System;
 using System.Diagnostics;
+using WInterop.Gdi.Native;
+using WInterop.Windows;
 
 namespace WInterop.Gdi
 {
     public readonly struct FontHandle : IDisposable
     {
-        public HGDIOBJ Handle { get; }
+        public HFONT Handle { get; }
         private readonly bool _ownsHandle;
 
         public static RegionHandle Null = new RegionHandle(default);
 
-        public FontHandle(HGDIOBJ handle, bool ownsHandle = true)
+        public FontHandle(HFONT handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || GdiMethods.Imports.GetObjectType(handle) == ObjectType.Font);
+            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Font);
 
             Handle = handle;
             _ownsHandle = ownsHandle;
         }
 
-        public bool IsInvalid => Handle.IsInvalid || GdiMethods.Imports.GetObjectType(Handle) != ObjectType.Font;
+        public bool IsInvalid => Handle.IsInvalid || Imports.GetObjectType(Handle) != ObjectType.Font;
 
         public void Dispose()
         {
             if (_ownsHandle)
-                GdiMethods.Imports.DeleteObject(Handle);
+                Imports.DeleteObject(Handle);
         }
 
-        public static implicit operator FontHandle(StockFont font) => GdiMethods.GetStockFont(font);
         public static implicit operator HGDIOBJ(FontHandle handle) => handle.Handle;
+        public static implicit operator HFONT(FontHandle handle) => handle.Handle;
+        public static implicit operator LRESULT(FontHandle handle) => handle.Handle.Handle;
         public static implicit operator GdiObjectHandle(FontHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
+        public static implicit operator FontHandle(StockFont font) => Gdi.GetStockFont(font);
     }
 }

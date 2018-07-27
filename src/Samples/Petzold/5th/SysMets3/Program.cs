@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Linq;
 using WInterop.Gdi;
 using WInterop.Modules;
@@ -187,8 +188,7 @@ namespace SysMets3
                     return 0;
 
                 case WindowMessage.Paint:
-                    PAINTSTRUCT ps;
-                    using (DeviceContext dc = window.BeginPaint(out ps))
+                    using (DeviceContext dc = window.BeginPaint(out PaintStruct ps))
                     {
                         // Get vertical scroll bar position
                         si = new SCROLLINFO
@@ -203,8 +203,8 @@ namespace SysMets3
                         iHorzPos = si.nPos;
 
                         // Find painting limits
-                        int iPaintBeg = Math.Max(0, iVertPos + ps.rcPaint.top / cyChar);
-                        int iPaintEnd = Math.Min(SysMets.sysmetrics.Count - 1, iVertPos + ps.rcPaint.bottom / cyChar);
+                        int iPaintBeg = Math.Max(0, iVertPos + ps.Paint.Top / cyChar);
+                        int iPaintEnd = Math.Min(SysMets.sysmetrics.Count - 1, iVertPos + ps.Paint.Bottom / cyChar);
 
                         var keys = SysMets.sysmetrics.Keys.ToArray();
                         for (int i = iPaintBeg; i <= iPaintEnd; i++)
@@ -213,10 +213,10 @@ namespace SysMets3
                             int x = cxChar * (1 - iHorzPos);
                             int y = cyChar * (i - iVertPos);
 
-                            dc.TextOut(x, y, metric.ToString());
-                            dc.TextOut(x + 22 * cxCaps, y, SysMets.sysmetrics[metric]);
+                            dc.TextOut(new Point(x, y), metric.ToString().AsSpan());
+                            dc.TextOut(new Point(x + 22 * cxCaps, y), SysMets.sysmetrics[metric].AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Right, TextAlignment.Vertical.Top));
-                            dc.TextOut(x + 22 * cxCaps + 40 * cxChar, y, WindowMethods.GetSystemMetrics(metric).ToString());
+                            dc.TextOut(new Point(x + 22 * cxCaps + 40 * cxChar, y), WindowMethods.GetSystemMetrics(metric).ToString().AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Left, TextAlignment.Vertical.Top));
                         }
                     }

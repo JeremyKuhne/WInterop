@@ -7,19 +7,20 @@
 
 using System;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi.Native
 {
-    public readonly struct HBRUSH
+    public readonly struct HBITMAP
     {
         public IntPtr Handle { get; }
 
-        public HBRUSH(IntPtr handle)
+        public HBITMAP(IntPtr handle)
         {
             Handle = handle;
         }
 
         public bool IsInvalid => Handle == IntPtr.Zero;
 
-        public static implicit operator HGDIOBJ(HBRUSH handle) => new HGDIOBJ(handle.Handle);
+        public static implicit operator HGDIOBJ(HBITMAP handle) => new HGDIOBJ(handle.Handle);
+        public static explicit operator HBITMAP(HGDIOBJ handle) => new HBITMAP(handle.Handle);
     }
 }

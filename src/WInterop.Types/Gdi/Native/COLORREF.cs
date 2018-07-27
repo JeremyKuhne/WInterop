@@ -8,7 +8,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi.Native
 {
     // https://msdn.microsoft.com/en-us/library/dd183449.aspx
     [StructLayout(LayoutKind.Explicit)]
@@ -62,5 +62,6 @@ namespace WInterop.Gdi
         public static bool operator !=(COLORREF a, COLORREF b) => a.Value != b.Value;
         public static implicit operator COLORREF(uint value) => new COLORREF(value);
         public static implicit operator COLORREF(Color color) => new COLORREF(color.R, color.G, color.B);
+        public static implicit operator Color(COLORREF color) => Color.FromArgb(color.R, color.G, color.B);
     }
 }

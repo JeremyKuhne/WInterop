@@ -79,7 +79,7 @@ namespace AltWind
                     cyClient = lParam.HighWord;
                     return 0;
                 case WindowMessage.Paint:
-                    Point[] apt = new Point[10];
+                    Span<Point> apt = stackalloc Point[10];
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SelectObject(StockBrush.Gray);

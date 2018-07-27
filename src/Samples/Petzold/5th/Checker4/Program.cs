@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.ErrorHandling;
+using System.Drawing;
 using WInterop.ErrorHandling;
 using WInterop.Gdi;
 using WInterop.Modules;
@@ -83,7 +83,7 @@ namespace Checker4
                                 null,
                                 WindowStyles.ChildWindow | WindowStyles.Visible,
                                 ExtendedWindowStyles.Default,
-                                0, 0, 0, 0,
+                                new Rectangle(),
                                 window,
                                 (IntPtr)(y << 8 | x),
                                 window.GetWindowLong(WindowLong.InstanceHandle),
@@ -95,11 +95,8 @@ namespace Checker4
                     for (x = 0; x < DIVISIONS; x++)
                         for (y = 0; y < DIVISIONS; y++)
                             hwndChild[x, y].MoveWindow(
-                                x * cxBlock,
-                                y * cyBlock,
-                                cxBlock,
-                                cyBlock,
-                                true);
+                                new Rectangle(x * cxBlock, y * cyBlock, cxBlock, cyBlock),
+                                repaint: true);
                     return 0;
                 case WindowMessage.LeftButtonDown:
                     ErrorMethods.MessageBeep(BeepType.Ok);
@@ -168,26 +165,24 @@ namespace Checker4
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        RECT rect = window.GetClientRectangle();
+                        Rectangle rect = window.GetClientRectangle();
                         dc.Rectangle(rect);
 
                         if (window.GetWindowLong(0) != IntPtr.Zero)
                         {
                             dc.MoveTo(0, 0);
-                            dc.LineTo(rect.right, rect.bottom);
-                            dc.MoveTo(0, rect.bottom);
-                            dc.LineTo(rect.right, 0);
+                            dc.LineTo(rect.Right, rect.Bottom);
+                            dc.MoveTo(0, rect.Bottom);
+                            dc.LineTo(rect.Right, 0);
                         }
 
                         // Draw the "focus" rectangle
                         if (window == Windows.GetFocus())
                         {
-                            rect.left += rect.right / 10;
-                            rect.right -= rect.left;
-                            rect.top += rect.bottom / 10;
-                            rect.bottom -= rect.top;
+                            rect.Inflate(rect.Width / -10, rect.Height / -10);
+
                             dc.SelectObject(StockBrush.Null);
-                            using (PenHandle pen = Windows.CreatePen(PenStyle.Dash, 0, 0))
+                            using (PenHandle pen = Gdi.CreatePen(PenStyle.Dash, 0, default))
                             {
                                 dc.SelectObject(pen);
                                 dc.Rectangle(rect);

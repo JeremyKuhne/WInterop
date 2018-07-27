@@ -8,16 +8,11 @@
 using System;
 using System.Drawing;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling;
-using WInterop.Gdi;
-using WInterop.Gdi;
 using WInterop.Globalization;
 using WInterop.Modules;
 using WInterop.Resources;
-using WInterop.Resources;
 using WInterop.SystemInformation;
 using WInterop.SystemInformation.Types;
-using WInterop.Windows;
 
 namespace WInterop.Windows
 {
@@ -54,15 +49,24 @@ namespace WInterop.Windows
             string windowName,
             WindowStyles style,
             ExtendedWindowStyles extendedStyle,
-            int x,
-            int y,
-            int width,
-            int height,
+            Rectangle bounds,
             WindowHandle parentWindow,
             IntPtr menuHandle,
             ModuleInstance instance,
             IntPtr parameters) => WindowMethods.CreateWindow(
-                className, windowName, style, extendedStyle, x, y, width, height, parentWindow, menuHandle, instance, parameters);
+                className, windowName, style, extendedStyle, bounds, parentWindow, menuHandle, instance, parameters);
+
+        public static WindowHandle CreateWindow(
+            string className,
+            string windowName,
+            WindowStyles style,
+            ExtendedWindowStyles extendedStyle,
+            Size size,
+            WindowHandle parentWindow,
+            IntPtr menuHandle,
+            ModuleInstance instance,
+            IntPtr parameters) => WindowMethods.CreateWindow(
+                className, windowName, style, extendedStyle, new Rectangle(default, size), parentWindow, menuHandle, instance, parameters);
 
         public static bool GetMessage(out MSG message, uint minMessage = 0, uint maxMessage = 0) => WindowMethods.GetMessage(out message, WindowHandle.Null, minMessage, maxMessage);
         public static bool PeekMessage(out MSG message, uint minMessage, uint maxMessage, PeekMessageOptions options)
@@ -77,40 +81,12 @@ namespace WInterop.Windows
         public static CursorHandle SetCursor(CursorHandle cursor) => ResourceMethods.SetCursor(cursor);
         public static CursorHandle SetCursor(CursorId id) => ResourceMethods.SetCursor(ResourceMethods.LoadCursor(id));
         public static void SetCursorPosition(int x, int y) => ResourceMethods.SetCursorPosition(x, y);
-        public static RegionHandle CreateEllipticRegion(int left, int top, int right, int bottom) => GdiMethods.CreateEllipticRegion(left, top, right, bottom);
-        public static RegionHandle CreateRectangleRegion(int left, int top, int right, int bottom) => GdiMethods.CreateRectangleRegion(left, top, right, bottom);
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.Ok) => WindowMethods.MessageBox(text, caption, type);
         public static void MessageBeep(BeepType type = BeepType.SimpleBeep) => ErrorMethods.MessageBeep(type);
         public static int GetSystemMetrics(SystemMetric metric) => WindowMethods.GetSystemMetrics(metric);
         public static KeyState GetKeyState(VirtualKey key) => WindowMethods.GetKeyState(key);
         public static string GetKeyNameText(LPARAM lParam) => WindowMethods.GetKeyNameText(lParam);
-        public static COLORREF GetSystemColor(SystemColor systemColor) => WindowMethods.GetSystemColor(systemColor);
-        public static BrushHandle GetSystemColorBrush(SystemColor systemColor) => GdiMethods.GetSystemColorBrush(systemColor);
-        public static BrushHandle CreateSolidBrush(byte red, byte green, byte blue) => GdiMethods.CreateSolidBrush(red, green, blue);
-        public static BrushHandle CreateSolidBrush(COLORREF color) => GdiMethods.CreateSolidBrush(color.R, color.G, color.B);
-        public static PenHandle CreatePen(PenStyle style, int width, COLORREF color) => GdiMethods.CreatePen(style, width, color);
-
-        public static PenHandle CreatePen(PenStyleExtended style, uint width, COLORREF color, PenEndCap endCap = PenEndCap.Round, PenJoin join = PenJoin.Round)
-            => GdiMethods.CreatePen(style, width, color, endCap, join);
-
-        public static FontHandle CreateFont(
-            int height,
-            int width,
-            int escapement,
-            int orientation,
-            FontWeight weight,
-            bool italic,
-            bool underline,
-            bool strikeout,
-            CharacterSet characterSet,
-            OutputPrecision outputPrecision,
-            ClippingPrecision clippingPrecision,
-            Quality quality,
-            FontPitch pitch,
-            FontFamily family,
-            string typeface) => GdiMethods.CreateFont(
-                height, width, escapement, orientation, weight, italic, underline, strikeout, characterSet, outputPrecision, clippingPrecision, quality, pitch, family, typeface);
-
+        public static Color GetSystemColor(SystemColor systemColor) => WindowMethods.GetSystemColor(systemColor);
         public static void SetCaretPosition(int x, int y) => ResourceMethods.SetCaretPosition(x, y);
         public static void DestroyCaret() => ResourceMethods.DestroyCaret();
         public static WindowHandle GetFocus() => WindowMethods.GetFocus();
@@ -120,10 +96,6 @@ namespace WInterop.Windows
         public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
 
         public static SYSTEMTIME GetLocalTime() => SystemInformationMethods.GetLocalTime();
-
-        public static DeviceContext CreateDeviceContext(string driver, string device) => GdiMethods.CreateDeviceContext(driver, device);
-        public static DeviceContext CreateInformationContext(string driver, string device) => GdiMethods.CreateInformationContext(driver, device);
-
-        public static SIZE GetDialogBaseUnits() => WindowMethods.GetDialogBaseUnits();
+        public static Size GetDialogBaseUnits() => WindowMethods.GetDialogBaseUnits();
     }
 }

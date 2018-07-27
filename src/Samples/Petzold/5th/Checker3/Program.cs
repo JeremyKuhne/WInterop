@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.ErrorHandling;
+using System.Drawing;
 using WInterop.ErrorHandling;
 using WInterop.Gdi;
 using WInterop.Modules;
@@ -81,7 +81,7 @@ namespace Checker3
                                 null,
                                 WindowStyles.ChildWindow | WindowStyles.Visible,
                                 ExtendedWindowStyles.Default,
-                                0, 0, 0, 0,
+                                new Rectangle(),
                                 window,
                                 (IntPtr)(y << 8 | x),
                                 window.GetWindowLong(WindowLong.InstanceHandle),
@@ -93,11 +93,8 @@ namespace Checker3
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
                             hwndChild[x, y].MoveWindow(
-                                x * cxBlock,
-                                y * cyBlock,
-                                cxBlock,
-                                cyBlock,
-                                true);
+                                new Rectangle(x * cxBlock, y * cyBlock, cxBlock, cyBlock),
+                                repaint: true);
                     return 0;
                 case WindowMessage.LeftButtonDown:
                     ErrorMethods.MessageBeep(BeepType.Ok);
@@ -124,15 +121,15 @@ namespace Checker3
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        RECT rect = window.GetClientRectangle();
+                        Rectangle rect = window.GetClientRectangle();
                         dc.Rectangle(rect);
 
                         if (window.GetWindowLong(0) != IntPtr.Zero)
                         {
                             dc.MoveTo(0, 0);
-                            dc.LineTo(rect.right, rect.bottom);
-                            dc.MoveTo(0, rect.bottom);
-                            dc.LineTo(rect.right, 0);
+                            dc.LineTo(rect.Right, rect.Bottom);
+                            dc.MoveTo(0, rect.Bottom);
+                            dc.LineTo(rect.Right, 0);
                         }
                     }
                     return 0;

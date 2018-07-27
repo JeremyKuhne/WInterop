@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Threading;
 using WInterop.Gdi;
 using WInterop.Modules;
@@ -90,9 +91,14 @@ namespace RandRect
             if (cxClient == 0 || cyClient == 0)
                 return;
 
-            RECT rect = new RECT(rand.Next() % cxClient, rand.Next() % cyClient,
-                rand.Next() % cxClient, rand.Next() % cyClient);
-            using (BrushHandle brush = Windows.CreateSolidBrush((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256)))
+            Rectangle rect = Rectangle.FromLTRB(
+                rand.Next() % cxClient,
+                rand.Next() % cyClient,
+                rand.Next() % cxClient,
+                rand.Next() % cyClient);
+
+            using (BrushHandle brush = Gdi.CreateSolidBrush(
+                Color.FromArgb((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256))))
             {
                 using (DeviceContext dc = window.GetDeviceContext())
                 {

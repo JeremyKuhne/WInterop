@@ -6,19 +6,23 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
+using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
 {
     public readonly struct PenHandle : IDisposable
     {
-        public HGDIOBJ Handle { get; }
+        public HPEN Handle { get; }
         private readonly bool _ownsHandle;
 
         public static FontHandle Null = new FontHandle(default);
 
-        public PenHandle(HGDIOBJ handle, bool ownsHandle = true)
+        public PenHandle(HPEN handle, bool ownsHandle = true)
         {
+            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Pen || Imports.GetObjectType(handle) == ObjectType.ExtendedPen);
+
             Handle = handle;
             _ownsHandle = ownsHandle;
         }
@@ -30,7 +34,7 @@ namespace WInterop.Gdi
                 if (Handle.IsInvalid)
                     return true;
 
-                ObjectType type = GdiMethods.Imports.GetObjectType(Handle);
+                ObjectType type = Imports.GetObjectType(Handle);
                 return !(type == ObjectType.Pen || type == ObjectType.ExtendedPen);
             }
         }
@@ -39,12 +43,13 @@ namespace WInterop.Gdi
         public void Dispose()
         {
             if (_ownsHandle)
-                GdiMethods.Imports.DeleteObject(Handle);
+                Imports.DeleteObject(Handle);
         }
 
-        public static implicit operator PenHandle(StockPen pen) => GdiMethods.GetStockPen(pen);
         public static implicit operator HGDIOBJ(PenHandle handle) => handle.Handle;
+        public static implicit operator HPEN(PenHandle handle) => handle.Handle;
         public static implicit operator LRESULT(PenHandle handle) => handle.Handle.Handle;
         public static implicit operator GdiObjectHandle(PenHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
+        public static implicit operator PenHandle(StockPen pen) => Gdi.GetStockPen(pen);
     }
 }

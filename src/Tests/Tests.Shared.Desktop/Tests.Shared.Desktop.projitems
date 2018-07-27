@@ -23,7 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)File\SymbolicLinkTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DEVMODE_Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DISPLAY_DEVICE_Tests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\GdiTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\GeneralGdi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)File\FileManagementBehaviors.cs" />

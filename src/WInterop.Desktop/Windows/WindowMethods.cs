@@ -6,10 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling;
 using WInterop.Gdi;
+using WInterop.Gdi.Native;
 using WInterop.Modules;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -203,7 +204,7 @@ namespace WInterop.Windows
             int height = WindowDefines.CW_USEDEFAULT,
             ModuleInstance instance = null)
         {
-            return CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.Null, IntPtr.Zero, instance, IntPtr.Zero);
+            return CreateWindow(className, windowName, style, extendedStyle, new Rectangle(x, y, width, height), WindowHandle.Null, IntPtr.Zero, instance, IntPtr.Zero);
         }
 
         public static WindowHandle CreateWindow(
@@ -217,7 +218,7 @@ namespace WInterop.Windows
             int height = WindowDefines.CW_USEDEFAULT,
             ModuleInstance instance = null)
         {
-            return CreateWindow(className, windowName, style, extendedStyle, x, y, width, height, WindowHandle.Null, IntPtr.Zero, instance, IntPtr.Zero);
+            return CreateWindow(className, windowName, style, extendedStyle, new Rectangle(x, y, width, height), WindowHandle.Null, IntPtr.Zero, instance, IntPtr.Zero);
         }
 
         public static WindowHandle CreateWindow(
@@ -225,10 +226,7 @@ namespace WInterop.Windows
             string windowName,
             WindowStyles style,
             ExtendedWindowStyles extendedStyle,
-            int x,
-            int y,
-            int width,
-            int height,
+            Rectangle bounds,
             WindowHandle parentWindow,
             IntPtr menuHandle,
             ModuleInstance instance,
@@ -239,10 +237,10 @@ namespace WInterop.Windows
                 className,
                 windowName,
                 style,
-                x,
-                y,
-                width,
-                height,
+                bounds.X,
+                bounds.Y,
+                bounds.Width,
+                bounds.Height,
                 parentWindow,
                 menuHandle,
                 instance ?? ModuleInstance.Null,
@@ -259,10 +257,7 @@ namespace WInterop.Windows
             string windowName,
             WindowStyles style,
             ExtendedWindowStyles extendedStyle,
-            int x,
-            int y,
-            int width,
-            int height,
+            Rectangle bounds,
             WindowHandle parentWindow,
             IntPtr menuHandle,
             ModuleInstance instance,
@@ -276,10 +271,10 @@ namespace WInterop.Windows
                     (IntPtr)name,
                     windowName,
                     style,
-                    x,
-                    y,
-                    width,
-                    height,
+                    bounds.X,
+                    bounds.Y,
+                    bounds.Width,
+                    bounds.Height,
                     parentWindow,
                     menuHandle,
                     instance ?? ModuleInstance.Null,
@@ -375,7 +370,7 @@ namespace WInterop.Windows
         public static BrushHandle SetClassBackgroundBrush(WindowHandle window, BrushHandle value, bool ownsHandle = true)
         {
             IntPtr result = SetClassLong(window, ClassLong.BackgroundBrush, value.Handle.Handle);
-            return new BrushHandle(new HGDIOBJ(result), ownsHandle);
+            return new BrushHandle(new HBRUSH(result), ownsHandle);
         }
 
         public static bool ShowWindow(WindowHandle window, ShowWindow command)
@@ -383,9 +378,9 @@ namespace WInterop.Windows
             return Imports.ShowWindow(window, command);
         }
 
-        public static void MoveWindow(WindowHandle window, int x, int y, int width, int height, bool repaint)
+        public static void MoveWindow(WindowHandle window, Rectangle position, bool repaint)
         {
-            if (!Imports.MoveWindow(window, x, y, width, height, repaint))
+            if (!Imports.MoveWindow(window, position.X, position.Y, position.Width, position.Height, repaint))
                 throw Errors.GetIoExceptionForLastError();
         }
 
@@ -428,7 +423,7 @@ namespace WInterop.Windows
             Imports.PostQuitMessage(exitCode);
         }
 
-        public static RECT GetClientRectangle(WindowHandle window)
+        public static Rectangle GetClientRectangle(WindowHandle window)
         {
             if (!Imports.GetClientRect(window, out RECT rect))
                 throw Errors.GetIoExceptionForLastError();
@@ -436,7 +431,7 @@ namespace WInterop.Windows
             return rect;
         }
 
-        public static RECT GetWindowRectangle(WindowHandle window)
+        public static Rectangle GetWindowRectangle(WindowHandle window)
         {
             if (!Imports.GetWindowRect(window, out RECT result))
                 throw Errors.GetIoExceptionForLastError();
@@ -496,9 +491,12 @@ namespace WInterop.Windows
             return result;
         }
 
-        public unsafe static int ScrollWindow(WindowHandle window, int dx, int dy, RECT scroll, RECT clip)
+        public unsafe static int ScrollWindow(WindowHandle window, int dx, int dy, Rectangle scroll, Rectangle clip)
         {
-            int result = Imports.ScrollWindowEx(window, dx, dy, &scroll, &clip, IntPtr.Zero, null, ScrollWindowFlags.SW_ERASE | ScrollWindowFlags.SW_INVALIDATE);
+            RECT scrollRect = scroll;
+            RECT clipRect = clip;
+
+            int result = Imports.ScrollWindowEx(window, dx, dy, &scrollRect, &clipRect, IntPtr.Zero, null, ScrollWindowFlags.SW_ERASE | ScrollWindowFlags.SW_INVALIDATE);
 
             if (result == 0)
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -549,15 +547,10 @@ namespace WInterop.Windows
             return BufferHelper.TruncatingApiInvoke(ref wrapper, null, Errors.Failed);
         }
 
-        public static SIZE GetDialogBaseUnits()
+        public static Size GetDialogBaseUnits()
         {
             int result = Imports.GetDialogBaseUnits();
-
-            return new SIZE
-            {
-                cx = Conversion.LowWord(result),
-                cy = Conversion.HighWord(result)
-            };
+            return new Size(Conversion.LowWord(result), Conversion.HighWord(result));
         }
 
         public static WindowHandle GetDialogItem(WindowHandle window, int id)
@@ -594,7 +587,7 @@ namespace WInterop.Windows
                 throw Errors.GetIoExceptionForLastError();
         }
 
-        public static COLORREF GetSystemColor(SystemColor systemColor)
+        public static Color GetSystemColor(SystemColor systemColor)
         {
             return Imports.GetSysColor(systemColor);
         }

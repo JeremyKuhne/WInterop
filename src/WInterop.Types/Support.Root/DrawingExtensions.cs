@@ -5,12 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Gdi
+namespace System.Drawing
 {
-    // https://msdn.microsoft.com/en-us/library/dd145106.aspx
-    public struct SIZE
+    public static class DrawingExtensions
     {
-        public int cx;
-        public int cy;
+        public static bool Is(this Color color, Color value)
+        {
+            return color.ToArgb() == value.ToArgb();
+        }
     }
 }

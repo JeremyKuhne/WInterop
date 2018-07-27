@@ -6,8 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Diagnostics;
-using WInterop.Handles.Types;
+using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -30,13 +29,13 @@ namespace WInterop.Gdi
 
         public ObjectType GetObjectType()
         {
-            return GdiMethods.Imports.GetObjectType(Handle);
+            return Imports.GetObjectType(Handle);
         }
 
-        public static implicit operator GdiObjectHandle(StockFont font) => new GdiObjectHandle(GdiMethods.GetStockFont(font).Handle, false);
-        public static implicit operator GdiObjectHandle(StockBrush brush) => new GdiObjectHandle(GdiMethods.GetStockBrush(brush), false);
-        public static implicit operator GdiObjectHandle(SystemColor color) => new GdiObjectHandle(GdiMethods.GetSystemColorBrush(color), false);
-        public static implicit operator GdiObjectHandle(StockPen pen) => new GdiObjectHandle(GdiMethods.GetStockPen(pen), false);
+        public static implicit operator GdiObjectHandle(StockFont font) => new GdiObjectHandle(Gdi.GetStockFont(font).Handle, false);
+        public static implicit operator GdiObjectHandle(StockBrush brush) => new GdiObjectHandle(Gdi.GetStockBrush(brush), false);
+        public static implicit operator GdiObjectHandle(SystemColor color) => new GdiObjectHandle(Gdi.GetSystemColorBrush(color), false);
+        public static implicit operator GdiObjectHandle(StockPen pen) => new GdiObjectHandle(Gdi.GetStockPen(pen), false);
 
         public static implicit operator HGDIOBJ(GdiObjectHandle handle) => handle.Handle;
 
@@ -45,7 +44,7 @@ namespace WInterop.Gdi
         public void Dispose()
         {
             if (_ownsHandle)
-                GdiMethods.Imports.DeleteObject(Handle);
+                Imports.DeleteObject(Handle);
         }
     }
 }

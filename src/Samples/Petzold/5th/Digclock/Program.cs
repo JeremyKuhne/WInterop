@@ -134,7 +134,7 @@ namespace DigClock
             switch (message)
             {
                 case WindowMessage.Create:
-                    hBrushRed = Windows.CreateSolidBrush(255, 0, 0);
+                    hBrushRed = Gdi.CreateSolidBrush(Color.Red);
                     window.SetTimer(ID_TIMER, 1000);
                     return 0;
                 case WindowMessage.SettingChange:

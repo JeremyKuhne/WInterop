@@ -7,6 +7,7 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
+using System.Drawing;
 using System.Text;
 using WInterop.Gdi;
 using WInterop.Modules;
@@ -76,7 +77,7 @@ namespace Head
         static bool bValidFile;
         static string szFile;
         static byte[] buffer = new byte[MAXREAD];
-        static RECT rect;
+        static Rectangle rect;
 
 
         unsafe static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
@@ -86,19 +87,18 @@ namespace Head
             switch (message)
             {
                 case WindowMessage.Create:
-                    SIZE baseUnits = Windows.GetDialogBaseUnits();
-                    rect.left = 20 * baseUnits.cx;
-                    rect.top = 3 * baseUnits.cy;
+                    Size baseUnits = Windows.GetDialogBaseUnits();
+                    rect = Rectangle.FromLTRB(20 * baseUnits.Width, 3 * baseUnits.Height, rect.Right, rect.Bottom);
 
                     // Create listbox and static text windows.
                     hwndList = Windows.CreateWindow("listbox", null,
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard, ExtendedWindowStyles.Default,
-                        baseUnits.cx, baseUnits.cy * 3, baseUnits.cx * 13 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.cy * 10,
+                        new Rectangle(baseUnits.Width, baseUnits.Height * 3, baseUnits.Width * 13 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.Height * 10),
                         window, (IntPtr)ID_LIST, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
                     hwndText = Windows.CreateWindow("static", StorageMethods.GetCurrentDirectory(),
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left, ExtendedWindowStyles.Default,
-                        baseUnits.cx, baseUnits.cy, baseUnits.cx * 260, baseUnits.cy,
+                        new Rectangle(baseUnits.Width, baseUnits.Height, baseUnits.Width * 260, baseUnits.Height),
                         window, (IntPtr)ID_TEXT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
                     OldList = hwndList.SetWindowProcedure(s_ListBoxProcedure);
@@ -107,8 +107,7 @@ namespace Head
                         hwndList.SendMessage(ListBoxMessage.Directory, (uint)DIRATTR, f);
                     return 0;
                 case WindowMessage.Size:
-                    rect.right = lParam.LowWord;
-                    rect.bottom = lParam.HighWord;
+                    rect = Rectangle.FromLTRB(rect.Left, rect.Top, lParam.LowWord, lParam.HighWord);
                     return 0;
                 case WindowMessage.SetFocus:
                     hwndList.SetFocus();
@@ -188,7 +187,7 @@ namespace Head
                         dc.SelectObject(StockFont.SystemFixed);
                         dc.SetTextColor(Windows.GetSystemColor(SystemColor.ButtonText));
                         dc.SetBackgroundColor(Windows.GetSystemColor(SystemColor.ButtonFace));
-                        dc.DrawText(Encoding.UTF8.GetString(buffer), rect, DTFLAGS);
+                        dc.DrawText(Encoding.UTF8.GetString(buffer).AsSpan(), rect, DTFLAGS);
                     }
 
                     return 0;

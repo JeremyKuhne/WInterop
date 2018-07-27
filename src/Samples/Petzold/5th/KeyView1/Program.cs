@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Resources;
@@ -57,7 +58,7 @@ namespace KeyView1
 
         static int cxClientMax, cyClientMax, cxClient, cyClient, cxChar, cyChar;
         static int cLinesMax, cLines;
-        static RECT rectScroll;
+        static Rectangle rectScroll;
         static MSG[] pmsg;
 
         static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
@@ -89,10 +90,7 @@ namespace KeyView1
 
                     CalculateScroll:
 
-                    rectScroll.left = 0;
-                    rectScroll.right = cxClient;
-                    rectScroll.top = cyChar;
-                    rectScroll.bottom = cyChar * (cyClient / cyChar);
+                    rectScroll = Rectangle.FromLTRB(0, cyChar, cxClient, cyChar * (cyClient / cyChar));
                     window.Invalidate(true);
 
                     return 0;
@@ -124,8 +122,8 @@ namespace KeyView1
                     {
                         dc.SelectObject(StockFont.SystemFixed);
                         dc.SetBackgroundMode(BackgroundMode.Transparent);
-                        dc.TextOut(0, 0, "Message        Key       Char     Repeat Scan Ext ALT Prev Tran");
-                        dc.TextOut(0, 0, "_______        ___       ____     ______ ____ ___ ___ ____ ____");
+                        dc.TextOut(default, "Message        Key       Char     Repeat Scan Ext ALT Prev Tran".AsSpan());
+                        dc.TextOut(default, "_______        ___       ____     ______ ____ ___ ___ ____ ____".AsSpan());
                         for (int i = 0; i < Math.Min(cLines, cyClient / cyChar - 1); i++)
                         {
                             bool iType;
@@ -142,7 +140,7 @@ namespace KeyView1
                                     break;
                             }
 
-                            dc.TextOut(0, (cyClient / cyChar - 1 - i) * cyChar,
+                            dc.TextOut(new Point(0, (cyClient / cyChar - 1 - i) * cyChar),
                                 string.Format(iType
                                 ? "{0,-13} {1,3} {2,15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}"
                                 : "{0,-13} {1,3} {2,-15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}  VirtualKey: {9}",
@@ -157,7 +155,7 @@ namespace KeyView1
                                     (0x20000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
                                     (0x40000000 & pmsg[i].lParam) != 0 ? "Down" : "Up",
                                     (0x80000000 & pmsg[i].lParam) != 0 ? "Up" : "Down",
-                                    (VirtualKey)pmsg[i].wParam));
+                                    (VirtualKey)pmsg[i].wParam).AsSpan());
                         }
                     }
                     return 0;

@@ -13,7 +13,6 @@ using Tests.Support;
 using WInterop.Compression;
 using WInterop.Compression.Types;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling;
 using WInterop.Support;
 using Xunit;
 

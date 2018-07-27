@@ -6,24 +6,21 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop;
 using WInterop.Gdi;
-using WInterop.Gdi;
-using WInterop.Windows;
 using WInterop.Windows;
 using Xunit;
 
-namespace DesktopTests.Gdi
+namespace GdiTests
 {
-    public class GdiTests
+    public class GeneralGdi
     {
         [Fact]
         public void EnumerateDisplayDevices()
         {
-            var devices = GdiMethods.EnumerateDisplayDevices(null).ToArray();
+            var devices = Gdi.EnumerateDisplayDevices(null).ToArray();
             devices.Should().Contain(d => (d.StateFlags & (DeviceState.DISPLAY_DEVICE_ACTIVE | DeviceState.DISPLAY_DEVICE_PRIMARY_DEVICE)) ==
                 (DeviceState.DISPLAY_DEVICE_ACTIVE | DeviceState.DISPLAY_DEVICE_PRIMARY_DEVICE));
         }
@@ -31,8 +28,8 @@ namespace DesktopTests.Gdi
         [Fact]
         public void EnumerateDisplayDevices_Monitors()
         {
-            var device = GdiMethods.EnumerateDisplayDevices(null).First();
-            var monitor = GdiMethods.EnumerateDisplayDevices(device.DeviceName).First();
+            var device = Gdi.EnumerateDisplayDevices(null).First();
+            var monitor = Gdi.EnumerateDisplayDevices(device.DeviceName).First();
 
             // Something like \\.\DISPLAY1 and \\.\DISPLAY1\Monitor0
             monitor.DeviceName.Should().StartWith(device.DeviceName);
@@ -41,23 +38,23 @@ namespace DesktopTests.Gdi
         [Fact]
         public void EnumerateDisplaySettings_Null()
         {
-            var settings = GdiMethods.EnumerateDisplaySettings(null).ToArray();
+            var settings = Gdi.EnumerateDisplaySettings(null).ToArray();
             settings.Should().NotBeEmpty();
         }
 
         [Fact]
         public void EnumerateDisplaySettings_FirstDevice()
         {
-            var device = GdiMethods.EnumerateDisplayDevices(null).First();
-            var settings = GdiMethods.EnumerateDisplaySettings(device.DeviceName);
+            var device = Gdi.EnumerateDisplayDevices(null).First();
+            var settings = Gdi.EnumerateDisplaySettings(device.DeviceName);
             settings.Should().NotBeEmpty();
         }
 
         [Fact]
         public void EnumerateDisplaySettings_FirstDevice_CurrentMode()
         {
-            var device = GdiMethods.EnumerateDisplayDevices(null).First();
-            var settings = GdiMethods.EnumerateDisplaySettings(device.DeviceName, GdiDefines.ENUM_CURRENT_SETTINGS).ToArray();
+            var device = Gdi.EnumerateDisplayDevices(null).First();
+            var settings = Gdi.EnumerateDisplaySettings(device.DeviceName, GdiDefines.ENUM_CURRENT_SETTINGS).ToArray();
             settings.Length.Should().Be(1);
         }
 
@@ -65,20 +62,20 @@ namespace DesktopTests.Gdi
         public void GetDeviceContext_NullWindow()
         {
             // Null here should be the entire screen
-            DeviceContext context = GdiMethods.GetDeviceContext(WindowHandle.Null);
+            DeviceContext context = Gdi.GetDeviceContext(WindowHandle.Null);
             context.IsInvalid.Should().BeFalse();
-            int pixelWidth = GdiMethods.GetDeviceCapability(context, DeviceCapability.HORZRES);
-            int pixelHeight = GdiMethods.GetDeviceCapability(context, DeviceCapability.VERTRES);
+            int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HORZRES);
+            int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VERTRES);
         }
 
         [Fact]
         public void GetWindowDeviceContext_NullWindow()
         {
             // Null here should be the entire screen
-            DeviceContext context = GdiMethods.GetWindowDeviceContext(WindowHandle.Null);
+            DeviceContext context = Gdi.GetWindowDeviceContext(WindowHandle.Null);
             context.IsInvalid.Should().BeFalse();
-            int pixelWidth = GdiMethods.GetDeviceCapability(context, DeviceCapability.HORZRES);
-            int pixelHeight = GdiMethods.GetDeviceCapability(context, DeviceCapability.VERTRES);
+            int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HORZRES);
+            int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VERTRES);
         }
 
         [Fact]
@@ -144,9 +141,9 @@ namespace DesktopTests.Gdi
         [Fact]
         public unsafe void EnumFont_Arial()
         {
-            using (var context = GdiMethods.GetDeviceContext(WindowMethods.GetDesktopWindow()))
+            using (var context = Gdi.GetDeviceContext(WindowMethods.GetDesktopWindow()))
             {
-                var info = GdiMethods.EnumerateFontFamilies(context, CharacterSet.ANSI_CHARSET, "Arial");
+                var info = Gdi.EnumerateFontFamilies(context, CharacterSet.ANSI_CHARSET, "Arial");
                 info.Count().Should().Be(4);
                 var regular = info.First();
                 regular.FontAttributes.elfEnumLogfontEx.elfFullName.CreateString().Should().Be("Arial");
@@ -154,7 +151,7 @@ namespace DesktopTests.Gdi
                 regular.FontAttributes.elfEnumLogfontEx.elfScript.CreateString().Should().Be("Western");
                 regular.TextMetrics.ntmTm.ntmFlags.Should().Be(TextMetricFlags.NTM_REGULAR | TextMetricFlags.NTM_TT_OPENTYPE | TextMetricFlags.NTM_DSIG);
                 regular.TextMetrics.ntmTm.tmPitchAndFamily.PitchTypes.Should().Be(FontPitchTypes.VariablePitch | FontPitchTypes.TrueType | FontPitchTypes.Vector);
-                regular.TextMetrics.ntmTm.tmPitchAndFamily.Family.Should().Be(FontFamily.Swiss);
+                regular.TextMetrics.ntmTm.tmPitchAndFamily.Family.Should().Be(FontFamilyType.Swiss);
                 regular.TextMetrics.ntmFontSig.UnicodeSubsetsOne.Should().Be(
                     UnicodeSubsetsOne.BasicLatin | UnicodeSubsetsOne.Latin1Supplement | UnicodeSubsetsOne.LatinExtendedA | UnicodeSubsetsOne.LatinExtendedB
                     | UnicodeSubsetsOne.IPAPhoneticExtensions | UnicodeSubsetsOne.SpacingToneModifier | UnicodeSubsetsOne.CombiningDiacriticalMarks
@@ -172,9 +169,9 @@ namespace DesktopTests.Gdi
         public void EnumFont_All()
         {
             // Just making sure we don't fall over
-            using (var context = GdiMethods.GetDeviceContext(WindowMethods.GetDesktopWindow()))
+            using (var context = Gdi.GetDeviceContext(WindowMethods.GetDesktopWindow()))
             {
-                GdiMethods.EnumerateFontFamilies(context, CharacterSet.DEFAULT_CHARSET, null).Should().NotBeEmpty();
+                Gdi.EnumerateFontFamilies(context, CharacterSet.DEFAULT_CHARSET, null).Should().NotBeEmpty();
             }
         }
 
@@ -182,7 +179,7 @@ namespace DesktopTests.Gdi
         public void GetSystemColorBrush()
         {
             // System color brushes are special- they'll always give the same value
-            BrushHandle brush = GdiMethods.GetSystemColorBrush(SystemColor.MenuBar);
+            BrushHandle brush = Gdi.GetSystemColorBrush(SystemColor.MenuBar);
             long handle = (long)brush.Handle.Handle;
             handle = handle & 0xFFFF00;
 

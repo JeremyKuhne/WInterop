@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Resources;
@@ -55,7 +56,7 @@ namespace Colors1
             }
         }
 
-        static COLORREF[] crPrim = { new COLORREF(255, 0, 0), new COLORREF(0, 255, 0), new COLORREF(0, 0, 255) };
+        static Color[] crPrim = { Color.Red, Color.Green, Color.Blue };
         static BrushHandle[] hBrush = new BrushHandle[3];
         static BrushHandle hBrushStatic;
         static WindowHandle[] hwndScroll = new WindowHandle[3];
@@ -64,7 +65,7 @@ namespace Colors1
         static WindowHandle hwndRect;
         static int[] color = new int[3];
         static int cyChar, idFocus;
-        static RECT rcColor;
+        static Rectangle rcColor;
         static string[] szColorLabel = { "Red", "Green", "Blue" };
         static IntPtr[] OldScroll = new IntPtr[3];
 
@@ -85,7 +86,7 @@ namespace Colors1
                     hwndRect = Windows.CreateWindow("static", null,
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.WhiteRectangle,
                         ExtendedWindowStyles.Default,
-                        0, 0, 0, 0,
+                        new Rectangle(),
                         window, (IntPtr)9, hInstance, IntPtr.Zero);
 
                     for (int i = 0; i < 3; i++)
@@ -95,7 +96,7 @@ namespace Colors1
                         hwndScroll[i] = Windows.CreateWindow("scrollbar", null,
                             WindowStyles.Child | WindowStyles.Visible | WindowStyles.TabStop | (WindowStyles)ScrollBarStyles.Veritcal,
                             ExtendedWindowStyles.Default,
-                            0, 0, 0, 0,
+                            new Rectangle(),
                             window, (IntPtr)i, hInstance, IntPtr.Zero);
 
                         hwndScroll[i].SetScrollRange(ScrollBar.Control, 0, 255, false);
@@ -106,7 +107,7 @@ namespace Colors1
                         hwndLabel[i] = Windows.CreateWindow("static", szColorLabel[i],
                             WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
                             ExtendedWindowStyles.Default,
-                            0, 0, 0, 0,
+                            new Rectangle(),
                             window, (IntPtr)i + 3, hInstance, IntPtr.Zero);
 
                         // The three color-value text fields have IDs 6, 7,
@@ -114,32 +115,35 @@ namespace Colors1
                         hwndValue[i] = Windows.CreateWindow("static", "0",
                             WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
                             ExtendedWindowStyles.Default,
-                            0, 0, 0, 0,
+                            new Rectangle(),
                             window, (IntPtr)i + 6, hInstance, IntPtr.Zero);
 
                         OldScroll[i] = hwndScroll[i].SetWindowProcedure(s_ScrollProcedure);
 
-                        hBrush[i] = Windows.CreateSolidBrush(crPrim[i]);
+                        hBrush[i] = Gdi.CreateSolidBrush(crPrim[i]);
                     }
 
-                    hBrushStatic = Windows.GetSystemColorBrush(SystemColor.ButtonHighlight);
-                    cyChar = Windows.GetDialogBaseUnits().cy;
+                    hBrushStatic = Gdi.GetSystemColorBrush(SystemColor.ButtonHighlight);
+                    cyChar = Windows.GetDialogBaseUnits().Height;
 
                     return 0;
                 case WindowMessage.Size:
                     int cxClient = lParam.LowWord;
                     int cyClient = lParam.HighWord;
-                    rcColor = new RECT(cxClient / 2, 0, cxClient, cyClient);
-                    hwndRect.MoveWindow(0, 0, cxClient / 2, cyClient, true);
+                    rcColor = Rectangle.FromLTRB(cxClient / 2, 0, cxClient, cyClient);
+                    hwndRect.MoveWindow(new Rectangle(0, 0, cxClient / 2, cyClient), repaint: true);
 
                     for (int i = 0; i < 3; i++)
                     {
-                        hwndScroll[i].MoveWindow((2 * i + 1) * cxClient / 14, 2 * cyChar,
-                            cxClient / 14, cyClient - 4 * cyChar, true);
-                        hwndLabel[i].MoveWindow((4 * i + 1) * cxClient / 28, cyChar / 2,
-                            cxClient / 7, cyChar, true);
-                        hwndValue[i].MoveWindow((4 * i + 1) * cxClient / 28, cyClient - 3 * cyChar / 2,
-                            cxClient / 7, cyChar, true);
+                        hwndScroll[i].MoveWindow(
+                            new Rectangle((2 * i + 1) * cxClient / 14, 2 * cyChar, cxClient / 14, cyClient - 4 * cyChar),
+                            repaint: true);
+                        hwndLabel[i].MoveWindow(
+                            new Rectangle((4 * i + 1) * cxClient / 28, cyChar / 2, cxClient / 7, cyChar),
+                            repaint: true);
+                        hwndValue[i].MoveWindow(
+                            new Rectangle((4 * i + 1) * cxClient / 28, cyClient - 3 * cyChar / 2, cxClient / 7, cyChar),
+                            repaint: true);
                     }
 
                     window.SetFocus();
@@ -183,7 +187,7 @@ namespace Colors1
                     hwndValue[id].SetWindowText(color[id].ToString());
 
                     // We'll dispose when we set the next brush
-                    BrushHandle brush = Windows.CreateSolidBrush((byte)color[0], (byte)color[1], (byte)color[2]);
+                    BrushHandle brush = Gdi.CreateSolidBrush(Color.FromArgb(color[0], color[1], color[2]));
 
                     window.SetClassBackgroundBrush(brush).Dispose();
                     window.InvalidateRectangle(rcColor, true);
@@ -202,7 +206,7 @@ namespace Colors1
                     }
                     break;
                 case WindowMessage.SystemColorChange:
-                    hBrushStatic = Windows.GetSystemColorBrush(SystemColor.ButtonHighlight);
+                    hBrushStatic = Gdi.GetSystemColorBrush(SystemColor.ButtonHighlight);
                     return 0;
                 case WindowMessage.Destroy:
                     window.SetClassBackgroundBrush(StockBrush.White).Dispose();

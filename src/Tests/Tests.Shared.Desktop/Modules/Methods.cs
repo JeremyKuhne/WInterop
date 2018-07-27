@@ -13,7 +13,6 @@ using Tests.Support;
 using WInterop.Storage;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Modules;
 using WInterop.Resources;
 using WInterop.Support;
 using Xunit;

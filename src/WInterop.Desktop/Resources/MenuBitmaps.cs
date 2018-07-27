@@ -7,6 +7,7 @@
 
 using System;
 using WInterop.Gdi;
+using WInterop.Gdi.Native;
 
 namespace WInterop.Resources
 {

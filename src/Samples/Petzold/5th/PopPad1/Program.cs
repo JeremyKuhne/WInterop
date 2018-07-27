@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Resources;
@@ -67,13 +68,13 @@ namespace PopPad1
                         WindowStyles.Child | WindowStyles.Visible | WindowStyles.HorizontalScroll | WindowStyles.VerticalScroll
                         | WindowStyles.Border | (WindowStyles)EditStyles.Left | (WindowStyles)EditStyles.Multiline
                         | (WindowStyles)EditStyles.AutoHorizontalScroll | (WindowStyles)EditStyles.AutoVerticalScroll,
-                        ExtendedWindowStyles.Default, 0, 0, 0, 0, window, (IntPtr)ID_EDIT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
+                        ExtendedWindowStyles.Default, new Rectangle(), window, (IntPtr)ID_EDIT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
                     return 0;
                 case WindowMessage.SetFocus:
                     hwndEdit.SetFocus();
                     return 0;
                 case WindowMessage.Size:
-                    hwndEdit.MoveWindow(0, 0, lParam.LowWord, lParam.HighWord, true);
+                    hwndEdit.MoveWindow(new Rectangle(0, 0, lParam.LowWord, lParam.HighWord), repaint: true);
                     return 0;
                 case WindowMessage.Command:
                     if (wParam.LowWord == ID_EDIT

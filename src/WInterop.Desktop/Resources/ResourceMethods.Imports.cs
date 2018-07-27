@@ -9,8 +9,10 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
+using WInterop.Gdi.Native;
 using WInterop.Modules;
 using WInterop.Resources;
+using WInterop.Resources.Native;
 using WInterop.Windows;
 
 namespace WInterop.Resources
@@ -377,7 +379,7 @@ namespace WInterop.Resources
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
             public static extern bool SetMenuInfo(
                 MenuHandle hmenu,
-                [In] ref MENUINFO lpcmi);
+                in MENUINFO lpcmi);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647998.aspx
             [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]

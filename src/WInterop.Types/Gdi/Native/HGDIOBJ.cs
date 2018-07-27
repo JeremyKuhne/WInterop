@@ -6,15 +6,18 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Gdi.Native;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi.Native
 {
-    // https://msdn.microsoft.com/en-us/library/dd145035.aspx
-    public struct LOGBRUSH
+    public readonly struct HGDIOBJ
     {
-        public BrushStyle lpStyle;
-        public COLORREF lbColor;
-        public UIntPtr lbHatch;
+        public IntPtr Handle { get; }
+
+        public HGDIOBJ(IntPtr handle)
+        {
+            Handle = handle;
+        }
+
+        public bool IsInvalid => Handle == IntPtr.Zero;
     }
 }

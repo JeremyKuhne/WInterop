@@ -7,19 +7,17 @@
 
 using System;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi.Native
 {
-    public readonly struct HRGN
+    public readonly struct HDC
     {
         public IntPtr Handle { get; }
 
-        public HRGN(IntPtr handle)
+        public HDC(IntPtr handle)
         {
             Handle = handle;
         }
 
-        public bool IsInvalid => Handle == IntPtr.Zero;
-
-        public static implicit operator HGDIOBJ(HRGN handle) => new HGDIOBJ(handle.Handle);
+        public bool IsInvalid => Handle == IntPtr.Zero || Handle == (IntPtr)(-1);
     }
 }

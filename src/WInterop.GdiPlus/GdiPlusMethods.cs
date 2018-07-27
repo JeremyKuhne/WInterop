@@ -62,13 +62,13 @@ namespace WInterop.GdiPlus
             Imports.GdiplusShutdown(token);
         }
 
-        public static GpPen CreatePen(ARGB color, float width = 1.0f, GpUnit unit = GpUnit.UnitWorld)
+        public static GpPen CreatePen(Color color, float width = 1.0f, GpUnit unit = GpUnit.UnitWorld)
         {
             ThrowIfFailed(Imports.GdipCreatePen1(color, width, unit, out GpPen pen));
             return pen;
         }
 
-        public static GpBrush CreateSolidBrush(ARGB color)
+        public static GpBrush CreateSolidBrush(Color color)
         {
             ThrowIfFailed(Imports.GdipCreateSolidFill(color, out GpBrush brush));
             return brush;
@@ -80,7 +80,7 @@ namespace WInterop.GdiPlus
         public static void FillEllipse(GpGraphics graphics, GpBrush brush, int x, int y, int width, int height)
             => ThrowIfFailed(Imports.GdipFillEllipseI(graphics, brush, x, y, width, height));
 
-        public static void GraphicsClear(GpGraphics graphics, ARGB color)
+        public static void GraphicsClear(GpGraphics graphics, Color color)
             => ThrowIfFailed(Imports.GdipGraphicsClear(graphics, color));
     }
 }

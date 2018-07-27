@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Resources;
@@ -66,14 +67,15 @@ namespace LineDemo
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        dc.Rectangle(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
+                        dc.Rectangle(Rectangle.FromLTRB(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8));
                         dc.MoveTo(0, 0);
                         dc.LineTo(cxClient, cyClient);
                         dc.MoveTo(0, cyClient);
                         dc.LineTo(cxClient, 0);
-                        dc.Ellipse(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8);
-                        dc.RoundRectangle(cxClient / 4, cyClient / 4, 3 * cxClient / 4, 3 * cyClient / 4,
-                            cxClient / 4, cyClient / 4);
+                        dc.Ellipse(Rectangle.FromLTRB(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8));
+                        dc.RoundRectangle(
+                            Rectangle.FromLTRB(cxClient / 4, cyClient / 4, 3 * cxClient / 4, 3 * cyClient / 4),
+                            new Size(cxClient / 4, cyClient / 4));
                     }
                     return 0;
                 case WindowMessage.Destroy:

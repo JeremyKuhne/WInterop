@@ -31,9 +31,9 @@ namespace WInterop.Gdi
             get => (FontPitchTypes)(RawValue & 0x0F);
         }
 
-        public FontFamily Family
+        public FontFamilyType Family
         {
-            get => (FontFamily)(RawValue & 0xF0);
+            get => (FontFamilyType)(RawValue & 0xF0);
             set => RawValue = (byte)((byte)value | (byte)Pitch);
         }
     }

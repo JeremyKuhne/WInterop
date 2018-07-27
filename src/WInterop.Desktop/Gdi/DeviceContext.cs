@@ -6,8 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Diagnostics;
-using WInterop.Support;
+using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -17,33 +16,29 @@ namespace WInterop.Gdi
     /// </summary>
     public readonly struct DeviceContext : IDisposable
     {
-        public HDC Handle => _paint.hdc;
+        public HDC Handle { get; }
         private readonly WindowHandle _window;
         private readonly CollectionType _type;
-        private readonly PAINTSTRUCT _paint;
 
-        public DeviceContext(HDC handle)
+        public DeviceContext(HDC handle, bool ownsHandle = false)
         {
             _window = default;
-            _paint = default;
-            _paint.hdc = handle;
-            _type = CollectionType.None;
+            Handle = handle;
+            _type = ownsHandle ? CollectionType.Delete : CollectionType.None;
         }
 
         public DeviceContext(HDC handle, WindowHandle windowHandle)
         {
             _window = windowHandle;
-            _paint = default;
-            _paint.hdc = handle;
-            _type = windowHandle.HWND == IntPtr.Zero
-                ? CollectionType.Release : CollectionType.Delete;
+            Handle = handle;
+            _type = CollectionType.Release;
         }
 
-        public DeviceContext(HDC handle, WindowHandle windowHandle, PAINTSTRUCT paint)
+        public DeviceContext(HDC handle, WindowHandle windowHandle, in PAINTSTRUCT paint)
         {
             _window = windowHandle;
-            _paint = paint;
             _type = CollectionType.EndPaint;
+            Handle = paint.hdc;
         }
 
         public void Dispose()
@@ -51,16 +46,19 @@ namespace WInterop.Gdi
             switch (_type)
             {
                 case CollectionType.Delete:
-                    if (!GdiMethods.Imports.DeleteDC(Handle))
+                    if (!Imports.DeleteDC(Handle))
                     { } // Debug.Fail("Failed to delete DC");
                     break;
                 case CollectionType.Release:
-                    if (!GdiMethods.Imports.ReleaseDC(_window, Handle))
+                    if (!Imports.ReleaseDC(_window, Handle))
                     { } // Debug.Fail("Failed to release DC");
                     break;
                 case CollectionType.EndPaint:
-                    if (!GdiMethods.Imports.EndPaint(_window, in _paint))
+                    PAINTSTRUCT ps = new PAINTSTRUCT(Handle);
+                    if (!Imports.EndPaint(_window, in ps))
                     { } // Debug.Fail("Failed to end paint");
+                    break;
+                case CollectionType.None:
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -83,7 +81,7 @@ namespace WInterop.Gdi
         public struct DeleteHDC
         {
             private HDC _handle;
-            public static implicit operator DeviceContext(DeleteHDC handle) => new DeviceContext(handle._handle, default);
+            public static implicit operator DeviceContext(DeleteHDC handle) => new DeviceContext(handle._handle);
         }
     }
 }

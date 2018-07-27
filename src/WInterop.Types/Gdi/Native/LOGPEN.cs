@@ -5,19 +5,15 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
+using System.Drawing;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi.Native
 {
-    public readonly struct HGDIOBJ
+    // https://msdn.microsoft.com/en-us/library/dd145041.aspx
+    public struct LOGPEN
     {
-        public IntPtr Handle { get; }
-
-        public HGDIOBJ(IntPtr handle)
-        {
-            Handle = handle;
-        }
-
-        public bool IsInvalid => Handle == IntPtr.Zero;
+        public PenStyle lopnStyle;
+        public Point lopnWidth;
+        public COLORREF lopnColor;
     }
 }

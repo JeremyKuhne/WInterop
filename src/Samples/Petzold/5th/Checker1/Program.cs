@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.ErrorHandling;
 using WInterop.Gdi;
 using WInterop.Modules;
@@ -74,13 +75,13 @@ namespace Checker1
                     if (x < DIVISIONS && y < DIVISIONS)
                     {
                         fState[x, y] ^= true;
-                        RECT rect = new RECT
-                        {
-                            left = x * cxBlock,
-                            top = y * cyBlock,
-                            right = (x + 1) * cxBlock,
-                            bottom = (y + 1) * cyBlock
-                        };
+                        Rectangle rect = Rectangle.FromLTRB
+                        (
+                            x * cxBlock,
+                            y * cyBlock,
+                            (x + 1) * cxBlock,
+                            (y + 1) * cyBlock
+                        );
                         window.InvalidateRectangle(rect, false);
                     }
                     else
@@ -95,8 +96,9 @@ namespace Checker1
                         for (x = 0; x < DIVISIONS; x++)
                             for (y = 0; y < DIVISIONS; y++)
                             {
-                                dc.Rectangle(x * cxBlock, y * cyBlock,
-                                    (x + 1) * cxBlock, (y + 1) * cyBlock);
+                                dc.Rectangle(new Rectangle(
+                                    x * cxBlock, y * cyBlock, (x + 1) * cxBlock, (y + 1) * cyBlock));
+
                                 if (fState[x,y])
                                 {
                                     dc.MoveTo(x * cxBlock, y * cyBlock);

@@ -79,7 +79,7 @@ namespace Connect
 
                         using (DeviceContext dc = window.GetDeviceContext())
                         {
-                            dc.SetPixel(lParam.LowWord, lParam.HighWord, 0);
+                            dc.SetPixel(lParam.LowWord, lParam.HighWord, default);
                         }
                     }
                     return 0;

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using Xunit;
 
-namespace DesktopTests.Gdi
+namespace GdiTests
 {
     public class DISPLAY_DEVICE_Tests
     {

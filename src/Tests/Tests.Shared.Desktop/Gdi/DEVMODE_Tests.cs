@@ -11,7 +11,7 @@ using WInterop;
 using WInterop.Gdi;
 using Xunit;
 
-namespace DesktopTests.Gdi
+namespace GdiTests
 {
     public class DEVMODE_Tests
     {

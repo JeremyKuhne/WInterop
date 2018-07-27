@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Resources;
@@ -111,10 +112,10 @@ namespace SysMets2
                         {
                             int y = cyChar * (i - iVscrollPos);
 
-                            dc.TextOut(0, y, metric.ToString());
-                            dc.TextOut(22 * cxCaps, y, SysMets.sysmetrics[metric]);
+                            dc.TextOut(new Point(0, y), metric.ToString().AsSpan());
+                            dc.TextOut(new Point(22 * cxCaps, y), SysMets.sysmetrics[metric].AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Right, TextAlignment.Vertical.Top));
-                            dc.TextOut(22 * cxCaps + 40 * cxChar, y, Windows.GetSystemMetrics(metric).ToString());
+                            dc.TextOut(new Point(22 * cxCaps + 40 * cxChar, y), Windows.GetSystemMetrics(metric).ToString().AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Left, TextAlignment.Vertical.Top));
                             i++;
                         }

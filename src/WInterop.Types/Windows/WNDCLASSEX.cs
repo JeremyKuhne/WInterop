@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi;
+using WInterop.Gdi.Native;
 
 namespace WInterop.Windows
 {

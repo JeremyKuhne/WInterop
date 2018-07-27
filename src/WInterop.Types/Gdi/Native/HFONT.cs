@@ -7,17 +7,20 @@
 
 using System;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi.Native
 {
-    public readonly struct HDC
+    public readonly struct HFONT
     {
         public IntPtr Handle { get; }
 
-        public HDC(IntPtr handle)
+        public HFONT(IntPtr handle)
         {
             Handle = handle;
         }
 
-        public bool IsInvalid => Handle == IntPtr.Zero || Handle == (IntPtr)(-1);
+        public bool IsInvalid => Handle == IntPtr.Zero;
+
+        public static implicit operator HGDIOBJ(HFONT handle) => new HGDIOBJ(handle.Handle);
+        public static explicit operator HFONT(HGDIOBJ handle) => new HFONT(handle.Handle);
     }
 }

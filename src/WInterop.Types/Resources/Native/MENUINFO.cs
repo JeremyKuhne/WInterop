@@ -7,8 +7,9 @@
 
 using System;
 using WInterop.Gdi;
+using WInterop.Gdi.Native;
 
-namespace WInterop.Resources
+namespace WInterop.Resources.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647575.aspx
     public struct MENUINFO

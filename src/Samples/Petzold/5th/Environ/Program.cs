@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.ProcessAndThreads;
@@ -77,17 +78,17 @@ namespace Environ
             switch (message)
             {
                 case WindowMessage.Create:
-                    SIZE baseUnits = Windows.GetDialogBaseUnits();
+                    Size baseUnits = Windows.GetDialogBaseUnits();
 
                     // Create listbox and static text windows.
                     hwndList = Windows.CreateWindow("listbox", null,
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard, ExtendedWindowStyles.Default,
-                        baseUnits.cx, baseUnits.cy * 3, baseUnits.cx * 64 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.cy * 20,
+                        new Rectangle(baseUnits.Width, baseUnits.Height * 3, baseUnits.Width * 64 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.Height * 20),
                         window, (IntPtr)ID_LIST, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
                     hwndText = Windows.CreateWindow("static", null,
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left, ExtendedWindowStyles.Default,
-                        baseUnits.cx, baseUnits.cy, Windows.GetSystemMetrics(SystemMetric.CYSCREEN), baseUnits.cy,
+                        new Rectangle(baseUnits.Width, baseUnits.Height, Windows.GetSystemMetrics(SystemMetric.CYSCREEN), baseUnits.Height),
                         window, (IntPtr)ID_TEXT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
 
                     FillListBox(hwndList);

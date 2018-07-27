@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Gdi;
+using WInterop.Gdi.Native;
 using WInterop.Windows;
 
-namespace WInterop.Resources
+namespace WInterop.Resources.Native
 {
     public struct MENUBARINFO
     {

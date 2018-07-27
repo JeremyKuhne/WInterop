@@ -6,10 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Windows;
-using WInterop.Windows;
 using Xunit;
 using FluentAssertions;
-using WInterop.Resources;
 using WInterop.Resources;
 
 namespace DesktopTests.Resources
