@@ -77,11 +77,5 @@ namespace WInterop.Gdi
             Release,
             EndPaint
         }
-
-        public struct DeleteHDC
-        {
-            private HDC _handle;
-            public static implicit operator DeviceContext(DeleteHDC handle) => new DeviceContext(handle._handle);
-        }
     }
 }

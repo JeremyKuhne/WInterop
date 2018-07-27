@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Resources;
-using WInterop.Resources;
 
 namespace WInterop.Windows
 {

@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Registry.Types;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using System.Runtime.InteropServices.ComTypes;

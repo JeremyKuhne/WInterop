@@ -11,7 +11,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling;
 using WInterop.SecurityManagement.Types;
 using WInterop.Support.Buffers;
 
