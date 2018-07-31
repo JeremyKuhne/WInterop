@@ -28,7 +28,7 @@ namespace WInterop.Storage
             // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createfile2 (kernel32)
             [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern SafeFileHandle CreateFile2(
-                string lpFileName,
+                ref char lpFileName,
                 DesiredAccess dwDesiredAccess,
                 ShareModes dwShareMode,
                 CreationDisposition dwCreationDisposition,
@@ -280,7 +280,7 @@ namespace WInterop.Storage
             // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-setcurrentdirectory
             [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
             public static extern bool SetCurrentDirectoryW(
-                string lpPathName);
+                ref char lpPathName);
 
             // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getlogicaldrives
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

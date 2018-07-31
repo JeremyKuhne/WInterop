@@ -7,9 +7,6 @@
 
 using System;
 using System.Drawing;
-using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace PopPad1
@@ -24,51 +21,25 @@ namespace PopPad1
         [STAThread]
         static void Main()
         {
-            const string szAppName = "PopPad1";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "PopPad1",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new PopPad1(), "Popup editor using child window edit box");
         }
+    }
 
-        static WindowHandle hwndEdit;
+    class PopPad1 : WindowClass
+    {
+        WindowHandle hwndEdit;
         const int ID_EDIT = 1;
 
-        unsafe static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case WindowMessage.Create:
-                    hwndEdit = Windows.CreateWindow("edit", null,
+                    hwndEdit = Windows.CreateWindow("edit", "",
                         WindowStyles.Child | WindowStyles.Visible | WindowStyles.HorizontalScroll | WindowStyles.VerticalScroll
                         | WindowStyles.Border | (WindowStyles)EditStyles.Left | (WindowStyles)EditStyles.Multiline
                         | (WindowStyles)EditStyles.AutoHorizontalScroll | (WindowStyles)EditStyles.AutoVerticalScroll,
-                        ExtendedWindowStyles.Default, new Rectangle(), window, (IntPtr)ID_EDIT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
+                        ExtendedWindowStyles.Default, new Rectangle(), window, (MenuHandle)ID_EDIT, ModuleInstance, IntPtr.Zero);
                     return 0;
                 case WindowMessage.SetFocus:
                     hwndEdit.SetFocus();
@@ -86,7 +57,7 @@ namespace PopPad1
                     return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

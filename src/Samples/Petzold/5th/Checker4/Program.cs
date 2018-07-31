@@ -7,10 +7,7 @@
 
 using System;
 using System.Drawing;
-using WInterop.ErrorHandling;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Checker4
@@ -22,55 +19,23 @@ namespace Checker4
     /// </summary>
     static class Program
     {
-        const string szChildClass = "Checker4_Child";
-
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Checker4";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            wndclass.WindowProcedure = ChildWindowProcedure;
-            wndclass.WindowExtraBytes = IntPtr.Size;
-            wndclass.ClassName = szChildClass;
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Checker4 Mouse Hit-Test Demo",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Checker4(), "Checker4 Mouse Hit-Test Demo");
         }
+    }
 
+    class Checker4 : WindowClass
+    {
         const int DIVISIONS = 5;
-        static WindowHandle[,] hwndChild = new WindowHandle[DIVISIONS, DIVISIONS];
-        static int cxBlock, cyBlock;
-        static int idFocus = 0;
+        WindowHandle[,] hwndChild = new WindowHandle[DIVISIONS, DIVISIONS];
+        int cxBlock, cyBlock;
+        public static int idFocus = 0;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        Checker4Child _childClass = (Checker4Child)(new Checker4Child().Register());
+
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             int x, y;
             switch (message)
@@ -78,16 +43,10 @@ namespace Checker4
                 case WindowMessage.Create:
                     for (x = 0; x < DIVISIONS; x++)
                         for (y = 0; y < DIVISIONS; y++)
-                            hwndChild[x, y] = Windows.CreateWindow(
-                                szChildClass,
-                                null,
-                                WindowStyles.ChildWindow | WindowStyles.Visible,
-                                ExtendedWindowStyles.Default,
-                                new Rectangle(),
-                                window,
-                                (IntPtr)(y << 8 | x),
-                                window.GetWindowLong(WindowLong.InstanceHandle),
-                                IntPtr.Zero);
+                            hwndChild[x, y] = _childClass.CreateWindow(
+                                style: WindowStyles.ChildWindow | WindowStyles.Visible,
+                                parentWindow: window,
+                                menuHandle: (MenuHandle)(y << 8 | x));
                     return 0;
                 case WindowMessage.Size:
                     cxBlock = lParam.LowWord / DIVISIONS;
@@ -99,7 +58,7 @@ namespace Checker4
                                 repaint: true);
                     return 0;
                 case WindowMessage.LeftButtonDown:
-                    ErrorMethods.MessageBeep(BeepType.Ok);
+                    Windows.MessageBeep(BeepType.Ok);
                     return 0;
                 // On set-focus message, set focus to child window
                 case WindowMessage.SetFocus:
@@ -124,15 +83,20 @@ namespace Checker4
                     idFocus = y << 8 | x;
                     window.GetDialogItem(idFocus).SetFocus();
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
+        }
+    }
+
+    class Checker4Child : WindowClass
+    {
+        public Checker4Child()
+            : base(windowExtraBytes: IntPtr.Size)
+        {
         }
 
-        static LRESULT ChildWindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -156,7 +120,7 @@ namespace Checker4
                     return 0;
                 // For focus messages, invalidate the window for repaint
                 case WindowMessage.SetFocus:
-                    idFocus = (int)window.GetWindowLong(WindowLong.Id);
+                    Checker4.idFocus = (int)window.GetWindowLong(WindowLong.Id);
                     // Fall through
                     goto case WindowMessage.KillFocus;
                 case WindowMessage.KillFocus:
@@ -170,10 +134,10 @@ namespace Checker4
 
                         if (window.GetWindowLong(0) != IntPtr.Zero)
                         {
-                            dc.MoveTo(0, 0);
-                            dc.LineTo(rect.Right, rect.Bottom);
-                            dc.MoveTo(0, rect.Bottom);
-                            dc.LineTo(rect.Right, 0);
+                            dc.MoveTo(new Point(0, 0));
+                            dc.LineTo(new Point(rect.Right, rect.Bottom));
+                            dc.MoveTo(new Point(0, rect.Bottom));
+                            dc.LineTo(new Point(rect.Right, 0));
                         }
 
                         // Draw the "focus" rectangle
@@ -192,7 +156,8 @@ namespace Checker4
                     }
                     return 0;
             }
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

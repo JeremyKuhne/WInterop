@@ -7,7 +7,6 @@
 
 using System;
 using WInterop.ErrorHandling;
-using WInterop.ErrorHandling;
 using WInterop.Support;
 
 namespace WInterop

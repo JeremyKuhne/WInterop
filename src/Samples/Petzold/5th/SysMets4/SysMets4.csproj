@@ -2,10 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\SysMets\Metrics.cs" Link="Metrics.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\WInterop.Desktop\WInterop.Desktop.csproj" />
     <ProjectReference Include="..\..\..\..\WInterop.Types\WInterop.Types.csproj" />

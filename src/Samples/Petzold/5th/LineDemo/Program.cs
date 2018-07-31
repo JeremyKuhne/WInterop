@@ -9,7 +9,6 @@ using System;
 using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace LineDemo
@@ -25,7 +24,7 @@ namespace LineDemo
         static void Main()
         {
             ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
+            WindowClassInfo wndclass = new WindowClassInfo
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
@@ -39,12 +38,12 @@ namespace LineDemo
             Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = Windows.CreateWindow(
-                module,
                 "LineDemo",
                 "Line Demonstration",
-                WindowStyles.OverlappedWindow);
+                WindowStyles.OverlappedWindow,
+                instance: module);
 
-            window.ShowWindow(ShowWindow.Normal);
+            window.ShowWindow(ShowWindowCommand.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -68,10 +67,10 @@ namespace LineDemo
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.Rectangle(Rectangle.FromLTRB(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8));
-                        dc.MoveTo(0, 0);
-                        dc.LineTo(cxClient, cyClient);
-                        dc.MoveTo(0, cyClient);
-                        dc.LineTo(cxClient, 0);
+                        dc.MoveTo(new Point(0, 0));
+                        dc.LineTo(new Point(cxClient, cyClient));
+                        dc.MoveTo(new Point(0, cyClient));
+                        dc.LineTo(new Point(cxClient, 0));
                         dc.Ellipse(Rectangle.FromLTRB(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8));
                         dc.RoundRectangle(
                             Rectangle.FromLTRB(cxClient / 4, cyClient / 4, 3 * cxClient / 4, 3 * cyClient / 4),

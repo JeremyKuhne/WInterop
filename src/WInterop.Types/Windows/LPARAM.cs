@@ -7,31 +7,32 @@
 
 using System;
 using WInterop.Support;
+using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
     public struct LPARAM
     {
-        public IntPtr RawValue;
+        public IntPtr Value;
 
-        public ushort LowWord => Conversion.LowWord(RawValue);
-        public ushort HighWord => Conversion.HighWord(RawValue);
+        public ushort LowWord => Conversion.LowWord(Value);
+        public ushort HighWord => Conversion.HighWord(Value);
 
-        public LPARAM(IntPtr value) => RawValue = value;
-        public LPARAM(short high, short low) => RawValue = (IntPtr)Conversion.HighLowToInt(high, low);
-        public LPARAM(int high, int low) => RawValue = (IntPtr)Conversion.HighLowToInt(checked((short)high), checked((short)low));
+        public LPARAM(IntPtr value) => Value = value;
+        public LPARAM(short high, short low) => Value = (IntPtr)Conversion.HighLowToInt(high, low);
+        public LPARAM(int high, int low) => Value = (IntPtr)Conversion.HighLowToInt(checked((short)high), checked((short)low));
 
-        public static implicit operator int(LPARAM value) => (int)value.RawValue.ToInt64();
-        public static explicit operator uint(LPARAM value) => (uint)value.RawValue.ToInt64();
+        public static implicit operator int(LPARAM lParam) => (int)lParam.Value.ToInt64();
+        public static explicit operator uint(LPARAM lParam) => (uint)lParam.Value.ToInt64();
         public static implicit operator LPARAM(int value) => new LPARAM((IntPtr)value);
         public static implicit operator LPARAM(IntPtr value) => new LPARAM(value);
-        public static implicit operator IntPtr(LPARAM value) => value.RawValue;
+        public static implicit operator IntPtr(LPARAM lParam) => lParam.Value;
 
-        public unsafe static implicit operator void*(LPARAM value) => value.RawValue.ToPointer();
+        public unsafe static implicit operator void*(LPARAM lParam) => lParam.Value.ToPointer();
         public unsafe static implicit operator LPARAM (void* value) => new LPARAM((IntPtr)value);
-        public static explicit operator WindowHandle(LPARAM value) => value.RawValue;
-        public static explicit operator LPARAM(WindowHandle value) => new LPARAM(value.HWND);
+        public static explicit operator WindowHandle(LPARAM lParam) => new HWND(lParam.Value);
+        public static explicit operator LPARAM(WindowHandle value) => new LPARAM(value.HWND.Value);
 
-        public override string ToString() => RawValue.ToString();
+        public override string ToString() => Value.ToString();
     }
 }

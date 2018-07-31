@@ -38,36 +38,6 @@ namespace WInterop.ErrorHandling
                 ErrorMode dwNewMode,
                 out ErrorMode lpOldMode);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679277.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool Beep(
-                uint dwFreq,
-                uint dwDurations);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679277.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool MessageBeep(
-                BeepType uType);
-        }
-
-        /// <summary>
-        /// Emit a beep.
-        /// </summary>
-        /// <param name="frequency">Frequency in hertz.</param>
-        /// <param name="duration">Duration in milliseconds.</param>
-        public static void Beep(uint frequency, uint duration)
-        {
-            if (!Imports.Beep(frequency, duration))
-                throw Errors.GetIoExceptionForLastError();
-        }
-
-        /// <summary>
-        /// Play the specified sound (as defined in the Sound control panel).
-        /// </summary>
-        public static void MessageBeep(BeepType type = BeepType.SimpleBeep)
-        {
-            if (!Imports.MessageBeep(type))
-                throw Errors.GetIoExceptionForLastError();
         }
 
         /// <summary>

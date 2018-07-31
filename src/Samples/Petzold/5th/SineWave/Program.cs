@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace SineWave
@@ -24,39 +22,16 @@ namespace SineWave
         [STAThread]
         static void Main()
         {
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = "SineWave"
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                "SineWave",
-                "Sine Wave Using PolyLine",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new SineWave(), "Sine Wave Using PolyLine");
         }
+    }
 
-        static int cxClient, cyClient;
+    class SineWave : WindowClass
+    {
+        int cxClient, cyClient;
+        Point[] apt = new Point[1000];
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -67,10 +42,9 @@ namespace SineWave
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        dc.MoveTo(0, cyClient / 2);
-                        dc.LineTo(cxClient, cyClient / 2);
+                        dc.MoveTo(new Point(0, cyClient / 2));
+                        dc.LineTo(new Point(cxClient, cyClient / 2));
 
-                        Point[] apt = new Point[1000];
                         for (int i = 0; i < apt.Length; i++)
                         {
                             apt[i].X = i * cxClient / apt.Length;
@@ -79,12 +53,9 @@ namespace SineWave
                         dc.Polyline(apt);
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

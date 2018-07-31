@@ -13,11 +13,8 @@ using WInterop.GdiPlus;
 
 using System;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.SystemInformation.Types;
 using WInterop.Windows;
-using WInterop.Console;
 using System.Drawing;
 
 namespace Clock
@@ -32,49 +29,23 @@ namespace Clock
         [STAThread]
         static void Main()
         {
-            // Hack for launching as a .NET Core Windows Application
-            ConsoleMethods.TryFreeConsole();
-
 #if GDIPLUS
             UIntPtr token = GdiPlusMethods.Startup();
 #endif
-            const string szAppName = "Clock";
 
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Analog Clock",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Clock(), "Analog Clock");
 
 #if GDIPLUS
             GdiPlusMethods.Shutdown(token);
 #endif
         }
+    }
 
-        static void SetIsotropic(DeviceContext hdc, int cxClient, int cyClient)
+    class Clock : WindowClass
+    {
+        public Clock() : base(backgroundBrush: StockBrush.White) { }
+
+        void SetIsotropic(DeviceContext hdc, int cxClient, int cyClient)
         {
             hdc.SetMapMode(MapMode.Isotropic);
             hdc.SetWindowExtents(1000, 1000);
@@ -82,7 +53,7 @@ namespace Clock
             hdc.SetViewportOrigin(cxClient / 2, cyClient / 2);
         }
 
-        static void RotatePoint(Point[] pt, int iNum, int iAngle)
+        void RotatePoint(Point[] pt, int iNum, int iAngle)
         {
              for (int i = 0; i < iNum; i++)
             {
@@ -94,7 +65,7 @@ namespace Clock
             }
         }
 
-        static void DrawClock(DeviceContext dc)
+        void DrawClock(DeviceContext dc)
         {
             int iAngle;
             Point[] pt = new Point[3];
@@ -129,7 +100,7 @@ namespace Clock
 #endif
         }
 
-        static void DrawHands(DeviceContext dc, SYSTEMTIME pst, bool fChange)
+        void DrawHands(DeviceContext dc, SYSTEMTIME pst, bool fChange)
         {
             int[] iAngle =
             {
@@ -187,7 +158,7 @@ namespace Clock
         static int cxClient, cyClient;
         static SYSTEMTIME stPrevious;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -221,13 +192,9 @@ namespace Clock
                         DrawHands(dc, stPrevious, true);
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    window.KillTimer(ID_TIMER);
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

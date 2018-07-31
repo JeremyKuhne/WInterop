@@ -78,7 +78,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Checker4", "Samples\Petzold
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blokout2", "Samples\Petzold\5th\Blokout2\Blokout2.csproj", "{B32D80EF-5F4A-4476-989E-C98EDE93FB50}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SysMets", "Samples\Petzold\5th\SysMets\SysMets.csproj", "{513338DE-9A71-4F2A-A4BA-95389A6166A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SysMetsFinal", "Samples\Petzold\5th\SysMets\SysMetsFinal.csproj", "{513338DE-9A71-4F2A-A4BA-95389A6166A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beeper1", "Samples\Petzold\5th\Beeper1\Beeper1.csproj", "{24B6950D-846C-4F2E-95B0-81253DAE49D0}"
 EndProject

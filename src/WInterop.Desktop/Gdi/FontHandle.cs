@@ -17,8 +17,6 @@ namespace WInterop.Gdi
         public HFONT Handle { get; }
         private readonly bool _ownsHandle;
 
-        public static RegionHandle Null = new RegionHandle(default);
-
         public FontHandle(HFONT handle, bool ownsHandle = true)
         {
             Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Font);
@@ -37,7 +35,7 @@ namespace WInterop.Gdi
 
         public static implicit operator HGDIOBJ(FontHandle handle) => handle.Handle;
         public static implicit operator HFONT(FontHandle handle) => handle.Handle;
-        public static implicit operator LRESULT(FontHandle handle) => handle.Handle.Handle;
+        public static implicit operator LRESULT(FontHandle handle) => handle.Handle.Value;
         public static implicit operator GdiObjectHandle(FontHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
         public static implicit operator FontHandle(StockFont font) => Gdi.GetStockFont(font);
     }

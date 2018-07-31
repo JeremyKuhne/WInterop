@@ -8,7 +8,7 @@
 namespace WInterop.Windows
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548.aspx
-    public enum ShowWindow : int
+    public enum ShowWindowCommand : int
     {
         /// <summary>
         /// Hides the window, activating another window. (SW_HIDE)

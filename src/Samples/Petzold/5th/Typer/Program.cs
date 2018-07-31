@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Typer
@@ -24,43 +22,17 @@ namespace Typer
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Typer";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Typing Program",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Typer(), "Typing Program");
         }
+    }
 
-        static int cxChar, cyChar, cxClient, cyClient, cxBuffer, cyBuffer, xCaret, yCaret;
-        static CharacterSet dwCharSet = CharacterSet.DEFAULT_CHARSET;
-        static char[,] pBuffer;
+    class Typer : WindowClass
+    {
+        int cxChar, cyChar, cxClient, cyClient, cxBuffer, cyBuffer, xCaret, yCaret;
+        CharacterSet dwCharSet = CharacterSet.DEFAULT_CHARSET;
+        char[,] pBuffer;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -99,14 +71,14 @@ namespace Typer
                     yCaret = 0;
 
                     if (window == Windows.GetFocus())
-                        Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                        Windows.SetCaretPosition(new Point(xCaret * cxChar, yCaret * cyChar));
 
                     window.Invalidate(true);
                     return 0;
                 case WindowMessage.SetFocus:
                     // create and show the caret
-                    window.CreateCaret(default, cxChar, cyChar);
-                    Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    window.CreateCaret(default, new Size(cxChar, cyChar));
+                    Windows.SetCaretPosition(new Point(xCaret * cxChar, yCaret * cyChar));
                     window.ShowCaret();
                     return 0;
                 case WindowMessage.KillFocus:
@@ -167,7 +139,7 @@ namespace Typer
                             }
                             break;
                     }
-                    Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    Windows.SetCaretPosition(new Point(xCaret * cxChar, yCaret * cyChar));
                     return 0;
 
                 case WindowMessage.Char:
@@ -236,7 +208,7 @@ namespace Typer
                                 break;
                         }
                     }
-                    Windows.SetCaretPosition(xCaret * cxChar, yCaret * cyChar);
+                    Windows.SetCaretPosition(new Point(xCaret * cxChar, yCaret * cyChar));
                     return 0;
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
@@ -255,12 +227,9 @@ namespace Typer
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

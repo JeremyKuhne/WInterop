@@ -9,8 +9,8 @@ using System;
 using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
+using WInterop.Windows.Native;
 
 namespace OwnDraw
 {
@@ -27,7 +27,7 @@ namespace OwnDraw
             const string szAppName = "OwnDraw";
 
             ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
+            WindowClassInfo wndclass = new WindowClassInfo
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
@@ -41,12 +41,12 @@ namespace OwnDraw
             Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = Windows.CreateWindow(
-                module,
                 szAppName,
                 "Owner-Draw Button Demo",
-                WindowStyles.OverlappedWindow);
+                WindowStyles.OverlappedWindow,
+                instance: module);
 
-            window.ShowWindow(ShowWindow.Normal);
+            window.ShowWindow(ShowWindowCommand.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))
@@ -83,16 +83,18 @@ namespace OwnDraw
                     // Create the owner-draw pushbuttons
                     CREATESTRUCT* create = (CREATESTRUCT*)lParam;
 
-                    hwndSmaller = Windows.CreateWindow("button", "",
-                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
-                        ExtendedWindowStyles.Default,
-                        new Size(btnWidth, btnHeight),
-                        window, (IntPtr)ID_SMALLER, create->Instance, IntPtr.Zero);
-                    hwndLarger = Windows.CreateWindow("button", "",
-                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
-                        ExtendedWindowStyles.Default,
-                        new Size(btnWidth, btnHeight),
-                        window, (IntPtr)ID_LARGER, create->Instance, IntPtr.Zero);
+                    hwndLarger = Windows.CreateWindow("button",
+                        style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
+                        bounds: new Rectangle(0, 0, btnWidth, btnHeight),
+                        parentWindow: window,
+                        menuHandle: (MenuHandle)ID_SMALLER,
+                        instance: create->hInstance);
+                    hwndLarger = Windows.CreateWindow("button",
+                        style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
+                        bounds: new Rectangle(0, 0, btnWidth, btnHeight),
+                        parentWindow: window,
+                        menuHandle: (MenuHandle)ID_LARGER,
+                        instance: create->hInstance);
 
                     return 0;
                 case WindowMessage.Size:

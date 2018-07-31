@@ -4,7 +4,6 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net462</TargetFramework>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\WInterop.Desktop\WInterop.Desktop.csproj" />

@@ -608,7 +608,7 @@ namespace WInterop.Storage
         {
             List<BackupStreamInformation> streams = new List<BackupStreamInformation>();
             using (var fileHandle = CreateFile(
-                path: path,
+                path: path.AsSpan(),
                 // To look at metadata we don't need read or write access
                 desiredAccess: 0,
                 shareMode: ShareModes.ReadWrite,

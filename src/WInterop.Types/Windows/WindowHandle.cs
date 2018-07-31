@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
@@ -14,37 +15,37 @@ namespace WInterop.Windows
     /// </summary>
     public readonly struct WindowHandle
     {
-        public IntPtr HWND { get; }
+        public HWND HWND { get; }
 
-        public static WindowHandle Null = new WindowHandle(IntPtr.Zero);
+        public static WindowHandle Null = new WindowHandle(default);
 
         // Special handles for setting position
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545.aspx
 
         /// <summary>
-        /// For placing windows at the bottom of the Z order.
+        /// For placing windows at the top of the Z order. [HWND_TOP]
         /// </summary>
-        public static WindowHandle HWND_BOTTOM = new WindowHandle(new IntPtr(1));
+        public static WindowHandle Top = new WindowHandle(default);
 
         /// <summary>
-        /// For placing windows behind all topmost windows (if not already non-topmost).
+        /// For placing windows at the bottom of the Z order. [HWND_BOTTOM]
         /// </summary>
-        public static WindowHandle HWND_NOTOPMOST = new WindowHandle(new IntPtr(-2));
+        public static WindowHandle Bottom = new WindowHandle(new HWND(new IntPtr(1)));
 
         /// <summary>
-        /// For placing windows at the top of the Z order.
+        /// For placing windows behind all topmost windows (if not already non-topmost). [HWND_NOTOPMOST]
         /// </summary>
-        public static WindowHandle HWND_TOP = new WindowHandle(IntPtr.Zero);
+        public static WindowHandle NoTopMost = new WindowHandle(new HWND(new IntPtr(-2)));
 
         /// <summary>
-        /// For placing windows above all non-topmost windows.
+        /// For placing windows above all non-topmost windows. [HWND_TOPMOST]
         /// </summary>
-        public static WindowHandle HWND_TOPMOST = new WindowHandle(new IntPtr(-1));
+        public static WindowHandle TopMost = new WindowHandle(new HWND(new IntPtr(-1)));
 
-        public WindowHandle(IntPtr hwnd) => HWND = hwnd;
+        public WindowHandle(HWND hwnd) => HWND = hwnd;
 
-        public static implicit operator IntPtr(WindowHandle handle) => handle.HWND;
-        public static implicit operator WindowHandle(IntPtr handle) => new WindowHandle(handle);
+        public static implicit operator HWND(WindowHandle handle) => handle.HWND;
+        public static implicit operator WindowHandle(HWND handle) => new WindowHandle(handle);
 
         public override int GetHashCode() => HWND.GetHashCode();
 
@@ -61,6 +62,6 @@ namespace WInterop.Windows
 
         public static bool operator !=(WindowHandle a, WindowHandle b) => a.HWND != b.HWND;
 
-        public bool IsValid => HWND != IntPtr.Zero && HWND != (IntPtr)(-1);
+        public bool IsInvalid => HWND.IsInvalid;
     }
 }

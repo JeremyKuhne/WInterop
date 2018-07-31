@@ -11,18 +11,13 @@ namespace WInterop.Modules.Native
 {
     public readonly struct HMODULE
     {
-        public IntPtr Handle { get; }
+        public IntPtr Value { get; }
 
         public HMODULE(IntPtr handle)
         {
-            Handle = handle;
+            Value = handle;
         }
 
-        public bool IsInvalid => Handle == IntPtr.Zero;
-
-        public readonly struct Owned
-        {
-            public IntPtr Handle { get; }
-        }
+        public bool IsInvalid => Value == IntPtr.Zero;
     }
 }

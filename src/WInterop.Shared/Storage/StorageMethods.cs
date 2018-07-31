@@ -75,9 +75,9 @@ namespace WInterop.Storage
         /// Gets a canonical version of the given file's path.
         /// </summary>
         /// <param name="resolveLinks">True to get the destination of links rather than the link itself.</param>
-        public static string GetFinalPathName(string path, GetFinalPathNameByHandleFlags finalPathFlags, bool resolveLinks)
+        public static string GetFinalPathName(StringSpan path, GetFinalPathNameByHandleFlags finalPathFlags, bool resolveLinks)
         {
-            if (path == null) return null;
+            if (path.IsEmpty) return null;
 
             // BackupSemantics is needed to get directory handles
             FileFlags flags = FileFlags.BackupSemantics;
@@ -145,7 +145,7 @@ namespace WInterop.Storage
         /// Wrapper that allows getting a file stream using System.IO defines.
         /// </summary>
         public static System.IO.Stream CreateFileStream(
-            string path,
+            StringSpan path,
             System.IO.FileAccess fileAccess,
             System.IO.FileShare fileShare,
             System.IO.FileMode fileMode,
@@ -167,7 +167,7 @@ namespace WInterop.Storage
         /// Get a stream for the specified file.
         /// </summary>
         public static System.IO.Stream CreateFileStream(
-            string path,
+            StringSpan path,
             DesiredAccess desiredAccess,
             ShareModes shareMode,
             CreationDisposition creationDisposition,
@@ -186,7 +186,7 @@ namespace WInterop.Storage
         }
 
         private delegate SafeFileHandle CreateFileDelegate(
-            string path,
+            StringSpan path,
             DesiredAccess desiredAccess,
             ShareModes shareMode,
             CreationDisposition creationDisposition,
@@ -200,7 +200,7 @@ namespace WInterop.Storage
         /// Wrapper that allows using System.IO defines where available. Calls CreateFile2 if available.
         /// </summary>
         public static SafeFileHandle CreateFileSystemIo(
-            string path,
+            StringSpan path,
             System.IO.FileAccess fileAccess,
             System.IO.FileShare fileShare,
             System.IO.FileMode fileMode,
@@ -222,7 +222,7 @@ namespace WInterop.Storage
         /// CreateFile wrapper that attempts to use CreateFile2 if running as Windows Store app.
         /// </summary>
         public static SafeFileHandle CreateFile(
-            string path,
+            StringSpan path,
             CreationDisposition creationDisposition,
             DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite,
             ShareModes shareMode = ShareModes.ReadWrite,
@@ -253,7 +253,7 @@ namespace WInterop.Storage
         /// CreateFile2 wrapper. Only available on Windows 8 and above.
         /// </summary>
         public static unsafe SafeFileHandle CreateFile2(
-            string path,
+            StringSpan path,
             DesiredAccess desiredAccess,
             ShareModes shareMode,
             CreationDisposition creationDisposition,
@@ -270,14 +270,14 @@ namespace WInterop.Storage
             };
 
             SafeFileHandle handle = Imports.CreateFile2(
-                lpFileName: path,
+                lpFileName: ref MemoryMarshal.GetReference(path.GetSpanWithoutTerminator()),
                 dwDesiredAccess: desiredAccess,
                 dwShareMode: shareMode,
                 dwCreationDisposition: creationDisposition,
                 pCreateExParams: ref extended);
 
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Errors.GetIoExceptionForLastError(path.ToString());
 
             return handle;
         }
@@ -794,7 +794,7 @@ namespace WInterop.Storage
         /// <summary>
         /// Simple wrapper to allow creating a file handle for an existing directory.
         /// </summary>
-        public static SafeFileHandle CreateDirectoryHandle(string directoryPath, DesiredAccess desiredAccess = DesiredAccess.ListDirectory)
+        public static SafeFileHandle CreateDirectoryHandle(StringSpan directoryPath, DesiredAccess desiredAccess = DesiredAccess.ListDirectory)
         {
             return CreateFile(
                 directoryPath,
@@ -825,10 +825,10 @@ namespace WInterop.Storage
         /// <summary>
         /// Set the current directory.
         /// </summary>
-        public static void SetCurrentDirectory(string path)
+        public static void SetCurrentDirectory(StringSpan path)
         {
-            if (!Imports.SetCurrentDirectoryW(path))
-                throw Errors.GetIoExceptionForLastError(path);
+            if (!Imports.SetCurrentDirectoryW(ref MemoryMarshal.GetReference(path.GetSpanWithoutTerminator())))
+                throw Errors.GetIoExceptionForLastError(path.ToString());
         }
 
         /// <summary>

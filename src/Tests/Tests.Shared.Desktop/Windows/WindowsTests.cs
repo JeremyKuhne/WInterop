@@ -11,73 +11,73 @@ using System.IO;
 using WInterop.Windows;
 using Xunit;
 
-namespace DesktopTests.Windows
+namespace WindowsTests
 {
     public class WindowsTests
     {
         [Fact]
         public void BasicGetDesktopWindow()
         {
-            WindowMethods.GetDesktopWindow().Should().NotBe(WindowHandle.Null);
+            Windows.GetDesktopWindow().Should().NotBe(WindowHandle.Null);
         }
 
         [Fact]
         public void BasicGetShellWindow()
         {
-            WindowMethods.GetShellWindow().Should().NotBe(WindowHandle.Null);
+            Windows.GetShellWindow().Should().NotBe(WindowHandle.Null);
         }
 
         [Fact]
         public void IsWindowShell()
         {
-            var window = WindowMethods.GetShellWindow();
-            WindowMethods.IsWindow(window).Should().BeTrue();
+            var window = Windows.GetShellWindow();
+            Windows.IsWindow(window).Should().BeTrue();
         }
 
         [Fact]
         public void IsWindowUnicodeShell()
         {
-            var window = WindowMethods.GetShellWindow();
-            WindowMethods.IsWindowUnicode(window).Should().BeTrue();
+            var window = Windows.GetShellWindow();
+            Windows.IsWindowUnicode(window).Should().BeTrue();
         }
 
         [Fact]
         public void IsWindowVisibleShell()
         {
-            var window = WindowMethods.GetShellWindow();
-            WindowMethods.IsWindowVisible(window).Should().BeTrue();
+            var window = Windows.GetShellWindow();
+            Windows.IsWindowVisible(window).Should().BeTrue();
         }
 
         [Fact]
         public void IsWindowVisibleDesktop()
         {
-            var window = WindowMethods.GetDesktopWindow();
-            WindowMethods.IsWindowVisible(window).Should().BeTrue();
+            var window = Windows.GetDesktopWindow();
+            Windows.IsWindowVisible(window).Should().BeTrue();
         }
 
         [Fact]
         public void GetTopWindow()
         {
-            WindowMethods.GetTopWindow(WindowHandle.Null).Should().NotBe(WindowHandle.Null);
+            Windows.GetTopWindow(WindowHandle.Null).Should().NotBe(WindowHandle.Null);
         }
 
         [Fact]
         public void IsGuiThread()
         {
             // Could be either, make sure we don't choke.
-            WindowMethods.IsGuiThread();
+            Windows.IsGuiThread();
         }
 
         [Fact]
         public void GetClassName()
         {
-            WindowMethods.GetClassName(WindowMethods.GetShellWindow()).Should().Be("Progman");
+            Windows.GetClassName(Windows.GetShellWindow()).Should().Be("Progman");
         }
 
         [Fact]
         public void GetClassName_NullWindow()
         {
-            Action action = () => WindowMethods.GetClassName(WindowHandle.Null);
+            Action action = () => Windows.GetClassName(WindowHandle.Null);
 
             // Invalid window handle. (1400)
             action.Should().Throw<IOException>().And.HResult.Should().Be(unchecked((int)0x80070578));
@@ -86,7 +86,7 @@ namespace DesktopTests.Windows
         [Fact]
         public void GetOwner_Desktop()
         {
-            var window = WindowMethods.GetWindow(WindowMethods.GetDesktopWindow(), GetWindowOption.GW_OWNER);
+            var window = Windows.GetWindow(Windows.GetDesktopWindow(), GetWindowOption.GW_OWNER);
             window.Should().Be(WindowHandle.Null);
         }
 
@@ -94,19 +94,19 @@ namespace DesktopTests.Windows
         public void GetKeyboardType()
         {
             // Don't know that you can ever get something other than Enhanced?
-            WindowMethods.GetKeyboardType().Should().Be(KeyboardType.Enhanced);
+            Windows.GetKeyboardType().Should().Be(KeyboardType.Enhanced);
         }
 
         [Fact]
         public void GetKeyboardSubtype()
         {
-            int subType = WindowMethods.GetKeyboardSubType();
+            int subType = Windows.GetKeyboardSubType();
         }
 
         [Fact]
         public void GetKeyboardFunctionKeyCount()
         {
-            int keyCount = WindowMethods.GetKeyboardFunctionKeyCount();
+            int keyCount = Windows.GetKeyboardFunctionKeyCount();
             keyCount.Should().BeGreaterOrEqualTo(10);
         }
     }

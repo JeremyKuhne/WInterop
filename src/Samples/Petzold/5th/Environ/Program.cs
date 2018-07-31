@@ -7,11 +7,9 @@
 
 using System;
 using System.Drawing;
-using WInterop.Gdi;
-using WInterop.Modules;
 using WInterop.ProcessAndThreads;
-using WInterop.Resources;
 using WInterop.Windows;
+using WInterop.Gdi;
 
 namespace Environ
 {
@@ -25,41 +23,16 @@ namespace Environ
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Environ";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Environment List Box",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Environ(), "Environment List Box");
         }
+    }
 
-        static WindowHandle hwndList, hwndText;
+    class Environ : WindowClass
+    {
         const int ID_LIST = 1;
         const int ID_TEXT = 2;
+
+        WindowHandle hwndList, hwndText;
 
         unsafe static void FillListBox(WindowHandle hwndList)
         {
@@ -73,23 +46,38 @@ namespace Environ
             }
         }
 
-        unsafe static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case WindowMessage.Create:
                     Size baseUnits = Windows.GetDialogBaseUnits();
+                    Rectangle bounds = window.GetClientRectangle();
 
                     // Create listbox and static text windows.
-                    hwndList = Windows.CreateWindow("listbox", null,
-                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard, ExtendedWindowStyles.Default,
-                        new Rectangle(baseUnits.Width, baseUnits.Height * 3, baseUnits.Width * 64 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.Height * 20),
-                        window, (IntPtr)ID_LIST, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
+                    hwndList = Windows.CreateWindow(
+                        className: "listbox",
+                        style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard,
+                        bounds: new Rectangle(
+                            baseUnits.Width,
+                            baseUnits.Height * 3,
+                            bounds.Width - baseUnits.Width - Windows.GetSystemMetrics(SystemMetric.CXVSCROLL),
+                            bounds.Height - baseUnits.Height * 4),
+                        parentWindow: window,
+                        menuHandle: (MenuHandle)ID_LIST,
+                        instance: ModuleInstance);
 
-                    hwndText = Windows.CreateWindow("static", null,
-                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left, ExtendedWindowStyles.Default,
-                        new Rectangle(baseUnits.Width, baseUnits.Height, Windows.GetSystemMetrics(SystemMetric.CYSCREEN), baseUnits.Height),
-                        window, (IntPtr)ID_TEXT, ((CREATESTRUCT*)lParam)->hInstance, IntPtr.Zero);
+                    hwndText = Windows.CreateWindow(
+                        className: "static",
+                        style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left,
+                        bounds: new Rectangle(
+                            baseUnits.Width,
+                            baseUnits.Height,
+                            bounds.Width - baseUnits.Width - Windows.GetSystemMetrics(SystemMetric.CXVSCROLL),
+                            baseUnits.Height),
+                        parentWindow: window,
+                        menuHandle: (MenuHandle)ID_TEXT,
+                        instance: ModuleInstance);
 
                     FillListBox(hwndList);
                     return 0;
@@ -113,12 +101,9 @@ namespace Environ
                         hwndText.SetWindowText(value);
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

@@ -6,11 +6,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Reflection;
+using System.Text;
 
 namespace WInterop.Support
 {
     public static class Strings
     {
+        private static FieldInfo s_chunkChars;
+
         /// <summary>
         /// Single allocation replacement of a single character in a string.
         /// </summary>
@@ -29,6 +33,17 @@ namespace WInterop.Support
                     n[index] = newChar;
                 return newString;
             }
+        }
+
+        public static char[] GetChunk(this StringBuilder builder)
+        {
+            if (s_chunkChars == null)
+            {
+                // Evil, but a useful performance hack until netcoreapp3.0.
+                s_chunkChars = typeof(StringBuilder).GetField("m_ChunkChars", BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+
+            return (char[])s_chunkChars.GetValue(builder);
         }
     }
 }

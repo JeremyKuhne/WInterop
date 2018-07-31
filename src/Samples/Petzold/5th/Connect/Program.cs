@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Connect
@@ -24,45 +22,22 @@ namespace Connect
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Connect";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Connect-the-Points Mouse Demo",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Connect(), "Connect-the-Points Mouse Demo");
         }
+    }
 
+    class Connect : WindowClass
+    {
         const int MAXPOINTS = 1000;
-        static Point[] pt = new Point[MAXPOINTS];
-        static int iCount;
-        static int sampleCount;
         const int TakeEvery = 10;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        Point[] pt = new Point[MAXPOINTS];
+        int iCount;
+        int sampleCount;
+
+        public Connect() : base(backgroundBrush: StockBrush.White) { }
+
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -74,12 +49,12 @@ namespace Connect
                     // Machines are way to fast to make this look interesting now, adding TakeEvery
                     if ((MouseKey)wParam == MouseKey.LeftButton && iCount < MAXPOINTS && (sampleCount++ % TakeEvery == 0))
                     {
-                        pt[iCount].X = lParam.LowWord;
-                        pt[iCount++].Y = lParam.HighWord;
+                        Point point = new Point(lParam.LowWord, lParam.HighWord);
+                        pt[iCount++] = point;
 
                         using (DeviceContext dc = window.GetDeviceContext())
                         {
-                            dc.SetPixel(lParam.LowWord, lParam.HighWord, default);
+                            dc.SetPixel(point, default);
                         }
                     }
                     return 0;
@@ -95,20 +70,17 @@ namespace Connect
                         for (int i = 0; i < iCount - 1; i++)
                             for (int j = i + 1; j < iCount; j++)
                             {
-                                dc.MoveTo(pt[i].X, pt[i].Y);
-                                dc.LineTo(pt[j].X, pt[j].Y);
+                                dc.MoveTo(pt[i]);
+                                dc.LineTo(pt[j]);
                             }
 
                         Windows.ShowCursor(false);
                         Windows.SetCursor(CursorId.Arrow);
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

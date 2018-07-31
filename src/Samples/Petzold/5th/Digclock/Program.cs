@@ -9,8 +9,6 @@ using System;
 using System.Drawing;
 using WInterop;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.SystemInformation.Types;
 using WInterop.Windows;
 
@@ -26,38 +24,12 @@ namespace DigClock
         [STAThread]
         static void Main()
         {
-            const string szAppName = "DigClock";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Digital Clock",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new DigClock(), "Digital Clock");
         }
+    }
 
+    class DigClock : WindowClass
+    {
         static BOOL[,] fSevenSegment =
         {
             { 1, 1, 1, 0, 1, 1, 1 }, // 0
@@ -125,11 +97,11 @@ namespace DigClock
         }
 
         const int ID_TIMER = 1;
-        static BrushHandle hBrushRed;
-        static int cxClient, cyClient;
-        static bool f24Hour, fSuppress;
+        BrushHandle hBrushRed;
+        int cxClient, cyClient;
+        bool f24Hour, fSuppress;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -165,11 +137,10 @@ namespace DigClock
                 case WindowMessage.Destroy:
                     window.KillTimer(ID_TIMER);
                     hBrushRed.Dispose();
-                    Windows.PostQuitMessage(0);
-                    return 0;
+                    break;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

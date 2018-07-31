@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace OwnDraw
@@ -24,54 +22,28 @@ namespace OwnDraw
         [STAThread]
         static void Main()
         {
-            const string szAppName = "OwnDraw";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Owner-Draw Button Demo",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new OwnDraw(), "Owner-Draw Button Demo");
         }
+    }
 
-        static void Triangle(DeviceContext dc, Point[] pt)
+    class OwnDraw : WindowClass
+    {
+        void Triangle(DeviceContext dc, Point[] pt)
         {
             dc.SelectObject(StockBrush.Black);
             dc.Polygon(pt);
             dc.SelectObject(StockBrush.White);
         }
 
-        static WindowHandle hwndSmaller, hwndLarger;
-        static int cxClient, cyClient;
-        static int btnWidth, btnHeight;
-        static Size baseUnits;
+        WindowHandle hwndSmaller, hwndLarger;
+        int cxClient, cyClient;
+        int btnWidth, btnHeight;
+        Size baseUnits;
 
         const int ID_SMALLER = 1;
         const int ID_LARGER = 2;
 
-        static unsafe  LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -81,19 +53,17 @@ namespace OwnDraw
                     btnHeight = baseUnits.Height * 4;
 
                     // Create the owner-draw pushbuttons
-                    CREATESTRUCT* create = (CREATESTRUCT*)lParam;
-
                     hwndSmaller = Windows.CreateWindow("button", "",
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
                         ExtendedWindowStyles.Default,
                         new Rectangle(0, 0, btnWidth, btnHeight),
-                        window, (IntPtr)ID_SMALLER, create->Instance, IntPtr.Zero);
+                        window, (MenuHandle)ID_SMALLER, ModuleInstance, IntPtr.Zero);
 
                     hwndLarger = Windows.CreateWindow("button", "",
                         WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
                         ExtendedWindowStyles.Default,
                         new Rectangle(0, 0, btnWidth, btnHeight),
-                        window, (IntPtr)ID_LARGER, create->Instance, IntPtr.Zero);
+                        window, (MenuHandle)ID_LARGER, ModuleInstance, IntPtr.Zero);
                     return 0;
                 case WindowMessage.Size:
                     cxClient = lParam.LowWord;
@@ -140,7 +110,7 @@ namespace OwnDraw
 
                         Point[] pt = new Point[3];
 
-                        switch((int)pdis->CtlID)
+                        switch ((int)pdis->CtlID)
                         {
                             case ID_SMALLER:
                                 pt[0].X = 3 * cx / 8; pt[0].Y = 1 * cy / 8;
@@ -196,12 +166,9 @@ namespace OwnDraw
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

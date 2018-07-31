@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Support.Buffers;
-using WInterop.Windows;
+using WInterop.Windows.Native;
 
 namespace WInterop.Windows.BufferWrappers
 {
@@ -16,7 +16,7 @@ namespace WInterop.Windows.BufferWrappers
 
         uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
         {
-            return checked((uint)WindowMethods.Imports.GetClassNameW(Window, buffer, (int)buffer.CharCapacity));
+            return checked((uint)Imports.GetClassNameW(Window, buffer, (int)buffer.CharCapacity));
         }
     }
 }

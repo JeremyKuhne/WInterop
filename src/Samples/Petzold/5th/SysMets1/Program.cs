@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace SysMets1
@@ -24,39 +22,15 @@ namespace SysMets1
         [STAThread]
         static void Main()
         {
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = "SysMets1"
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                "SysMets1",
-                "Get System Metrics No. 1",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new SysMets1(), "System Metrics");
         }
+    }
 
-        static int cxChar, cxCaps, cyChar;
+    class SysMets1 : WindowClass
+    {
+        int cxChar, cxCaps, cyChar;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -73,10 +47,10 @@ namespace SysMets1
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         int i = 0;
-                        foreach (SystemMetric metric in SysMets.sysmetrics.Keys)
+                        foreach (SystemMetric metric in Metrics.SystemMetrics.Keys)
                         {
                             dc.TextOut(new Point(0, cyChar * i), metric.ToString().AsSpan());
-                            dc.TextOut(new Point(22 * cxCaps, cyChar * i), SysMets.sysmetrics[metric].AsSpan());
+                            dc.TextOut(new Point(22 * cxCaps, cyChar * i), Metrics.SystemMetrics[metric].AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Right, TextAlignment.Vertical.Top));
                             dc.TextOut(new Point(22 * cxCaps + 40 * cxChar, cyChar * i), Windows.GetSystemMetrics(metric).ToString().AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Left, TextAlignment.Vertical.Top));
@@ -84,12 +58,9 @@ namespace SysMets1
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

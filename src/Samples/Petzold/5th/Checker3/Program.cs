@@ -7,10 +7,7 @@
 
 using System;
 using System.Drawing;
-using WInterop.ErrorHandling;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Checker3
@@ -22,70 +19,31 @@ namespace Checker3
     /// </summary>
     static class Program
     {
-        const string szChildClass = "Checker3_Child";
-
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Checker3";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            wndclass.WindowProcedure = ChildWindowProcedure;
-            wndclass.WindowExtraBytes = IntPtr.Size;
-            wndclass.ClassName = szChildClass;
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Checker3 Mouse Hit-Test Demo",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Checker3(), "Checker3 Mouse Hit-Test Demo");
         }
+    }
 
+    class Checker3 : WindowClass
+    {
         const int DIVISIONS = 5;
-        static WindowHandle[,] hwndChild = new WindowHandle[DIVISIONS, DIVISIONS];
-        static int cxBlock, cyBlock;
+        WindowHandle[,] hwndChild = new WindowHandle[DIVISIONS, DIVISIONS];
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        int cxBlock, cyBlock;
+        Checker3Child _childClass = (Checker3Child)(new Checker3Child().Register());
+
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case WindowMessage.Create:
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
-                            hwndChild[x, y] = Windows.CreateWindow(
-                                szChildClass,
-                                null,
-                                WindowStyles.ChildWindow | WindowStyles.Visible,
-                                ExtendedWindowStyles.Default,
-                                new Rectangle(),
-                                window,
-                                (IntPtr)(y << 8 | x),
-                                window.GetWindowLong(WindowLong.InstanceHandle),
-                                IntPtr.Zero);
+                            hwndChild[x, y] = _childClass.CreateWindow(
+                                style: WindowStyles.ChildWindow | WindowStyles.Visible,
+                                parentWindow: window);
                     return 0;
                 case WindowMessage.Size:
                     cxBlock = lParam.LowWord / DIVISIONS;
@@ -97,17 +55,22 @@ namespace Checker3
                                 repaint: true);
                     return 0;
                 case WindowMessage.LeftButtonDown:
-                    ErrorMethods.MessageBeep(BeepType.Ok);
-                    return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
+                    Windows.MessageBeep(BeepType.Ok);
                     return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
+        }
+    }
+
+    class Checker3Child : WindowClass
+    {
+        public Checker3Child()
+            : base(windowExtraBytes: IntPtr.Size)
+        {
         }
 
-        static LRESULT ChildWindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -115,7 +78,7 @@ namespace Checker3
                     window.SetWindowLong(0, IntPtr.Zero); // on/off flag
                     return 0;
                 case WindowMessage.LeftButtonDown:
-                    window.SetWindowLong(0, (IntPtr)(1 ^ (int)window.GetWindowLong( 0)));
+                    window.SetWindowLong(0, (IntPtr)(1 ^ (int)window.GetWindowLong(0)));
                     window.Invalidate(false);
                     return 0;
                 case WindowMessage.Paint:
@@ -126,15 +89,16 @@ namespace Checker3
 
                         if (window.GetWindowLong(0) != IntPtr.Zero)
                         {
-                            dc.MoveTo(0, 0);
-                            dc.LineTo(rect.Right, rect.Bottom);
-                            dc.MoveTo(0, rect.Bottom);
-                            dc.LineTo(rect.Right, 0);
+                            dc.MoveTo(default);
+                            dc.LineTo(new Point(rect.Right, rect.Bottom));
+                            dc.MoveTo(new Point(0, rect.Bottom));
+                            dc.LineTo(new Point(rect.Right, 0));
                         }
                     }
                     return 0;
             }
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

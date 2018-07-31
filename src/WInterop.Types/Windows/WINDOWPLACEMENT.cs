@@ -15,7 +15,7 @@ namespace WInterop.Windows
     {
         public uint length;
         public uint flags;
-        public ShowWindow showCmd;
+        public ShowWindowCommand showCmd;
         public Point ptMinPosition;
         public Point ptMaxPosition;
         public RECT rcNormalPosition;

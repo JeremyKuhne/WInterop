@@ -17,8 +17,11 @@ namespace WInterop.Gdi
     {
         public static BrushHandle CreateSolidBrush(Color color) => new BrushHandle(Imports.CreateSolidBrush(color));
 
-        public static PenHandle GetCurrentPen(in DeviceContext context)
+        public static PenHandle GetCurrentPen(in this DeviceContext context)
             => new PenHandle((HPEN)Imports.GetCurrentObject(context, ObjectType.Pen), ownsHandle: false);
+
+        public static BrushHandle GetCurrentBrush(in this DeviceContext context)
+            => new BrushHandle((HBRUSH)Imports.GetCurrentObject(context, ObjectType.Brush), ownsHandle: false);
 
         public static BrushHandle GetStockBrush(StockBrush brush)
             => new BrushHandle((HBRUSH)Imports.GetStockObject((int)brush), ownsHandle: false);
@@ -71,64 +74,70 @@ namespace WInterop.Gdi
             throw new InvalidOperationException();
         }
 
+        public static Color GetPixel(this in DeviceContext context, Point point) => Imports.GetPixel(context, point.X, point.Y);
 
-        public static Color GetPixel(in DeviceContext context, int x, int y) => Imports.GetPixel(context, x, y);
+        public static bool SetPixel(this in DeviceContext context, Point point, Color color)
+            => Imports.SetPixelV(context, point.X, point.Y, color);
 
-        public static bool SetPixel(in DeviceContext context, int x, int y, COLORREF color) => Imports.SetPixelV(context, x, y, color);
+        public unsafe static bool MoveTo(this in DeviceContext context, Point point)
+            => Imports.MoveToEx(context, point.X, point.Y, null);
 
-        public unsafe static bool MoveTo(in DeviceContext context, int x, int y) => Imports.MoveToEx(context, x, y, null);
+        public static bool LineTo(this in DeviceContext context, Point point) => Imports.LineTo(context, point.X, point.Y);
 
-        public static bool LineTo(in DeviceContext context, int x, int y) => Imports.LineTo(context, x, y);
+        public static PolyFillMode GetPolyFillMode(this in DeviceContext context) => Imports.GetPolyFillMode(context);
 
-        public static PolyFillMode GetPolyFillMode(in DeviceContext context) => Imports.GetPolyFillMode(context);
+        public static PolyFillMode SetPolyFillMode(this in DeviceContext context, PolyFillMode fillMode) 
+            => Imports.SetPolyFillMode(context, fillMode);
 
-        public static PolyFillMode SetPolyFillMode(in DeviceContext context, PolyFillMode fillMode) => Imports.SetPolyFillMode(context, fillMode);
+        public static bool Polygon(this in DeviceContext context, params Point[] points) => Polygon(context, points.AsSpan());
 
-        public static bool Polygon(in DeviceContext context, params Point[] points) => Polygon(context, points.AsSpan());
+        public static bool Polygon(this in DeviceContext context, ReadOnlySpan<Point> points)
+            => Imports.Polygon(context, ref MemoryMarshal.GetReference(points), points.Length);
 
-        public static bool Polygon(in DeviceContext context, ReadOnlySpan<Point> points) => Imports.Polygon(context, ref MemoryMarshal.GetReference(points), points.Length);
+        public static bool Polyline(this in DeviceContext context, params Point[] points) => Polyline(context, points.AsSpan());
 
-        public static bool Polyline(in DeviceContext context, params Point[] points) => Polyline(context, points.AsSpan());
+        public static bool Polyline(this in DeviceContext context, ReadOnlySpan<Point> points)
+            => Imports.Polyline(context, ref MemoryMarshal.GetReference(points), points.Length);
 
-        public static bool Polyline(in DeviceContext context, ReadOnlySpan<Point> points) => Imports.Polyline(context, ref MemoryMarshal.GetReference(points), points.Length);
+        public static bool Rectangle(this in DeviceContext context, Rectangle rectangle)
+            => Imports.Rectangle(context, rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
 
-        public static bool Rectangle(in DeviceContext context, Rectangle rectangle) => Imports.Rectangle(context, rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
+        public static bool Ellipse(this in DeviceContext context, Rectangle bounds)
+            => Imports.Ellipse(context, bounds.Left, bounds.Top, bounds.Right, bounds.Bottom);
 
-        public static bool Ellipse(in DeviceContext context, Rectangle bounds) => Imports.Ellipse(context, bounds.Left, bounds.Top, bounds.Right, bounds.Bottom);
-
-        public static bool RoundRectangle(in DeviceContext context, Rectangle rectangle, Size corner)
+        public static bool RoundRectangle(this in DeviceContext context, Rectangle rectangle, Size corner)
             => Imports.RoundRect(context, rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom, corner.Width, corner.Height);
 
-        public static bool FillRectangle(in DeviceContext context, Rectangle rectangle, BrushHandle brush)
+        public static bool FillRectangle(this in DeviceContext context, Rectangle rectangle, BrushHandle brush)
         {
             RECT rect = rectangle;
             return Imports.FillRect(context, ref rect, brush);
         }
 
-        public static bool FrameRectangle(in DeviceContext context, Rectangle rectangle, BrushHandle brush)
+        public static bool FrameRectangle(this in DeviceContext context, Rectangle rectangle, BrushHandle brush)
         {
             RECT rect = rectangle;
             return Imports.FrameRect(context, ref rect, brush);
         }
 
-        public static bool InvertRectangle(in DeviceContext context, Rectangle rectangle)
+        public static bool InvertRectangle(this in DeviceContext context, Rectangle rectangle)
         {
             RECT rect = rectangle;
             return Imports.InvertRect(context, ref rect);
         }
 
-        public static bool DrawFocusRectangle(in DeviceContext context, Rectangle rectangle)
+        public static bool DrawFocusRectangle(this in DeviceContext context, Rectangle rectangle)
         {
             RECT rect = rectangle;
             return Imports.DrawFocusRect(context, ref rect);
         }
 
-        public unsafe static bool PolyBezier(in DeviceContext context, params Point[] points)
+        public unsafe static bool PolyBezier(this in DeviceContext context, params Point[] points)
         {
             return PolyBezier(context, points.AsSpan());
         }
 
-        public unsafe static bool PolyBezier(in DeviceContext context, ReadOnlySpan<Point> points)
+        public unsafe static bool PolyBezier(this in DeviceContext context, ReadOnlySpan<Point> points)
         {
             return Imports.PolyBezier(context, ref MemoryMarshal.GetReference(points), (uint)points.Length);
         }

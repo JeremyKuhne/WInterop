@@ -5,10 +5,9 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using FluentAssertions;
 using WInterop.Windows;
 using Xunit;
-using FluentAssertions;
-using WInterop.Resources;
 
 namespace DesktopTests.Resources
 {
@@ -16,13 +15,13 @@ namespace DesktopTests.Resources
     {
         static LRESULT CallDefaultProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return window.DefaultWindowProcedure(message, wParam, lParam);
         }
 
         [Fact]
         public void CreateMenu()
         {
-            using (MenuHandle menu = ResourceMethods.CreateMenu())
+            using (MenuHandle menu = Windows.CreateMenu())
             {
                 menu.IsInvalid.Should().BeFalse();
             }
@@ -31,10 +30,10 @@ namespace DesktopTests.Resources
         [Fact]
         public void AppendMenu()
         {
-            using (MenuHandle menu = ResourceMethods.CreateMenu())
+            using (MenuHandle menu = Windows.CreateMenu())
             {
                 menu.IsInvalid.Should().BeFalse();
-                ResourceMethods.AppendMenu(menu, "&File", 1000);
+                Windows.AppendMenu(menu, "&File", 1000);
             }
         }
     }

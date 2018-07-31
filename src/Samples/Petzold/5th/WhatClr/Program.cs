@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace WhatClr
@@ -24,37 +22,13 @@ namespace WhatClr
         [STAThread]
         static void Main()
         {
-            const string szAppName = "WhatClr";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "What Color",
-                WindowStyles.Overlapped | WindowStyles.Caption | WindowStyles.SystemMenu | WindowStyles.Border);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new WhatColor(), "What Color");
         }
+    }
+
+    class WhatColor : WindowClass
+    {
+        public WhatColor() : base(backgroundBrush: BrushHandle.NoBrush) { }
 
         static void FindWindowSize(ref int cxWindow, ref int cyWindow)
         {
@@ -68,11 +42,11 @@ namespace WhatClr
             cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CYBORDER) + Windows.GetSystemMetrics(SystemMetric.CYCAPTION) + 2 * tm.tmHeight;
         }
 
-        static DeviceContext dcScreen;
-        static Color cr, crLast;
         const int ID_TIMER = 1;
-
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        DeviceContext dcScreen;
+        Color cr, crLast;
+        
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -88,7 +62,8 @@ namespace WhatClr
                     if (cr != crLast)
                     {
                         crLast = cr;
-                        window.Invalidate(false);
+                        window.GetDeviceContext().SetBackgroundColor(cr);
+                        window.Invalidate(erase: false);
                     }
                     return 0;
                 case WindowMessage.Paint:
@@ -96,6 +71,7 @@ namespace WhatClr
                     {
                         dc.SelectObject(StockFont.SystemFixed);
                         Rectangle rc = window.GetClientRectangle();
+                        dc.FillRectangle(rc, dc.GetCurrentBrush());
                         dc.DrawText($"0x{cr.R:X2} 0x{cr.G:X2} 0x{cr.B:X2}".AsSpan(), rc,
                             TextFormat.SingleLine | TextFormat.Center | TextFormat.VerticallyCenter);
                     }
@@ -103,11 +79,10 @@ namespace WhatClr
                 case WindowMessage.Destroy:
                     dcScreen.Dispose();
                     window.KillTimer(ID_TIMER);
-                    Windows.PostQuitMessage(0);
-                    return 0;
+                    break;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

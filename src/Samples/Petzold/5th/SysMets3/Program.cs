@@ -9,8 +9,6 @@ using System;
 using System.Drawing;
 using System.Linq;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace SysMets3
@@ -25,39 +23,15 @@ namespace SysMets3
         [STAThread]
         static void Main()
         {
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = "SysMets3"
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                "SysMets3",
-                "Get System Metrics No. 3",
-                WindowStyles.OverlappedWindow | WindowStyles.VerticalScroll | WindowStyles.HorizontalScroll);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new SysMets3(), "System metrics with both Scrollbars");
         }
+    }
 
-        static int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
+    class SysMets3 : WindowClass
+    {
+        int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             SCROLLINFO si;
 
@@ -85,7 +59,7 @@ namespace SysMets3
                     {
                         fMask = ScrollInfoMask.Range | ScrollInfoMask.Page,
                         nMin = 0,
-                        nMax = SysMets.sysmetrics.Count - 1,
+                        nMax = Metrics.SystemMetrics.Count - 1,
                         nPage = (uint)(cyClient / cyChar),
                     };
                     window.SetScrollInfo(ScrollBar.Vertical, ref si, true);
@@ -141,7 +115,7 @@ namespace SysMets3
                     // If the position has changed, scroll the window and update it
                     if (si.nPos != iVertPos)
                     {
-                        window.ScrollWindow(0, cyChar * (iVertPos - si.nPos));
+                        window.ScrollWindow(new Point(0, cyChar * (iVertPos - si.nPos)));
                         window.UpdateWindow();
                     }
                     return 0;
@@ -183,7 +157,7 @@ namespace SysMets3
                     // If the position has changed, scroll the window
                     if (si.nPos != iHorzPos)
                     {
-                        window.ScrollWindow(cxChar * (iHorzPos - si.nPos), 0);
+                        window.ScrollWindow(new Point(cxChar * (iHorzPos - si.nPos), 0));
                     }
                     return 0;
 
@@ -204,9 +178,9 @@ namespace SysMets3
 
                         // Find painting limits
                         int iPaintBeg = Math.Max(0, iVertPos + ps.Paint.Top / cyChar);
-                        int iPaintEnd = Math.Min(SysMets.sysmetrics.Count - 1, iVertPos + ps.Paint.Bottom / cyChar);
+                        int iPaintEnd = Math.Min(Metrics.SystemMetrics.Count - 1, iVertPos + ps.Paint.Bottom / cyChar);
 
-                        var keys = SysMets.sysmetrics.Keys.ToArray();
+                        var keys = Metrics.SystemMetrics.Keys.ToArray();
                         for (int i = iPaintBeg; i <= iPaintEnd; i++)
                         {
                             var metric = keys[i];
@@ -214,9 +188,9 @@ namespace SysMets3
                             int y = cyChar * (i - iVertPos);
 
                             dc.TextOut(new Point(x, y), metric.ToString().AsSpan());
-                            dc.TextOut(new Point(x + 22 * cxCaps, y), SysMets.sysmetrics[metric].AsSpan());
+                            dc.TextOut(new Point(x + 22 * cxCaps, y), Metrics.SystemMetrics[metric].AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Right, TextAlignment.Vertical.Top));
-                            dc.TextOut(new Point(x + 22 * cxCaps + 40 * cxChar, y), WindowMethods.GetSystemMetrics(metric).ToString().AsSpan());
+                            dc.TextOut(new Point(x + 22 * cxCaps + 40 * cxChar, y), Windows.GetSystemMetrics(metric).ToString().AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Left, TextAlignment.Vertical.Top));
                         }
                     }
@@ -226,7 +200,7 @@ namespace SysMets3
                     return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

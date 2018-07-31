@@ -8,9 +8,9 @@
 using System;
 using System.Drawing;
 using System.Threading;
+using WInterop.Console;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace RandRect
@@ -25,10 +25,13 @@ namespace RandRect
         [STAThread]
         static void Main()
         {
+            // Hack for launching as a .NET Core Windows Application
+            ConsoleMethods.TryFreeConsole();
+
             const string szAppName = "RandRect";
 
             ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
+            WindowClassInfo wndclass = new WindowClassInfo
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
@@ -42,17 +45,18 @@ namespace RandRect
             Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = Windows.CreateWindow(
-                module,
                 szAppName,
                 "Random Rectangles",
-                WindowStyles.OverlappedWindow);
+                WindowStyles.OverlappedWindow,
+                bounds: Windows.DefaultBounds,
+                instance: module);
 
-            window.ShowWindow(ShowWindow.Normal);
+            window.ShowWindow(ShowWindowCommand.Normal);
             window.UpdateWindow();
 
             while (true)
             {
-                if (Windows.PeekMessage(out MSG message, 0, 0, PeekMessageOptions.PM_REMOVE))
+                if (Windows.PeekMessage(out MSG message, options: PeekMessageOptions.Remove))
                 {
                     if (message.message == WindowMessage.Quit)
                         break;

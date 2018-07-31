@@ -1,8 +1,7 @@
 {
   "profiles": {
-    "HelloMsg": {
-      "commandName": "Executable",
-      "executablePath": "$(TargetPath)"
+    "Run": {
+      "commandName": "Project"
     }
   }
 }

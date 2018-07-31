@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi.Native;
 using WInterop.Windows;
 
@@ -76,6 +77,11 @@ namespace WInterop.Gdi
             Delete,
             Release,
             EndPaint
+        }
+
+        public void TextOut(Point point, object p)
+        {
+            throw new NotImplementedException();
         }
     }
 }

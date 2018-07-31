@@ -11,16 +11,16 @@ namespace WInterop.Gdi.Native
 {
     public readonly struct HFONT
     {
-        public IntPtr Handle { get; }
+        public IntPtr Value { get; }
 
         public HFONT(IntPtr handle)
         {
-            Handle = handle;
+            Value = handle;
         }
 
-        public bool IsInvalid => Handle == IntPtr.Zero;
+        public bool IsInvalid => Value == IntPtr.Zero;
 
-        public static implicit operator HGDIOBJ(HFONT handle) => new HGDIOBJ(handle.Handle);
+        public static implicit operator HGDIOBJ(HFONT handle) => new HGDIOBJ(handle.Value);
         public static explicit operator HFONT(HGDIOBJ handle) => new HFONT(handle.Handle);
     }
 }

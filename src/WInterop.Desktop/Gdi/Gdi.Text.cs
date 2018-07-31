@@ -20,16 +20,20 @@ namespace WInterop.Gdi
     {
         public static FontHandle GetStockFont(StockFont font) => new FontHandle((HFONT)Imports.GetStockObject((int)font), ownsHandle: false);
 
-        public static Color GetTextColor(in DeviceContext context) => Imports.GetTextColor(context);
+        public static Color GetTextColor(this in DeviceContext context) => Imports.GetTextColor(context);
 
-        public static Color SetTextColor(in DeviceContext context, Color color) => Imports.SetTextColor(context, color);
+        public static Color SetTextColor(this in DeviceContext context, Color color) => Imports.SetTextColor(context, color);
 
-        public static TextAlignment SetTextAlignment(in DeviceContext context, TextAlignment alignment) => Imports.SetTextAlign(context, alignment);
+        public static Color SetTextColor(this in DeviceContext context, SystemColor color)
+            => Imports.SetTextColor(context, Windows.Windows.GetSystemColor(color));
 
-        public static bool TextOut(in DeviceContext context, Point position, ReadOnlySpan<char> text)
+
+        public static TextAlignment SetTextAlignment(this in DeviceContext context, TextAlignment alignment) => Imports.SetTextAlign(context, alignment);
+
+        public static bool TextOut(this in DeviceContext context, Point position, ReadOnlySpan<char> text)
             => Imports.TextOutW(context, position.X, position.Y, ref MemoryMarshal.GetReference(text), text.Length);
 
-        public static unsafe int DrawText(in DeviceContext context, ReadOnlySpan<char> text, Rectangle bounds, TextFormat format)
+        public static unsafe int DrawText(this in DeviceContext context, ReadOnlySpan<char> text, Rectangle bounds, TextFormat format)
         {
             RECT rect = bounds;
 
@@ -52,7 +56,7 @@ namespace WInterop.Gdi
             }
         }
 
-        public static bool GetTextMetrics(in DeviceContext context, out TEXTMETRIC metrics) => Imports.GetTextMetricsW(context, out metrics);
+        public static bool GetTextMetrics(this in DeviceContext context, out TEXTMETRIC metrics) => Imports.GetTextMetricsW(context, out metrics);
 
         public static FontHandle CreateFont(
              int height,

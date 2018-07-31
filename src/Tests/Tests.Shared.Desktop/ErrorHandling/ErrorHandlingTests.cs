@@ -7,6 +7,7 @@
 
 using FluentAssertions;
 using WInterop.ErrorHandling;
+using WInterop.Windows;
 using Xunit;
 
 namespace DesktopTests
@@ -16,7 +17,7 @@ namespace DesktopTests
         [Fact]
         public void BasicBeep()
         {
-            ErrorMethods.Beep(frequency: 262, duration: 200);
+            Windows.Beep(frequency: 262, duration: 200);
         }
 
         [Theory,
@@ -29,7 +30,7 @@ namespace DesktopTests
             ]
         public void BasicMessageBeep(BeepType type)
         {
-            ErrorMethods.MessageBeep(type);
+            Windows.MessageBeep(type);
         }
 
         [Fact]

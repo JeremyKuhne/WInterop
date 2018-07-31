@@ -8,9 +8,8 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
+using WInterop.Windows.Native;
 
 namespace Colors1
 {
@@ -24,101 +23,78 @@ namespace Colors1
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Colors1";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Color Scroll",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Colors1(), "Color Scroll");
         }
+    }
 
-        static Color[] crPrim = { Color.Red, Color.Green, Color.Blue };
-        static BrushHandle[] hBrush = new BrushHandle[3];
-        static BrushHandle hBrushStatic;
-        static WindowHandle[] hwndScroll = new WindowHandle[3];
-        static WindowHandle[] hwndLabel = new WindowHandle[3];
-        static WindowHandle[] hwndValue = new WindowHandle[3];
-        static WindowHandle hwndRect;
-        static int[] color = new int[3];
-        static int cyChar, idFocus;
-        static Rectangle rcColor;
-        static string[] szColorLabel = { "Red", "Green", "Blue" };
-        static IntPtr[] OldScroll = new IntPtr[3];
+    class Colors1 : WindowClass
+    {
+        Color[] crPrim = { Color.Red, Color.Green, Color.Blue };
+        BrushHandle[] hBrush = new BrushHandle[3];
+        BrushHandle hBrushStatic;
+        WindowHandle[] hwndScroll = new WindowHandle[3];
+        WindowHandle[] hwndLabel = new WindowHandle[3];
+        WindowHandle[] hwndValue = new WindowHandle[3];
+        WindowHandle hwndRect;
+        int[] color = new int[3];
+        int cyChar, idFocus;
+        Rectangle rcColor;
+        string[] szColorLabel = { "Red", "Green", "Blue" };
+        WNDPROC[] OldScroll = new WNDPROC[3];
 
         // We need to put the delegate in a static to prevent the callback from being collected
-        static WindowProcedure s_ScrollProcedure = ScrollProcedure;
+        WindowProcedure _scrollProcedure;
 
-
-        static unsafe LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case WindowMessage.Create:
-                    ModuleInstance hInstance = window.GetWindowLong(WindowLong.InstanceHandle);
-
                     // Create the white-rectangle window against which the
                     // scroll bars will be positioned. The child window ID is 9.
 
-                    hwndRect = Windows.CreateWindow("static", null,
-                        WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.WhiteRectangle,
-                        ExtendedWindowStyles.Default,
-                        new Rectangle(),
-                        window, (IntPtr)9, hInstance, IntPtr.Zero);
+                    hwndRect = Windows.CreateWindow(
+                        className: "static",
+                        style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.WhiteRectangle,
+                        parentWindow: window,
+                        menuHandle: (MenuHandle)9,
+                        instance: ModuleInstance);
 
                     for (int i = 0; i < 3; i++)
                     {
                         // The three scroll bars have IDs 0, 1, and 2, with
                         // scroll bar ranges from 0 through 255.
-                        hwndScroll[i] = Windows.CreateWindow("scrollbar", null,
-                            WindowStyles.Child | WindowStyles.Visible | WindowStyles.TabStop | (WindowStyles)ScrollBarStyles.Veritcal,
-                            ExtendedWindowStyles.Default,
-                            new Rectangle(),
-                            window, (IntPtr)i, hInstance, IntPtr.Zero);
+                        hwndScroll[i] = Windows.CreateWindow(
+                            className: "scrollbar",
+                            style: WindowStyles.Child | WindowStyles.Visible | WindowStyles.TabStop | (WindowStyles)ScrollBarStyles.Veritcal,
+                            parentWindow: window,
+                            menuHandle: (MenuHandle)i,
+                            instance: ModuleInstance);
 
                         hwndScroll[i].SetScrollRange(ScrollBar.Control, 0, 255, false);
                         hwndScroll[i].SetScrollPosition(ScrollBar.Control, 0, false);
 
                         // The three color-name labels have IDs 3, 4, and 5,
                         // and text strings “Red”, “Green”, and “Blue”.
-                        hwndLabel[i] = Windows.CreateWindow("static", szColorLabel[i],
-                            WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
-                            ExtendedWindowStyles.Default,
-                            new Rectangle(),
-                            window, (IntPtr)i + 3, hInstance, IntPtr.Zero);
+                        hwndLabel[i] = Windows.CreateWindow(
+                            className: "static",
+                            windowName: szColorLabel[i],
+                            style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
+                            parentWindow: window,
+                            menuHandle: (MenuHandle)(i + 3),
+                            instance: ModuleInstance);
 
                         // The three color-value text fields have IDs 6, 7,
                         // and 8, and initial text strings of “0”.
-                        hwndValue[i] = Windows.CreateWindow("static", "0",
-                            WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
-                            ExtendedWindowStyles.Default,
-                            new Rectangle(),
-                            window, (IntPtr)i + 6, hInstance, IntPtr.Zero);
+                        hwndValue[i] = Windows.CreateWindow(
+                            className: "static",
+                            windowName: "0",
+                            style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Center,
+                            parentWindow: window,
+                            menuHandle: (MenuHandle)(i + 6),
+                            instance: ModuleInstance);
 
-                        OldScroll[i] = hwndScroll[i].SetWindowProcedure(s_ScrollProcedure);
+                        OldScroll[i] = hwndScroll[i].SetWindowProcedure(_scrollProcedure = ScrollProcedure);
 
                         hBrush[i] = Gdi.CreateSolidBrush(crPrim[i]);
                     }
@@ -214,14 +190,13 @@ namespace Colors1
                     for (int i = 0; i < 3; i++)
                         hBrush[i].Dispose();
 
-                    Windows.PostQuitMessage(0);
-                    return 0;
+                    break;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        static LRESULT ScrollProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        LRESULT ScrollProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             int id = (int)window.GetWindowLong(WindowLong.Id).ToInt64();
 
@@ -238,7 +213,7 @@ namespace Colors1
                     break;
             }
 
-            return WindowMethods.CallWindowProcedure(OldScroll[id], window, message, wParam, lParam);
+            return Windows.CallWindowProcedure(OldScroll[id], window, message, wParam, lParam);
         }
     }
 }

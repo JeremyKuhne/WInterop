@@ -7,10 +7,7 @@
 
 using System;
 using System.Drawing;
-using WInterop.ErrorHandling;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Checker2
@@ -25,43 +22,17 @@ namespace Checker2
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Checker2";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Checker2 Mouse Hit-Test Demo",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Checker2(), "Checker2 Mouse Hit-Test Demo");
         }
+    }
 
+    class Checker2 : WindowClass
+    {
         const int DIVISIONS = 5;
-        static bool[,] fState = new bool[DIVISIONS, DIVISIONS];
-        static int cxBlock, cyBlock;
+        bool[,] fState = new bool[DIVISIONS, DIVISIONS];
+        int cxBlock, cyBlock;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -108,10 +79,10 @@ namespace Checker2
                     }
                     x = (x + DIVISIONS) % DIVISIONS;
                     y = (y + DIVISIONS) % DIVISIONS;
-                    point.X = x * cxBlock + cxBlock / 2;
-                    point.Y = y * cyBlock + cyBlock / 2;
+
+                    point = new Point(x * cxBlock + cxBlock / 2,  y * cyBlock + cyBlock / 2);
                     window.ClientToScreen(ref point);
-                    Windows.SetCursorPosition(point.X, point.Y);
+                    Windows.SetCursorPosition(point);
                     return 0;
                 case WindowMessage.LeftButtonDown:
                     x = lParam.LowWord / cxBlock;
@@ -130,7 +101,7 @@ namespace Checker2
                     }
                     else
                     {
-                        ErrorMethods.MessageBeep(0);
+                        Windows.MessageBeep(0);
                     }
 
                     return 0;
@@ -141,22 +112,19 @@ namespace Checker2
                             for (y = 0; y < DIVISIONS; y++)
                             {
                                 dc.Rectangle(new Rectangle(x * cxBlock, y * cyBlock, (x + 1) * cxBlock, (y + 1) * cyBlock));
-                                if (fState[x,y])
+                                if (fState[x, y])
                                 {
-                                    dc.MoveTo(x * cxBlock, y * cyBlock);
-                                    dc.LineTo((x + 1) * cxBlock, (y + 1) * cyBlock);
-                                    dc.MoveTo(x * cxBlock, (y + 1) * cyBlock);
-                                    dc.LineTo((x + 1) * cxBlock, y * cyBlock);
+                                    dc.MoveTo(new Point(x * cxBlock, y * cyBlock));
+                                    dc.LineTo(new Point((x + 1) * cxBlock, (y + 1) * cyBlock));
+                                    dc.MoveTo(new Point(x * cxBlock, (y + 1) * cyBlock));
+                                    dc.LineTo(new Point((x + 1) * cxBlock, y * cyBlock));
                                 }
                             }
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

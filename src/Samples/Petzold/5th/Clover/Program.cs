@@ -6,9 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Clover
@@ -23,43 +22,19 @@ namespace Clover
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Clover";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Draw a Clover",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Clover(), "Draw a Clover");
         }
+    }
 
-        static int cxClient, cyClient;
-        static RegionHandle hRgnClip;
+    class Clover : WindowClass
+    {
+        int cxClient, cyClient;
+        RegionHandle hRgnClip;
         const double TWO_PI = Math.PI * 2;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        public Clover() : base(backgroundBrush: StockBrush.White) { }
+
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -72,7 +47,7 @@ namespace Clover
 
                     hRgnClip.Dispose();
 
-                    RegionHandle[] hRgnTemp = new RegionHandle[6];
+                    Span<RegionHandle> hRgnTemp = stackalloc RegionHandle[6];
 
                     hRgnTemp[0] = Gdi.CreateEllipticRegion(0, cyClient / 3, cxClient / 2, 2 * cyClient / 3);
                     hRgnTemp[1] = Gdi.CreateEllipticRegion(cxClient / 2, cyClient / 3, cxClient, 2 * cyClient / 3);
@@ -101,20 +76,19 @@ namespace Clover
 
                         for (double fAngle = 0.0; fAngle < TWO_PI; fAngle += TWO_PI / 360)
                         {
-                            dc.MoveTo(0, 0);
-                            dc.LineTo(
+                            dc.MoveTo(default);
+                            dc.LineTo(new Point(
                                 (int)(fRadius * Math.Cos(fAngle) + 0.5),
-                                (int)(-fRadius * Math.Sin(fAngle) + 0.5));
+                                (int)(-fRadius * Math.Sin(fAngle) + 0.5)));
                         }
                     }
                     return 0;
                 case WindowMessage.Destroy:
                     hRgnClip.Dispose();
-                    Windows.PostQuitMessage(0);
-                    return 0;
+                    break;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
 
         static double Hypotenuse(double x, double y)

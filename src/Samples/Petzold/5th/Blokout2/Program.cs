@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Blokout2
@@ -24,39 +22,16 @@ namespace Blokout2
         [STAThread]
         static void Main()
         {
-            const string szAppName = "Blokout2";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Mouse Button & Capture Demo",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Blockout2(), "Mouse Button & Capture Demo");
         }
+    }
 
-        static void DrawBoxOutline(WindowHandle window, Point ptBeg, Point ptEnd)
+    class Blockout2 : WindowClass
+    {
+        bool fBlocking, fValidBox;
+        Point ptBeg, ptEnd, ptBoxBeg, ptBoxEnd;
+
+        void DrawBoxOutline(WindowHandle window, Point ptBeg, Point ptEnd)
         {
             using (DeviceContext dc = window.GetDeviceContext())
             {
@@ -66,10 +41,7 @@ namespace Blokout2
             }
         }
 
-        static bool fBlocking, fValidBox;
-        static Point ptBeg, ptEnd, ptBoxBeg, ptBoxEnd;
-
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -121,12 +93,9 @@ namespace Blokout2
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
-            }
+                }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+                return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

@@ -11,7 +11,6 @@ using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Multimedia;
 using WInterop.Multimedia.Types;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace HelloWin
@@ -32,7 +31,7 @@ namespace HelloWin
             const string szAppName = "HelloWin";
 
             ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
+            WindowClassInfo wndclass = new WindowClassInfo
             {
                 Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
                 WindowProcedure = WindowProcedure,
@@ -46,12 +45,13 @@ namespace HelloWin
             Windows.RegisterClass(ref wndclass);
 
             WindowHandle window = Windows.CreateWindow(
-                module,
                 szAppName,
                 "The Hello Program",
-                WindowStyles.OverlappedWindow);
+                WindowStyles.OverlappedWindow,
+                instance: module,
+                bounds: Windows.DefaultBounds);
 
-            window.ShowWindow(ShowWindow.Normal);
+            window.ShowWindow(ShowWindowCommand.Normal);
             window.UpdateWindow();
 
             while (Windows.GetMessage(out MSG message))

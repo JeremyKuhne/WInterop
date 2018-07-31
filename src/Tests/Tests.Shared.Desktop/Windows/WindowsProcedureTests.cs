@@ -8,21 +8,22 @@
 using FluentAssertions;
 using System;
 using WInterop.Windows;
+using WInterop.Windows.Native;
 using Xunit;
 
-namespace DesktopTests.Windows
+namespace WindowsTests
 {
     public class WindowsProcedureTests
     {
         static LRESULT CallDefaultProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
 
         [Fact]
         public void WindowCallback_SendMessage()
         {
-            WindowClass myClass = new WindowClass
+            WindowClassInfo myClass = new WindowClassInfo
             {
                 ClassName = "WindowCallback_SendMessage",
                 WindowProcedure = (window, message, wParam, lParam) =>
@@ -31,26 +32,26 @@ namespace DesktopTests.Windows
                 }
             };
 
-            Atom atom = WindowMethods.RegisterClass(ref myClass);
+            Atom atom = Windows.RegisterClass(ref myClass);
             atom.IsValid.Should().BeTrue();
 
             try
             {
-                WindowHandle window = WindowMethods.CreateWindow(atom, null, WindowStyles.Minimize | WindowStyles.Diabled);
-                window.IsValid.Should().BeTrue();
+                WindowHandle window = Windows.CreateWindow(atom, style: WindowStyles.Minimize | WindowStyles.Diabled);
+                window.IsInvalid.Should().BeFalse();
 
                 try
                 {
-                    WindowMethods.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)42);
+                    window.SendMessage(WindowMessage.Activate).Should().Be((LRESULT)42);
                 }
                 finally
                 {
-                    WindowMethods.DestroyWindow(window);
+                    window.DestroyWindow();
                 }
             }
             finally
             {
-                WindowMethods.UnregisterClass(atom, null);
+                Windows.UnregisterClass(atom);
             }
         }
 
@@ -58,7 +59,7 @@ namespace DesktopTests.Windows
         public void WindowCallback_Subclass()
         {
             int value = 42;
-            WindowClass myClass = new WindowClass
+            WindowClassInfo myClass = new WindowClassInfo
             {
                 ClassName = "WindowCallback_Subclass",
                 WindowProcedure = (window, message, wParam, lParam) =>
@@ -67,37 +68,37 @@ namespace DesktopTests.Windows
                 }
             };
 
-            Atom atom = WindowMethods.RegisterClass(ref myClass);
+            Atom atom = Windows.RegisterClass(ref myClass);
             atom.IsValid.Should().BeTrue();
 
             try
             {
-                WindowHandle window = WindowMethods.CreateWindow(atom, null, WindowStyles.Minimize | WindowStyles.Diabled);
-                window.IsValid.Should().BeTrue();
+                WindowHandle window = Windows.CreateWindow(atom, style: WindowStyles.Minimize | WindowStyles.Diabled);
+                window.IsInvalid.Should().BeFalse();
 
                 try
                 {
-                    WindowMethods.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)42);
+                    Windows.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)42);
 
-                    IntPtr previous = IntPtr.Zero;
+                    WNDPROC previous = default;
                     WindowProcedure subClass = (w, m, wParam, lParam) =>
                     {
-                        return WindowMethods.CallWindowProcedure(previous, w, m, wParam, lParam);
+                        return Windows.CallWindowProcedure(previous, w, m, wParam, lParam);
                     };
 
                     value = 1999;
-                    previous = WindowMethods.SetWindowProcedure(window, subClass);
-                    WindowMethods.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)1999);
+                    previous = Windows.SetWindowProcedure(window, subClass);
+                    Windows.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)1999);
                     GC.KeepAlive(subClass);
                 }
                 finally
                 {
-                    WindowMethods.DestroyWindow(window);
+                    Windows.DestroyWindow(window);
                 }
             }
             finally
             {
-                WindowMethods.UnregisterClass(atom, null);
+                Windows.UnregisterClass(atom, null);
             }
         }
     }

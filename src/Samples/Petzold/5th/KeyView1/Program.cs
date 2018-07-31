@@ -7,10 +7,10 @@
 
 using System;
 using System.Drawing;
+using System.Text;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
+using WInterop.Support;
 
 namespace KeyView1
 {
@@ -24,48 +24,27 @@ namespace KeyView1
         [STAThread]
         static void Main()
         {
-            const string szAppName = "KeyView1";
-
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = szAppName
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                szAppName,
-                "Keyboard Message Viewer #1",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new KeyView1(), "Keyboard Message Viewer #1");
         }
+    }
 
-        static int cxClientMax, cyClientMax, cxClient, cyClient, cxChar, cyChar;
-        static int cLinesMax, cLines;
-        static Rectangle rectScroll;
-        static MSG[] pmsg;
+    class KeyView1 : WindowClass
+    {
+        int cxClientMax, cyClientMax, cxClient, cyClient, cxChar, cyChar;
+        int cLinesMax, cLines;
+        Rectangle rectScroll;
+        MSG[] pmsg;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        StringBuilder _sb = new StringBuilder(256);
+        char[] _chunk;
+
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
                 case WindowMessage.Create:
+                    _chunk = _sb.GetChunk();
+                    goto case WindowMessage.DisplayChange;
                 case WindowMessage.DisplayChange:
                     // Get maximum size of client area
                     cxClientMax = Windows.GetSystemMetrics(SystemMetric.CXMAXIMIZED);
@@ -115,7 +94,7 @@ namespace KeyView1
                     cLines = Math.Min(cLines + 1, cLinesMax);
 
                     // Scroll up the display
-                    window.ScrollWindow(0, -cyChar, rectScroll, rectScroll);
+                    window.ScrollWindow(new Point(0, -cyChar), rectScroll, rectScroll);
                     break; // i.e., call DefWindowProc so Sys messages work
                 case WindowMessage.Paint:
                     using (DeviceContext dc = window.BeginPaint())
@@ -140,8 +119,8 @@ namespace KeyView1
                                     break;
                             }
 
-                            dc.TextOut(new Point(0, (cyClient / cyChar - 1 - i) * cyChar),
-                                string.Format(iType
+                            _sb.Clear();
+                            _sb.AppendFormat(iType
                                 ? "{0,-13} {1,3} {2,15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}"
                                 : "{0,-13} {1,3} {2,-15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}  VirtualKey: {9}",
                                     pmsg[i].message,
@@ -155,16 +134,15 @@ namespace KeyView1
                                     (0x20000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
                                     (0x40000000 & pmsg[i].lParam) != 0 ? "Down" : "Up",
                                     (0x80000000 & pmsg[i].lParam) != 0 ? "Up" : "Down",
-                                    (VirtualKey)pmsg[i].wParam).AsSpan());
+                                    (VirtualKey)pmsg[i].wParam);
+
+                            dc.TextOut(new Point(0, (cyClient / cyChar - 1 - i) * cyChar), _chunk.AsSpan(0, _sb.Length));
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

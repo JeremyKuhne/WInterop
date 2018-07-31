@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace Bezier
@@ -24,48 +22,24 @@ namespace Bezier
         [STAThread]
         static void Main()
         {
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = "Bezier"
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                "Bezier",
-                "Bezier Splines",
-                WindowStyles.OverlappedWindow);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new Bezier(), "Bezier Splines");
         }
+    }
 
-        static void DrawBezier(DeviceContext dc, Point[] apt)
+    class Bezier : WindowClass
+    {
+        void DrawBezier(DeviceContext dc, Point[] apt)
         {
             dc.PolyBezier(apt);
-            dc.MoveTo(apt[0].X, apt[0].Y);
-            dc.LineTo(apt[1].X, apt[1].Y);
-            dc.MoveTo(apt[2].X, apt[2].Y);
-            dc.LineTo(apt[3].X, apt[3].Y);
+            dc.MoveTo(apt[0]);
+            dc.LineTo(apt[1]);
+            dc.MoveTo(apt[2]);
+            dc.LineTo(apt[3]);
         }
 
-        static Point[] apt = new Point[4];
+        Point[] apt = new Point[4];
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -119,12 +93,9 @@ namespace Bezier
                         DrawBezier(dc, apt);
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    WindowMethods.PostQuitMessage(0);
-                    return 0;
             }
 
-            return WindowMethods.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

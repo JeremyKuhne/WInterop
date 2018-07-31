@@ -141,7 +141,7 @@ namespace GdiTests
         [Fact]
         public unsafe void EnumFont_Arial()
         {
-            using (var context = Gdi.GetDeviceContext(WindowMethods.GetDesktopWindow()))
+            using (var context = Gdi.GetDeviceContext(Windows.GetDesktopWindow()))
             {
                 var info = Gdi.EnumerateFontFamilies(context, CharacterSet.ANSI_CHARSET, "Arial");
                 info.Count().Should().Be(4);
@@ -169,7 +169,7 @@ namespace GdiTests
         public void EnumFont_All()
         {
             // Just making sure we don't fall over
-            using (var context = Gdi.GetDeviceContext(WindowMethods.GetDesktopWindow()))
+            using (var context = Gdi.GetDeviceContext(Windows.GetDesktopWindow()))
             {
                 Gdi.EnumerateFontFamilies(context, CharacterSet.DEFAULT_CHARSET, null).Should().NotBeEmpty();
             }
@@ -180,7 +180,7 @@ namespace GdiTests
         {
             // System color brushes are special- they'll always give the same value
             BrushHandle brush = Gdi.GetSystemColorBrush(SystemColor.MenuBar);
-            long handle = (long)brush.Handle.Handle;
+            long handle = (long)brush.HBRUSH.Value;
             handle = handle & 0xFFFF00;
 
             // This changed in RS4 from C5 to BF for the last byte. Checking the first

@@ -84,7 +84,7 @@ namespace DesktopTests.Communication
         {
             COMMCONFIG config = CommunicationsMethods.CommConfigDialog(
                 @"COM4",
-                WindowMethods.GetForegroundWindow());
+                Windows.GetForegroundWindow());
         }
     }
 }

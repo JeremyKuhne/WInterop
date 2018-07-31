@@ -13,7 +13,7 @@ using Tests.Support;
 using WInterop.Storage;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Resources;
+using WInterop.Windows;
 using WInterop.Support;
 using Xunit;
 using ModuleTypes = WInterop.Modules;
@@ -70,7 +70,7 @@ namespace DesktopTests.ModuleTests
             using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(),
                 LoadLibraryFlags.LOAD_LIBRARY_AS_IMAGE_RESOURCE | LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE))
             {
-                string resource = ResourceMethods.LoadString(handle, 101);
+                string resource = Windows.LoadString(handle, 101);
                 resource.Should().Be("Test");
             }
         }
@@ -88,7 +88,7 @@ namespace DesktopTests.ModuleTests
                 using (var handle = ModuleMethods.LoadLibrary(longPathLibrary,
                     LoadLibraryFlags.LOAD_LIBRARY_AS_IMAGE_RESOURCE | LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE))
                 {
-                    string resource = ResourceMethods.LoadString(handle, 101);
+                    string resource = Windows.LoadString(handle, 101);
                     resource.Should().Be("Test");
                 }
             }

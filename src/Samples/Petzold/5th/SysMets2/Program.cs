@@ -8,8 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Modules;
-using WInterop.Resources;
 using WInterop.Windows;
 
 namespace SysMets2
@@ -24,39 +22,15 @@ namespace SysMets2
         [STAThread]
         static void Main()
         {
-            ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-            WindowClass wndclass = new WindowClass
-            {
-                Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-                WindowProcedure = WindowProcedure,
-                Instance = module,
-                Icon = IconId.Application,
-                Cursor = CursorId.Arrow,
-                Background = StockBrush.White,
-                ClassName = "SysMets2"
-            };
-
-            Windows.RegisterClass(ref wndclass);
-
-            WindowHandle window = Windows.CreateWindow(
-                module,
-                "SysMets2",
-                "Get System Metrics No. 2",
-                WindowStyles.OverlappedWindow | WindowStyles.VerticalScroll);
-
-            window.ShowWindow(ShowWindow.Normal);
-            window.UpdateWindow();
-
-            while (Windows.GetMessage(out MSG message))
-            {
-                Windows.TranslateMessage(ref message);
-                Windows.DispatchMessage(ref message);
-            }
+            Windows.CreateMainWindowAndRun(new SysMets2(), "System Metrics with Scrollbar");
         }
+    }
 
-        static int cxChar, cxCaps, cyChar, cyClient, iVscrollPos;
+    class SysMets2 : WindowClass
+    {
+        int cxChar, cxCaps, cyChar, cyClient, iVscrollPos;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
@@ -69,7 +43,7 @@ namespace SysMets2
                         cyChar = tm.tmHeight + tm.tmExternalLeading;
                     }
 
-                    window.SetScrollRange(ScrollBar.Vertical, 0, SysMets.sysmetrics.Count - 1, false);
+                    window.SetScrollRange(ScrollBar.Vertical, 0, Metrics.SystemMetrics.Count - 1, false);
                     window.SetScrollPosition(ScrollBar.Vertical, iVscrollPos, true);
 
                     return 0;
@@ -96,7 +70,7 @@ namespace SysMets2
                             break;
                     }
 
-                    iVscrollPos = Math.Max(0, Math.Min(iVscrollPos, SysMets.sysmetrics.Count - 1));
+                    iVscrollPos = Math.Max(0, Math.Min(iVscrollPos, Metrics.SystemMetrics.Count - 1));
 
                     if (iVscrollPos != window.GetScrollPosition(ScrollBar.Vertical))
                     {
@@ -108,12 +82,12 @@ namespace SysMets2
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         int i = 0;
-                        foreach (SystemMetric metric in SysMets.sysmetrics.Keys)
+                        foreach (SystemMetric metric in Metrics.SystemMetrics.Keys)
                         {
                             int y = cyChar * (i - iVscrollPos);
 
                             dc.TextOut(new Point(0, y), metric.ToString().AsSpan());
-                            dc.TextOut(new Point(22 * cxCaps, y), SysMets.sysmetrics[metric].AsSpan());
+                            dc.TextOut(new Point(22 * cxCaps, y), Metrics.SystemMetrics[metric].AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Right, TextAlignment.Vertical.Top));
                             dc.TextOut(new Point(22 * cxCaps + 40 * cxChar, y), Windows.GetSystemMetrics(metric).ToString().AsSpan());
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Left, TextAlignment.Vertical.Top));
@@ -121,12 +95,9 @@ namespace SysMets2
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
-                    Windows.PostQuitMessage(0);
-                    return 0;
             }
 
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            return base.WindowProcedure(window, message, wParam, lParam);
         }
     }
 }

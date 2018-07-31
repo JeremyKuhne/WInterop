@@ -169,5 +169,19 @@ namespace WInterop.Support
         /// <param name="source">The long to swap.</param>
         /// <returns>The swapped long.</returns>
         public static long EndianSwap(long source) => (long)EndianSwap((ulong)source);
+
+        /// <summary>
+        /// Wraps a span around a buffer that points to a null terminated string.
+        /// </summary>
+        public static unsafe ReadOnlySpan<char> NullTerminatedStringToSpan(char* buffer)
+        {
+            if (buffer == null)
+                return default;
+
+            char* end = buffer;
+            while (*(++end) != '\0') ;
+
+            return new ReadOnlySpan<char>(buffer, (int)(end - buffer));
+        }
     }
 }
