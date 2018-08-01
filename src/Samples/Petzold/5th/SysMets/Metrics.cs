@@ -13,7 +13,7 @@ public static class Metrics
 {
     public static Dictionary<SystemMetric, string> SystemMetrics = new Dictionary<SystemMetric, string>
     {
-        { SystemMetric.CXSCREEN, "Screen width in pixels" },
+        { SystemMetric.ScreenWidth, "Screen width in pixels" },
         { SystemMetric.CYSCREEN, "Screen height in pixels" },
         { SystemMetric.CXVSCROLL, "Vertical scroll width" },
         { SystemMetric.CYHSCROLL, "Horizontal scroll height" },

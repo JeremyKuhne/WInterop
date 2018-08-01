@@ -19,6 +19,8 @@ namespace WInterop.Gdi
             Value = (uint)operation;
         }
 
+        public static implicit operator RasterOperation(Common operation) => new RasterOperation(operation);
+
         /// <summary>
         /// These are the patterns that are given defines in Windows.
         /// </summary>

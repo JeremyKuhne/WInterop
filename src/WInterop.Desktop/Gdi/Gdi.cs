@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using WInterop.ErrorHandling;
 using WInterop.Gdi.Native;
 using WInterop.Support;
 using WInterop.Windows;
@@ -36,11 +37,13 @@ namespace WInterop.Gdi
         /// <summary>
         /// Get the device context for the client area of the specified window.
         /// </summary>
-        /// <param name="window">The window handle, or null for the entire screen.</param>
         public static DeviceContext GetDeviceContext(this in WindowHandle window)
-        {
-            return new DeviceContext(Imports.GetDC(window), window);
-        }
+            => new DeviceContext(Imports.GetDC(window), window);
+
+        /// <summary>
+        /// Get the device context for the screen.
+        /// </summary>
+        public static DeviceContext GetDeviceContext() => new WindowHandle().GetDeviceContext();
 
         /// <summary>
         /// Get the device context for the specified window.
@@ -55,19 +58,19 @@ namespace WInterop.Gdi
         public static BitmapHandle CreateCompatibleBitmap(this in DeviceContext context, Size size) => 
             new BitmapHandle(Imports.CreateCompatibleBitmap(context, size.Width, size.Height));
 
-        public static void BitBlt(
+        public static void BitBlit(
             this in DeviceContext source,
             in DeviceContext destination,
             Point sourceOrigin,
-            Rectangle destinationRect,
+            Rectangle destinationBounds,
             RasterOperation operation)
         {
             if (!Imports.BitBlt(
                 destination,
-                destinationRect.X,
-                destinationRect.Y,
-                destinationRect.Width,
-                destinationRect.Height,
+                destinationBounds.X,
+                destinationBounds.Y,
+                destinationBounds.Width,
+                destinationBounds.Height,
                 source,
                 sourceOrigin.X,
                 sourceOrigin.Y,
@@ -75,6 +78,35 @@ namespace WInterop.Gdi
             {
                 throw Errors.GetIoExceptionForLastError();
             }
+        }
+
+        public static StretchMode SetStretchBlitMode(this DeviceContext context, StretchMode mode)
+        {
+            StretchMode oldMode = Imports.SetStretchBltMode(context, mode);
+            if ((WindowsError)oldMode == WindowsError.ERROR_INVALID_PARAMETER)
+                throw Errors.GetIoExceptionForError(WindowsError.ERROR_INVALID_PARAMETER);
+            return oldMode;
+        }
+
+        public static bool StretchBlit(
+            this in DeviceContext source,
+            in DeviceContext destination,
+            Rectangle sourceBounds,
+            Rectangle destinationBounds,
+            RasterOperation operation)
+        {
+            return Imports.StretchBlt(
+                destination,
+                destinationBounds.X,
+                destinationBounds.Y,
+                destinationBounds.Width,
+                destinationBounds.Height,
+                source,
+                sourceBounds.X,
+                sourceBounds.Y,
+                sourceBounds.Width,
+                sourceBounds.Height,
+                operation);
         }
 
 

@@ -16,7 +16,7 @@ namespace WInterop.Windows
         /// <remarks>
         /// This is the same value obtained by calling GetDeviceCaps as follows: GetDeviceCaps(hdcPrimaryMonitor, HORZRES).
         /// </remarks>
-        CXSCREEN = 0,
+        ScreenWidth = 0,
 
         /// <summary>
         /// The height of the screen of the primary display monitor, in pixels. (SM_CYSCREEN)
@@ -24,7 +24,8 @@ namespace WInterop.Windows
         /// <remarks>
         ///  This is the same value obtained by calling GetDeviceCaps as follows: GetDeviceCaps(hdcPrimaryMonitor, VERTRES).
         /// </remarks>
-        CYSCREEN = 1,
+        ScreenHeight = 1,
+
         CXVSCROLL = 2,
         CYHSCROLL = 3,
         CYCAPTION = 4,

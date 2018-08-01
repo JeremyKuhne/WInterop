@@ -1093,5 +1093,26 @@ namespace WInterop.Gdi.Native
             int nXSrc,
             int nYSrc,
             RasterOperation dwRop);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-setstretchbltmode
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern StretchMode SetStretchBltMode(
+            HDC hdc,
+            StretchMode mode);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-stretchblt
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern bool StretchBlt(
+            HDC hdcDest,
+            int xDest,
+            int yDest,
+            int wDest,
+            int hDest,
+            HDC hdcSrc,
+            int xSrc,
+            int ySrc,
+            int wSrc,
+            int hSrc,
+            RasterOperation dwRop);
     }
 }
