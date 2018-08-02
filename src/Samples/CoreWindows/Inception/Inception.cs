@@ -13,8 +13,10 @@ namespace Inception
 {
     public class Inception : WindowClass
     {
-        Rectangle _client;
-        Rectangle _screen;
+        private Rectangle _client;
+        private Rectangle _screen;
+        private MonitorHandle _initialMonitor;
+        private TimerId _timerId = new TimerId(1);
 
         public Inception() : base(backgroundBrush: BrushHandle.NoBrush) { }
 
@@ -23,10 +25,17 @@ namespace Inception
             switch (message)
             {
                 case WindowMessage.Create:
-                    _screen = new Rectangle(0, 0, Windows.GetSystemMetrics(SystemMetric.ScreenWidth), Windows.GetSystemMetrics(SystemMetric.ScreenHeight));
+                    _initialMonitor = window.MonitorFromWindow();
+                    _screen = Windows.GetMonitorInfo(_initialMonitor).Monitor;
+                    window.SetTimer(_timerId, 200);
                     return 0;
                 case WindowMessage.Size:
                     _client = new Rectangle(default, new Message.Size(wParam, lParam).NewSize);
+                    return 0;
+                case WindowMessage.Timer:
+                    // Update via timer if we aren't primarily on the main monitor
+                    if (window.MonitorFromWindow() != _initialMonitor)
+                        window.Invalidate();
                     return 0;
                 case WindowMessage.Move:
                     window.Invalidate();
@@ -34,12 +43,14 @@ namespace Inception
                 case WindowMessage.Paint:
                     using (DeviceContext clientDC = window.BeginPaint())
                     using (DeviceContext screenDC = Gdi.GetDeviceContext())
-                    using (DeviceContext memoryDC = clientDC.CreateCompatibleDeviceContext())
                     {
                         clientDC.SetStretchBlitMode(StretchMode.HalfTone);
                         screenDC.StretchBlit(clientDC, _screen, _client, RasterOperation.Common.SourceCopy);
                     }
                     return 0;
+                case WindowMessage.Destroy:
+                    window.KillTimer(_timerId);
+                    break;
             }
 
             return base.WindowProcedure(window, message, wParam, lParam);

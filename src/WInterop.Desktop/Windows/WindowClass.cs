@@ -12,7 +12,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Windows;
 using WInterop.Support;
 using WInterop.Windows.Native;
 

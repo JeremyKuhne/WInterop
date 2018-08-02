@@ -5,26 +5,12 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Windows;
 
-namespace Beeper1
+namespace Beeper
 {
-    /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 8-1, Pages 331-333.
-    /// </summary>
-    static class Program
-    {
-        [STAThread]
-        static void Main()
-        {
-            Windows.CreateMainWindowAndRun(new Beeper1(), "Timer on Message Loop");
-        }
-    }
 
     class Beeper1 : WindowClass
     {

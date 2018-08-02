@@ -9,32 +9,32 @@ using System;
 
 namespace WInterop.Windows
 {
-    public struct TimerId
+    public readonly struct TimerId
     {
         public static TimerId Null => new TimerId();
 
-        public IntPtr RawValue;
+        public UIntPtr Value { get; }
 
-        public TimerId(int id)
+        public TimerId(uint id)
         {
-            RawValue = (IntPtr)id;
+            Value = (UIntPtr)id;
         }
 
         public override bool Equals(object obj)
         {
             return obj is TimerId other
-                ? other.RawValue == RawValue
+                ? other.Value == Value
                 : false;
         }
 
-        public bool Equals(TimerId other) => other.RawValue == RawValue;
+        public bool Equals(TimerId other) => other.Value == Value;
 
-        public override int GetHashCode() => RawValue.GetHashCode();
+        public override int GetHashCode() => Value.GetHashCode();
 
-        public static bool operator ==(TimerId a, TimerId b) => a.RawValue == b.RawValue;
+        public static bool operator ==(TimerId a, TimerId b) => a.Value == b.Value;
 
-        public static bool operator !=(TimerId a, TimerId b) => a.RawValue != b.RawValue;
+        public static bool operator !=(TimerId a, TimerId b) => a.Value != b.Value;
 
-        public static implicit operator TimerId(int value) => new TimerId(value);
+        public static implicit operator TimerId(uint value) => new TimerId(value);
     }
 }

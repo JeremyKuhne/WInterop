@@ -83,7 +83,7 @@ namespace OwnDraw
                     // Create the owner-draw pushbuttons
                     CREATESTRUCT* create = (CREATESTRUCT*)lParam;
 
-                    hwndLarger = Windows.CreateWindow("button",
+                    hwndSmaller = Windows.CreateWindow("button",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
                         bounds: new Rectangle(0, 0, btnWidth, btnHeight),
                         parentWindow: window,

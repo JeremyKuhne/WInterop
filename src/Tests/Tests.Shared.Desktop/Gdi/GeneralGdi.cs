@@ -62,7 +62,7 @@ namespace GdiTests
         public void GetDeviceContext_NullWindow()
         {
             // Null here should be the entire screen
-            DeviceContext context = Gdi.GetDeviceContext(WindowHandle.Null);
+            DeviceContext context = Gdi.GetDeviceContext(default);
             context.IsInvalid.Should().BeFalse();
             int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HORZRES);
             int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VERTRES);
@@ -72,7 +72,7 @@ namespace GdiTests
         public void GetWindowDeviceContext_NullWindow()
         {
             // Null here should be the entire screen
-            DeviceContext context = Gdi.GetWindowDeviceContext(WindowHandle.Null);
+            DeviceContext context = Gdi.GetWindowDeviceContext(default);
             context.IsInvalid.Should().BeFalse();
             int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HORZRES);
             int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VERTRES);

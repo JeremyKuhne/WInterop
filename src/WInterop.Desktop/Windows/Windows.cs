@@ -620,7 +620,7 @@ namespace WInterop.Windows
 
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.Ok)
         {
-            return MessageBox(WindowHandle.Null, text, caption, type);
+            return MessageBox(default, text, caption, type);
         }
 
         public static CommandId MessageBox(this in WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.Ok)
@@ -688,6 +688,25 @@ namespace WInterop.Windows
 
                 return new IconHandle(handle, ownsHandle: false);
             }
+        }
+
+        public static MonitorHandle MonitorFromWindow(this in WindowHandle window, MonitorOption option = MonitorOption.DefaultToNull)
+            => Imports.MonitorFromWindow(window, option);
+
+        public static MonitorHandle MonitorFromPoint(Point point, MonitorOption option = MonitorOption.DefaultToNull)
+            => Imports.MonitorFromPoint(point, option);
+
+        public static MonitorHandle MonitorFromRectangle(Rectangle rectangle, MonitorOption option = MonitorOption.DefaultToNull)
+        {
+            Gdi.Native.RECT rect = rectangle;
+            return Imports.MonitorFromRect(in rect, option);
+        }
+
+        public static MonitorInfo GetMonitorInfo(MonitorHandle monitor)
+        {
+            MonitorInfo info = MonitorInfo.Create();
+            Imports.GetMonitorInfoW(monitor, ref info);
+            return info;
         }
     }
 }

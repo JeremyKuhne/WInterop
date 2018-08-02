@@ -8,24 +8,22 @@
 using System;
 using WInterop.Windows;
 
-namespace ScrnSize
+namespace Beeper
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
+    /// Samples from Programming Windows, 5th Edition.
     /// Original (c) Charles Petzold, 1998
-    /// Figure 2-3, Pages 37-38.
     /// </summary>
     static class Program
     {
         [STAThread]
         static void Main()
         {
-            int cxScreen, cyScreen;
+            // Figure 8-1, Pages 331-333.
+            Windows.CreateMainWindowAndRun(new Beeper1(), "Timer on Message Loop");
 
-            cxScreen = Windows.GetSystemMetrics(SystemMetric.ScreenWidth);
-            cyScreen = Windows.GetSystemMetrics(SystemMetric.ScreenHeight);
-
-            Windows.MessageBox($"The screen is {cxScreen} pixels wide by {cyScreen} pixels high.", "ScrnSize");
+            // Figure 8-2, Pages 335-337.
+            Windows.CreateMainWindowAndRun(new Beeper2(), "Timer Procedure");
         }
     }
 }

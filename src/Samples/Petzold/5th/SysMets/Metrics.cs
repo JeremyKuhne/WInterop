@@ -5,7 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-
 using System.Collections.Generic;
 using WInterop.Windows;
 
@@ -14,7 +13,7 @@ public static class Metrics
     public static Dictionary<SystemMetric, string> SystemMetrics = new Dictionary<SystemMetric, string>
     {
         { SystemMetric.ScreenWidth, "Screen width in pixels" },
-        { SystemMetric.CYSCREEN, "Screen height in pixels" },
+        { SystemMetric.ScreenHeight, "Screen height in pixels" },
         { SystemMetric.CXVSCROLL, "Vertical scroll width" },
         { SystemMetric.CYHSCROLL, "Horizontal scroll height" },
         { SystemMetric.CYCAPTION, "Caption bar height" },

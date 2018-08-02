@@ -17,8 +17,6 @@ namespace WInterop.Windows
     {
         public HWND HWND { get; }
 
-        public static WindowHandle Null = new WindowHandle(default);
-
         // Special handles for setting position
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545.aspx
 

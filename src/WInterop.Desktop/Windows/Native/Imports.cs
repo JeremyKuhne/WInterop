@@ -1304,5 +1304,29 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool MessageBeep(
             BeepType uType);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-monitorfrompoint
+        [DllImport(Libraries.User32, ExactSpelling = true)]
+        public static extern HMONITOR MonitorFromPoint(
+            Point pt,
+            MonitorOption dwFlags);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-monitorfromrect
+        [DllImport(Libraries.User32, ExactSpelling = true)]
+        public static extern HMONITOR MonitorFromRect(
+            in RECT lprc,
+            MonitorOption dwFlags);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-monitorfromwindow
+        [DllImport(Libraries.User32, ExactSpelling = true)]
+        public static extern HMONITOR MonitorFromWindow(
+            HWND hwnd,
+            MonitorOption dwFlags);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getmonitorinfow
+        [DllImport(Libraries.User32, ExactSpelling = true)]
+        public static extern bool GetMonitorInfoW(
+            HMONITOR hMonitor,
+            ref MonitorInfo lpmi);
     }
 }
