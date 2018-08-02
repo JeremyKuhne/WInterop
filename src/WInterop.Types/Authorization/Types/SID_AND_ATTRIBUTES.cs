@@ -15,6 +15,6 @@ namespace WInterop.Authorization.Types
     public struct SID_AND_ATTRIBUTES
     {
         public IntPtr Sid;
-        public uint Attributes;
+        public GroupSidAttributes Attributes;
     }
 }

@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
+using System.Runtime.InteropServices;
 using WInterop.Gdi.Native;
 
 namespace WInterop.Windows
@@ -13,6 +14,7 @@ namespace WInterop.Windows
     /// <summary>
     /// Monitor information. [MONITORINFO]
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct MonitorInfo
     {
         private const uint MONITORINFOF_PRIMARY = 0x00000001;

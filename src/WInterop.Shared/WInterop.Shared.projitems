@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\AuthorizationMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Authorization\AuthorizationMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\Native\AuthorizationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\CompressionMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\Types\FdiHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
@@ -50,5 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.Imports.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Authorization\Native\" />
   </ItemGroup>
 </Project>

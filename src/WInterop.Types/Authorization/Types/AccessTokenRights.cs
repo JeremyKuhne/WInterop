@@ -71,6 +71,11 @@ namespace WInterop.Authorization.Types
         AdjustSessionId = 0x0100,
 
         /// <summary>
+        /// Special value to attempt to get all valid caller access rights.
+        /// </summary>
+        MaximumAllowed = 0x02000000,
+
+        /// <summary>
         /// All rights except AdjustSessionId.
         /// [TOKEN_ALL_ACCESS_P]
         /// </summary>

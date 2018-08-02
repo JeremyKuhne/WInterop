@@ -137,6 +137,17 @@ namespace WInterop.Authorization
         }
 
         /// <summary>
+        /// Get information about the specified token.
+        /// </summary>
+        public unsafe static TokenStatistics GetTokenStatistics(AccessToken token)
+        {
+            TokenStatistics stats = default;
+            if (!Imports.GetTokenInformation(token, TokenInformation.Statistics, &stats, (uint)sizeof(TokenStatistics), out uint _))
+                throw Errors.GetIoExceptionForLastError();
+            return stats;
+        }
+
+        /// <summary>
         /// Returns true if the given token has the specified privilege. The privilege may or may not be enabled.
         /// </summary>
         public static bool HasPrivilege(AccessToken token, Privilege privilege)
@@ -176,9 +187,11 @@ namespace WInterop.Authorization
                 TOKEN_GROUPS* groups = (TOKEN_GROUPS*)buffer;
                 ReadOnlySpan<SID_AND_ATTRIBUTES> data = new ReadOnlySpan<SID_AND_ATTRIBUTES>(&groups->Groups, (int)groups->GroupCount);
                 info = new List<GroupSidInformation>(data.Length);
+
+                // Copy the SID pointers into our own SID structs.
                 for (int i = 0; i < data.Length; i++)
                 {
-                    info.Add(new GroupSidInformation(CopySid(data[i].Sid), (GroupSidAttributes)data[i].Attributes));
+                    info.Add(new GroupSidInformation(CopySid(data[i].Sid), data[i].Attributes));
                 }
             });
 
@@ -389,32 +402,47 @@ namespace WInterop.Authorization
         }
 
         /// <summary>
-        /// Opens a thread token.
+        /// Opens a thread token. Returns null if the thead has no token (i.e. it isn't impersonating
+        /// and is implicitly inheriting the process token).
         /// </summary>
+        /// <param name="openAsSelf"></param>
         public static AccessToken OpenThreadToken(AccessTokenRights desiredAccess, bool openAsSelf)
         {
             if (!Imports.OpenThreadToken(ThreadMethods.Imports.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
-                WindowsError error = Errors.GetLastError();
-                if (error != WindowsError.ERROR_NO_TOKEN)
-                    throw Errors.GetIoExceptionForError(error, desiredAccess.ToString());
-
-                using (AccessToken processToken = OpenProcessToken(AccessTokenRights.Duplicate))
-                {
-                    if (!Imports.DuplicateTokenEx(
-                        processToken,
-                        AccessTokenRights.Impersonate | AccessTokenRights.Query | AccessTokenRights.AdjustPrivileges,
-                        IntPtr.Zero,
-                        SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation,
-                        TOKEN_TYPE.TokenImpersonation,
-                        ref threadToken))
-                    {
-                        throw Errors.GetIoExceptionForLastError(desiredAccess.ToString());
-                    }
-                }
+                // Threads only have their own token if the are impersonating, otherwise they inherit process
+                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_NO_TOKEN);
+                return null;
             }
 
             return threadToken;
+        }
+
+        /// <summary>
+        /// Duplicates a token. Token must have been created with <see cref="AccessTokenRights.Duplicate"/>.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="rights"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public static AccessToken DuplicateToken(
+            AccessToken token,
+            AccessTokenRights rights = default,
+            ImpersonationLevel impersonationLevel = ImpersonationLevel.Anonymous,
+            TokenType tokenType = TokenType.Impersonation)
+        {
+            if (!Imports.DuplicateTokenEx(
+                token,
+                AccessTokenRights.Impersonate | AccessTokenRights.Query | AccessTokenRights.AdjustPrivileges,
+                IntPtr.Zero,
+                ImpersonationLevel.Impersonation,
+                TokenType.Impersonation,
+                out AccessToken duplicatedToken))
+            {
+                throw Errors.GetIoExceptionForLastError();
+            }
+
+            return duplicatedToken;
         }
     }
 }

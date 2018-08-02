@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using WInterop.Gdi.Native;
 using WInterop.Modules;
-using WInterop.Windows.Native;
 
 namespace WInterop.Windows.Native
 {

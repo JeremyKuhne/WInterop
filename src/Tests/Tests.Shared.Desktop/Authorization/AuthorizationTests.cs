@@ -16,9 +16,9 @@ using WInterop.SystemInformation;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DesktopTests.Authorization
+namespace Authorization
 {
-    public class AuthorizationTests
+    public class Basic
     {
         [Fact]
         public unsafe void SidSize()
@@ -114,15 +114,25 @@ namespace DesktopTests.Authorization
         [Fact]
         public void GetTokenGroupSids_ForCurrentProcess()
         {
-            List<GroupSidInformation> groupSids;
             using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                groupSids = AuthorizationMethods.GetTokenGroupSids(token).ToList();
+                List<GroupSidInformation> groupSids = AuthorizationMethods.GetTokenGroupSids(token).ToList();
+                groupSids.Should().NotBeEmpty();
+                groupSids.Should().Contain((sid) => AuthorizationMethods.LookupAccountSidLocal(sid.Sid).Name.Equals("Everyone"));
+                TokenStatistics stats = AuthorizationMethods.GetTokenStatistics(token);
+                groupSids.Count.Should().Be((int)stats.GroupCount);
             }
+        }
 
-            groupSids.Should().NotBeEmpty();
-            groupSids.Should().Contain((sid) => AuthorizationMethods.LookupAccountSidLocal(sid.Sid).Name.Equals("Everyone"));
+        [Fact]
+        public void GetTokenStatistics_ForCurrentProcess()
+        {
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            {
+                TokenStatistics stats = AuthorizationMethods.GetTokenStatistics(token);
+                stats.TokenType.Should().Be(TokenType.Primary);
+            }
         }
 
         [Fact]
@@ -139,6 +149,18 @@ namespace DesktopTests.Authorization
 
                 // Check the helper
                 AuthorizationMethods.HasPrivilege(token, Privilege.ChangeNotify).Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void GetTokenPrivileges_NoReadRights()
+        {
+            // You need Query or Read (which includes Query) rights
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Duplicate))
+            {
+                token.IsInvalid.Should().BeFalse();
+                Action action = () => AuthorizationMethods.GetTokenPrivileges(token);
+                action.Should().Throw<UnauthorizedAccessException>();
             }
         }
 
@@ -202,5 +224,53 @@ namespace DesktopTests.Authorization
         {
             AuthorizationMethods.GetDomainName().Should().NotBeNull();
         }
+
+        [Theory,
+            InlineData(true),
+            InlineData(false)]
+        public void GetThreadToken(bool openAsSelf)
+        {
+            // Unless we're impersonating we shouldn't get a token for the thread
+            using (var token = AuthorizationMethods.OpenThreadToken(AccessTokenRights.Query, openAsSelf))
+            {
+                token.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public void DuplicateProcessToken_NoDuplicateRights()
+        {
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Query))
+            {
+                Action action = () => AuthorizationMethods.DuplicateToken(token);
+                action.Should().Throw<UnauthorizedAccessException>("didn't ask for duplicate rights");
+            }
+        }
+
+        [Fact]
+        public void DuplicateProcessToken()
+        {
+            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+            {
+                var privileges = AuthorizationMethods.GetTokenPrivileges(token);
+
+                using (var duplicate = AuthorizationMethods.DuplicateToken(token))
+                {
+                    duplicate.IsInvalid.Should().BeFalse();
+                    var duplicatePrivileges = AuthorizationMethods.GetTokenPrivileges(duplicate);
+
+                    duplicatePrivileges.Should().Equal(privileges);
+                }
+
+                using (var duplicate = AuthorizationMethods.DuplicateToken(token, rights: AccessTokenRights.MaximumAllowed))
+                {
+                    duplicate.IsInvalid.Should().BeFalse();
+                    var duplicatePrivileges = AuthorizationMethods.GetTokenPrivileges(duplicate);
+
+                    duplicatePrivileges.Count().Should().BeGreaterOrEqualTo(privileges.Count());
+                }
+            }
+        }
+
     }
 }

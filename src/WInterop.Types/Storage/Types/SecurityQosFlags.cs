@@ -29,22 +29,22 @@ namespace WInterop.Storage.Types
         /// <summary>
         /// [SECURITY_ANONYMOUS]
         /// </summary>
-        Anonymous = (SECURITY_IMPERSONATION_LEVEL.SecurityAnonymous << 16),
+        Anonymous = (ImpersonationLevel.Anonymous << 16),
 
         /// <summary>
         /// [SECURITY_IDENTIFICATION]
         /// </summary>
-        Identification = (SECURITY_IMPERSONATION_LEVEL.SecurityIdentification << 16),
+        Identification = (ImpersonationLevel.Identification << 16),
 
         /// <summary>
         /// [SECURITY_IMPERSONATION]
         /// </summary>
-        Impersonation = (SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation << 16),
+        Impersonation = (ImpersonationLevel.Impersonation << 16),
 
         /// <summary>
         /// [SECURITY_DELEGATION]
         /// </summary>
-        Delegations = (SECURITY_IMPERSONATION_LEVEL.SecurityDelegation << 16),
+        Delegations = (ImpersonationLevel.Delegation << 16),
 
         /// <summary>
         /// [SECURITY_CONTEXT_TRACKING]

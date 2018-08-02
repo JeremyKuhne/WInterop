@@ -167,9 +167,9 @@ namespace WInterop.Authorization
                 AccessToken hExistingToken,
                 AccessTokenRights dwDesiredAccess,
                 IntPtr lpTokenAttributes,
-                SECURITY_IMPERSONATION_LEVEL ImpersonationLevel,
-                TOKEN_TYPE TokenType,
-                ref AccessToken phNewToken);
+                ImpersonationLevel ImpersonationLevel,
+                TokenType TokenType,
+                out AccessToken phNewToken);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379590.aspx
             [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]

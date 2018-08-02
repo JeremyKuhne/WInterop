@@ -11,7 +11,7 @@ namespace WInterop.Authorization.Types
     public struct SECURITY_QUALITY_OF_SERVICE
     {
         public uint Length;
-        public SECURITY_IMPERSONATION_LEVEL ImpersonationLevel;
+        public ImpersonationLevel ImpersonationLevel;
         public SECURITY_CONTEXT_TRACKING_MODE ContextTrackingMode;
         public BOOLEAN EffectiveOnly;
     }

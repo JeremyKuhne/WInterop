@@ -9,10 +9,18 @@ namespace WInterop.Authorization.Types
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379633.aspx">TOKEN_TYPE</a> structure.
+    /// [TOKEN_TYPE]
     /// </summary>
-    public enum TOKEN_TYPE
+    public enum TokenType
     {
-        TokenPrimary = 1,
-        TokenImpersonation
+        /// <summary>
+        /// An access token that can be used with CreateProcessAsUser. [TokenPrimary]
+        /// </summary>
+        Primary = 1,
+
+        /// <summary>
+        /// An impersonation token. [TokenImpersonation]
+        /// </summary>
+        Impersonation
     }
 }
