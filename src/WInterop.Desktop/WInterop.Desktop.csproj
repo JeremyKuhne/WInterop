@@ -27,7 +27,4 @@
   <ItemGroup>
     <ProjectReference Include="..\WInterop.Types\WInterop.Types.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Storage\Types\" />
-  </ItemGroup>
 </Project>
