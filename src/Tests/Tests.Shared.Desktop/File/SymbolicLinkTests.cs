@@ -43,26 +43,26 @@ namespace DesktopTests.File
 
                 string symbolicLink = Paths.Combine(cleaner.TempFolder, "Link");
                 string extendedLink = @"\\?\" + symbolicLink;
-                StorageMethods.CreateSymbolicLink(symbolicLink, filePath);
-                StorageMethods.FileExists(symbolicLink).Should().BeTrue("symbolic link should exist");
+                Storage.CreateSymbolicLink(symbolicLink, filePath);
+                Storage.FileExists(symbolicLink).Should().BeTrue("symbolic link should exist");
 
                 // GetFinalPathName should normalize the casing, pushing ToUpper to validate
-                using (var handle = StorageMethods.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
+                using (var handle = Storage.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    StorageMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedPath);
-                    StorageMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedPath);
                 }
 
-                using (var handle = StorageMethods.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead,
+                using (var handle = Storage.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead,
                     ShareModes.ReadWrite, FileAttributes.None, FileFlags.OpenReparsePoint))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    StorageMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
                         .Should().Be(extendedLink);
-                    StorageMethods.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
                         .Should().Be(extendedLink);
                 }
             }
@@ -75,15 +75,15 @@ namespace DesktopTests.File
             {
                 string filePath = cleaner.CreateTestFile("CreateSymbolicLinkToFile");
                 string symbolicLink = cleaner.GetTestPath();
-                Action action = () => StorageMethods.CreateSymbolicLink(symbolicLink, filePath);
+                Action action = () => Storage.CreateSymbolicLink(symbolicLink, filePath);
 
                 if (CanCreateSymbolicLinks())
                 {
                     action();
-                    var attributes = StorageMethods.GetFileAttributes(symbolicLink);
+                    var attributes = Storage.GetFileAttributes(symbolicLink);
                     attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
 
-                    using (var handle = StorageMethods.CreateFile(symbolicLink, CreationDisposition.OpenExisting, DesiredAccess.ReadExtendedAttributes,
+                    using (var handle = Storage.CreateFile(symbolicLink, CreationDisposition.OpenExisting, DesiredAccess.ReadExtendedAttributes,
                         ShareModes.All, fileFlags: FileFlags.OpenReparsePoint))
                     {
                         handle.IsInvalid.Should().BeFalse();
@@ -109,15 +109,15 @@ namespace DesktopTests.File
                 string filePath = cleaner.CreateTestFile("CreateRelativeSymbolicLinkToFile");
                 string fileName = Paths.GetLastSegment(filePath);
                 string symbolicLink = cleaner.GetTestPath();
-                Action action = () => StorageMethods.CreateSymbolicLink(symbolicLink, fileName);
+                Action action = () => Storage.CreateSymbolicLink(symbolicLink, fileName);
 
                 if (CanCreateSymbolicLinks())
                 {
                     action();
-                    var attributes = StorageMethods.GetFileAttributes(symbolicLink);
+                    var attributes = Storage.GetFileAttributes(symbolicLink);
                     attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
 
-                    using (var handle = StorageMethods.CreateFile(symbolicLink, CreationDisposition.OpenExisting, DesiredAccess.ReadExtendedAttributes,
+                    using (var handle = Storage.CreateFile(symbolicLink, CreationDisposition.OpenExisting, DesiredAccess.ReadExtendedAttributes,
                         ShareModes.All, fileFlags: FileFlags.OpenReparsePoint))
                     {
                         handle.IsInvalid.Should().BeFalse();
@@ -145,12 +145,12 @@ namespace DesktopTests.File
                 string filePath = cleaner.CreateTestFile("CreateSymbolicLinkToLongPathFile", longPath);
 
                 string symbolicLink = cleaner.GetTestPath();
-                Action action = () => StorageMethods.CreateSymbolicLink(symbolicLink, filePath);
+                Action action = () => Storage.CreateSymbolicLink(symbolicLink, filePath);
 
                 if (CanCreateSymbolicLinks())
                 {
                     action();
-                    var attributes = StorageMethods.GetFileAttributes(symbolicLink);
+                    var attributes = Storage.GetFileAttributes(symbolicLink);
                     attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
                 }
                 else

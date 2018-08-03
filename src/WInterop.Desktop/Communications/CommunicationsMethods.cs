@@ -169,7 +169,7 @@ namespace WInterop.Desktop.Communications
             FileAttributes fileAttributes = FileAttributes.None,
             FileFlags fileFlags = FileFlags.None)
         {
-            return StorageMethods.CreateFile(
+            return Storage.Storage.CreateFile(
                 path,
                 CreationDisposition.OpenExisting,
                 DesiredAccess.GenericReadWrite,

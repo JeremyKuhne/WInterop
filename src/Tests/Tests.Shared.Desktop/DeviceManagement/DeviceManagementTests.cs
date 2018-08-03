@@ -20,7 +20,7 @@ namespace DesktopTests.Devices
         public void QueryDeviceName()
         {
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
-            using (var handle = StorageMethods.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
+            using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
                 DeviceMethods.QueryDeviceName(handle).Should().StartWith(@"\Device\HarddiskVolume");
             }
@@ -30,7 +30,7 @@ namespace DesktopTests.Devices
         public void QuerySuggestedLinkName()
         {
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
-            using (var handle = StorageMethods.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
+            using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
                 Action action = () => DeviceMethods.QuerySuggestedLinkName(handle);
                 action.Should().Throw<WInteropIOException>("this is an optional query, not aware of which drivers support this").
@@ -42,7 +42,7 @@ namespace DesktopTests.Devices
         public void QueryUniqueId()
         {
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
-            using (var handle = StorageMethods.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
+            using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
                 DeviceMethods.QueryUniqueId(handle).Should().NotBeEmpty();
             }
@@ -52,7 +52,7 @@ namespace DesktopTests.Devices
         public void QueryStableGuid()
         {
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
-            using (var handle = StorageMethods.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
+            using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
                 DeviceMethods.QueryStableGuid(handle).Should().NotBe(Guid.Empty);
             }
@@ -64,7 +64,7 @@ namespace DesktopTests.Devices
             // TODO: Need to conditionalize this on RS1
 
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
-            using (var handle = StorageMethods.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
+            using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
                 DeviceMethods.QueryInterfacename(handle).Should().StartWith(@"\\?\STORAGE#Volume#{");
             }

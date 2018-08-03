@@ -41,7 +41,7 @@ namespace Tests.Support
                 FileHelper.CreateDirectoryRecursive(TempFolder);
 
                 // Create a flag file and leave it open- this way we can track and clean abandoned (crashed/terminated) processes
-                _flagFile = StorageMethods.CreateFileStream(flagFile,
+                _flagFile = Storage.CreateFileStream(flagFile,
                     DesiredAccess.GenericReadWrite, 0, CreationDisposition.CreateNew);
 
                 var writer = new StreamWriter(_flagFile);
@@ -82,7 +82,7 @@ namespace Tests.Support
                         try
                         {
                             // If we can't delete the flag file (open handle) we'll throw and move on
-                            StorageMethods.DeleteFile(@"\\?\" + flagFile.File);
+                            Storage.DeleteFile(@"\\?\" + flagFile.File);
 
                             FileHelper.DeleteDirectoryRecursive(@"\\?\" + flagFile.Directory);
                         }
@@ -106,7 +106,7 @@ namespace Tests.Support
         public string CreateTestFile(string content, string basePath = null)
         {
             string testFile = GetTestPath(basePath);
-            using (var stream = StorageMethods.CreateFileStream(testFile,
+            using (var stream = Storage.CreateFileStream(testFile,
                 DesiredAccess.GenericReadWrite, ShareModes.ReadWrite, CreationDisposition.CreateNew))
             {
                 using (var writer = new StreamWriter(stream))
@@ -121,7 +121,7 @@ namespace Tests.Support
         public string CreateTestFile(byte[] content, string basePath = null)
         {
             string testFile = GetTestPath(basePath);
-            using (var stream = StorageMethods.CreateFileStream(testFile,
+            using (var stream = Storage.CreateFileStream(testFile,
                 DesiredAccess.GenericReadWrite, ShareModes.ReadWrite, CreationDisposition.CreateNew))
             {
                 using (var writer = new BinaryWriter(stream))
@@ -172,7 +172,7 @@ namespace Tests.Support
 
                     try
                     {
-                        StorageMethods.DeleteFile(@"\\?\" + file);
+                        Storage.DeleteFile(@"\\?\" + file);
                     }
                     catch (Exception)
                     {

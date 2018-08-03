@@ -22,16 +22,16 @@ namespace DesktopTests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string fileName = System.IO.Path.GetRandomFileName();
-                using (var directory = StorageMethods.CreateDirectoryHandle(cleaner.TempFolder))
+                using (var directory = Storage.CreateDirectoryHandle(cleaner.TempFolder))
                 {
                     directory.IsInvalid.Should().BeFalse();
 
-                    using (var file = StorageMethods.CreateFileRelative(fileName, directory, CreateDisposition.Create))
+                    using (var file = Storage.CreateFileRelative(fileName, directory, CreateDisposition.Create))
                     {
                         file.IsInvalid.Should().BeFalse();
                     }
 
-                    StorageMethods.FileExists(Paths.Combine(cleaner.TempFolder, fileName)).Should().BeTrue();
+                    Storage.FileExists(Paths.Combine(cleaner.TempFolder, fileName)).Should().BeTrue();
                 }
             }
         }
@@ -41,7 +41,7 @@ namespace DesktopTests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                using (var file = StorageMethods.CreateFileDirect(@"\??\" + cleaner.GetTestPath(), CreateDisposition.Create))
+                using (var file = Storage.CreateFileDirect(@"\??\" + cleaner.GetTestPath(), CreateDisposition.Create))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -54,7 +54,7 @@ namespace DesktopTests.File
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.CreateTestFile(nameof(OpenFileDirect));
-                using (var file = StorageMethods.CreateFileDirect(@"\??\" + path, CreateDisposition.Open))
+                using (var file = Storage.CreateFileDirect(@"\??\" + path, CreateDisposition.Open))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -68,7 +68,7 @@ namespace DesktopTests.File
             {
                 string path = @"\??\" + cleaner.CreateTestFile(nameof(OpenFileDirect_WithSpan));
                 string wrongPath =  path + "foo";
-                using (var file = StorageMethods.CreateFileDirect(wrongPath.AsSpan().Slice(0, path.Length), CreateDisposition.Open))
+                using (var file = Storage.CreateFileDirect(wrongPath.AsSpan().Slice(0, path.Length), CreateDisposition.Open))
                 {
                     file.IsInvalid.Should().BeFalse();
                 }
@@ -80,15 +80,15 @@ namespace DesktopTests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                using (var directory = StorageMethods.CreateDirectoryHandle(cleaner.TempFolder))
+                using (var directory = Storage.CreateDirectoryHandle(cleaner.TempFolder))
                 {
                     directory.IsInvalid.Should().BeFalse("can open the root directory");
 
                     string name = System.IO.Path.GetRandomFileName();
                     string path = Paths.Combine(cleaner.TempFolder, name);
-                    StorageMethods.CreateDirectory(path);
+                    Storage.CreateDirectory(path);
 
-                    using (var subdir = StorageMethods.CreateDirectoryHandle(directory, name))
+                    using (var subdir = Storage.CreateDirectoryHandle(directory, name))
                     {
                         subdir.IsInvalid.Should().BeFalse("can open subdir from handle");
                     }
@@ -101,15 +101,15 @@ namespace DesktopTests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                using (var directory = StorageMethods.CreateDirectoryHandle(cleaner.TempFolder))
+                using (var directory = Storage.CreateDirectoryHandle(cleaner.TempFolder))
                 {
                     directory.IsInvalid.Should().BeFalse();
 
                     string name = System.IO.Path.GetRandomFileName();
-                    using (var subdir = StorageMethods.CreateDirectory(directory, name))
+                    using (var subdir = Storage.CreateDirectory(directory, name))
                     {
                         subdir.IsInvalid.Should().BeFalse();
-                        StorageMethods.DirectoryExists(Paths.Combine(cleaner.TempFolder, name)).Should().BeTrue();
+                        Storage.DirectoryExists(Paths.Combine(cleaner.TempFolder, name)).Should().BeTrue();
                     }
                 }
             }

@@ -133,15 +133,15 @@ namespace WInterop.Compression
 
             path = Paths.TrimTrailingSeparators(path);
             if (path[path.Length -1] != '_'
-                || StorageMethods.GetFileAttributesEx(path).nFileSize <= (ulong)sizeof(LzxHeader))
+                || Storage.Storage.GetFileAttributesEx(path).nFileSize <= (ulong)sizeof(LzxHeader))
                 return filenameOnly ? Paths.GetLastSegment(path) : path;
 
             char replacement;
-            using (var file = StorageMethods.CreateFile(path, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.Read))
+            using (var file = Storage.Storage.CreateFile(path, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.Read))
             {
                 LzxHeader header = new LzxHeader();
 
-                if (StorageMethods.ReadFile(file, Structs.AsByteSpan(ref header)) < sizeof(LzxHeader))
+                if (Storage.Storage.ReadFile(file, Structs.AsByteSpan(ref header)) < sizeof(LzxHeader))
                     return path;
 
                 replacement = char.ToUpperInvariant((char)header.extensionChar);
@@ -262,7 +262,7 @@ namespace WInterop.Compression
             bool overwrite = false,
             bool throwOnBadCompression = false)
         {
-            if (!StorageMethods.DirectoryExists(sourceDirectory)) throw new DirectoryNotFoundException(sourceDirectory);
+            if (!Storage.Storage.DirectoryExists(sourceDirectory)) throw new DirectoryNotFoundException(sourceDirectory);
 
             if (destinationDirectory == null)
             {
@@ -282,7 +282,7 @@ namespace WInterop.Compression
                 if (result < 0)
                 {
                     // Bad source file perhaps, attempt a normal copy
-                    StorageMethods.CopyFile(file, Paths.Combine(targetDirectory, Paths.GetLastSegment(file)), overwrite: overwrite);
+                    Storage.Storage.CopyFile(file, Paths.Combine(targetDirectory, Paths.GetLastSegment(file)), overwrite: overwrite);
                 }
             }
         }
@@ -328,7 +328,7 @@ namespace WInterop.Compression
             bool throwOnBadCompression = true,
             bool useCreateFile = true)
         {
-            if (!overwrite && StorageMethods.PathExists(destination))
+            if (!overwrite && Storage.Storage.PathExists(destination))
                 throw Errors.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, destination);
 
             using (LzHandle sourceHandle = useCreateFile ? LzCreateFile(source) : LzOpenFile(source))

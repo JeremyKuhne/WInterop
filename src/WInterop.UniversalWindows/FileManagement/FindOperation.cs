@@ -23,7 +23,7 @@ namespace WInterop.Storage
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private IntPtr CreateDirectoryHandle(string fileName, string subDirectory)
             {
-                SafeFileHandle safeHandle = StorageMethods.CreateDirectoryHandle(subDirectory);
+                SafeFileHandle safeHandle = Storage.CreateDirectoryHandle(subDirectory);
 
                 // Ideally we'd never wrap in a SafeFileHandle, but for now this is reasonable.
                 IntPtr handle = safeHandle.DangerousGetHandle();

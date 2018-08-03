@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Threading;
-using WInterop.Storage;
 using WInterop.Handles;
 using WInterop.Support.Buffers;
 
@@ -60,7 +59,7 @@ namespace WInterop.Storage
 
         public IEnumerator<T> GetEnumerator()
         {
-            SafeFileHandle handle = StorageMethods.CreateDirectoryHandle(_directory);
+            SafeFileHandle handle = Storage.CreateDirectoryHandle(_directory);
             IntPtr phandle = handle.DangerousGetHandle();
             handle.SetHandleAsInvalid();
             handle.Dispose();

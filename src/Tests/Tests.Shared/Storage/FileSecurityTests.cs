@@ -21,10 +21,10 @@ namespace Tests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                using (var handle = StorageMethods.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
+                using (var handle = Storage.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    SID sid = StorageMethods.QueryOwner(handle);
+                    SID sid = Storage.QueryOwner(handle);
                     sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
                     string sidString = sid.ConvertSidToString();
                     AccountSidInformation info = sid.LookupAccountSid();

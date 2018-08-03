@@ -9,7 +9,6 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.IO;
 using WInterop.Console.Types;
-using WInterop.Storage;
 
 namespace WInterop.Console
 {
@@ -49,7 +48,7 @@ namespace WInterop.Console
             if (!CanRead)
                 throw new InvalidOperationException();
 
-            return (int)StorageMethods.ReadFile(_handle, buffer.AsSpan().Slice(offset, count));
+            return (int)Storage.Storage.ReadFile(_handle, buffer.AsSpan().Slice(offset, count));
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -57,7 +56,7 @@ namespace WInterop.Console
             if (!CanWrite)
                 throw new InvalidOperationException();
 
-            StorageMethods.WriteFile(_handle, buffer.AsSpan().Slice(offset, count));
+            Storage.Storage.WriteFile(_handle, buffer.AsSpan().Slice(offset, count));
         }
     }
 }

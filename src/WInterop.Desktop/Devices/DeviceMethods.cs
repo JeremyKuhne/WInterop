@@ -164,7 +164,7 @@ namespace WInterop.Devices
         /// </summary>
         public unsafe static string QueryDosVolumePath(string volume)
         {
-            var mountManager = StorageMethods.CreateFile(
+            var mountManager = Storage.Storage.CreateFile(
                 @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0);
 
             ControlCode controlCode = ControlCodes.MountManager.QueryDosVolumePath;

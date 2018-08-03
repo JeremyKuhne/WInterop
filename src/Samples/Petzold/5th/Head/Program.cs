@@ -74,7 +74,7 @@ namespace Head
 
                     hwndText = Windows.CreateWindow(
                         className: "static",
-                        windowName: StorageMethods.GetCurrentDirectory(),
+                        windowName: Storage.GetCurrentDirectory(),
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left,
                         bounds: new Rectangle(baseUnits.Width, baseUnits.Height, baseUnits.Width * 260, baseUnits.Height),
                         parentWindow: window,
@@ -107,13 +107,13 @@ namespace Head
                             SafeFileHandle hFile = null;
                             try
                             {
-                                using (hFile = StorageMethods.CreateFile(szFile.AsSpan(0, result),
+                                using (hFile = Storage.CreateFile(szFile.AsSpan(0, result),
                                     CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.Read))
                                 {
                                     if (!hFile.IsInvalid)
                                     {
                                         bValidFile = true;
-                                        hwndText.SetWindowText(StorageMethods.GetCurrentDirectory());
+                                        hwndText.SetWindowText(Storage.GetCurrentDirectory());
                                     }
                                 }
                                 hFile = null;
@@ -131,19 +131,19 @@ namespace Head
                                 try
                                 {
                                     szFile[result - 1] = '\0';
-                                    StorageMethods.SetCurrentDirectory(szFile.AsSpan(1, result - 2));
+                                    Storage.SetCurrentDirectory(szFile.AsSpan(1, result - 2));
                                 }
                                 catch
                                 {
                                     dir[0] = szFile[2];
                                     dir[1] = ':';
 
-                                    try { StorageMethods.SetCurrentDirectory(dir); }
+                                    try { Storage.SetCurrentDirectory(dir); }
                                     catch { }
                                 }
 
                                 // Get the new directory name and fill the list box.
-                                hwndText.SetWindowText(StorageMethods.GetCurrentDirectory());
+                                hwndText.SetWindowText(Storage.GetCurrentDirectory());
                                 hwndList.SendMessage(ListBoxMessage.ResetContent, 0, 0);
                                 fixed (char* f = filter)
                                     hwndList.SendMessage(ListBoxMessage.Directory, (uint)DIRATTR, f);
@@ -158,7 +158,7 @@ namespace Head
                         break;
 
                     uint bytesRead;
-                    using (var hFile = StorageMethods.CreateFile(szFile, CreationDisposition.OpenExisting,
+                    using (var hFile = Storage.CreateFile(szFile, CreationDisposition.OpenExisting,
                         DesiredAccess.GenericRead, ShareModes.Read))
                     {
                         if (hFile.IsInvalid)
@@ -167,7 +167,7 @@ namespace Head
                             break;
                         }
 
-                        bytesRead = StorageMethods.ReadFile(hFile, _buffer);
+                        bytesRead = Storage.ReadFile(hFile, _buffer);
                     }
 
                     using (DeviceContext dc = window.BeginPaint())

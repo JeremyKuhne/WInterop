@@ -16,9 +16,9 @@ namespace DesktopTests.DiskManagementTests
         [Fact]
         public void GetDiskFreeSpaceForCurrentDrive()
         {
-            var freeSpace = StorageMethods.GetDiskFreeSpace(null);
+            var freeSpace = Storage.GetDiskFreeSpace(null);
             freeSpace.NumberOfFreeClusters.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfClusters);
-            var extendedFreeSpace = StorageMethods.GetDiskFreeSpaceExtended(null);
+            var extendedFreeSpace = Storage.GetDiskFreeSpaceExtended(null);
             extendedFreeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(extendedFreeSpace.TotalNumberOfBytes);
             extendedFreeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(extendedFreeSpace.TotalNumberOfFreeBytes);
             extendedFreeSpace.TotalNumberOfBytes.Should().Be(freeSpace.SectorsPerCluster * (ulong)freeSpace.BytesPerSector * freeSpace.TotalNumberOfClusters);

@@ -20,7 +20,7 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Storage
 {
-    public static partial class StorageMethods
+    public static partial class Storage
     {
         private struct ShortPathNameWrapper : IBufferFunc<StringBuffer, uint>
         {

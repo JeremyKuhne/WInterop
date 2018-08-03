@@ -27,13 +27,13 @@ namespace DesktopTests.FileManagementTests
             {
                 string testFile = cleaner.CreateTestFile(nameof(OpenFileWithTrailingSeparator));
 
-                string fullName = StorageMethods.GetFullPathName(Paths.AddTrailingSeparator(testFile));
+                string fullName = Storage.GetFullPathName(Paths.AddTrailingSeparator(testFile));
 
                 FindOperation<string> find = new FindOperation<string>(testFile);
                 Action action = () => find.FirstOrDefault();
                 action.Should().Throw<ArgumentException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_PARAMETER));
 
-                action = () => StorageMethods.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes);
+                action = () => Storage.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes);
                 action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_NAME));
             }
         }
@@ -52,7 +52,7 @@ namespace DesktopTests.FileManagementTests
             Processes.SetEnvironmentVariable(@"=C:", @"C:\Users");
             using (new TempCurrentDirectory(@"D:\"))
             {
-                StorageMethods.GetFullPathName(value).Should().Be(expected);
+                Storage.GetFullPathName(value).Should().Be(expected);
             }
         }
 
@@ -64,7 +64,7 @@ namespace DesktopTests.FileManagementTests
         {
             using (new TempCurrentDirectory(@"C:\Users"))
             {
-                StorageMethods.GetLongPathName(value).Should().Be(expected);
+                Storage.GetLongPathName(value).Should().Be(expected);
             }
         }
 
@@ -72,7 +72,7 @@ namespace DesktopTests.FileManagementTests
         public void LongPathNameThrowsFileNotFound()
         {
             string path = System.IO.Path.GetRandomFileName();
-            Action action = () => StorageMethods.GetLongPathName(path);
+            Action action = () => Storage.GetLongPathName(path);
             action.Should().Throw<System.IO.FileNotFoundException>();
         }
 
@@ -87,7 +87,7 @@ namespace DesktopTests.FileManagementTests
             ]
         public void CreateFileOnDriveRoot(string path)
         {
-            SafeFileHandle handle = StorageMethods.CreateFile(
+            SafeFileHandle handle = Storage.CreateFile(
                 path,
                 CreationDisposition.OpenExisting,
                 0,
@@ -106,7 +106,7 @@ namespace DesktopTests.FileManagementTests
                 string source = cleaner.GetTestPath();
                 string destination = cleaner.GetTestPath();
 
-                Action action = () => StorageMethods.CopyFileEx(source, destination);
+                Action action = () => Storage.CopyFileEx(source, destination);
                 action.Should().Throw<System.IO.FileNotFoundException>();
 
                 source = Paths.Combine(source, "file");
@@ -120,7 +120,7 @@ namespace DesktopTests.FileManagementTests
             using (var cleaner = new TestFileCleaner())
             {
                 string path = @"\\?\" + cleaner.GetTestPath() + "/";
-                Action action = () => StorageMethods.CreateFile(
+                Action action = () => Storage.CreateFile(
                     path,
                     CreationDisposition.OpenExisting,
                     0,
@@ -151,7 +151,7 @@ namespace DesktopTests.FileManagementTests
         [Theory, MemberData(nameof(DosMatchData))]
         public void IsNameInExpression(string expression, string name, bool ignoreCase, bool expected)
         {
-            StorageMethods.IsNameInExpression(expression, name, ignoreCase).Should().Be(expected,
+            Storage.IsNameInExpression(expression, name, ignoreCase).Should().Be(expected,
                 $"'{expression ?? "<null>"}' in '{name ?? "<null>"}' with ignoreCase of {ignoreCase}");
         }
 

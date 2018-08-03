@@ -22,7 +22,7 @@ using WInterop.Synchronization.Types;
 
 namespace WInterop.Storage
 {
-    public static partial class StorageMethods
+    public static partial class Storage
     {
         // Asynchronous Disk I/O Appears as Synchronous on Windows
         // https://support.microsoft.com/en-us/kb/156932

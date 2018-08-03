@@ -15,7 +15,7 @@ namespace Tests.Support
     {
         public static void WriteAllBytes(string path, byte[] data)
         {
-            using (var stream = StorageMethods.CreateFileStream(path,
+            using (var stream = Storage.CreateFileStream(path,
                 DesiredAccess.GenericWrite, ShareModes.ReadWrite, CreationDisposition.OpenAlways))
             {
                 using (var writer = new System.IO.BinaryWriter(stream))
@@ -27,7 +27,7 @@ namespace Tests.Support
 
         public static void WriteAllText(string path, string text)
         {
-            using (var stream = StorageMethods.CreateFileStream(path,
+            using (var stream = Storage.CreateFileStream(path,
                 DesiredAccess.GenericWrite, ShareModes.ReadWrite, CreationDisposition.OpenAlways))
             {
                 using (var writer = new System.IO.StreamWriter(stream))
@@ -39,7 +39,7 @@ namespace Tests.Support
 
         public static string ReadAllText(string path)
         {
-            using (var stream = StorageMethods.CreateFileStream(path,
+            using (var stream = Storage.CreateFileStream(path,
                 DesiredAccess.GenericRead, ShareModes.ReadWrite, CreationDisposition.OpenExisting))
             {
                 using (var reader = new System.IO.StreamReader(stream))
@@ -51,11 +51,11 @@ namespace Tests.Support
 
         public static string CreateDirectoryRecursive(string path)
         {
-            if (!StorageMethods.PathExists(path))
+            if (!Storage.PathExists(path))
             {
                 int lastSeparator = path.LastIndexOfAny(new char[] { Paths.DirectorySeparator, Paths.AltDirectorySeparator });
                 CreateDirectoryRecursive(path.Substring(0, lastSeparator));
-                StorageMethods.CreateDirectory(path);
+                Storage.CreateDirectory(path);
             }
 
             return path;
@@ -63,7 +63,7 @@ namespace Tests.Support
 
         public static void DeleteDirectoryRecursive(string path)
         {
-            var data = StorageMethods.TryGetFileInfo(path);
+            var data = Storage.TryGetFileInfo(path);
             if (!data.HasValue)
             {
                 // Nothing found
@@ -79,7 +79,7 @@ namespace Tests.Support
             if ((data.Value.dwFileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
             {
                 // Make it writable
-                StorageMethods.SetFileAttributes(path, data.Value.dwFileAttributes & ~FileAttributes.ReadOnly);
+                Storage.SetFileAttributes(path, data.Value.dwFileAttributes & ~FileAttributes.ReadOnly);
             }
 
             // Reparse points don't need to be empty to be deleted. Deleting will simply disconnect the reparse point, which is what we want.
@@ -90,12 +90,12 @@ namespace Tests.Support
                     if ((findResult.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
                         DeleteDirectoryRecursive(Paths.Combine(path, findResult.FileName));
                     else
-                        StorageMethods.DeleteFile(Paths.Combine(path, findResult.FileName));
+                        Storage.DeleteFile(Paths.Combine(path, findResult.FileName));
                 }
             }
 
             // We've either emptied or we're a reparse point, delete the directory
-            StorageMethods.RemoveDirectory(path);
+            Storage.RemoveDirectory(path);
         }
 
         public static void EnsurePathDirectoryExists(string path)

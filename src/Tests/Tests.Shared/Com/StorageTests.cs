@@ -29,7 +29,7 @@ namespace Tests.Com
                 created.Should().NotBeNull();
                 IStorage storage = created as IStorage;
                 storage.Should().NotBeNull();
-                StorageMethods.FileExists(path).Should().BeTrue();
+                Storage.FileExists(path).Should().BeTrue();
 
                 storage.Stat(out var stats, StatFlag.Default);
                 stats.GetAndFreeString().Should().Be(path);

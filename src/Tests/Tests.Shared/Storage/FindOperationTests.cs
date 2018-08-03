@@ -56,13 +56,13 @@ namespace File
             using (var cleaner = new TestFileCleaner())
             {
                 string subdirA = Paths.Combine(cleaner.TempFolder, "A");
-                StorageMethods.CreateDirectory(subdirA);
+                Storage.CreateDirectory(subdirA);
                 string fileB = Paths.Combine(subdirA, "B");
                 FileHelper.WriteAllText(fileB, "B file");
                 string subdirC = Paths.Combine(subdirA, "C");
-                StorageMethods.CreateDirectory(subdirC);
+                Storage.CreateDirectory(subdirC);
                 string subdirD = Paths.Combine(subdirA, "D");
-                StorageMethods.CreateDirectory(subdirD);
+                Storage.CreateDirectory(subdirD);
                 string fileE = Paths.Combine(subdirD, "E");
                 FileHelper.WriteAllText(fileE, "E file");
 

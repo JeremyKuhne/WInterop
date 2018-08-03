@@ -22,8 +22,8 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void GetHandleTypeBasic()
         {
-            string tempPath = StorageMethods.GetTempPath();
-            using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
+            string tempPath = Storage.GetTempPath();
+            using (var directory = Storage.CreateDirectoryHandle(tempPath))
             {
                 string name = HandleMethods.GetObjectType(directory);
                 name.Should().Be("File");
@@ -33,8 +33,8 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void GetHandleNameBasic()
         {
-            string tempPath = StorageMethods.GetTempPath();
-            using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
+            string tempPath = Storage.GetTempPath();
+            using (var directory = Storage.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string name = HandleMethods.GetObjectName(directory);
@@ -104,12 +104,12 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void QueryDosVolumePathBasic()
         {
-            string tempPath = StorageMethods.GetTempPath();
-            using (var directory = StorageMethods.CreateDirectoryHandle(tempPath))
+            string tempPath = Storage.GetTempPath();
+            using (var directory = Storage.CreateDirectoryHandle(tempPath))
             {
                 // This will give back the NT path (\Device\HarddiskVolumen...)
                 string fullName = HandleMethods.GetObjectName(directory);
-                string fileName = StorageMethods.GetFileName(directory);
+                string fileName = Storage.GetFileName(directory);
                 string deviceName = fullName.Substring(0, fullName.Length - fileName.Length);
 
                 string dosVolumePath = DeviceMethods.QueryDosVolumePath(deviceName);
@@ -122,7 +122,7 @@ namespace DesktopTests.HandlesTests
         [Fact]
         public void GetPipeObjectInfo()
         {
-            var fileHandle = StorageMethods.CreateFileSystemIo(
+            var fileHandle = Storage.CreateFileSystemIo(
                 @"\\.\pipe\",
                 0,                  // We don't care about read or write, we're just getting metadata with this handle
                 System.IO.FileShare.ReadWrite,
@@ -137,14 +137,14 @@ namespace DesktopTests.HandlesTests
             string typeName = HandleMethods.GetObjectType(fileHandle);
             typeName.Should().Be(@"File");
 
-            string fileName = StorageMethods.GetFileName(fileHandle);
+            string fileName = Storage.GetFileName(fileHandle);
             fileName.Should().Be(@"\");
         }
 
         [Fact]
         public void GetPipeObjectInfoNoTrailingSlash()
         {
-            var fileHandle = StorageMethods.CreateFileSystemIo(
+            var fileHandle = Storage.CreateFileSystemIo(
                 @"\\.\pipe",
                 0,                  // We don't care about read or write, we're just getting metadata with this handle
                 System.IO.FileShare.ReadWrite,
@@ -160,7 +160,7 @@ namespace DesktopTests.HandlesTests
             typeName.Should().Be(@"File");
 
             // Not sure why this is- probably the source of why so many other things go wrong
-            Action action = () => StorageMethods.GetFileName(fileHandle);
+            Action action = () => Storage.GetFileName(fileHandle);
             action.Should().Throw<ArgumentException>().And.HResult.Should().Be(unchecked((int)0x80070057));
         }
     }

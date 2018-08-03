@@ -18,29 +18,29 @@ namespace Tests.DirectoryManagement
         [Fact]
         public void GetCurrentDirectoryBasic()
         {
-            string currentDirectory = StorageMethods.GetCurrentDirectory();
+            string currentDirectory = Storage.GetCurrentDirectory();
             currentDirectory.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void SetCurrentDirectoryBasic()
         {
-            string currentDirectory = StorageMethods.GetCurrentDirectory();
+            string currentDirectory = Storage.GetCurrentDirectory();
 
             try
             {
                 StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
                 {
-                    StorageMethods.SetCurrentDirectory(@"C:\");
-                    StorageMethods.GetCurrentDirectory().Should().Be(@"C:\");
+                    Storage.SetCurrentDirectory(@"C:\");
+                    Storage.GetCurrentDirectory().Should().Be(@"C:\");
                 });
             }
             finally
             {
-                if (currentDirectory != StorageMethods.GetCurrentDirectory())
+                if (currentDirectory != Storage.GetCurrentDirectory())
                 {
-                    StorageMethods.SetCurrentDirectory(currentDirectory);
-                    StorageMethods.GetCurrentDirectory().Should().Be(currentDirectory);
+                    Storage.SetCurrentDirectory(currentDirectory);
+                    Storage.GetCurrentDirectory().Should().Be(currentDirectory);
                 }
             }
         }
@@ -48,22 +48,22 @@ namespace Tests.DirectoryManagement
         [Fact]
         public void SetCurrentDirectoryShortName()
         {
-            string currentDirectory = StorageMethods.GetCurrentDirectory();
+            string currentDirectory = Storage.GetCurrentDirectory();
 
             try
             {
                 StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
                 {
-                    StorageMethods.SetCurrentDirectory(@"C:\PROGRA~1");
-                    StorageMethods.GetCurrentDirectory().Should().Be(@"C:\PROGRA~1");
+                    Storage.SetCurrentDirectory(@"C:\PROGRA~1");
+                    Storage.GetCurrentDirectory().Should().Be(@"C:\PROGRA~1");
                 });
             }
             finally
             {
-                if (currentDirectory != StorageMethods.GetCurrentDirectory())
+                if (currentDirectory != Storage.GetCurrentDirectory())
                 {
-                    StorageMethods.SetCurrentDirectory(currentDirectory);
-                    StorageMethods.GetCurrentDirectory().Should().Be(currentDirectory);
+                    Storage.SetCurrentDirectory(currentDirectory);
+                    Storage.GetCurrentDirectory().Should().Be(currentDirectory);
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace Tests.DirectoryManagement
             using (var cleaner = new TestFileCleaner())
             {
                 string directoryPath = cleaner.GetTestPath();
-                Action action = () => StorageMethods.SetCurrentDirectory(directoryPath);
+                Action action = () => Storage.SetCurrentDirectory(directoryPath);
                 action.Should().Throw<System.IO.FileNotFoundException>();
             }
         }
@@ -85,8 +85,8 @@ namespace Tests.DirectoryManagement
             using (var temp = new TestFileCleaner())
             {
                 string directoryPath = temp.GetTestPath();
-                StorageMethods.CreateDirectory(directoryPath);
-                using (var directory = StorageMethods.CreateDirectoryHandle(directoryPath))
+                Storage.CreateDirectory(directoryPath);
+                using (var directory = Storage.CreateDirectoryHandle(directoryPath))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
@@ -99,17 +99,17 @@ namespace Tests.DirectoryManagement
             using (var temp = new TestFileCleaner())
             {
                 string directoryPath = temp.GetTestPath();
-                StorageMethods.CreateDirectory(directoryPath);
-                using (var directory = StorageMethods.CreateDirectoryHandle(directoryPath))
+                Storage.CreateDirectory(directoryPath);
+                using (var directory = Storage.CreateDirectoryHandle(directoryPath))
                 {
                     directory.IsInvalid.Should().BeFalse();
                 }
 
-                StorageMethods.RemoveDirectory(directoryPath);
+                Storage.RemoveDirectory(directoryPath);
 
                 Action action = () =>
                 {
-                    using (var directory = StorageMethods.CreateDirectoryHandle(directoryPath))
+                    using (var directory = Storage.CreateDirectoryHandle(directoryPath))
                     {
                     }
                 };

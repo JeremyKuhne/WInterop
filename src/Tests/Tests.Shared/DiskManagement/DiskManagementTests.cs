@@ -19,7 +19,7 @@ namespace Tests.DiskManagement
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                var freeSpace = StorageMethods.GetDiskFreeSpaceExtended(null);
+                var freeSpace = Storage.GetDiskFreeSpaceExtended(null);
                 freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfBytes);
                 freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfFreeBytes);
             });
@@ -28,8 +28,8 @@ namespace Tests.DiskManagement
         [Fact]
         public void GetDiskFreeSpaceForTempDirectory()
         {
-            string tempPath = StorageMethods.GetTempPath();
-            var freeSpace = StorageMethods.GetDiskFreeSpaceExtended(tempPath);
+            string tempPath = Storage.GetTempPath();
+            var freeSpace = Storage.GetDiskFreeSpaceExtended(tempPath);
             freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfBytes);
             freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfFreeBytes);
         }

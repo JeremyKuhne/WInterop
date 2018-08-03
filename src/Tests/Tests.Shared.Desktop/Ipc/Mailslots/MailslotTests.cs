@@ -24,11 +24,11 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = StorageMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0))
+                using (var fileHandle = Storage.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
-                    StorageMethods.GetFileType(fileHandle).Should().Be(FileType.Unknown);
-                    var modeInfo = StorageMethods.GetFileMode(fileHandle);
+                    Storage.GetFileType(fileHandle).Should().Be(FileType.Unknown);
+                    var modeInfo = Storage.GetFileMode(fileHandle);
 
                     // The mailslot was opened synchronously
                     modeInfo.Should().Be(FileAccessModes.SynchronousNotAlertable);
@@ -45,12 +45,12 @@ namespace DesktopTests.Ipc.MailslotTests
             {
                 handle.IsInvalid.Should().BeFalse();
 
-                using (var fileHandle = StorageMethods.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
+                using (var fileHandle = Storage.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
                     FileAttributes.None, FileFlags.Overlapped))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
-                    StorageMethods.GetFileType(fileHandle).Should().Be(FileType.Unknown);
-                    var modeInfo = StorageMethods.GetFileMode(fileHandle);
+                    Storage.GetFileType(fileHandle).Should().Be(FileType.Unknown);
+                    var modeInfo = Storage.GetFileMode(fileHandle);
 
                     // The mailslot was opened asynchronously (e.g. no synchronous flag)
                     modeInfo.Should().Be((FileAccessModes)0);

@@ -22,7 +22,7 @@ namespace WInterop.Storage
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private IntPtr CreateDirectoryHandle(string fileName, string subDirectory)
             {
-                return StorageMethods.CreateDirectoryHandle(_directory, fileName);
+                return Storage.CreateDirectoryHandle(_directory, fileName);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
