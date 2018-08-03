@@ -917,5 +917,10 @@ namespace WInterop.Storage
 
             return freeSpace;
         }
+
+        public static bool AreInvalid(this FileAttributes attributes)
+        {
+            return attributes == FileAttributes.Invalid;
+        }
     }
 }
