@@ -14,5 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Resources\TestFiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StoreHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestFileCleaner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThreadRunner.cs" />
   </ItemGroup>
 </Project>

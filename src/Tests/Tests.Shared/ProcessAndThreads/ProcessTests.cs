@@ -9,7 +9,6 @@ using System;
 using Xunit;
 using FluentAssertions;
 using WInterop.ProcessAndThreads;
-using WInterop.ProcessAndThreads.Types;
 
 namespace Tests.ProcessAndThreads
 {
@@ -18,21 +17,21 @@ namespace Tests.ProcessAndThreads
         [Fact]
         public void GetCurrentProcessId()
         {
-            uint id = ProcessMethods.GetCurrentProcessId();
+            uint id = Processes.GetCurrentProcessId();
             id.Should().NotBe(0);
         }
 
         [Fact]
         public void GetCurrentProcess()
         {
-            ProcessHandle handle = ProcessMethods.GetCurrentProcess();
+            ProcessHandle handle = Processes.GetCurrentProcess();
             handle.HANDLE.Should().Be(new IntPtr(-1));
         }
 
         [Fact]
         public void OpenCurrentProcess()
         {
-            using (SafeProcessHandle handle = ProcessMethods.OpenProcess(ProcessMethods.GetCurrentProcessId(), ProcessAccessRights.QueryLimitedInfomration))
+            using (SafeProcessHandle handle = Processes.OpenProcess(Processes.GetCurrentProcessId(), ProcessAccessRights.QueryLimitedInfomration))
             {
                 handle.IsInvalid.Should().BeFalse();
             }

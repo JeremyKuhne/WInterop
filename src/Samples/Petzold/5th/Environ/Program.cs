@@ -36,7 +36,7 @@ namespace Environ
 
         unsafe static void FillListBox(WindowHandle hwndList)
         {
-            foreach (var name in ProcessMethods.GetEnvironmentVariables().Keys)
+            foreach (var name in Processes.GetEnvironmentVariables().Keys)
             {
                 if (name[0] != '=') // Skip variable names beginning with '='
                 {
@@ -95,7 +95,7 @@ namespace Environ
                         int result = hwndList.SendMessage(ListBoxMessage.GetText, iIndex, nameBuffer);
 
                         // Get environment string.
-                        string value = ProcessMethods.GetEnvironmentVariable(new string(nameBuffer, 0, result));
+                        string value = Processes.GetEnvironmentVariable(new string(nameBuffer, 0, result));
 
                         // Show it in window.
                         hwndText.SetWindowText(value);

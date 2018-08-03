@@ -19,7 +19,7 @@ namespace DesktopTests.RemoteDesktop
         {
             // This, of course, won't necessarily be true if remotely connected to a full Terminal Server
             // or as an administrator to a Windows server via Remote Desktop for Administration.
-            RemoteDesktopMethods.ProcessIdToSessionId(ProcessMethods.GetCurrentProcessId()).Should().Be(1);
+            RemoteDesktopMethods.ProcessIdToSessionId(Processes.GetCurrentProcessId()).Should().Be(1);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace DesktopTests.RemoteDesktop
             // This, of course, won't necessarily be true if remotely connected to a full Terminal Server
             // or as an administrator to a Windows server via Remote Desktop for Administration.
             RemoteDesktopMethods.GetActiveConsoleSessionId().Should().Be(
-                RemoteDesktopMethods.ProcessIdToSessionId(ProcessMethods.GetCurrentProcessId()));
+                RemoteDesktopMethods.ProcessIdToSessionId(Processes.GetCurrentProcessId()));
         }
     }
 }

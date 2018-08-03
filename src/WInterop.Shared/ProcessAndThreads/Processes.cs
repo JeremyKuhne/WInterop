@@ -5,30 +5,24 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.ProcessAndThreads.Types;
+using WInterop.ProcessAndThreads.Native;
 using WInterop.Support;
 
 namespace WInterop.ProcessAndThreads
 {
-    public static partial class ProcessMethods
+    public static partial class Processes
     {
         /// <summary>
         /// Get the handle for the current process.
         /// Note that this handle is only relevant in the current process- it
         /// can't be passed to other processes.
         /// </summary>
-        public static ProcessHandle GetCurrentProcess()
-        {
-            return Imports.GetCurrentProcess();
-        }
+        public static ProcessHandle GetCurrentProcess() => Imports.GetCurrentProcess();
 
         /// <summary>
         /// Get the handle for the current process.
         /// </summary>
-        public static uint GetCurrentProcessId()
-        {
-            return Imports.GetCurrentProcessId();
-        }
+        public static uint GetCurrentProcessId() => Imports.GetCurrentProcessId();
 
         /// <summary>
         /// Open a handle to the specified process by id.

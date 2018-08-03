@@ -7,13 +7,13 @@
 
 using WInterop.Handles.Types;
 
-namespace WInterop.ProcessAndThreads.Types
+namespace WInterop.ProcessAndThreads
 {
     /// <summary>
     /// Safe handle for a thread.
     /// </summary>
-    public class SafeThreadHandle : CloseHandle
+    public class ThreadHandle : CloseHandle
     {
-        public SafeThreadHandle() : base() { }
+        public ThreadHandle() : base() { }
     }
 }

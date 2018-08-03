@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Support.Buffers;
+using WInterop.ProcessAndThreads.Native;
 
 namespace WInterop.ProcessAndThreads.BufferWrappers
 {
@@ -15,7 +16,7 @@ namespace WInterop.ProcessAndThreads.BufferWrappers
 
         uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
         {
-            return ProcessMethods.Imports.GetEnvironmentVariableW(Name, buffer, buffer.CharCapacity);
+            return Imports.GetEnvironmentVariableW(Name, buffer, buffer.CharCapacity);
         }
     }
 }

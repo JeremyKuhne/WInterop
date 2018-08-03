@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.ProcessAndThreads.Types
+namespace WInterop.ProcessAndThreads
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684874.aspx
     [StructLayout(LayoutKind.Sequential)]

@@ -28,9 +28,27 @@ namespace WInterop.Authorization.Native
             PRIVILEGE_SET* RequiredPrivileges,
             out BOOL pfResult);
 
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378612.aspx
+        [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+        public unsafe static extern BOOL ImpersonateLoggedOnUser(
+            AccessToken hToken);
+
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public static extern BOOL RevertToSelf();
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
+        [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+        public static unsafe extern BOOL CreateRestrictedToken(
+            AccessToken ExistingTokenHandle,
+            uint Flags,
+            uint DisableSidCount,
+            SID_AND_ATTRIBUTES* SidsToDisable,
+            uint DeletePrivilegeCount,
+            LUID_AND_ATTRIBUTES* PrivilegesToDelete,
+            uint RestrictedSidCount,
+            SID_AND_ATTRIBUTES* SidsToRestrict,
+            AccessToken NewTokenHandle);
 
         // This isn't allowed in Windows Store apps, but is exactly the same as
         // calling LookupAccountSidW with a null or empty computer name.

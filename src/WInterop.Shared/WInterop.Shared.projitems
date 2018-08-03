@@ -37,9 +37,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)MemoryManagement\MemoryMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipes\PipeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipes\PipeMethods.Imports.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.Imports.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ThreadMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Native\Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Processes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Threads.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\SynchronizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.cs" />
@@ -53,5 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Authorization\Native\" />
+    <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Native\" />
   </ItemGroup>
 </Project>

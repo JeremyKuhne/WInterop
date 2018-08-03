@@ -226,7 +226,7 @@ namespace WInterop.Authorization
             if (!Imports.GetTokenInformation(token, TokenInformation.Owner, buffer, (uint)size, out uint _))
                 throw Errors.GetIoExceptionForLastError();
 
-            return CopySid((IntPtr)((TOKEN_OWNER*)buffer)->Owner);
+            return CopySid(((TOKEN_OWNER*)buffer)->Owner);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace WInterop.Authorization
             if (!Imports.GetTokenInformation(token, TokenInformation.PrimaryGroup, buffer, (uint)size, out uint _))
                 throw Errors.GetIoExceptionForLastError();
 
-            return CopySid((IntPtr)((TOKEN_PRIMARY_GROUP*)buffer)->PrimaryGroup);
+            return CopySid(((TOKEN_PRIMARY_GROUP*)buffer)->PrimaryGroup);
         }
 
         /// <summary>
@@ -304,9 +304,9 @@ namespace WInterop.Authorization
             return *u;
         }
 
-        private static unsafe SID CopySid(IntPtr source)
+        private static unsafe SID CopySid(SID* source)
         {
-            if (!Imports.CopySid((uint)sizeof(SID), out SID destination, (SID*)source))
+            if (!Imports.CopySid((uint)sizeof(SID), out SID destination, source))
                 throw Errors.GetIoExceptionForLastError();
             return destination;
         }
@@ -374,7 +374,7 @@ namespace WInterop.Authorization
         /// </summary>
         public static AccessToken OpenProcessToken(AccessTokenRights desiredAccess)
         {
-            if (!Imports.OpenProcessToken(ProcessMethods.GetCurrentProcess(), desiredAccess, out var processToken))
+            if (!Imports.OpenProcessToken(Processes.GetCurrentProcess(), desiredAccess, out var processToken))
                 throw Errors.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
@@ -409,7 +409,7 @@ namespace WInterop.Authorization
         /// <param name="openAsSelf"></param>
         public static AccessToken OpenThreadToken(AccessTokenRights desiredAccess, bool openAsSelf)
         {
-            if (!Imports.OpenThreadToken(ThreadMethods.Imports.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
+            if (!Imports.OpenThreadToken(Threads.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
                 // Threads only have their own token if the are impersonating, otherwise they inherit process
                 Errors.ThrowIfLastErrorNot(WindowsError.ERROR_NO_TOKEN);
@@ -423,7 +423,7 @@ namespace WInterop.Authorization
         /// Duplicates a token. Token must have been created with <see cref="AccessTokenRights.Duplicate"/>.
         /// </summary>
         /// <param name="token"></param>
-        /// <param name="rights"></param>
+        /// <param name="rights">Rights to apply to the token. default is all of the rights from the source token.</param>
         /// <param name=""></param>
         /// <returns></returns>
         public static AccessToken DuplicateToken(
@@ -444,6 +444,12 @@ namespace WInterop.Authorization
             }
 
             return duplicatedToken;
+        }
+
+        public static void SetThreadToken(this ThreadHandle thread, AccessToken token)
+        {
+            if (!Imports.SetThreadToken(thread, token))
+                throw Errors.GetIoExceptionForLastError();
         }
     }
 }

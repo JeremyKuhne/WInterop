@@ -50,7 +50,7 @@ namespace DesktopTests.FileManagementTests
             // isn't more than one.
 
             // Set the current directory to D: and the hidden env for C:'s last current directory
-            ProcessMethods.SetEnvironmentVariable(@"=C:", @"C:\Users");
+            Processes.SetEnvironmentVariable(@"=C:", @"C:\Users");
             using (new TempCurrentDirectory(@"D:\"))
             {
                 StorageMethods.GetFullPathName(value).Should().Be(expected);

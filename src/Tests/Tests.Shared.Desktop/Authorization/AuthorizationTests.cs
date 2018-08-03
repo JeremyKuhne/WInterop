@@ -15,6 +15,9 @@ using System.Diagnostics;
 using WInterop.SystemInformation;
 using System.Collections.Generic;
 using System.Linq;
+using Tests.Shared.Support;
+using WInterop.ProcessAndThreads;
+using WInterop.ProcessAndThreads.Types;
 
 namespace AuthorizationTests
 {
@@ -257,19 +260,46 @@ namespace AuthorizationTests
                 using (var duplicate = token.DuplicateToken())
                 {
                     duplicate.IsInvalid.Should().BeFalse();
-                    var duplicatePrivileges = duplicate.GetTokenPrivileges();
+                    duplicate.GetTokenStatistics().TokenType.Should().Be(TokenType.Impersonation);
 
+                    var duplicatePrivileges = duplicate.GetTokenPrivileges();
                     duplicatePrivileges.Should().Equal(privileges);
                 }
 
                 using (var duplicate = token.DuplicateToken(rights: AccessTokenRights.MaximumAllowed))
                 {
                     duplicate.IsInvalid.Should().BeFalse();
-                    var duplicatePrivileges = duplicate.GetTokenPrivileges();
-
-                    duplicatePrivileges.Count().Should().BeGreaterOrEqualTo(privileges.Count());
+                    duplicate.GetTokenStatistics().GroupCount.Should().BeGreaterOrEqualTo((uint)privileges.Count());
                 }
             }
+        }
+
+        [Fact]
+        public void ChangeThreadToImpersonate()
+        {
+            ThreadRunner.Run(() =>
+            {
+                using (var token = Authorization.OpenThreadToken(AccessTokenRights.Query, openAsSelf: true))
+                {
+                    token.Should().BeNull();
+                }
+
+                using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+                {
+                    using (var duplicate = token.DuplicateToken(AccessTokenRights.Query | AccessTokenRights.Impersonate, ImpersonationLevel.Impersonation))
+                    {
+                        using (ThreadHandle thread = Threads.GetCurrentThread())
+                        {
+                            thread.SetThreadToken(duplicate);
+
+                            using (var threadToken = Authorization.OpenThreadToken(AccessTokenRights.Query, openAsSelf: false))
+                            {
+                                threadToken.Should().BeNull();
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
 }

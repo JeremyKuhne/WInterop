@@ -159,7 +159,7 @@ namespace WInterop.Modules
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         public unsafe static MODULEINFO GetModuleInfo(ModuleInstance module, SafeProcessHandle process = null)
         {
-            if (process == null) process = ProcessMethods.GetCurrentProcess();
+            if (process == null) process = Processes.GetCurrentProcess();
 
             if (!Imports.K32GetModuleInformation(process, module, out var info, (uint)sizeof(MODULEINFO)))
                 throw Errors.GetIoExceptionForLastError();
@@ -229,7 +229,7 @@ namespace WInterop.Modules
         /// <param name="process">The process to get modules for or null for the current process.</param>
         public unsafe static IEnumerable<ModuleInstance> GetProcessModules(SafeProcessHandle process = null)
         {
-            if (process == null) process = ProcessMethods.GetCurrentProcess();
+            if (process == null) process = Processes.GetCurrentProcess();
 
             return BufferHelper.BufferInvoke<HeapBuffer, ModuleInstance[]>(buffer =>
             {

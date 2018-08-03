@@ -8,7 +8,7 @@
 using System;
 using WInterop.Handles.Types;
 
-namespace WInterop.ProcessAndThreads.Types
+namespace WInterop.ProcessAndThreads
 {
     /// <summary>
     /// Safe handle for a process.

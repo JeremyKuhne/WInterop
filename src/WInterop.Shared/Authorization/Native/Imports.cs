@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.MemoryManagement.Types;
-using WInterop.ProcessAndThreads.Types;
+using WInterop.ProcessAndThreads;
 
 namespace WInterop.Authorization.Native
 {
@@ -147,7 +147,7 @@ namespace WInterop.Authorization.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public static extern bool OpenThreadToken(
-            SafeThreadHandle ThreadHandle,
+            ThreadHandle ThreadHandle,
             AccessTokenRights DesiredAccess,
             BOOL OpenAsSelf,
             out AccessToken TokenHandle);
@@ -172,7 +172,7 @@ namespace WInterop.Authorization.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379590.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public static extern BOOL SetThreadToken(
-            IntPtr Thread,
+            ThreadHandle Thread,
             AccessToken Token);
 
         // https://msdn.microsoft.com/en-us/library/aa379180.aspx
@@ -208,5 +208,10 @@ namespace WInterop.Authorization.Native
             uint BufferLength,
             TOKEN_PRIVILEGES* PreviousState,
             out uint ReturnLength);
+
+        internal static ProcessHandle GetCurrentProcess()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

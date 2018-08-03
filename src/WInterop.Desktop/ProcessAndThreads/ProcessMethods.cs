@@ -11,6 +11,7 @@ using System.Linq;
 using WInterop.ErrorHandling;
 using WInterop.ProcessAndThreads.BufferWrappers;
 using WInterop.ProcessAndThreads.Types;
+using WInterop.ProcessAndThreads.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -19,7 +20,7 @@ namespace WInterop.ProcessAndThreads
     /// <summary>
     /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
-    public static partial class ProcessMethods
+    public static partial class Processes
     {
         /// <summary>
         /// Set the given enivronment variable.

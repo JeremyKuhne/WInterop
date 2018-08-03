@@ -8,7 +8,7 @@
 using System;
 using WInterop.Authorization.Types;
 
-namespace WInterop.ProcessAndThreads.Types
+namespace WInterop.ProcessAndThreads
 {
     [Flags]
     public enum ProcessAccessRights : uint

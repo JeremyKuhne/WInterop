@@ -7,6 +7,7 @@
 
 using System;
 using WInterop.Handles.Types;
+using WInterop.ProcessAndThreads.Native;
 
 namespace WInterop.ProcessAndThreads.Types
 {
@@ -21,7 +22,7 @@ namespace WInterop.ProcessAndThreads.Types
 
         protected override bool ReleaseHandle()
         {
-            ProcessMethods.Imports.FreeEnvironmentStringsW(handle);
+            Imports.FreeEnvironmentStringsW(handle);
             handle = IntPtr.Zero;
             return true;
         }
