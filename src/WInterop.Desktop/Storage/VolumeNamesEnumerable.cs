@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using WInterop.ErrorHandling;
-using WInterop.Storage;
+using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -54,7 +54,7 @@ namespace WInterop.Storage
 
             private string FindFirstVolume()
             {
-                _findHandle = StorageMethods.Imports.FindFirstVolumeW(
+                _findHandle = Imports.FindFirstVolumeW(
                     _buffer,
                     _buffer.CharCapacity);
 
@@ -76,7 +76,7 @@ namespace WInterop.Storage
 
             private string FindNextVolume()
             {
-                if (!StorageMethods.Imports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
+                if (!Imports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
                     WindowsError error = Errors.GetLastError();
                     switch (error)

@@ -7,6 +7,7 @@
 
 using System;
 using WInterop.Support.Buffers;
+using WInterop.Storage.Native;
 
 namespace WInterop.Storage.BufferWrappers
 {
@@ -16,7 +17,7 @@ namespace WInterop.Storage.BufferWrappers
 
         uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
         {
-            return StorageMethods.Imports.GetFullPathNameW(Path, buffer.CharCapacity, buffer, IntPtr.Zero);
+            return Imports.GetFullPathNameW(Path, buffer.CharCapacity, buffer, IntPtr.Zero);
         }
     }
 }

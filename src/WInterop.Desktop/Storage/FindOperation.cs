@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using WInterop.ErrorHandling;
-using WInterop.Storage;
+using WInterop.Storage.Native;
 
 namespace WInterop.Storage
 {
@@ -28,7 +28,7 @@ namespace WInterop.Storage
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void GetData()
             {
-                NTSTATUS status = StorageMethods.Imports.NtQueryDirectoryFile(
+                NTSTATUS status = Imports.NtQueryDirectoryFile(
                     FileHandle: _directory,
                     Event: IntPtr.Zero,
                     ApcRoutine: null,

@@ -11,6 +11,7 @@ using System;
 using Tests.Support;
 using WInterop.ErrorHandling;
 using WInterop.Storage;
+using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop;
 using Xunit;
@@ -179,7 +180,7 @@ namespace Tests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                IntPtr result = StorageMethods.Imports.FindFirstFileW(cleaner.TempFolder, out WIN32_FIND_DATA findData);
+                IntPtr result = Imports.FindFirstFileW(cleaner.TempFolder, out WIN32_FIND_DATA findData);
                 try
                 {
                     IsValid(result).Should().BeTrue("root location exists");
@@ -187,10 +188,10 @@ namespace Tests.File
                 finally
                 {
                     if (IsValid(result))
-                        StorageMethods.Imports.FindClose(result);
+                        Imports.FindClose(result);
                 }
 
-                result = StorageMethods.Imports.FindFirstFileW(cleaner.GetTestPath(), out findData);
+                result = Imports.FindFirstFileW(cleaner.GetTestPath(), out findData);
                 WindowsError error = Errors.GetLastError();
 
                 try
@@ -201,10 +202,10 @@ namespace Tests.File
                 finally
                 {
                     if (IsValid(result))
-                        StorageMethods.Imports.FindClose(result);
+                        Imports.FindClose(result);
                 }
 
-                result = StorageMethods.Imports.FindFirstFileW(Paths.Combine(cleaner.GetTestPath(), "NotHere"), out findData);
+                result = Imports.FindFirstFileW(Paths.Combine(cleaner.GetTestPath(), "NotHere"), out findData);
                 error = Errors.GetLastError();
 
                 try
@@ -215,7 +216,7 @@ namespace Tests.File
                 finally
                 {
                     if (IsValid(result))
-                        StorageMethods.Imports.FindClose(result);
+                        Imports.FindClose(result);
                 }
             }
 
@@ -230,15 +231,15 @@ namespace Tests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                bool success = StorageMethods.Imports.GetFileAttributesExW(cleaner.TempFolder,
+                bool success = Imports.GetFileAttributesExW(cleaner.TempFolder,
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA attributeData);
                 success.Should().BeTrue("root location exists");
-                success = StorageMethods.Imports.GetFileAttributesExW(cleaner.GetTestPath(),
+                success = Imports.GetFileAttributesExW(cleaner.GetTestPath(),
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
                 WindowsError error = Errors.GetLastError();
                 success.Should().BeFalse("non-existant file");
                 error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
-                success = StorageMethods.Imports.GetFileAttributesExW(Paths.Combine(cleaner.GetTestPath(), "NotHere"),
+                success = Imports.GetFileAttributesExW(Paths.Combine(cleaner.GetTestPath(), "NotHere"),
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
                 error = Errors.GetLastError();
                 success.Should().BeFalse("non-existant subdir");
@@ -269,7 +270,7 @@ namespace Tests.File
                     action.Should().Throw<UnauthorizedAccessException>();
 
                     // Find file will work at this point.
-                    IntPtr findHandle = StorageMethods.Imports.FindFirstFileW(path, out WIN32_FIND_DATA findData);
+                    IntPtr findHandle = Imports.FindFirstFileW(path, out WIN32_FIND_DATA findData);
                     findHandle.Should().NotBe(IntPtr.Zero);
                     try
                     {
@@ -277,7 +278,7 @@ namespace Tests.File
                     }
                     finally
                     {
-                        StorageMethods.Imports.FindClose(findHandle);
+                        Imports.FindClose(findHandle);
                     }
                 }
             }

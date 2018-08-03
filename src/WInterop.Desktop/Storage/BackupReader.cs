@@ -8,7 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using WInterop.ErrorHandling;
-using WInterop.Storage;
+using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -32,7 +32,7 @@ namespace WInterop.Storage
         public unsafe BackupStreamInformation? GetNextInfo()
         {
             void* buffer = _buffer.VoidPointer;
-            if (!StorageMethods.Imports.BackupRead(
+            if (!Imports.BackupRead(
                 hFile: _fileHandle,
                 lpBuffer: buffer,
                 nNumberOfBytesToRead: s_headerSize,
@@ -51,7 +51,7 @@ namespace WInterop.Storage
             if (streamId->dwStreamNameSize > 0)
             {
                 _buffer.EnsureByteCapacity(s_headerSize + streamId->dwStreamNameSize);
-                if (!StorageMethods.Imports.BackupRead(
+                if (!Imports.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: Pointers.Offset(buffer, s_headerSize),
                     nNumberOfBytesToRead: streamId->dwStreamNameSize,
@@ -67,7 +67,7 @@ namespace WInterop.Storage
             if (streamId->Size > 0)
             {
                 // Move to the next header, if any
-                if (!StorageMethods.Imports.BackupSeek(
+                if (!Imports.BackupSeek(
                     hFile: _fileHandle,
                     dwLowBytesToSeek: uint.MaxValue,
                     dwHighBytesToSeek: int.MaxValue,
@@ -104,7 +104,7 @@ namespace WInterop.Storage
             if (_context != IntPtr.Zero)
             {
                 // Free the context memory
-                if (!StorageMethods.Imports.BackupRead(
+                if (!Imports.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: null,
                     nNumberOfBytesToRead: 0,

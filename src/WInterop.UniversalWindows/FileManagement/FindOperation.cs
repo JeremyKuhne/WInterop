@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using WInterop.ErrorHandling;
-using WInterop.Storage;
+using WInterop.Storage.Native;
 using WInterop.Support;
 
 namespace WInterop.Storage
@@ -34,7 +34,7 @@ namespace WInterop.Storage
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void GetData()
             {
-                if (!StorageMethods.Imports.GetFileInformationByHandleEx(
+                if (!Imports.GetFileInformationByHandleEx(
                    _directory,
                    FileInfoClass.FileFullDirectoryInfo,
                    _buffer.VoidPointer,

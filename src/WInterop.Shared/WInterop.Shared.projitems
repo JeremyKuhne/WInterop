@@ -21,7 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\DosMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\StorageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\StorageMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\StorageMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\StorageMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.DosMatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.Multiple.cs" />
@@ -54,5 +54,6 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Authorization\Native\" />
     <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Native\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Storage\Native\" />
   </ItemGroup>
 </Project>

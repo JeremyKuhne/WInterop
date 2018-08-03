@@ -14,12 +14,11 @@ using System.Runtime.InteropServices;
 using WInterop.Authorization;
 using WInterop.ErrorHandling;
 using WInterop.Storage.BufferWrappers;
-using WInterop.Storage;
+using WInterop.Storage.Native;
 using WInterop.MemoryManagement;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Synchronization.Types;
-using WInterop.Authorization.Native;
 
 namespace WInterop.Storage
 {
@@ -756,7 +755,7 @@ namespace WInterop.Storage
         public unsafe static SID QueryOwner(SafeFileHandle handle)
         {
             SID* sidp;
-            SECURITY_DESCRIPTOR* descriptor;
+            Authorization.Native.SECURITY_DESCRIPTOR* descriptor;
 
             WindowsError result = Authorization.Native.Imports.GetSecurityInfo(
                 handle,

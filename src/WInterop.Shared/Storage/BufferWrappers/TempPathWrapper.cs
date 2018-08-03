@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Support.Buffers;
+using WInterop.Storage.Native;
 
 namespace WInterop.Storage.BufferWrappers
 {
@@ -13,7 +14,7 @@ namespace WInterop.Storage.BufferWrappers
     {
         uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
         {
-            return StorageMethods.Imports.GetTempPathW(buffer.CharCapacity, buffer);
+            return Imports.GetTempPathW(buffer.CharCapacity, buffer);
         }
     }
 }

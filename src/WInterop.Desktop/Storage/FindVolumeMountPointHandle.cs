@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Handles.Types;
+using WInterop.Storage.Native;
 
 namespace WInterop.Storage
 {
@@ -20,7 +21,7 @@ namespace WInterop.Storage
 
         protected override bool ReleaseHandle()
         {
-            return StorageMethods.Imports.FindVolumeMountPointClose(handle);
+            return Imports.FindVolumeMountPointClose(handle);
         }
     }
 }
