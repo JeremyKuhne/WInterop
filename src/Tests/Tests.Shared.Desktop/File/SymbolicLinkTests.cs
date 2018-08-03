@@ -9,7 +9,6 @@ using FluentAssertions;
 using System;
 using Tests.Support;
 using WInterop.Authorization;
-using WInterop.Authorization.Types;
 using WInterop.Devices;
 using WInterop.ErrorHandling;
 using WInterop.Storage;

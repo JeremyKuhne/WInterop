@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using WInterop.ErrorHandling;
 using WInterop.ProcessAndThreads.BufferWrappers;
-using WInterop.ProcessAndThreads.Types;
 using WInterop.ProcessAndThreads.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;

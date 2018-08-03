@@ -9,7 +9,6 @@ using FluentAssertions;
 using Xunit;
 using WInterop.Authorization;
 using System.Security.Principal;
-using WInterop.Authorization.Types;
 using System;
 using System.Diagnostics;
 using WInterop.SystemInformation;
@@ -17,7 +16,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Tests.Shared.Support;
 using WInterop.ProcessAndThreads;
-using WInterop.ProcessAndThreads.Types;
 
 namespace AuthorizationTests
 {

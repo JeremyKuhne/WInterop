@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ProcessAndThreads.Types;
 
 namespace WInterop.ProcessAndThreads.Native
 {

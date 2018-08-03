@@ -9,7 +9,6 @@ using FluentAssertions;
 using System;
 using WInterop.Authentication;
 using WInterop.Authorization;
-using WInterop.Authorization.Types;
 using WInterop.SecurityManagement;
 using WInterop.SecurityManagement.Types;
 using Xunit;

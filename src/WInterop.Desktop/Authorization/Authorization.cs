@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Authorization.Native;
-using WInterop.Authorization.Types;
+using WInterop.Authorization;
 using WInterop.ErrorHandling;
 using WInterop.Support;
 using WInterop.Support.Buffers;

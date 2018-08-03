@@ -8,7 +8,6 @@
 using FluentAssertions;
 using Tests.Support;
 using WInterop.Authorization;
-using WInterop.Authorization.Types;
 using WInterop.Storage;
 using WInterop.Storage.Types;
 using WInterop.SystemInformation;

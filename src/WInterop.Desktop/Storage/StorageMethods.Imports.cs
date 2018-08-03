@@ -8,7 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.Types;
+using WInterop.Authorization;
 using WInterop.ErrorHandling;
 using WInterop.Storage.Types;
 using WInterop.Handles.Types;

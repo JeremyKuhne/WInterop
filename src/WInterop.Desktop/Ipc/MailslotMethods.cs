@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.Types;
+using WInterop.Authorization;
 using WInterop.Ipc.Types;
 using WInterop.Support;
 

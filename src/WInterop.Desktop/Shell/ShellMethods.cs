@@ -15,7 +15,7 @@ using WInterop.Handles.Types;
 using WInterop.Shell.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Authorization.Types;
+using WInterop.Authorization;
 
 namespace WInterop.Shell
 {

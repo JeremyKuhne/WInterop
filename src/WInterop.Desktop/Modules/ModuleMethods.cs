@@ -9,9 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Modules.BufferWrappers;
-using WInterop.Modules;
 using WInterop.ProcessAndThreads;
-using WInterop.ProcessAndThreads.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

@@ -7,7 +7,7 @@
 
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.Types;
+using WInterop.Authorization;
 using WInterop.Pipes.Types;
 
 namespace WInterop.Pipes
