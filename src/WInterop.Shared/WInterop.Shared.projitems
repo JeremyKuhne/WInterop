@@ -20,8 +20,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\BufferWrappers\TempPathWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\DosMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\StorageExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\StorageMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\StorageMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Storage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.DosMatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFilters.Multiple.cs" />
