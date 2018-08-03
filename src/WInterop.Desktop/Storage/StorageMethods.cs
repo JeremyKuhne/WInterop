@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.Storage.Types;
+using WInterop.Storage;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
 using WInterop.Support;

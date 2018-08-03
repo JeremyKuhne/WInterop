@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     /// <summary>
     /// Contains information about the remote end of a named pipe.

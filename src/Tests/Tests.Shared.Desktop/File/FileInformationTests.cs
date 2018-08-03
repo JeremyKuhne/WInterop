@@ -9,9 +9,7 @@ using FluentAssertions;
 using System.Diagnostics;
 using System.Linq;
 using Tests.Support;
-using WInterop.ErrorHandling;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using Xunit;
 
 namespace DesktopTests.File

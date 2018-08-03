@@ -9,7 +9,7 @@ using System;
 using System.Diagnostics;
 using WInterop.Support;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class FindResult

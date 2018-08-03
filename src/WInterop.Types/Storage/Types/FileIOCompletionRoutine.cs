@@ -8,7 +8,7 @@
 using WInterop.ErrorHandling;
 using WInterop.Synchronization.Types;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364052.aspx">FileIOCompletionRoutine</a> callback used by

@@ -9,7 +9,6 @@ using FluentAssertions;
 using System.Linq;
 using Tests.Support;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using WInterop.Support;
 using Xunit;
 

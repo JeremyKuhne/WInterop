@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using WInterop.Storage.Types;
+using WInterop.Storage;
 
 namespace WInterop.Shell.Types
 {

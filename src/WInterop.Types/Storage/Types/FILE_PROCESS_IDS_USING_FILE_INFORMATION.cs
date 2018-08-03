@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     /// <summary>
     /// Gets all of the process IDs using the given file.

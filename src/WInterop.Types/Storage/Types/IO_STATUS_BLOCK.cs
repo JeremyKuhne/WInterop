@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff550671.aspx
     [StructLayout(LayoutKind.Sequential)]

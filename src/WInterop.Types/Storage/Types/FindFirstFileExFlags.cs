@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364419.aspx
     [Flags]

@@ -12,7 +12,6 @@ using WInterop.Authorization;
 using WInterop.Devices;
 using WInterop.ErrorHandling;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using WInterop.Support;
 using Xunit;
 

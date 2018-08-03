@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     /// <summary>
     /// Basic information about an alternate stream.

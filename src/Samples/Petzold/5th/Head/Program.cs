@@ -12,7 +12,6 @@ using System.Text;
 using WInterop.Gdi;
 using WInterop.Windows;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using WInterop.Windows.Native;
 
 namespace Head

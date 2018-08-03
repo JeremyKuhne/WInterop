@@ -8,14 +8,11 @@
 using FluentAssertions;
 using System;
 using IO = System.IO;
-using System.IO.Compression;
 using System.Linq;
 using Tests.Support;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using WInterop.Support;
 using Xunit;
-using System.Text;
 using Tests.Shared.Support.Resources;
 using WInterop.Windows;
 

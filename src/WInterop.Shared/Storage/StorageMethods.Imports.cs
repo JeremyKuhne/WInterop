@@ -9,7 +9,7 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
-using WInterop.Storage.Types;
+using WInterop.Storage;
 using WInterop.Handles.Types;
 using WInterop.Synchronization.Types;
 

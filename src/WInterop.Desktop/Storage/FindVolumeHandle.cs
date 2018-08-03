@@ -7,7 +7,7 @@
 
 using WInterop.Handles.Types;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     /// <summary>
     /// Handle for enumerating volumes.

@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 using WInterop.Compression.Types;
 using WInterop.ErrorHandling;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using WInterop.Handles.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;

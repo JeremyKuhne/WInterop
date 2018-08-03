@@ -13,7 +13,6 @@ using WInterop.Desktop.Communications.Types;
 using WInterop.Registry;
 using WInterop.Registry.Types;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop.Synchronization.Types;
 using WInterop.Windows;

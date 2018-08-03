@@ -8,7 +8,7 @@
 using System;
 using WInterop.ErrorHandling;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365282.aspx
     public unsafe struct OFSTRUCT

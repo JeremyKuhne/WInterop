@@ -8,7 +8,7 @@
 using System;
 using WInterop.Authorization;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     // File Access Rights Constants
     // https://msdn.microsoft.com/en-us/library/windows/desktop/gg258116.aspx

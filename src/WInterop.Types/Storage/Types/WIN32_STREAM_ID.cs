@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     /// <summary>
     /// <a href="https://docs.microsoft.com/en-us/windows/desktop/api/winbase/ns-winbase-_win32_stream_id">WIN32_STREAM_ID</a> structure.

@@ -11,7 +11,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 
 namespace Tests.Support
 {

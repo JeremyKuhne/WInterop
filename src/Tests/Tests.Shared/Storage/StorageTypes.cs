@@ -8,7 +8,7 @@
 namespace Tests.File
 {
     using FluentAssertions;
-    using WInterop.Storage.Types;
+    using WInterop.Storage;
     using Xunit;
 
     public class FileManagementTypes

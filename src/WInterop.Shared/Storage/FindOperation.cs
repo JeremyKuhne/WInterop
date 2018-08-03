@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Threading;
-using WInterop.Storage.Types;
+using WInterop.Storage;
 using WInterop.Handles;
 using WInterop.Support.Buffers;
 

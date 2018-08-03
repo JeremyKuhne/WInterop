@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using WInterop.ErrorHandling;
-using WInterop.Storage.Types;
+using WInterop.Storage;
 using WInterop.Support;
 
 namespace WInterop.Storage

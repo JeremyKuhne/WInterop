@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 using WInterop.Authorization;
 using WInterop.ErrorHandling;
 using WInterop.Storage.BufferWrappers;
-using WInterop.Storage.Types;
+using WInterop.Storage;
 using WInterop.MemoryManagement;
 using WInterop.Support;
 using WInterop.Support.Buffers;

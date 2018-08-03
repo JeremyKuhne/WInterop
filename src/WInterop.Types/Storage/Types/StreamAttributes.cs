@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     /// <summary>
     /// The attributes returned in WIN32_STREAM_ID dwStreamAttributes. Defines taken from winnt.h.

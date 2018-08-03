@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Storage.Types
+namespace WInterop.Storage
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545793.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

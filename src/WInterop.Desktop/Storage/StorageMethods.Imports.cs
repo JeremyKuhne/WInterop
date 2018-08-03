@@ -12,7 +12,7 @@ using WInterop.Authorization.Native;
 using WInterop.ErrorHandling;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
-using WInterop.Storage.Types;
+using WInterop.Storage;
 
 namespace WInterop.Storage
 {

@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 using WInterop.Devices.Types;
 using WInterop.ErrorHandling;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

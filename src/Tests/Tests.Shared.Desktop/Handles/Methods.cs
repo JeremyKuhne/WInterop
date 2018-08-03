@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using WInterop.Devices;
 using WInterop.Storage;
-using WInterop.Storage.Types;
 using WInterop.Handles;
 using WInterop.Handles.Types;
 using WInterop.Support;
