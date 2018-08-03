@@ -7,6 +7,7 @@
 
 using System;
 using WInterop.Authorization;
+using WInterop.Authorization.Native;
 using WInterop.SafeString.Types;
 
 namespace WInterop.Handles.Types

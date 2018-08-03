@@ -14,6 +14,6 @@ namespace WInterop.Authorization
     {
         public uint PrivilegeCount;
         public uint Control;
-        public LUID_AND_ATTRIBUTES Privilege;
+        public LuidAndAttributes Privilege;
     }
 }

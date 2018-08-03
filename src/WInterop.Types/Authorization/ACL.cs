@@ -5,15 +5,17 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Runtime.InteropServices;
+
 namespace WInterop.Authorization
 {
-#pragma warning disable CS0169
     /// <summary>
     /// Access control list (ACL) header.
     /// </summary>
     /// <remarks>
     /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374931.aspx"/>
     /// </remarks>
+    [StructLayout(LayoutKind.Sequential)]
     public struct ACL
     {
         /// <summary>
@@ -39,5 +41,4 @@ namespace WInterop.Authorization
         // Padding
         private ushort Sbz2;
     }
-#pragma warning restore CS0169
 }

@@ -19,6 +19,7 @@ using WInterop.MemoryManagement;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Synchronization.Types;
+using WInterop.Authorization.Native;
 
 namespace WInterop.Storage
 {

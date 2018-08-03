@@ -45,7 +45,7 @@ namespace WInterop.Authorization.Native
             uint DisableSidCount,
             SID_AND_ATTRIBUTES* SidsToDisable,
             uint DeletePrivilegeCount,
-            LUID_AND_ATTRIBUTES* PrivilegesToDelete,
+            LuidAndAttributes* PrivilegesToDelete,
             uint RestrictedSidCount,
             SID_AND_ATTRIBUTES* SidsToRestrict,
             AccessToken NewTokenHandle);

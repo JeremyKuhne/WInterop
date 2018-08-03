@@ -166,7 +166,7 @@ namespace WInterop.Authorization
             TokenInformationInvoke(token, TokenInformation.Privileges,
             buffer =>
             {
-                foreach (LUID_AND_ATTRIBUTES privilege in ((TOKEN_PRIVILEGES*)buffer)->Privileges)
+                foreach (LuidAndAttributes privilege in ((TOKEN_PRIVILEGES*)buffer)->Privileges)
                 {
                     privileges.Add(new PrivilegeSetting(LookupPrivilege(privilege.Luid), privilege.Attributes));
                 }

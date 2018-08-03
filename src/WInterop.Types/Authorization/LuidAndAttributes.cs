@@ -7,11 +7,13 @@
 
 namespace WInterop.Authorization
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379560.aspx
-    public struct SECURITY_ATTRIBUTES
+    /// <summary>
+    /// <a href="https://msdn.microsoft.com/en-us/library/aa379263.aspx">LUID_AND_ATTRIBUTES</a> structure.
+    /// [LUID_AND_ATTRIBUTES]
+    /// </summary>
+    public struct LuidAndAttributes
     {
-        public uint nLength;
-        public unsafe SECURITY_DESCRIPTOR* lpSecurityDescriptor;
-        public BOOL bInheritHandle;
+        public LUID Luid;
+        public PrivilegeAttributes Attributes;
     }
 }

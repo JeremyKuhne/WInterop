@@ -8,11 +8,11 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization;
+using WInterop.Authorization.Native;
 using WInterop.ErrorHandling;
-using WInterop.Storage.Types;
 using WInterop.Handles.Types;
 using WInterop.SafeString.Types;
+using WInterop.Storage.Types;
 
 namespace WInterop.Storage
 {

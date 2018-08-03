@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization
+namespace WInterop.Authorization.Native
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379630.aspx">TOKEN_PRIVILEGES</a> structure.
@@ -17,11 +17,11 @@ namespace WInterop.Authorization
         public uint PrivilegeCount;
 
         // This is an ANYSIZE_ARRAY
-        private LUID_AND_ATTRIBUTES _Privileges;
+        private LuidAndAttributes _Privileges;
 
-        unsafe public ReadOnlySpan<LUID_AND_ATTRIBUTES> Privileges
+        unsafe public ReadOnlySpan<LuidAndAttributes> Privileges
         {
-            get { fixed (LUID_AND_ATTRIBUTES* p = &_Privileges) { return new ReadOnlySpan<LUID_AND_ATTRIBUTES>(p, (int)PrivilegeCount); } }
+            get { fixed (LuidAndAttributes* p = &_Privileges) { return new ReadOnlySpan<LuidAndAttributes>(p, (int)PrivilegeCount); } }
         }
     }
 }

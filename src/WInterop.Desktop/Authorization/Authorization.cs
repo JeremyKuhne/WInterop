@@ -29,13 +29,13 @@ namespace WInterop.Authorization
         {
             LUID luid = LookupPrivilegeValue(privilege);
 
-            var luidAttributes = new LUID_AND_ATTRIBUTES { Luid = luid };
+            var luidAttributes = new LuidAndAttributes { Luid = luid };
 
             var set = new PRIVILEGE_SET
             {
                 Control = PRIVILEGE_SET_ALL_NECESSARY,
                 PrivilegeCount = 1,
-                Privilege = new LUID_AND_ATTRIBUTES { Luid = luid }
+                Privilege = new LuidAndAttributes { Luid = luid }
             };
 
             if (!Imports.PrivilegeCheck(token, &set, out BOOL result))
@@ -65,14 +65,14 @@ namespace WInterop.Authorization
             if (privileges == null || privileges.Length == 0)
                 return true;
 
-            byte* buffer = stackalloc byte[sizeof(PRIVILEGE_SET) + (sizeof(LUID_AND_ATTRIBUTES) * (privileges.Length - 1))];
+            byte* buffer = stackalloc byte[sizeof(PRIVILEGE_SET) + (sizeof(LuidAndAttributes) * (privileges.Length - 1))];
             PRIVILEGE_SET* set = (PRIVILEGE_SET*)buffer;
             set->Control = all ? PRIVILEGE_SET_ALL_NECESSARY : 0;
             set->PrivilegeCount = (uint)privileges.Length;
-            Span<LUID_AND_ATTRIBUTES> luids = new Span<LUID_AND_ATTRIBUTES>(&set->Privilege, privileges.Length);
+            Span<LuidAndAttributes> luids = new Span<LuidAndAttributes>(&set->Privilege, privileges.Length);
             for (int i = 0; i < privileges.Length; i++)
             {
-                luids[i] = new LUID_AND_ATTRIBUTES { Luid = LookupPrivilegeValue(privileges[i]) };
+                luids[i] = new LuidAndAttributes { Luid = LookupPrivilegeValue(privileges[i]) };
             }
 
             if (!Imports.PrivilegeCheck(token, set, out BOOL result))
