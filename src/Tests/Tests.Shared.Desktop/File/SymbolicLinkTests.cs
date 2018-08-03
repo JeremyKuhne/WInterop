@@ -24,9 +24,9 @@ namespace DesktopTests.File
         private static bool CanCreateSymbolicLinks()
         {
             // Assuming that the current thread can replicate rights from the process
-            using (var processToken = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Query | AccessTokenRights.Read))
+            using (var processToken = Authorization.OpenProcessToken(AccessTokenRights.Query | AccessTokenRights.Read))
             {
-                return AuthorizationMethods.HasPrivilege(processToken, Privilege.CreateSymbolicLink);
+                return processToken.HasPrivilege(Privilege.CreateSymbolicLink);
             }
         }
 

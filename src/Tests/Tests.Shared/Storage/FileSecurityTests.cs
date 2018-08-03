@@ -28,8 +28,8 @@ namespace Tests.File
                     handle.IsInvalid.Should().BeFalse();
                     SID sid = StorageMethods.QueryOwner(handle);
                     sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
-                    string sidString = AuthorizationMethods.ConvertSidToString(in sid);
-                    AccountSidInformation info = AuthorizationMethods.LookupAccountSid(in sid);
+                    string sidString = sid.ConvertSidToString();
+                    AccountSidInformation info = sid.LookupAccountSid();
                     info.Usage.Should().Be(SidNameUse.User);
                     info.Name.Should().Be(SystemInformationMethods.GetUserName());
                 }

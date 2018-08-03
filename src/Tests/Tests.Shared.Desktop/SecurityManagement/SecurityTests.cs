@@ -22,8 +22,8 @@ namespace DesktopTests.SecurityManagement
         public void EnumerateAccountRights_UserGroup()
         {
             LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_EXECUTE);
-            SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.Users);
-            var rights = SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
+            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.Users);
+            var rights = SecurityMethods.LsaEnumerateAccountRights(handle, in sid);
             rights.Should().NotBeEmpty();
             rights.Should().Contain("SeChangeNotifyPrivilege");
         }
@@ -32,8 +32,8 @@ namespace DesktopTests.SecurityManagement
         public void EnumerateAccountRights_ReadRightsFails()
         {
             LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
-            SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.Users);
-            Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
+            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.Users);
+            Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, in sid);
             action.Should().Throw<UnauthorizedAccessException>();
         }
 
@@ -42,7 +42,7 @@ namespace DesktopTests.SecurityManagement
         {
             LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             SID sid = new SID();
-            Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, ref sid);
+            Action action = () => SecurityMethods.LsaEnumerateAccountRights(handle, in sid);
             action.Should().Throw<ArgumentException>();
         }
 
@@ -50,8 +50,8 @@ namespace DesktopTests.SecurityManagement
         public void EnumerateAccountRights_NoRightsFails()
         {
             LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
-            SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.AllApplicationPackages);
-            SecurityMethods.LsaEnumerateAccountRights(handle, ref sid).Should().BeEmpty();
+            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.AllApplicationPackages);
+            SecurityMethods.LsaEnumerateAccountRights(handle, in sid).Should().BeEmpty();
         }
     }
 }

@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Authorization.Native;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.Support;
@@ -15,7 +16,7 @@ using WInterop.SystemInformation.Types;
 
 namespace WInterop.Authorization
 {
-    public static partial class AuthorizationMethods
+    public static partial class Authorization
     {
         // In winnt.h
         private const uint PRIVILEGE_SET_ALL_NECESSARY = 1;
@@ -24,7 +25,7 @@ namespace WInterop.Authorization
         /// Checks if the given privilege is enabled. This does not tell you whether or not it
         /// is possible to get a privilege- most held privileges are not enabled by default.
         /// </summary>
-        public unsafe static bool IsPrivilegeEnabled(AccessToken token, Privilege privilege)
+        public unsafe static bool IsPrivilegeEnabled(this AccessToken token, Privilege privilege)
         {
             LUID luid = LookupPrivilegeValue(privilege);
 
@@ -46,7 +47,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if all of the given privileges are enabled for the current process.
         /// </summary>
-        public static bool AreAllPrivilegesEnabled(AccessToken token, params Privilege[] privileges)
+        public static bool AreAllPrivilegesEnabled(this AccessToken token, params Privilege[] privileges)
         {
             return ArePrivilegesEnabled(token, all: true, privileges: privileges);
         }
@@ -54,12 +55,12 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if any of the given privileges are enabled for the current process.
         /// </summary>
-        public static bool AreAnyPrivilegesEnabled(AccessToken token, params Privilege[] privileges)
+        public static bool AreAnyPrivilegesEnabled(this AccessToken token, params Privilege[] privileges)
         {
             return ArePrivilegesEnabled(token, all: false, privileges: privileges);
         }
 
-        private unsafe static bool ArePrivilegesEnabled(AccessToken token, bool all, Privilege[] privileges)
+        private unsafe static bool ArePrivilegesEnabled(this AccessToken token, bool all, Privilege[] privileges)
         {
             if (privileges == null || privileges.Length == 0)
                 return true;
@@ -78,55 +79,6 @@ namespace WInterop.Authorization
                 throw Errors.GetIoExceptionForLastError();
 
             return result;
-        }
-
-        /// <summary>
-        /// Gets the info (name, domain name, usage) for the given SID.
-        /// </summary>
-        public static AccountSidInformation LookupAccountSidLocal(in SID sid)
-        {
-            var wrapper = new LookupAccountSidLocalWrapper(in sid);
-            return BufferHelper.TwoBufferInvoke<LookupAccountSidLocalWrapper, StringBuffer, AccountSidInformation>(ref wrapper);
-        }
-
-        private readonly struct LookupAccountSidLocalWrapper : ITwoBufferFunc<StringBuffer, AccountSidInformation>
-        {
-            private readonly SID _sid;
-
-            public LookupAccountSidLocalWrapper(in SID sid)
-            {
-                _sid = sid;
-            }
-
-            AccountSidInformation ITwoBufferFunc<StringBuffer, AccountSidInformation>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
-            {
-                SidNameUse usage;
-                uint nameCharCapacity = nameBuffer.CharCapacity;
-                uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
-
-                while (!Imports.LookupAccountSidLocalW(
-                    in _sid,
-                    nameBuffer,
-                    ref nameCharCapacity,
-                    domainNameBuffer,
-                    ref domainNameCharCapacity,
-                    out usage))
-                {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
-                    nameBuffer.EnsureCharCapacity(nameCharCapacity);
-                    domainNameBuffer.EnsureCharCapacity(domainNameCharCapacity);
-                }
-
-                nameBuffer.SetLengthToFirstNull();
-                domainNameBuffer.SetLengthToFirstNull();
-
-                return new AccountSidInformation
-                {
-                    Name = nameBuffer.ToString(),
-                    DomainName = domainNameBuffer.ToString(),
-                    Usage = usage
-                };
-            }
         }
 
         /// <summary>

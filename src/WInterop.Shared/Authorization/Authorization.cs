@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using WInterop.Authorization.Native;
 using WInterop.Authorization.Types;
 using WInterop.ErrorHandling;
 using WInterop.ProcessAndThreads;
@@ -17,11 +18,11 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Authorization
 {
-    public static partial class AuthorizationMethods
+    public static partial class Authorization
     {
         private static Dictionary<Privilege, string> s_privileges;
 
-        static AuthorizationMethods()
+        static Authorization()
         {
             s_privileges = new Dictionary<Privilege, string>
             {
@@ -139,7 +140,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get information about the specified token.
         /// </summary>
-        public unsafe static TokenStatistics GetTokenStatistics(AccessToken token)
+        public unsafe static TokenStatistics GetTokenStatistics(this AccessToken token)
         {
             TokenStatistics stats = default;
             if (!Imports.GetTokenInformation(token, TokenInformation.Statistics, &stats, (uint)sizeof(TokenStatistics), out uint _))
@@ -150,7 +151,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if the given token has the specified privilege. The privilege may or may not be enabled.
         /// </summary>
-        public static bool HasPrivilege(AccessToken token, Privilege privilege)
+        public static bool HasPrivilege(this AccessToken token, Privilege privilege)
         {
             return GetTokenPrivileges(token).Any(t => t.Privilege == privilege);
         }
@@ -158,7 +159,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get all privilege information for the given access token.
         /// </summary>
-        public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(AccessToken token)
+        public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(this AccessToken token)
         {
             var privileges = new List<PrivilegeSetting>();
 
@@ -177,7 +178,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Gets the group SIDs associated with the current token.
         /// </summary>
-        public unsafe static IEnumerable<GroupSidInformation> GetTokenGroupSids(AccessToken token)
+        public unsafe static IEnumerable<GroupSidInformation> GetTokenGroupSids(this AccessToken token)
         {
             List<GroupSidInformation> info = null;
 
@@ -201,7 +202,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the user SID for the given token.
         /// </summary>
-        public unsafe static SID GetTokenUserSid(AccessToken token)
+        public unsafe static SID GetTokenUserSid(this AccessToken token)
         {
             // This size should always be sufficient as SID alignment is uint.
             int size = sizeof(TOKEN_USER) + sizeof(SID);
@@ -216,7 +217,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the SID that will be used as the owner for objects created by the given token.
         /// </summary>
-        public unsafe static SID GetTokenOwnerSid(AccessToken token)
+        public unsafe static SID GetTokenOwnerSid(this AccessToken token)
         {
             // This size should always be sufficient as SID alignment is uint.
             int size = sizeof(TOKEN_OWNER) + sizeof(SID);
@@ -231,7 +232,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the SID that will be used as the primary group for objects created by the given token.
         /// </summary>
-        public unsafe static SID GetTokenPrimaryGroupSid(AccessToken token)
+        public unsafe static SID GetTokenPrimaryGroupSid(this AccessToken token)
         {
             // This size should always be sufficient as SID alignment is uint.
             int size = sizeof(TOKEN_PRIMARY_GROUP) + sizeof(SID);
@@ -260,18 +261,18 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns true if the given SID is the specified "well known" SID type.
         /// </summary>
-        public static bool IsWellKnownSid(in SID sid, WellKnownSID sidType)
+        public static bool IsWellKnownSid(this in SID sid, WellKnownSID sidType)
             => Imports.IsWellKnownSid(in sid, sidType);
 
         /// <summary>
         /// Returns true if the given SID is valid.
         /// </summary>
-        public static bool IsValidSid(in SID sid) => Imports.IsValidSid(in sid);
+        public static bool IsValidSid(this in SID sid) => Imports.IsValidSid(in sid);
 
         /// <summary>
         /// Returns the S-n-n-n... string version of the given SID.
         /// </summary>
-        public unsafe static string ConvertSidToString(in SID sid)
+        public unsafe static string ConvertSidToString(this in SID sid)
         {
             if (!Imports.ConvertSidToStringSidW(sid, out var handle))
                 throw Errors.GetIoExceptionForLastError();
@@ -282,7 +283,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Returns the count of sub authorities for the given SID.
         /// </summary>
-        public unsafe static byte GetSidSubAuthorityCount(in SID sid)
+        public unsafe static byte GetSidSubAuthorityCount(this in SID sid)
         {
             byte* b = Imports.GetSidSubAuthorityCount(sid);
             if (b == null)
@@ -294,7 +295,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the sub authority at the specified index for the given SID.
         /// </summary>
-        public unsafe static uint GetSidSubAuthority(in SID sid, uint nSubAuthority)
+        public unsafe static uint GetSidSubAuthority(this in SID sid, uint nSubAuthority)
         {
             uint* u = Imports.GetSidSubAuthority(sid, nSubAuthority);
             if (u == null)
@@ -317,7 +318,7 @@ namespace WInterop.Authorization
         /// The target computer to look up the SID on. When null will look on the local machine
         /// then trusted domain controllers.
         /// </param>
-        public unsafe static AccountSidInformation LookupAccountSid(in SID sid, string systemName = null)
+        public unsafe static AccountSidInformation LookupAccountSid(this in SID sid, string systemName = null)
         {
             var wrapper = new LookupAccountSidWrapper(in sid, systemName);
             return BufferHelper.TwoBufferInvoke<LookupAccountSidWrapper, StringBuffer, AccountSidInformation>(ref wrapper);
@@ -426,7 +427,7 @@ namespace WInterop.Authorization
         /// <param name=""></param>
         /// <returns></returns>
         public static AccessToken DuplicateToken(
-            AccessToken token,
+            this AccessToken token,
             AccessTokenRights rights = default,
             ImpersonationLevel impersonationLevel = ImpersonationLevel.Anonymous,
             TokenType tokenType = TokenType.Impersonation)

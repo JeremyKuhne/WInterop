@@ -8,42 +8,42 @@
 using System.Runtime.InteropServices;
 using WInterop.Authorization.Types;
 
-namespace WInterop.Authorization
+namespace WInterop.Authorization.Native
 {
-    public static partial class AuthorizationMethods
+    /// <summary>
+    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    /// </summary>
+    public static partial class Imports
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // Advapi (Advanced API) provides Win32 security and registry calls and as such hosts most
-            // of the Authorization APIs.
-            //
-            // Advapi usually calls the NT Marta provider (Windows NT Multiple Access RouTing Authority).
-            // https://msdn.microsoft.com/en-us/library/aa939264.aspx
+        // Advapi (Advanced API) provides Win32 security and registry calls and as such hosts most
+        // of the Authorization APIs.
+        //
+        // Advapi usually calls the NT Marta provider (Windows NT Multiple Access RouTing Authority).
+        // https://msdn.microsoft.com/en-us/library/aa939264.aspx
 
-            // https://msdn.microsoft.com/en-us/library/aa379304.aspx
-            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            public unsafe static extern BOOL PrivilegeCheck(
-                AccessToken ClientToken,
-                PRIVILEGE_SET* RequiredPrivileges,
-                out BOOL pfResult);
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379304.aspx
+        [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+        public unsafe static extern BOOL PrivilegeCheck(
+            AccessToken ClientToken,
+            PRIVILEGE_SET* RequiredPrivileges,
+            out BOOL pfResult);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
-            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            public static extern BOOL RevertToSelf();
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
+        [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+        public static extern BOOL RevertToSelf();
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/mt779143.aspx
-            // The docs claim that it is in Advapi.dll, but it actually lives in sechost.dll
-            [DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
-            public static extern BOOL LookupAccountSidLocalW(
-                in SID lpSid,
-                SafeHandle lpName,
-                ref uint cchName,
-                SafeHandle lpReferencedDomainName,
-                ref uint cchReferencedDomainName,
-                out SidNameUse peUse);
-        }
+        // This isn't allowed in Windows Store apps, but is exactly the same as
+        // calling LookupAccountSidW with a null or empty computer name.
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/mt779143.aspx
+        // The docs claim that it is in Advapi.dll, but it actually lives in sechost.dll
+        //[DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
+        //public static extern BOOL LookupAccountSidLocalW(
+        //    in SID lpSid,
+        //    SafeHandle lpName,
+        //    ref uint cchName,
+        //    SafeHandle lpReferencedDomainName,
+        //    ref uint cchReferencedDomainName,
+        //    out SidNameUse peUse);
     }
 }

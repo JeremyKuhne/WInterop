@@ -41,7 +41,7 @@ namespace WInterop.SecurityManagement
             [DllImport(Libraries.Advapi32, ExactSpelling = true)]
             public static extern NTSTATUS LsaEnumerateAccountRights(
                 LsaHandle PolicyHandle,
-                ref SID AccountSid,
+                in SID AccountSid,
                 out LsaMemoryHandle UserRights,
                 out uint CountOfRights);
         }
@@ -72,9 +72,9 @@ namespace WInterop.SecurityManagement
         /// Enumerates rights explicitly given to the specified SID. If the given SID
         /// doesn't have any directly applied rights, returns an empty collection.
         /// </summary>
-        public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, ref SID sid)
+        public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, in SID sid)
         {
-            NTSTATUS status = Imports.LsaEnumerateAccountRights(policyHandle, ref sid, out var rightsBuffer, out uint rightsCount);
+            NTSTATUS status = Imports.LsaEnumerateAccountRights(policyHandle, in sid, out var rightsBuffer, out uint rightsCount);
             switch (status)
             {
                 case NTSTATUS.STATUS_OBJECT_NAME_NOT_FOUND:

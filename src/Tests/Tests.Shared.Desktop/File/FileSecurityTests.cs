@@ -28,7 +28,7 @@ namespace DesktopTests.File
                     handle.IsInvalid.Should().BeFalse();
                     SID sid = StorageMethods.QueryOwner(handle);
                     sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
-                    AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
+                    AccountSidInformation info = sid.LookupAccountSid();
                     info.Usage.Should().Be(SidNameUse.User);
                     info.Name.Should().Be(SystemInformationMethods.GetUserName());
                 }

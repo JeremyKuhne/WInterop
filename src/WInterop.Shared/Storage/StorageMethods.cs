@@ -758,7 +758,7 @@ namespace WInterop.Storage
             SID* sidp;
             SECURITY_DESCRIPTOR* descriptor;
 
-            WindowsError result = AuthorizationMethods.Imports.GetSecurityInfo(
+            WindowsError result = Authorization.Native.Imports.GetSecurityInfo(
                 handle,
                 SecurityObjectType.File,
                 SecurityInformation.Owner,

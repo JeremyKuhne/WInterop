@@ -16,7 +16,7 @@ using WInterop.SystemInformation;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Authorization
+namespace AuthorizationTests
 {
     public class Basic
     {
@@ -37,24 +37,24 @@ namespace Authorization
             bool runningAsAdmin = 
                 new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
-            AuthorizationMethods.IsProcessElevated().Should().Be(runningAsAdmin);
+            Authorization.IsProcessElevated().Should().Be(runningAsAdmin);
         }
 
         [Fact]
         public void CreateWellKnownSid_Everyone()
         {
-            SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.World);
-            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
+            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.World);
+            sid.IsValidSid().Should().BeTrue();
             sid.Revision.Should().Be(1);
             sid.IdentifierAuthority.Should().Be(IdentifierAuthority.World);
 
-            AuthorizationMethods.GetSidSubAuthorityCount(in sid).Should().Be(1);
-            AuthorizationMethods.GetSidSubAuthority(in sid, 0).Should().Be(0);
+            sid.GetSidSubAuthorityCount().Should().Be(1);
+            sid.GetSidSubAuthority(0).Should().Be(0);
 
-            AuthorizationMethods.IsWellKnownSid(in sid, WellKnownSID.World).Should().BeTrue();
-            AuthorizationMethods.ConvertSidToString(in sid).Should().Be("S-1-1-0");
+            sid.IsWellKnownSid(WellKnownSID.World).Should().BeTrue();
+            sid.ConvertSidToString().Should().Be("S-1-1-0");
 
-            AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
+            AccountSidInformation info = sid.LookupAccountSid();
             info.Name.Should().Be("Everyone");
             info.DomainName.Should().Be("");
             info.Usage.Should().Be(SidNameUse.WellKnownGroup);
@@ -63,8 +63,8 @@ namespace Authorization
         [Fact]
         public void IsValidSid_GoodSid()
         {
-            SID sid = AuthorizationMethods.CreateWellKnownSid(WellKnownSID.IISUser);
-            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
+            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.IISUser);
+            sid.IsValidSid().Should().BeTrue();
         }
 
         // [Fact]
@@ -75,9 +75,9 @@ namespace Authorization
                 Debug.WriteLine(@"/// <summary>");
                 try
                 {
-                    SID sid = AuthorizationMethods.CreateWellKnownSid(type);
-                    AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
-                    Debug.WriteLine($"/// {info.Name} ({AuthorizationMethods.ConvertSidToString(in sid)}) [{info.Usage}]");
+                    SID sid = Authorization.CreateWellKnownSid(type);
+                    AccountSidInformation info = sid.LookupAccountSid();
+                    Debug.WriteLine($"/// {info.Name} ({sid.ConvertSidToString()}) [{info.Usage}]");
                 }
                 catch
                 {
@@ -93,34 +93,34 @@ namespace Authorization
         public void IsValidSid_BadSid()
         {
             SID sid = new SID();
-            AuthorizationMethods.IsValidSid(in sid).Should().BeFalse();
+            sid.IsValidSid().Should().BeFalse();
         }
 
         [Fact]
         public void GetTokenUserSid_ForCurrentProcess()
         {
             SID sid;
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                sid = AuthorizationMethods.GetTokenUserSid(token);
+                sid = token.GetTokenUserSid();
             }
-            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
+            sid.IsValidSid().Should().BeTrue();
 
-            AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
+            AccountSidInformation info = sid.LookupAccountSid();
             info.Name.Should().Be(SystemInformationMethods.GetUserName());
         }
 
         [Fact]
         public void GetTokenGroupSids_ForCurrentProcess()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                List<GroupSidInformation> groupSids = AuthorizationMethods.GetTokenGroupSids(token).ToList();
+                List<GroupSidInformation> groupSids = token.GetTokenGroupSids().ToList();
                 groupSids.Should().NotBeEmpty();
-                groupSids.Should().Contain((sid) => AuthorizationMethods.LookupAccountSidLocal(sid.Sid).Name.Equals("Everyone"));
-                TokenStatistics stats = AuthorizationMethods.GetTokenStatistics(token);
+                groupSids.Should().Contain((group) => group.Sid.LookupAccountSid(null).Name.Equals("Everyone"));
+                TokenStatistics stats = token.GetTokenStatistics();
                 groupSids.Count.Should().Be((int)stats.GroupCount);
             }
         }
@@ -128,9 +128,9 @@ namespace Authorization
         [Fact]
         public void GetTokenStatistics_ForCurrentProcess()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
-                TokenStatistics stats = AuthorizationMethods.GetTokenStatistics(token);
+                TokenStatistics stats = token.GetTokenStatistics();
                 stats.TokenType.Should().Be(TokenType.Primary);
             }
         }
@@ -138,17 +138,17 @@ namespace Authorization
         [Fact]
         public void GetTokenPrivileges_ForCurrentProcess()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                var privileges = AuthorizationMethods.GetTokenPrivileges(token);
+                var privileges = token.GetTokenPrivileges();
                 privileges.Should().NotBeEmpty();
 
                 // This Privilege should always exist
                 privileges.Should().Contain(s => s.Privilege == Privilege.ChangeNotify);
 
                 // Check the helper
-                AuthorizationMethods.HasPrivilege(token, Privilege.ChangeNotify).Should().BeTrue();
+                token.HasPrivilege(Privilege.ChangeNotify).Should().BeTrue();
             }
         }
 
@@ -156,10 +156,10 @@ namespace Authorization
         public void GetTokenPrivileges_NoReadRights()
         {
             // You need Query or Read (which includes Query) rights
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Duplicate))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate))
             {
                 token.IsInvalid.Should().BeFalse();
-                Action action = () => AuthorizationMethods.GetTokenPrivileges(token);
+                Action action = () => token.GetTokenPrivileges();
                 action.Should().Throw<UnauthorizedAccessException>();
             }
         }
@@ -168,14 +168,14 @@ namespace Authorization
         public void GetTokenOwnerSid_ForCurrentProcess()
         {
             SID sid;
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                sid = AuthorizationMethods.GetTokenOwnerSid(token);
+                sid = token.GetTokenOwnerSid();
             }
-            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
+            sid.IsValidSid().Should().BeTrue();
 
-            AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
+            AccountSidInformation info = sid.LookupAccountSid();
             info.Name.Should().Be(SystemInformationMethods.GetUserName());
         }
 
@@ -183,46 +183,46 @@ namespace Authorization
         public void GetTokenPrimaryGroupSid_ForCurrentProcess()
         {
             SID sid;
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                sid = AuthorizationMethods.GetTokenPrimaryGroupSid(token);
+                sid = token.GetTokenPrimaryGroupSid();
             }
-            AuthorizationMethods.IsValidSid(in sid).Should().BeTrue();
+            sid.IsValidSid().Should().BeTrue();
 
-            AccountSidInformation info = AuthorizationMethods.LookupAccountSidLocal(sid);
+            AccountSidInformation info = sid.LookupAccountSid();
             info.Name.Should().Be(SystemInformationMethods.GetUserName());
         }
 
         [Fact]
         public void IsPrivilegeEnabled_ForCurrentProcess()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                AuthorizationMethods.IsPrivilegeEnabled(token, Privilege.ChangeNotify).Should().BeTrue();
-                AuthorizationMethods.IsPrivilegeEnabled(token, Privilege.Backup).Should().BeFalse();
+                token.IsPrivilegeEnabled(Privilege.ChangeNotify).Should().BeTrue();
+                token.IsPrivilegeEnabled(Privilege.Backup).Should().BeFalse();
             }
         }
 
         [Fact]
         public void AreAllPrivilegesEnabled_ForCurrentProcess()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privilege.ChangeNotify, Privilege.Backup).Should().BeFalse();
-                AuthorizationMethods.AreAnyPrivilegesEnabled(token, Privilege.ChangeNotify, Privilege.Backup).Should().BeTrue();
-                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privilege.Backup).Should().BeFalse();
-                AuthorizationMethods.AreAnyPrivilegesEnabled(token, Privilege.ChangeNotify).Should().BeTrue();
-                AuthorizationMethods.AreAllPrivilegesEnabled(token, Privilege.ChangeNotify, Privilege.ChangeNotify).Should().BeTrue();
+                token.AreAllPrivilegesEnabled(Privilege.ChangeNotify, Privilege.Backup).Should().BeFalse();
+                token.AreAnyPrivilegesEnabled(Privilege.ChangeNotify, Privilege.Backup).Should().BeTrue();
+                token.AreAllPrivilegesEnabled(Privilege.Backup).Should().BeFalse();
+                token.AreAnyPrivilegesEnabled(Privilege.ChangeNotify).Should().BeTrue();
+                token.AreAllPrivilegesEnabled(Privilege.ChangeNotify, Privilege.ChangeNotify).Should().BeTrue();
             }
         }
 
         [Fact]
         public void GetDomainName()
         {
-            AuthorizationMethods.GetDomainName().Should().NotBeNull();
+            Authorization.GetDomainName().Should().NotBeNull();
         }
 
         [Theory,
@@ -231,7 +231,7 @@ namespace Authorization
         public void GetThreadToken(bool openAsSelf)
         {
             // Unless we're impersonating we shouldn't get a token for the thread
-            using (var token = AuthorizationMethods.OpenThreadToken(AccessTokenRights.Query, openAsSelf))
+            using (var token = Authorization.OpenThreadToken(AccessTokenRights.Query, openAsSelf))
             {
                 token.Should().BeNull();
             }
@@ -240,9 +240,9 @@ namespace Authorization
         [Fact]
         public void DuplicateProcessToken_NoDuplicateRights()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Query))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Query))
             {
-                Action action = () => AuthorizationMethods.DuplicateToken(token);
+                Action action = () => token.DuplicateToken();
                 action.Should().Throw<UnauthorizedAccessException>("didn't ask for duplicate rights");
             }
         }
@@ -250,27 +250,26 @@ namespace Authorization
         [Fact]
         public void DuplicateProcessToken()
         {
-            using (var token = AuthorizationMethods.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
             {
-                var privileges = AuthorizationMethods.GetTokenPrivileges(token);
+                var privileges = token.GetTokenPrivileges();
 
-                using (var duplicate = AuthorizationMethods.DuplicateToken(token))
+                using (var duplicate = token.DuplicateToken())
                 {
                     duplicate.IsInvalid.Should().BeFalse();
-                    var duplicatePrivileges = AuthorizationMethods.GetTokenPrivileges(duplicate);
+                    var duplicatePrivileges = duplicate.GetTokenPrivileges();
 
                     duplicatePrivileges.Should().Equal(privileges);
                 }
 
-                using (var duplicate = AuthorizationMethods.DuplicateToken(token, rights: AccessTokenRights.MaximumAllowed))
+                using (var duplicate = token.DuplicateToken(rights: AccessTokenRights.MaximumAllowed))
                 {
                     duplicate.IsInvalid.Should().BeFalse();
-                    var duplicatePrivileges = AuthorizationMethods.GetTokenPrivileges(duplicate);
+                    var duplicatePrivileges = duplicate.GetTokenPrivileges();
 
                     duplicatePrivileges.Count().Should().BeGreaterOrEqualTo(privileges.Count());
                 }
             }
         }
-
     }
 }
