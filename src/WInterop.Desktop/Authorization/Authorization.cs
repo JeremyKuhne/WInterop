@@ -7,7 +7,6 @@
 
 using System;
 using WInterop.Authorization.Native;
-using WInterop.Authorization;
 using WInterop.ErrorHandling;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -115,6 +114,38 @@ namespace WInterop.Authorization
                 domainNameBuffer.Length = domainNameLength;
                 return domainNameBuffer.ToString();
             }
+        }
+
+        public unsafe static AccessToken CreateRestrictedToken(this AccessToken token, params SID[] sidsToDisable)
+        {
+            if (sidsToDisable == null || sidsToDisable.Length == 0)
+                throw new ArgumentNullException();
+
+            SID_AND_ATTRIBUTES* sids = stackalloc SID_AND_ATTRIBUTES[sidsToDisable.Length];
+            fixed (SID* sid = sidsToDisable)
+            {
+                for (int i = 0; i < sidsToDisable.Length; i++)
+                    sids[i].Sid = &sid[i];
+
+                if (!Imports.CreateRestrictedToken(token, 0, (uint)sidsToDisable.Length, sids, 0, null, 0, null, out AccessToken restricted))
+                {
+                    throw Errors.GetIoExceptionForLastError();
+                }
+
+                return restricted;
+            }
+        }
+
+        public static void ImpersonateLoggedOnUser(this AccessToken token)
+        {
+            if (!Imports.ImpersonateLoggedOnUser(token))
+                throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static void RevertToSelf()
+        {
+            if (!Imports.RevertToSelf())
+                throw Errors.GetIoExceptionForLastError();
         }
     }
 }

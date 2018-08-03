@@ -13,6 +13,6 @@ namespace WInterop.Authorization.Native
     public struct SID_AND_ATTRIBUTES
     {
         public unsafe SID* Sid;
-        public GroupSidAttributes Attributes;
+        public SidAttributes Attributes;
     }
 }

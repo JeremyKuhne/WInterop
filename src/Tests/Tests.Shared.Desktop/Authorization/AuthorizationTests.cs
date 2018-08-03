@@ -104,7 +104,7 @@ namespace AuthorizationTests
             using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                sid = token.GetTokenUserSid();
+                sid = token.GetTokenUserSid().Sid;
             }
             sid.IsValidSid().Should().BeTrue();
 
@@ -118,11 +118,11 @@ namespace AuthorizationTests
             using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
-                List<GroupSidInformation> groupSids = token.GetTokenGroupSids().ToList();
-                groupSids.Should().NotBeEmpty();
-                groupSids.Should().Contain((group) => group.Sid.LookupAccountSid(null).Name.Equals("Everyone"));
+                List<SidAndAttributes> groups = token.GetTokenGroupSids().ToList();
+                groups.Should().NotBeEmpty();
+                groups.Should().Contain((group) => group.Sid.LookupAccountSid(null).Name.Equals("Everyone"));
                 TokenStatistics stats = token.GetTokenStatistics();
-                groupSids.Count.Should().Be((int)stats.GroupCount);
+                groups.Count.Should().Be((int)stats.GroupCount);
             }
         }
 
@@ -295,6 +295,41 @@ namespace AuthorizationTests
                                 threadToken.Should().BeNull();
                             }
                         }
+                    }
+                }
+            });
+        }
+
+        [Fact]
+        public void CreateRestrictedToken_Process()
+        {
+            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+            {
+                SidAndAttributes info = token.GetTokenUserSid();
+                info.Sid.IsValidSid().Should().BeTrue();
+                info.Attributes.Should().NotHaveFlag(SidAttributes.UseForDenyOnly);
+                using (var restricted = token.CreateRestrictedToken(info.Sid))
+                {
+                    restricted.IsInvalid.Should().BeFalse();
+                    info = restricted.GetTokenUserSid();
+                    info.Attributes.Should().HaveFlag(SidAttributes.UseForDenyOnly);
+                    info.Sid.IsValidSid().Should().BeTrue();
+                    restricted.GetTokenStatistics().TokenType.Should().Be(TokenType.Primary);
+                }
+            }
+        }
+
+        [Fact]
+        public void ImpersonateLoggedInUser()
+        {
+            ThreadRunner.Run(() =>
+            {
+                using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+                {
+                    using (var restricted = token.CreateRestrictedToken(token.GetTokenUserSid()))
+                    {
+                        restricted.ImpersonateLoggedOnUser();
+                        Authorization.RevertToSelf();
                     }
                 }
             });

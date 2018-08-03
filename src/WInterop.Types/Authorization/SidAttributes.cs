@@ -14,7 +14,7 @@ namespace WInterop.Authorization
     /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379624.aspx"/>
     /// </summary>
     [Flags]
-    public enum GroupSidAttributes : uint
+    public enum SidAttributes : uint
     {
         /// <summary>
         /// The SID cannot have the Enabled attribute cleared by a call to the AdjustTokenGroups function.

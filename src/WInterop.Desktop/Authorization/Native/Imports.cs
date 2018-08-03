@@ -37,7 +37,7 @@ namespace WInterop.Authorization.Native
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public static extern BOOL RevertToSelf();
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446583.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public static unsafe extern BOOL CreateRestrictedToken(
             AccessToken ExistingTokenHandle,
@@ -48,7 +48,7 @@ namespace WInterop.Authorization.Native
             LuidAndAttributes* PrivilegesToDelete,
             uint RestrictedSidCount,
             SID_AND_ATTRIBUTES* SidsToRestrict,
-            AccessToken NewTokenHandle);
+            out AccessToken NewTokenHandle);
 
         // This isn't allowed in Windows Store apps, but is exactly the same as
         // calling LookupAccountSidW with a null or empty computer name.

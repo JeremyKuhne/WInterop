@@ -7,15 +7,17 @@
 
 namespace WInterop.Authorization
 {
-    public struct GroupSidInformation
+    public readonly struct SidAndAttributes
     {
-        public SID Sid;
-        public GroupSidAttributes Attributes;
+        public SID Sid { get; }
+        public SidAttributes Attributes { get; }
 
-        public GroupSidInformation(SID sid, GroupSidAttributes attributes)
+        public SidAndAttributes(SID sid, SidAttributes attributes)
         {
             Sid = sid;
             Attributes = attributes;
         }
+
+        public static implicit operator SID(SidAndAttributes info) => info.Sid;
     }
 }

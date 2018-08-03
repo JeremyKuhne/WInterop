@@ -178,21 +178,21 @@ namespace WInterop.Authorization
         /// <summary>
         /// Gets the group SIDs associated with the current token.
         /// </summary>
-        public unsafe static IEnumerable<GroupSidInformation> GetTokenGroupSids(this AccessToken token)
+        public unsafe static IEnumerable<SidAndAttributes> GetTokenGroupSids(this AccessToken token)
         {
-            List<GroupSidInformation> info = null;
+            List<SidAndAttributes> info = null;
 
             TokenInformationInvoke(token, TokenInformation.Groups,
             buffer =>
             {
                 TOKEN_GROUPS* groups = (TOKEN_GROUPS*)buffer;
                 ReadOnlySpan<SID_AND_ATTRIBUTES> data = new ReadOnlySpan<SID_AND_ATTRIBUTES>(&groups->Groups, (int)groups->GroupCount);
-                info = new List<GroupSidInformation>(data.Length);
+                info = new List<SidAndAttributes>(data.Length);
 
                 // Copy the SID pointers into our own SID structs.
                 for (int i = 0; i < data.Length; i++)
                 {
-                    info.Add(new GroupSidInformation(CopySid(data[i].Sid), data[i].Attributes));
+                    info.Add(new SidAndAttributes(CopySid(data[i].Sid), data[i].Attributes));
                 }
             });
 
@@ -202,7 +202,7 @@ namespace WInterop.Authorization
         /// <summary>
         /// Get the user SID for the given token.
         /// </summary>
-        public unsafe static SID GetTokenUserSid(this AccessToken token)
+        public unsafe static SidAndAttributes GetTokenUserSid(this AccessToken token)
         {
             // This size should always be sufficient as SID alignment is uint.
             int size = sizeof(TOKEN_USER) + sizeof(SID);
@@ -211,7 +211,8 @@ namespace WInterop.Authorization
             if (!Imports.GetTokenInformation(token, TokenInformation.User, buffer, (uint)size, out uint _))
                 throw Errors.GetIoExceptionForLastError();
 
-            return CopySid(((TOKEN_USER*)buffer)->User.Sid);
+            TOKEN_USER* user = (TOKEN_USER*)buffer;
+            return new SidAndAttributes(CopySid(user->User.Sid), user->User.Attributes);
         }
 
         /// <summary>
