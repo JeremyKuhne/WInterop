@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.SafeString.Types;
@@ -58,6 +59,28 @@ namespace WInterop.Security.Native
             LSA_OBJECT_ATTRIBUTES* ObjectAttributes,
             PolicyAccessRights DesiredAccess,
             out LsaHandle PolicyHandle);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern WindowsError LsaNtStatusToWinError(NTSTATUS Status);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721787.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern NTSTATUS LsaClose(
+            IntPtr ObjectHandle);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721796.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern NTSTATUS LsaFreeMemory(
+            IntPtr ObjectHandle);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721790.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern NTSTATUS LsaEnumerateAccountRights(
+            LsaHandle PolicyHandle,
+            in SID AccountSid,
+            out LsaMemoryHandle UserRights,
+            out uint CountOfRights);
 
         // This isn't allowed in Windows Store apps, but is exactly the same as
         // calling LookupAccountSidW with a null or empty computer name.

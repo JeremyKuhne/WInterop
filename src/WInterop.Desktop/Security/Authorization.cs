@@ -12,6 +12,8 @@ using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
 using WInterop.SystemInformation.Types;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WInterop.Security
 {
@@ -163,6 +165,53 @@ namespace WInterop.Security
                 throw ErrorMethods.GetIoExceptionForNTStatus(status);
 
             return handle;
+        }
+
+        /// <summary>
+        /// Convert an NTSTATUS to a Windows error code (returns ERROR_MR_MID_NOT_FOUND if unable to find an error)
+        /// </summary>
+        public static WindowsError NtStatusToWinError(NTSTATUS status)
+        {
+            return Imports.LsaNtStatusToWinError(status);
+        }
+
+        public static void LsaClose(IntPtr handle)
+        {
+            NTSTATUS status = Imports.LsaClose(handle);
+            if (status != NTSTATUS.STATUS_SUCCESS)
+                throw ErrorMethods.GetIoExceptionForNTStatus(status);
+        }
+
+        public static void LsaFreeMemory(IntPtr handle)
+        {
+            NTSTATUS status = Imports.LsaFreeMemory(handle);
+            if (status != NTSTATUS.STATUS_SUCCESS)
+                throw ErrorMethods.GetIoExceptionForNTStatus(status);
+        }
+
+        /// <summary>
+        /// Enumerates rights explicitly given to the specified SID. If the given SID
+        /// doesn't have any directly applied rights, returns an empty collection.
+        /// </summary>
+        public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, in SID sid)
+        {
+            NTSTATUS status = Imports.LsaEnumerateAccountRights(policyHandle, in sid, out var rightsBuffer, out uint rightsCount);
+            switch (status)
+            {
+                case NTSTATUS.STATUS_OBJECT_NAME_NOT_FOUND:
+                    return Enumerable.Empty<string>();
+                case NTSTATUS.STATUS_SUCCESS:
+                    break;
+                default:
+                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
+            }
+
+            List<string> rights = new List<string>();
+            Reader reader = new Reader(rightsBuffer);
+            for (int i = 0; i < rightsCount; i++)
+                rights.Add(reader.ReadUNICODE_STRING());
+
+            return rights;
         }
     }
 }

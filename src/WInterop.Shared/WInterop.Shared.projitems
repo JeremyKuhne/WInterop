@@ -9,7 +9,7 @@
     <Import_RootNamespace>WInterop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Security\Authorization.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Security\Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Native\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\CompressionMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\Types\FdiHandle.cs" />
