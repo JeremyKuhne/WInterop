@@ -18,10 +18,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\StringBufferTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CacheTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptographyTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceControlCodeTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DeviceManagement\DeviceManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectoryManagement\DirectoryManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DiskManagement\DiskManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\DeviceControlCodeTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\DeviceManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\DirectoryManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\DiskManagementTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHandlingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\DateTimeTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileSecurityTests.cs" />
