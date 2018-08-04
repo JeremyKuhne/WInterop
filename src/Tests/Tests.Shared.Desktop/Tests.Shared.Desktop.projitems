@@ -9,8 +9,8 @@
     <Import_RootNamespace>DesktopTests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Security\AuthenticationTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Security\AuthorizationTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Security\LsaTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Security\Basic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\BackupTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clipboard\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationTests.cs" />
@@ -36,7 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\MenuTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SafeString\SafeStringTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Security\SecurityTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Security\EnumerateRights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\AssociationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />

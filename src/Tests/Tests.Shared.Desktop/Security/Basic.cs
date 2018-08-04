@@ -18,7 +18,7 @@ using WInterop.Security;
 using WInterop.SystemInformation;
 using Xunit;
 
-namespace AuthorizationTests
+namespace SecurityTests
 {
     public class Basic
     {

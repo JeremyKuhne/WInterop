@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Security;
 using WInterop.ErrorHandling;
 using WInterop.MemoryManagement.Types;
 using WInterop.ProcessAndThreads;
@@ -208,10 +207,5 @@ namespace WInterop.Security.Native
             uint BufferLength,
             TOKEN_PRIVILEGES* PreviousState,
             out uint ReturnLength);
-
-        internal static ProcessHandle GetCurrentProcess()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
