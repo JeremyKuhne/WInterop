@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Security\Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Native\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\CompressionMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\Types\FdiHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\FdiHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
