@@ -9,7 +9,7 @@ using System;
 using System.Drawing;
 using WInterop;
 using WInterop.Gdi;
-using WInterop.SystemInformation.Types;
+using WInterop.SystemInformation;
 using WInterop.Windows;
 
 namespace DigClock

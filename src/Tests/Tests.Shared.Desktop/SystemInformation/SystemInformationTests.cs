@@ -9,12 +9,11 @@ using FluentAssertions;
 using System;
 using System.Diagnostics;
 using WInterop.SystemInformation;
-using WInterop.SystemInformation.Types;
 using Xunit;
 
-namespace DesktopTests.SystemInformation
+namespace SystemInformationTests
 {
-    public class SystemInformationTests
+    public class Basic
     {
         [Fact]
         public void GetCurrentUserName()

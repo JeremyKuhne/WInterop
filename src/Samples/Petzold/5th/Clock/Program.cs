@@ -13,7 +13,7 @@ using WInterop.GdiPlus;
 
 using System;
 using WInterop.Gdi;
-using WInterop.SystemInformation.Types;
+using WInterop.SystemInformation;
 using WInterop.Windows;
 using System.Drawing;
 

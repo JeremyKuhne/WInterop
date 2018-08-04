@@ -11,7 +11,6 @@ using WInterop.ErrorHandling;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
-using WInterop.SystemInformation.Types;
 using System.Collections.Generic;
 using System.Linq;
 

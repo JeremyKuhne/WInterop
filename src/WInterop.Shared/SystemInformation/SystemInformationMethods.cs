@@ -8,7 +8,7 @@
 using WInterop.ErrorHandling;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.SystemInformation.Types;
+using WInterop.SystemInformation;
 
 namespace WInterop.SystemInformation
 {

@@ -13,11 +13,9 @@ using WInterop.ErrorHandling;
 using WInterop.Gdi;
 using WInterop.Globalization;
 using WInterop.Modules;
-using WInterop.Windows;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
-using WInterop.SystemInformation.Types;
 using WInterop.Windows.BufferWrappers;
 using WInterop.Windows.Native;
 
