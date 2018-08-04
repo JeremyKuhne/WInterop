@@ -8,11 +8,11 @@
 using WInterop.ErrorHandling;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.SystemInformation;
+using WInterop.SystemInformation.Native;
 
 namespace WInterop.SystemInformation
 {
-    public static partial class SystemInformationMethods
+    public static partial class SystemInformation
     {
         /// <summary>
         /// Get the current user name.
@@ -51,7 +51,7 @@ namespace WInterop.SystemInformation
         /// Gets the user name in the specified format. Returns null for
         /// formats that aren't mapped.
         /// </summary>
-        public static string GetUserName(EXTENDED_NAME_FORMAT format)
+        public static string GetUserName(ExtendedNameFormat format)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {

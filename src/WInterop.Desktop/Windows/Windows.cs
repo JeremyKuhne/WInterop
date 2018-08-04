@@ -163,7 +163,7 @@ namespace WInterop.Windows
         public static SystemParameters SystemParameters => SystemParameters.Instance;
         public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
 
-        public static SYSTEMTIME GetLocalTime() => SystemInformationMethods.GetLocalTime();
+        public static SYSTEMTIME GetLocalTime() => SystemInformation.SystemInformation.GetLocalTime();
 
         /// <summary>
         /// Returns the average size in pixels of characters for the system font.

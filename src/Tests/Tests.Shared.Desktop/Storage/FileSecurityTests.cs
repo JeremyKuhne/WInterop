@@ -28,7 +28,7 @@ namespace DesktopTests.File
                     sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
                     AccountSidInformation info = sid.LookupAccountSid();
                     info.Usage.Should().Be(SidNameUse.User);
-                    info.Name.Should().Be(SystemInformationMethods.GetUserName());
+                    info.Name.Should().Be(SystemInformation.GetUserName());
                 }
             }
         }

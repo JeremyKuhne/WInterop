@@ -110,7 +110,7 @@ namespace SecurityTests
             sid.IsValidSid().Should().BeTrue();
 
             AccountSidInformation info = sid.LookupAccountSid();
-            info.Name.Should().Be(SystemInformationMethods.GetUserName());
+            info.Name.Should().Be(SystemInformation.GetUserName());
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace SecurityTests
             sid.IsValidSid().Should().BeTrue();
 
             AccountSidInformation info = sid.LookupAccountSid();
-            info.Name.Should().Be(SystemInformationMethods.GetUserName());
+            info.Name.Should().Be(SystemInformation.GetUserName());
         }
 
         [Fact]
@@ -193,7 +193,7 @@ namespace SecurityTests
             sid.IsValidSid().Should().BeTrue();
 
             AccountSidInformation info = sid.LookupAccountSid();
-            info.Name.Should().Be(SystemInformationMethods.GetUserName());
+            info.Name.Should().Be(SystemInformation.GetUserName());
         }
 
         [Fact]

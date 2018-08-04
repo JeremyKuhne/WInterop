@@ -94,7 +94,7 @@ namespace WInterop.Security
         {
             unsafe string ITwoBufferFunc<StringBuffer, string>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
             {
-                string name = SystemInformationMethods.GetUserName(EXTENDED_NAME_FORMAT.NameSamCompatible);
+                string name = SystemInformation.SystemInformation.GetUserName(ExtendedNameFormat.SamCompatible);
 
                 SID sid = new SID();
                 uint sidLength = (uint)sizeof(SID);

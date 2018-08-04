@@ -8,11 +8,11 @@
 using WInterop.ErrorHandling;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.SystemInformation;
+using WInterop.SystemInformation.Native;
 
 namespace WInterop.SystemInformation
 {
-    public static partial class SystemInformationMethods
+    public static partial class SystemInformation
     {
         /// <summary>
         /// Returns true if the specified processor feature is present.

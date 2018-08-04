@@ -7,18 +7,21 @@
 
 namespace WInterop.SystemInformation
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724268.aspx
-    public enum EXTENDED_NAME_FORMAT : uint
+    /// <summary>
+    /// [EXTENDED_NAME_FORMAT]
+    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724268.aspx"/>
+    /// </summary>
+    public enum ExtendedNameFormat : uint
     {
-        NameUnknown = 0,
-        NameFullyQualifiedDN = 1,
-        NameSamCompatible = 2,
-        NameDisplay = 3,
-        NameUniqueId = 6,
-        NameCanonical = 7,
-        NameUserPrincipal = 8,
-        NameCanonicalEx = 9,
-        NameServicePrincipal = 10,
-        NameDnsDomain = 12
+        Unknown = 0,
+        FullyQualifiedDN = 1,
+        SamCompatible = 2,
+        Display = 3,
+        UniqueId = 6,
+        Canonical = 7,
+        UserPrincipal = 8,
+        CanonicalEx = 9,
+        ServicePrincipal = 10,
+        DnsDomain = 12
     }
 }

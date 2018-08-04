@@ -13,42 +13,42 @@ using Xunit;
 
 namespace SystemInformationTests
 {
-    public class Basic
+    public partial class Basic
     {
         [Fact]
         public void GetCurrentUserName()
         {
-            SystemInformationMethods.GetUserName().Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
+            SystemInformation.GetUserName().Should().Be(Environment.GetEnvironmentVariable("USERNAME"));
         }
 
         [Fact]
         public void GetSuiteMask()
         {
-            SystemInformationMethods.GetSuiteMask().Should().HaveFlag(SuiteMask.VER_SUITE_SINGLEUSERTS);
+            SystemInformation.GetSuiteMask().Should().HaveFlag(SuiteMask.VER_SUITE_SINGLEUSERTS);
         }
 
         [Fact]
         public void GetUserNameSam()
         {
             // Should be DOMAIN\user or COMPUTER\user
-            SystemInformationMethods.GetUserName(EXTENDED_NAME_FORMAT.NameSamCompatible)
+            SystemInformation.GetUserName(ExtendedNameFormat.SamCompatible)
                 .Should().Be($"{Environment.GetEnvironmentVariable("USERDOMAIN")}\\{Environment.GetEnvironmentVariable("USERNAME")}");
         }
 
         [Fact]
         public void GetUserNameDisplay()
         {
-            SystemInformationMethods.GetUserName(EXTENDED_NAME_FORMAT.NameDisplay).Should().NotBeNullOrWhiteSpace();
+            SystemInformation.GetUserName(ExtendedNameFormat.Display).Should().NotBeNullOrWhiteSpace();
         }
 
         // [Fact]
         private void DumpUserNameFormats()
         {
-            foreach (EXTENDED_NAME_FORMAT format in Enum.GetValues(typeof(EXTENDED_NAME_FORMAT)))
+            foreach (ExtendedNameFormat format in Enum.GetValues(typeof(ExtendedNameFormat)))
             {
                 try
                 {
-                    string name = SystemInformationMethods.GetUserName(format) ?? "<null>";
+                    string name = SystemInformation.GetUserName(format) ?? "<null>";
                     Debug.WriteLine($"{format}: '{name}'");
                 }
                 catch (Exception e)
@@ -61,8 +61,8 @@ namespace SystemInformationTests
         [Fact]
         public void GetComputerName_NetBIOS()
         {
-            SystemInformationMethods.GetComputerName(ComputerNameFormat.NetBIOS)
-                .Should().Be(SystemInformationMethods.GetComputerName());
+            SystemInformation.GetComputerName(ComputerNameFormat.NetBIOS)
+                .Should().Be(SystemInformation.GetComputerName());
         }
 
         // [Fact]
@@ -72,7 +72,7 @@ namespace SystemInformationTests
             {
                 try
                 {
-                    string name = SystemInformationMethods.GetComputerName(format) ?? "<null>";
+                    string name = SystemInformation.GetComputerName(format) ?? "<null>";
                     Debug.WriteLine($"{format}: '{name}'");
                 }
                 catch (Exception e)
@@ -85,7 +85,7 @@ namespace SystemInformationTests
         [Fact]
         public void ExpandEnvironmentVariables_Existing()
         {
-            SystemInformationMethods.ExpandEnvironmentVariables(@"%COMPUTERNAME%").
+            SystemInformation.ExpandEnvironmentVariables(@"%COMPUTERNAME%").
                 Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
         }
 
@@ -96,7 +96,7 @@ namespace SystemInformationTests
             try
             {
                 Environment.SetEnvironmentVariable("ExpandEnvironmentVariables_Long", longValue);
-                SystemInformationMethods.ExpandEnvironmentVariables(@"%ExpandEnvironmentVariables_Long%").
+                SystemInformation.ExpandEnvironmentVariables(@"%ExpandEnvironmentVariables_Long%").
                     Should().Be(longValue);
             }
             finally

@@ -29,7 +29,7 @@ namespace Tests.File
                     string sidString = sid.ConvertSidToString();
                     AccountSidInformation info = sid.LookupAccountSid();
                     info.Usage.Should().Be(SidNameUse.User);
-                    info.Name.Should().Be(SystemInformationMethods.GetUserName());
+                    info.Name.Should().Be(WInterop.SystemInformation.SystemInformation.GetUserName());
                 }
             }
         }
