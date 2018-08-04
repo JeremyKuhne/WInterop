@@ -11,41 +11,45 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Authorization;
 using WInterop.ErrorHandling;
-using WInterop.Security.Types;
 using WInterop.Support.Buffers;
+
+namespace WInterop.Security.Native
+{
+    /// <summary>
+    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    /// </summary>
+    public static partial class Imports
+    {
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern WindowsError LsaNtStatusToWinError(NTSTATUS Status);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721787.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern NTSTATUS LsaClose(
+            IntPtr ObjectHandle);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721796.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern NTSTATUS LsaFreeMemory(
+            IntPtr ObjectHandle);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721790.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern NTSTATUS LsaEnumerateAccountRights(
+            LsaHandle PolicyHandle,
+            in SID AccountSid,
+            out LsaMemoryHandle UserRights,
+            out uint CountOfRights);
+    }
+}
 
 namespace WInterop.Security
 {
-    public static partial class SecurityMethods
+    using WInterop.Security.Native;
+
+    public static partial class Security
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
-            [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-            public static extern WindowsError LsaNtStatusToWinError(NTSTATUS Status);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721787.aspx
-            [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-            public static extern NTSTATUS LsaClose(
-                IntPtr ObjectHandle);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721796.aspx
-            [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-            public static extern NTSTATUS LsaFreeMemory(
-                IntPtr ObjectHandle);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721790.aspx
-            [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-            public static extern NTSTATUS LsaEnumerateAccountRights(
-                LsaHandle PolicyHandle,
-                in SID AccountSid,
-                out LsaMemoryHandle UserRights,
-                out uint CountOfRights);
-        }
-
         /// <summary>
         /// Convert an NTSTATUS to a Windows error code (returns ERROR_MR_MID_NOT_FOUND if unable to find an error)
         /// </summary>

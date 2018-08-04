@@ -6,11 +6,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.ErrorHandling;
-using WInterop.Security.Types;
+using WInterop.Security;
+using WInterop.Authentication.Native;
 
 namespace WInterop.Authentication
 {
-    public static partial class AuthenticationMethods
+    public static partial class Authentication
     {
         public static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
         {

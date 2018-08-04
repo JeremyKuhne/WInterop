@@ -9,24 +9,24 @@ using FluentAssertions;
 using System;
 using WInterop.Authentication;
 using WInterop.Authorization;
-using WInterop.Security.Types;
+using WInterop.Security;
 using Xunit;
 
-namespace DesktopTests.Authentication
+namespace AuthenticationTests
 {
     public class AuthenticationTests
     {
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void LsaOpenPolicy_StandardRead()
         {
-            LsaHandle handle = AuthenticationMethods.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            LsaHandle handle = Authentication.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             handle.IsInvalid.Should().BeFalse();
         }
 
         [Fact]
         public void LsaOpenPolicy_GenericRead()
         {
-            Action action = () => AuthenticationMethods.LsaOpenLocalPolicy((PolicyAccessRights)GenericAccessRights.Read);
+            Action action = () => Authentication.LsaOpenLocalPolicy((PolicyAccessRights)GenericAccessRights.Read);
             action.Should().Throw<UnauthorizedAccessException>();
         }
     }

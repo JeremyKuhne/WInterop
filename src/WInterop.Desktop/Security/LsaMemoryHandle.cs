@@ -8,7 +8,7 @@
 using System;
 using WInterop.Handles.Types;
 
-namespace WInterop.Security.Types
+namespace WInterop.Security
 {
     public class LsaMemoryHandle : HandleZeroIsInvalid
     {
@@ -21,7 +21,7 @@ namespace WInterop.Security.Types
 
         protected override bool ReleaseHandle()
         {
-            SecurityMethods.LsaFreeMemory(handle);
+            Security.LsaFreeMemory(handle);
             return true;
         }
     }
