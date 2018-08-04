@@ -9,12 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Cryptography.Types;
-using WInterop.Handles.Types;
-using WInterop.Support;
+using WInterop.Errors;
+using WInterop.Handles;
 
 namespace WInterop.Cryptography
 {
-    public static partial class CryptoMethods
+    public static partial class Cryptography
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
@@ -67,7 +67,7 @@ namespace WInterop.Cryptography
         public static void CloseStore(IntPtr handle)
         {
             if (!Imports.CertCloseStore(handle, dwFlags: 0))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         unsafe private static CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)

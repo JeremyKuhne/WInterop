@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.Errors
 {
     /// <summary>
     /// Flags used when invoking FormatMessage().

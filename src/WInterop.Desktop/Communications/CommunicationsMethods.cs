@@ -9,17 +9,15 @@ using Microsoft.Win32.SafeHandles;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Desktop.Communications.Types;
+using WInterop.Errors;
 using WInterop.Registry;
-using WInterop.Registry.Types;
 using WInterop.Storage;
-using WInterop.Support;
-using WInterop.Synchronization.Types;
+using WInterop.Synchronization;
 using WInterop.Windows;
 
-namespace WInterop.Desktop.Communications
+namespace WInterop.Communications
 {
-    public static partial class CommunicationsMethods
+    public static partial class Communications
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
@@ -92,7 +90,7 @@ namespace WInterop.Desktop.Communications
             };
 
             if (!Imports.GetCommState(fileHandle, ref dcb))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return dcb;
         }
@@ -102,13 +100,13 @@ namespace WInterop.Desktop.Communications
             dcb.DCBlength = (uint)sizeof(DCB);
 
             if (!Imports.GetCommState(fileHandle, ref dcb))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public unsafe static DCB BuildCommDCB(string definition)
         {
             if (!Imports.BuildCommDCBW(definition, out DCB dcb))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return dcb;
         }
@@ -116,7 +114,7 @@ namespace WInterop.Desktop.Communications
         public static COMMPROP GetCommProperties(SafeFileHandle fileHandle)
         {
             if (!Imports.GetCommProperties(fileHandle, out COMMPROP properties))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return properties;
         }
@@ -127,7 +125,7 @@ namespace WInterop.Desktop.Communications
             uint size = (uint)sizeof(COMMCONFIG);
 
             if (!Imports.GetCommConfig(fileHandle, ref config, ref size))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return config;
         }
@@ -142,7 +140,7 @@ namespace WInterop.Desktop.Communications
             uint size = (uint)sizeof(COMMCONFIG);
 
             if (!Imports.GetDefaultCommConfigW(port, ref config, ref size))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return config;
         }
@@ -156,7 +154,7 @@ namespace WInterop.Desktop.Communications
             COMMCONFIG config = GetDefaultCommConfig(port);
 
             if (!Imports.CommConfigDialogW(port, parent, ref config))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return config;
         }
@@ -180,10 +178,10 @@ namespace WInterop.Desktop.Communications
 
         public static IEnumerable<string> GetAvailableComPorts()
         {
-            using (var key = RegistryMethods.OpenKey(
+            using (var key = Registry.Registry.OpenKey(
                 RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"HARDWARE\DEVICEMAP\SERIALCOMM"))
             {
-                return RegistryMethods.GetValueDataDirect(key, RegistryValueType.REG_SZ).OfType<string>().ToArray();
+                return Registry.Registry.GetValueDataDirect(key, RegistryValueType.REG_SZ).OfType<string>().ToArray();
             }
         }
     }

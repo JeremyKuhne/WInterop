@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System.Linq;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
 using Xunit;
 

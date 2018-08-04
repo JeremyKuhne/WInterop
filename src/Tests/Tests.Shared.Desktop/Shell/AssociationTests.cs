@@ -8,13 +8,11 @@
 using FluentAssertions;
 using System;
 using WInterop.Registry;
-using WInterop.Registry.Types;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Shell;
-using WInterop.Shell.Types;
 using Xunit;
 
-namespace DesktopTests.ShellTests
+namespace ShellTests
 {
     public class AssociationTests
     {
@@ -98,7 +96,7 @@ namespace DesktopTests.ShellTests
         {
             RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.App, ".txt", null);
 
-            string name = RegistryMethods.QueryKeyName(key);
+            string name = Registry.QueryKeyName(key);
 
             if (name.StartsWith(@"\REGISTRY\MACHINE"))
             {
@@ -118,7 +116,7 @@ namespace DesktopTests.ShellTests
         {
             RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.BaseClass, ".txt", null);
 
-            string name = RegistryMethods.QueryKeyName(key);
+            string name = Registry.QueryKeyName(key);
 
             // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\*
             name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(@"_Classes\*");
@@ -130,7 +128,7 @@ namespace DesktopTests.ShellTests
             RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.Class, ".txt", null);
 
             // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
-            string name = RegistryMethods.QueryKeyName(key);
+            string name = Registry.QueryKeyName(key);
 
             if (name.StartsWith(@"\REGISTRY\MACHINE"))
             {
@@ -149,7 +147,7 @@ namespace DesktopTests.ShellTests
         {
             RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.ShellExecClass, ".txt", null);
 
-            string name = RegistryMethods.QueryKeyName(key);
+            string name = Registry.QueryKeyName(key);
 
             if (name.StartsWith(@"\REGISTRY\MACHINE"))
             {

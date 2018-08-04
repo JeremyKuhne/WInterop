@@ -7,7 +7,7 @@
 
 using System;
 using System.Drawing;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Windows;
 

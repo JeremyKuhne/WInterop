@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 
 namespace WInterop.Support.Internal
 {
@@ -38,11 +38,7 @@ namespace WInterop.Support.Internal
             IntPtr hCertStore,
             uint dwFlags);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/hh920918.aspx
-        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-        public static extern WindowsError GetCurrentApplicationUserModelId(
-            ref uint applicationUserModelIdLength,
-            SafeHandle applicationUserModelId);
+
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683152.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

@@ -5,8 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.ErrorHandling;
-using WInterop.Support;
+using WInterop.Errors;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation.Native;
 
@@ -31,7 +30,7 @@ namespace WInterop.SystemInformation
             uint sizeInChars = buffer.CharCapacity;
             while (!Imports.GetUserNameW(buffer, ref sizeInChars))
             {
-                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                 buffer.EnsureCharCapacity(sizeInChars);
             }
 
@@ -58,7 +57,7 @@ namespace WInterop.SystemInformation
                 uint size = buffer.CharCapacity;
                 while (!Imports.GetUserNameExW(format, buffer, ref size))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_NONE_MAPPED:
@@ -67,7 +66,7 @@ namespace WInterop.SystemInformation
                             buffer.EnsureCharCapacity(size);
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
 
@@ -86,7 +85,7 @@ namespace WInterop.SystemInformation
                 uint size = buffer.CharCapacity;
                 while (!Imports.GetComputerNameExW(format, buffer, ref size))
                 {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_MORE_DATA);
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_MORE_DATA);
                     buffer.EnsureCharCapacity(size);
                 }
                 buffer.Length = size;
@@ -108,7 +107,7 @@ namespace WInterop.SystemInformation
                 }
 
                 if (size == 0)
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
 
                 buffer.Length = size - 1;
                 return buffer.ToString();

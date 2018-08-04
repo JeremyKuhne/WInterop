@@ -8,7 +8,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using WInterop.Handles.Types;
+using WInterop.Handles;
 
 namespace WInterop.Modules
 {

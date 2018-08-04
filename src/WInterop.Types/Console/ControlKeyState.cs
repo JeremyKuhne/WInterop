@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Console.Types
+namespace WInterop.Console
 {
     [Flags]
     public enum ControlKeyState : uint

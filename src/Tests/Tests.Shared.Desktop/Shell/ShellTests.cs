@@ -10,12 +10,11 @@ using System;
 using System.Linq;
 using WInterop.Security;
 using WInterop.Shell;
-using WInterop.Shell.Types;
 using Xunit;
 
-namespace DesktopTests.ShellTests
+namespace ShellTests
 {
-    public class ShellTests
+    public class Basic
     {
         [Fact]
         public void GetKnownFolderPath_Basic()

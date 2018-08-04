@@ -8,9 +8,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using WInterop.Com.Types;
+using WInterop.Com;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761130.aspx
     [ComImport,

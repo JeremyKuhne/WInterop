@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 
 namespace WInterop.Support.Buffers
 {
@@ -274,7 +274,7 @@ namespace WInterop.Support.Buffers
                     if (ShouldThrow != null && !ShouldThrow(error))
                         return null;
 
-                    throw Errors.GetIoExceptionForError(error, DetailForError);
+                    throw Error.GetIoExceptionForError(error, DetailForError);
                 }
 
                 buffer.Length = returnValue;

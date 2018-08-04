@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     /// <summary>
     /// Wrapper for handles that need closed via CloseHandle.

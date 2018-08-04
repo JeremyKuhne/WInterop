@@ -6,9 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Support.Internal;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.Errors
 {
     public class DriveLockedException : WInteropIOException
     {
@@ -18,7 +17,7 @@ namespace WInterop.ErrorHandling
             : base(DefaultError) { }
 
         public DriveLockedException(string message, Exception innerException = null)
-            : base(message, Macros.HRESULT_FROM_WIN32(DefaultError), innerException) { }
+            : base(message, Error.HRESULT_FROM_WIN32(DefaultError), innerException) { }
 
         public DriveLockedException(string message, HRESULT hresult, Exception innerException = null)
             : base(message, hresult, innerException) { }

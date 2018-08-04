@@ -7,7 +7,7 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -41,7 +41,7 @@ namespace WInterop.Storage
                 bProcessSecurity: true,
                 context: ref _context))
             {
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
             }
 
             // Exit if at the end
@@ -60,7 +60,7 @@ namespace WInterop.Storage
                     bProcessSecurity: true,
                     context: ref _context))
                 {
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
                 }
             }
 
@@ -75,7 +75,7 @@ namespace WInterop.Storage
                     lpdwHighByteSeeked: out _,
                     context: ref _context))
                 {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
                 }
             }
 
@@ -114,7 +114,7 @@ namespace WInterop.Storage
                     context: ref _context))
                 {
 #if DEBUG
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
 #endif
                 }
 

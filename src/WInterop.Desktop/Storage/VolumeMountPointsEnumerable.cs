@@ -9,9 +9,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage.Native;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Storage
@@ -78,7 +77,7 @@ namespace WInterop.Storage
 
                 if (_findHandle.IsInvalid)
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         // Not positive on this case as I haven't been able to get this API
@@ -90,7 +89,7 @@ namespace WInterop.Storage
                             _lastEntryFound = true;
                             return null;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
 
@@ -102,7 +101,7 @@ namespace WInterop.Storage
             {
                 if (!Imports.FindNextVolumeMountPointW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         // Not positive on this case as I haven't been able to get this API
@@ -114,7 +113,7 @@ namespace WInterop.Storage
                             _lastEntryFound = true;
                             return null;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
 

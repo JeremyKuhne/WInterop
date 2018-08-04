@@ -122,7 +122,7 @@ namespace Tests.Buffers
             ]
         public void CharCapacityHasUintMax(uint plusValue)
         {
-            if (WInterop.Support.Environment.Is64BitProcess)
+            if (Environment.Is64BitProcess)
             {
                 using (var buffer = new StringBuffer())
                 {
@@ -171,7 +171,7 @@ namespace Tests.Buffers
             ]
         public void EnsureCharCapacityOver32Bit(uint initialBufferSize)
         {
-            if (!WInterop.Support.Environment.Is64BitProcess)
+            if (!Environment.Is64BitProcess)
             {
                 using (var buffer = new StringBuffer(initialBufferSize))
                 {

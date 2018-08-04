@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     [Flags]
     public enum PROPDESC_FORMAT_FLAGS

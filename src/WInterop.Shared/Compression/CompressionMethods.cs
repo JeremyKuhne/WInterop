@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Compression.Types;
+using WInterop.Compression;
 
 namespace WInterop.Compression
 {
-    public static partial class CompressionMethods
+    public static partial class Compression
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

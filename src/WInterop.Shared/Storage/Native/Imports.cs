@@ -8,9 +8,9 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
-using WInterop.Handles.Types;
-using WInterop.Synchronization.Types;
+using WInterop.Errors;
+using WInterop.Handles;
+using WInterop.Synchronization;
 
 namespace WInterop.Storage.Native
 {

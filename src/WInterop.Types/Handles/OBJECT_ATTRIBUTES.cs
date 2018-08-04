@@ -10,7 +10,7 @@ using WInterop.Security;
 using WInterop.Security.Native;
 using WInterop.SafeString.Types;
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff557749.aspx
     public unsafe struct OBJECT_ATTRIBUTES

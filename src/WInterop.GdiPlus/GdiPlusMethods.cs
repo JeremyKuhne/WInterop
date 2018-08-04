@@ -8,7 +8,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Support;
 
@@ -22,9 +22,9 @@ namespace WInterop.GdiPlus
             switch (status)
             {
                 case GpStatus.Win32Error:
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     if (error != WindowsError.ERROR_SUCCESS)
-                        return Errors.GetIoExceptionForError(error);
+                        return Error.GetIoExceptionForError(error);
                     goto default;
                 default:
                     return new GdiPlusException(status);

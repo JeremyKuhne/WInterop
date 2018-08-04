@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.Errors
 {
     [Flags]
     public enum ErrorMode : uint

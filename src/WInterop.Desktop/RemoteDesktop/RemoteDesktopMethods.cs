@@ -6,11 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.Support;
+using WInterop.Errors;
 
-namespace WInterop.Desktop.RemoteDesktop
+namespace WInterop.RemoteDesktop
 {
-    public static partial class RemoteDesktopMethods
+    public static partial class RemoteDesktop
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
@@ -36,7 +36,7 @@ namespace WInterop.Desktop.RemoteDesktop
         public static uint ProcessIdToSessionId(uint processId)
         {
             if (!Imports.ProcessIdToSessionId(processId, out uint sessionId))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return sessionId;
         }

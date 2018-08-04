@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Com.Types;
+using WInterop.Com;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     [ComImport,
         Guid(InterfaceIds.IID_IPropertyDescription),

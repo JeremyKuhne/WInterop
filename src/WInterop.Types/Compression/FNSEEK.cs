@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Storage;
 
-namespace WInterop.Compression.Types
+namespace WInterop.Compression
 {
     // https://msdn.microsoft.com/en-us/library/ff797948.aspx
 

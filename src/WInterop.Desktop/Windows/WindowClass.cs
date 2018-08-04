@@ -10,9 +10,9 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Support;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows
@@ -109,7 +109,7 @@ namespace WInterop.Windows
 
                 Atom atom = Imports.RegisterClassExW(ref _wndClass);
                 if (!atom.IsValid)
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
                 Atom = atom;
                 return this;
             }

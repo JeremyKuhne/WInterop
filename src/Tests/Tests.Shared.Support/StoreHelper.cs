@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.WindowsStore;
 
 namespace Tests.Support
 {
@@ -16,12 +17,12 @@ namespace Tests.Support
             try
             {
                 action();
-                if (WInterop.Support.Environment.IsWindowsStoreApplication())
+                if (WindowsStore.IsWindowsStoreApplication())
                     throw new InvalidOperationException("Should not succeed if Windows Store app");
             }
             catch (UnauthorizedAccessException)
             {
-                if (!WInterop.Support.Environment.IsWindowsStoreApplication())
+                if (!WindowsStore.IsWindowsStoreApplication())
                     throw new InvalidOperationException("Should succeed if not Windows Store app");
             }
         }

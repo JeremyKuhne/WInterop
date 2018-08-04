@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Devices.Types
+namespace WInterop.Devices
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364393.aspx
     [StructLayout(LayoutKind.Explicit)]

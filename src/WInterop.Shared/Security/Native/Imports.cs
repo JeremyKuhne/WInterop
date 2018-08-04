@@ -7,8 +7,8 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
-using WInterop.MemoryManagement.Types;
+using WInterop.Errors;
+using WInterop.Memory;
 using WInterop.ProcessAndThreads;
 
 namespace WInterop.Security.Native

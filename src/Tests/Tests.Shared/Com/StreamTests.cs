@@ -10,10 +10,9 @@ using System.IO;
 using System.Text;
 using Tests.Support;
 using WInterop.Com;
-using WInterop.Com.Types;
 using Xunit;
 
-namespace Tests.Com
+namespace ComTests
 {
     public class StreamTests
     {

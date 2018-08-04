@@ -9,6 +9,11 @@
     <Import_RootNamespace>WInterop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\LzException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveLockedException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveNotReadyException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FileExistsException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WInteropIOException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Native\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\CompressionMethods.cs" />
@@ -39,10 +44,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Native\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Processes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Threads.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\BufferHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\SynchronizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\Native\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\WindowsStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFullPath.cs" />

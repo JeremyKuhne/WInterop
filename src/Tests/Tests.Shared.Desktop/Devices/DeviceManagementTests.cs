@@ -8,13 +8,13 @@
 using FluentAssertions;
 using System;
 using WInterop.Devices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
 using Xunit;
 
-namespace DesktopTests.Devices
+namespace DevicesTests
 {
-    public class DeviceManagementTests
+    public class Basic
     {
         [Fact]
         public void QueryDeviceName()
@@ -22,7 +22,7 @@ namespace DesktopTests.Devices
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
             using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
-                DeviceMethods.QueryDeviceName(handle).Should().StartWith(@"\Device\HarddiskVolume");
+                Devices.QueryDeviceName(handle).Should().StartWith(@"\Device\HarddiskVolume");
             }
         }
 
@@ -32,9 +32,9 @@ namespace DesktopTests.Devices
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
             using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
-                Action action = () => DeviceMethods.QuerySuggestedLinkName(handle);
+                Action action = () => WInterop.Devices.Devices.QuerySuggestedLinkName(handle);
                 action.Should().Throw<WInteropIOException>("this is an optional query, not aware of which drivers support this").
-                    And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_NOT_FOUND));
+                    And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_NOT_FOUND));
             }
         }
 
@@ -44,7 +44,7 @@ namespace DesktopTests.Devices
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
             using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
-                DeviceMethods.QueryUniqueId(handle).Should().NotBeEmpty();
+                Devices.QueryUniqueId(handle).Should().NotBeEmpty();
             }
         }
 
@@ -54,7 +54,7 @@ namespace DesktopTests.Devices
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
             using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
-                DeviceMethods.QueryStableGuid(handle).Should().NotBe(Guid.Empty);
+                Devices.QueryStableGuid(handle).Should().NotBe(Guid.Empty);
             }
         }
 
@@ -66,7 +66,7 @@ namespace DesktopTests.Devices
             // Need to open the handle with no rights (desiredAccess: 0) to avoid needing to run as admin
             using (var handle = Storage.CreateFile(@"\\.\C:", CreationDisposition.OpenExisting, desiredAccess: 0))
             {
-                DeviceMethods.QueryInterfacename(handle).Should().StartWith(@"\\?\STORAGE#Volume#{");
+                Devices.QueryInterfacename(handle).Should().StartWith(@"\\?\STORAGE#Volume#{");
             }
         }
     }

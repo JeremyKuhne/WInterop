@@ -8,8 +8,7 @@
 using FluentAssertions;
 using System;
 using System.IO;
-using WInterop.ErrorHandling;
-using WInterop.Support;
+using WInterop.Errors;
 using Xunit;
 
 namespace Tests.ErrorHandling
@@ -32,7 +31,7 @@ namespace Tests.ErrorHandling
             ]
         public void ErrorsMapToExceptions(WindowsError error, Type exceptionType)
         {
-            Errors.GetIoExceptionForError(error).Should().BeOfType(exceptionType);
+            Error.GetIoExceptionForError(error).Should().BeOfType(exceptionType);
         }
 
         [Theory,
@@ -43,7 +42,7 @@ namespace Tests.ErrorHandling
             ]
         public void WindowsErrorTextIsAsExpected(uint error, string expected)
         {
-            Errors.LastErrorToString((WindowsError)error).Should().Be(expected);
+            Error.LastErrorToString((WindowsError)error).Should().Be(expected);
         }
 
         [Theory,
@@ -53,7 +52,7 @@ namespace Tests.ErrorHandling
             ]
         public void WindowsErrorToHresultMappings(WindowsError error, HRESULT expected)
         {
-            HRESULT result = ErrorMacros.HRESULT_FROM_WIN32(error);
+            HRESULT result = Error.HRESULT_FROM_WIN32(error);
             result.Should().Be(expected);
         }
     }

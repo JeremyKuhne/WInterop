@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     /// <summary>
     /// Wrapper for a native certificate store handle.

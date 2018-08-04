@@ -9,9 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Gdi.Native;
-using WInterop.Support;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -76,7 +75,7 @@ namespace WInterop.Gdi
                 sourceOrigin.Y,
                 operation))
             {
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
             }
         }
 
@@ -84,7 +83,7 @@ namespace WInterop.Gdi
         {
             StretchMode oldMode = Imports.SetStretchBltMode(context, mode);
             if ((WindowsError)oldMode == WindowsError.ERROR_INVALID_PARAMETER)
-                throw Errors.GetIoExceptionForError(WindowsError.ERROR_INVALID_PARAMETER);
+                throw Error.GetIoExceptionForError(WindowsError.ERROR_INVALID_PARAMETER);
             return oldMode;
         }
 

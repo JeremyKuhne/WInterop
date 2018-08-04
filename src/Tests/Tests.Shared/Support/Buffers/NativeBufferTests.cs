@@ -76,7 +76,7 @@ namespace Tests.Buffers
         [Fact]
         public void CreateNativeBufferOver32BitCapacity()
         {
-            if (!WInterop.Support.Environment.Is64BitProcess)
+            if (!Environment.Is64BitProcess)
             {
                 Action action = () => new HeapBuffer(uint.MaxValue + 1ul);
                 action.Should().Throw<OverflowException>();
@@ -89,7 +89,7 @@ namespace Tests.Buffers
             ]
         public void ResizeNativeBufferOver32BitCapacity(ulong initialBufferSize)
         {
-            if (!WInterop.Support.Environment.Is64BitProcess)
+            if (!Environment.Is64BitProcess)
             {
                 using (var buffer = new HeapBuffer(initialBufferSize))
                 {

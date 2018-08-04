@@ -5,8 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Globalization.Types;
-using WInterop.Support;
+using WInterop.Errors;
 
 namespace WInterop.Globalization
 {
@@ -28,7 +27,7 @@ namespace WInterop.Globalization
             char* data = stackalloc char[2];
             int result = GlobalizationMethods.Imports.GetLocaleInfoEx(localeName, (uint)LocaleInfoType.LOCALE_ITIME, data, 2);
             if (result != 2)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return data[0] == '1';
         }
@@ -41,7 +40,7 @@ namespace WInterop.Globalization
             char* data = stackalloc char[2];
             int result = GlobalizationMethods.Imports.GetLocaleInfoEx(localeName, (uint)LocaleInfoType.LOCALE_ITLZERO, data, 2);
             if (result != 2)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return data[0] == '1';
         }

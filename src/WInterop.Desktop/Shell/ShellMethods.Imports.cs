@@ -8,9 +8,9 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Security;
-using WInterop.ErrorHandling;
-using WInterop.Registry.Types;
-using WInterop.Shell.Types;
+using WInterop.Errors;
+using WInterop.Registry;
+using WInterop.Shell;
 
 namespace WInterop.Shell
 {

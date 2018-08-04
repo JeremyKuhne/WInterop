@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Security.Native;
 using WInterop.Ipc.Types;
-using WInterop.Support;
+using WInterop.Errors;
 
 namespace WInterop.Ipc
 {
@@ -65,7 +65,7 @@ namespace WInterop.Ipc
             }
 
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError(name);
+                throw Error.GetIoExceptionForLastError(name);
 
             return handle;
         }
@@ -85,7 +85,7 @@ namespace WInterop.Ipc
                     lpNextSize: &info.NextSize,
                     lpMessageCount: &info.MessageCount,
                     lpReadTimeout: &info.ReadTimeout))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
             }
 
             return info;
@@ -98,7 +98,7 @@ namespace WInterop.Ipc
         public static void SetMailslotTimeout(SafeMailslotHandle mailslotHandle, uint readTimeout)
         {
             if (!Imports.SetMailslotInfo(mailslotHandle, readTimeout))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
     }
 }

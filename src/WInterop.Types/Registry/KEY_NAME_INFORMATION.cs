@@ -8,7 +8,7 @@
 
 using System;
 
-namespace WInterop.Registry.Types
+namespace WInterop.Registry
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff553381.aspx
     public struct KEY_NAME_INFORMATION

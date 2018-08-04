@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Compression.Types
+namespace WInterop.Compression
 {
     // https://msdn.microsoft.com/en-us/library/ff797928.aspx
     public struct FDINOTIFICATION

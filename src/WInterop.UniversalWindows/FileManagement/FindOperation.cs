@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage.Native;
 using WInterop.Support;
 
@@ -40,14 +40,14 @@ namespace WInterop.Storage
                    _buffer.VoidPointer,
                    (uint)_buffer.ByteCapacity))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_NO_MORE_FILES:
                             NoMoreFiles();
                             return;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
             }

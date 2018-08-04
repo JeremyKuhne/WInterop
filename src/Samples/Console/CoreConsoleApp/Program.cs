@@ -7,9 +7,7 @@
 
 using System;
 using System.Diagnostics;
-using System.Text;
 using WInterop.Console;
-using WInterop.Console.Types;
 using WInterop.Windows;
 
 namespace CoreConsoleApp
@@ -50,14 +48,14 @@ namespace CoreConsoleApp
                 writer.Flush();
 
                 // Tangerine
-                Console.WriteLine();
-                Console.Write($"{Esc}[38;2;242;133;0m");
-                Console.WriteLine("In living color!");
-                Console.Write($"{Esc}[4m");
-                Console.WriteLine("In living color!");
+                System.Console.WriteLine();
+                System.Console.Write($"{Esc}[38;2;242;133;0m");
+                System.Console.WriteLine("In living color!");
+                System.Console.Write($"{Esc}[4m");
+                System.Console.WriteLine("In living color!");
             }
 
-            Console.WriteLine("After exiting terminal mode.");
+            System.Console.WriteLine("After exiting terminal mode.");
         }
 
         static void Performance()
@@ -79,39 +77,39 @@ namespace CoreConsoleApp
             stopwatch.Stop();
             long used = GC.GetAllocatedBytesForCurrentThread() - prebytes;
 
-            Console.WriteLine($"Time: {stopwatch.ElapsedMilliseconds}, Allocated Bytes: {used}");
+            System.Console.WriteLine($"Time: {stopwatch.ElapsedMilliseconds}, Allocated Bytes: {used}");
         }
 
         static void ReadInputExample()
         {
             // https://docs.microsoft.com/en-us/windows/console/reading-input-buffer-events
 
-            var inputHandle = ConsoleMethods.GetStandardHandle(StandardHandleType.Input);
-            var oldMode = ConsoleMethods.GetConsoleInputMode(inputHandle);
+            var inputHandle = WInterop.Console.Console.GetStandardHandle(StandardHandleType.Input);
+            var oldMode = WInterop.Console.Console.GetConsoleInputMode(inputHandle);
 
             // Setting EnableExtendedFlags without EnableQuickEditMode turns off QuickEdit mode, which is necessary to
             // get mouse events.
 
-            ConsoleMethods.SetConsoleInputMode(inputHandle,
+            WInterop.Console.Console.SetConsoleInputMode(inputHandle,
                 ConsoleInputMode.EnableWindowInput | ConsoleInputMode.EnableMouseInput | ConsoleInputMode.EnableExtendedFlags);
 
             bool exit = false;
-            foreach (var i in ConsoleMethods.ReadConsoleInput(inputHandle))
+            foreach (var i in WInterop.Console.Console.ReadConsoleInput(inputHandle))
             {
                 switch (i.EventType)
                 {
                     case EventType.Focus:
-                        Console.WriteLine($"Focus: {i.Data.FocusEvent.bSetFocus}");
+                        System.Console.WriteLine($"Focus: {i.Data.FocusEvent.bSetFocus}");
                         break;
                     case EventType.Key:
                         var keyEvent = i.Data.KeyEvent;
-                        Console.WriteLine($"Key: Down = {keyEvent.bKeyDown} Char = '{keyEvent.uChar.UnicodeChar}' Virtual Key = {keyEvent.wVirtualKeyCode} Modifiers = {keyEvent.dwControlKeyState}");
+                        System.Console.WriteLine($"Key: Down = {keyEvent.bKeyDown} Char = '{keyEvent.uChar.UnicodeChar}' Virtual Key = {keyEvent.wVirtualKeyCode} Modifiers = {keyEvent.dwControlKeyState}");
                         exit = keyEvent.wVirtualKeyCode == VirtualKey.C
                             && (keyEvent.dwControlKeyState & (ControlKeyState.LeftCtrlPressed | ControlKeyState.RightCtrlPressed)) != 0;
                         break;
                     case EventType.Mouse:
                         var mouseEvent = i.Data.MouseEvent;
-                        Console.WriteLine($"Mouse: {mouseEvent.dwEventFlags} {mouseEvent.dwMousePosition.X}, {mouseEvent.dwMousePosition.Y}");
+                        System.Console.WriteLine($"Mouse: {mouseEvent.dwEventFlags} {mouseEvent.dwMousePosition.X}, {mouseEvent.dwMousePosition.Y}");
                         break;
                 }
 
@@ -119,7 +117,7 @@ namespace CoreConsoleApp
                     break;
             }
 
-            ConsoleMethods.SetConsoleInputMode(inputHandle, oldMode);
+            WInterop.Console.Console.SetConsoleInputMode(inputHandle, oldMode);
         }
     }
 }

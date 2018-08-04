@@ -6,9 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Support.Internal;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.Errors
 {
     public class FileExistsException : WInteropIOException
     {
@@ -21,6 +20,6 @@ namespace WInterop.ErrorHandling
             : this(message, DefaultError, innerException) { }
 
         public FileExistsException(string message, WindowsError error, Exception innerException = null)
-            : base(message, Macros.HRESULT_FROM_WIN32(error), innerException) { }
+            : base(message, Error.HRESULT_FROM_WIN32(error), innerException) { }
     }
 }

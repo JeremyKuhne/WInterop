@@ -153,7 +153,7 @@ namespace WInterop.Storage
                 {
                     // Grab the next directory to parse
                     var next = _pending.Dequeue();
-                    HandleMethods.CloseHandle(_directory);
+                    Handles.Handles.CloseHandle(_directory);
                     _directory = next.Item1;
                     _path = next.Item2;
                     FindNextFile();
@@ -181,10 +181,10 @@ namespace WInterop.Storage
                 if (queue != null)
                 {
                     while (queue.Count > 0)
-                        HandleMethods.CloseHandle(queue.Dequeue().Item1);
+                        Handles.Handles.CloseHandle(queue.Dequeue().Item1);
                 }
 
-                HandleMethods.CloseHandle(_directory);
+                Handles.Handles.CloseHandle(_directory);
             }
 
             ~FindEnumerator()

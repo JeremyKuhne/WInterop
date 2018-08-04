@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 using WInterop.Security.Native;
-using WInterop.Handles.Types;
+using WInterop.Handles;
 
 namespace WInterop.Synchronization
 {

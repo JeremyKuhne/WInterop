@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Devices.Types
+namespace WInterop.Devices
 {
     // Defined in mountdev.h
     public struct MOUNTDEV_STABLE_GUID

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Compression.Types
+namespace WInterop.Compression
 {
     public class LzHandle : IDisposable
     {
@@ -22,7 +22,7 @@ namespace WInterop.Compression.Types
 
         protected virtual void Dispose(bool disposing)
         {
-            CompressionMethods.Imports.LZClose(RawHandle);
+            Compression.Imports.LZClose(RawHandle);
         }
 
         ~LzHandle()

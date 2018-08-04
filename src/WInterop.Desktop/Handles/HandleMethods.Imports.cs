@@ -7,13 +7,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
-using WInterop.Handles.Types;
+using WInterop.Errors;
 using WInterop.SafeString.Types;
 
 namespace WInterop.Handles
 {
-    public static partial class HandleMethods
+    public static partial class Handles
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

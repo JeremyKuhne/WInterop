@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 
 namespace WInterop.Storage
 {

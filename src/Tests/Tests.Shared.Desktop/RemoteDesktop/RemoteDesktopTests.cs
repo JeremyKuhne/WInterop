@@ -7,19 +7,19 @@
 
 using Xunit;
 using FluentAssertions;
-using WInterop.Desktop.RemoteDesktop;
+using WInterop.RemoteDesktop;
 using WInterop.ProcessAndThreads;
 
-namespace DesktopTests.RemoteDesktop
+namespace RemoteDesktopTests
 {
-    public class RemoteDesktopTests
+    public class Basic
     {
         [Fact]
         public void GetCurrentSessionId()
         {
             // This, of course, won't necessarily be true if remotely connected to a full Terminal Server
             // or as an administrator to a Windows server via Remote Desktop for Administration.
-            RemoteDesktopMethods.ProcessIdToSessionId(Processes.GetCurrentProcessId()).Should().Be(1);
+            RemoteDesktop.ProcessIdToSessionId(Processes.GetCurrentProcessId()).Should().Be(1);
         }
 
         [Fact]
@@ -27,8 +27,8 @@ namespace DesktopTests.RemoteDesktop
         {
             // This, of course, won't necessarily be true if remotely connected to a full Terminal Server
             // or as an administrator to a Windows server via Remote Desktop for Administration.
-            RemoteDesktopMethods.GetActiveConsoleSessionId().Should().Be(
-                RemoteDesktopMethods.ProcessIdToSessionId(Processes.GetCurrentProcessId()));
+            RemoteDesktop.GetActiveConsoleSessionId().Should().Be(
+                RemoteDesktop.ProcessIdToSessionId(Processes.GetCurrentProcessId()));
         }
     }
 }

@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using WInterop.Storage;
 
-namespace WInterop.Compression.Types
+namespace WInterop.Compression
 {
     public class LzStream : Stream
     {
@@ -18,8 +18,8 @@ namespace WInterop.Compression.Types
         public LzStream(string path, bool useCreateFile = true)
         {
             _handle = useCreateFile
-                ? CompressionMethods.LzCreateFile(path, out string uncompressedName)
-                : CompressionMethods.LzOpenFile(path, out uncompressedName);
+                ? Compression.LzCreateFile(path, out string uncompressedName)
+                : Compression.LzOpenFile(path, out uncompressedName);
             UncompressedName = uncompressedName;
         }
 
@@ -55,12 +55,12 @@ namespace WInterop.Compression.Types
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            return CompressionMethods.LzRead(_handle, buffer, offset, count);
+            return Compression.LzRead(_handle, buffer, offset, count);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            return CompressionMethods.LzSeek(_handle, checked((int)offset), (MoveMethod)origin);
+            return Compression.LzSeek(_handle, checked((int)offset), (MoveMethod)origin);
         }
 
         public override void SetLength(long value)

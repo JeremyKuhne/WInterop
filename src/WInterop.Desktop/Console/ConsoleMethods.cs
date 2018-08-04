@@ -7,21 +7,19 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Console.Types;
-using WInterop.Support;
+using WInterop.Errors;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Console
 {
-    public static partial class ConsoleMethods
+    public static partial class Console
     {
         public static void FreeConsole()
         {
             if (!Imports.FreeConsole())
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static bool TryFreeConsole()
@@ -42,7 +40,7 @@ namespace WInterop.Console
         public static ConsoleInputMode GetConsoleInputMode(SafeFileHandle inputHandle)
         {
             if (!Imports.GetConsoleMode(inputHandle, out uint mode))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return (ConsoleInputMode)mode;
         }
@@ -50,13 +48,13 @@ namespace WInterop.Console
         public static void SetConsoleInputMode(SafeFileHandle inputHandle, ConsoleInputMode mode)
         {
             if (!Imports.SetConsoleMode(inputHandle, (uint)mode))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static ConsoleOuputMode GetConsoleOutputMode(SafeFileHandle outputHandle)
         {
             if (!Imports.GetConsoleMode(outputHandle, out uint mode))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return (ConsoleOuputMode)mode;
         }
@@ -64,14 +62,14 @@ namespace WInterop.Console
         public static void SetConsoleOutputMode(SafeFileHandle outputHandle, ConsoleOuputMode mode)
         {
             if (!Imports.SetConsoleMode(outputHandle, (uint)mode))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static SafeFileHandle GetStandardHandle(StandardHandleType type)
         {
             IntPtr handle = Imports.GetStdHandle(type);
             if (handle == (IntPtr)(-1))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             // If there is no associated standard handle, return null
             if (handle == IntPtr.Zero)
@@ -91,7 +89,7 @@ namespace WInterop.Console
             {
                 yield return buffer;
             }
-            throw Errors.GetIoExceptionForLastError();
+            throw Error.GetIoExceptionForLastError();
         }
 
         /// <summary>
@@ -104,7 +102,7 @@ namespace WInterop.Console
             if (!Imports.PeekConsoleInputW(inputHandle, ref MemoryMarshal.GetReference(owner.Memory.Span), (uint)count, out uint read))
             {
                 owner.Dispose();
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
             }
 
             return new OwnedMemoryEnumerable<INPUT_RECORD>(owner, 0, (int)read);
@@ -115,7 +113,7 @@ namespace WInterop.Console
             fixed (char* c = &MemoryMarshal.GetReference(text))
             {
                 if (!Imports.WriteConsoleW(outputHandle, c, (uint)text.Length, out uint charsWritten))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
 
                 return charsWritten;
             }

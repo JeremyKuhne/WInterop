@@ -7,7 +7,7 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
-using WInterop.Console.Types;
+using WInterop.Console;
 
 namespace WInterop.Console
 {
@@ -25,14 +25,14 @@ namespace WInterop.Console
         /// <param name="addFlag">Adds the given flags instead of just replacing the existing flags.</param>
         public TemporaryOutputMode(ConsoleOuputMode mode, bool addFlag = false)
         {
-            _handle = ConsoleMethods.GetStandardHandle(StandardHandleType.Output);
-            _mode = ConsoleMethods.GetConsoleOutputMode(_handle);
-            ConsoleMethods.SetConsoleOutputMode(_handle, addFlag ? mode | _mode : mode);
+            _handle = Console.GetStandardHandle(StandardHandleType.Output);
+            _mode = Console.GetConsoleOutputMode(_handle);
+            Console.SetConsoleOutputMode(_handle, addFlag ? mode | _mode : mode);
         }
 
         public void Dispose()
         {
-            ConsoleMethods.SetConsoleOutputMode(_handle, _mode);
+            Console.SetConsoleOutputMode(_handle, _mode);
         }
     }
 }

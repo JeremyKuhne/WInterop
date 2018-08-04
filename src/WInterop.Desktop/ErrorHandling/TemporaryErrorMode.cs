@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.Errors
 {
     /// <summary>
     /// Simple helper class to temporarily enable thread error flag modes if necessary.
@@ -19,10 +19,10 @@ namespace WInterop.ErrorHandling
 
         private TemporaryErrorMode(ErrorMode modesToEnable)
         {
-            _oldMode = ErrorMethods.GetThreadErrorMode();
+            _oldMode = Error.GetThreadErrorMode();
             if ((_oldMode & modesToEnable) != modesToEnable)
             {
-                _oldMode = ErrorMethods.SetThreadErrorMode(_oldMode | modesToEnable);
+                _oldMode = Error.SetThreadErrorMode(_oldMode | modesToEnable);
                 _restoreOldMode = true;
             }
             else
@@ -44,7 +44,7 @@ namespace WInterop.ErrorHandling
             if (_restoreOldMode)
             {
                 _restoreOldMode = false;
-                ErrorMethods.SetThreadErrorMode(_oldMode);
+                Error.SetThreadErrorMode(_oldMode);
             }
         }
     }

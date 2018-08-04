@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Handles.Types;
+using WInterop.Handles;
 
 namespace WInterop.Ipc.Types
 {

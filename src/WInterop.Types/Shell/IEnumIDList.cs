@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nn-shobjidl_core-ienumidlist
     [ComImport,

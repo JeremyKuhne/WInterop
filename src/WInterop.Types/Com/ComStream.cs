@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     /// <summary>
     /// Stream that wraps a COM <see cref="IStream"/>

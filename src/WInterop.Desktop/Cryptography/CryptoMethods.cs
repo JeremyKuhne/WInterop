@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Handles.Types;
+using WInterop.Handles;
 
 namespace WInterop.Cryptography
 {
-    public static partial class CryptoMethods
+    public static partial class Cryptography
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     /// <summary>
     /// Wrapper for an event handle

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     /// <summary>
     /// <see cref="IShellFolder"/> name styles. [SHGDNF]

@@ -8,10 +8,10 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Windows;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nn-shobjidl_core-ishellfolder
     [ComImport,

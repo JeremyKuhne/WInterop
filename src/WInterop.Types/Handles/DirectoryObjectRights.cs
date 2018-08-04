@@ -8,7 +8,7 @@
 using System;
 using WInterop.Security;
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     // https://msdn.microsoft.com/en-us/library/bb470234.aspx
     [Flags]

@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage.Native;
-using WInterop.Handles.Types;
+using WInterop.Handles;
 using WInterop.SafeString.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -47,7 +47,7 @@ namespace WInterop.Storage
         public static BY_HANDLE_FILE_INFORMATION GetFileInformationByHandle(SafeFileHandle fileHandle)
         {
             if (!Imports.GetFileInformationByHandle(fileHandle, out BY_HANDLE_FILE_INFORMATION fileInformation))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return fileInformation;
         }
@@ -59,7 +59,7 @@ namespace WInterop.Storage
         {
             if (!Imports.CreateSymbolicLinkW(symbolicLinkPath, targetPath,
                 targetIsDirectory ? SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_DIRECTORY : SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_FILE))
-                throw Errors.GetIoExceptionForLastError(symbolicLinkPath);
+                throw Error.GetIoExceptionForLastError(symbolicLinkPath);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace WInterop.Storage
 
             SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, lpSecurityAttributes: null, creationDisposition, flags, hTemplateFile: IntPtr.Zero);
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Error.GetIoExceptionForLastError(path);
             return handle;
         }
 
@@ -196,7 +196,7 @@ namespace WInterop.Storage
                     EaLength: 0);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status, path.ToString());
+                    throw Error.GetIoExceptionForNTStatus(status, path.ToString());
 
                 return handle;
             }
@@ -263,7 +263,7 @@ namespace WInterop.Storage
                 pbCancel: ref cancel,
                 dwCopyFlags: overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS))
             {
-                throw Errors.GetIoExceptionForLastError(source);
+                throw Error.GetIoExceptionForLastError(source);
             }
         }
 
@@ -326,7 +326,7 @@ namespace WInterop.Storage
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                    throw Error.GetIoExceptionForNTStatus(status);
 
                 return value->FileName.CreateString();
             });
@@ -342,7 +342,7 @@ namespace WInterop.Storage
                 FileInformationClass: fileInformationClass);
 
             if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                throw Error.GetIoExceptionForNTStatus(status);
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace WInterop.Storage
             NTSTATUS result = Imports.NtQueryInformationFile(fileHandle, out _,
                 &access, (uint)sizeof(FILE_ACCESS_INFORMATION), FileInformationClass.FileAccessInformation);
             if (result != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorMethods.GetIoExceptionForNTStatus(result);
+                throw Error.GetIoExceptionForNTStatus(result);
             return access.AccessFlags;
         }
 
@@ -426,7 +426,7 @@ namespace WInterop.Storage
                             buffer.EnsureByteCapacity((ulong)statusBlock.Information);
                             break;
                         default:
-                            throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                            throw Error.GetIoExceptionForNTStatus(status);
                     }
                 }
 
@@ -456,14 +456,14 @@ namespace WInterop.Storage
                 // QueryDosDevicePrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
                 while ((result = Imports.QueryDosDeviceW(deviceName, buffer, buffer.CharCapacity)) == 0)
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_INSUFFICIENT_BUFFER:
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(error, deviceName);
+                            throw Error.GetIoExceptionForError(error, deviceName);
                     }
                 }
 
@@ -493,7 +493,7 @@ namespace WInterop.Storage
                 }
 
                 if (result == 0)
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
 
                 buffer.Length = result;
                 return buffer.Split('\0', removeEmptyStrings: true);
@@ -509,14 +509,14 @@ namespace WInterop.Storage
             {
                 while (!Imports.GetVolumePathNameW(path, buffer, buffer.CharCapacity))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_FILENAME_EXCED_RANGE:
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(error, path);
+                            throw Error.GetIoExceptionForError(error, path);
                     }
                 }
 
@@ -538,14 +538,14 @@ namespace WInterop.Storage
                 // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
                 while (!Imports.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_MORE_DATA:
                             buffer.EnsureCharCapacity(returnLength);
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(error, volumeName);
+                            throw Error.GetIoExceptionForError(error, volumeName);
                     }
                 }
 
@@ -575,7 +575,7 @@ namespace WInterop.Storage
                 buffer.EnsureCharCapacity(100);
 
                 if (!Imports.GetVolumeNameForVolumeMountPointW(volumeMountPoint, buffer, buffer.CharCapacity))
-                    throw Errors.GetIoExceptionForLastError(volumeMountPoint);
+                    throw Error.GetIoExceptionForLastError(volumeMountPoint);
 
                 buffer.SetLengthToFirstNull();
                 return buffer.ToString();

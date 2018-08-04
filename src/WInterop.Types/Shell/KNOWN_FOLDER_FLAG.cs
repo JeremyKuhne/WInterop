@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd378447.aspx">KNOWN_FOLDER_FLAG</a> enumeration.

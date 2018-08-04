@@ -6,22 +6,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Support.Buffers;
+using WInterop.WindowsStore.Native;
 
-namespace WInterop.Support
+namespace WInterop.WindowsStore
 {
-    public static class Environment
+    public static class WindowsStore
     {
         private static int s_isWinRT = -1;
-
-        /// <summary>
-        /// True if the current process is running in 64 bit.
-        /// </summary>
-        /// <remarks>
-        /// This isn't defined in Portable so we need our own.
-        /// </remarks>
-        public static bool Is64BitProcess = IntPtr.Size == sizeof(ulong);
 
         /// <summary>
         /// Returns true if the current process is a Windows Store application (WinRT).
@@ -35,7 +28,7 @@ namespace WInterop.Support
                     uint bufferSize = buffer.CharCapacity;
                     try
                     {
-                        WindowsError result = Internal.Imports.GetCurrentApplicationUserModelId(ref bufferSize, buffer);
+                        WindowsError result = Imports.GetCurrentApplicationUserModelId(ref bufferSize, buffer);
                         switch (result)
                         {
                             case WindowsError.APPMODEL_ERROR_NO_APPLICATION:
@@ -46,7 +39,7 @@ namespace WInterop.Support
                                 s_isWinRT = 1;
                                 break;
                             default:
-                                throw Errors.GetIoExceptionForError(result);
+                                throw Error.GetIoExceptionForError(result);
                         }
                     }
                     catch (EntryPointNotFoundException)

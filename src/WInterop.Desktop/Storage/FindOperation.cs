@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage.Native;
 
 namespace WInterop.Storage
@@ -50,7 +50,7 @@ namespace WInterop.Storage
                         Debug.Assert(statusBlock.Information.ToInt64() != 0);
                         break;
                     default:
-                        throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                        throw Error.GetIoExceptionForNTStatus(status);
                 }
             }
         }

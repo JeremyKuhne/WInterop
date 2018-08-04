@@ -7,9 +7,9 @@
 
 using System;
 using System.Drawing;
+using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Support;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows
@@ -21,7 +21,7 @@ namespace WInterop.Windows
         {
             HCURSOR handle = Imports.LoadCursorW(ModuleInstance.Null, (char*)(uint)id);
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return new CursorHandle(handle, ownsHandle: false);
         }
@@ -30,7 +30,7 @@ namespace WInterop.Windows
         {
             HCURSOR handle = Imports.LoadCursorFromFileW(path);
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return new CursorHandle(handle, ownsHandle: false);
         }
@@ -48,7 +48,7 @@ namespace WInterop.Windows
         public static void SetSystemCursor(CursorHandle cursor, SystemCursor id)
         {
             if (!Imports.SetSystemCursor(cursor, id))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static int ShowCursor(bool show)
@@ -60,7 +60,7 @@ namespace WInterop.Windows
         {
             CursorHandle copy = Imports.CopyCursor(cursor);
             if (copy.IsInvalid)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return copy;
         }
@@ -68,7 +68,7 @@ namespace WInterop.Windows
         public static Point GetCursorPosition()
         {
             if (!Imports.GetCursorPos(out Point point))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return point;
         }
@@ -76,7 +76,7 @@ namespace WInterop.Windows
         public static Point GetPhysicalCursorPosition()
         {
             if (!Imports.GetPhysicalCursorPos(out Point point))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return point;
         }
@@ -84,43 +84,43 @@ namespace WInterop.Windows
         public static void SetCursorPosition(Point point)
         {
             if (!Imports.SetCursorPos(point.X, point.Y))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static void SetPhysicalCursorPosition(Point point)
         {
             if (!Imports.SetPhysicalCursorPos(point.X, point.Y))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static void CreateCaret(this in WindowHandle window, BitmapHandle bitmap, Size size)
         {
             if (!Imports.CreateCaret(window, bitmap, size.Width, size.Height))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static void DestroyCaret()
         {
             if (!Imports.DestroyCaret())
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static void SetCaretPosition(Point point)
         {
             if (!Imports.SetCaretPos(point.X, point.Y))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static void ShowCaret(this in WindowHandle window)
         {
             if (!Imports.ShowCaret(window))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static void HideCaret(this in WindowHandle window)
         {
             if (!Imports.HideCaret(window))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
     }
 }

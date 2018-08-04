@@ -7,14 +7,15 @@
 
 using FluentAssertions;
 using System;
-using IO = System.IO;
 using System.Linq;
+using Tests.Shared.Support.Resources;
 using Tests.Support;
 using WInterop.Storage;
 using WInterop.Support;
-using Xunit;
-using Tests.Shared.Support.Resources;
 using WInterop.Windows;
+using WInterop.WindowsStore;
+using Xunit;
+using IO = System.IO;
 
 namespace Tests.FileManagementTests
 {
@@ -559,8 +560,8 @@ namespace Tests.FileManagementTests
                 var fileHandle = Storage.CreateFileSystemIo(
                     @"C:\Users",
                     0,                  // We don't care about read or write, we're just getting metadata with this handle
-                    System.IO.FileShare.ReadWrite,
-                    System.IO.FileMode.Open,
+                    IO.FileShare.ReadWrite,
+                    IO.FileMode.Open,
                     0,
                     FileFlags.OpenReparsePoint           // To avoid traversing links
                         | FileFlags.BackupSemantics);    // To open directories
@@ -578,11 +579,11 @@ namespace Tests.FileManagementTests
                 string filePath = cleaner.GetTestPath();
                 using (var stream = Storage.CreateFileStream(
                     path: filePath,
-                    fileAccess: System.IO.FileAccess.Write,
-                    fileShare: System.IO.FileShare.ReadWrite,
-                    fileMode: System.IO.FileMode.Append,
+                    fileAccess: IO.FileAccess.Write,
+                    fileShare: IO.FileShare.ReadWrite,
+                    fileMode: IO.FileMode.Append,
                     fileAttributes: 0,
-                    securityFlags: WInterop.Support.Environment.IsWindowsStoreApplication()
+                    securityFlags: WindowsStore.IsWindowsStoreApplication()
                         ? SecurityQosFlags.None
                         : SecurityQosFlags.QosPresent | SecurityQosFlags.Anonymous))
                 {

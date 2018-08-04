@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Storage;
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     /// <summary>
     /// Statistical data about storage objects.

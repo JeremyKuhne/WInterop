@@ -7,15 +7,14 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Clipboard.Types;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Windows;
 
 namespace WInterop.Clipboard
 {
-    public static partial class ClipboardMethods
+    public static partial class Clipboard
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
@@ -84,7 +83,7 @@ namespace WInterop.Clipboard
                 int count;
                 while ((count = Imports.GetClipboardFormatNameW(format, buffer, (int)buffer.CharCapacity)) == 0)
                 {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(buffer.CharCapacity + 50);
                 }
 
@@ -105,7 +104,7 @@ namespace WInterop.Clipboard
 
             while (!Imports.GetUpdatedClipboardFormats(ref MemoryMarshal.GetReference(buffer.Span), (uint)buffer.Length, out count))
             {
-                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                 buffer.EnsureCapacity((int)count);
             }
 

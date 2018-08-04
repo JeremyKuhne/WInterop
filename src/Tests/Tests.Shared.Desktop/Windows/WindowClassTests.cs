@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using System.IO;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Modules;
 using WInterop.Windows;
 using WInterop.Windows.Native;
@@ -21,7 +21,7 @@ namespace WindowsTests
         [Fact]
         public unsafe void WindowClassSize()
         {
-            sizeof(WNDCLASSEX).Should().Be(WInterop.Support.Environment.Is64BitProcess ? 80 : 48);
+            sizeof(WNDCLASSEX).Should().Be(Environment.Is64BitProcess ? 80 : 48);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace WindowsTests
         {
             Action action = () => Windows.GetClassInfo(null, Path.GetRandomFileName());
             action.Should().Throw<IOException>().And
-                .HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
+                .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace WindowsTests
                 Action action =
                     () => Windows.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
                 action.Should().Throw<IOException>().And
-                    .HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_HANDLE));
+                    .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_HANDLE));
             }
         }
 
@@ -159,7 +159,7 @@ namespace WindowsTests
                 Action action =
                     () => Windows.GetClassInfo(ModuleMethods.GetModuleHandle(null), "RegisterClass_UnregisterClassName");
                 action.Should().Throw<IOException>().And
-                    .HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
+                    .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
             }
         }
 
@@ -188,7 +188,7 @@ namespace WindowsTests
                 {
                     Action action = () => Windows.UnregisterClass(atom, null);
                     action.Should().Throw<IOException>().And
-                        .HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_HAS_WINDOWS));
+                        .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_HAS_WINDOWS));
                 }
                 finally
                 {

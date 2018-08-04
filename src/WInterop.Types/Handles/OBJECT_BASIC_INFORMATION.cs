@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     // The full struct isn't officially documented, names may be wrong.
     //

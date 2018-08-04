@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Support;
 
@@ -67,13 +67,13 @@ namespace Tests.Support
             if (!data.HasValue)
             {
                 // Nothing found
-                throw Errors.GetIoExceptionForError(WindowsError.ERROR_PATH_NOT_FOUND, path);
+                throw Error.GetIoExceptionForError(WindowsError.ERROR_PATH_NOT_FOUND, path);
             }
 
             if ((data.Value.dwFileAttributes & FileAttributes.Directory) != FileAttributes.Directory)
             {
                 // Not a directory, a file
-                throw Errors.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, path);
+                throw Error.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, path);
             }
 
             if ((data.Value.dwFileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)

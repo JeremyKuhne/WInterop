@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Support;
 using Internal = WInterop.Support.Internal;
 
-namespace WInterop.MemoryManagement
+namespace WInterop.Memory
 {
     public static partial class MemoryMethods
     {
@@ -137,7 +137,7 @@ namespace WInterop.MemoryManagement
         public static void LocalFree(IntPtr memory)
         {
             if (Imports.LocalFree(memory) != IntPtr.Zero)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
     }
 }

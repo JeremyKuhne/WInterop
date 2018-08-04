@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Security.Native;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
@@ -39,7 +39,7 @@ namespace WInterop.Security
             };
 
             if (!Imports.PrivilegeCheck(token, &set, out BOOL result))
-                throw Errors.GetIoExceptionForLastError(privilege.ToString());
+                throw Error.GetIoExceptionForLastError(privilege.ToString());
 
             return result;
         }
@@ -76,7 +76,7 @@ namespace WInterop.Security
             }
 
             if (!Imports.PrivilegeCheck(token, set, out BOOL result))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return result;
         }
@@ -108,7 +108,7 @@ namespace WInterop.Security
                     cchReferencedDomainName: ref domainNameLength,
                     peUse: out _))
                 {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     domainNameBuffer.EnsureCharCapacity(domainNameLength);
                 }
 
@@ -130,7 +130,7 @@ namespace WInterop.Security
 
                 if (!Imports.CreateRestrictedToken(token, 0, (uint)sidsToDisable.Length, sids, 0, null, 0, null, out AccessToken restricted))
                 {
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
                 }
 
                 return restricted;
@@ -140,13 +140,13 @@ namespace WInterop.Security
         public static void ImpersonateLoggedOnUser(this AccessToken token)
         {
             if (!Imports.ImpersonateLoggedOnUser(token))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static void RevertToSelf()
         {
             if (!Imports.RevertToSelf())
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         public static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
@@ -161,7 +161,7 @@ namespace WInterop.Security
             }
 
             if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                throw Error.GetIoExceptionForNTStatus(status);
 
             return handle;
         }
@@ -178,14 +178,14 @@ namespace WInterop.Security
         {
             NTSTATUS status = Imports.LsaClose(handle);
             if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                throw Error.GetIoExceptionForNTStatus(status);
         }
 
         public static void LsaFreeMemory(IntPtr handle)
         {
             NTSTATUS status = Imports.LsaFreeMemory(handle);
             if (status != NTSTATUS.STATUS_SUCCESS)
-                throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                throw Error.GetIoExceptionForNTStatus(status);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace WInterop.Security
                 case NTSTATUS.STATUS_SUCCESS:
                     break;
                 default:
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                    throw Error.GetIoExceptionForNTStatus(status);
             }
 
             List<string> rights = new List<string>();

@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.ProcessAndThreads.BufferWrappers;
 using WInterop.ProcessAndThreads.Native;
 using WInterop.Support;
@@ -30,7 +30,7 @@ namespace WInterop.ProcessAndThreads
             if (name == null) throw new ArgumentNullException(nameof(name));
 
             if (!Imports.SetEnvironmentVariableW(name, value))
-                throw Errors.GetIoExceptionForLastError(name);
+                throw Error.GetIoExceptionForLastError(name);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace WInterop.ProcessAndThreads
             if (process == null) process = GetCurrentProcess();
 
             if (!Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(PROCESS_MEMORY_COUNTERS_EX)))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return info;
         }

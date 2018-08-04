@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Windows;
 using Xunit;
 
@@ -36,23 +36,23 @@ namespace DesktopTests
         [Fact]
         public void GetProcessErrorMode()
         {
-            ErrorMode mode = ErrorMethods.GetProcessErrorMode();
+            ErrorMode mode = Error.GetProcessErrorMode();
         }
 
         [Fact]
         public void BasicThreadErrorMode()
         {
-            ErrorMode mode = ErrorMethods.GetThreadErrorMode();
+            ErrorMode mode = Error.GetThreadErrorMode();
             ErrorMode newMode = mode ^ ErrorMode.SEM_NOOPENFILEERRORBOX;
-            ErrorMode oldMode = ErrorMethods.SetThreadErrorMode(newMode);
+            ErrorMode oldMode = Error.SetThreadErrorMode(newMode);
             try
             {
                 oldMode.Should().Be(mode);
-                ErrorMethods.GetThreadErrorMode().Should().Be(newMode);
+                Error.GetThreadErrorMode().Should().Be(newMode);
             }
             finally
             {
-                ErrorMethods.SetThreadErrorMode(mode).Should().Be(newMode);
+                Error.SetThreadErrorMode(mode).Should().Be(newMode);
             }
         }
 
@@ -64,7 +64,7 @@ namespace DesktopTests
             ]
         public void ConvertNtStatus(NTSTATUS status, WindowsError expected)
         {
-            ErrorMethods.NtStatusToWinError(status).Should().Be(expected);
+            Error.NtStatusToWinError(status).Should().Be(expected);
         }
     }
 }

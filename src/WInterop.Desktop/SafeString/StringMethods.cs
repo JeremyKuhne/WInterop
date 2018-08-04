@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.SafeString.Types;
 
 namespace WInterop.SafeString
@@ -16,8 +16,8 @@ namespace WInterop.SafeString
         {
             NTSTATUS status = Imports.RtlUpcaseUnicodeString(ref value, ref value, false);
 
-            if (!ErrorMacros.NT_SUCCESS(status))
-                ErrorMethods.GetIoExceptionForNTStatus(status);
+            if (!Error.NT_SUCCESS(status))
+                Error.GetIoExceptionForNTStatus(status);
         }
     }
 }

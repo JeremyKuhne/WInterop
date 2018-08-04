@@ -5,8 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using WInterop.Errors;
 using WInterop.ProcessAndThreads.Native;
-using WInterop.Support;
 
 namespace WInterop.ProcessAndThreads
 {
@@ -31,7 +31,7 @@ namespace WInterop.ProcessAndThreads
         {
             SafeProcessHandle handle = Imports.OpenProcess(desiredAccess, inheritHandle, processId);
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
             return handle;
         }
     }

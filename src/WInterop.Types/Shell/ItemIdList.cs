@@ -5,9 +5,9 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Com.Types;
+using WInterop.Com;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     /// <summary>
     /// List of item ids in the shell.

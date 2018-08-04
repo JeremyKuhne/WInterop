@@ -7,12 +7,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
-using WInterop.Support;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.Errors
 {
-    public static partial class ErrorMethods
+    public static partial class Error
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
@@ -63,7 +61,7 @@ namespace WInterop.ErrorHandling
         public static ErrorMode SetThreadErrorMode(ErrorMode mode)
         {
             if (!Imports.SetThreadErrorMode(mode, out ErrorMode oldMode))
-                throw Errors.GetIoExceptionForLastError();
+                throw GetIoExceptionForLastError();
 
             return oldMode;
         }
@@ -80,7 +78,7 @@ namespace WInterop.ErrorHandling
                     return new NotImplementedException(path ?? WInteropStrings.NoValue);
             }
 
-            return Errors.GetIoExceptionForError(ErrorMethods.NtStatusToWinError(status), path);
+            return GetIoExceptionForError(NtStatusToWinError(status), path);
         }
     }
 }

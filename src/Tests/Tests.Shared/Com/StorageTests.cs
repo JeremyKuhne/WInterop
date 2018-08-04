@@ -10,12 +10,11 @@ using System;
 using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop.Com;
-using WInterop.Com.Types;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
 using Xunit;
 
-namespace Tests.Com
+namespace ComTests
 {
     public class StorageTests
     {
@@ -143,7 +142,7 @@ namespace Tests.Com
                 storage.Commit();
 
                 IEnumSTATSTG e = storage.EnumElements();
-                WInterop.Com.Types.STATSTG stat = default;
+                WInterop.Com.STATSTG stat = default;
                 int count = 0;
                 while (e.Next(1, ref stat) > 0)
                 {

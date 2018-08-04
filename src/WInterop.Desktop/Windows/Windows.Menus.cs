@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Support;
+using WInterop.Errors;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows
@@ -17,7 +17,7 @@ namespace WInterop.Windows
         {
             MenuHandle menu = new MenuHandle(Imports.CreateMenu(), ownsHandle: true);
             if (menu.IsInvalid)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
             return menu;
         }
 
@@ -30,7 +30,7 @@ namespace WInterop.Windows
             fixed (char* c = text)
             {
                 if (!Imports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
             }
         }
     }

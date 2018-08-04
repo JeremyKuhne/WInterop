@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Security;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.NetworkManagement.Types;
 using WInterop.Support;
 
@@ -111,7 +111,7 @@ namespace WInterop.NetworkManagement
         {
             WindowsError result = Imports.NetApiBufferFree(buffer);
             if (result != WindowsError.NERR_Success)
-                throw Errors.GetIoExceptionForError(result);
+                throw Error.GetIoExceptionForError(result);
         }
 
         public unsafe static void AddLocalGroup(string groupName, string comment = null, string server = null)
@@ -131,7 +131,7 @@ namespace WInterop.NetworkManagement
                         parm_err: out uint parameter);
 
                     if (result != WindowsError.NERR_Success)
-                        throw Errors.GetIoExceptionForError(result, groupName);
+                        throw Error.GetIoExceptionForError(result, groupName);
                 }
             }
         }
@@ -150,7 +150,7 @@ namespace WInterop.NetworkManagement
                 resumehandle: IntPtr.Zero);
 
             if (result != WindowsError.NERR_Success)
-                throw Errors.GetIoExceptionForError(result, server);
+                throw Error.GetIoExceptionForError(result, server);
 
             foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
             {
@@ -175,7 +175,7 @@ namespace WInterop.NetworkManagement
                 resumehandle: IntPtr.Zero);
 
             if (result != WindowsError.NERR_Success)
-                throw Errors.GetIoExceptionForError(result, server);
+                throw Error.GetIoExceptionForError(result, server);
 
             foreach (Imports.LOCALGROUP_MEMBERS_INFO_1 info in ReadStructsFromBuffer<Imports.LOCALGROUP_MEMBERS_INFO_1>(buffer, entriesRead))
             {

@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     /// <summary>
     /// Use to scope unwrapping safe handles.

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     /// <summary>
     /// Storage commit options. [STGC]

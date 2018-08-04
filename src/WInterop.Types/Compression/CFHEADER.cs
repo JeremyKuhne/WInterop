@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Compression.Types
+namespace WInterop.Compression
 {
     // https://msdn.microsoft.com/en-us/library/bb417343.aspx#cfheader
     /// <summary>

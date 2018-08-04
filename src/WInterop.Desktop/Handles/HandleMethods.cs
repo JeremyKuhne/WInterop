@@ -9,14 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
-using WInterop.Handles.Types;
+using WInterop.Errors;
+using WInterop.Handles;
 using WInterop.SafeString.Types;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Handles
 {
-    public static partial class HandleMethods
+    public static partial class Handles
     {
         // Windows Kernel Architecture Internals
         // http://research.microsoft.com/en-us/um/redmond/events/wincore2010/Dave_Probert_1.pdf
@@ -43,7 +43,7 @@ namespace WInterop.Handles
                     ObjectAttributes: ref attributes);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status, path);
+                    throw Error.GetIoExceptionForNTStatus(status, path);
 
                 return directory;
             });
@@ -64,7 +64,7 @@ namespace WInterop.Handles
                     ObjectAttributes: ref attributes);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status, path);
+                    throw Error.GetIoExceptionForNTStatus(status, path);
 
                 return link;
             });
@@ -112,7 +112,7 @@ namespace WInterop.Handles
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                    throw Error.GetIoExceptionForNTStatus(status);
 
                 buffer.Length = (uint)(target.Length / sizeof(char));
                 return buffer.ToString();
@@ -157,7 +157,7 @@ namespace WInterop.Handles
                 } while (status == NTSTATUS.STATUS_MORE_ENTRIES);
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                    throw Error.GetIoExceptionForNTStatus(status);
             });
 
             return infos.OrderBy(i => i.Name); ;
@@ -198,8 +198,8 @@ namespace WInterop.Handles
                         ReturnLength: out returnLength);
                 }
 
-                if (!ErrorMacros.NT_SUCCESS(status))
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                if (!Error.NT_SUCCESS(status))
+                    throw Error.GetIoExceptionForNTStatus(status);
 
                 return ((UNICODE_STRING*)(buffer.VoidPointer))->ToString();
             });
@@ -229,8 +229,8 @@ namespace WInterop.Handles
                         ReturnLength: out returnLength);
                 }
 
-                if (!ErrorMacros.NT_SUCCESS(status))
-                    throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                if (!Error.NT_SUCCESS(status))
+                    throw Error.GetIoExceptionForNTStatus(status);
 
                 return ((OBJECT_TYPE_INFORMATION*)(buffer.VoidPointer))->TypeName.ToString();
             });

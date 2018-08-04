@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     /// <summary>
     /// Stat flags for <see cref="IStorage.Stat(out STATSTG, StatFlag)"/>.

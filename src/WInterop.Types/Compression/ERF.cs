@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Compression.Types
+namespace WInterop.Compression
 {
     // https://msdn.microsoft.com/en-us/library/bb432257.aspx
     public struct ERF

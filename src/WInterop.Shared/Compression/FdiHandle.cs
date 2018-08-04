@@ -5,9 +5,9 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Handles.Types;
+using WInterop.Handles;
 
-namespace WInterop.Compression.Types
+namespace WInterop.Compression
 {
     public class FdiHandle : HandleZeroOrMinusOneIsInvalid
     {
@@ -15,7 +15,7 @@ namespace WInterop.Compression.Types
 
         protected override bool ReleaseHandle()
         {
-            return CompressionMethods.Imports.FDIDestroy(handle);
+            return Compression.Imports.FDIDestroy(handle);
         }
     }
 }

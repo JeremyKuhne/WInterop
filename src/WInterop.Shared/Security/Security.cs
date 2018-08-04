@@ -10,9 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Security.Native;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.ProcessAndThreads;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Security
@@ -90,7 +89,7 @@ namespace WInterop.Security
         private static LUID LookupPrivilegeValue(Privilege privilege)
         {
             if (!Imports.LookupPrivilegeValueW(null, GetPrivilegeConstant(privilege), out LUID luid))
-                throw Errors.GetIoExceptionForLastError(privilege.ToString());
+                throw Errors.Error.GetIoExceptionForLastError(privilege.ToString());
 
             return luid;
         }
@@ -106,7 +105,7 @@ namespace WInterop.Security
             uint length = (uint)nameBuffer.Length;
             while (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, ref MemoryMarshal.GetReference(nameBuffer), ref length))
             {
-                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                Errors.Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                 char* n = stackalloc char[(int)length];
                 nameBuffer = new Span<char>(n, (int)length);
             }
@@ -128,7 +127,7 @@ namespace WInterop.Security
                     (uint)buffer.ByteCapacity,
                     out uint bytesNeeded))
                 {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Errors.Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureByteCapacity(bytesNeeded);
                 }
 
@@ -143,7 +142,7 @@ namespace WInterop.Security
         {
             TokenStatistics stats = default;
             if (!Imports.GetTokenInformation(token, TokenInformation.Statistics, &stats, (uint)sizeof(TokenStatistics), out uint _))
-                throw Errors.GetIoExceptionForLastError();
+                throw Errors.Error.GetIoExceptionForLastError();
             return stats;
         }
 
@@ -179,21 +178,22 @@ namespace WInterop.Security
         /// </summary>
         public unsafe static IEnumerable<SidAndAttributes> GetTokenGroupSids(this AccessToken token)
         {
-            List<SidAndAttributes> info = null;
+            SidAndAttributes[] info = null;
 
             TokenInformationInvoke(token, TokenInformation.Groups,
-            buffer =>
-            {
-                TOKEN_GROUPS* groups = (TOKEN_GROUPS*)buffer;
-                ReadOnlySpan<SID_AND_ATTRIBUTES> data = new ReadOnlySpan<SID_AND_ATTRIBUTES>(&groups->Groups, (int)groups->GroupCount);
-                info = new List<SidAndAttributes>(data.Length);
-
-                // Copy the SID pointers into our own SID structs.
-                for (int i = 0; i < data.Length; i++)
+                buffer =>
                 {
-                    info.Add(new SidAndAttributes(CopySid(data[i].Sid), data[i].Attributes));
-                }
-            });
+                    TOKEN_GROUPS* groups = (TOKEN_GROUPS*)buffer;
+                    info = new SidAndAttributes[(int)groups->GroupCount];
+                    SID_AND_ATTRIBUTES* group = &groups->Groups;
+
+                    // Copy the SID pointers into our own SID structs.
+                    for (int i = 0; i < info.Length; i++)
+                    {
+                        info[i] = new SidAndAttributes(
+                            CopySid(group[i].Sid), group[i].Attributes);
+                    }
+                });
 
             return info;
         }
@@ -208,7 +208,7 @@ namespace WInterop.Security
             byte* buffer = stackalloc byte[size];
 
             if (!Imports.GetTokenInformation(token, TokenInformation.User, buffer, (uint)size, out uint _))
-                throw Errors.GetIoExceptionForLastError();
+                throw Errors.Error.GetIoExceptionForLastError();
 
             TOKEN_USER* user = (TOKEN_USER*)buffer;
             return new SidAndAttributes(CopySid(user->User.Sid), user->User.Attributes);
@@ -224,7 +224,7 @@ namespace WInterop.Security
             byte* buffer = stackalloc byte[size];
 
             if (!Imports.GetTokenInformation(token, TokenInformation.Owner, buffer, (uint)size, out uint _))
-                throw Errors.GetIoExceptionForLastError();
+                throw Errors.Error.GetIoExceptionForLastError();
 
             return CopySid(((TOKEN_OWNER*)buffer)->Owner);
         }
@@ -239,7 +239,7 @@ namespace WInterop.Security
             byte* buffer = stackalloc byte[size];
 
             if (!Imports.GetTokenInformation(token, TokenInformation.PrimaryGroup, buffer, (uint)size, out uint _))
-                throw Errors.GetIoExceptionForLastError();
+                throw Errors.Error.GetIoExceptionForLastError();
 
             return CopySid(((TOKEN_PRIMARY_GROUP*)buffer)->PrimaryGroup);
         }
@@ -253,7 +253,7 @@ namespace WInterop.Security
 
             uint size = (uint)sizeof(SID);
             if (!Imports.CreateWellKnownSid(sidType, null, &sid, ref size))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return sid;
         }
@@ -275,7 +275,7 @@ namespace WInterop.Security
         public unsafe static string ConvertSidToString(this in SID sid)
         {
             if (!Imports.ConvertSidToStringSidW(sid, out var handle))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return new string((char*)handle);
         }
@@ -287,7 +287,7 @@ namespace WInterop.Security
         {
             byte* b = Imports.GetSidSubAuthorityCount(sid);
             if (b == null)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return *b;
         }
@@ -299,7 +299,7 @@ namespace WInterop.Security
         {
             uint* u = Imports.GetSidSubAuthority(sid, nSubAuthority);
             if (u == null)
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return *u;
         }
@@ -307,7 +307,7 @@ namespace WInterop.Security
         private static unsafe SID CopySid(SID* source)
         {
             if (!Imports.CopySid((uint)sizeof(SID), out SID destination, source))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
             return destination;
         }
 
@@ -350,7 +350,7 @@ namespace WInterop.Security
                     ref domainNameCharCapacity,
                     out usage))
                 {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     nameBuffer.EnsureCharCapacity(nameCharCapacity);
                     domainNameBuffer.EnsureCharCapacity(domainNameCharCapacity);
                 }
@@ -375,7 +375,7 @@ namespace WInterop.Security
         public static AccessToken OpenProcessToken(AccessTokenRights desiredAccess)
         {
             if (!Imports.OpenProcessToken(Processes.GetCurrentProcess(), desiredAccess, out var processToken))
-                throw Errors.GetIoExceptionForLastError(desiredAccess.ToString());
+                throw Error.GetIoExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
         }
@@ -395,7 +395,7 @@ namespace WInterop.Security
                     (uint)sizeof(TOKEN_ELEVATION),
                     out _))
                 {
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
                 }
 
                 return elevation.TokenIsElevated;
@@ -412,7 +412,7 @@ namespace WInterop.Security
             if (!Imports.OpenThreadToken(Threads.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
                 // Threads only have their own token if the are impersonating, otherwise they inherit process
-                Errors.ThrowIfLastErrorNot(WindowsError.ERROR_NO_TOKEN);
+                Error.ThrowIfLastErrorNot(WindowsError.ERROR_NO_TOKEN);
                 return null;
             }
 
@@ -440,7 +440,7 @@ namespace WInterop.Security
                 TokenType.Impersonation,
                 out AccessToken duplicatedToken))
             {
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
             }
 
             return duplicatedToken;
@@ -449,7 +449,7 @@ namespace WInterop.Security
         public static void SetThreadToken(this ThreadHandle thread, AccessToken token)
         {
             if (!Imports.SetThreadToken(thread, token))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
     }
 }

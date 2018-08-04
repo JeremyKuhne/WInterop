@@ -9,8 +9,8 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Security;
 using WInterop.Security.Native;
-using WInterop.Com.Types;
-using WInterop.ErrorHandling;
+using WInterop.Com;
+using WInterop.Errors;
 using WInterop.Storage;
 
 namespace WInterop.Com

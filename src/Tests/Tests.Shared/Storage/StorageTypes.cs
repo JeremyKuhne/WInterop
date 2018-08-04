@@ -5,12 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using FluentAssertions;
+using System;
+using WInterop.Storage;
+using Xunit;
+
 namespace Tests.File
 {
-    using FluentAssertions;
-    using WInterop.Storage;
-    using Xunit;
-
     public class FileManagementTypes
     {
         [Fact]
@@ -33,7 +34,7 @@ namespace Tests.File
         [Fact]
         public unsafe void CopyFile2MessageSize()
         {
-            sizeof(COPYFILE2_MESSAGE).Should().Be(WInterop.Support.Environment.Is64BitProcess ? 80 : 72);
+            sizeof(COPYFILE2_MESSAGE).Should().Be(Environment.Is64BitProcess ? 80 : 72);
         }
     }
 }

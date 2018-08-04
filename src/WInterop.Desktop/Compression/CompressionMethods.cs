@@ -8,16 +8,15 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using WInterop.Compression.Types;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
-using WInterop.Handles.Types;
+using WInterop.Handles;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Compression
 {
-    public static partial class CompressionMethods
+    public static partial class Compression
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
@@ -215,9 +214,9 @@ namespace WInterop.Compression
             if (!throwOnError || result >= 0)
                 return result;
 
-            WindowsError error = Errors.GetLastError();
+            WindowsError error = Error.GetLastError();
             if (error != WindowsError.ERROR_SUCCESS)
-                throw Errors.GetIoExceptionForError(error, path);
+                throw Error.GetIoExceptionForError(error, path);
 
             throw new LzException((LzError)result, path);
         }
@@ -329,7 +328,7 @@ namespace WInterop.Compression
             bool useCreateFile = true)
         {
             if (!overwrite && Storage.Storage.PathExists(destination))
-                throw Errors.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, destination);
+                throw Error.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, destination);
 
             using (LzHandle sourceHandle = useCreateFile ? LzCreateFile(source) : LzOpenFile(source))
             {

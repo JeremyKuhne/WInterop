@@ -7,7 +7,7 @@
 
 
 using FluentAssertions;
-using WInterop.Devices.Types;
+using WInterop.Devices;
 using Xunit;
 
 namespace Tests.Devices

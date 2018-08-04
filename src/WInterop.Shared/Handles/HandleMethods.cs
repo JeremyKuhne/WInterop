@@ -7,12 +7,12 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 using WInterop.ProcessAndThreads;
-using WInterop.Support;
 
 namespace WInterop.Handles
 {
-    public static partial class HandleMethods
+    public static partial class Handles
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
@@ -37,7 +37,7 @@ namespace WInterop.Handles
         public static void CloseHandle(IntPtr handle)
         {
             if (!Imports.CloseHandle(handle))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
     }
 }

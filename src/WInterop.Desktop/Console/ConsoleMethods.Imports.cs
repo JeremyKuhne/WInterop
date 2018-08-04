@@ -7,11 +7,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Console.Types;
+using WInterop.Console;
 
 namespace WInterop.Console
 {
-    public static partial class ConsoleMethods
+    public static partial class Console
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

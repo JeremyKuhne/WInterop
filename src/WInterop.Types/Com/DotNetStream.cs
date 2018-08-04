@@ -8,9 +8,9 @@
 using System;
 using System.Buffers;
 using System.IO;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     public class DotNetStream : IStream
     {

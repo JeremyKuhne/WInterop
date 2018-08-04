@@ -12,13 +12,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Security;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage.BufferWrappers;
 using WInterop.Storage.Native;
-using WInterop.MemoryManagement;
+using WInterop.Memory;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Synchronization.Types;
+using WInterop.Synchronization;
 
 namespace WInterop.Storage
 {
@@ -124,7 +124,7 @@ namespace WInterop.Storage
                     uUnique: 0,
                     lpTempFileName: buffer);
 
-                if (result == 0) throw Errors.GetIoExceptionForLastError(path);
+                if (result == 0) throw Errors.Error.GetIoExceptionForLastError(path);
 
                 buffer.SetLengthToFirstNull();
                 return buffer.ToString();
@@ -137,7 +137,7 @@ namespace WInterop.Storage
         public static void DeleteFile(string path)
         {
             if (!Imports.DeleteFileW(path))
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Errors.Error.GetIoExceptionForLastError(path);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace WInterop.Storage
                 pCreateExParams: ref extended);
 
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError(path.ToString());
+                throw Error.GetIoExceptionForLastError(path.ToString());
 
             return handle;
         }
@@ -327,8 +327,8 @@ namespace WInterop.Storage
             };
 
             HRESULT hr = Imports.CopyFile2(source, destination,  ref parameters);
-            if (ErrorMacros.FAILED(hr))
-                throw Errors.GetIoExceptionForHResult(hr, source);
+            if (Error.FAILED(hr))
+                throw Error.GetIoExceptionForHResult(hr, source);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace WInterop.Storage
         {
             FileAttributes attributes = Imports.GetFileAttributesW(path);
             if (attributes == FileAttributes.Invalid)
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Error.GetIoExceptionForLastError(path);
 
             return attributes;
         }
@@ -371,7 +371,7 @@ namespace WInterop.Storage
         public static WIN32_FILE_ATTRIBUTE_DATA GetFileAttributesEx(string path)
         {
             if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Error.GetIoExceptionForLastError(path);
 
             return data;
         }
@@ -413,12 +413,12 @@ namespace WInterop.Storage
         {
             if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
             {
-                WindowsError error = Errors.GetLastError();
+                WindowsError error = Error.GetLastError();
                 switch (error)
                 {
                     case WindowsError.ERROR_ACCESS_DENIED:
                     case WindowsError.ERROR_NETWORK_ACCESS_DENIED:
-                        throw Errors.GetIoExceptionForError(error, path);
+                        throw Error.GetIoExceptionForError(error, path);
                     case WindowsError.ERROR_PATH_NOT_FOUND:
                     default:
                         return null;
@@ -434,7 +434,7 @@ namespace WInterop.Storage
         public static void SetFileAttributes(string path, FileAttributes attributes)
         {
             if (!Imports.SetFileAttributesW(path, attributes))
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Error.GetIoExceptionForLastError(path);
         }
 
         /// <summary>
@@ -443,7 +443,7 @@ namespace WInterop.Storage
         public static void FlushFileBuffers(SafeFileHandle fileHandle)
         {
             if (!Imports.FlushFileBuffers(fileHandle))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         /// <summary>
@@ -465,14 +465,14 @@ namespace WInterop.Storage
                         buffer.VoidPointer,
                         checked((uint)buffer.ByteCapacity)))
                     {
-                        WindowsError error = Errors.GetLastError();
+                        WindowsError error = Error.GetLastError();
                         if (error != WindowsError.ERROR_MORE_DATA)
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                         buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                     }
                 }
 
-                return ((FILE_NAME_INFORMATION*)buffer.VoidPointer)->FileName.CreateString();
+                return (((FILE_NAME_INFORMATION*)buffer.VoidPointer)->FileName).CreateString();
             });
         }
 
@@ -489,7 +489,7 @@ namespace WInterop.Storage
                     FileInfoClass.FileStandardInfo,
                     &info,
                     (uint)sizeof(FILE_STANDARD_INFORMATION)))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
             }
 
             return new FileStandardInfo(info);
@@ -508,7 +508,7 @@ namespace WInterop.Storage
                     FileInfoClass.FileBasicInfo,
                     &info,
                     (uint)sizeof(FILE_BASIC_INFORMATION)))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
             }
             return new FileBasicInfo(info);
         }
@@ -525,7 +525,7 @@ namespace WInterop.Storage
                     while (!Imports.GetFileInformationByHandleEx(fileHandle, FileInfoClass.FileStreamInfo,
                         buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
                     {
-                        WindowsError error = Errors.GetLastError();
+                        WindowsError error = Error.GetLastError();
                         switch (error)
                         {
                             case WindowsError.ERROR_HANDLE_EOF:
@@ -535,7 +535,7 @@ namespace WInterop.Storage
                                 buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                                 break;
                             default:
-                                throw Errors.GetIoExceptionForError(error);
+                                throw Error.GetIoExceptionForError(error);
                         }
                     }
                 }
@@ -562,12 +562,12 @@ namespace WInterop.Storage
             {
                 OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
                 if (!Imports.ReadFile(fileHandle, ref MemoryMarshal.GetReference(buffer), (uint)buffer.Length, out numberOfBytesRead, &overlapped))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
             }
             else
             {
                 if (!Imports.ReadFile(fileHandle, ref MemoryMarshal.GetReference(buffer), (uint)buffer.Length, out numberOfBytesRead, null))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
             }
 
             return numberOfBytesRead;
@@ -592,12 +592,12 @@ namespace WInterop.Storage
             {
                 OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
                 if (!Imports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, &overlapped))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
             }
             else
             {
                 if (!Imports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, null))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
             }
 
             return numberOfBytesWritten;
@@ -612,7 +612,7 @@ namespace WInterop.Storage
         public static long SetFilePointer(SafeFileHandle fileHandle, long distance, MoveMethod moveMethod)
         {
             if (!Imports.SetFilePointerEx(fileHandle, distance, out long position, moveMethod))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return position;
         }
@@ -631,7 +631,7 @@ namespace WInterop.Storage
         public static long GetFileSize(SafeFileHandle fileHandle)
         {
             if (!Imports.GetFileSizeEx(fileHandle, out long size))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return size;
         }
@@ -643,7 +643,7 @@ namespace WInterop.Storage
         {
             FileType fileType = Imports.GetFileType(fileHandle);
             if (fileType == FileType.Unknown)
-                Errors.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
+                Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
             return fileType;
         }
@@ -699,7 +699,7 @@ namespace WInterop.Storage
                         buffer.VoidPointer,
                         (uint)buffer.ByteCapacity))
                     {
-                        var error = Errors.GetLastError();
+                        var error = Error.GetLastError();
                         switch (error)
                         {
                             case WindowsError.ERROR_BAD_LENGTH:
@@ -714,7 +714,7 @@ namespace WInterop.Storage
                                 // Nothing left to get
                                 return;
                             default:
-                                throw Errors.GetIoExceptionForError(error);
+                                throw Error.GetIoExceptionForError(error);
                         }
                     }
 
@@ -765,7 +765,7 @@ namespace WInterop.Storage
                 ppSecurityDescriptor: &descriptor);
 
             if (result != WindowsError.ERROR_SUCCESS)
-                throw Errors.GetIoExceptionForError(result);
+                throw Error.GetIoExceptionForError(result);
 
             SID sid = new SID(sidp);
             MemoryMethods.LocalFree((IntPtr)(descriptor));
@@ -778,7 +778,7 @@ namespace WInterop.Storage
         public static void RemoveDirectory(string path)
         {
             if (!Imports.RemoveDirectoryW(path))
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Error.GetIoExceptionForLastError(path);
         }
 
         /// <summary>
@@ -787,7 +787,7 @@ namespace WInterop.Storage
         public static void CreateDirectory(string path)
         {
             if (!Imports.CreateDirectoryW(path, IntPtr.Zero))
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Error.GetIoExceptionForLastError(path);
         }
 
         /// <summary>
@@ -827,7 +827,7 @@ namespace WInterop.Storage
         public static void SetCurrentDirectory(StringSpan path)
         {
             if (!Imports.SetCurrentDirectoryW(ref MemoryMarshal.GetReference(path.GetSpanWithoutTerminator())))
-                throw Errors.GetIoExceptionForLastError(path.ToString());
+                throw Error.GetIoExceptionForLastError(path.ToString());
         }
 
         /// <summary>
@@ -862,7 +862,7 @@ namespace WInterop.Storage
                     out FileSystemFeature flags,
                     fileSystemName,
                     fileSystemName.CharCapacity))
-                    throw Errors.GetIoExceptionForLastError(rootPath);
+                    throw Error.GetIoExceptionForLastError(rootPath);
 
                 volumeName.SetLengthToFirstNull();
                 fileSystemName.SetLengthToFirstNull();
@@ -892,7 +892,7 @@ namespace WInterop.Storage
                     lpNumberOfFreeClusters: &freeSpace.NumberOfFreeClusters,
                     lpTotalNumberOfClusters: &freeSpace.TotalNumberOfClusters))
                 {
-                    throw Errors.GetIoExceptionForLastError(directory);
+                    throw Error.GetIoExceptionForLastError(directory);
                 }
             }
 
@@ -911,7 +911,7 @@ namespace WInterop.Storage
                     lpTotalNumberOfBytes: &freeSpace.TotalNumberOfBytes,
                     lpTotalNumberOfFreeBytes: &freeSpace.TotalNumberOfFreeBytes))
                 {
-                    throw Errors.GetIoExceptionForLastError(directory);
+                    throw Error.GetIoExceptionForLastError(directory);
                 }
             }
 

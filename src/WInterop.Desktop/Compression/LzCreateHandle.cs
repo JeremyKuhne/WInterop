@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Compression.Types
+namespace WInterop.Compression
 {
     public class LzCreateHandle : LzHandle
     {
@@ -13,7 +13,7 @@ namespace WInterop.Compression.Types
 
         protected override void Dispose(bool disposing)
         {
-            CompressionMethods.Imports.LZCloseFile(RawHandle);
+            Compression.Imports.LZCloseFile(RawHandle);
         }
     }
 }

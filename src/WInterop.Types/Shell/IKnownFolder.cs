@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761768.aspx
     [ComImport,

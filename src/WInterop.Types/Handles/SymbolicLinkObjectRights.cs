@@ -8,7 +8,7 @@
 using System;
 using WInterop.Security;
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     [Flags]
     public enum SymbolicLinkObjectRights : uint

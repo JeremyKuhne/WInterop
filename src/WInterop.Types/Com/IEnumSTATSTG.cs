@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379217.aspx
     [ComImport,

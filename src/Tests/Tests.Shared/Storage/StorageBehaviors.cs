@@ -9,7 +9,7 @@ using FluentAssertions;
 using Microsoft.Win32.SafeHandles;
 using System;
 using Tests.Support;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Storage.Native;
 using WInterop.Support;
@@ -192,7 +192,7 @@ namespace Tests.File
                 }
 
                 result = Imports.FindFirstFileW(cleaner.GetTestPath(), out findData);
-                WindowsError error = Errors.GetLastError();
+                WindowsError error = Error.GetLastError();
 
                 try
                 {
@@ -206,7 +206,7 @@ namespace Tests.File
                 }
 
                 result = Imports.FindFirstFileW(Paths.Combine(cleaner.GetTestPath(), "NotHere"), out findData);
-                error = Errors.GetLastError();
+                error = Error.GetLastError();
 
                 try
                 {
@@ -236,12 +236,12 @@ namespace Tests.File
                 success.Should().BeTrue("root location exists");
                 success = Imports.GetFileAttributesExW(cleaner.GetTestPath(),
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
-                WindowsError error = Errors.GetLastError();
+                WindowsError error = Error.GetLastError();
                 success.Should().BeFalse("non-existant file");
                 error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
                 success = Imports.GetFileAttributesExW(Paths.Combine(cleaner.GetTestPath(), "NotHere"),
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
-                error = Errors.GetLastError();
+                error = Error.GetLastError();
                 success.Should().BeFalse("non-existant subdir");
                 error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
             }
@@ -319,7 +319,7 @@ namespace Tests.File
 
                     // RemoveDirectory API call will throw
                     Action action = () => Storage.RemoveDirectory(directory);
-                    action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_DIR_NOT_EMPTY));
+                    action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_DIR_NOT_EMPTY));
 
                     // Opening the directory for deletion will succeed, but have no impact
                     using (var directoryHandle = Storage.CreateFile(

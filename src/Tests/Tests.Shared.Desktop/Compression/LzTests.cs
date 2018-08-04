@@ -11,12 +11,11 @@ using System.IO;
 using System.Text;
 using Tests.Support;
 using WInterop.Compression;
-using WInterop.Compression.Types;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Support;
 using Xunit;
 
-namespace DesktopTests.Compression
+namespace CompressionTests
 {
     public class LzTests
     {
@@ -76,7 +75,7 @@ namespace DesktopTests.Compression
                 string source = cleaner.CreateTestFile(CompressedFile2);
                 string destination = cleaner.GetTestPath();
 
-                CompressionMethods.LzCopyFile(source, destination, false, useCreateFile).Should().Be(563);
+                Compression.LzCopyFile(source, destination, false, useCreateFile).Should().Be(563);
 
                 FileHelper.ReadAllText(destination).Should().Be(CompressedContent2);
             }
@@ -92,7 +91,7 @@ namespace DesktopTests.Compression
                 string source = cleaner.CreateTestFile(CompressedFile2);
                 string destination = cleaner.CreateTestFile($"CopyFile_OverExisting({useCreateFile})");
 
-                CompressionMethods.LzCopyFile(source, destination, overwrite: true, useCreateFile: useCreateFile).Should().Be(563);
+                Compression.LzCopyFile(source, destination, overwrite: true, useCreateFile: useCreateFile).Should().Be(563);
                 FileHelper.ReadAllText(destination).Should().Be(CompressedContent2);
             }
         }
@@ -107,8 +106,8 @@ namespace DesktopTests.Compression
                 string source = cleaner.CreateTestFile(CompressedFile2);
                 string destination = cleaner.CreateTestFile($"CopyFile_NotOverExisting({useCreateFile})");
 
-                Action action = () => CompressionMethods.LzCopyFile(source, destination, overwrite: false, useCreateFile: useCreateFile);
-                action.Should().Throw<IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_FILE_EXISTS));
+                Action action = () => Compression.LzCopyFile(source, destination, overwrite: false, useCreateFile: useCreateFile);
+                action.Should().Throw<IOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_FILE_EXISTS));
             }
         }
 
@@ -162,7 +161,7 @@ namespace DesktopTests.Compression
                 data[9] = character;
                 string path = Paths.Combine(cleaner.TempFolder, compressedName);
                 FileHelper.WriteAllBytes(path, data);
-                Path.GetFileName(CompressionMethods.GetExpandedName(path)).Should().Be(expandedName);
+                Path.GetFileName(Compression.GetExpandedName(path)).Should().Be(expandedName);
             }
         }
 
@@ -176,7 +175,7 @@ namespace DesktopTests.Compression
                 data[9] = character;
                 string path = Paths.Combine(cleaner.TempFolder, compressedName);
                 FileHelper.WriteAllBytes(path, data);
-                Path.GetFileName(CompressionMethods.GetExpandedNameEx(path)).Should().Be(expandedName);
+                Path.GetFileName(Compression.GetExpandedNameEx(path)).Should().Be(expandedName);
             }
         }
 
@@ -206,7 +205,7 @@ namespace DesktopTests.Compression
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.CreateTestFile("ExpandedName_NotLzFile");
-                CompressionMethods.GetExpandedName(path).Should().Be(path);
+                Compression.GetExpandedName(path).Should().Be(path);
             }
         }
 
@@ -221,7 +220,7 @@ namespace DesktopTests.Compression
             {
                 string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
-                Action action = () => CompressionMethods.GetExpandedName(path);
+                Action action = () => Compression.GetExpandedName(path);
                 action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadValue);
             }
         }
@@ -234,7 +233,7 @@ namespace DesktopTests.Compression
             {
                 string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
-                Action action = () => CompressionMethods.LzOpenFile(path);
+                Action action = () => Compression.LzOpenFile(path);
                 action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadInHandle);
             }
         }
@@ -247,7 +246,7 @@ namespace DesktopTests.Compression
             {
                 string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
-                using (var handle = CompressionMethods.LzCreateFile(path))
+                using (var handle = Compression.LzCreateFile(path))
                 {
                     handle.RawHandle.Should().BeGreaterThan(0);
                 }
@@ -264,7 +263,7 @@ namespace DesktopTests.Compression
                 string path = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 300);
                 FileHelper.EnsurePathDirectoryExists(path);
                 FileHelper.WriteAllBytes(path, CompressedFile1);
-                Action action = () => CompressionMethods.LzCreateFile(path);
+                Action action = () => Compression.LzCreateFile(path);
                 action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadValue);
             }
         }

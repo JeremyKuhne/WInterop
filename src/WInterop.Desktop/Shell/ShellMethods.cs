@@ -8,11 +8,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Com.Types;
-using WInterop.Registry.Types;
-using WInterop.ErrorHandling;
-using WInterop.Handles.Types;
-using WInterop.Shell.Types;
+using WInterop.Com;
+using WInterop.Registry;
+using WInterop.Errors;
+using WInterop.Handles;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Security;
@@ -25,7 +24,7 @@ namespace WInterop.Shell
         {
             HRESULT result = Imports.PSGetPropertyDescriptionListFromString(value, new Guid(InterfaceIds.IID_IPropertyDescriptionList), out IPropertyDescriptionList list);
             if (result != HRESULT.S_OK)
-                throw Errors.GetIoExceptionForHResult(result);
+                throw Error.GetIoExceptionForHResult(result);
             return list;
         }
 
@@ -33,7 +32,7 @@ namespace WInterop.Shell
         {
             HRESULT result = Imports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle);
             if (result != HRESULT.S_OK)
-                throw Errors.GetIoExceptionForHResult(result);
+                throw Error.GetIoExceptionForHResult(result);
             return handle;
         }
 
@@ -51,7 +50,7 @@ namespace WInterop.Shell
                 }
 
                 if (result != HRESULT.S_OK)
-                    throw Errors.GetIoExceptionForHResult(result, association);
+                    throw Error.GetIoExceptionForHResult(result, association);
 
                 // Count includes the null
                 buffer.Length = count - 1;
@@ -66,7 +65,7 @@ namespace WInterop.Shell
         {
             HRESULT hr = Imports.SHGetKnownFolderPath(folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
             if (hr != HRESULT.S_OK)
-                throw Errors.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
+                throw Error.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
             return path;
         }
@@ -78,7 +77,7 @@ namespace WInterop.Shell
         {
             HRESULT hr = Imports.SHGetKnownFolderIDList(folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
             if (hr != HRESULT.S_OK)
-                throw Errors.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
+                throw Error.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
             return id;
         }
@@ -90,7 +89,7 @@ namespace WInterop.Shell
         {
             HRESULT hr = Imports.SHGetNameFromIDList(id, form, out string name);
             if (hr != HRESULT.S_OK)
-                throw Errors.GetIoExceptionForHResult(hr);
+                throw Error.GetIoExceptionForHResult(hr);
 
             return name;
         }
@@ -150,7 +149,7 @@ namespace WInterop.Shell
             {
                 while (!Imports.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
                 {
-                    Errors.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                 }
 

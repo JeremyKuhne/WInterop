@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.ErrorHandling;
-using WInterop.Handles.Types;
+using WInterop.Errors;
+using WInterop.Handles;
 
-namespace WInterop.Registry.Types
+namespace WInterop.Registry
 {
     public class RegistryKeyHandle : HandleZeroOrMinusOneIsInvalid
     {
@@ -59,7 +59,7 @@ namespace WInterop.Registry.Types
 
         protected override bool ReleaseHandle()
         {
-            return RegistryMethods.Imports.RegCloseKey(handle) != WindowsError.ERROR_SUCCESS;
+            return Registry.Imports.RegCloseKey(handle) != WindowsError.ERROR_SUCCESS;
         }
     }
 }

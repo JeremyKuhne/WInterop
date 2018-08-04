@@ -9,9 +9,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage.Native;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Storage
@@ -60,14 +59,14 @@ namespace WInterop.Storage
 
                 if (_findHandle.IsInvalid)
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     if (error == WindowsError.ERROR_FILENAME_EXCED_RANGE)
                     {
                         _buffer.EnsureCharCapacity(_buffer.CharCapacity + 64);
                         return FindFirstVolume();
                     }
 
-                    throw Errors.GetIoExceptionForError(error);
+                    throw Error.GetIoExceptionForError(error);
                 }
 
                 _buffer.SetLengthToFirstNull();
@@ -78,7 +77,7 @@ namespace WInterop.Storage
             {
                 if (!Imports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_FILENAME_EXCED_RANGE:
@@ -88,7 +87,7 @@ namespace WInterop.Storage
                             _lastEntryFound = true;
                             return null;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
 

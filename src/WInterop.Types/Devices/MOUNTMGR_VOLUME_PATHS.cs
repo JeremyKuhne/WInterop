@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Devices.Types
+namespace WInterop.Devices
 {
     // Defined in mountmgr.h
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

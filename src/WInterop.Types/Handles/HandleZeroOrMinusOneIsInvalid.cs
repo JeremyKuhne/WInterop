@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Handles.Types
+namespace WInterop.Handles
 {
     public abstract class HandleZeroOrMinusOneIsInvalid : BaseHandle
     {

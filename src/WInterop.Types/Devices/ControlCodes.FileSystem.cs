@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WInterop.Devices.Types
+namespace WInterop.Devices
 {
     public static partial class ControlCodes
     {

@@ -11,7 +11,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using WInterop.Console.Types;
+using WInterop.Console;
 
 namespace WInterop.Console
 {

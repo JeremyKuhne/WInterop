@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 using WInterop.Modules.BufferWrappers;
 using WInterop.ProcessAndThreads;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Modules
@@ -102,7 +102,7 @@ namespace WInterop.Modules
                 GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                 address,
                 out var handle))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return new ModuleInstance(handle);
         }
@@ -137,7 +137,7 @@ namespace WInterop.Modules
             Func<IntPtr, GetModuleFlags, IntPtr> getHandle = (IntPtr n, GetModuleFlags f) =>
             {
                 if (!Imports.GetModuleHandleExW(f, n, out var handle))
-                    throw Errors.GetIoExceptionForLastError();
+                    throw Error.GetIoExceptionForLastError();
                 return handle;
             };
 
@@ -160,7 +160,7 @@ namespace WInterop.Modules
             if (process == null) process = Processes.GetCurrentProcess();
 
             if (!Imports.K32GetModuleInformation(process, module, out var info, (uint)sizeof(MODULEINFO)))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
 
             return info;
         }
@@ -183,7 +183,7 @@ namespace WInterop.Modules
         public static void FreeLibrary(IntPtr handle)
         {
             if (!Imports.FreeLibrary(handle))
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace WInterop.Modules
         {
             ModuleInstance handle = Imports.LoadLibraryExW(path, IntPtr.Zero, flags);
             if (handle.IsInvalid)
-                throw Errors.GetIoExceptionForLastError(path);
+                throw Error.GetIoExceptionForLastError(path);
 
             return handle;
         }
@@ -215,7 +215,7 @@ namespace WInterop.Modules
         {
             IntPtr method = Imports.GetProcAddress(library, methodName);
             if (method == IntPtr.Zero)
-                throw Errors.GetIoExceptionForLastError(methodName);
+                throw Error.GetIoExceptionForLastError(methodName);
 
             return Marshal.GetDelegateForFunctionPointer<DelegateType>(method);
         }
@@ -238,7 +238,7 @@ namespace WInterop.Modules
                     buffer.EnsureByteCapacity(sizeNeeded);
                     if (!Imports.K32EnumProcessModulesEx(process, buffer, (uint)buffer.ByteCapacity,
                         out sizeNeeded, ListModulesOptions.LIST_MODULES_DEFAULT))
-                        throw Errors.GetIoExceptionForLastError();
+                        throw Error.GetIoExceptionForLastError();
                 } while (sizeNeeded > buffer.ByteCapacity);
 
                 IntPtr* b = (IntPtr*)buffer.VoidPointer;

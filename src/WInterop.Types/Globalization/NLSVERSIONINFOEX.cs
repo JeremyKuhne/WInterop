@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Globalization.Types
+namespace WInterop.Globalization
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd319087.aspx
     public struct NLSVERSIONINFOEX

@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Shell.Types
+namespace WInterop.Shell
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/shtypes/ns-shtypes-_strret
     public struct ReturnString : IDisposable

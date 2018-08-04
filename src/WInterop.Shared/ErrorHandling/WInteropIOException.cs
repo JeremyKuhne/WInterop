@@ -7,10 +7,8 @@
 
 using System;
 using System.IO;
-using WInterop.Support;
-using WInterop.Support.Internal;
 
-namespace WInterop.ErrorHandling
+namespace WInterop.Errors
 {
     public class WInteropIOException : IOException
     {
@@ -21,12 +19,12 @@ namespace WInterop.ErrorHandling
             : base(message, innerException) { HResult = (int)hresult; }
 
         public WInteropIOException(HRESULT result)
-            : this(Errors.HResultToString(result), result) { }
+            : this(Error.HResultToString(result), result) { }
 
         public WInteropIOException(WindowsError error)
-            : this(Errors.LastErrorToString(error), Macros.HRESULT_FROM_WIN32(error)) { }
+            : this(Error.LastErrorToString(error), Error.HRESULT_FROM_WIN32(error)) { }
 
         public WInteropIOException(NTSTATUS status)
-            : this(Macros.HRESULT_FROM_NT(status)) { }
+            : this(Error.HRESULT_FROM_NT(status)) { }
     }
 }

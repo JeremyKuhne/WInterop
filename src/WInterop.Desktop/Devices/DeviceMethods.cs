@@ -8,15 +8,13 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Devices.Types;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Devices
 {
-    public static partial class DeviceMethods
+    public static partial class Devices
     {
         /// <summary>
         /// Get the stable Guid for the given device handle.
@@ -36,7 +34,7 @@ namespace WInterop.Devices
                 lpBytesReturned: out _,
                 lpOverlapped: null))
             {
-                throw Errors.GetIoExceptionForLastError();
+                throw Error.GetIoExceptionForLastError();
             }
 
             return guid.StableGuid;
@@ -74,14 +72,14 @@ namespace WInterop.Devices
                     lpBytesReturned: out _,
                     lpOverlapped: null))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_MORE_DATA:
                             buffer.EnsureByteCapacity(((MOUNTDEV_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_NAME));
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
 
@@ -109,14 +107,14 @@ namespace WInterop.Devices
                     lpBytesReturned: out _,
                     lpOverlapped: null))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_MORE_DATA:
                             buffer.EnsureByteCapacity(((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
 
@@ -144,14 +142,14 @@ namespace WInterop.Devices
                     lpBytesReturned: out _,
                     lpOverlapped: null))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_MORE_DATA:
                             buffer.EnsureByteCapacity(((MOUNTDEV_UNIQUE_ID*)buffer.VoidPointer)->UniqueIdLength + (ulong)sizeof(MOUNTDEV_UNIQUE_ID));
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
 
@@ -195,14 +193,14 @@ namespace WInterop.Devices
                         lpBytesReturned: out _,
                         lpOverlapped: null))
                     {
-                        WindowsError error = Errors.GetLastError();
+                        WindowsError error = Error.GetLastError();
                         switch (error)
                         {
                             case WindowsError.ERROR_MORE_DATA:
                                 outBuffer.EnsureByteCapacity(checked(outBuffer.ByteCapacity * 2));
                                 break;
                             default:
-                                throw Errors.GetIoExceptionForError(error, volume);
+                                throw Error.GetIoExceptionForError(error, volume);
                         }
                     }
 
@@ -237,7 +235,7 @@ namespace WInterop.Devices
                     lpBytesReturned: out _,
                     lpOverlapped: null))
                 {
-                    WindowsError error = Errors.GetLastError();
+                    WindowsError error = Error.GetLastError();
                     switch (error)
                     {
                         case WindowsError.ERROR_SUCCESS:
@@ -247,7 +245,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(buffer.ByteCapacity + 1024);
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(error);
+                            throw Error.GetIoExceptionForError(error);
                     }
                 }
 

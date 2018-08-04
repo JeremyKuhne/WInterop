@@ -10,7 +10,7 @@ using System;
 using Tests.Support;
 using WInterop.Security;
 using WInterop.Devices;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
@@ -87,7 +87,7 @@ namespace DesktopTests.File
                         ShareModes.All, fileFlags: FileFlags.OpenReparsePoint))
                     {
                         handle.IsInvalid.Should().BeFalse();
-                        var (printName, substituteName, tag) = DeviceMethods.GetReparsePointNames(handle);
+                        var (printName, substituteName, tag) = WInterop.Devices.Devices.GetReparsePointNames(handle);
                         tag.Should().Be(ReparseTag.SymbolicLink);
                         printName.Should().Be(filePath);
                         substituteName.Should().Be(@"\??\" + filePath);
@@ -96,7 +96,7 @@ namespace DesktopTests.File
                 else
                 {
                     // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
-                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace DesktopTests.File
                         ShareModes.All, fileFlags: FileFlags.OpenReparsePoint))
                     {
                         handle.IsInvalid.Should().BeFalse();
-                        var (printName, substituteName, tag) = DeviceMethods.GetReparsePointNames(handle);
+                        var (printName, substituteName, tag) = WInterop.Devices.Devices.GetReparsePointNames(handle);
                         tag.Should().Be(ReparseTag.SymbolicLink);
                         printName.Should().Be(fileName);
                         substituteName.Should().Be(fileName);
@@ -130,7 +130,7 @@ namespace DesktopTests.File
                 else
                 {
                     // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
-                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }
@@ -155,7 +155,7 @@ namespace DesktopTests.File
                 }
                 else
                 {
-                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
                 }
             }
         }

@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe ref struct STGOPTIONS

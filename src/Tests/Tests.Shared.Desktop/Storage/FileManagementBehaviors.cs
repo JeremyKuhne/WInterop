@@ -10,7 +10,7 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Linq;
 using Tests.Support;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
@@ -31,10 +31,10 @@ namespace DesktopTests.FileManagementTests
 
                 FindOperation<string> find = new FindOperation<string>(testFile);
                 Action action = () => find.FirstOrDefault();
-                action.Should().Throw<ArgumentException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_PARAMETER));
+                action.Should().Throw<ArgumentException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_PARAMETER));
 
                 action = () => Storage.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes);
-                action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)ErrorMacros.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_NAME));
+                action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_NAME));
             }
         }
 

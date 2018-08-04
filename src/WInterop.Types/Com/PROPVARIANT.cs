@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     public class PROPVARIANT : VARIANT
     {

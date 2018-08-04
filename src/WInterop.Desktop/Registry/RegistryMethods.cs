@@ -8,15 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Registry.Types;
-using WInterop.ErrorHandling;
+using WInterop.Errors;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using System.Runtime.InteropServices.ComTypes;
 
 namespace WInterop.Registry
 {
-    public static partial class RegistryMethods
+    public static partial class Registry
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
@@ -113,7 +112,7 @@ namespace WInterop.Registry
                 }
 
                 if (status != NTSTATUS.STATUS_SUCCESS)
-                    ErrorMethods.GetIoExceptionForNTStatus(status);
+                    Error.GetIoExceptionForNTStatus(status);
 
                 return ((KEY_NAME_INFORMATION*)buffer.VoidPointer)->Name.CreateString();
             });
@@ -129,7 +128,7 @@ namespace WInterop.Registry
         {
             WindowsError result = Imports.RegOpenKeyExW(key, subKeyName, 0, rights, out RegistryKeyHandle subKey);
             if (result != WindowsError.ERROR_SUCCESS)
-                throw Errors.GetIoExceptionForError(result);
+                throw Error.GetIoExceptionForError(result);
 
             return subKey;
         }
@@ -147,7 +146,7 @@ namespace WInterop.Registry
                 case WindowsError.ERROR_FILE_NOT_FOUND:
                     return false;
                 default:
-                    throw Errors.GetIoExceptionForError(result);
+                    throw Error.GetIoExceptionForError(result);
             }
         }
 
@@ -165,7 +164,7 @@ namespace WInterop.Registry
                 case WindowsError.ERROR_FILE_NOT_FOUND:
                     return RegistryValueType.REG_NONE;
                 default:
-                    throw Errors.GetIoExceptionForError(result);
+                    throw Error.GetIoExceptionForError(result);
             }
         }
 
@@ -196,7 +195,7 @@ namespace WInterop.Registry
                         case WindowsError.ERROR_FILE_NOT_FOUND:
                             return null;
                         default:
-                            throw Errors.GetIoExceptionForError(result);
+                            throw Error.GetIoExceptionForError(result);
                     }
                 }
 
@@ -247,7 +246,7 @@ namespace WInterop.Registry
                             buffer.EnsureByteCapacity(resultLength);
                             break;
                         default:
-                            throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                            throw Error.GetIoExceptionForNTStatus(status);
                     }
                 }
             });
@@ -298,7 +297,7 @@ namespace WInterop.Registry
                             buffer.EnsureByteCapacity(resultLength);
                             break;
                         default:
-                            throw ErrorMethods.GetIoExceptionForNTStatus(status);
+                            throw Error.GetIoExceptionForNTStatus(status);
                     }
                 }
             });
@@ -347,7 +346,7 @@ namespace WInterop.Registry
                             }
                             break;
                         default:
-                            throw Errors.GetIoExceptionForError(result);
+                            throw Error.GetIoExceptionForError(result);
                     }
                 }
             });

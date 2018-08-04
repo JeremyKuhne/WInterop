@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace WInterop.Com.Types
+namespace WInterop.Com
 {
     [ComImport,
         Guid("0000000b-0000-0000-C000-000000000046"),

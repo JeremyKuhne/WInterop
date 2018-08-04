@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Windows;
 
-namespace WInterop.Console.Types
+namespace WInterop.Console
 {
     /// <summary>
     /// Console input record structure

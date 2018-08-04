@@ -26,7 +26,7 @@ namespace HelloWin
         static void Main()
         {
             // Hack for launching as a .NET Core Windows Application
-            ConsoleMethods.TryFreeConsole();
+            WInterop.Console.Console.TryFreeConsole();
 
             const string szAppName = "HelloWin";
 

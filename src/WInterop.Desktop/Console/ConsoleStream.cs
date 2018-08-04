@@ -8,7 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.IO;
-using WInterop.Console.Types;
+using WInterop.Console;
 
 namespace WInterop.Console
 {
@@ -19,7 +19,7 @@ namespace WInterop.Console
 
         public ConsoleStream(StandardHandleType type)
         {
-            _handle = ConsoleMethods.GetStandardHandle(type);
+            _handle = Console.GetStandardHandle(type);
             _output = type != StandardHandleType.Input;
         }
 

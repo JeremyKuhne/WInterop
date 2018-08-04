@@ -8,17 +8,16 @@
 using FluentAssertions;
 using System;
 using WInterop.Clipboard;
-using WInterop.Clipboard.Types;
 using Xunit;
 
-namespace DesktopTests.ClipboardTests
+namespace ClipboardTests
 {
     public class Methods
     {
         [Fact]
         public void GetClipboardFormatNameForBuiltIn()
         {
-            Action action = () => ClipboardMethods.GetClipboardFormatName((uint)ClipboardFormat.CF_TEXT);
+            Action action = () => Clipboard.GetClipboardFormatName((uint)ClipboardFormat.CF_TEXT);
 
             // You can't get the name for built-in types
             action.Should().Throw<ArgumentException>();
@@ -27,12 +26,12 @@ namespace DesktopTests.ClipboardTests
         [Fact]
         public void GetAvailableClipboardFormatsBasic()
         {
-            uint[] formats = ClipboardMethods.GetAvailableClipboardFormats();
+            uint[] formats = Clipboard.GetAvailableClipboardFormats();
             foreach (uint format in formats)
             {
                 if (!Enum.IsDefined(typeof(ClipboardFormat), format))
                 {
-                    string name = ClipboardMethods.GetClipboardFormatName(format);
+                    string name = Clipboard.GetClipboardFormatName(format);
                     name.Should().NotBeNullOrEmpty();
                 }
             }

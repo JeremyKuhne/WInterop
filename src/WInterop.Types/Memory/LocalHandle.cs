@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Handles.Types;
+using WInterop.Handles;
 
-namespace WInterop.MemoryManagement.Types
+namespace WInterop.Memory
 {
     /// <summary>
     /// Handle for heap memory allocated with LocalAlloc- use SafeHeapHandle where possible instead.

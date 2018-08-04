@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.Devices.Types;
+using WInterop.Devices;
 using Xunit;
 
 namespace Tests.Devices
