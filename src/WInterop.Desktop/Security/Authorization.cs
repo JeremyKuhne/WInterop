@@ -15,7 +15,7 @@ using WInterop.SystemInformation.Types;
 
 namespace WInterop.Security
 {
-    public static partial class Authorization
+    public static partial class Security
     {
         // In winnt.h
         private const uint PRIVILEGE_SET_ALL_NECESSARY = 1;
@@ -146,6 +146,23 @@ namespace WInterop.Security
         {
             if (!Imports.RevertToSelf())
                 throw Errors.GetIoExceptionForLastError();
+        }
+
+        public static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
+        {
+            LSA_OBJECT_ATTRIBUTES attributes = new LSA_OBJECT_ATTRIBUTES();
+            LsaHandle handle;
+            NTSTATUS status;
+
+            unsafe
+            {
+                status = Imports.LsaOpenPolicy(null, &attributes, access, out handle);
+            }
+
+            if (status != NTSTATUS.STATUS_SUCCESS)
+                throw ErrorMethods.GetIoExceptionForNTStatus(status);
+
+            return handle;
         }
     }
 }

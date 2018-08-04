@@ -6,17 +6,17 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using Xunit;
-using WInterop.Security;
-using System.Security.Principal;
 using System;
-using System.Diagnostics;
-using WInterop.SystemInformation;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Principal;
 using Tests.Shared.Support;
-using WInterop.ProcessAndThreads;
 using Tests.Support;
+using WInterop.ProcessAndThreads;
+using WInterop.Security;
+using WInterop.SystemInformation;
+using Xunit;
 
 namespace AuthorizationTests
 {
@@ -39,13 +39,13 @@ namespace AuthorizationTests
             bool runningAsAdmin = 
                 new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
-            Authorization.IsProcessElevated().Should().Be(runningAsAdmin);
+            Security.IsProcessElevated().Should().Be(runningAsAdmin);
         }
 
         [Fact]
         public void CreateWellKnownSid_Everyone()
         {
-            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.World);
+            SID sid = Security.CreateWellKnownSid(WellKnownSID.World);
             sid.IsValidSid().Should().BeTrue();
             sid.Revision.Should().Be(1);
             sid.IdentifierAuthority.Should().Be(IdentifierAuthority.World);
@@ -65,7 +65,7 @@ namespace AuthorizationTests
         [Fact]
         public void IsValidSid_GoodSid()
         {
-            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.IISUser);
+            SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
             sid.IsValidSid().Should().BeTrue();
         }
 
@@ -77,7 +77,7 @@ namespace AuthorizationTests
                 Debug.WriteLine(@"/// <summary>");
                 try
                 {
-                    SID sid = Authorization.CreateWellKnownSid(type);
+                    SID sid = Security.CreateWellKnownSid(type);
                     AccountSidInformation info = sid.LookupAccountSid();
                     Debug.WriteLine($"/// {info.Name} ({sid.ConvertSidToString()}) [{info.Usage}]");
                 }
@@ -102,7 +102,7 @@ namespace AuthorizationTests
         public void GetTokenUserSid_ForCurrentProcess()
         {
             SID sid;
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 sid = token.GetTokenUserSid().Sid;
@@ -116,7 +116,7 @@ namespace AuthorizationTests
         [Fact]
         public void GetTokenGroupSids_ForCurrentProcess()
         {
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 List<SidAndAttributes> groups = token.GetTokenGroupSids().ToList();
@@ -130,7 +130,7 @@ namespace AuthorizationTests
         [Fact]
         public void GetTokenStatistics_ForCurrentProcess()
         {
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
             {
                 TokenStatistics stats = token.GetTokenStatistics();
                 stats.TokenType.Should().Be(TokenType.Primary);
@@ -140,7 +140,7 @@ namespace AuthorizationTests
         [Fact]
         public void GetTokenPrivileges_ForCurrentProcess()
         {
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 var privileges = token.GetTokenPrivileges();
@@ -158,7 +158,7 @@ namespace AuthorizationTests
         public void GetTokenPrivileges_NoReadRights()
         {
             // You need Query or Read (which includes Query) rights
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate))
             {
                 token.IsInvalid.Should().BeFalse();
                 Action action = () => token.GetTokenPrivileges();
@@ -170,7 +170,7 @@ namespace AuthorizationTests
         public void GetTokenOwnerSid_ForCurrentProcess()
         {
             SID sid;
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 sid = token.GetTokenOwnerSid();
@@ -185,7 +185,7 @@ namespace AuthorizationTests
         public void GetTokenPrimaryGroupSid_ForCurrentProcess()
         {
             SID sid;
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 sid = token.GetTokenPrimaryGroupSid();
@@ -199,7 +199,7 @@ namespace AuthorizationTests
         [Fact]
         public void IsPrivilegeEnabled_ForCurrentProcess()
         {
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 token.IsPrivilegeEnabled(Privilege.ChangeNotify).Should().BeTrue();
@@ -210,7 +210,7 @@ namespace AuthorizationTests
         [Fact]
         public void AreAllPrivilegesEnabled_ForCurrentProcess()
         {
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Read))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
             {
                 token.IsInvalid.Should().BeFalse();
                 token.AreAllPrivilegesEnabled(Privilege.ChangeNotify, Privilege.Backup).Should().BeFalse();
@@ -224,7 +224,7 @@ namespace AuthorizationTests
         [Fact]
         public void GetDomainName()
         {
-            Authorization.GetDomainName().Should().NotBeNull();
+            Security.GetDomainName().Should().NotBeNull();
         }
 
         [Theory,
@@ -233,7 +233,7 @@ namespace AuthorizationTests
         public void GetThreadToken(bool openAsSelf)
         {
             // Unless we're impersonating we shouldn't get a token for the thread
-            using (var token = Authorization.OpenThreadToken(AccessTokenRights.Query, openAsSelf))
+            using (var token = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf))
             {
                 token.Should().BeNull();
             }
@@ -242,7 +242,7 @@ namespace AuthorizationTests
         [Fact]
         public void DuplicateProcessToken_NoDuplicateRights()
         {
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Query))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Query))
             {
                 Action action = () => token.DuplicateToken();
                 action.Should().Throw<UnauthorizedAccessException>("didn't ask for duplicate rights");
@@ -252,7 +252,7 @@ namespace AuthorizationTests
         [Fact]
         public void DuplicateProcessToken()
         {
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
             {
                 var privileges = token.GetTokenPrivileges();
 
@@ -276,35 +276,35 @@ namespace AuthorizationTests
         [Fact]
         public void ChangeThreadToImpersonate()
         {
-            ThreadRunner.Run(() =>
+            ThreadRunner.Run((Action)(() =>
             {
-                using (var token = Authorization.OpenThreadToken(AccessTokenRights.Query, openAsSelf: true))
+                using (var token = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf: true))
                 {
                     token.Should().BeNull();
                 }
 
-                using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+                using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
                 {
-                    using (var duplicate = token.DuplicateToken(AccessTokenRights.Query | AccessTokenRights.Impersonate, ImpersonationLevel.Impersonation))
+                    using (var duplicate = Security.DuplicateToken(token, AccessTokenRights.Query | AccessTokenRights.Impersonate, ImpersonationLevel.Impersonation))
                     {
                         using (ThreadHandle thread = Threads.GetCurrentThread())
                         {
-                            thread.SetThreadToken(duplicate);
+                            Security.SetThreadToken(thread, duplicate);
 
-                            using (var threadToken = Authorization.OpenThreadToken(AccessTokenRights.Query, openAsSelf: false))
+                            using (var threadToken = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf: false))
                             {
                                 threadToken.Should().BeNull();
                             }
                         }
                     }
                 }
-            });
+            }));
         }
 
         [Fact]
         public void CreateRestrictedToken_Process()
         {
-            using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
             {
                 SidAndAttributes info = token.GetTokenUserSid();
                 info.Sid.IsValidSid().Should().BeTrue();
@@ -323,39 +323,39 @@ namespace AuthorizationTests
         [Fact]
         public void Impersonate_DisableUser()
         {
-            ThreadRunner.Run(() =>
+            ThreadRunner.Run((() =>
             {
-                using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+                using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
                 {
-                    using (var restricted = token.CreateRestrictedToken(token.GetTokenUserSid()))
+                    using (var restricted = Security.CreateRestrictedToken(token, Security.GetTokenUserSid(token)))
                     {
-                        restricted.ImpersonateLoggedOnUser();
-                        Authorization.RevertToSelf();
+                        Security.ImpersonateLoggedOnUser(restricted);
+                        Security.RevertToSelf();
                     }
                 }
-            });
+            }));
         }
 
         [Fact]
         public void Impersonate_DisableUser_FileAccess()
         {
-            ThreadRunner.Run(() =>
+            ThreadRunner.Run((() =>
             {
                 using (var cleaner = new TestFileCleaner())
-                using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+                using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
                 {
                     string path = cleaner.CreateTestFile(nameof(Impersonate_DisableUser_FileAccess));
                     FileHelper.ReadAllText(path).Should().Be(nameof(Impersonate_DisableUser_FileAccess));
-                    using (var restricted = token.CreateRestrictedToken(token.GetTokenUserSid()))
+                    using (var restricted = Security.CreateRestrictedToken(token, Security.GetTokenUserSid(token)))
                     {
-                        restricted.ImpersonateLoggedOnUser();
+                        Security.ImpersonateLoggedOnUser(restricted);
                         Action action = () => FileHelper.ReadAllText(path);
                         action.Should().Throw<UnauthorizedAccessException>();
-                        Authorization.RevertToSelf();
+                        Security.RevertToSelf();
                         FileHelper.ReadAllText(path).Should().Be(nameof(Impersonate_DisableUser_FileAccess));
                     }
                 }
-            });
+            }));
         }
     }
 }

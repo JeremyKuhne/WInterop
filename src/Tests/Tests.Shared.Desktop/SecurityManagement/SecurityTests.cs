@@ -7,7 +7,6 @@
 
 using FluentAssertions;
 using System;
-using WInterop.Authentication;
 using WInterop.Security;
 using Xunit;
 
@@ -18,8 +17,8 @@ namespace SecurityTests
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_UserGroup()
         {
-            LsaHandle handle = Authentication.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_EXECUTE);
-            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.Users);
+            LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_EXECUTE);
+            SID sid = Security.CreateWellKnownSid(WellKnownSID.Users);
             var rights = Security.LsaEnumerateAccountRights(handle, in sid);
             rights.Should().NotBeEmpty();
             rights.Should().Contain("SeChangeNotifyPrivilege");
@@ -28,8 +27,8 @@ namespace SecurityTests
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_ReadRightsFails()
         {
-            LsaHandle handle = Authentication.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
-            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.Users);
+            LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            SID sid = Security.CreateWellKnownSid(WellKnownSID.Users);
             Action action = () => Security.LsaEnumerateAccountRights(handle, in sid);
             action.Should().Throw<UnauthorizedAccessException>();
         }
@@ -37,7 +36,7 @@ namespace SecurityTests
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_BadSidFails()
         {
-            LsaHandle handle = Authentication.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
             SID sid = new SID();
             Action action = () => Security.LsaEnumerateAccountRights(handle, in sid);
             action.Should().Throw<ArgumentException>();
@@ -46,8 +45,8 @@ namespace SecurityTests
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void EnumerateAccountRights_NoRightsFails()
         {
-            LsaHandle handle = Authentication.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
-            SID sid = Authorization.CreateWellKnownSid(WellKnownSID.AllApplicationPackages);
+            LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            SID sid = Security.CreateWellKnownSid(WellKnownSID.AllApplicationPackages);
             Security.LsaEnumerateAccountRights(handle, in sid).Should().BeEmpty();
         }
     }

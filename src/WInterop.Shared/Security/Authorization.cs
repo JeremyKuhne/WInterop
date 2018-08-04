@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Security.Native;
-using WInterop.Security;
 using WInterop.ErrorHandling;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
@@ -18,11 +17,11 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Security
 {
-    public static partial class Authorization
+    public static partial class Security
     {
         private static Dictionary<Privilege, string> s_privileges;
 
-        static Authorization()
+        static Security()
         {
             s_privileges = new Dictionary<Privilege, string>
             {

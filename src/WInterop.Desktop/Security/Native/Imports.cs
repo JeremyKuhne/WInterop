@@ -6,7 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.Security;
+using WInterop.ErrorHandling;
+using WInterop.SafeString.Types;
 
 namespace WInterop.Security.Native
 {
@@ -49,6 +50,14 @@ namespace WInterop.Security.Native
             uint RestrictedSidCount,
             SID_AND_ATTRIBUTES* SidsToRestrict,
             out AccessToken NewTokenHandle);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378299.aspx
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public unsafe static extern NTSTATUS LsaOpenPolicy(
+            UNICODE_STRING* SystemName,
+            LSA_OBJECT_ATTRIBUTES* ObjectAttributes,
+            PolicyAccessRights DesiredAccess,
+            out LsaHandle PolicyHandle);
 
         // This isn't allowed in Windows Store apps, but is exactly the same as
         // calling LookupAccountSidW with a null or empty computer name.
