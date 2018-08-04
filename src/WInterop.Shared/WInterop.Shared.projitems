@@ -40,8 +40,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Processes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Threads.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\SynchronizationMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.Imports.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\Native\Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,5 +54,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Security\" />
     <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Native\" />
     <Folder Include="$(MSBuildThisFileDirectory)Storage\Native\" />
+    <Folder Include="$(MSBuildThisFileDirectory)SystemInformation\Native\" />
   </ItemGroup>
 </Project>

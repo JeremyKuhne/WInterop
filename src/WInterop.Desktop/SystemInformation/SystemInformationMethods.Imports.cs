@@ -34,7 +34,7 @@ namespace WInterop.SystemInformation
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724301.aspx
             [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
             public static extern bool GetComputerNameExW(
-                COMPUTER_NAME_FORMAT NameType,
+                ComputerNameFormat NameType,
                 SafeHandle lpBuffer,
                 ref uint lpnSize);
 

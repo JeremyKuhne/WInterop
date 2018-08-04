@@ -79,7 +79,7 @@ namespace WInterop.SystemInformation
         /// <summary>
         /// Get the computer name in the specified format.
         /// </summary>
-        public static string GetComputerName(COMPUTER_NAME_FORMAT format)
+        public static string GetComputerName(ComputerNameFormat format)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {

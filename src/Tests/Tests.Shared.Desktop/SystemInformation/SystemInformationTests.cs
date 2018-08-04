@@ -61,14 +61,14 @@ namespace SystemInformationTests
         [Fact]
         public void GetComputerName_NetBIOS()
         {
-            SystemInformationMethods.GetComputerName(COMPUTER_NAME_FORMAT.ComputerNameNetBIOS)
+            SystemInformationMethods.GetComputerName(ComputerNameFormat.NetBIOS)
                 .Should().Be(SystemInformationMethods.GetComputerName());
         }
 
         // [Fact]
         private void DumpComputerNameFormats()
         {
-            foreach (COMPUTER_NAME_FORMAT format in Enum.GetValues(typeof(COMPUTER_NAME_FORMAT)))
+            foreach (ComputerNameFormat format in Enum.GetValues(typeof(ComputerNameFormat)))
             {
                 try
                 {
