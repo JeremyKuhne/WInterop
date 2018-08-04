@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tests.Shared.Support;
 using WInterop.ProcessAndThreads;
+using Tests.Support;
 
 namespace AuthorizationTests
 {
@@ -320,7 +321,7 @@ namespace AuthorizationTests
         }
 
         [Fact]
-        public void ImpersonateLoggedInUser()
+        public void Impersonate_DisableUser()
         {
             ThreadRunner.Run(() =>
             {
@@ -330,6 +331,28 @@ namespace AuthorizationTests
                     {
                         restricted.ImpersonateLoggedOnUser();
                         Authorization.RevertToSelf();
+                    }
+                }
+            });
+        }
+
+        [Fact]
+        public void Impersonate_DisableUser_FileAccess()
+        {
+            ThreadRunner.Run(() =>
+            {
+                using (var cleaner = new TestFileCleaner())
+                using (var token = Authorization.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+                {
+                    string path = cleaner.CreateTestFile(nameof(Impersonate_DisableUser_FileAccess));
+                    FileHelper.ReadAllText(path).Should().Be(nameof(Impersonate_DisableUser_FileAccess));
+                    using (var restricted = token.CreateRestrictedToken(token.GetTokenUserSid()))
+                    {
+                        restricted.ImpersonateLoggedOnUser();
+                        Action action = () => FileHelper.ReadAllText(path);
+                        action.Should().Throw<UnauthorizedAccessException>();
+                        Authorization.RevertToSelf();
+                        FileHelper.ReadAllText(path).Should().Be(nameof(Impersonate_DisableUser_FileAccess));
                     }
                 }
             });
