@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Authorization;
+using WInterop.Security;
 using WInterop.ErrorHandling;
 using WInterop.Support.Buffers;
 

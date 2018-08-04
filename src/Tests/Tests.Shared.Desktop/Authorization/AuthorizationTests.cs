@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using Xunit;
-using WInterop.Authorization;
+using WInterop.Security;
 using System.Security.Principal;
 using System;
 using System.Diagnostics;

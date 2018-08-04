@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using WInterop.Authorization;
+using WInterop.Security;
 
 namespace WInterop.NetworkManagement.Types
 {

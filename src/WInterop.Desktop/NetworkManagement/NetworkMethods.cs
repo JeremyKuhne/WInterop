@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Authorization;
+using WInterop.Security;
 using WInterop.ErrorHandling;
 using WInterop.NetworkManagement.Types;
 using WInterop.Support;

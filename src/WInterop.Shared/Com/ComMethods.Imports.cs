@@ -7,8 +7,8 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization;
-using WInterop.Authorization.Native;
+using WInterop.Security;
+using WInterop.Security.Native;
 using WInterop.Com.Types;
 using WInterop.ErrorHandling;
 using WInterop.Storage;

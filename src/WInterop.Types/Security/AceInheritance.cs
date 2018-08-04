@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     /// <summary>
     /// Access control entry inheritance flags.

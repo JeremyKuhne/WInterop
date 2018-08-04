@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using System.Runtime.CompilerServices;
-using WInterop.Authorization;
+using WInterop.Security;
 using WInterop.Support.Buffers;
 using Xunit;
 

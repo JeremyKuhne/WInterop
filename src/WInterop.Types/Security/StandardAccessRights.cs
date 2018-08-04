@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     /// <summary>
     /// Standard rights that apply to most securable objects (in addition to

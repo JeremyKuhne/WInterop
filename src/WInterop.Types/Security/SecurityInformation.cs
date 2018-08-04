@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     /// <summary>
     /// Security information type to be set or queried. [SECURITY_INFORMATION]

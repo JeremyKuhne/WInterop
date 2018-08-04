@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     /// <summary>
     /// Access control list (ACL) header.

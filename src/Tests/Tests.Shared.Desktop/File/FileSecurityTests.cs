@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using Tests.Support;
-using WInterop.Authorization;
+using WInterop.Security;
 using WInterop.Storage;
 using WInterop.SystemInformation;
 using Xunit;

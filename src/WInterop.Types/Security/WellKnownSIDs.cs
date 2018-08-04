@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     /// <summary>
     /// Well known security identifiers in Windows. [WELL_KNOWN_SID_TYPE]

@@ -7,7 +7,7 @@
 
 using WInterop.Handles.Types;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     /// <summary>
     /// Safe handle for an access token

@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using System.Linq;
-using WInterop.Authorization;
+using WInterop.Security;
 using WInterop.Shell;
 using WInterop.Shell.Types;
 using Xunit;

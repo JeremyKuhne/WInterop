@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Authorization;
+using WInterop.Security;
 using WInterop.ErrorHandling;
 using WInterop.Storage.BufferWrappers;
 using WInterop.Storage.Native;
@@ -755,9 +755,9 @@ namespace WInterop.Storage
         public unsafe static SID QueryOwner(SafeFileHandle handle)
         {
             SID* sidp;
-            Authorization.Native.SECURITY_DESCRIPTOR* descriptor;
+            Security.Native.SECURITY_DESCRIPTOR* descriptor;
 
-            WindowsError result = Authorization.Native.Imports.GetSecurityInfo(
+            WindowsError result = Security.Native.Imports.GetSecurityInfo(
                 handle,
                 SecurityObjectType.File,
                 SecurityInformation.Owner,

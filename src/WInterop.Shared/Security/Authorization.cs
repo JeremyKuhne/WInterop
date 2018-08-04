@@ -9,14 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using WInterop.Authorization.Native;
-using WInterop.Authorization;
+using WInterop.Security.Native;
+using WInterop.Security;
 using WInterop.ErrorHandling;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     public static partial class Authorization
     {

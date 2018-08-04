@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using Tests.Support;
-using WInterop.Authorization;
+using WInterop.Security;
 using WInterop.Devices;
 using WInterop.ErrorHandling;
 using WInterop.Storage;

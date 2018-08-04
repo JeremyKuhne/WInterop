@@ -8,7 +8,6 @@
 using FluentAssertions;
 using System;
 using WInterop.Authentication;
-using WInterop.Authorization;
 using WInterop.Security;
 using Xunit;
 

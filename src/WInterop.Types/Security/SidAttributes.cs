@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     /// <summary>
     /// <see cref="SID_AND_ATTRIBUTES"/> attributes for group SIDs.

@@ -7,12 +7,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Authorization;
+using WInterop.Security;
 using WInterop.ErrorHandling;
 using WInterop.MemoryManagement.Types;
 using WInterop.ProcessAndThreads;
 
-namespace WInterop.Authorization.Native
+namespace WInterop.Security.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

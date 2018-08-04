@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms686670.aspx
     [Flags]

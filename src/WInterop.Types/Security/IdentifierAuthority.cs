@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Authorization
+namespace WInterop.Security
 {
     /// <summary>
     /// The top-level authority of a security identifier (SID). [SID_IDENTIFIER_AUTHORITY]
