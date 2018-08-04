@@ -9,7 +9,7 @@ using FluentAssertions;
 using System;
 using WInterop.Authentication;
 using WInterop.Authorization;
-using WInterop.SecurityManagement.Types;
+using WInterop.Security.Types;
 using Xunit;
 
 namespace DesktopTests.Authentication

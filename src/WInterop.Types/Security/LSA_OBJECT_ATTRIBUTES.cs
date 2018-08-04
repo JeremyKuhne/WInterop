@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.SecurityManagement.Types
+namespace WInterop.Security.Types
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721829.aspx
     public struct LSA_OBJECT_ATTRIBUTES

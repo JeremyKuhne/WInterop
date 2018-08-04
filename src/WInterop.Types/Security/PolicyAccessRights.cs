@@ -8,7 +8,7 @@
 using System;
 using WInterop.Authorization;
 
-namespace WInterop.SecurityManagement.Types
+namespace WInterop.Security.Types
 {
     // These live in NTSecAPI.h
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721916.

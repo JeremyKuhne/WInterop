@@ -8,7 +8,7 @@
 using System;
 using WInterop.Handles.Types;
 
-namespace WInterop.SecurityManagement.Types
+namespace WInterop.Security.Types
 {
     public class LsaHandle : HandleZeroIsInvalid
     {

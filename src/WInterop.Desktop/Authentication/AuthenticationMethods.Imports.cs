@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.ErrorHandling;
 using WInterop.SafeString.Types;
-using WInterop.SecurityManagement.Types;
+using WInterop.Security.Types;
 
 namespace WInterop.Authentication
 {

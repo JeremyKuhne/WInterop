@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.ErrorHandling;
-using WInterop.SecurityManagement.Types;
+using WInterop.Security.Types;
 
 namespace WInterop.Authentication
 {

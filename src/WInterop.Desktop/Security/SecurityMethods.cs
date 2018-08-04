@@ -11,10 +11,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Authorization;
 using WInterop.ErrorHandling;
-using WInterop.SecurityManagement.Types;
+using WInterop.Security.Types;
 using WInterop.Support.Buffers;
 
-namespace WInterop.SecurityManagement
+namespace WInterop.Security
 {
     public static partial class SecurityMethods
     {
