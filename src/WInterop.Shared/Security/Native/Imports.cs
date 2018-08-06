@@ -90,11 +90,11 @@ namespace WInterop.Security.Native
             ref uint cchReferencedDomainName,
             out SidNameUse peUse);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446654.aspx
+        // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-getsecurityinfo
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
         public unsafe static extern WindowsError GetSecurityInfo(
             SafeHandle handle,
-            SecurityObjectType ObjectType,
+            ObjectType ObjectType,
             SecurityInformation SecurityInfo,
             SID** ppsidOwner = null,
             SID** ppsidGroup = null,
@@ -106,7 +106,7 @@ namespace WInterop.Security.Native
         [DllImport(Libraries.Advapi32, ExactSpelling = true, CharSet = CharSet.Unicode)]
         public unsafe static extern WindowsError GetNamedSecurityInfoW(
             string pObjectName,
-            SecurityObjectType ObjectType,
+            ObjectType ObjectType,
             SecurityInformation SecurityInfo,
             SID** ppsidOwner = null,
             SID** ppsidGroup = null,
@@ -114,11 +114,11 @@ namespace WInterop.Security.Native
             ACL** ppSacl = null,
             SECURITY_DESCRIPTOR** ppSecurityDescriptor = null);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379588.aspx
+        // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-setsecurityinfo
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
         public unsafe static extern WindowsError SetSecurityInfo(
             SafeHandle handle,
-            SecurityObjectType ObjectType,
+            ObjectType ObjectType,
             SecurityInformation SecurityInfo,
             SID* psidOwner,
             SID* psidGroup,
@@ -128,7 +128,7 @@ namespace WInterop.Security.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446635.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public unsafe static extern BOOL GetAclInformation(
-            ACL* pAcl,
+            SecurityDescriptor pAcl,
             void* pAclInformation,
             uint nAclInformationLength,
             AclInformationClass dwAclInformationClass);
@@ -136,11 +136,11 @@ namespace WInterop.Security.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374951.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public unsafe static extern BOOL AddAccessAllowedAceEx(
-            ACL* pAcl,
+            SecurityDescriptor pAcl,
             uint dwAceRevision,
             // This is AceInheritence
             uint AceFlags,
-            ACCESS_MASK AccessMask,
+            AccessMask AccessMask,
             SID* pSid);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
@@ -160,10 +160,10 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern BOOL DuplicateTokenEx(
+        public unsafe static extern BOOL DuplicateTokenEx(
             AccessToken hExistingToken,
             AccessTokenRights dwDesiredAccess,
-            IntPtr lpTokenAttributes,
+            SECURITY_ATTRIBUTES* lpTokenAttributes,
             ImpersonationLevel ImpersonationLevel,
             TokenType TokenType,
             out AccessToken phNewToken);
@@ -207,5 +207,20 @@ namespace WInterop.Security.Native
             uint BufferLength,
             TOKEN_PRIVILEGES* PreviousState,
             out uint ReturnLength);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/Aclapi/nf-aclapi-getexplicitentriesfromaclw
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public unsafe static extern WindowsError GetExplicitEntriesFromAclW(
+            ACL* pacl,
+            out uint pcCountOfExplicitEntries,
+            EXPLICIT_ACCESS** pListOfExplicitEntries);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-setentriesinaclw
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public unsafe static extern WindowsError SetEntriesInAclW(
+            uint cCountOfExplicitEntries,
+            EXPLICIT_ACCESS* pListOfExplicitEntries,
+            ACL* OldAcl,
+            ACL** NewAcl);
     }
 }

@@ -8,11 +8,9 @@
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
 using Tests.Shared.Support;
-using Tests.Support;
 using WInterop.ProcessAndThreads;
 using WInterop.Security;
 using WInterop.SystemInformation;
@@ -22,12 +20,6 @@ namespace SecurityTests
 {
     public class Basic
     {
-        [Fact]
-        public unsafe void SidSize()
-        {
-            sizeof(SID).Should().Be(68);
-        }
-
         [Fact]
         public void IsElevated()
         {
@@ -40,62 +32,6 @@ namespace SecurityTests
                 new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
             Security.IsProcessElevated().Should().Be(runningAsAdmin);
-        }
-
-        [Fact]
-        public void CreateWellKnownSid_Everyone()
-        {
-            SID sid = Security.CreateWellKnownSid(WellKnownSID.World);
-            sid.IsValidSid().Should().BeTrue();
-            sid.Revision.Should().Be(1);
-            sid.IdentifierAuthority.Should().Be(IdentifierAuthority.World);
-
-            sid.GetSidSubAuthorityCount().Should().Be(1);
-            sid.GetSidSubAuthority(0).Should().Be(0);
-
-            sid.IsWellKnownSid(WellKnownSID.World).Should().BeTrue();
-            sid.ConvertSidToString().Should().Be("S-1-1-0");
-
-            AccountSidInformation info = sid.LookupAccountSid();
-            info.Name.Should().Be("Everyone");
-            info.DomainName.Should().Be("");
-            info.Usage.Should().Be(SidNameUse.WellKnownGroup);
-        }
-
-        [Fact]
-        public void IsValidSid_GoodSid()
-        {
-            SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
-            sid.IsValidSid().Should().BeTrue();
-        }
-
-        // [Fact]
-        private void DumpAllWellKnownSids()
-        {
-            foreach (WellKnownSID type in Enum.GetValues(typeof(WellKnownSID)))
-            {
-                Debug.WriteLine(@"/// <summary>");
-                try
-                {
-                    SID sid = Security.CreateWellKnownSid(type);
-                    AccountSidInformation info = sid.LookupAccountSid();
-                    Debug.WriteLine($"/// {info.Name} ({sid.ConvertSidToString()}) [{info.Usage}]");
-                }
-                catch
-                {
-                    Debug.WriteLine($"/// Unable to retrieve");
-                }
-                Debug.WriteLine(@"/// </summary>");
-                Debug.WriteLine($"{type} = {(int)type},");
-                Debug.WriteLine("");
-            }
-        }
-
-        [Fact]
-        public void IsValidSid_BadSid()
-        {
-            SID sid = new SID();
-            sid.IsValidSid().Should().BeFalse();
         }
 
         [Fact]
@@ -276,7 +212,7 @@ namespace SecurityTests
         [Fact]
         public void ChangeThreadToImpersonate()
         {
-            ThreadRunner.Run((Action)(() =>
+            ThreadRunner.Run((() =>
             {
                 using (var token = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf: true))
                 {
@@ -291,6 +227,7 @@ namespace SecurityTests
                         {
                             Security.SetThreadToken(thread, duplicate);
 
+                            // We didn't actually change from what the process token is
                             using (var threadToken = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf: false))
                             {
                                 threadToken.Should().BeNull();
@@ -337,24 +274,45 @@ namespace SecurityTests
         }
 
         [Fact]
-        public void Impersonate_DisableUser_FileAccess()
+        public void Impersonate_Anonymous()
         {
             ThreadRunner.Run((() =>
             {
-                using (var cleaner = new TestFileCleaner())
-                using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+                Security.ImpersonateAnonymousToken();
+                Security.RevertToSelf();
+            }));
+        }
+
+        [Theory,
+            InlineData(true),
+            InlineData(false)]
+        public void Impersonate_Anonymous_GetThreadToken(bool openAsSelf)
+        {
+            using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
+            {
+                var privileges = token.GetTokenPrivileges();
+            }
+
+            ThreadRunner.Run((() =>
+            {
+                Security.ImpersonateAnonymousToken();
+                SID sid;
+                using (var threadToken = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf))
                 {
-                    string path = cleaner.CreateTestFile(nameof(Impersonate_DisableUser_FileAccess));
-                    FileHelper.ReadAllText(path).Should().Be(nameof(Impersonate_DisableUser_FileAccess));
-                    using (var restricted = Security.CreateRestrictedToken(token, Security.GetTokenUserSid(token)))
-                    {
-                        Security.ImpersonateLoggedOnUser(restricted);
-                        Action action = () => FileHelper.ReadAllText(path);
-                        action.Should().Throw<UnauthorizedAccessException>();
-                        Security.RevertToSelf();
-                        FileHelper.ReadAllText(path).Should().Be(nameof(Impersonate_DisableUser_FileAccess));
-                    }
+                    threadToken.Should().NotBeNull();
+                    threadToken.IsInvalid.Should().BeFalse();
+                    sid = threadToken.GetTokenOwnerSid();
+                    Action action = () => sid.LookupAccountSid();
+                    action.Should().Throw<UnauthorizedAccessException>();
+
+                    var privileges = threadToken.GetTokenPrivileges();
                 }
+                Security.RevertToSelf();
+
+                var info = sid.LookupAccountSid();
+                info.Name.Should().Be("ANONYMOUS LOGON");
+                info.Usage.Should().Be(SidNameUse.WellKnownGroup);
+                sid.Equals(Security.CreateWellKnownSid(WellKnownSID.Anonymous)).Should().BeTrue();
             }));
         }
     }

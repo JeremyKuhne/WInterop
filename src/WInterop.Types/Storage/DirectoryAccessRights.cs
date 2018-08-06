@@ -95,6 +95,29 @@ namespace WInterop.Storage
         /// The right to use the object for synchronization. Enables a thread to wait
         /// until the object is in the signaled state. [SYNCHRONIZE]
         /// </summary>
-        Synchronize = StandardAccessRights.Synchronize
+        Synchronize = StandardAccessRights.Synchronize,
+
+        /// <summary>
+        /// Maps internally to ReadAttributes | ListDirectory | ReadExtendedAttributes | StandardRightsRead | Synchronize.
+        /// [FILE_GENERIC_READ]
+        /// </summary>
+        GenericRead = GenericAccessRights.Read,
+
+        /// <summary>
+        /// Maps internally to AddSubdirectory | WriteAttributes | AddFile | WriteExtendedAttributes | StandardRightsWrite | Synchronize.
+        /// [FILE_GENERIC_WRITE]
+        /// </summary>
+        GenericWrite = GenericAccessRights.Write,
+
+        /// <summary>
+        /// Maps internally to DeleteChild | ReadAttributes | StandardRightsExecute | Synchronize.
+        /// [FILE_GENERIC_EXECUTE]
+        /// </summary>
+        GenericExecute = GenericAccessRights.Execute,
+
+        /// <summary>
+        /// Not technically part of the SDK, for convenience.
+        /// </summary>
+        GenericReadWrite = GenericRead | GenericWrite
     }
 }

@@ -8,11 +8,11 @@
 using System;
 using WInterop.Security.Native;
 using WInterop.Errors;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
 using System.Collections.Generic;
 using System.Linq;
+using WInterop.ProcessAndThreads;
 
 namespace WInterop.Security
 {
@@ -29,13 +29,11 @@ namespace WInterop.Security
         {
             LUID luid = LookupPrivilegeValue(privilege);
 
-            var luidAttributes = new LuidAndAttributes { Luid = luid };
-
-            var set = new PRIVILEGE_SET
+            var set = new PrivilegeSet
             {
                 Control = PRIVILEGE_SET_ALL_NECESSARY,
                 PrivilegeCount = 1,
-                Privilege = new LuidAndAttributes { Luid = luid }
+                Privilege = luid
             };
 
             if (!Imports.PrivilegeCheck(token, &set, out BOOL result))
@@ -65,14 +63,14 @@ namespace WInterop.Security
             if (privileges == null || privileges.Length == 0)
                 return true;
 
-            byte* buffer = stackalloc byte[sizeof(PRIVILEGE_SET) + (sizeof(LuidAndAttributes) * (privileges.Length - 1))];
-            PRIVILEGE_SET* set = (PRIVILEGE_SET*)buffer;
+            byte* buffer = stackalloc byte[sizeof(PrivilegeSet) + (sizeof(LuidAndAttributes) * (privileges.Length - 1))];
+            PrivilegeSet* set = (PrivilegeSet*)buffer;
             set->Control = all ? PRIVILEGE_SET_ALL_NECESSARY : 0;
             set->PrivilegeCount = (uint)privileges.Length;
             Span<LuidAndAttributes> luids = new Span<LuidAndAttributes>(&set->Privilege, privileges.Length);
             for (int i = 0; i < privileges.Length; i++)
             {
-                luids[i] = new LuidAndAttributes { Luid = LookupPrivilegeValue(privileges[i]) };
+                luids[i] = LookupPrivilegeValue(privileges[i]);
             }
 
             if (!Imports.PrivilegeCheck(token, set, out BOOL result))
@@ -138,9 +136,14 @@ namespace WInterop.Security
         }
 
         public static void ImpersonateLoggedOnUser(this AccessToken token)
+            => Error.ThrowLastErrorIfFalse(Imports.ImpersonateLoggedOnUser(token));
+
+        public static void ImpersonateAnonymousToken()
         {
-            if (!Imports.ImpersonateLoggedOnUser(token))
-                throw Error.GetIoExceptionForLastError();
+            using (ThreadHandle thread = Threads.GetCurrentThread())
+            {
+                Error.ThrowLastErrorIfFalse(Imports.ImpersonateAnonymousToken(thread));
+            }
         }
 
         public static void RevertToSelf()

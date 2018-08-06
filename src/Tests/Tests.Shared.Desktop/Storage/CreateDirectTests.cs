@@ -12,9 +12,9 @@ using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
 
-namespace DesktopTests.File
+namespace StorageTests
 {
-    public class CreateDirectTests
+    public class CreateDirect
     {
         [Fact]
         public void CreateRelativeToDirectoryHandle()

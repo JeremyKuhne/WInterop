@@ -100,7 +100,10 @@ namespace Tests.Support
 
         public string GetTestPath(string basePath = null)
         {
-            return Path.Combine(basePath ?? TempFolder, Path.GetRandomFileName());
+            string path = Path.Combine(basePath ?? TempFolder, Path.GetRandomFileName());
+            if (basePath != null && !TempFolder.StartsWith(basePath))
+                TrackFile(path);
+            return path;
         }
 
         public string CreateTestFile(string content, string basePath = null)

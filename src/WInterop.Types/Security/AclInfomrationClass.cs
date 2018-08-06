@@ -16,12 +16,12 @@ namespace WInterop.Security
     public enum AclInformationClass : uint
     {
         /// <summary>
-        /// [AclRevisionInformation] <see cref="ACL_REVISION_INFORMATION"/>
+        /// [AclRevisionInformation] <see cref="AclRevisionInformation"/>
         /// </summary>
         RevisionInformation = 1,
 
         /// <summary>
-        /// [AclSizeInformation] <see cref="ACL_REVISION_INFORMATION"/>
+        /// [AclSizeInformation] <see cref="AclRevisionInformation"/>
         /// </summary>
         SizeInformation = 2
     }

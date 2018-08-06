@@ -752,24 +752,32 @@ namespace WInterop.Storage
         /// <summary>
         /// Get the owner SID for the given handle.
         /// </summary>
-        public unsafe static SID QueryOwner(SafeFileHandle handle)
+        public unsafe static SID GetOwner(this SafeFileHandle handle)
+            => Security.Security.GetOwner(handle, ObjectType.File);
+
+        /// <summary>
+        /// Get the primary group SID for the given handle.
+        /// </summary>
+        public unsafe static SID GetPrimaryGroup(this SafeFileHandle handle)
+            => Security.Security.GetPrimaryGroup(handle, ObjectType.File);
+
+        /// <summary>
+        /// Get the discretionary access control list for the given handle.
+        /// </summary>
+        public unsafe static SecurityDescriptor GetAccessControlList(this SafeFileHandle handle)
+            => Security.Security.GetAccessControlList(handle, ObjectType.File);
+
+        public unsafe static void ChangeAccess(
+            this SafeFileHandle handle,
+            in SID sid,
+            FileAccessRights rights,
+            AccessMode access,
+            Inheritance inheritance = Inheritance.NoInheritance)
         {
-            SID* sidp;
-            Security.Native.SECURITY_DESCRIPTOR* descriptor;
-
-            WindowsError result = Security.Native.Imports.GetSecurityInfo(
-                handle,
-                SecurityObjectType.File,
-                SecurityInformation.Owner,
-                ppsidOwner: &sidp,
-                ppSecurityDescriptor: &descriptor);
-
-            if (result != WindowsError.ERROR_SUCCESS)
-                throw Error.GetIoExceptionForError(result);
-
-            SID sid = new SID(sidp);
-            MemoryMethods.LocalFree((IntPtr)(descriptor));
-            return sid;
+            using (SecurityDescriptor sd = GetAccessControlList(handle))
+            {
+                sd.SetAclAccess(in sid, rights, access, inheritance);
+            }
         }
 
         /// <summary>

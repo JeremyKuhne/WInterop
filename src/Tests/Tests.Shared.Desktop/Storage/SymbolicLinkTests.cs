@@ -9,15 +9,14 @@ using FluentAssertions;
 using System;
 using Tests.Support;
 using WInterop.Security;
-using WInterop.Devices;
 using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
 
-namespace DesktopTests.File
+namespace StorageTests
 {
-    public class SymbolicLinkTests
+    public class SymbolicLinks
     {
         private static bool CanCreateSymbolicLinks()
         {

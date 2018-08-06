@@ -7,17 +7,24 @@
 
 namespace WInterop.Security
 {
-    // https://msdn.microsoft.com/en-us/library/cc234317.aspx
-    public enum SECURITY_CONTEXT_TRACKING_MODE : byte
+    /// <summary>
+    /// [SECURITY_CONTEXT_TRACKING_MODE]
+    /// </summary>
+    /// <remarks>
+    /// <see cref="https://msdn.microsoft.com/en-us/library/cc234317.aspx"/>
+    /// </remarks>
+    public enum ContextTrackingMode : byte
     {
         /// <summary>
         /// The server is given a snapshot of the client's security context.
+        /// [SECURITY_STATIC_TRACKING]
         /// </summary>
-        SECURITY_STATIC_TRACKING = 0x00,
+        Static = 0x00,
 
         /// <summary>
         /// The server is continually updated with changes.
+        /// [SECURITY_DYNAMIC_TRACKING]
         /// </summary>
-        SECURITY_DYNAMIC_TRACKING = 0x01
+        Dynamic = 0x01
     }
 }

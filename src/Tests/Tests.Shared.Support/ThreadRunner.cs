@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 
 namespace Tests.Shared.Support
@@ -36,7 +37,7 @@ namespace Tests.Shared.Support
             thread.Start();
             thread.Join();
             if (exception != null)
-                throw exception;
+                ExceptionDispatchInfo.Capture(exception).Throw();
         }
     }
 }

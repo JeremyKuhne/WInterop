@@ -223,10 +223,11 @@ namespace WInterop.Security
             int size = sizeof(TOKEN_OWNER) + sizeof(SID);
             byte* buffer = stackalloc byte[size];
 
-            if (!Imports.GetTokenInformation(token, TokenInformation.Owner, buffer, (uint)size, out uint _))
-                throw Errors.Error.GetIoExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetTokenInformation(token, TokenInformation.Owner, buffer, (uint)size, out uint _));
 
-            return CopySid(((TOKEN_OWNER*)buffer)->Owner);
+            TOKEN_OWNER* owner = (TOKEN_OWNER*)buffer;
+            return CopySid(owner->Owner);
         }
 
         /// <summary>
@@ -387,12 +388,12 @@ namespace WInterop.Security
         {
             using (AccessToken token = OpenProcessToken(AccessTokenRights.Read))
             {
-                TOKEN_ELEVATION elevation = new TOKEN_ELEVATION();
+                TokenElevation elevation = new TokenElevation();
                 if (!Imports.GetTokenInformation(
                     token,
                     TokenInformation.Elevation,
                     &elevation,
-                    (uint)sizeof(TOKEN_ELEVATION),
+                    (uint)sizeof(TokenElevation),
                     out _))
                 {
                     throw Error.GetIoExceptionForLastError();
@@ -426,16 +427,17 @@ namespace WInterop.Security
         /// <param name="rights">Rights to apply to the token. default is all of the rights from the source token.</param>
         /// <param name=""></param>
         /// <returns></returns>
-        public static AccessToken DuplicateToken(
+        public unsafe static AccessToken DuplicateToken(
             this AccessToken token,
             AccessTokenRights rights = default,
             ImpersonationLevel impersonationLevel = ImpersonationLevel.Anonymous,
             TokenType tokenType = TokenType.Impersonation)
         {
+            // Note that DuplicateToken calls DuplicateTokenEx with TOKEN_IMPERSONATE | TOKEN_QUERY and null.
             if (!Imports.DuplicateTokenEx(
                 token,
-                AccessTokenRights.Impersonate | AccessTokenRights.Query | AccessTokenRights.AdjustPrivileges,
-                IntPtr.Zero,
+                rights,
+                null,
                 ImpersonationLevel.Impersonation,
                 TokenType.Impersonation,
                 out AccessToken duplicatedToken))
@@ -451,5 +453,73 @@ namespace WInterop.Security
             if (!Imports.SetThreadToken(thread, token))
                 throw Error.GetIoExceptionForLastError();
         }
+
+        /// <summary>
+        /// Get the owner SID for the given handle.
+        /// </summary>
+        public unsafe static SID GetOwner(SafeHandle handle, ObjectType type)
+        {
+            SID* sidp;
+            SECURITY_DESCRIPTOR* descriptor;
+
+            WindowsError result = Imports.GetSecurityInfo(
+                handle,
+                type,
+                SecurityInformation.Owner,
+                ppsidOwner: &sidp,
+                ppSecurityDescriptor: &descriptor);
+
+            if (result != WindowsError.ERROR_SUCCESS)
+                throw Error.GetIoExceptionForError(result);
+
+            SID sid = new SID(sidp);
+            Memory.Memory.LocalFree((IntPtr)(descriptor));
+            return sid;
+        }
+
+        /// <summary>
+        /// Get the primary group SID for the given handle.
+        /// </summary>
+        public unsafe static SID GetPrimaryGroup(SafeHandle handle, ObjectType type)
+        {
+            SID* sidp;
+            SECURITY_DESCRIPTOR* descriptor;
+
+            WindowsError result = Imports.GetSecurityInfo(
+                handle,
+                type,
+                SecurityInformation.Group,
+                ppsidGroup: &sidp,
+                ppSecurityDescriptor: &descriptor);
+
+            if (result != WindowsError.ERROR_SUCCESS)
+                throw Error.GetIoExceptionForError(result);
+
+            SID sid = new SID(sidp);
+            Memory.Memory.LocalFree((IntPtr)(descriptor));
+            return sid;
+        }
+
+        /// <summary>
+        /// Get discretionary access control list for the specified handle.
+        /// </summary>
+        public unsafe static SecurityDescriptor GetAccessControlList(SafeHandle handle, ObjectType type)
+        {
+            ACL* acl;
+            SECURITY_DESCRIPTOR* descriptor;
+
+            WindowsError result = Imports.GetSecurityInfo(
+                handle,
+                type,
+                SecurityInformation.Dacl,
+                ppDacl: &acl,
+                ppSecurityDescriptor: &descriptor);
+
+            if (result != WindowsError.ERROR_SUCCESS)
+                throw Error.GetIoExceptionForError(result);
+
+            return new SecurityDescriptor(handle, type, descriptor);
+        }
+
     }
 }

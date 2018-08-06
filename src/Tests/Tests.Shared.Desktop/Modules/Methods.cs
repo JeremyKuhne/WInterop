@@ -11,7 +11,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop.Storage;
-using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Windows;
 using WInterop.Support;
@@ -19,15 +18,15 @@ using Xunit;
 using ModuleTypes = WInterop.Modules;
 using System.Drawing;
 
-namespace DesktopTests.ModuleTests
+namespace ModuleTests
 {
-    public class Methods
+    public class Basic
     {
         internal const string NativeTestLibrary = "NativeTestLibrary.dll";
 
         private string GetNativeTestLibraryLocation()
         {
-            string path = Paths.Combine(System.IO.Path.GetDirectoryName((new Uri(typeof(Methods).Assembly.CodeBase)).LocalPath), NativeTestLibrary);
+            string path = Paths.Combine(System.IO.Path.GetDirectoryName((new Uri(typeof(Basic).Assembly.CodeBase)).LocalPath), NativeTestLibrary);
             if (!Storage.FileExists(path))
             {
                 throw new System.IO.FileNotFoundException(path);

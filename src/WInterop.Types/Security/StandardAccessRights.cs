@@ -28,12 +28,18 @@ namespace WInterop.Security
         /// The right to read the information in the object's security descriptor.
         /// Doesn't include system access control list info (SACL). [READ_CONTROL]
         /// </summary>
+        /// <remarks>
+        /// .NET calls this ReadPermissions <see cref="System.Security.AccessControl.FileSystemRights"/>.
+        /// </remarks>
         ReadControl = 0x00020000,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
         /// object's security descriptor. [WRITE_DAC]
         /// </summary>
+        /// <remarks>
+        /// .NET calls this WritePermissions <see cref="System.Security.AccessControl.FileSystemRights"/>.
+        /// </remarks>
         WriteDac = 0x00040000,
 
         /// <summary>
@@ -47,6 +53,17 @@ namespace WInterop.Security
         /// this access right. [SYNCHRONIZE]
         /// </summary>
         Synchronize = 0x00100000,
+
+        /// <summary>
+        /// The right to read/change the system access control list (SACL), which
+        /// controls access logging. [ACCESS_SYSTEM_SECURITY]
+        /// </summary>
+        /// <remarks>
+        /// This right isn't technically part of StandardAccessRights- it's very special.
+        /// This is the best place to put it, however. It isn't included as part of the
+        /// <see cref="All"/> mask.
+        /// </remarks>
+        AccessSystemSecurity = 0x01000000,
 
         // Yes, these three are all READ_CONTROL
 

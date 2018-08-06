@@ -280,6 +280,16 @@ namespace WInterop.Errors
             if (result.Failed()) throw result.GetException(path);
         }
 
+        public static void ThrowLastErrorIfFalse(bool result, string path = null)
+        {
+            if (!result) throw GetIoExceptionForLastError(path);
+        }
+
+        public static void ThrowIfFailed(this WindowsError error, string path = null)
+        {
+            if (error != WindowsError.ERROR_SUCCESS) throw GetIoExceptionForError(error, path);
+        }
+
         private const int STATUS_SEVERITY_SUCCESS = 0x0;
         private const int STATUS_SEVERITY_INFORMATIONAL = 0x1;
         private const int STATUS_SEVERITY_WARNING = 0x2;

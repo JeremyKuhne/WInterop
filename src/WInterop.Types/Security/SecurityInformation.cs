@@ -19,7 +19,7 @@ namespace WInterop.Security
     public enum SecurityInformation : uint
     {
         /// <summary>
-        /// Primary group identifier of the object being referenced. [OWNER_SECURITY_INFORMATION]
+        /// Primary owner identifier of the object being referenced. [OWNER_SECURITY_INFORMATION]
         /// </summary>
         /// <remarks>
         /// <see cref="StandardAccessRights.ReadControl"/> right required to query.
@@ -28,18 +28,29 @@ namespace WInterop.Security
         Owner = 0x00000001,
 
         /// <summary>
-        /// [GROUP_SECURITY_INFORMATION]
+        /// The primary group identifier. [GROUP_SECURITY_INFORMATION]
         /// </summary>
+        /// <remarks>
+        /// <see cref="StandardAccessRights.ReadControl"/> right required to query.
+        /// <see cref="StandardAccessRights.WriteOwner"/> right required to set.
+        /// </remarks>
         Group = 0x00000002,
 
         /// <summary>
-        /// [DACL_SECURITY_INFORMATION]
+        /// The discretionary access control list (DACL). [DACL_SECURITY_INFORMATION]
         /// </summary>
+        /// <remarks>
+        /// <see cref="StandardAccessRights.ReadControl"/> right required to query.
+        /// <see cref="StandardAccessRights.WriteDac"/> right required to set.
+        /// </remarks>
         Dacl = 0x00000004,
 
         /// <summary>
-        /// [SACL_SECURITY_INFORMATION]
+        /// The system access control list (SACL). [SACL_SECURITY_INFORMATION]
         /// </summary>
+        /// <remarks>
+        /// <see cref="StandardAccessRights.AccessSystemSecurity"/> right required to read or write.
+        /// </remarks>
         Sacl = 0x00000008,
 
         /// <summary>

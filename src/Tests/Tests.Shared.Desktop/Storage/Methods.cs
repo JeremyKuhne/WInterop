@@ -9,7 +9,7 @@ using FluentAssertions;
 using WInterop.Storage;
 using Xunit;
 
-namespace DesktopTests.DiskManagementTests
+namespace StorageTests
 {
     public class DiskTests
     {

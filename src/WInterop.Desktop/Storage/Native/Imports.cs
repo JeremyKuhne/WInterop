@@ -12,6 +12,7 @@ using WInterop.Security.Native;
 using WInterop.Errors;
 using WInterop.Handles;
 using WInterop.SafeString.Types;
+using WInterop.Handles.Native;
 
 namespace WInterop.Storage.Native
 {
@@ -70,6 +71,23 @@ namespace WInterop.Storage.Native
         public static extern bool DecryptFileW(
             string lpFileName,
             uint dwReserved);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/Winefs/nf-winefs-queryusersonencryptedfile
+        [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public unsafe static extern WindowsError QueryUsersOnEncryptedFile(
+            string lpFileName,
+            ENCRYPTION_CERTIFICATE_HASH_LIST** pUsers);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winefs/nf-winefs-freeencryptioncertificatehashlist
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public unsafe static extern void FreeEncryptionCertificateHashList(
+            ENCRYPTION_CERTIFICATE_HASH_LIST* pUsers);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winefs/nf-winefs-removeusersfromencryptedfile
+        [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public unsafe static extern WindowsError RemoveUsersFromEncryptedFile(
+            string lpFileName,
+            ENCRYPTION_CERTIFICATE_HASH_LIST* pHashes);
 
         // https://docs.microsoft.com/en-us/windows/desktop/FileIO/adding-users-to-an-encrypted-file
         //

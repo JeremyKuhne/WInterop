@@ -12,9 +12,9 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace DesktopTests.File
+namespace StorageTests
 {
-    public class FileInformationTests
+    public class FileInformation
     {
         [Fact]
         public void TestFileRights()

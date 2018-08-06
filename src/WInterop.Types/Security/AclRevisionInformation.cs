@@ -8,12 +8,13 @@
 namespace WInterop.Security
 {
     /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/aa379307.aspx">PRIVILEGE_SET</a> structure.
+    /// [ACL_REVISION_INFORMATION]
     /// </summary>
-    public struct PRIVILEGE_SET
+    /// <remarks>
+    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374942.aspx"/>
+    /// </remarks>
+    public readonly struct AclRevisionInformation
     {
-        public uint PrivilegeCount;
-        public uint Control;
-        public LuidAndAttributes Privilege;
+        public readonly uint AclRevision;
     }
 }

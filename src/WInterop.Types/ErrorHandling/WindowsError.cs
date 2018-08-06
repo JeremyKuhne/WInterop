@@ -208,6 +208,8 @@ namespace WInterop.Errors
         ERROR_INVALID_INDEX = 1413,
         ERROR_INVALID_ICON_HANDLE = 1414,
 
+        RPC_S_SERVER_UNAVAILABLE = 1722,
+
         // From lmerr.h
         NERR_BASE = 2100,
         NERR_BufTooSmall = NERR_BASE + 23,
@@ -218,6 +220,8 @@ namespace WInterop.Errors
         ERROR_NOT_APPCONTAINER = 4250,
         ERROR_APPCONTAINER_REQUIRED = 4251,
         ERROR_NOT_SUPPORTED_IN_APPCONTAINER = 4252,
+
+        ERROR_FILE_NOT_ENCRYPTED = 6007,
 
         APPMODEL_ERROR_NO_APPLICATION = 15703,
 

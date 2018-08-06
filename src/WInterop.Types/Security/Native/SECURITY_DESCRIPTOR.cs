@@ -8,14 +8,14 @@
 namespace WInterop.Security.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379561.aspx
-    public unsafe struct SECURITY_DESCRIPTOR
+    public unsafe readonly struct SECURITY_DESCRIPTOR
     {
-        public byte Revision;
-        public byte Sbz1;
-        public ushort Control;
-        public SID* Owner;
-        public SID* Group;
-        public ACL* Sacl;
-        public ACL* Dacl;
+        public readonly byte Revision;
+        public readonly byte Sbz1;
+        public readonly SECURITY_DESCRIPTOR_CONTROL Control;
+        public readonly SID* Owner;
+        public readonly SID* Group;
+        public readonly ACL* Sacl;
+        public readonly ACL* Dacl;
     }
 }

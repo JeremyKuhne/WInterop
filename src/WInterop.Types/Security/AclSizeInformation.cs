@@ -7,9 +7,13 @@
 
 namespace WInterop.Security
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb530717.aspx
-    public struct TOKEN_ELEVATION
+    /// <summary>
+    /// [ACL_SIZE_INFORMATION]
+    /// </summary>
+    public struct AclSizeInformation
     {
-        public BOOL TokenIsElevated;
+        public uint AceCount;
+        public uint AclBytesInUse;
+        public uint AclBytesFree;
     }
 }

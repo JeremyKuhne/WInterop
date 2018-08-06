@@ -13,9 +13,9 @@ using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
 
-namespace DesktopTests.File
+namespace StorageTests
 {
-    public class FileManagementTests
+    public class Basic
     {
         [Fact]
         public void GetShortPathBasic()

@@ -7,9 +7,14 @@
 
 namespace WInterop.Security
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374942.aspx
-    public struct ACL_REVISION_INFORMATION
+    /// <summary>
+    /// [TOKEN_ELEVATION]
+    /// </summary>
+    /// <remarks>
+    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/bb530717.aspx"/>
+    /// </remarks>
+    public struct TokenElevation
     {
-        public uint AclRevision;
+        public BOOL TokenIsElevated;
     }
 }

@@ -17,6 +17,7 @@ using WInterop.Handles;
 using WInterop.SafeString.Types;
 using WInterop.Support;
 using WInterop.Support.Buffers;
+using WInterop.Security;
 
 namespace WInterop.Storage
 {
@@ -175,7 +176,7 @@ namespace WInterop.Storage
             fixed (char* c = &MemoryMarshal.GetReference(path))
             {
                 UNICODE_STRING name = new UNICODE_STRING(c, path.Length);
-                OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES(
+                var attributes = new Handles.Native.OBJECT_ATTRIBUTES(
                     &name,
                     objectAttributes,
                     rootDirectory,
@@ -630,6 +631,66 @@ namespace WInterop.Storage
             }
 
             return streams;
+        }
+
+        public static void EncryptFile(string path)
+            => Error.ThrowLastErrorIfFalse(Imports.EncryptFileW(path), path);
+
+        public static void DecryptFile(string path)
+            => Error.ThrowLastErrorIfFalse(Imports.DecryptFileW(path, 0), path);
+
+        public unsafe static IEnumerable<SID> QueryUsersOnEncryptedFile(string path)
+        {
+            ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
+            Error.ThrowIfFailed(Imports.QueryUsersOnEncryptedFile(path, &hashList));
+            if (hashList->nCert_Hash == 0)
+            {
+                Imports.FreeEncryptionCertificateHashList(hashList);
+                return Enumerable.Empty<SID>();
+            }
+
+            ENCRYPTION_CERTIFICATE_HASH* users = *hashList->pUsers;
+            SID[] sids = new SID[hashList->nCert_Hash];
+            for (int i = 0; i < sids.Length; i++)
+            {
+                sids[0] = new SID(users->pUserSid);
+                users++;
+            }
+
+            Imports.FreeEncryptionCertificateHashList(hashList);
+            return sids;
+        }
+
+        public unsafe static bool RemoveUser(in SID sid, string path)
+        {
+            ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
+            Error.ThrowIfFailed(Imports.QueryUsersOnEncryptedFile(path, &hashList));
+
+            try
+            {
+                ENCRYPTION_CERTIFICATE_HASH* users = *hashList->pUsers;
+                for (int i = 0; i < hashList->nCert_Hash; i++)
+                {
+                    if (sid.Equals(users->pUserSid))
+                    {
+                        var removeList = new ENCRYPTION_CERTIFICATE_HASH_LIST
+                        {
+                            nCert_Hash = 1,
+                            pUsers = &users
+                        };
+
+                        Error.ThrowIfFailed(Imports.RemoveUsersFromEncryptedFile(path, &removeList));
+                        return true;
+                    }
+                    users++;
+                }
+
+                return false;
+            }
+            finally
+            {
+                Imports.FreeEncryptionCertificateHashList(hashList);
+            }
         }
     }
 }

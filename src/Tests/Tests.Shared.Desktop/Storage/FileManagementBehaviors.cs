@@ -16,9 +16,9 @@ using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using Xunit;
 
-namespace DesktopTests.FileManagementTests
+namespace StorageTests
 {
-    public class FileManagementBehaviors
+    public class Behaviors
     {
         [Fact]
         public void OpenFileWithTrailingSeparator()

@@ -10,9 +10,9 @@ namespace WInterop.Security
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/aa379261.aspx">LUID</a> structure.
     /// </summary>
-    public struct LUID
+    public readonly struct LUID
     {
-        public uint LowPart;
-        public uint HighPart;
+        public readonly uint LowPart;
+        public readonly uint HighPart;
     }
 }

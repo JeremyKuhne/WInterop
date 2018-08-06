@@ -86,6 +86,33 @@ namespace WInterop.Storage
         /// The right to use the object for synchronization. Enables a thread to wait
         /// until the object is in the signaled state. [SYNCHRONIZE]
         /// </summary>
-        Synchronize = StandardAccessRights.Synchronize
+        Synchronize = StandardAccessRights.Synchronize,
+
+        /// <summary>
+        /// Maps internally to ReadAttributes | ReadData | ReadExtendedAttributes | StandardRightsRead | Synchronize.
+        /// [FILE_GENERIC_READ]
+        /// </summary>
+        /// <remarks>
+        /// This is effectively equivalent to <see cref="System.Security.AccessControl.FileSystemRights.Read"/>,
+        /// although the rights are mapped out (modulo <see cref="Synchronize"/>.
+        /// </remarks>
+        GenericRead = GenericAccessRights.Read,
+
+        /// <summary>
+        /// Maps internally to AppendData | WriteAttributes | WriteData | WriteExtendedAttributes | StandardRightsWrite | Synchronize.
+        /// [FILE_GENERIC_WRITE]
+        /// </summary>
+        GenericWrite = GenericAccessRights.Write,
+
+        /// <summary>
+        /// Maps internally to Execute | ReadAttributes | StandardRightsExecute | Synchronize.
+        /// [FILE_GENERIC_EXECUTE]
+        /// </summary>
+        GenericExecute = GenericAccessRights.Execute,
+
+        /// <summary>
+        /// Not technically part of the SDK, for convenience.
+        /// </summary>
+        GenericReadWrite = GenericRead | GenericWrite
     }
 }

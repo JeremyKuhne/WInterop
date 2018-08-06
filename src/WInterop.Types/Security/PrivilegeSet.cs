@@ -7,10 +7,13 @@
 
 namespace WInterop.Security
 {
-    public struct ACL_SIZE_INFORMATION
+    /// <summary>
+    /// <a href="https://msdn.microsoft.com/en-us/library/aa379307.aspx">[PRIVILEGE_SET]</a> structure.
+    /// </summary>
+    public struct PrivilegeSet
     {
-        public uint AceCount;
-        public uint AclBytesInUse;
-        public uint AclBytesFree;
+        public uint PrivilegeCount;
+        public uint Control;
+        public LuidAndAttributes Privilege;
     }
 }

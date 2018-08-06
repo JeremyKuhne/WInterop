@@ -7,6 +7,7 @@
 
 using System;
 using WInterop.Handles;
+using WInterop.Support.Internal;
 
 namespace WInterop.Memory
 {
@@ -24,7 +25,7 @@ namespace WInterop.Memory
 
         protected override bool ReleaseHandle()
         {
-            Support.Internal.Imports.LocalFree(handle);
+            Imports.LocalFree(handle);
             return true;
         }
     }

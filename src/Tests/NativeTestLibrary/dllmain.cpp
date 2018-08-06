@@ -4,6 +4,8 @@
 #include "accctrl.h"
 #include "shellapi.h"
 #include "shlobj.h"
+#include "aclapi.h"
+#include "lm.h"
 
 BOOL APIENTRY DllMain(
     HMODULE hModule,

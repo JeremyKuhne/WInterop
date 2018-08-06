@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Security\SecurityDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\BufferWrappers\FullPathNameWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\BufferWrappers\TempPathWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\DosMatcher.cs" />
@@ -58,7 +59,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.Imports.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Security\" />
     <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Native\" />
     <Folder Include="$(MSBuildThisFileDirectory)Storage\Native\" />
     <Folder Include="$(MSBuildThisFileDirectory)SystemInformation\Native\" />

@@ -8,7 +8,7 @@
 using System.Diagnostics;
 using WInterop.Security;
 
-namespace WInterop.NetworkManagement.Types
+namespace WInterop.Network
 {
     [DebuggerDisplay("{Name} {AccountType}")]
     public struct MemberInfo

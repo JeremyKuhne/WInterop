@@ -11,9 +11,9 @@ namespace WInterop.Security
     /// Object types that support security. [SE_OBJECT_TYPE]
     /// </summary>
     /// <remarks>
-    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379593.aspx"/>
+    /// <see cref="https://docs.microsoft.com/en-us/windows/desktop/api/accctrl/ne-accctrl-_se_object_type"/>
     /// </remarks>
-    public enum SecurityObjectType : uint
+    public enum ObjectType
     {
         /// <summary>
         /// [SE_UNKNOWN_OBJECT_TYPE]
@@ -21,12 +21,12 @@ namespace WInterop.Security
         Unknown = 0,
 
         /// <summary>
-        /// [SE_FILE_OBJECT]
+        /// File or directory. [SE_FILE_OBJECT]
         /// </summary>
         File,
 
         /// <summary>
-        /// [SE_SERVICE]
+        /// Windows service. [SE_SERVICE]
         /// </summary>
         Service,
 
@@ -46,22 +46,22 @@ namespace WInterop.Security
         NetworkShare,
 
         /// <summary>
-        /// Kernel object such as semaphores, mutexes, etc. S[SE_KERNEL_OBJECT]
+        /// [SE_KERNEL_OBJECT]
         /// </summary>
         Kernel,
 
         /// <summary>
-        /// [SE_WINDOW_OBJECT]
+        /// Window station or dektop object. [SE_WINDOW_OBJECT]
         /// </summary>
         Window,
 
         /// <summary>
-        /// [SE_DS_OBJECT]
+        /// Directory service object or property / property set thereof. [SE_DS_OBJECT]
         /// </summary>
         DirectoryService,
 
         /// <summary>
-        /// [SE_DS_OBJECT_ALL]
+        /// Directory service object and all its property / property sets. [SE_DS_OBJECT_ALL]
         /// </summary>
         DirectoryServiceAll,
 
@@ -71,18 +71,18 @@ namespace WInterop.Security
         ProviderDefined,
 
         /// <summary>
-        /// [SE_WMIGUID_OBJECT]
+        /// WMI object. [SE_WMIGUID_OBJECT]
         /// </summary>
         Wmi,
 
         /// <summary>
         /// [SE_REGISTRY_WOW64_32KEY]
         /// </summary>
-        RegistryKeyWow64_32,
+        RegistryWow6432,
 
         /// <summary>
         /// [SE_REGISTRY_WOW64_64KEY]
         /// </summary>
-        RegistryKeyWow64_64,
+        RegistryWow6464,
     }
 }

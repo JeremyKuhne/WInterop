@@ -10,7 +10,7 @@ using FluentAssertions;
 using WInterop.Devices;
 using Xunit;
 
-namespace Tests.Devices
+namespace DeviceTests
 {
     public class DeviceControlCodeTests
     {

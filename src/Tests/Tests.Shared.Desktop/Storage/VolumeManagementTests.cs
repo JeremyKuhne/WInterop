@@ -11,9 +11,9 @@ using WInterop.Errors;
 using WInterop.Storage;
 using Xunit;
 
-namespace DesktopTests
+namespace StorageTests
 {
-    public class VolumeManagementTests
+    public class Volumes
     {
         [Fact]
         public void QueryDosDevice_All()

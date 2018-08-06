@@ -11,9 +11,17 @@ namespace WInterop.Security
     /// <a href="https://msdn.microsoft.com/en-us/library/aa379263.aspx">LUID_AND_ATTRIBUTES</a> structure.
     /// [LUID_AND_ATTRIBUTES]
     /// </summary>
-    public struct LuidAndAttributes
+    public readonly struct LuidAndAttributes
     {
-        public LUID Luid;
-        public PrivilegeAttributes Attributes;
+        public readonly LUID Luid;
+        public readonly PrivilegeAttributes Attributes;
+
+        public LuidAndAttributes(LUID luid, PrivilegeAttributes attributes = default)
+        {
+            Luid = luid;
+            Attributes = attributes;
+        }
+
+        public static implicit operator LuidAndAttributes(LUID luid) => new LuidAndAttributes(luid);
     }
 }

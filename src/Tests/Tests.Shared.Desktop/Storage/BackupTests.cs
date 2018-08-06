@@ -11,9 +11,9 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace DesktopTests.StorageTests
+namespace StorageTests
 {
-    public class BackupTests
+    public class Backup
     {
         [Fact]
         public void NoAlternateStreamData()

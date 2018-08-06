@@ -8,19 +8,15 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Support;
 using Internal = WInterop.Support.Internal;
 
 namespace WInterop.Memory
 {
-    public static partial class MemoryMethods
+    public static partial class Memory
     {
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-#if DESKTOP
-        [SuppressUnmanagedCodeSecurity] // We don't want a stack walk with every P/Invoke.
-#endif
         public static partial class Imports
         {
             // Heap Functions

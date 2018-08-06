@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
+using WInterop.ProcessAndThreads;
 using WInterop.SafeString.Types;
 
 namespace WInterop.Security.Native
@@ -27,13 +28,18 @@ namespace WInterop.Security.Native
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public unsafe static extern BOOL PrivilegeCheck(
             AccessToken ClientToken,
-            PRIVILEGE_SET* RequiredPrivileges,
+            PrivilegeSet* RequiredPrivileges,
             out BOOL pfResult);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378612.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public unsafe static extern BOOL ImpersonateLoggedOnUser(
             AccessToken hToken);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378610.aspx
+        [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+        public unsafe static extern BOOL ImpersonateAnonymousToken(
+            ThreadHandle thread);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]

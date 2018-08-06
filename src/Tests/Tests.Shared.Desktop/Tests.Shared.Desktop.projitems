@@ -16,10 +16,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\LzTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\DeviceManagementTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Encryption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Methods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\CreateDirectTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileInformationTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileSecurityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\SymbolicLinkTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DEVMODE_Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\DISPLAY_DEVICE_Tests.cs" />
@@ -47,7 +47,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Cryptography\" />
     <Folder Include="$(MSBuildThisFileDirectory)ErrorHandling\" />
   </ItemGroup>
 </Project>

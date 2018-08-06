@@ -11,9 +11,9 @@ using WInterop.Storage;
 using WInterop.Ipc;
 using Xunit;
 
-namespace DesktopTests.Ipc.MailslotTests
+namespace IpcTests
 {
-    public class MailslotTests
+    public class Mailslots
     {
         [Fact]
         public void BasicCreateMailslot()

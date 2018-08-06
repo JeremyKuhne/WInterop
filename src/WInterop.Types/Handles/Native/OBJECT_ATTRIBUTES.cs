@@ -6,11 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.SafeString.Types;
 using WInterop.Security;
 using WInterop.Security.Native;
-using WInterop.SafeString.Types;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff557749.aspx
     public unsafe struct OBJECT_ATTRIBUTES
@@ -40,13 +40,13 @@ namespace WInterop.Handles
         /// Optional quality of service to be applied to the object. Used to indicate
         /// security impersonation level and context tracking mode (dynamic or static).
         /// </summary>
-        public SECURITY_QUALITY_OF_SERVICE* SecurityQualityOfService;
+        public QualityOfService* SecurityQualityOfService;
 
         /// <summary>
         /// Equivalent of InitializeObjectAttributes macro with the exception that you can directly set SQOS.
         /// </summary>
         public unsafe OBJECT_ATTRIBUTES(UNICODE_STRING* objectName, ObjectAttributes attributes, IntPtr rootDirectory,
-            SECURITY_DESCRIPTOR* securityDescriptor = null, SECURITY_QUALITY_OF_SERVICE* securityQualityOfService = null)
+            SECURITY_DESCRIPTOR* securityDescriptor = null, QualityOfService* securityQualityOfService = null)
         {
             Length = (uint)sizeof(OBJECT_ATTRIBUTES);
             RootDirectory = rootDirectory;

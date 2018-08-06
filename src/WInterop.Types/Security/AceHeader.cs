@@ -8,15 +8,15 @@
 namespace WInterop.Security
 {
     /// <summary>
-    /// Defines the type and size of an access control entry (ACE).
+    /// Defines the type and size of an access control entry (ACE). [ACE_HEADER]
     /// </summary>
     /// <remarks>
     /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374919.aspx"/>
     /// </remarks>
-    public struct ACE_HEADER
+    public readonly struct AceHeader
     {
-        public AceType AceType;
-        public AceInheritance AceFlags;
-        public short AceSize;
+        public readonly AceType AceType;
+        public readonly AceInheritance AceFlags;
+        public readonly short AceSize;
     }
 }
