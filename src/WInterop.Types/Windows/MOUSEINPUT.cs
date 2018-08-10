@@ -9,13 +9,26 @@ using System;
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646273.aspx
-    public struct MOUSEINPUT
+    /// <summary>
+    /// [MOUSEINPUT]
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646273.aspx"/></remarks>
+    public struct MouseInput
     {
         public int dx;
         public int dy;
-        public uint mouseData;
+
+        /// <summary>
+        /// Wheel movement for wheel moves (positive for forward/right).
+        /// For X button events, which X button (1 or 2)
+        /// </summary>
+        public int mouseData;
+
         public MouseEvent dwFlags;
+
+        /// <summary>
+        /// Time in milliseconds.
+        /// </summary>
         public uint time;
         public IntPtr dwExtraInfo;
     }

@@ -12,7 +12,7 @@ namespace WInterop.Windows
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644949.aspx
     public delegate void SendAsyncProcedure(
         WindowHandle hwnd,
-        WindowMessage uMsg,
+        MessageType uMsg,
         UIntPtr dwData,
         LRESULT result);
 }

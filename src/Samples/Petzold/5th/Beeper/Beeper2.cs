@@ -16,14 +16,14 @@ namespace Beeper
         static bool fFlipFlop = false;
         const int ID_TIMER = 1;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     window.SetTimer(ID_TIMER, 1000, TimerProcedure);
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     window.KillTimer(ID_TIMER);
                     break;
             }
@@ -31,7 +31,7 @@ namespace Beeper
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        static void TimerProcedure(WindowHandle window, WindowMessage message, TimerId timerId, uint time)
+        static void TimerProcedure(WindowHandle window, MessageType message, TimerId timerId, uint time)
         {
             Windows.MessageBeep();
             fFlipFlop = !fFlipFlop;

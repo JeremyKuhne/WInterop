@@ -9,8 +9,11 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Windows
 {
+    /// <summary>
+    /// [INPUT]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646270.aspx
-    public struct INPUT
+    public struct Input
     {
         public InputType type;
         public InputUnion Data;
@@ -19,11 +22,11 @@ namespace WInterop.Windows
         public struct InputUnion
         {
             [FieldOffset(0)]
-            public MOUSEINPUT mi;
+            public MouseInput mi;
             [FieldOffset(0)]
-            public KEYBDINPUT ki;
+            public KeyboardInput ki;
             [FieldOffset(0)]
-            public HARDWAREINPUT hi;
+            public HardwareInput hi;
         }
     }
 }

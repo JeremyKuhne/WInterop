@@ -39,11 +39,11 @@ namespace Bezier
 
         Point[] apt = new Point[4];
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Size:
+                case MessageType.Size:
                     int cxClient = lParam.LowWord;
                     int cyClient = lParam.HighWord;
 
@@ -58,9 +58,9 @@ namespace Bezier
 
                     return 0;
 
-                case WindowMessage.LeftButtonDown:
-                case WindowMessage.RightButtonDown:
-                case WindowMessage.MouseMove:
+                case MessageType.LeftButtonDown:
+                case MessageType.RightButtonDown:
+                case MessageType.MouseMove:
                     MouseKey mk = (MouseKey)wParam.LowWord;
                     if ((mk & (MouseKey.LeftButton | MouseKey.RightButton)) != 0)
                     {
@@ -86,7 +86,7 @@ namespace Bezier
                         }
                     }
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     window.Invalidate(true);
                     using (DeviceContext dc = window.BeginPaint())
                     {

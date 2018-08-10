@@ -15,7 +15,7 @@ namespace WindowsTests
 {
     public class WindowsProcedureTests
     {
-        static LRESULT CallDefaultProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        static LRESULT CallDefaultProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
@@ -42,7 +42,7 @@ namespace WindowsTests
 
                 try
                 {
-                    window.SendMessage(WindowMessage.Activate).Should().Be((LRESULT)42);
+                    window.SendMessage(MessageType.Activate).Should().Be((LRESULT)42);
                 }
                 finally
                 {
@@ -78,7 +78,7 @@ namespace WindowsTests
 
                 try
                 {
-                    Windows.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)42);
+                    Windows.SendMessage(window, MessageType.Activate, 0, 0).Should().Be((LRESULT)42);
 
                     WNDPROC previous = default;
                     WindowProcedure subClass = (w, m, wParam, lParam) =>
@@ -88,7 +88,7 @@ namespace WindowsTests
 
                     value = 1999;
                     previous = Windows.SetWindowProcedure(window, subClass);
-                    Windows.SendMessage(window, WindowMessage.Activate, 0, 0).Should().Be((LRESULT)1999);
+                    Windows.SendMessage(window, MessageType.Activate, 0, 0).Should().Be((LRESULT)1999);
                     GC.KeepAlive(subClass);
                 }
                 finally

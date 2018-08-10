@@ -7,10 +7,20 @@
 
 namespace WInterop.Windows
 {
+    /// <summary>
+    /// [LASTINPUTINFO]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646272.aspx
-    public struct LASTINPUTINFO
+    public struct LastInputInfo
     {
+        /// <summary>
+        /// Size of the struct in bytes.
+        /// </summary>
         public uint cbSize;
+
+        /// <summary>
+        /// Tick count when the last input was recieved.
+        /// </summary>
         public uint dwTime;
     }
 }

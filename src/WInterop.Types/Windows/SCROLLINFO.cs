@@ -7,8 +7,11 @@
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787537.aspx
-    public struct SCROLLINFO
+    /// <summary>
+    /// [SCROLLINFO]
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/bb787537.aspx"/></remarks>
+    public struct ScrollInfo
     {
         public uint cbSize;
         public ScrollInfoMask fMask;

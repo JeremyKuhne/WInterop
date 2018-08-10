@@ -7,7 +7,7 @@
 
 using WInterop.Gdi.Native;
 
-namespace WInterop.Windows
+namespace WInterop.Windows.Native
 {
     public struct TPMPARAMS
     {

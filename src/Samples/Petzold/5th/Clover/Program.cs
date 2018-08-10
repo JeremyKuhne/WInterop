@@ -34,11 +34,11 @@ namespace Clover
 
         public Clover() : base(backgroundBrush: StockBrush.White) { }
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -66,7 +66,7 @@ namespace Clover
                     Windows.ShowCursor(false);
 
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SetViewportOrigin(cxClient / 2, cyClient / 2);
@@ -83,7 +83,7 @@ namespace Clover
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     hRgnClip.Dispose();
                     break;
             }

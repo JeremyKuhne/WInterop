@@ -46,11 +46,11 @@ namespace Environ
             }
         }
 
-        protected unsafe override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     Size baseUnits = Windows.GetDialogBaseUnits();
                     Rectangle bounds = window.GetClientRectangle();
 
@@ -81,10 +81,10 @@ namespace Environ
 
                     FillListBox(hwndList);
                     return 0;
-                case WindowMessage.SetFocus:
+                case MessageType.SetFocus:
                     hwndList.SetFocus();
                     return 0;
-                case WindowMessage.Command:
+                case MessageType.Command:
                     if (wParam.LowWord == ID_LIST
                         && (wParam.HighWord == (ushort)ListBoxNotification.SelectionChange))
                     {

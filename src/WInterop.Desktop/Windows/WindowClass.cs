@@ -156,11 +156,11 @@ namespace WInterop.Windows
             return window;
         }
 
-        protected virtual LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected virtual LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     if (window == MainWindow)
                         Windows.PostQuitMessage(0);
                     return 0;

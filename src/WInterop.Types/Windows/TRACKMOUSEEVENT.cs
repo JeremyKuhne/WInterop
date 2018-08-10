@@ -7,8 +7,11 @@
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645604.aspx
-    public struct TRACKMOUSEEVENT
+    /// <summary>
+    /// [TRACKMOUSEEVENT]
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms645604.aspx"/></remarks>
+    public struct TrackMouseEvent
     {
         public uint cbSize;
         public TrackMouseEvents dwFlags;

@@ -158,19 +158,19 @@ namespace Clock
         static int cxClient, cyClient;
         static SYSTEMTIME stPrevious;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     window.SetTimer(ID_TIMER, 1000);
                     stPrevious = Windows.GetLocalTime();
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
                     return 0;
-                case WindowMessage.Timer:
+                case MessageType.Timer:
                     SYSTEMTIME st = Windows.GetLocalTime();
                     bool fChange = st.wHour != stPrevious.wHour ||
                         st.wMinute != stPrevious.wMinute;
@@ -184,7 +184,7 @@ namespace Clock
                     }
                     stPrevious = st;
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         SetIsotropic(dc, cxClient, cyClient);

@@ -32,21 +32,21 @@ namespace Checker2
         bool[,] fState = new bool[DIVISIONS, DIVISIONS];
         int cxBlock, cyBlock;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxBlock = lParam.LowWord / DIVISIONS;
                     cyBlock = lParam.HighWord / DIVISIONS;
                     return 0;
-                case WindowMessage.SetFocus:
+                case MessageType.SetFocus:
                     Windows.ShowCursor(true);
                     return 0;
-                case WindowMessage.KillFocus:
+                case MessageType.KillFocus:
                     Windows.ShowCursor(false);
                     return 0;
-                case WindowMessage.KeyDown:
+                case MessageType.KeyDown:
                     Point point = Windows.GetCursorPosition();
                     window.ScreenToClient(ref point);
                     int x = Math.Max(0, Math.Min(DIVISIONS - 1, point.X / cxBlock));
@@ -73,7 +73,7 @@ namespace Checker2
                             break;
                         case VirtualKey.Return:
                         case VirtualKey.Space:
-                            window.SendMessage(WindowMessage.LeftButtonDown, (WPARAM)MouseKey.LeftButton,
+                            window.SendMessage(MessageType.LeftButtonDown, (WPARAM)MouseKey.LeftButton,
                                 new LPARAM(y * cyBlock, x * cxBlock));
                             break;
                     }
@@ -84,7 +84,7 @@ namespace Checker2
                     window.ClientToScreen(ref point);
                     Windows.SetCursorPosition(point);
                     return 0;
-                case WindowMessage.LeftButtonDown:
+                case MessageType.LeftButtonDown:
                     x = lParam.LowWord / cxBlock;
                     y = lParam.HighWord / cyBlock;
                     if (x < DIVISIONS && y < DIVISIONS)
@@ -105,7 +105,7 @@ namespace Checker2
                     }
 
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         for (x = 0; x < DIVISIONS; x++)

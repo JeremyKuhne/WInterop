@@ -30,11 +30,11 @@ namespace SysMets1
     {
         int cxChar, cxCaps, cyChar;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -43,7 +43,7 @@ namespace SysMets1
                         cyChar = tm.tmHeight + tm.tmExternalLeading;
                     }
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         int i = 0;

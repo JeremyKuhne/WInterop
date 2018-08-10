@@ -13,20 +13,79 @@ namespace WInterop.Windows
     [Flags]
     public enum WindowPosition : uint
     {
-        SWP_NOSIZE         = 0x0001,
-        SWP_NOMOVE         = 0x0002,
-        SWP_NOZORDER       = 0x0004,
-        SWP_NOREDRAW       = 0x0008,
-        SWP_NOACTIVATE     = 0x0010,
-        SWP_FRAMECHANGED   = 0x0020,
-        SWP_SHOWWINDOW     = 0x0040,
-        SWP_HIDEWINDOW     = 0x0080,
-        SWP_NOCOPYBITS     = 0x0100,
-        SWP_NOOWNERZORDER  = 0x0200,
-        SWP_NOSENDCHANGING = 0x0400,
-        SWP_DRAWFRAME      = SWP_FRAMECHANGED,
-        SWP_NOREPOSITION   = SWP_NOOWNERZORDER,
-        SWP_DEFERERASE     = 0x2000,
-        SWP_ASYNCWINDOWPOS = 0x4000
+        /// <summary>
+        /// [SWP_NOSIZE]
+        /// </summary>
+        NoSize = 0x0001,
+
+        /// <summary>
+        /// [SWP_NOMOVE]
+        /// </summary>
+        NoMove = 0x0002,
+
+        /// <summary>
+        /// [SWP_NOZORDER]
+        /// </summary>
+        NoZOrder = 0x0004,
+
+        /// <summary>
+        /// [SWP_NOREDRAW]
+        /// </summary>
+        NoRedraw = 0x0008,
+
+        /// <summary>
+        /// [SWP_NOACTIVATE]
+        /// </summary>
+        NoActivate = 0x0010,
+
+        /// <summary>
+        /// [SWP_FRAMECHANGED]
+        /// </summary>
+        FrameChanged = 0x0020,
+
+        /// <summary>
+        /// [SWP_SHOWWINDOW]
+        /// </summary>
+        ShowWindow = 0x0040,
+
+        /// <summary>
+        /// [SWP_HIDEWINDOW]
+        /// </summary>
+        HideWindow = 0x0080,
+
+        /// <summary>
+        /// [SWP_NOCOPYBITS]
+        /// </summary>
+        NoCopyBits = 0x0100,
+
+        /// <summary>
+        /// [SWP_NOOWNERZORDER]
+        /// </summary>
+        NoOwnerZOrder = 0x0200,
+
+        /// <summary>
+        /// [SWP_NOSENDCHANGING]
+        /// </summary>
+        NoSendChanging = 0x0400,
+
+        /// <summary>
+        /// [SWP_DRAWFRAME]
+        /// </summary>
+        DrawFrame = FrameChanged,
+
+        /// <summary>
+        /// [SWP_NOREPOSITION]
+        /// </summary>
+        NoReposition = NoOwnerZOrder,
+
+        /// <summary>
+        /// [SWP_DEFERERASE]
+        /// </summary>
+        DeferErase = 0x2000,
+
+        /// <summary>
+        /// [SWP_ASYNCWINDOWPOS]
+        /// </summary>
+        AsyncWindowPosition = 0x4000
     }
 }

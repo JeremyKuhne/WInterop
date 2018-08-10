@@ -32,14 +32,14 @@ namespace Typer
         CharacterSet dwCharSet = CharacterSet.DEFAULT_CHARSET;
         char[,] pBuffer;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.InputLanguageChange:
+                case MessageType.InputLanguageChange:
                     dwCharSet = (CharacterSet)(uint)wParam;
-                    goto case WindowMessage.Create;
-                case WindowMessage.Create:
+                    goto case MessageType.Create;
+                case MessageType.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
@@ -53,7 +53,7 @@ namespace Typer
                         }
                     }
                     goto CalculateSize;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -75,18 +75,18 @@ namespace Typer
 
                     window.Invalidate(true);
                     return 0;
-                case WindowMessage.SetFocus:
+                case MessageType.SetFocus:
                     // create and show the caret
                     window.CreateCaret(default, new Size(cxChar, cyChar));
                     Windows.SetCaretPosition(new Point(xCaret * cxChar, yCaret * cyChar));
                     window.ShowCaret();
                     return 0;
-                case WindowMessage.KillFocus:
+                case MessageType.KillFocus:
                     // hide and destroy the caret
                     window.HideCaret();
                     Windows.DestroyCaret();
                     return 0;
-                case WindowMessage.KeyDown:
+                case MessageType.KeyDown:
                     switch ((VirtualKey)wParam)
                     {
                         case VirtualKey.Home:
@@ -142,7 +142,7 @@ namespace Typer
                     Windows.SetCaretPosition(new Point(xCaret * cxChar, yCaret * cyChar));
                     return 0;
 
-                case WindowMessage.Char:
+                case MessageType.Char:
                     for (int i = 0; i < lParam.LowWord; i++)
                     {
                         switch ((char)wParam)
@@ -151,13 +151,13 @@ namespace Typer
                                 if (xCaret > 0)
                                 {
                                     xCaret--;
-                                    window.SendMessage(WindowMessage.KeyDown, (uint)VirtualKey.Delete, 1);
+                                    window.SendMessage(MessageType.KeyDown, (uint)VirtualKey.Delete, 1);
                                 }
                                 break;
                             case '\t': // tab
                                 do
                                 {
-                                    window.SendMessage(WindowMessage.Char, ' ', 1);
+                                    window.SendMessage(MessageType.Char, ' ', 1);
                                 } while (xCaret % 8 != 0);
                                 break;
                             case '\n': // line feed
@@ -210,7 +210,7 @@ namespace Typer
                     }
                     Windows.SetCaretPosition(new Point(xCaret * cxChar, yCaret * cyChar));
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,

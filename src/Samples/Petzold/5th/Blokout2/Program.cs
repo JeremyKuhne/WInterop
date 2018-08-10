@@ -41,11 +41,11 @@ namespace Blokout2
             }
         }
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.LeftButtonDown:
+                case MessageType.LeftButtonDown:
                     ptBeg.X = ptEnd.X = lParam.LowWord;
                     ptBeg.Y = ptEnd.Y = lParam.HighWord;
                     DrawBoxOutline(window, ptBeg, ptEnd);
@@ -53,7 +53,7 @@ namespace Blokout2
                     Windows.SetCursor(CursorId.Cross);
                     fBlocking = true;
                     return 0;
-                case WindowMessage.MouseMove:
+                case MessageType.MouseMove:
                     if (fBlocking)
                     {
                         Windows.SetCursor(CursorId.Cross);
@@ -63,7 +63,7 @@ namespace Blokout2
                         DrawBoxOutline(window, ptBeg, ptEnd);
                     }
                     return 0;
-                case WindowMessage.LeftButtonUp:
+                case MessageType.LeftButtonUp:
                     if (fBlocking)
                     {
                         DrawBoxOutline(window, ptBeg, ptEnd);
@@ -77,7 +77,7 @@ namespace Blokout2
                         window.Invalidate(true);
                     }
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         if (fValidBox)

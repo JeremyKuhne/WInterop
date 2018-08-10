@@ -37,15 +37,15 @@ namespace Connect
 
         public Connect() : base(backgroundBrush: StockBrush.White) { }
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.LeftButtonDown:
+                case MessageType.LeftButtonDown:
                     iCount = 0;
                     window.Invalidate(true);
                     return 0;
-                case WindowMessage.MouseMove:
+                case MessageType.MouseMove:
                     // Machines are way to fast to make this look interesting now, adding TakeEvery
                     if ((MouseKey)wParam == MouseKey.LeftButton && iCount < MAXPOINTS && (sampleCount++ % TakeEvery == 0))
                     {
@@ -58,10 +58,10 @@ namespace Connect
                         }
                     }
                     return 0;
-                case WindowMessage.LeftButtonUp:
+                case MessageType.LeftButtonUp:
                     window.Invalidate(false);
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         Windows.SetCursor(CursorId.Wait);

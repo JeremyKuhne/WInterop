@@ -17,19 +17,19 @@ namespace Beeper
         bool fFlipFlop = false;
         const int ID_TIMER = 1;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     window.SetTimer(ID_TIMER, 1000);
                     return 0;
-                case WindowMessage.Timer:
+                case MessageType.Timer:
                     Windows.MessageBeep();
                     fFlipFlop = !fFlipFlop;
                     window.Invalidate();
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         using (BrushHandle brush = Gdi.CreateSolidBrush(fFlipFlop ? Color.Red : Color.Blue))
@@ -38,7 +38,7 @@ namespace Beeper
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     window.KillTimer(ID_TIMER);
                     break;
             }

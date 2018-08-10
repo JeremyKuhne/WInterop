@@ -34,18 +34,18 @@ namespace Checker3
         int cxBlock, cyBlock;
         Checker3Child _childClass = (Checker3Child)(new Checker3Child().Register());
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
                             hwndChild[x, y] = _childClass.CreateWindow(
                                 style: WindowStyles.ChildWindow | WindowStyles.Visible,
                                 parentWindow: window);
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxBlock = lParam.LowWord / DIVISIONS;
                     cyBlock = lParam.HighWord / DIVISIONS;
                     for (int x = 0; x < DIVISIONS; x++)
@@ -54,7 +54,7 @@ namespace Checker3
                                 new Rectangle(x * cxBlock, y * cyBlock, cxBlock, cyBlock),
                                 repaint: true);
                     return 0;
-                case WindowMessage.LeftButtonDown:
+                case MessageType.LeftButtonDown:
                     Windows.MessageBeep(BeepType.Ok);
                     return 0;
             }
@@ -70,18 +70,18 @@ namespace Checker3
         {
         }
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     window.SetWindowLong(0, IntPtr.Zero); // on/off flag
                     return 0;
-                case WindowMessage.LeftButtonDown:
+                case MessageType.LeftButtonDown:
                     window.SetWindowLong(0, (IntPtr)(1 ^ (int)window.GetWindowLong(0)));
                     window.Invalidate(false);
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         Rectangle rect = window.GetClientRectangle();

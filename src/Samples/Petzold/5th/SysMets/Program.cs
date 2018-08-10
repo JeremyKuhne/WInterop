@@ -32,13 +32,13 @@ namespace SysMets
         int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
         int iDeltaPerLine, iAccumDelta; // for mouse wheel logic
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
-            SCROLLINFO si;
+            ScrollInfo si;
 
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -51,8 +51,8 @@ namespace SysMets
                     iMaxWidth = 40 * cxChar + 22 * cxCaps;
 
                     // Fall through for mouse wheel information
-                    goto case WindowMessage.SettingChange;
-                case WindowMessage.SettingChange:
+                    goto case MessageType.SettingChange;
+                case MessageType.SettingChange:
                     uint ulScrollLines = Windows.SystemParameters.GetWheelScrollLines();
 
                     // ulScrollLines usually equals 3 or 0 (for no scrolling)
@@ -62,12 +62,12 @@ namespace SysMets
                     else
                         iDeltaPerLine = 0;
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
                     // Set vertical scroll bar range and page size
-                    si = new SCROLLINFO
+                    si = new ScrollInfo
                     {
                         fMask = ScrollInfoMask.Range | ScrollInfoMask.Page,
                         nMin = 0,
@@ -82,9 +82,9 @@ namespace SysMets
                     window.SetScrollInfo(ScrollBar.Horizontal, ref si, true);
 
                     return 0;
-                case WindowMessage.VerticalScroll:
+                case MessageType.VerticalScroll:
                     // Get all the vertical scroll bar information
-                    si = new SCROLLINFO
+                    si = new ScrollInfo
                     {
                         fMask = ScrollInfoMask.All
                     };
@@ -131,9 +131,9 @@ namespace SysMets
                         window.UpdateWindow();
                     }
                     return 0;
-                case WindowMessage.HorizontalScroll:
+                case MessageType.HorizontalScroll:
                     // Get all the horizontal scroll bar information
-                    si = new SCROLLINFO
+                    si = new ScrollInfo
                     {
                         fMask = ScrollInfoMask.All
                     };
@@ -172,55 +172,55 @@ namespace SysMets
                         window.ScrollWindow(new Point(cxChar * (iHorzPos - si.nPos), 0));
                     }
                     return 0;
-                case WindowMessage.KeyDown:
+                case MessageType.KeyDown:
                     switch ((VirtualKey)wParam)
                     {
                         case VirtualKey.Home:
-                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollCommand.Top, 0);
+                            window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.Top, 0);
                             break;
                         case VirtualKey.End:
-                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollCommand.Bottom, 0);
+                            window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.Bottom, 0);
                             break;
                         case VirtualKey.Prior:
-                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollCommand.PageUp, 0);
+                            window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.PageUp, 0);
                             break;
                         case VirtualKey.Next:
-                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollCommand.PageDown, 0);
+                            window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.PageDown, 0);
                             break;
                         case VirtualKey.Up:
-                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollCommand.LineUp, 0);
+                            window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.LineUp, 0);
                             break;
                         case VirtualKey.Down:
-                            window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollCommand.LineDown, 0);
+                            window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.LineDown, 0);
                             break;
                         case VirtualKey.Left:
-                            window.SendMessage(WindowMessage.HorizontalScroll, (uint)ScrollCommand.PageUp, 0);
+                            window.SendMessage(MessageType.HorizontalScroll, (uint)ScrollCommand.PageUp, 0);
                             break;
                         case VirtualKey.Right:
-                            window.SendMessage(WindowMessage.HorizontalScroll, (uint)ScrollCommand.PageDown, 0);
+                            window.SendMessage(MessageType.HorizontalScroll, (uint)ScrollCommand.PageDown, 0);
                             break;
                     }
                     return 0;
-                case WindowMessage.MouseWheel:
+                case MessageType.MouseWheel:
                     if (iDeltaPerLine == 0)
                         break;
                     iAccumDelta += (short)wParam.HighWord; // 120 or -120
                     while (iAccumDelta >= iDeltaPerLine)
                     {
-                        window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollCommand.LineUp, 0);
+                        window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.LineUp, 0);
                         iAccumDelta -= iDeltaPerLine;
                     }
                     while (iAccumDelta <= -iDeltaPerLine)
                     {
-                        window.SendMessage(WindowMessage.VerticalScroll, (uint)ScrollCommand.LineDown, 0);
+                        window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.LineDown, 0);
                         iAccumDelta += iDeltaPerLine;
                     }
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint(out PaintStruct ps))
                     {
                         // Get vertical scroll bar position
-                        si = new SCROLLINFO
+                        si = new ScrollInfo
                         {
                             fMask = ScrollInfoMask.Position
                         };

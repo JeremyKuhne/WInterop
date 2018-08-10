@@ -9,10 +9,13 @@ using System;
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646271.aspx
-    public struct KEYBDINPUT
+    /// <summary>
+    /// [KEYBDINPUT]
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646271.aspx"/></remarks>
+    public struct KeyboardInput
     {
-        public ushort wVk;
+        public VirtualKey wVk;
         public ushort wScan;
         public KeyEvent dwFlags;
         public uint time;

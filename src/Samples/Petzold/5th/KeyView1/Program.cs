@@ -33,19 +33,19 @@ namespace KeyView1
         int cxClientMax, cyClientMax, cxClient, cyClient, cxChar, cyChar;
         int cLinesMax, cLines;
         Rectangle rectScroll;
-        MSG[] pmsg;
+        WindowMessage[] pmsg;
 
         StringBuilder _sb = new StringBuilder(256);
         char[] _chunk;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     _chunk = _sb.GetChunk();
-                    goto case WindowMessage.DisplayChange;
-                case WindowMessage.DisplayChange:
+                    goto case MessageType.DisplayChange;
+                case MessageType.DisplayChange:
                     // Get maximum size of client area
                     cxClientMax = Windows.GetSystemMetrics(SystemMetric.CXMAXIMIZED);
                     cyClientMax = Windows.GetSystemMetrics(SystemMetric.CYMAXIMIZED);
@@ -60,10 +60,10 @@ namespace KeyView1
                     }
 
                     cLinesMax = cyClientMax / cyChar;
-                    pmsg = new MSG[cLinesMax];
+                    pmsg = new WindowMessage[cLinesMax];
                     cLines = 0;
                     goto CalculateScroll;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -73,30 +73,27 @@ namespace KeyView1
                     window.Invalidate(true);
 
                     return 0;
-                case WindowMessage.KeyDown:
-                case WindowMessage.KeyUp:
-                case WindowMessage.Char:
-                case WindowMessage.DeadChar:
-                case WindowMessage.SystemKeyDown:
-                case WindowMessage.SystemKeyUp:
-                case WindowMessage.SystemChar:
-                case WindowMessage.SystemDeadChar:
+                case MessageType.KeyDown:
+                case MessageType.KeyUp:
+                case MessageType.Char:
+                case MessageType.DeadChar:
+                case MessageType.SystemKeyDown:
+                case MessageType.SystemKeyUp:
+                case MessageType.SystemChar:
+                case MessageType.SystemDeadChar:
                     // Rearrange storage array
                     for (int i = cLinesMax - 1; i > 0; i--)
                     {
                         pmsg[i] = pmsg[i - 1];
                     }
                     // Store new message
-                    pmsg[0].hwnd = window;
-                    pmsg[0].message = message;
-                    pmsg[0].wParam = wParam;
-                    pmsg[0].lParam = lParam;
+                    pmsg[0] = new WindowMessage(window, message, wParam, lParam);
                     cLines = Math.Min(cLines + 1, cLinesMax);
 
                     // Scroll up the display
                     window.ScrollWindow(new Point(0, -cyChar), rectScroll, rectScroll);
                     break; // i.e., call DefWindowProc so Sys messages work
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SelectObject(StockFont.SystemFixed);
@@ -106,12 +103,12 @@ namespace KeyView1
                         for (int i = 0; i < Math.Min(cLines, cyClient / cyChar - 1); i++)
                         {
                             bool iType;
-                            switch (pmsg[i].message)
+                            switch (pmsg[i].Type)
                             {
-                                case WindowMessage.Char:
-                                case WindowMessage.SystemChar:
-                                case WindowMessage.DeadChar:
-                                case WindowMessage.SystemDeadChar:
+                                case MessageType.Char:
+                                case MessageType.SystemChar:
+                                case MessageType.DeadChar:
+                                case MessageType.SystemDeadChar:
                                     iType = true;
                                     break;
                                 default:
@@ -123,7 +120,7 @@ namespace KeyView1
                             _sb.AppendFormat(iType
                                 ? "{0,-13} {1,3} {2,15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}"
                                 : "{0,-13} {1,3} {2,-15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}  VirtualKey: {9}",
-                                    pmsg[i].message,
+                                    pmsg[i].Type,
                                     pmsg[i].wParam.ToString(),
                                     iType
                                         ? $"0x{((uint)pmsg[i].wParam):X4} {(char)(uint)pmsg[i].wParam}"

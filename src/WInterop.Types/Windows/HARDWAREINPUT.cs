@@ -7,8 +7,11 @@
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646269.aspx
-    public struct HARDWAREINPUT
+    /// <summary>
+    /// [HARDWAREINPUT]
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646269.aspx"/></remarks>
+    public struct HardwareInput
     {
         public uint uMsg;
         public ushort wParamL;

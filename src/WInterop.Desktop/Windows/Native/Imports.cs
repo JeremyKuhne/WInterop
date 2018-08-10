@@ -402,7 +402,7 @@ namespace WInterop.Windows.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644936.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern BOOL GetMessageW(
-            out MSG lpMsg,
+            out WindowMessage lpMsg,
             HWND hWnd,
             uint wMsgFilterMin,
             uint wMsgFilterMax);
@@ -426,7 +426,7 @@ namespace WInterop.Windows.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644943.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool PeekMessageW(
-            out MSG lpMsg,
+            out WindowMessage lpMsg,
             HWND hWnd,
             uint wMsgFilterMin,
             uint wMsgFilterMax,
@@ -441,7 +441,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern LRESULT SendMessageW(
             HWND hWnd,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam);
 
@@ -449,7 +449,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool SendMessageCallbackW(
             HWND hWnd,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam,
             SendAsyncProcedure lpCallBack,
@@ -459,7 +459,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern LRESULT SendMessageTimeoutW(
             HWND hWnd,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam,
             SendMessageTimeoutOptions fuFlags,
@@ -470,7 +470,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool SendNotifyMessageW(
             HWND hWnd,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam);
 
@@ -487,12 +487,12 @@ namespace WInterop.Windows.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool TranslateMessage(
-            ref MSG lpMsg);
+            ref WindowMessage lpMsg);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644934.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool DispatchMessageW(
-            ref MSG lpMsg);
+            ref WindowMessage lpMsg);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644947.aspx
         [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -503,7 +503,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern LRESULT DefWindowProcW(
             HWND hWnd,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam);
 
@@ -512,7 +512,7 @@ namespace WInterop.Windows.Native
         public static extern LRESULT CallWindowProcW(
             WNDPROC lpPrevWndFunc,
             HWND hWnd,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam);
 
@@ -520,7 +520,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern bool PostMessageW(
             HWND hWnd,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam);
 
@@ -528,7 +528,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern bool PostThreadMessageW(
             uint idThread,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam);
 
@@ -548,7 +548,7 @@ namespace WInterop.Windows.Native
         public static extern bool GetScrollInfo(
             HWND hwind,
             ScrollBar fnBar,
-            [In] ref SCROLLINFO lpsi);
+            [In] ref ScrollInfo lpsi);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787599.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -572,7 +572,7 @@ namespace WInterop.Windows.Native
         public static extern int SetScrollInfo(
             HWND hwind,
             ScrollBar fnBar,
-            [In] ref SCROLLINFO lpsi,
+            [In] ref ScrollInfo lpsi,
             bool fRedraw);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/bb787601.aspx
@@ -630,7 +630,7 @@ namespace WInterop.Windows.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646302.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool GetLastInputInfo(
-            ref LASTINPUTINFO plii);
+            ref LastInputInfo plii);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644935.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -658,7 +658,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern LRESULT DefDlgProcW(
             HWND hDlg,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam);
 
@@ -735,7 +735,7 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool IsDialogMessageW(
             HWND hDlg,
-            [In] ref MSG lpMsg);
+            in WindowMessage lpMsg);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645502.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -753,7 +753,7 @@ namespace WInterop.Windows.Native
         public static extern LRESULT SendDlgItemMessageW(
             HWND hDlg,
             int nIDDlgItem,
-            WindowMessage Msg,
+            MessageType Msg,
             WPARAM wParam,
             LPARAM lParam);
 
@@ -809,15 +809,15 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern int GetMouseMovePointsEx(
             uint cbSize,
-            [In] ref MOUSEMOVEPOINT lppt,
-            MOUSEMOVEPOINT[] lpptBuf,
+            in MouseMovePoint lppt,
+            MouseMovePoint[] lpptBuf,
             int nBufPoints,
             uint resolution);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646265.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool TrackMouseEvent(
-            ref TRACKMOUSEEVENT lpEventTrack);
+            ref TrackMouseEvent lpEventTrack);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644906.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]

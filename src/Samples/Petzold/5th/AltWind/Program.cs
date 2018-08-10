@@ -44,15 +44,15 @@ namespace AltWind
 
         int cxClient, cyClient;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     Span<Point> apt = stackalloc Point[10];
                     using (DeviceContext dc = window.BeginPaint())
                     {

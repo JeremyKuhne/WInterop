@@ -54,21 +54,21 @@ namespace HelloWin
             window.ShowWindow(ShowWindowCommand.Normal);
             window.UpdateWindow();
 
-            while (Windows.GetMessage(out MSG message))
+            while (Windows.GetMessage(out WindowMessage message))
             {
                 Windows.TranslateMessage(ref message);
                 Windows.DispatchMessage(ref message);
             }
         }
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     MultimediaMethods.PlaySound(PlaySoundAlias.SystemHand, PlaySoundOptions.Async | PlaySoundOptions.NoDefault);
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.DrawText(
@@ -77,7 +77,7 @@ namespace HelloWin
                             TextFormat.SingleLine | TextFormat.Center | TextFormat.VerticallyCenter);
                     }
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

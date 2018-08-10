@@ -43,11 +43,11 @@ namespace OwnDraw
         const int ID_SMALLER = 1;
         const int ID_LARGER = 2;
 
-        protected unsafe override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     baseUnits = Windows.GetDialogBaseUnits();
                     btnWidth = baseUnits.Width * 8;
                     btnHeight = baseUnits.Height * 4;
@@ -65,7 +65,7 @@ namespace OwnDraw
                         new Rectangle(0, 0, btnWidth, btnHeight),
                         window, (MenuHandle)ID_LARGER, ModuleInstance, IntPtr.Zero);
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -77,7 +77,7 @@ namespace OwnDraw
                         new Rectangle(cxClient / 2 + btnWidth / 2, cyClient / 2 - btnHeight / 2, btnWidth, btnHeight),
                         repaint: true);
                     return 0;
-                case WindowMessage.Command:
+                case MessageType.Command:
                     Rectangle rc = window.GetWindowRectangle();
 
                     // Make the window 10% smaller or larger
@@ -93,7 +93,7 @@ namespace OwnDraw
 
                     window.MoveWindow(new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top), repaint: true);
                     return 0;
-                case WindowMessage.DrawItem:
+                case MessageType.DrawItem:
                     DRAWITEMSTRUCT* pdis = (DRAWITEMSTRUCT*)lParam;
 
                     // Fill area with white and frame it black

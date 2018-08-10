@@ -20,27 +20,27 @@ namespace Inception
 
         public Inception() : base(backgroundBrush: BrushHandle.NoBrush) { }
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     _initialMonitor = window.MonitorFromWindow();
                     _screen = Windows.GetMonitorInfo(_initialMonitor).Monitor;
                     window.SetTimer(_timerId, 200);
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     _client = new Rectangle(default, new Message.Size(wParam, lParam).NewSize);
                     return 0;
-                case WindowMessage.Timer:
+                case MessageType.Timer:
                     // Update via timer if we aren't primarily on the main monitor
                     if (window.MonitorFromWindow() != _initialMonitor)
                         window.Invalidate();
                     return 0;
-                case WindowMessage.Move:
+                case MessageType.Move:
                     window.Invalidate();
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext clientDC = window.BeginPaint())
                     using (DeviceContext screenDC = Gdi.GetDeviceContext())
                     {
@@ -48,7 +48,7 @@ namespace Inception
                         screenDC.StretchBlit(clientDC, _screen, _client, RasterOperation.Common.SourceCopy);
                     }
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     window.KillTimer(_timerId);
                     break;
             }

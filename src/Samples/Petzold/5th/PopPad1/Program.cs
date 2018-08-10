@@ -30,29 +30,29 @@ namespace PopPad1
         WindowHandle hwndEdit;
         const int ID_EDIT = 1;
 
-        protected unsafe override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     hwndEdit = Windows.CreateWindow("edit", "",
                         WindowStyles.Child | WindowStyles.Visible | WindowStyles.HorizontalScroll | WindowStyles.VerticalScroll
                         | WindowStyles.Border | (WindowStyles)EditStyles.Left | (WindowStyles)EditStyles.Multiline
                         | (WindowStyles)EditStyles.AutoHorizontalScroll | (WindowStyles)EditStyles.AutoVerticalScroll,
                         ExtendedWindowStyles.Default, new Rectangle(), window, (MenuHandle)ID_EDIT, ModuleInstance, IntPtr.Zero);
                     return 0;
-                case WindowMessage.SetFocus:
+                case MessageType.SetFocus:
                     hwndEdit.SetFocus();
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     hwndEdit.MoveWindow(new Rectangle(0, 0, lParam.LowWord, lParam.HighWord), repaint: true);
                     return 0;
-                case WindowMessage.Command:
+                case MessageType.Command:
                     if (wParam.LowWord == ID_EDIT
                         && (wParam.HighWord == (ushort)EditNotification.ErrorSpace || wParam.HighWord == (ushort)EditNotification.MaxText))
                         window.MessageBox("Edit control out of space.", "PopPad1", MessageBoxType.Ok | MessageBoxType.IconStop);
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

@@ -33,15 +33,15 @@ namespace Checker1
         bool[,] fState = new bool[DIVISIONS, DIVISIONS];
         int cxBlock, cyBlock;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxBlock = lParam.LowWord / DIVISIONS;
                     cyBlock = lParam.HighWord / DIVISIONS;
                     return 0;
-                case WindowMessage.LeftButtonDown:
+                case MessageType.LeftButtonDown:
                     int x = lParam.LowWord / cxBlock;
                     int y = lParam.HighWord / cyBlock;
                     if (x < DIVISIONS && y < DIVISIONS)
@@ -62,7 +62,7 @@ namespace Checker1
                     }
 
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         for (x = 0; x < DIVISIONS; x++)

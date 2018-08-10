@@ -56,9 +56,9 @@ namespace RandRect
 
             while (true)
             {
-                if (Windows.PeekMessage(out MSG message, options: PeekMessageOptions.Remove))
+                if (Windows.PeekMessage(out WindowMessage message, options: PeekMessageOptions.Remove))
                 {
-                    if (message.message == WindowMessage.Quit)
+                    if (message.Type == MessageType.Quit)
                         break;
                     Windows.TranslateMessage(ref message);
                     Windows.DispatchMessage(ref message);
@@ -74,15 +74,15 @@ namespace RandRect
         static int cxClient, cyClient;
         static Random rand = new Random();
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

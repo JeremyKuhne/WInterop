@@ -13,19 +13,74 @@ namespace WInterop.Windows
     [Flags]
     public enum MouseEvent : uint
     {
-        MOUSEEVENTF_MOVE               = 0x0001, /* mouse move */
-        MOUSEEVENTF_LEFTDOWN           = 0x0002, /* left button down */
-        MOUSEEVENTF_LEFTUP             = 0x0004, /* left button up */
-        MOUSEEVENTF_RIGHTDOWN          = 0x0008, /* right button down */
-        MOUSEEVENTF_RIGHTUP            = 0x0010, /* right button up */
-        MOUSEEVENTF_MIDDLEDOWN         = 0x0020, /* middle button down */
-        MOUSEEVENTF_MIDDLEUP           = 0x0040, /* middle button up */
-        MOUSEEVENTF_XDOWN              = 0x0080, /* x button down */
-        MOUSEEVENTF_XUP                = 0x0100, /* x button down */
-        MOUSEEVENTF_WHEEL              = 0x0800, /* wheel button rolled */
-        MOUSEEVENTF_HWHEEL             = 0x1000, /* hwheel button rolled */
-        MOUSEEVENTF_MOVE_NOCOALESCE    = 0x2000, /* do not coalesce mouse moves */
-        MOUSEEVENTF_VIRTUALDESK        = 0x4000, /* map to entire virtual desktop */
-        MOUSEEVENTF_ABSOLUTE           = 0x8000  /* absolute move */
+        /// <summary>
+        /// Mouse move. [MOUSEEVENTF_MOVE]
+        /// </summary>
+        Move = 0x0001,
+
+        /// <summary>
+        /// Left button down. [MOUSEEVENTF_LEFTDOWN]
+        /// </summary>
+        LeftDown = 0x0002,
+
+        /// <summary>
+        /// Left button up. [MOUSEEVENTF_LEFTUP]
+        /// </summary>
+        LeftUp = 0x0004,
+
+        /// <summary>
+        /// Right button down. [MOUSEEVENTF_RIGHTDOWN]
+        /// </summary>
+        RightDown = 0x0008,
+
+        /// <summary>
+        /// Right button up. [MOUSEEVENTF_RIGHTUP]
+        /// </summary>
+        RightUp = 0x0010,
+
+        /// <summary>
+        /// Middle button down. [MOUSEEVENTF_MIDDLEDOWN]
+        /// </summary>
+        MiddleDown = 0x0020,
+
+        /// <summary>
+        /// Middle button up. [MOUSEEVENTF_MIDDLEUP]
+        /// </summary>
+        MiddleUp = 0x0040,
+
+        /// <summary>
+        /// X button down. [MOUSEEVENTF_XDOWN]
+        /// </summary>
+        XDown = 0x0080,
+
+        /// <summary>
+        /// X button up. [MOUSEEVENTF_XUP]
+        /// </summary>
+        XUp = 0x0100,
+
+        /// <summary>
+        /// Wheel move. [MOUSEEVENTF_WHEEL]
+        /// </summary>
+        Wheel = 0x0800,
+
+        /// <summary>
+        /// Horizontal wheel move. [MOUSEEVENTF_HWHEEL]
+        /// </summary>
+        HWheel = 0x1000,
+
+        /// <summary>
+        /// Do not coalesce mouse moves. [MOUSEEVENTF_MOVE_NOCOALESCE]
+        /// </summary>
+        NoCoalesce = 0x2000,
+
+        /// <summary>
+        /// Map to entire virtual desktop. [MOUSEEVENTF_VIRTUALDESK]
+        /// </summary>
+        VirtualDesk = 0x4000,
+
+        /// <summary>
+        /// Absolute move. [MOUSEEVENTF_ABSOLUTE]
+        /// </summary>
+        Absolute = 0x8000
     }
 }

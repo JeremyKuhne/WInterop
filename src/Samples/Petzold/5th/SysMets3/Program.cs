@@ -31,13 +31,13 @@ namespace SysMets3
     {
         int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
-            SCROLLINFO si;
+            ScrollInfo si;
 
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -50,12 +50,12 @@ namespace SysMets3
                     iMaxWidth = 40 * cxChar + 22 * cxCaps;
 
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
                     // Set vertical scroll bar range and page size
-                    si = new SCROLLINFO
+                    si = new ScrollInfo
                     {
                         fMask = ScrollInfoMask.Range | ScrollInfoMask.Page,
                         nMin = 0,
@@ -70,9 +70,9 @@ namespace SysMets3
                     window.SetScrollInfo(ScrollBar.Horizontal, ref si, true);
 
                     return 0;
-                case WindowMessage.VerticalScroll:
+                case MessageType.VerticalScroll:
                     // Get all the vertical scroll bar information
-                    si = new SCROLLINFO
+                    si = new ScrollInfo
                     {
                         fMask = ScrollInfoMask.All
                     };
@@ -119,9 +119,9 @@ namespace SysMets3
                         window.UpdateWindow();
                     }
                     return 0;
-                case WindowMessage.HorizontalScroll:
+                case MessageType.HorizontalScroll:
                     // Get all the horizontal scroll bar information
-                    si = new SCROLLINFO
+                    si = new ScrollInfo
                     {
                         fMask = ScrollInfoMask.All
                     };
@@ -161,11 +161,11 @@ namespace SysMets3
                     }
                     return 0;
 
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint(out PaintStruct ps))
                     {
                         // Get vertical scroll bar position
-                        si = new SCROLLINFO
+                        si = new ScrollInfo
                         {
                             fMask = ScrollInfoMask.Position
                         };
@@ -195,7 +195,7 @@ namespace SysMets3
                         }
                     }
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

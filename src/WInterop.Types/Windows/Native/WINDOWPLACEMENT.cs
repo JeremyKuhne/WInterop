@@ -8,7 +8,7 @@
 using System.Drawing;
 using WInterop.Gdi.Native;
 
-namespace WInterop.Windows
+namespace WInterop.Windows.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632611.aspx
     public struct WINDOWPLACEMENT

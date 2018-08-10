@@ -45,11 +45,11 @@ namespace Colors1
         // We need to put the delegate in a static to prevent the callback from being collected
         WindowProcedure _scrollProcedure;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     // Create the white-rectangle window against which the
                     // scroll bars will be positioned. The child window ID is 9.
 
@@ -103,7 +103,7 @@ namespace Colors1
                     cyChar = Windows.GetDialogBaseUnits().Height;
 
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     int cxClient = lParam.LowWord;
                     int cyClient = lParam.HighWord;
                     rcColor = Rectangle.FromLTRB(cxClient / 2, 0, cxClient, cyClient);
@@ -124,10 +124,10 @@ namespace Colors1
 
                     window.SetFocus();
                     return 0;
-                case WindowMessage.SetFocus:
+                case MessageType.SetFocus:
                     hwndScroll[idFocus].SetFocus();
                     return 0;
-                case WindowMessage.VerticalScroll:
+                case MessageType.VerticalScroll:
                     int id = (int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id);
 
                     switch ((ScrollCommand)wParam.LowWord)
@@ -168,9 +168,9 @@ namespace Colors1
                     window.SetClassBackgroundBrush(brush).Dispose();
                     window.InvalidateRectangle(rcColor, true);
                     return 0;
-                case WindowMessage.ControlColorScrollBar:
+                case MessageType.ControlColorScrollBar:
                     return hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)];
-                case WindowMessage.ControlColorStatic:
+                case MessageType.ControlColorStatic:
                     id = (int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id);
 
                     if (id >= 3 && id <= 8)
@@ -181,10 +181,10 @@ namespace Colors1
                         return hBrushStatic;
                     }
                     break;
-                case WindowMessage.SystemColorChange:
+                case MessageType.SystemColorChange:
                     hBrushStatic = Gdi.GetSystemColorBrush(SystemColor.ButtonHighlight);
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     window.SetClassBackgroundBrush(StockBrush.White).Dispose();
 
                     for (int i = 0; i < 3; i++)
@@ -196,19 +196,19 @@ namespace Colors1
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        LRESULT ScrollProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        LRESULT ScrollProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             int id = (int)window.GetWindowLong(WindowLong.Id).ToInt64();
 
             switch (message)
             {
-                case WindowMessage.KeyDown:
+                case MessageType.KeyDown:
                     if ((VirtualKey)wParam == VirtualKey.Tab)
                         window.GetParent().GetDialogItem(
                             (id + ((Windows.GetKeyState(VirtualKey.Shift) & KeyState.Down) != 0 ? 2 : 1) % 3))
                             .SetFocus();
                     break;
-                case WindowMessage.SetFocus:
+                case MessageType.SetFocus:
                     idFocus = id;
                     break;
             }

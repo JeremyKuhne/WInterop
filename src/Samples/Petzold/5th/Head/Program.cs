@@ -53,13 +53,13 @@ namespace Head
 
         Rectangle rect;
 
-        protected unsafe override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             const string filter = "*.*";
 
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     Size baseUnits = Windows.GetDialogBaseUnits();
                     rect = Rectangle.FromLTRB(20 * baseUnits.Width, 3 * baseUnits.Height, rect.Right, rect.Bottom);
 
@@ -86,13 +86,13 @@ namespace Head
                     fixed (char* f = filter)
                         hwndList.SendMessage(ListBoxMessage.Directory, (uint)DIRATTR, f);
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     rect = Rectangle.FromLTRB(rect.Left, rect.Top, lParam.LowWord, lParam.HighWord);
                     return 0;
-                case WindowMessage.SetFocus:
+                case MessageType.SetFocus:
                     hwndList.SetFocus();
                     return 0;
-                case WindowMessage.Command:
+                case MessageType.Command:
                     if (wParam.LowWord == ID_LIST
                         && (wParam.HighWord == (ushort)ListBoxNotification.DoubleClick))
                     {
@@ -153,7 +153,7 @@ namespace Head
                         window.Invalidate();
                     }
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     if (!bValidFile)
                         break;
 
@@ -185,12 +185,12 @@ namespace Head
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        LRESULT ListBoxProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        LRESULT ListBoxProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
-            if (message == WindowMessage.KeyDown && (VirtualKey)wParam == VirtualKey.Return)
+            if (message == MessageType.KeyDown && (VirtualKey)wParam == VirtualKey.Return)
             {
                 window.GetParent().SendMessage(
-                    WindowMessage.Command,
+                    MessageType.Command,
                     new WPARAM(1, (ushort)ListBoxNotification.DoubleClick),
                     (LPARAM)window);
             }

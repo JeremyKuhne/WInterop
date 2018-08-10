@@ -46,15 +46,15 @@ namespace WhatClr
         DeviceContext dcScreen;
         Color cr, crLast;
         
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     dcScreen = Gdi.CreateDeviceContext("DISPLAY", null);
                     window.SetTimer(ID_TIMER, 100);
                     return 0;
-                case WindowMessage.Timer:
+                case MessageType.Timer:
                     Point pt = Windows.GetCursorPosition();
                     cr = dcScreen.GetPixel(pt);
                     // Not sure why the sample did this
@@ -66,7 +66,7 @@ namespace WhatClr
                         window.Invalidate(erase: false);
                     }
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SelectObject(StockFont.SystemFixed);
@@ -76,7 +76,7 @@ namespace WhatClr
                             TextFormat.SingleLine | TextFormat.Center | TextFormat.VerticallyCenter);
                     }
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     dcScreen.Dispose();
                     window.KillTimer(ID_TIMER);
                     break;

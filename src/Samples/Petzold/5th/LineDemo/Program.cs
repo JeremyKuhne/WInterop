@@ -46,7 +46,7 @@ namespace LineDemo
             window.ShowWindow(ShowWindowCommand.Normal);
             window.UpdateWindow();
 
-            while (Windows.GetMessage(out MSG message))
+            while (Windows.GetMessage(out WindowMessage message))
             {
                 Windows.TranslateMessage(ref message);
                 Windows.DispatchMessage(ref message);
@@ -55,15 +55,15 @@ namespace LineDemo
 
         static int cxClient, cyClient;
 
-        static LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.Rectangle(Rectangle.FromLTRB(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8));
@@ -77,7 +77,7 @@ namespace LineDemo
                             new Size(cxClient / 4, cyClient / 4));
                     }
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     Windows.PostQuitMessage(0);
                     return 0;
             }

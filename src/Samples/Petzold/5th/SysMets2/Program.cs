@@ -30,11 +30,11 @@ namespace SysMets2
     {
         int cxChar, cxCaps, cyChar, cyClient, iVscrollPos;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.GetTextMetrics(out TEXTMETRIC tm);
@@ -47,10 +47,10 @@ namespace SysMets2
                     window.SetScrollPosition(ScrollBar.Vertical, iVscrollPos, true);
 
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cyClient = lParam.HighWord;
                     return 0;
-                case WindowMessage.VerticalScroll:
+                case MessageType.VerticalScroll:
                     switch ((ScrollCommand)wParam.LowWord)
                     {
                         case ScrollCommand.LineUp:
@@ -78,7 +78,7 @@ namespace SysMets2
                         window.Invalidate(true);
                     }
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         int i = 0;

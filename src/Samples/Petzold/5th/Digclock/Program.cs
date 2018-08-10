@@ -101,27 +101,27 @@ namespace DigClock
         int cxClient, cyClient;
         bool f24Hour, fSuppress;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             switch (message)
             {
-                case WindowMessage.Create:
+                case MessageType.Create:
                     hBrushRed = Gdi.CreateSolidBrush(Color.Red);
                     window.SetTimer(ID_TIMER, 1000);
                     return 0;
-                case WindowMessage.SettingChange:
+                case MessageType.SettingChange:
                     f24Hour = Windows.LocaleInfo.GetIs24HourClock();
                     fSuppress = Windows.LocaleInfo.GetHoursHaveLeadingZeros();
                     window.Invalidate(true);
                     return 0;
-                case WindowMessage.Size:
+                case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
                     return 0;
-                case WindowMessage.Timer:
+                case MessageType.Timer:
                     window.Invalidate(true);
                     return 0;
-                case WindowMessage.Paint:
+                case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SetMapMode(MapMode.Isotropic);
@@ -134,7 +134,7 @@ namespace DigClock
                         DisplayTime(dc, f24Hour, fSuppress);
                     }
                     return 0;
-                case WindowMessage.Destroy:
+                case MessageType.Destroy:
                     window.KillTimer(ID_TIMER);
                     hBrushRed.Dispose();
                     break;

@@ -63,7 +63,7 @@ namespace WInterop.Windows
             mainWindow.ShowWindow(ShowWindowCommand.Normal);
             mainWindow.UpdateWindow();
 
-            while (GetMessage(out MSG message))
+            while (GetMessage(out WindowMessage message))
             {
                 TranslateMessage(ref message);
                 DispatchMessage(ref message);
@@ -188,13 +188,13 @@ namespace WInterop.Windows
                 Marshal.GetFunctionPointerForDelegate(newCallback)));
         }
 
-        public static LRESULT CallWindowProcedure(WNDPROC previous, WindowHandle window, WindowMessage message, WPARAM wParam = default, LPARAM lParam = default)
+        public static LRESULT CallWindowProcedure(WNDPROC previous, WindowHandle window, MessageType message, WPARAM wParam = default, LPARAM lParam = default)
             => Imports.CallWindowProcW(previous, window, message, wParam, lParam);
 
         public static LRESULT SendMessage(this in WindowHandle window, ListBoxMessage message, WPARAM wParam = default, LPARAM lParam = default)
-            => SendMessage(window, (WindowMessage)message, wParam, lParam);
+            => SendMessage(window, (MessageType)message, wParam, lParam);
 
-        public static LRESULT SendMessage(this in WindowHandle window, WindowMessage message, WPARAM wParam = default, LPARAM lParam = default)
+        public static LRESULT SendMessage(this in WindowHandle window, MessageType message, WPARAM wParam = default, LPARAM lParam = default)
             => Imports.SendMessageW(window, message, wParam, lParam);
 
         public static string GetClassName(this in WindowHandle window)
@@ -410,8 +410,8 @@ namespace WInterop.Windows
         /// </param>
         /// <param name="minMessage"></param>
         /// <param name="maxMessage"></param>
-        /// <returns>False when <see cref="WindowMessage.Quit"/> is returned.</returns>
-        public static bool GetMessage(out MSG message, WindowHandle window = default, WindowMessage minMessage = WindowMessage.Null, WindowMessage maxMessage = WindowMessage.Null)
+        /// <returns>False when <see cref="MessageType.Quit"/> is returned.</returns>
+        public static bool GetMessage(out WindowMessage message, WindowHandle window = default, MessageType minMessage = MessageType.Null, MessageType maxMessage = MessageType.Null)
         {
             BOOL result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
 
@@ -422,22 +422,22 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static bool PeekMessage(out MSG message, WindowHandle window = default, uint minMessage = 0, uint maxMessage = 0, PeekMessageOptions options = PeekMessageOptions.NoRemove)
+        public static bool PeekMessage(out WindowMessage message, WindowHandle window = default, uint minMessage = 0, uint maxMessage = 0, PeekMessageOptions options = PeekMessageOptions.NoRemove)
         {
             return Imports.PeekMessageW(out message, window, minMessage, maxMessage, options);
         }
 
-        public static bool TranslateMessage(ref MSG message)
+        public static bool TranslateMessage(ref WindowMessage message)
         {
             return Imports.TranslateMessage(ref message);
         }
 
-        public static bool DispatchMessage(ref MSG message)
+        public static bool DispatchMessage(ref WindowMessage message)
         {
             return Imports.DispatchMessageW(ref message);
         }
 
-        public static LRESULT DefaultWindowProcedure(this in WindowHandle window, WindowMessage message, WPARAM wParam, LPARAM lParam)
+        public static LRESULT DefaultWindowProcedure(this in WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
         {
             return Imports.DefWindowProcW(window, message, wParam, lParam);
         }
@@ -481,9 +481,9 @@ namespace WInterop.Windows
             return result;
         }
 
-        public unsafe static int SetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref SCROLLINFO scrollInfo, bool redraw)
+        public unsafe static int SetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo, bool redraw)
         {
-            scrollInfo.cbSize = (uint)sizeof(SCROLLINFO);
+            scrollInfo.cbSize = (uint)sizeof(ScrollInfo);
             int result = Imports.SetScrollInfo(window, scrollBar, ref scrollInfo, redraw);
 
             return result;
@@ -498,9 +498,9 @@ namespace WInterop.Windows
             return result;
         }
 
-        public unsafe static void GetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref SCROLLINFO scrollInfo)
+        public unsafe static void GetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo)
         {
-            scrollInfo.cbSize = (uint)sizeof(SCROLLINFO);
+            scrollInfo.cbSize = (uint)sizeof(ScrollInfo);
             if (!Imports.GetScrollInfo(window, scrollBar, ref scrollInfo))
                 throw Error.GetIoExceptionForLastError();
         }
