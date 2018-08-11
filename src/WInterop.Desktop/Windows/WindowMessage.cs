@@ -16,16 +16,16 @@ namespace WInterop.Windows
     {
         public readonly WindowHandle Window;
         public readonly MessageType Type;
-        public readonly WPARAM wParam;
-        public readonly LPARAM lParam;
+        public readonly WParam wParam;
+        public readonly LParam lParam;
         public readonly uint Time;
         public readonly Point Point;
 
         public WindowMessage(
             WindowHandle window,
             MessageType type,
-            WPARAM wParam = default,
-            LPARAM lParam = default,
+            WParam wParam = default,
+            LParam lParam = default,
             uint time = 0,
             Point point = default)
         {

@@ -53,7 +53,7 @@ namespace Head
 
         Rectangle rect;
 
-        protected unsafe override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             const string filter = "*.*";
 
@@ -185,14 +185,14 @@ namespace Head
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        LRESULT ListBoxProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        LResult ListBoxProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             if (message == MessageType.KeyDown && (VirtualKey)wParam == VirtualKey.Return)
             {
                 window.GetParent().SendMessage(
                     MessageType.Command,
-                    new WPARAM(1, (ushort)ListBoxNotification.DoubleClick),
-                    (LPARAM)window);
+                    new WParam(1, (ushort)ListBoxNotification.DoubleClick),
+                    (LParam)window);
             }
 
             return Windows.CallWindowProcedure(_existingListBoxWndProc, window, message, wParam, lParam);

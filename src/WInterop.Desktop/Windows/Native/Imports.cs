@@ -417,11 +417,11 @@ namespace WInterop.Windows.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644937.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern LPARAM GetMessageExtraInfo();
+        public static extern LParam GetMessageExtraInfo();
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644954.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern LPARAM SetMessageExtraInfo(LPARAM lParam);
+        public static extern LParam SetMessageExtraInfo(LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644943.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -439,29 +439,29 @@ namespace WInterop.Windows.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644950.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern LRESULT SendMessageW(
+        public static extern LResult SendMessageW(
             HWND hWnd,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam);
+            WParam wParam,
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644951.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool SendMessageCallbackW(
             HWND hWnd,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam,
+            WParam wParam,
+            LParam lParam,
             SendAsyncProcedure lpCallBack,
             UIntPtr dwData);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644952.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-        public static extern LRESULT SendMessageTimeoutW(
+        public static extern LResult SendMessageTimeoutW(
             HWND hWnd,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam,
+            WParam wParam,
+            LParam lParam,
             SendMessageTimeoutOptions fuFlags,
             uint uTimeout,
             out UIntPtr lpdwResult);
@@ -471,13 +471,13 @@ namespace WInterop.Windows.Native
         public static extern bool SendNotifyMessageW(
             HWND hWnd,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam);
+            WParam wParam,
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644948.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool ReplyMessage(
-            LRESULT lResult);
+            LResult lResult);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644942.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -501,36 +501,36 @@ namespace WInterop.Windows.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633572.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern LRESULT DefWindowProcW(
+        public static extern LResult DefWindowProcW(
             HWND hWnd,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam);
+            WParam wParam,
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633571.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern LRESULT CallWindowProcW(
+        public static extern LResult CallWindowProcW(
             WNDPROC lpPrevWndFunc,
             HWND hWnd,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam);
+            WParam wParam,
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644944.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern bool PostMessageW(
             HWND hWnd,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam);
+            WParam wParam,
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644946.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern bool PostThreadMessageW(
             uint idThread,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam);
+            WParam wParam,
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644945.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -643,7 +643,7 @@ namespace WInterop.Windows.Native
             SafeHandle lpTemplate,
             HWND hWndParent,
             DialogProcedure lpDialogFunc,
-            LPARAM lParamInit);
+            LParam lParamInit);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645445.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -652,15 +652,15 @@ namespace WInterop.Windows.Native
             string lpTemplateName,
             HWND hWndParent,
             DialogProcedure lpDialogFunc,
-            LPARAM dwInitParam);
+            LParam dwInitParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645450.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern LRESULT DefDlgProcW(
+        public static extern LResult DefDlgProcW(
             HWND hDlg,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam);
+            WParam wParam,
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645461.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -669,7 +669,7 @@ namespace WInterop.Windows.Native
             SafeHandle hDialogTemplate,
             HWND hWndParent,
             DialogProcedure lpDialogFunc,
-            LPARAM dwInitParam);
+            LParam dwInitParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645465.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -678,7 +678,7 @@ namespace WInterop.Windows.Native
             string lpTemplateName,
             HWND hWndParent,
             DialogProcedure lpDialogFunc,
-            LPARAM dwInitParam);
+            LParam dwInitParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645472.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -750,12 +750,12 @@ namespace WInterop.Windows.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645515.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern LRESULT SendDlgItemMessageW(
+        public static extern LResult SendDlgItemMessageW(
             HWND hDlg,
             int nIDDlgItem,
             MessageType Msg,
-            WPARAM wParam,
-            LPARAM lParam);
+            WParam wParam,
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645518.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -893,20 +893,20 @@ namespace WInterop.Windows.Native
         public static extern bool EnumChildWindows(
             HWND hWndParent,
             EnumerateWindowProcedure lpEnumFunc,
-            LPARAM lParam);
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633495.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool EnumThreadWindows(
             uint dwThreadId,
             EnumerateWindowProcedure lpfn,
-            LPARAM lParam);
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633497.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool EnumWindows(
             EnumerateWindowProcedure lpEnumFunc,
-            LPARAM lParam);
+            LParam lParam);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647486.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]

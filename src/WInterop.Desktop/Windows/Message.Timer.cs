@@ -16,10 +16,10 @@ namespace WInterop.Windows
         {
             // https://docs.microsoft.com/en-us/windows/desktop/winmsg/wm-timer
 
-            private readonly WPARAM _wParam;
-            private readonly LPARAM _lParam;
+            private readonly WParam _wParam;
+            private readonly LParam _lParam;
 
-            public Timer(WPARAM wParam, LPARAM lParam)
+            public Timer(WParam wParam, LParam lParam)
             {
                 _wParam = wParam;
                 _lParam = lParam;

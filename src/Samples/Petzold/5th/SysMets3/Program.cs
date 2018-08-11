@@ -31,7 +31,7 @@ namespace SysMets3
     {
         int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             ScrollInfo si;
 

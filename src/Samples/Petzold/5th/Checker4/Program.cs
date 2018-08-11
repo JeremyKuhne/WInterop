@@ -35,7 +35,7 @@ namespace Checker4
 
         Checker4Child _childClass = (Checker4Child)(new Checker4Child().Register());
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             int x, y;
             switch (message)
@@ -96,7 +96,7 @@ namespace Checker4
         {
         }
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

@@ -19,7 +19,7 @@ namespace WInterop.Windows
         {
             private readonly CREATESTRUCT* _createStruct;
 
-            public Create(LPARAM lParam)
+            public Create(LParam lParam)
             {
                 _createStruct = (CREATESTRUCT*)lParam;
             }

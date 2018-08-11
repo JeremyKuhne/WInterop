@@ -71,7 +71,7 @@ namespace OwnDraw
         const int ID_SMALLER = 1;
         const int ID_LARGER = 2;
 
-        static unsafe  LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static unsafe  LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

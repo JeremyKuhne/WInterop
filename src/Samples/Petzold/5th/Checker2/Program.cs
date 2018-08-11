@@ -32,7 +32,7 @@ namespace Checker2
         bool[,] fState = new bool[DIVISIONS, DIVISIONS];
         int cxBlock, cyBlock;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
@@ -73,8 +73,8 @@ namespace Checker2
                             break;
                         case VirtualKey.Return:
                         case VirtualKey.Space:
-                            window.SendMessage(MessageType.LeftButtonDown, (WPARAM)MouseKey.LeftButton,
-                                new LPARAM(y * cyBlock, x * cxBlock));
+                            window.SendMessage(MessageType.LeftButtonDown, (WParam)MouseKey.LeftButton,
+                                new LParam(y * cyBlock, x * cxBlock));
                             break;
                     }
                     x = (x + DIVISIONS) % DIVISIONS;

@@ -20,7 +20,7 @@ namespace WInterop.Globalization
         /// <summary>
         /// The sort handle for the invariant culture.
         /// </summary>
-        public static LPARAM InvariantSortHandle = GetSortHandle("");
+        public static LParam InvariantSortHandle = GetSortHandle("");
 
         /// <summary>
         /// Compare the given strings. Note that String.CompareOrdinal can be faster than this.
@@ -130,11 +130,11 @@ namespace WInterop.Globalization
         /// <summary>
         /// Gets the sort handle for the given locale.
         /// </summary>
-        public static unsafe LPARAM GetSortHandle(string locale)
+        public static unsafe LParam GetSortHandle(string locale)
         {
-            LPARAM sortHandle;
+            LParam sortHandle;
             fixed (char* l = locale)
-                if (Imports.LCMapStringEx(l, LocaleMapFlags.SortHandle, null, 0, (char*)&sortHandle, sizeof(LPARAM), null, null, 0) == 0)
+                if (Imports.LCMapStringEx(l, LocaleMapFlags.SortHandle, null, 0, (char*)&sortHandle, sizeof(LParam), null, null, 0) == 0)
                     throw Error.GetIoExceptionForLastError();
             return sortHandle;
         }

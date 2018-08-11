@@ -37,7 +37,7 @@ namespace WInterop.Gdi
 
         public static implicit operator HGDIOBJ(RegionHandle handle) => handle.Handle;
         public static implicit operator HRGN(RegionHandle handle) => handle.Handle;
-        public static implicit operator LRESULT(RegionHandle handle) => handle.Handle.Handle;
+        public static implicit operator LResult(RegionHandle handle) => handle.Handle.Handle;
         public static implicit operator GdiObjectHandle(RegionHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
     }
 }

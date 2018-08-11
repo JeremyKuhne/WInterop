@@ -20,7 +20,7 @@ namespace Inception
 
         public Inception() : base(backgroundBrush: BrushHandle.NoBrush) { }
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

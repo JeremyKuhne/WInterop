@@ -74,7 +74,7 @@ namespace RandRect
         static int cxClient, cyClient;
         static Random rand = new Random();
 
-        static LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

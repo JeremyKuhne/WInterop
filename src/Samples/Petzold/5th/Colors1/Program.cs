@@ -45,7 +45,7 @@ namespace Colors1
         // We need to put the delegate in a static to prevent the callback from being collected
         WindowProcedure _scrollProcedure;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
@@ -196,7 +196,7 @@ namespace Colors1
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        LRESULT ScrollProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        LResult ScrollProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             int id = (int)window.GetWindowLong(WindowLong.Id).ToInt64();
 

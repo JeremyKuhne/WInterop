@@ -20,7 +20,7 @@ namespace WInterop.Shell
         public char* lpszTitle;
         public BrowseInfoFlags ulFlags;
         public IntPtr lpfn;
-        public LPARAM lParam;
+        public LParam lParam;
         public int iImage;
     }
 }

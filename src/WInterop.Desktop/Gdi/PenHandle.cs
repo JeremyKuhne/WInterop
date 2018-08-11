@@ -48,7 +48,7 @@ namespace WInterop.Gdi
 
         public static implicit operator HGDIOBJ(PenHandle handle) => handle.Handle;
         public static implicit operator HPEN(PenHandle handle) => handle.Handle;
-        public static implicit operator LRESULT(PenHandle handle) => handle.Handle.Handle;
+        public static implicit operator LResult(PenHandle handle) => handle.Handle.Handle;
         public static implicit operator GdiObjectHandle(PenHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
         public static implicit operator PenHandle(StockPen pen) => Gdi.GetStockPen(pen);
     }

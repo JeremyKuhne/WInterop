@@ -23,7 +23,7 @@ namespace WInterop.Windows
         private uint _wParam;
         private uint _lParam;
 
-        public KeyMessage(WPARAM wParam, LPARAM lParam)
+        public KeyMessage(WParam wParam, LParam lParam)
         {
             _wParam = wParam;
             _lParam = (uint)lParam;

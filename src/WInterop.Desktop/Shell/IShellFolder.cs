@@ -45,7 +45,7 @@ namespace WInterop.Shell
 
         [PreserveSig]
         HRESULT CompareIDs(
-            LPARAM lParam,
+            LParam lParam,
             ItemIdList pidl1,
             ItemIdList pidl2);
 

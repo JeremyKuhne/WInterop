@@ -20,5 +20,5 @@ namespace WInterop.Windows
     /// <returns>Return true to continue enumeratoring.</returns>
     public delegate bool EnumerateWindowProcedure(
         WindowHandle window,
-        LPARAM lParam);
+        LParam lParam);
 }

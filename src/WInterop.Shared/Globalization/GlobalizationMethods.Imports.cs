@@ -8,6 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Globalization;
 using WInterop.Windows;
+using WInterop.Windows.Native;
 
 namespace WInterop.Globalization
 {
@@ -46,7 +47,7 @@ namespace WInterop.Globalization
                 int cchDest,
                 NLSVERSIONINFOEX* lpVersionInformation,
                 void* lpReserved,
-                LPARAM sortHandle);
+                LParam sortHandle);
         }
     }
 }

@@ -188,13 +188,13 @@ namespace WInterop.Windows
                 Marshal.GetFunctionPointerForDelegate(newCallback)));
         }
 
-        public static LRESULT CallWindowProcedure(WNDPROC previous, WindowHandle window, MessageType message, WPARAM wParam = default, LPARAM lParam = default)
+        public static LResult CallWindowProcedure(WNDPROC previous, WindowHandle window, MessageType message, WParam wParam = default, LParam lParam = default)
             => Imports.CallWindowProcW(previous, window, message, wParam, lParam);
 
-        public static LRESULT SendMessage(this in WindowHandle window, ListBoxMessage message, WPARAM wParam = default, LPARAM lParam = default)
+        public static LResult SendMessage(this in WindowHandle window, ListBoxMessage message, WParam wParam = default, LParam lParam = default)
             => SendMessage(window, (MessageType)message, wParam, lParam);
 
-        public static LRESULT SendMessage(this in WindowHandle window, MessageType message, WPARAM wParam = default, LPARAM lParam = default)
+        public static LResult SendMessage(this in WindowHandle window, MessageType message, WParam wParam = default, LParam lParam = default)
             => Imports.SendMessageW(window, message, wParam, lParam);
 
         public static string GetClassName(this in WindowHandle window)
@@ -437,7 +437,7 @@ namespace WInterop.Windows
             return Imports.DispatchMessageW(ref message);
         }
 
-        public static LRESULT DefaultWindowProcedure(this in WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        public static LResult DefaultWindowProcedure(this in WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             return Imports.DefWindowProcW(window, message, wParam, lParam);
         }
@@ -563,7 +563,7 @@ namespace WInterop.Windows
             return Imports.GetKeyState(key);
         }
 
-        public static string GetKeyNameText(LPARAM lParam)
+        public static string GetKeyNameText(LParam lParam)
         {
             var wrapper = new KeyNameTextWrapper { LParam = lParam };
 

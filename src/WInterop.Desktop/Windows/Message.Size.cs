@@ -14,7 +14,7 @@ namespace WInterop.Windows
             public System.Drawing.Size NewSize { get; }
             public SizeType SizeType { get;  }
 
-            public Size(WPARAM wParam, LPARAM lParam)
+            public Size(WParam wParam, LParam lParam)
             {
                 NewSize = new System.Drawing.Size(lParam.LowWord, lParam.HighWord);
                 SizeType = (SizeType)(int)wParam;

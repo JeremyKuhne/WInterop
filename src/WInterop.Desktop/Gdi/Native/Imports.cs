@@ -274,7 +274,7 @@ namespace WInterop.Gdi.Native
             HDC hdc,
             ref LOGFONT lpLogfont,
             EnumFontFamExProc lpEnumFonFamExProc,
-            LPARAM lParam,
+            LParam lParam,
             uint dwFlags);
 
         // https://msdn.microsoft.com/en-us/library/dd183354.aspx

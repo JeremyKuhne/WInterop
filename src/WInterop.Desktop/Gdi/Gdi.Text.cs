@@ -85,7 +85,7 @@ namespace WInterop.Gdi
             ref ENUMLOGFONTEXDV fontAttributes,
             ref NEWTEXTMETRICEX textMetrics,
             FontTypes fontType,
-            LPARAM lParam)
+            LParam lParam)
         {
             var info = (List<FontInformation>)GCHandle.FromIntPtr(lParam).Target;
             info.Add(new FontInformation { FontType = fontType, TextMetrics = textMetrics, FontAttributes = fontAttributes });

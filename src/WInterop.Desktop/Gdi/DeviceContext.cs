@@ -69,7 +69,7 @@ namespace WInterop.Gdi
         public bool IsInvalid => Handle.IsInvalid;
 
         public static implicit operator HDC(DeviceContext context) => context.Handle;
-        public static explicit operator DeviceContext(WPARAM wparam) => new DeviceContext(new HDC((IntPtr)wparam));
+        public static explicit operator DeviceContext(WParam wparam) => new DeviceContext(new HDC((IntPtr)wparam));
 
         private enum CollectionType
         {

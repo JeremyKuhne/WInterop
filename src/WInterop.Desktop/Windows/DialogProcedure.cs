@@ -13,6 +13,6 @@ namespace WInterop.Windows
     public delegate IntPtr DialogProcedure(
         WindowHandle hwndDlg,
         MessageType uMsg,
-        WPARAM wParam,
-        LPARAM lParam);
+        WParam wParam,
+        LParam lParam);
 }

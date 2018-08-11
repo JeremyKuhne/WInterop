@@ -34,7 +34,7 @@ namespace Checker3
         int cxBlock, cyBlock;
         Checker3Child _childClass = (Checker3Child)(new Checker3Child().Register());
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
@@ -70,7 +70,7 @@ namespace Checker3
         {
         }
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

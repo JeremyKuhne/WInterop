@@ -51,6 +51,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\WindowsStore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\LParam.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\Native\HWND.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFullPath.cs" />

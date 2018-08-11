@@ -12,7 +12,7 @@ namespace WInterop.Windows.BufferWrappers
 {
     public struct KeyNameTextWrapper : IBufferFunc<StringBuffer, uint>
     {
-        public LPARAM LParam;
+        public LParam LParam;
 
         uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
         {

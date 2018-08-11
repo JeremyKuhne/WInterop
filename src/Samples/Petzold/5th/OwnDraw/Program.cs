@@ -9,6 +9,7 @@ using System;
 using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Windows;
+using WInterop.Windows.Native;
 
 namespace OwnDraw
 {
@@ -43,7 +44,7 @@ namespace OwnDraw
         const int ID_SMALLER = 1;
         const int ID_LARGER = 2;
 
-        protected unsafe override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected unsafe override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

@@ -14,5 +14,5 @@ namespace WInterop.Gdi
         ref ENUMLOGFONTEXDV lpelfe,
         ref NEWTEXTMETRICEX lpntme,
         FontTypes FontType,
-        LPARAM lParam);
+        LParam lParam);
 }

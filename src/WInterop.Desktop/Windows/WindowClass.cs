@@ -156,7 +156,7 @@ namespace WInterop.Windows
             return window;
         }
 
-        protected virtual LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected virtual LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

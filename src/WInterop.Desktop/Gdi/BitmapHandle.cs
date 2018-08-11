@@ -37,7 +37,7 @@ namespace WInterop.Gdi
 
         public static implicit operator HGDIOBJ(BitmapHandle handle) => handle.Handle;
         public static implicit operator HBITMAP(BitmapHandle handle) => handle.Handle;
-        public static implicit operator LRESULT(BitmapHandle handle) => handle.Handle.Handle;
+        public static implicit operator LResult(BitmapHandle handle) => handle.Handle.Handle;
         public static implicit operator GdiObjectHandle(BitmapHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
     }
 }

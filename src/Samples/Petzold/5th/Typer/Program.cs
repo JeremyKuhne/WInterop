@@ -32,7 +32,7 @@ namespace Typer
         CharacterSet dwCharSet = CharacterSet.DEFAULT_CHARSET;
         char[,] pBuffer;
 
-        protected override LRESULT WindowProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

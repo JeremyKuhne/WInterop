@@ -41,7 +41,7 @@ namespace WInterop.Gdi
 
         public static implicit operator HGDIOBJ(BrushHandle handle) => handle.HBRUSH;
         public static implicit operator HBRUSH(BrushHandle handle) => handle.HBRUSH;
-        public static implicit operator LRESULT(BrushHandle handle) => handle.HBRUSH.Value;
+        public static implicit operator LResult(BrushHandle handle) => handle.HBRUSH.Value;
         public static implicit operator GdiObjectHandle(BrushHandle handle) => new GdiObjectHandle(handle.HBRUSH, ownsHandle: false);
         public static implicit operator BrushHandle(StockBrush brush) => Gdi.GetStockBrush(brush);
         public static implicit operator BrushHandle(SystemColor color) => Gdi.GetSystemColorBrush(color);

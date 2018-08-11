@@ -98,7 +98,7 @@ namespace WindowsTests
             }
         }
 
-        static LRESULT CallDefaultProcedure(WindowHandle window, MessageType message, WPARAM wParam, LPARAM lParam)
+        static LResult CallDefaultProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             return window.DefaultWindowProcedure(message, wParam, lParam);
         }
