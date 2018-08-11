@@ -10,25 +10,11 @@ using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Windows;
 
-namespace SysMets1
+namespace SysMets
 {
-    /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 4-5, Pages 91-93.
-    /// </summary>
-    static class Program
-    {
-        [STAThread]
-        static void Main()
-        {
-            Windows.CreateMainWindowAndRun(new SysMets1(), "System Metrics");
-        }
-    }
-
     class SysMets1 : WindowClass
     {
-        int cxChar, cxCaps, cyChar;
+        protected int cxChar, cxCaps, cyChar;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

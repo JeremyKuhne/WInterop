@@ -8,7 +8,6 @@
 using System;
 using System.Drawing;
 using WInterop.Modules;
-using WInterop.Windows;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows

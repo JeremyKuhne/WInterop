@@ -11,25 +11,11 @@ using System.Linq;
 using WInterop.Gdi;
 using WInterop.Windows;
 
-namespace SysMets3
+namespace SysMets
 {
-    /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 4-11, Pages 112-117.
-    /// </summary>
-    static class Program
+    class SysMets3 : SysMets2
     {
-        [STAThread]
-        static void Main()
-        {
-            Windows.CreateMainWindowAndRun(new SysMets3(), "System metrics with both Scrollbars");
-        }
-    }
-
-    class SysMets3 : WindowClass
-    {
-        int cxChar, cxCaps, cyChar, cxClient, cyClient, iMaxWidth;
+        protected int cxClient;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -37,20 +23,9 @@ namespace SysMets3
 
             switch (message)
             {
-                case MessageType.Create:
-                    using (DeviceContext dc = window.GetDeviceContext())
-                    {
-                        dc.GetTextMetrics(out TEXTMETRIC tm);
-                        cxChar = tm.tmAveCharWidth;
-                        cxCaps = ((tm.tmPitchAndFamily.PitchTypes & FontPitchTypes.VariablePitch) != 0 ? 3 : 2) * cxChar / 2;
-                        cyChar = tm.tmHeight + tm.tmExternalLeading;
-                    }
-
-                    // Save the width of the three columns
-                    iMaxWidth = 40 * cxChar + 22 * cxCaps;
-
-                    return 0;
                 case MessageType.Size:
+                    int iMaxWidth = 40 * cxChar + 22 * cxCaps;
+
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
 
@@ -194,9 +169,6 @@ namespace SysMets3
                             dc.SetTextAlignment(new TextAlignment(TextAlignment.Horizontal.Left, TextAlignment.Vertical.Top));
                         }
                     }
-                    return 0;
-                case MessageType.Destroy:
-                    Windows.PostQuitMessage(0);
                     return 0;
             }
 

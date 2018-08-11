@@ -10,22 +10,8 @@ using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Windows;
 
-namespace Checker4
+namespace Checker
 {
-    /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 7-8, Pages 303-308.
-    /// </summary>
-    static class Program
-    {
-        [STAThread]
-        static void Main()
-        {
-            Windows.CreateMainWindowAndRun(new Checker4(), "Checker4 Mouse Hit-Test Demo");
-        }
-    }
-
     class Checker4 : WindowClass
     {
         const int DIVISIONS = 5;

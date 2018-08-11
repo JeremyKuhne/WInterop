@@ -11,16 +11,16 @@ using WInterop.Gdi.Native;
 namespace WInterop.Windows.Native
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/ns-winuser-tagdrawitemstruct
-    public struct DRAWITEMSTRUCT
+    public readonly struct DRAWITEMSTRUCT
     {
-        public OwnerDrawType CtlType;
-        public uint CtlID;
-        public uint itemID;
-        public OwnerDrawActions itemAction;
-        public OwnerDrawStates itemState;
-        public WindowHandle hwndItem;
-        public HDC hDC;
-        public RECT rcItem;
-        public IntPtr itemData;
+        public readonly OwnerDrawType CtlType;
+        public readonly uint CtlID;
+        public readonly uint itemID;
+        public readonly OwnerDrawActions itemAction;
+        public readonly OwnerDrawStates itemState;
+        public readonly HWND hwndItem;
+        public readonly HDC hDC;
+        public readonly RECT rcItem;
+        public readonly IntPtr itemData;
     }
 }

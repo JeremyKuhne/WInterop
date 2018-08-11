@@ -10,38 +10,21 @@ using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Windows;
 
-namespace SysMets2
+namespace SysMets
 {
-    /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 4-10, Pages 103-106.
-    /// </summary>
-    static class Program
+    class SysMets2 : SysMets1
     {
-        [STAThread]
-        static void Main()
-        {
-            Windows.CreateMainWindowAndRun(new SysMets2(), "System Metrics with Scrollbar");
-        }
-    }
-
-    class SysMets2 : WindowClass
-    {
-        int cxChar, cxCaps, cyChar, cyClient, iVscrollPos;
+        protected int cyClient, iVscrollPos;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
                 case MessageType.Create:
-                    using (DeviceContext dc = window.GetDeviceContext())
-                    {
-                        dc.GetTextMetrics(out TEXTMETRIC tm);
-                        cxChar = tm.tmAveCharWidth;
-                        cxCaps = ((tm.tmPitchAndFamily.PitchTypes & FontPitchTypes.VariablePitch) != 0 ? 3 : 2) * cxChar / 2;
-                        cyChar = tm.tmHeight + tm.tmExternalLeading;
-                    }
+                    // We have to call the base first to get the character metrics as setting the
+                    // scroll range will kick MessageType.Size events.
+
+                    base.WindowProcedure(window, message, wParam, lParam);
 
                     window.SetScrollRange(ScrollBar.Vertical, 0, Metrics.SystemMetrics.Count - 1, false);
                     window.SetScrollPosition(ScrollBar.Vertical, iVscrollPos, true);

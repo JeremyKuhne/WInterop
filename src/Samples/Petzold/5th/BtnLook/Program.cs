@@ -10,7 +10,6 @@ using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Windows;
-using WInterop.Windows.Native;
 
 namespace OwnDraw
 {
@@ -44,6 +43,7 @@ namespace OwnDraw
                 szAppName,
                 "Owner-Draw Button Demo",
                 WindowStyles.OverlappedWindow,
+                bounds: Windows.DefaultBounds,
                 instance: module);
 
             window.ShowWindow(ShowWindowCommand.Normal);
@@ -71,7 +71,7 @@ namespace OwnDraw
         const int ID_SMALLER = 1;
         const int ID_LARGER = 2;
 
-        static unsafe  LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
@@ -81,20 +81,20 @@ namespace OwnDraw
                     btnHeight = baseUnits.Height * 4;
 
                     // Create the owner-draw pushbuttons
-                    CREATESTRUCT* create = (CREATESTRUCT*)lParam;
+                    var createMessage = new Message.Create(lParam);
 
                     hwndSmaller = Windows.CreateWindow("button",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
                         bounds: new Rectangle(0, 0, btnWidth, btnHeight),
                         parentWindow: window,
                         menuHandle: (MenuHandle)ID_SMALLER,
-                        instance: create->hInstance);
+                        instance: createMessage.Instance);
                     hwndLarger = Windows.CreateWindow("button",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
                         bounds: new Rectangle(0, 0, btnWidth, btnHeight),
                         parentWindow: window,
                         menuHandle: (MenuHandle)ID_LARGER,
-                        instance: create->hInstance);
+                        instance: createMessage.Instance);
 
                     return 0;
                 case MessageType.Size:
@@ -126,12 +126,13 @@ namespace OwnDraw
                     window.MoveWindow(rc, repaint: true);
                     return 0;
                 case MessageType.DrawItem:
-                    DRAWITEMSTRUCT* pdis = (DRAWITEMSTRUCT*)lParam;
+
+                    var drawItemMessage = new Message.DrawItem(lParam);
 
                     // Fill area with white and frame it black
-                    using (DeviceContext dc = new DeviceContext(pdis->hDC))
+                    using (DeviceContext dc = drawItemMessage.DeviceContext)
                     {
-                        Rectangle rect = pdis->rcItem;
+                        Rectangle rect = drawItemMessage.ItemRectangle;
 
                         dc.FillRectangle(rect, StockBrush.White);
                         dc.FrameRectangle(rect, StockBrush.Black);
@@ -142,7 +143,7 @@ namespace OwnDraw
 
                         Point[] pt = new Point[3];
 
-                        switch((int)pdis->CtlID)
+                        switch((int)drawItemMessage.ControlId)
                         {
                             case ID_SMALLER:
                                 pt[0].X = 3 * cx / 8; pt[0].Y = 1 * cy / 8;
@@ -183,10 +184,10 @@ namespace OwnDraw
                         }
 
                         // Invert the rectangle if the button is selected
-                        if ((pdis->itemState & OwnerDrawStates.Selected) != 0)
+                        if ((drawItemMessage.ItemState & OwnerDrawStates.Selected) != 0)
                             dc.InvertRectangle(rect);
 
-                        if ((pdis->itemState & OwnerDrawStates.Focus) != 0)
+                        if ((drawItemMessage.ItemState & OwnerDrawStates.Focus) != 0)
                         {
                             rect = Rectangle.FromLTRB(
                                 rect.Left + cx / 16,
