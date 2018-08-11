@@ -100,13 +100,13 @@ namespace Clock
 #endif
         }
 
-        void DrawHands(DeviceContext dc, SYSTEMTIME pst, bool fChange)
+        void DrawHands(DeviceContext dc, SystemTime pst, bool fChange)
         {
             int[] iAngle =
             {
-                (pst.wHour * 30) % 360 + pst.wMinute / 2,
-                pst.wMinute * 6,
-                pst.wSecond * 6
+                (pst.Hour * 30) % 360 + pst.Minute / 2,
+                pst.Minute * 6,
+                pst.Second * 6
             };
 
             Point[][] pt =
@@ -156,7 +156,7 @@ namespace Clock
         const int ID_TIMER = 1;
         const double TWOPI = Math.PI * 2;
         static int cxClient, cyClient;
-        static SYSTEMTIME stPrevious;
+        static SystemTime stPrevious;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -164,16 +164,16 @@ namespace Clock
             {
                 case MessageType.Create:
                     window.SetTimer(ID_TIMER, 1000);
-                    stPrevious = Windows.GetLocalTime();
+                    stPrevious = SystemInformation.GetLocalTime();
                     return 0;
                 case MessageType.Size:
                     cxClient = lParam.LowWord;
                     cyClient = lParam.HighWord;
                     return 0;
                 case MessageType.Timer:
-                    SYSTEMTIME st = Windows.GetLocalTime();
-                    bool fChange = st.wHour != stPrevious.wHour ||
-                        st.wMinute != stPrevious.wMinute;
+                    SystemTime st = SystemInformation.GetLocalTime();
+                    bool fChange = st.Hour != stPrevious.Hour ||
+                        st.Minute != stPrevious.Minute;
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         SetIsotropic(dc, cxClient, cyClient);

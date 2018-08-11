@@ -30,6 +30,8 @@ namespace DigClock
 
     class DigClock : WindowClass
     {
+        public DigClock() : base(backgroundBrush: StockBrush.Black) { }
+
         static BOOL[,] fSevenSegment =
         {
             { 1, 1, 1, 0, 1, 1, 1 }, // 0
@@ -85,15 +87,15 @@ namespace DigClock
 
         static void DisplayTime(DeviceContext hdc, BOOL f24Hour, BOOL fSuppress)
         {
-            SYSTEMTIME st = Windows.GetLocalTime();
+            SystemTime st = SystemInformation.GetLocalTime();
             if (f24Hour)
-                DisplayTwoDigits(hdc, st.wHour, fSuppress);
+                DisplayTwoDigits(hdc, st.Hour, fSuppress);
             else
-                DisplayTwoDigits(hdc, (st.wHour %= 12) != 0 ? st.wHour : 12, fSuppress);
+                DisplayTwoDigits(hdc, (st.Hour % 12) != 0 ? st.Hour : 12, fSuppress);
             DisplayColon(hdc);
-            DisplayTwoDigits(hdc, st.wMinute, false);
+            DisplayTwoDigits(hdc, st.Minute, false);
             DisplayColon(hdc);
-            DisplayTwoDigits(hdc, st.wSecond, false);
+            DisplayTwoDigits(hdc, st.Second, false);
         }
 
         const int ID_TIMER = 1;

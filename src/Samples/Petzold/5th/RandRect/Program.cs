@@ -8,7 +8,6 @@
 using System;
 using System.Drawing;
 using System.Threading;
-using WInterop.Console;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Windows;

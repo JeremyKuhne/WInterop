@@ -35,8 +35,6 @@ namespace Connect
         int iCount;
         int sampleCount;
 
-        public Connect() : base(backgroundBrush: StockBrush.White) { }
-
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)

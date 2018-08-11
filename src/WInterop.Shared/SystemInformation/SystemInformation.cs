@@ -52,9 +52,9 @@ namespace WInterop.SystemInformation
         /// <summary>
         /// Returns the local system time.
         /// </summary>
-        public static SYSTEMTIME GetLocalTime()
+        public static SystemTime GetLocalTime()
         {
-            Imports.GetLocalTime(out SYSTEMTIME time);
+            Imports.GetLocalTime(out SystemTime time);
             return time;
         }
 

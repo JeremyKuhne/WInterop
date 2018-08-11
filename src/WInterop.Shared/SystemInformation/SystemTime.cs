@@ -7,16 +7,19 @@
 
 namespace WInterop.SystemInformation
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx
-    public struct SYSTEMTIME
+    /// <summary>
+    /// [SYSTEMTIME]
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx"/></remarks>
+    public readonly struct SystemTime
     {
-        public ushort wYear;
-        public Month wMonth;
-        public DayOfWeek wDayOfWeek;
-        public ushort wDay;
-        public ushort wHour;
-        public ushort wMinute;
-        public ushort wSecond;
-        public ushort wMilliseconds;
+        public readonly ushort Year;
+        public readonly Month Month;
+        public readonly DayOfWeek DayOfWeek;
+        public readonly ushort Day;
+        public readonly ushort Hour;
+        public readonly ushort Minute;
+        public readonly ushort Second;
+        public readonly ushort Milliseconds;
     }
 }
