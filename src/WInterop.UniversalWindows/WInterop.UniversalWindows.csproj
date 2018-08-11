@@ -1,11 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project>
-  <PropertyGroup>
-    <ImportCommonProps>false</ImportCommonProps>
-  </PropertyGroup>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
-  <!-- https://github.com/Microsoft/msbuild/issues/1392 -->
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <SignAssembly>True</SignAssembly>
@@ -21,5 +15,4 @@
   </ItemGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\WInterop.Shared\WInterop.Shared.projitems" Label="Shared" />
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
