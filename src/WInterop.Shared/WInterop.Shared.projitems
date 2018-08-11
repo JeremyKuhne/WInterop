@@ -9,6 +9,7 @@
     <Import_RootNamespace>WInterop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ApiSets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\CFHEADER.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\ERF.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\FciError.cs" />
@@ -51,10 +52,41 @@
     <Compile Include="$(MSBuildThisFileDirectory)Com\VARIANT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRT\FCNTL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRT\pmode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumPhysicalStoreCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumSystemStoreCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumSystemStoreLocationCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_PHYSICAL_STORE_INFO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_SYSTEM_STORE_INFO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_SYSTEM_STORE_RELOCATE_PARA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoDefines.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CRYPT_DATA_BLOB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\PhysicalStoreInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreOpenFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreVerifyFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocationId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveLockedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveNotReadyException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Facility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FileExistsException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FormatMessageFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\HRESULT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\NTSTATUS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WindowsError.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WInteropIOException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\LANGID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\Language.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\LCID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfoType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleMapFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleNameForm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\NLSVERSIONINFOEX.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\SortOrder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\Sublanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\BaseHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\CertificateStoreHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\CloseHandle.cs" />
@@ -74,6 +106,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SymbolicLinkObjectHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SymbolicLinkObjectRights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\UnwrapHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Libraries.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\HeapHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\HeapHandleCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\LocalHandle.cs" />
@@ -328,8 +361,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\Structs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\OVERLAPPED.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Synchronization\SynchronizationMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\ComputerNameFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\DayOfWeek.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\ExtendedNameFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\Month.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\Native\Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\Native\SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\ProcessorFeature.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SuiteMask.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemTime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\WindowsStore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\LParam.cs" />
@@ -344,7 +386,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Native\" />
-    <Folder Include="$(MSBuildThisFileDirectory)SystemInformation\Native\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Support.Root\README.txt" />

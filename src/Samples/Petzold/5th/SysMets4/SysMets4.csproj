@@ -10,6 +10,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\WInterop.Desktop\WInterop.Desktop.csproj" />
-    <ProjectReference Include="..\..\..\..\WInterop.Types\WInterop.Types.csproj" />
   </ItemGroup>
 </Project>
