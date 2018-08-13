@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define GDIPLUS
+// #define GDIPLUS
 
 #if GDIPLUS
 using WInterop.GdiPlus;
@@ -43,19 +43,17 @@ namespace Clock
 
     class Clock : WindowClass
     {
-        public Clock() : base(backgroundBrush: StockBrush.White) { }
-
-        void SetIsotropic(DeviceContext hdc, int cxClient, int cyClient)
+        void SetIsotropic(DeviceContext hdc)
         {
-            hdc.SetMapMode(MapMode.Isotropic);
-            hdc.SetWindowExtents(1000, 1000);
-            hdc.SetViewportExtents(cxClient / 2, -cyClient / 2);
-            hdc.SetViewportOrigin(cxClient / 2, cyClient / 2);
+            hdc.SetMappingMode(MappingMode.Isotropic);
+            hdc.SetWindowExtents(new Size(1000, 1000));
+            hdc.SetViewportExtents(new Size(_clientSize.Width / 2, -_clientSize.Height / 2));
+            hdc.SetViewportOrigin(new Point(_clientSize.Width / 2, _clientSize.Height / 2));
         }
 
         void RotatePoint(Point[] pt, int iNum, int iAngle)
         {
-             for (int i = 0; i < iNum; i++)
+            for (int i = 0; i < iNum; i++)
             {
                 pt[i] = new Point
                 (
@@ -100,51 +98,49 @@ namespace Clock
 #endif
         }
 
-        void DrawHands(DeviceContext dc, SystemTime pst, bool fChange)
+        void DrawHands(DeviceContext dc, SystemTime time, bool erase = false, bool drawHourAndMinuteHands = true)
         {
-            int[] iAngle =
+            int[] handAngles =
             {
-                (pst.Hour * 30) % 360 + pst.Minute / 2,
-                pst.Minute * 6,
-                pst.Second * 6
+                (time.Hour * 30) % 360 + time.Minute / 2,
+                time.Minute * (360 / 60),
+                time.Second * (360 / 60)
             };
 
-            Point[][] pt =
+            Point[][] handPoints =
             {
                 new Point[] { new Point(0, -150), new Point(100, 0), new Point(0, 600), new Point(-100, 0), new Point(0, -150) },
                 new Point[] { new Point(0, -200), new Point(50, 0), new Point(0, 800), new Point(-50, 0), new Point(0, -200), },
                 new Point[] { new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 800) }
             };
 
-            Color color = Gdi.GetPenColor(dc.GetCurrentPen());
-            bool erase = color.Is(Color.White);
-
 #if GDIPLUS
             using (var graphics = GdiPlus.CreateGraphics(dc))
             {
                 if (erase)
                 {
-                    using (var brush = graphics.CreateSolidBrush(color))
+                    using (var brush = graphics.CreateSolidBrush(Color.White))
                     {
                         graphics.FillEllipse(brush, -830, -830, 1660, 1660);
                     }
                     return;
                 }
 
-                using (var pen = graphics.CreatePen(color))
+                using (var pen = graphics.CreatePen(Color.Black))
                 {
                     graphics.SetSmoothingMode(SmoothingMode.HighQuality);
-
+#else
+                    dc.SelectObject(erase ? StockPen.White : StockPen.Black);
 #endif
 
-                    for (int i = fChange ? 0 : 2; i < 3; i++)
+                    for (int i = drawHourAndMinuteHands ? 0 : 2; i < 3; i++)
                     {
-                        RotatePoint(pt[i], 5, iAngle[i]);
+                        RotatePoint(handPoints[i], 5, handAngles[i]);
 
 #if GDIPLUS
-                        graphics.DrawLines(pen, pt[i]);
+                        graphics.DrawLines(pen, handPoints[i]);
 #else
-                        dc.Polyline(pt[i]);
+                        dc.Polyline(handPoints[i]);
 #endif
                     }
 #if GDIPLUS
@@ -155,8 +151,8 @@ namespace Clock
 
         const int ID_TIMER = 1;
         const double TWOPI = Math.PI * 2;
-        static int cxClient, cyClient;
-        static SystemTime stPrevious;
+        Size _clientSize;
+        SystemTime _previousTime;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -164,32 +160,29 @@ namespace Clock
             {
                 case MessageType.Create:
                     window.SetTimer(ID_TIMER, 1000);
-                    stPrevious = SystemInformation.GetLocalTime();
+                    _previousTime = SystemInformation.GetLocalTime();
                     return 0;
                 case MessageType.Size:
-                    cxClient = lParam.LowWord;
-                    cyClient = lParam.HighWord;
+                    _clientSize = new Message.Size(wParam, lParam).NewSize;
                     return 0;
                 case MessageType.Timer:
-                    SystemTime st = SystemInformation.GetLocalTime();
-                    bool fChange = st.Hour != stPrevious.Hour ||
-                        st.Minute != stPrevious.Minute;
+                    SystemTime time = SystemInformation.GetLocalTime();
+                    bool drawAllHands = time.Hour != _previousTime.Hour ||
+                        time.Minute != _previousTime.Minute;
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        SetIsotropic(dc, cxClient, cyClient);
-                        dc.SelectObject(StockPen.White);
-                        DrawHands(dc, stPrevious, fChange);
-                        dc.SelectObject(StockPen.Black);
-                        DrawHands(dc, st, true);
+                        SetIsotropic(dc);
+                        DrawHands(dc, _previousTime, erase: true, drawAllHands);
+                        DrawHands(dc, time);
                     }
-                    stPrevious = st;
+                    _previousTime = time;
                     return 0;
                 case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        SetIsotropic(dc, cxClient, cyClient);
+                        SetIsotropic(dc);
                         DrawClock(dc);
-                        DrawHands(dc, stPrevious, true);
+                        DrawHands(dc, _previousTime);
                     }
                     return 0;
             }

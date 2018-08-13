@@ -6,6 +6,8 @@
 #include "shlobj.h"
 #include "aclapi.h"
 #include "lm.h"
+#include "d2d1.h"
+#include "dwrite.h"
 
 BOOL APIENTRY DllMain(
     HMODULE hModule,

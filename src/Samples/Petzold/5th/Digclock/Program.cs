@@ -126,7 +126,7 @@ namespace DigClock
                 case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        dc.SetMapMode(MapMode.Isotropic);
+                        dc.SetMappingMode(MappingMode.Isotropic);
                         dc.SetWindowExtents(276, 72);
                         dc.SetViewportExtents(cxClient, cyClient);
                         dc.SetWindowOrigin(138, 36);

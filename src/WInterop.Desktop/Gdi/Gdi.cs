@@ -177,11 +177,17 @@ namespace WInterop.Gdi
 
         public static bool UpdateWindow(this in WindowHandle window) => Imports.UpdateWindow(window);
 
-        public static bool ValidateRectangle(this in WindowHandle window, ref Rectangle rectangle)
+        public unsafe static bool ValidateRectangle(this in WindowHandle window, ref Rectangle rectangle)
         {
             RECT rect = rectangle;
-            return Imports.ValidateRect(window, ref rect);
+            return Imports.ValidateRect(window, &rect);
         }
+
+        /// <summary>
+        /// Validates the entire Window.
+        /// </summary>
+        public unsafe static bool ValidateRectangle(this in WindowHandle window)
+            => Imports.ValidateRect(window, null);
 
         /// <summary>
         /// Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
@@ -232,14 +238,14 @@ namespace WInterop.Gdi
             return Imports.SelectClipRgn(context, region);
         }
 
-        public static unsafe bool SetViewportOrigin(this in DeviceContext context, int x, int y)
+        public static unsafe bool SetViewportOrigin(this in DeviceContext context, Point point)
         {
-            return Imports.SetViewportOrgEx(context, x, y, null);
+            return Imports.SetViewportOrgEx(context, point.X, point.Y, null);
         }
 
-        public static unsafe bool SetWindowOrigin(this in DeviceContext context, int x, int y)
+        public static unsafe bool SetWindowOrigin(this in DeviceContext context, Point point)
         {
-            return Imports.SetWindowOrgEx(context, x, y, null);
+            return Imports.SetWindowOrgEx(context, point.X, point.Y, null);
         }
 
         /// <summary>
@@ -325,20 +331,17 @@ namespace WInterop.Gdi
             return Imports.OffsetViewportOrgEx(context, x, y, null);
         }
 
-        public unsafe static bool SetWindowExtents(this in DeviceContext context, int x, int y)
-        {
-            return Imports.SetWindowExtEx(context, x, y, null);
-        }
+        /// <summary>
+        /// Sets the logical ("window") dimensions of the device context.
+        /// </summary>
+        public unsafe static bool SetWindowExtents(this in DeviceContext context, Size size)
+            => Imports.SetWindowExtEx(context, size.Width, size.Height, null);
 
-        public unsafe static bool SetViewportExtents(this in DeviceContext context, int x, int y)
-        {
-            return Imports.SetViewportExtEx(context, x, y, null);
-        }
+        public unsafe static bool SetViewportExtents(this in DeviceContext context, Size size)
+            => Imports.SetViewportExtEx(context, size.Width, size.Height, null);
 
-        public static MapMode SetMapMode(this in DeviceContext context, MapMode mapMode)
-        {
-            return Imports.SetMapMode(context, mapMode);
-        }
+        public static MappingMode SetMappingMode(this in DeviceContext context, MappingMode mapMode)
+            => Imports.SetMapMode(context, mapMode);
 
         public static Rectangle GetClipBox(this in DeviceContext context, out RegionType complexity)
         {

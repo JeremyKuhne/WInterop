@@ -11,7 +11,7 @@ namespace WInterop.Gdi
     /// Page-space to device-space transformation.
     /// </summary>
     // https://msdn.microsoft.com/en-us/library/dd145045.aspx
-    public enum MapMode
+    public enum MappingMode
     {
         /// <summary>
         /// Pixel mapping. Each unit in page space is one pixel in device space.

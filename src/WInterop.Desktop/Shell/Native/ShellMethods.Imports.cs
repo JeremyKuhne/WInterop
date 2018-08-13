@@ -24,7 +24,7 @@ namespace WInterop.Shell
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762188.aspx
             [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT SHGetKnownFolderPath(
-                [MarshalAs(UnmanagedType.LPStruct)] Guid rfid,
+                ref Guid rfid,
                 KNOWN_FOLDER_FLAG dwFlags,
                 SafeHandle hToken,
                 out string ppszPath);
@@ -32,7 +32,7 @@ namespace WInterop.Shell
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762187.aspx
             [DllImport(Libraries.Shell32, ExactSpelling = true)]
             public static extern HRESULT SHGetKnownFolderIDList(
-                [MarshalAs(UnmanagedType.LPStruct)] Guid rfid,
+                ref Guid rfid,
                 KNOWN_FOLDER_FLAG dwFlags,
                 SafeHandle hToken,
                 out ItemIdList ppidl);

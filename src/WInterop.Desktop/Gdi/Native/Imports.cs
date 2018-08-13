@@ -152,9 +152,9 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/en-us/library/dd145194.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern bool ValidateRect(
+        public unsafe static extern bool ValidateRect(
             WindowHandle hWnd,
-            [In] ref RECT lpRect);
+            RECT* lpRect);
 
         // https://msdn.microsoft.com/en-us/library/dd183362.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -551,7 +551,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/en-us/library/dd144897.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public static extern MapMode GetMapMode(
+        public static extern MappingMode GetMapMode(
             HDC hdc);
 
         // https://msdn.microsoft.com/en-us/library/dd144945.aspx
@@ -661,9 +661,9 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/en-us/library/dd162980.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public static extern MapMode SetMapMode(
+        public static extern MappingMode SetMapMode(
             HDC hdc,
-            MapMode fnMapMode);
+            MappingMode fnMapMode);
 
         // https://msdn.microsoft.com/en-us/library/dd145098.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -681,12 +681,12 @@ namespace WInterop.Gdi.Native
             int nYExtent,
             Point* lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dd145100.aspx
+        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-setwindowextex
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool SetWindowExtEx(
             HDC hdc,
-            int nXExtent,
-            int nYExtent,
+            int x,
+            int y,
             SIZE* lpSize);
 
         // https://msdn.microsoft.com/en-us/library/dd145101.aspx

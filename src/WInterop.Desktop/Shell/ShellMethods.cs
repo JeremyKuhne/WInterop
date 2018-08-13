@@ -63,7 +63,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetKnownFolderPath(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
         {
-            HRESULT hr = Imports.SHGetKnownFolderPath(folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
+            HRESULT hr = Imports.SHGetKnownFolderPath(ref folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
             if (hr != HRESULT.S_OK)
                 throw Error.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 
@@ -75,7 +75,7 @@ namespace WInterop.Shell
         /// </summary>
         public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
         {
-            HRESULT hr = Imports.SHGetKnownFolderIDList(folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
+            HRESULT hr = Imports.SHGetKnownFolderIDList(ref folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
             if (hr != HRESULT.S_OK)
                 throw Error.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
 

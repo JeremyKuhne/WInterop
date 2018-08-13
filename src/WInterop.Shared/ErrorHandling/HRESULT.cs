@@ -22,6 +22,8 @@ namespace WInterop.Errors
         STG_E_INVALIDFLAG = unchecked((int)0x800300FF),
         E_ACCESSDENIED = unchecked((int)0x80070005L),
         E_INVALIDARG = unchecked((int)0x80070057),
+        D2DERR_RECREATE_TARGET = unchecked((int)0x8899000C),
+        WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT = unchecked((int)0x88982F80)
     }
 
     public static class HResultExtensions

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ImportCommonProps>false</ImportCommonProps>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -8,9 +8,6 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <AutogenerateBindingRedirects>true</AutogenerateBindingRedirects>
   </PropertyGroup>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
-  <!-- https://github.com/Microsoft/msbuild/issues/1392 -->
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <TargetFramework>net471</TargetFramework>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -28,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WInterop.Desktop\WInterop.Desktop.csproj" />
+    <ProjectReference Include="..\..\WInterop.DirectX\WInterop.Direct2d.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
@@ -40,5 +38,4 @@
   <Import Project="..\Tests.Shared.Desktop\Tests.Shared.Desktop.projitems" Label="Shared" />
   <Import Project="..\Tests.Shared.Support\Tests.Shared.Support.projitems" Label="Shared" />
   <Import Project="..\Tests.Shared\Tests.Shared.projitems" Label="Shared" />
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
