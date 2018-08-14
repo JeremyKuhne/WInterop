@@ -123,7 +123,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Compression\FdiHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\SecurityDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\AccessMask.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\AccessMode.cs" />
