@@ -11,6 +11,6 @@ namespace WInterop.Gdi
     public struct NEWTEXTMETRICEX
     {
         public NEWTEXTMETRIC ntmTm;
-        public FONTSIGNATURE ntmFontSig;
+        public FontSignature ntmFontSig;
     }
 }

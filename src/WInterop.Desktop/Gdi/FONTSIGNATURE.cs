@@ -7,8 +7,11 @@
 
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd318064.aspx
-    public struct FONTSIGNATURE
+    /// <summary>
+    /// [FONTSIGNATURE]
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/dd318064.aspx"/></remarks>
+    public struct FontSignature
     {
         public UnicodeSubsetsOne UnicodeSubsetsOne;
         public UnicodeSubsetsTwo UnicodeSubsetsTwo;

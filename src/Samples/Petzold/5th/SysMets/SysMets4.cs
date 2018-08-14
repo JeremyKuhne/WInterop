@@ -13,8 +13,6 @@ namespace SysMets
     {
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
-            ScrollInfo si;
-
             switch (message)
             {
 

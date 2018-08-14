@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Runtime.CompilerServices;
 
 namespace WInterop.Support
 {
@@ -43,11 +42,5 @@ namespace WInterop.Support
         {
             return new Span<byte>(AddressOf(ref target), (int)SizeInBytes(ref target));
         }
-
-        /// <summary>
-        /// Helper method to skip initialization of a struct.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern unsafe void NoInit<T>(out T target) where T : struct;
     }
 }

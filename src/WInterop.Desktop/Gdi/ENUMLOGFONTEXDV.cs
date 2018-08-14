@@ -11,6 +11,6 @@ namespace WInterop.Gdi
     public struct ENUMLOGFONTEXDV
     {
         public ENUMLOGFONTEX elfEnumLogfontEx;
-        public DESIGNVECTOR elfDesignVector;
+        public DesignVector elfDesignVector;
     }
 }

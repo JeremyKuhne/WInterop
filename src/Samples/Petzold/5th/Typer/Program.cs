@@ -46,9 +46,9 @@ namespace Typer
                             OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
                         {
                             dc.SelectObject(font);
-                            dc.GetTextMetrics(out TEXTMETRIC tm);
-                            cxChar = tm.tmAveCharWidth;
-                            cyChar = tm.tmHeight;
+                            dc.GetTextMetrics(out TextMetrics tm);
+                            cxChar = tm.AverageCharWidth;
+                            cyChar = tm.Height;
                             dc.SelectObject(StockFont.System);
                         }
                     }

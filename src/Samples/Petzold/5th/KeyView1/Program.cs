@@ -54,9 +54,9 @@ namespace KeyView1
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
                         dc.SelectObject(StockFont.SystemFixed);
-                        dc.GetTextMetrics(out TEXTMETRIC tm);
-                        cxChar = tm.tmAveCharWidth;
-                        cyChar = tm.tmHeight;
+                        dc.GetTextMetrics(out TextMetrics tm);
+                        cxChar = tm.AverageCharWidth;
+                        cyChar = tm.Height;
                     }
 
                     cLinesMax = cyClientMax / cyChar;

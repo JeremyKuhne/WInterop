@@ -29,10 +29,10 @@ namespace GdiTests
         public void EnumerateDisplayDevices_Monitors()
         {
             var device = Gdi.EnumerateDisplayDevices(null).First();
-            var monitor = Gdi.EnumerateDisplayDevices(device.DeviceName).First();
+            var monitor = Gdi.EnumerateDisplayDevices(device.DeviceName.Buffer.CreateString()).First();
 
             // Something like \\.\DISPLAY1 and \\.\DISPLAY1\Monitor0
-            monitor.DeviceName.Should().StartWith(device.DeviceName);
+            monitor.DeviceName.Buffer.CreateString().Should().StartWith(device.DeviceName.Buffer.CreateString());
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace GdiTests
         public void EnumerateDisplaySettings_FirstDevice()
         {
             var device = Gdi.EnumerateDisplayDevices(null).First();
-            var settings = Gdi.EnumerateDisplaySettings(device.DeviceName);
+            var settings = Gdi.EnumerateDisplaySettings(device.DeviceName.Buffer.CreateString());
             settings.Should().NotBeEmpty();
         }
 
@@ -54,7 +54,7 @@ namespace GdiTests
         public void EnumerateDisplaySettings_FirstDevice_CurrentMode()
         {
             var device = Gdi.EnumerateDisplayDevices(null).First();
-            var settings = Gdi.EnumerateDisplaySettings(device.DeviceName, GdiDefines.ENUM_CURRENT_SETTINGS).ToArray();
+            var settings = Gdi.EnumerateDisplaySettings(device.DeviceName.Buffer.CreateString(), GdiDefines.ENUM_CURRENT_SETTINGS).ToArray();
             settings.Length.Should().Be(1);
         }
 
@@ -105,7 +105,7 @@ namespace GdiTests
         [Fact]
         public unsafe void DESIGNVECTOR_Size()
         {
-            sizeof(DESIGNVECTOR).Should().Be(72);
+            sizeof(DesignVector).Should().Be(72);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace GdiTests
         [Fact]
         public unsafe void LOGFONT_Size()
         {
-            sizeof(LOGFONT).Should().Be(92);
+            sizeof(LogicalFont).Should().Be(92);
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace GdiTests
         [Fact]
         public unsafe void FONTSIGNATURE_Size()
         {
-            sizeof(FONTSIGNATURE).Should().Be(24);
+            sizeof(FontSignature).Should().Be(24);
         }
 
         [Fact]

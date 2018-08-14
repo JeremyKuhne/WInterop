@@ -17,7 +17,7 @@ namespace GdiTests
         [Fact]
         public void MarshalSize()
         {
-            Marshal.SizeOf<DISPLAY_DEVICE>().Should().Be(840);
+            Marshal.SizeOf<DisplayDevice>().Should().Be(840);
         }
     }
 }

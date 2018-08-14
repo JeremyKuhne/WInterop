@@ -5,16 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using WInterop.Gdi.Native;
-
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd145035.aspx
-    public struct LOGBRUSH
+    /// <summary>
+    /// Fixed-point notation 2 bit integer and 30 bit fractional [FXPT2DOT30]
+    /// </summary>
+    public readonly struct FixedPoint2_30
     {
-        public BrushStyle lpStyle;
-        public COLORREF lbColor;
-        public UIntPtr lbHatch;
+        public readonly uint Value;
     }
 }

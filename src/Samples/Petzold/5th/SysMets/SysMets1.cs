@@ -23,10 +23,10 @@ namespace SysMets
                 case MessageType.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        dc.GetTextMetrics(out TEXTMETRIC tm);
-                        cxChar = tm.tmAveCharWidth;
-                        cxCaps = ((tm.tmPitchAndFamily.PitchTypes & FontPitchTypes.VariablePitch) != 0 ? 3 : 2) * cxChar / 2;
-                        cyChar = tm.tmHeight + tm.tmExternalLeading;
+                        dc.GetTextMetrics(out TextMetrics tm);
+                        cxChar = tm.AverageCharWidth;
+                        cxCaps = ((tm.PitchAndFamily.PitchTypes & FontPitchTypes.VariablePitch) != 0 ? 3 : 2) * cxChar / 2;
+                        cyChar = tm.Height + tm.ExternalLeading;
                     }
                     return 0;
                 case MessageType.Paint:

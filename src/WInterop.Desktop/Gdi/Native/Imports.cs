@@ -109,7 +109,7 @@ namespace WInterop.Gdi.Native
         public static extern bool EnumDisplayDevicesW(
             string lpDevice,
             uint iDevNum,
-            ref DISPLAY_DEVICE lpDisplayDevice,
+            ref DisplayDevice lpDisplayDevice,
             uint dwFlags);
 
         // https://msdn.microsoft.com/en-us/library/dd162611.aspx
@@ -209,7 +209,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool GetTextMetricsW(
             HDC hdc,
-            out TEXTMETRIC lptm);
+            out TextMetrics lptm);
 
         // https://msdn.microsoft.com/en-us/library/dd145091.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -272,7 +272,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int EnumFontFamiliesExW(
             HDC hdc,
-            ref LOGFONT lpLogfont,
+            ref LogicalFont lpLogfont,
             EnumFontFamExProc lpEnumFonFamExProc,
             LParam lParam,
             uint dwFlags);
@@ -542,7 +542,7 @@ namespace WInterop.Gdi.Native
         // https://msdn.microsoft.com/en-us/library/dn376360.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool GetDisplayAutoRotationPreferences(
-            out ORIENTATION_PREFERENCE pOrientation);
+            out OrientationPreference pOrientation);
 
         // https://msdn.microsoft.com/en-us/library/dd144892.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -651,7 +651,7 @@ namespace WInterop.Gdi.Native
         // https://msdn.microsoft.com/en-us/library/dn376361.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool SetDisplayAutoRotationPreferences(
-            ORIENTATION_PREFERENCE orientation);
+            OrientationPreference orientation);
 
         // https://msdn.microsoft.com/en-us/library/dd162977.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]

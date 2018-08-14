@@ -13,10 +13,7 @@ namespace WInterop.Gdi
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct ENUMLOGFONTEX
     {
-        public const int LF_FULLFACESIZE = 64;
-        public const int LF_FACESIZE = 32;
-
-        public LOGFONT elfLogFont;
+        public LogicalFont elfLogFont;
         private FixedString.Size64 _elfFullName;
         private FixedString.Size32 _elfStyle;
         private FixedString.Size32 _elfScript;

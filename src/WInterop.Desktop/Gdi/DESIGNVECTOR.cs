@@ -6,18 +6,31 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd183551.aspx
-    public struct DESIGNVECTOR
+    /// <summary>
+    /// [DESIGNVECTOR]
+    /// </summary>
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/dd183551.aspx"/></remarks>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DesignVector
     {
-        public const uint STAMP_DESIGNVECTOR = (0x8000000 + 'd' + ('v' << 8));
-        public const int MM_MAX_NUMAXES = 16;
+        private const uint STAMP_DESIGNVECTOR = (0x8000000 + 'd' + ('v' << 8));
+        private const int MM_MAX_NUMAXES = 16;
 
-        public uint dvReserved;
-        public uint dvNumAxes;
-        private FixedInt.Size16 _dvValues;
-        public Span<int> dvValues => _dvValues.Buffer;
+        private uint dvReserved;
+        private uint dvNumAxes;
+        private FixedInt.Size16 dvValues;
+
+        public DesignVector(ReadOnlySpan<int> values)
+        {
+            dvReserved = STAMP_DESIGNVECTOR;
+            dvNumAxes = (uint)values.Length;
+            values.CopyTo(dvValues.Buffer);
+        }
+
+        public ReadOnlySpan<int> Values => dvValues.Buffer.Slice(0, (int)dvNumAxes);
     }
 }

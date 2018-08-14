@@ -32,14 +32,14 @@ namespace WhatClr
 
         static void FindWindowSize(ref int cxWindow, ref int cyWindow)
         {
-            TEXTMETRIC tm;
+            TextMetrics tm;
             using (DeviceContext dcScreen = Gdi.CreateInformationContext("DISPLAY", null))
             {
                 dcScreen.GetTextMetrics(out tm);
             }
 
-            cxWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CXBORDER) + 12 * tm.tmAveCharWidth;
-            cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CYBORDER) + Windows.GetSystemMetrics(SystemMetric.CYCAPTION) + 2 * tm.tmHeight;
+            cxWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CXBORDER) + 12 * tm.AverageCharWidth;
+            cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CYBORDER) + Windows.GetSystemMetrics(SystemMetric.CYCAPTION) + 2 * tm.Height;
         }
 
         const int ID_TIMER = 1;

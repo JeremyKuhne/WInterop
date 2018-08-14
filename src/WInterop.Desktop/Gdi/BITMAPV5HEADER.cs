@@ -5,8 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.ColorSystem.Types;
-
 namespace WInterop.Gdi
 {
     // https://msdn.microsoft.com/en-us/library/dd183381.aspx
@@ -28,7 +26,7 @@ namespace WInterop.Gdi
         public uint bV5BlueMask;
         public uint bV5AlphaMask;
         public uint bV5CSType;
-        public CIEXYZTRIPLE bV5Endpoints;
+        public CieXyzTriple bV5Endpoints;
         public uint bV5GammaRed;
         public uint bV5GammaGreen;
         public uint bV5GammaBlue;

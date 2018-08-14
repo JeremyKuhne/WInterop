@@ -10,25 +10,29 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi
 {
+    /// <summary>
+    /// [LOGFONT]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/dd145037.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct LOGFONT
+    public struct LogicalFont
     {
         private const int LF_FACESIZE = 32;
 
-        public int lfHeight;
-        public int lfWidth;
-        public int lfEscapement;
-        public int lfOrientation;
-        public int lfWeight;
-        public BOOLEAN lfItalic;
-        public BOOLEAN lfUnderline;
-        public BOOLEAN lfStrikeOut;
-        public CharacterSet lfCharSet;
-        public OutputPrecision lfOutPrecision;
-        public ClippingPrecision lfClipPrecision;
-        public Quality lfQuality;
-        public PitchAndFamily lfPitchAndFamily;
+        public int Height;
+        public int Width;
+        public int Escapement;
+        public int Orientation;
+        public int Weight;
+        public BOOLEAN Italic;
+        public BOOLEAN Underline;
+        public BOOLEAN StrikeOut;
+        public CharacterSet CharacterSet;
+        public OutputPrecision OutputPrecision;
+        public ClippingPrecision ClippingPrecision;
+        public Quality Quality;
+        public PitchAndFamily PitchAndFamily;
+
         private FixedString.Size32 _lfFaceName;
         public Span<char> lfFaceName => _lfFaceName.Buffer;
     }

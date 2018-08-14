@@ -56,7 +56,7 @@ namespace WInterop.Gdi
             }
         }
 
-        public static bool GetTextMetrics(this in DeviceContext context, out TEXTMETRIC metrics) => Imports.GetTextMetricsW(context, out metrics);
+        public static bool GetTextMetrics(this in DeviceContext context, out TextMetrics metrics) => Imports.GetTextMetricsW(context, out metrics);
 
         public static FontHandle CreateFont(
              int height,
@@ -94,9 +94,9 @@ namespace WInterop.Gdi
 
         public static IEnumerable<FontInformation> EnumerateFontFamilies(in DeviceContext context, CharacterSet characterSet, string faceName)
         {
-            LOGFONT logFont = new LOGFONT
+            LogicalFont logFont = new LogicalFont
             {
-                lfCharSet = characterSet,
+                CharacterSet = characterSet,
             };
 
             logFont.lfFaceName.CopyFrom(faceName);

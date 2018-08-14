@@ -113,22 +113,16 @@ namespace WInterop.Gdi
         /// Enumerate display device info for the given device name.
         /// </summary>
         /// <param name="deviceName">The device to enumerate or null for all devices.</param>
-        public static IEnumerable<DISPLAY_DEVICE> EnumerateDisplayDevices(string deviceName)
+        public static IEnumerable<DisplayDevice> EnumerateDisplayDevices(string deviceName)
         {
             uint index = 0;
-            DISPLAY_DEVICE device = new DISPLAY_DEVICE()
-            {
-                cb = DISPLAY_DEVICE.s_size
-            };
+            DisplayDevice device = DisplayDevice.Create();
 
             while (Imports.EnumDisplayDevicesW(deviceName, index, ref device, 0))
             {
                 yield return device;
                 index++;
-                device = new DISPLAY_DEVICE()
-                {
-                    cb = DISPLAY_DEVICE.s_size
-                };
+                device = DisplayDevice.Create();
             }
 
             yield break;
