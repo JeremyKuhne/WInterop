@@ -9,7 +9,7 @@ namespace WInterop.Gdi
 {
     public struct ENUMTEXTMETRIC
     {
-        public NEWTEXTMETRICEX etmNewTextMetricEx;
+        public NewTextMetricsExtended etmNewTextMetricEx;
         public AXESLIST etmAxesList;
     }
 }

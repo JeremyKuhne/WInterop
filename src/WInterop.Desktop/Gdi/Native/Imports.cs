@@ -7,6 +7,7 @@
 
 using System;
 using System.Drawing;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using WInterop.Windows;
 
@@ -522,9 +523,9 @@ namespace WInterop.Gdi.Native
         // https://msdn.microsoft.com/en-us/library/dd183466.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool CombineTransform(
-            out XFORM lpxformResult,
-            [In] ref XFORM lpxform1,
-            [In] ref XFORM lpxform2);
+            out Matrix3x2 lpxformResult,
+            [In] ref Matrix3x2 lpxform1,
+            [In] ref Matrix3x2 lpxform2);
 
         // https://msdn.microsoft.com/en-us/library/dd162474.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -558,7 +559,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetViewportExtEx(
             HDC hdc,
-            out SIZE lpSize);
+            out Size lpSize);
 
         // https://msdn.microsoft.com/en-us/library/dd144946.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -570,7 +571,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetWindowExtEx(
             HDC hdc,
-            out SIZE lpSize);
+            out Size lpSize);
 
         // https://msdn.microsoft.com/en-us/library/dd144949.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -582,7 +583,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetWorldTransform(
             HDC hdc,
-            out XFORM lpXform);
+            out Matrix3x2 lpXform);
 
         // https://msdn.microsoft.com/en-us/library/dd145042.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -603,7 +604,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool ModifyWorldTransform(
             HDC hdc,
-            [In] ref XFORM lpXform,
+            [In] ref Matrix3x2 lpXform,
             WorldTransformMode iMode);
 
         // https://msdn.microsoft.com/en-us/library/dd162748.aspx
@@ -630,7 +631,7 @@ namespace WInterop.Gdi.Native
             int Xdenom,
             int Ynum,
             int Ydenom,
-            out SIZE lpSize);
+            out Size lpSize);
 
         // https://msdn.microsoft.com/en-us/library/dd162948.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -640,7 +641,7 @@ namespace WInterop.Gdi.Native
             int Xdenom,
             int Ynum,
             int Ydenom,
-            out SIZE lpSize);
+            out Size lpSize);
 
         // https://msdn.microsoft.com/en-us/library/dd162952.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -671,7 +672,7 @@ namespace WInterop.Gdi.Native
             HDC hdc,
             int nXExtent,
             int nYExtent,
-            SIZE* lpSize);
+            Size* lpSize);
 
         // https://msdn.microsoft.com/en-us/library/dd145099.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -687,7 +688,7 @@ namespace WInterop.Gdi.Native
             HDC hdc,
             int x,
             int y,
-            SIZE* lpSize);
+            Size* lpSize);
 
         // https://msdn.microsoft.com/en-us/library/dd145101.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -701,7 +702,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool SetWorldTransform(
             HDC hdc,
-            [In] ref XFORM lpXform);
+            [In] ref Matrix3x2 lpXform);
 
         // https://msdn.microsoft.com/en-us/library/dd183481.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -843,7 +844,7 @@ namespace WInterop.Gdi.Native
         // https://msdn.microsoft.com/en-us/library/dd162706.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern HRGN ExtCreateRegion(
-            [In] ref XFORM lpXform,
+            [In] ref Matrix3x2 lpXform,
             uint nCount,
             RGNDATA* lpRgnData);
 

@@ -12,7 +12,7 @@ namespace WInterop.Gdi
     // https://msdn.microsoft.com/en-us/library/dd162618.aspx
     public delegate int EnumFontFamExProc(
         ref ENUMLOGFONTEXDV lpelfe,
-        ref NEWTEXTMETRICEX lpntme,
+        ref NewTextMetricsExtended lpntme,
         FontTypes FontType,
         LParam lParam);
 }

@@ -409,7 +409,7 @@ namespace WInterop.Windows.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644938.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern POINTS GetMessagePos();
+        public static extern PointS GetMessagePos();
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644939.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]

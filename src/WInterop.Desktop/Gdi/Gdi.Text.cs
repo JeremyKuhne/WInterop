@@ -83,7 +83,7 @@ namespace WInterop.Gdi
 
         private static int EnumerateFontCallback(
             ref ENUMLOGFONTEXDV fontAttributes,
-            ref NEWTEXTMETRICEX textMetrics,
+            ref NewTextMetricsExtended textMetrics,
             FontTypes fontType,
             LParam lParam)
         {

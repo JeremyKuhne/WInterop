@@ -12,7 +12,7 @@ namespace WInterop.Gdi
     public class FontInformation
     {
         public ENUMLOGFONTEXDV FontAttributes;
-        public NEWTEXTMETRICEX TextMetrics;
+        public NewTextMetricsExtended TextMetrics;
         public FontTypes FontType;
 
         public override string ToString()

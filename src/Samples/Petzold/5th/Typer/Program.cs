@@ -29,7 +29,7 @@ namespace Typer
     class Typer : WindowClass
     {
         int cxChar, cyChar, cxClient, cyClient, cxBuffer, cyBuffer, xCaret, yCaret;
-        CharacterSet dwCharSet = CharacterSet.DEFAULT_CHARSET;
+        CharacterSet dwCharSet = CharacterSet.Default;
         char[,] pBuffer;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)

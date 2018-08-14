@@ -7,16 +7,19 @@
 
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd162808.aspx
-    public struct POINTS
+    /// <summary>
+    /// [POINTS]
+    /// </summary>
+    /// <msdn>https://msdn.microsoft.com/en-us/library/dd162808.aspx</msdn>
+    public struct PointS
     {
-        public short x;
-        public short y;
+        public short X;
+        public short Y;
 
-        public POINTS(short x, short y)
+        public PointS(short x, short y)
         {
-            this.x = x;
-            this.y = y;
+            X = x;
+            Y = y;
         }
     }
 }

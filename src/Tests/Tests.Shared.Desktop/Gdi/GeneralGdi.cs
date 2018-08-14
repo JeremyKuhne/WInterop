@@ -123,13 +123,13 @@ namespace GdiTests
         [Fact]
         public unsafe void NEWTEXTMETRIC_Size()
         {
-            sizeof(NEWTEXTMETRIC).Should().Be(76);
+            sizeof(NewTextMetrics).Should().Be(76);
         }
 
         [Fact]
         public unsafe void NEWTEXTMETRICEX_Size()
         {
-            sizeof(NEWTEXTMETRICEX).Should().Be(100);
+            sizeof(NewTextMetricsExtended).Should().Be(100);
         }
 
         [Fact]
@@ -143,22 +143,22 @@ namespace GdiTests
         {
             using (var context = Gdi.GetDeviceContext(Windows.GetDesktopWindow()))
             {
-                var info = Gdi.EnumerateFontFamilies(context, CharacterSet.ANSI_CHARSET, "Arial");
+                var info = Gdi.EnumerateFontFamilies(context, CharacterSet.Ansi, "Arial");
                 info.Count().Should().Be(4);
                 var regular = info.First();
                 regular.FontAttributes.elfEnumLogfontEx.elfFullName.CreateString().Should().Be("Arial");
                 regular.FontAttributes.elfEnumLogfontEx.elfStyle.CreateString().Should().Be("Regular");
                 regular.FontAttributes.elfEnumLogfontEx.elfScript.CreateString().Should().Be("Western");
-                regular.TextMetrics.ntmTm.ntmFlags.Should().Be(TextMetricFlags.NTM_REGULAR | TextMetricFlags.NTM_TT_OPENTYPE | TextMetricFlags.NTM_DSIG);
-                regular.TextMetrics.ntmTm.tmPitchAndFamily.PitchTypes.Should().Be(FontPitchTypes.VariablePitch | FontPitchTypes.TrueType | FontPitchTypes.Vector);
-                regular.TextMetrics.ntmTm.tmPitchAndFamily.Family.Should().Be(FontFamilyType.Swiss);
-                regular.TextMetrics.ntmFontSig.UnicodeSubsetsOne.Should().Be(
+                regular.TextMetrics.TextMetrics.Flags.Should().Be(TextMetricFlags.NTM_REGULAR | TextMetricFlags.NTM_TT_OPENTYPE | TextMetricFlags.NTM_DSIG);
+                regular.TextMetrics.TextMetrics.PitchAndFamily.PitchTypes.Should().Be(FontPitchTypes.VariablePitch | FontPitchTypes.TrueType | FontPitchTypes.Vector);
+                regular.TextMetrics.TextMetrics.PitchAndFamily.Family.Should().Be(FontFamilyType.Swiss);
+                regular.TextMetrics.FontSignature.UnicodeSubsetsOne.Should().Be(
                     UnicodeSubsetsOne.BasicLatin | UnicodeSubsetsOne.Latin1Supplement | UnicodeSubsetsOne.LatinExtendedA | UnicodeSubsetsOne.LatinExtendedB
                     | UnicodeSubsetsOne.IPAPhoneticExtensions | UnicodeSubsetsOne.SpacingToneModifier | UnicodeSubsetsOne.CombiningDiacriticalMarks
                     | UnicodeSubsetsOne.GreekAndCoptic | UnicodeSubsetsOne.Cyrillic | UnicodeSubsetsOne.Armenian | UnicodeSubsetsOne.Hebrew
                     | UnicodeSubsetsOne.Arabic | UnicodeSubsetsOne.LatinExtendedAdditionalCD | UnicodeSubsetsOne.GreekExtended | UnicodeSubsetsOne.Punctuation);
-                regular.TextMetrics.ntmFontSig.UnicodeSubsetsFour.Should().Be((UnicodeSubsetsFour)0);
-                regular.TextMetrics.ntmFontSig.CodePagesOem.Should().Be(CodePagesOem.ModernGreek | CodePagesOem.Russian | CodePagesOem.Nordic
+                regular.TextMetrics.FontSignature.UnicodeSubsetsFour.Should().Be((UnicodeSubsetsFour)0);
+                regular.TextMetrics.FontSignature.CodePagesOem.Should().Be(CodePagesOem.ModernGreek | CodePagesOem.Russian | CodePagesOem.Nordic
                     | CodePagesOem.Arabic | CodePagesOem.CanadianFrench | CodePagesOem.Hebrew | CodePagesOem.Icelandic | CodePagesOem.Portugese
                     | CodePagesOem.Turkish | CodePagesOem.Cyrillic | CodePagesOem.Latin2 | CodePagesOem.Baltic | CodePagesOem.Greek
                     | CodePagesOem.ArabicAsmo | CodePagesOem.MuiltilingualLatin | CodePagesOem.US);
@@ -171,7 +171,7 @@ namespace GdiTests
             // Just making sure we don't fall over
             using (var context = Gdi.GetDeviceContext(Windows.GetDesktopWindow()))
             {
-                Gdi.EnumerateFontFamilies(context, CharacterSet.DEFAULT_CHARSET, null).Should().NotBeEmpty();
+                Gdi.EnumerateFontFamilies(context, CharacterSet.Default, null).Should().NotBeEmpty();
             }
         }
 

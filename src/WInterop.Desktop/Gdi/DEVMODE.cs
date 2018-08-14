@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi
@@ -83,9 +84,9 @@ namespace WInterop.Gdi
 
         public struct DisplaySpecific
         {
-            public POINTL dmPosition;
-            public DisplayOrientation dmDisplayOrientation;
-            public FixedOutput dmDisplayFixedOutput;
+            public Point Position;
+            public DisplayOrientation DisplayOrientation;
+            public FixedOutput DisplayFixedOutput;
         }
 
         [Flags]

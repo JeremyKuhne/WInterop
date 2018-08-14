@@ -7,9 +7,13 @@
 
 namespace WInterop.Gdi
 {
-    public struct POINTL
+    /// <summary>
+    /// [NEWTEXTMETRICEX]
+    /// </summary>
+    /// <msdn>https://msdn.microsoft.com/en-us/library/dd162742.aspx</msdn>
+    public struct NewTextMetricsExtended
     {
-        public int x;
-        public int y;
+        public NewTextMetrics TextMetrics;
+        public FontSignature FontSignature;
     }
 }
