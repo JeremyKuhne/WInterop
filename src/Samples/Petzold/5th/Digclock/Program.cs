@@ -127,10 +127,10 @@ namespace DigClock
                     using (DeviceContext dc = window.BeginPaint())
                     {
                         dc.SetMappingMode(MappingMode.Isotropic);
-                        dc.SetWindowExtents(276, 72);
-                        dc.SetViewportExtents(cxClient, cyClient);
-                        dc.SetWindowOrigin(138, 36);
-                        dc.SetViewportOrigin(cxClient / 2, cyClient / 2);
+                        dc.SetWindowExtents(new Size(276, 72));
+                        dc.SetViewportExtents(new Size(cxClient, cyClient));
+                        dc.SetWindowOrigin(new Point(138, 36));
+                        dc.SetViewportOrigin(new Point(cxClient / 2, cyClient / 2));
                         dc.SelectObject(StockPen.Null);
                         dc.SelectObject(hBrushRed);
                         DisplayTime(dc, f24Hour, fSuppress);

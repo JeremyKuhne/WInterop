@@ -69,7 +69,7 @@ namespace Clover
                 case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        dc.SetViewportOrigin(cxClient / 2, cyClient / 2);
+                        dc.SetViewportOrigin(new Point(cxClient / 2, cyClient / 2));
                         dc.SelectClippingRegion(hRgnClip);
 
                         double fRadius = Hypotenuse(cxClient / 2.0, cyClient / 2.0);

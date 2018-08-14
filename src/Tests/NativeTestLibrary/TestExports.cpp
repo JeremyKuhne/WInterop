@@ -24,3 +24,19 @@ void* IntPointerCheck(int* value, int count)
     if (value && count > 0) *value = *value * 2;
     return value;
 }
+
+POINT ReturnPoint(int x, int y)
+{
+    POINT pt;
+    pt.x = x;
+    pt.y = y;
+    return pt;
+}
+
+POINTFLOAT ReturnPointFloat(float x, float y)
+{
+    POINTFLOAT pt;
+    pt.x = x;
+    pt.y = y;
+    return pt;
+}

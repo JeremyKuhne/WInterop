@@ -359,5 +359,27 @@ namespace ModuleTests
             moduleNames.Should().NotBeEmpty();
             moduleNames.Length.Should().Be(modules.Count());
         }
+
+        [DllImport(NativeTestLibrary, EntryPoint = "ReturnPoint")]
+        public unsafe static extern Point ReturnPoint(int x, int y);
+
+        [DllImport(NativeTestLibrary, EntryPoint = "ReturnPointFloat")]
+        public unsafe static extern PointF ReturnPointFloat(float x, float y);
+
+        [Fact]
+        public void ReturnPointInvoke()
+        {
+            Point point = ReturnPoint(4, 2);
+            point.X.Should().Be(4);
+            point.Y.Should().Be(2);
+        }
+
+        [Fact]
+        public void ReturnPointFloatInvoke()
+        {
+            PointF point = ReturnPointFloat(4.5f, 1.6f);
+            point.X.Should().Be(4.5f);
+            point.Y.Should().Be(1.6f);
+        }
     }
 }
