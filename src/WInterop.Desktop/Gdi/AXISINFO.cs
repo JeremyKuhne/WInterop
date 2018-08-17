@@ -10,18 +10,18 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi
 {
+    /// <summary>
+    /// [AXISINFO]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/dd183361.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct AXISINFO
+    public struct AxisInfo
     {
-        public const int MM_MAX_AXES_NAMELEN = 16;
+        public int MinValue;
+        public int MaxValue;
 
-        // Unfortunately the compiler doesn't allow sizeof(AXISINFO) even though it doesn't change
-        public const int AxisInfoSize = sizeof(int) * 2 + MM_MAX_AXES_NAMELEN * sizeof(char);
-
-        public int axMinValue;
-        public int axMaxValue;
         private FixedString.Size16 _axAxisName;
-        public Span<char> axAxisName => _axAxisName.Buffer;
+
+        public Span<char> AxisName => _axAxisName.Buffer;
     }
 }

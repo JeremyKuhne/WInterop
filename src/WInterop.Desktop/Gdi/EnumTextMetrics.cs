@@ -7,9 +7,12 @@
 
 namespace WInterop.Gdi
 {
-    public struct ENUMTEXTMETRIC
+    /// <summary>
+    /// [ENUMTEXTMETRIC]
+    /// </summary>
+    public struct EnumTextMetrics
     {
-        public NewTextMetricsExtended etmNewTextMetricEx;
-        public AXESLIST etmAxesList;
+        public NewTextMetricsExtended NewTextMetricsExtended;
+        public AxesList AxesList;
     }
 }

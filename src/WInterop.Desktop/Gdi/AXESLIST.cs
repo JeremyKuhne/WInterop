@@ -9,22 +9,27 @@ using System;
 
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd183360.aspx
-    public struct AXESLIST
+    /// <summary>
+    /// [AXESLIST]
+    /// </summary>
+    /// <msdn>https://msdn.microsoft.com/en-us/library/dd183360.aspx</msdn>
+    public struct AxesList
     {
         public const uint STAMP_AXESLIST = (0x8000000 + 'a' + ('l' << 8));
-        public const int MM_MAX_NUMAXES = 16;
+        private const int MM_MAX_NUMAXES = 16;
 
-        public uint axlReserved;
-        public uint axlNumAxes;
-        private unsafe fixed byte _axlAxisInfo[MM_MAX_NUMAXES * AXISINFO.AxisInfoSize];
+        private uint Reserved;
+        public uint NumberOfAxes;
 
-        public unsafe Span<AXISINFO> axlAxisInfo
+        // Unfortunately the compiler doesn't allow sizeof(AXISINFO) even though it doesn't change
+        private unsafe fixed byte _axlAxisInfo[MM_MAX_NUMAXES * (sizeof(int) * 2 + 16 * sizeof(char))];
+
+        public unsafe Span<AxisInfo> AxisInfo
         {
             get
             {
                 fixed (void* v = _axlAxisInfo)
-                    return new Span<AXISINFO>(v, MM_MAX_NUMAXES);
+                    return new Span<AxisInfo>(v, MM_MAX_NUMAXES);
             }
         }
     }

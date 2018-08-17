@@ -128,12 +128,9 @@ namespace WInterop.Gdi
             yield break;
         }
 
-        public static IEnumerable<DEVMODE> EnumerateDisplaySettings(string deviceName, uint modeIndex = 0)
+        public static IEnumerable<DeviceMode> EnumerateDisplaySettings(string deviceName, uint modeIndex = 0)
         {
-            DEVMODE mode = new DEVMODE()
-            {
-                dmSize = DEVMODE.s_size
-            };
+            DeviceMode mode = DeviceMode.Create();
 
             while (Imports.EnumDisplaySettingsW(deviceName, modeIndex, ref mode))
             {
@@ -143,10 +140,7 @@ namespace WInterop.Gdi
                     break;
 
                 modeIndex++;
-                mode = new DEVMODE()
-                {
-                    dmSize = DEVMODE.s_size
-                };
+                mode = DeviceMode.Create();
             }
 
             yield break;

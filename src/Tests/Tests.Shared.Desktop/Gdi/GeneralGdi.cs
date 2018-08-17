@@ -81,13 +81,13 @@ namespace GdiTests
         [Fact]
         public unsafe void AXISINFO_Size()
         {
-            sizeof(AXISINFO).Should().Be(40);
+            sizeof(AxisInfo).Should().Be(40);
         }
 
         [Fact]
         public unsafe void AXISINFO_Blittable()
         {
-            GCHandle.Alloc(new AXISINFO(), GCHandleType.Pinned).Free();
+            GCHandle.Alloc(new AxisInfo(), GCHandleType.Pinned).Free();
         }
 
         [Fact]

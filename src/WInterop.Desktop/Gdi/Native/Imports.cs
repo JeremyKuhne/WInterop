@@ -40,7 +40,7 @@ namespace WInterop.Gdi.Native
             string pwszDriver,
             string pwszDevice,
             string pszPort,
-            DEVMODE* pdm);
+            DeviceMode* pdm);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createicw
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -48,7 +48,7 @@ namespace WInterop.Gdi.Native
             string pwszDriver,
             string pwszDevice,
             string pszPort,
-            DEVMODE* pdm);
+            DeviceMode* pdm);
 
         // https://msdn.microsoft.com/en-us/library/dd183489.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -118,7 +118,7 @@ namespace WInterop.Gdi.Native
         public static extern bool EnumDisplaySettingsW(
             string lpszDeviceName,
             uint iModeNum,
-            ref DEVMODE lpDevMode);
+            ref DeviceMode lpDevMode);
 
         // https://msdn.microsoft.com/en-us/library/dd183485.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
