@@ -7,32 +7,35 @@
 
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd183381.aspx
-    public struct BITMAPV5HEADER
+    /// <summary>
+    /// [BITMAPV5HEADER]
+    /// </summary>
+    /// <msdn>https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-bitmapv5header</msdn>
+    public struct BitmapV5Header
     {
-        public uint bV5Size;
-        public int bV5Width;
-        public int bV5Height;
-        public ushort bV5Planes;
-        public ushort bV5BitCount;
-        public uint bV5Compression;
-        public uint bV5SizeImage;
-        public int bV5XPelsPerMeter;
-        public int bV5YPelsPerMeter;
-        public uint bV5ClrUsed;
-        public uint bV5ClrImportant;
-        public uint bV5RedMask;
-        public uint bV5GreenMask;
-        public uint bV5BlueMask;
-        public uint bV5AlphaMask;
-        public uint bV5CSType;
-        public CieXyzTriple bV5Endpoints;
-        public uint bV5GammaRed;
-        public uint bV5GammaGreen;
-        public uint bV5GammaBlue;
-        public uint bV5Intent;
-        public uint bV5ProfileData;
-        public uint bV5ProfileSize;
-        public uint bV5Reserved;
+        public uint Size;
+        public int Width;
+        public int Height;
+        public ushort Planes;
+        public ushort BitCount;
+        public BitmapCompression Compression;
+        public uint SizeImage;
+        public int XPixelsPerMeter;
+        public int YPixelsPerMeter;
+        public uint ColorsUsed;
+        public uint ColorsImportant;
+        public uint RedMask;
+        public uint GreenMask;
+        public uint BlueMask;
+        public uint AlphaMask;
+        public LogicalColorSpace ColorSpaceType;
+        public CieXyzTriple Endpoints;
+        public uint GammaRed;
+        public uint GammaGreen;
+        public uint GammaBlue;
+        public BitmapIntent Intent;
+        public uint ProfileData;
+        public uint ProfileSize;
+        public uint Reserved;
     }
 }

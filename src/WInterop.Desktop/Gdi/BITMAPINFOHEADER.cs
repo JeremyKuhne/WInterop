@@ -7,19 +7,23 @@
 
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd183376.aspx
-    public struct BITMAPINFOHEADER
+    /// <summary>
+    /// Contains information about the dimensions and color format of a DIB.
+    /// [BITMAPINFOHEADER]
+    /// </summary>
+    /// <msdn>https://msdn.microsoft.com/en-us/library/dd183376.aspx</msdn>
+    public struct BitmapInfoHeader
     {
-        public uint biSize;
-        public int biWidth;
-        public int biHeight;
-        public ushort biPlanes;
-        public ushort biBitCount;
-        public uint biCompression;
-        public uint biSizeImage;
-        public int biXPelsPerMeter;
-        public int biYPelsPerMeter;
-        public uint biClrUsed;
-        public uint biClrImportant;
+        public uint Size;
+        public int Width;
+        public int Height;
+        public ushort Planes;
+        public ushort BitCount;
+        public BitmapCompression Compression;
+        public uint SizeImage;
+        public int XPixelsPerMeter;
+        public int YPixelsPerMeter;
+        public uint ColorsUsed;
+        public uint ColorsImportant;
     }
 }

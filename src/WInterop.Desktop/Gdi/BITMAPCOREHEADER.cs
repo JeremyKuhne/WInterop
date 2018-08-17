@@ -7,13 +7,16 @@
 
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd183372.aspx
-    public struct BITMAPCOREHEADER
+    /// <summary>
+    /// [BITMAPCOREHEADER]
+    /// </summary>
+    /// <msdn>https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-tagbitmapcoreheader</msdn>
+    public struct BitmapCoreHeader
     {
-        public uint bcSize;
-        public ushort bcWidth;
-        public ushort bcHeight;
-        public ushort bcPlanes;
-        public ushort bcBitCount;
+        public uint Size;
+        public ushort Width;
+        public ushort Height;
+        public ushort Planes;
+        public ushort BitCount;
     }
 }
