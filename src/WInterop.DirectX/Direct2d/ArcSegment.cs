@@ -12,12 +12,26 @@ namespace WInterop.Direct2d
     /// <summary>
     /// Describes an arc that is defined as part of a path. [D2D1_ARC_SEGMENT]
     /// </summary>
-    public struct ArcSegment
+    public readonly struct ArcSegment
     {
-        public PointF Point;
-        public SizeF Size;
-        public float FlotationAngle;
-        public SweepDirection SweepDirection;
-        public ArcSize ArcSize;
+        public readonly PointF Point;
+        public readonly SizeF Size;
+        public readonly float RotationAngle;
+        public readonly SweepDirection SweepDirection;
+        public readonly ArcSize ArcSize;
+
+        public ArcSegment(
+            PointF point,
+            SizeF size,
+            float rotationAngle = 0.0f,
+            SweepDirection sweepDirection = SweepDirection.Clockwise,
+            ArcSize arcSize = ArcSize.Small)
+        {
+            Point = point;
+            Size = size;
+            RotationAngle = rotationAngle;
+            SweepDirection = sweepDirection;
+            ArcSize = arcSize;
+        }
     }
 }

@@ -35,13 +35,13 @@ namespace WInterop.Direct2d
             FigureBegin figureBegin);
 
         [PreserveSig]
-        new void AddLines(
-            ref PointF points,
+        unsafe new void AddLines(
+            PointF* points,
             uint pointsCount);
 
         [PreserveSig]
-        new void AddBeziers(
-            ref BezierSegment beziers,
+        unsafe new void AddBeziers(
+            BezierSegment* beziers,
             uint beziersCount);
 
         [PreserveSig]
@@ -72,5 +72,11 @@ namespace WInterop.Direct2d
         [PreserveSig]
         void AddArc(
             in ArcSegment arc);
+    }
+
+    public static class GeometrySinkExtensions
+    {
+        public unsafe static void AddBezier(this IGeometrySink sink, (float X, float Y) point1, (float X, float Y) point2, (float X, float Y) point3)
+            => sink.AddBezier(new BezierSegment(point1, point2, point3));
     }
 }

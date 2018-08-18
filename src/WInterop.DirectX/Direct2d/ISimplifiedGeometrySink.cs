@@ -34,13 +34,13 @@ namespace WInterop.Direct2d
             FigureBegin figureBegin);
 
         [PreserveSig]
-        void AddLines(
-            ref PointF points,
+        unsafe void AddLines(
+            PointF* points,
             uint pointsCount);
 
         [PreserveSig]
-        void AddBeziers(
-            ref BezierSegment beziers,
+        unsafe void AddBeziers(
+            BezierSegment* beziers,
             uint beziersCount);
 
         [PreserveSig]
@@ -49,5 +49,16 @@ namespace WInterop.Direct2d
 
         [PreserveSig]
         void Close();
+    }
+
+    public static class SimplifiedGeometrySinkExtensions
+    {
+        public unsafe static void AddLines(this IGeometrySink sink, ReadOnlySpan<PointF> points)
+        {
+            fixed (PointF* p = &MemoryMarshal.GetReference(points))
+            {
+                sink.AddLines(p, (uint)points.Length);
+            }
+        }
     }
 }

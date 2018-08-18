@@ -76,14 +76,11 @@ namespace WInterop.Direct2d
         /// interpolation occurs in.</param>
         /// <param name="extendMode">Specifies how the gradient will be extended outside of
         /// the unit length.</param>
-        new void CreateGradientStopCollectionSTUB();
-        //STDMETHOD(CreateGradientStopCollection)(
-        //    _In_reads_(gradientStopsCount) CONST D2D1_GRADIENT_STOP* gradientStops,
-        //    _In_range_(>=, 1) UINT32 gradientStopsCount,
-        //     D2D1_GAMMA colorInterpolationGamma,
-        //    D2D1_EXTEND_MODE extendMode,
-        //    _COM_Outptr_ ID2D1GradientStopCollection** gradientStopCollection 
-        //    ) PURE;
+        new unsafe IGradientStopCollection CreateGradientStopCollection(
+            GradientStop* gradientStops,
+            uint gradientStopsCount,
+            Gamma colorInterpolationGamma,
+            ExtendMode extendMode);
 
         new void CreateLinearGradientBrushSTUB();
         //STDMETHOD(CreateLinearGradientBrush)(
@@ -93,13 +90,10 @@ namespace WInterop.Direct2d
         //    _COM_Outptr_ ID2D1LinearGradientBrush** linearGradientBrush 
         //    ) PURE;
 
-        new void CreateRadialGradientBrushSTUB();
-        //STDMETHOD(CreateRadialGradientBrush)(
-        //    _In_ CONST D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES *radialGradientBrushProperties,
-        //    _In_opt_ CONST D2D1_BRUSH_PROPERTIES* brushProperties,
-        //    _In_ ID2D1GradientStopCollection* gradientStopCollection,
-        //    _COM_Outptr_ ID2D1RadialGradientBrush** radialGradientBrush 
-        //    ) PURE;
+        new unsafe IRadialGradientBrush CreateRadialGradientBrush(
+            in RadialGradientBrushProperties radialGradientBrushProperties,
+            BrushProperties* brushProperties,
+            IGradientStopCollection gradientStopCollection);
 
         /// <summary>
         /// Creates a bitmap render target whose bitmap can be used as a source for
@@ -119,14 +113,11 @@ namespace WInterop.Direct2d
         /// <param name="options">Allows the caller to retrieve a GDI compatible render
         /// target.</param>
         /// <param name="bitmapRenderTarget">The returned bitmap render target.</param>
-        new void CreateCompatibleRenderTargetSTUB();
-        //STDMETHOD(CreateCompatibleRenderTarget)(
-        //    _In_opt_ CONST D2D1_SIZE_F *desiredSize,
-        //    _In_opt_ CONST D2D1_SIZE_U* desiredPixelSize,
-        //    _In_opt_ CONST D2D1_PIXEL_FORMAT *desiredFormat,
-        //    D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS options,
-        //    _COM_Outptr_ ID2D1BitmapRenderTarget** bitmapRenderTarget 
-        //    ) PURE;
+        new unsafe IBitmapRenderTarget CreateCompatibleRenderTarget(
+            SizeF* desiredSize,
+            SizeU* desiredPixelSize,
+            PixelFormat* desiredFormat,
+            CompatibleRenderTargetOptions options);
 
         /// <summary>
         /// Creates a layer resource that can be used on any target and which will resize

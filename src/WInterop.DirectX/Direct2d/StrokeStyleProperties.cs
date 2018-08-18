@@ -20,5 +20,23 @@ namespace WInterop.Direct2d
         public readonly float MiterLimit;
         public readonly DashStyle DashStyle;
         public readonly float DashOffset;
+
+        public StrokeStyleProperties(
+            CapStyle startCap = CapStyle.Flat,
+            CapStyle endCap = CapStyle.Flat,
+            CapStyle dashCap = CapStyle.Flat,
+            LineJoin lineJoin = LineJoin.Miter,
+            float miterLimit = 0.0f,
+            DashStyle dashStyle = DashStyle.Solid,
+            float dashOffset = 0.0f)
+        {
+            StartCap = startCap;
+            EndCap = endCap;
+            DashCap = dashCap;
+            LineJoin = lineJoin;
+            MiterLimit = miterLimit;
+            DashStyle = dashStyle;
+            DashOffset = dashOffset;
+        }
     }
 }

@@ -9,16 +9,17 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using WInterop.Gdi;
-using WInterop.Gdi.Native;
 
 namespace WInterop.Direct2d
 {
-    // ID2D1DCRenderTarget
+    /// <summary>
+    /// Renders to an intermediate texture created by the CreateCompatibleRenderTarget method.
+    /// [ID2D1BitmapRenderTarget]
+    /// </summary>
     [ComImport,
-        Guid(InterfaceIds.IID_ID2D1DCRenderTarget),
+        Guid(InterfaceIds.IID_ID2D1BitmapRenderTarget),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IDeviceContextRenderTarget : IRenderTarget
+    public interface IBitmapRenderTarget : IRenderTarget
     {
         #region ID2D1Resource
         [PreserveSig]
@@ -449,17 +450,6 @@ namespace WInterop.Direct2d
             in RenderTargetProperties renderTargetProperties);
         #endregion
 
-        [PreserveSig]
-        void BindDC(
-            HDC hDC,
-            in RECT pSubRect);
-    }
-
-    public static class DeviceContextRenderTargetExtensions
-    {
-        public static void BindDC(this IDeviceContextRenderTarget renderTarget, DeviceContext deviceContext, Rectangle subRectangle)
-        {
-            renderTarget.BindDC(deviceContext, subRectangle);
-        }
+        IBitmap GetBitmap();
     }
 }

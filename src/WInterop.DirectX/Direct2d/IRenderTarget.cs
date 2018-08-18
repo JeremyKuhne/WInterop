@@ -78,14 +78,11 @@ namespace WInterop.Direct2d
         /// interpolation occurs in.</param>
         /// <param name="extendMode">Specifies how the gradient will be extended outside of
         /// the unit length.</param>
-        void CreateGradientStopCollectionSTUB();
-        //STDMETHOD(CreateGradientStopCollection)(
-        //    _In_reads_(gradientStopsCount) CONST D2D1_GRADIENT_STOP* gradientStops,
-        //    _In_range_(>=, 1) UINT32 gradientStopsCount,
-        //     D2D1_GAMMA colorInterpolationGamma,
-        //    D2D1_EXTEND_MODE extendMode,
-        //    _COM_Outptr_ ID2D1GradientStopCollection** gradientStopCollection 
-        //    ) PURE;
+        unsafe IGradientStopCollection CreateGradientStopCollection(
+            GradientStop* gradientStops,
+            uint gradientStopsCount,
+            Gamma colorInterpolationGamma,
+            ExtendMode extendMode);
 
         void CreateLinearGradientBrushSTUB();
         //STDMETHOD(CreateLinearGradientBrush)(
@@ -95,13 +92,10 @@ namespace WInterop.Direct2d
         //    _COM_Outptr_ ID2D1LinearGradientBrush** linearGradientBrush 
         //    ) PURE;
 
-        void CreateRadialGradientBrushSTUB();
-        //STDMETHOD(CreateRadialGradientBrush)(
-        //    _In_ CONST D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES *radialGradientBrushProperties,
-        //    _In_opt_ CONST D2D1_BRUSH_PROPERTIES* brushProperties,
-        //    _In_ ID2D1GradientStopCollection* gradientStopCollection,
-        //    _COM_Outptr_ ID2D1RadialGradientBrush** radialGradientBrush 
-        //    ) PURE;
+        unsafe IRadialGradientBrush CreateRadialGradientBrush(
+            in RadialGradientBrushProperties radialGradientBrushProperties,
+            BrushProperties* brushProperties,
+            IGradientStopCollection gradientStopCollection);
 
         /// <summary>
         /// Creates a bitmap render target whose bitmap can be used as a source for
@@ -121,14 +115,11 @@ namespace WInterop.Direct2d
         /// <param name="options">Allows the caller to retrieve a GDI compatible render
         /// target.</param>
         /// <param name="bitmapRenderTarget">The returned bitmap render target.</param>
-        void CreateCompatibleRenderTargetSTUB();
-        //STDMETHOD(CreateCompatibleRenderTarget)(
-        //    _In_opt_ CONST D2D1_SIZE_F *desiredSize,
-        //    _In_opt_ CONST D2D1_SIZE_U* desiredPixelSize,
-        //    _In_opt_ CONST D2D1_PIXEL_FORMAT *desiredFormat,
-        //    D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS options,
-        //    _COM_Outptr_ ID2D1BitmapRenderTarget** bitmapRenderTarget 
-        //    ) PURE;
+        unsafe IBitmapRenderTarget CreateCompatibleRenderTarget(
+            SizeF* desiredSize,
+            SizeU* desiredPixelSize,
+            PixelFormat* desiredFormat,
+            CompatibleRenderTargetOptions options);
 
         /// <summary>
         /// Creates a layer resource that can be used on any target and which will resize
@@ -475,6 +466,32 @@ namespace WInterop.Direct2d
         {
             fixed (BrushProperties* p = &properties)
                 return renderTarget.CreateSolidColorBrush(color, p);
+        }
+
+        public unsafe static IBitmapRenderTarget CreateCompatibleRenderTarget(this IRenderTarget renderTarget, SizeF desiredSize)
+            => renderTarget.CreateCompatibleRenderTarget(&desiredSize, null, null, CompatibleRenderTargetOptions.None);
+
+        public unsafe static IBitmapBrush CreateBitmapBrush(this IRenderTarget renderTarget, IBitmap bitmap, BitmapBrushProperties bitmapBrushProperties)
+            => renderTarget.CreateBitmapBrush(bitmap, &bitmapBrushProperties, null);
+
+        public unsafe static IRadialGradientBrush CreateRadialGradientBrush(
+            this IRenderTarget renderTarget,
+            in RadialGradientBrushProperties properties,
+            IGradientStopCollection gradientStopCollection)
+        {
+            return renderTarget.CreateRadialGradientBrush(properties, null, gradientStopCollection);
+        }
+
+        public unsafe static IGradientStopCollection CreateGradienStopCollection(
+            this IRenderTarget renderTarget,
+            ReadOnlySpan<GradientStop> gradientStops,
+            Gamma gamma = Gamma.ColorSpace_2_2,
+            ExtendMode extendMode = ExtendMode.Clamp)
+        {
+            fixed (GradientStop* gs = &MemoryMarshal.GetReference(gradientStops))
+            {
+                return renderTarget.CreateGradientStopCollection(gs, (uint)gradientStops.Length, gamma, extendMode);
+            }
         }
 
         public unsafe static void Clear(this IRenderTarget renderTarget)

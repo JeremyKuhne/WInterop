@@ -26,11 +26,14 @@ namespace WInterop.Direct2d
         public const string IID_ID2D1RenderTarget = "2cd90694-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1HwndRenderTarget = "2cd90698-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1DCRenderTarget = "1c51bc64-de61-46fd-9899-63a5d8f03950";
+        public const string IID_ID2D1BitmapRenderTarget = "2cd90695-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1Image = "65019f75-8da2-497c-b32c-dfa34e48ede6";
         public const string IID_ID2D1Bitmap = "a2296057-ea42-4099-983b-539fb6505426";
         public const string IID_ID2D1Brush = "2cd906a8-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1BitmapBrush = "2cd906aa-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1SolidColorBrush = "2cd906a9-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1LinearGradientBrush = "2cd906ab-12e2-11dc-9fed-001143a055f9";
+        public const string IID_ID2D1RadialGradientBrush = "2cd906ac-12e2-11dc-9fed-001143a055f9";
+        public const string IID_ID2D1GradientStopCollection = "2cd906a7-12e2-11dc-9fed-001143a055f9";
     }
 }

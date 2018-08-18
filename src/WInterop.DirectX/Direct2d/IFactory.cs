@@ -118,4 +118,12 @@ namespace WInterop.Direct2d
         IRenderTarget CreateDCRenderTarget(
             in RenderTargetProperties renderTargetProperties);
     }
+
+    public static class FactoryExtensions
+    {
+        public unsafe static IStrokeStyle CreateStrokeStyle(
+            this IFactory factory,
+            in StrokeStyleProperties strokeStyleProperties)
+            => factory.CreateStrokeStyle(strokeStyleProperties, null, 0);
+    }
 }

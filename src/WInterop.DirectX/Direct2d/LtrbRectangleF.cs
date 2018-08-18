@@ -26,6 +26,14 @@ namespace WInterop.Direct2d
             Bottom = rectangle.Bottom;
         }
 
+        public LtrbRectangleF(SizeF size)
+        {
+            Left = 0;
+            Top = 0;
+            Right = size.Width;
+            Bottom = size.Height;
+        }
+
         public static implicit operator RectangleF(LtrbRectangleF rect)
             => RectangleF.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
@@ -34,5 +42,8 @@ namespace WInterop.Direct2d
 
         public static implicit operator LtrbRectangleF(Rectangle rectangle)
             => new LtrbRectangleF(rectangle);
+
+        public static implicit operator LtrbRectangleF(SizeF size)
+            => new LtrbRectangleF(size);
     }
 }

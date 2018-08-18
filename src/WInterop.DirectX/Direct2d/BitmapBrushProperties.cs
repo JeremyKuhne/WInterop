@@ -16,5 +16,15 @@ namespace WInterop.Direct2d
         public readonly ExtendMode ExtendModeX;
         public readonly ExtendMode ExtendModeY;
         public readonly BitmapInterpolationMode InterpolationMode;
+
+        public BitmapBrushProperties(
+            ExtendMode extendModeX = ExtendMode.Clamp,
+            ExtendMode extendModeY = ExtendMode.Clamp,
+            BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.Linear)
+        {
+            ExtendModeX = extendModeX;
+            ExtendModeY = extendModeY;
+            InterpolationMode = interpolationMode;
+        }
     }
 }

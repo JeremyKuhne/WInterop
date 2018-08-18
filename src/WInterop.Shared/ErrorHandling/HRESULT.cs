@@ -23,6 +23,7 @@ namespace WInterop.Errors
         E_ACCESSDENIED = unchecked((int)0x80070005L),
         E_INVALIDARG = unchecked((int)0x80070057),
         D2DERR_RECREATE_TARGET = unchecked((int)0x8899000C),
+        D2DERR_WRONG_STATE = unchecked((int)0x88990001),
         WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT = unchecked((int)0x88982F80)
     }
 
