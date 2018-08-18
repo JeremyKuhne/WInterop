@@ -9,6 +9,7 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 
 namespace WInterop.Direct2d
 {
@@ -404,7 +405,8 @@ namespace WInterop.Direct2d
         /// Ends drawing on the render target, error results can be retrieved at this time,
         /// or when calling flush.
         /// </summary>
-        void EndDraw(
+        [PreserveSig]
+        HRESULT EndDraw(
             out ulong tag1,
             out ulong tag2);
 
@@ -499,6 +501,6 @@ namespace WInterop.Direct2d
             renderTarget.SetTransform(ref identity);
         }
 
-        public static void EndDraw(this IRenderTarget renderTarget) => renderTarget.EndDraw(out _, out _);
+        public static HRESULT EndDraw(this IRenderTarget renderTarget) => renderTarget.EndDraw(out _, out _);
     }
 }

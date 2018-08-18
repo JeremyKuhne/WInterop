@@ -174,7 +174,7 @@ namespace WInterop.Gdi
         /// <summary>
         /// Validates the entire Window.
         /// </summary>
-        public unsafe static bool ValidateRectangle(this in WindowHandle window)
+        public unsafe static bool Validate(this in WindowHandle window)
             => Imports.ValidateRect(window, null);
 
         /// <summary>
