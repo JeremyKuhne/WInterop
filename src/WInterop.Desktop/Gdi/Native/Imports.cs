@@ -274,7 +274,7 @@ namespace WInterop.Gdi.Native
         public static extern int EnumFontFamiliesExW(
             HDC hdc,
             ref LogicalFont lpLogfont,
-            EnumFontFamExProc lpEnumFonFamExProc,
+            EnumerateFontFamilyExtendedProcedure lpEnumFonFamExProc,
             LParam lParam,
             uint dwFlags);
 

@@ -10,15 +10,18 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi
 {
+    /// <summary>
+    /// [ENUMLOGFONTEX]
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct ENUMLOGFONTEX
+    public struct EnumerateLogicalFontExtended
     {
-        public LogicalFont elfLogFont;
+        public LogicalFont LogicalFont;
         private FixedString.Size64 _elfFullName;
         private FixedString.Size32 _elfStyle;
         private FixedString.Size32 _elfScript;
-        public Span<char> elfFullName => _elfFullName.Buffer;
-        public Span<char> elfStyle => _elfStyle.Buffer;
-        public Span<char> elfScript => _elfScript.Buffer;
+        public Span<char> FullName => _elfFullName.Buffer;
+        public Span<char> Style => _elfStyle.Buffer;
+        public Span<char> Script => _elfScript.Buffer;
     }
 }

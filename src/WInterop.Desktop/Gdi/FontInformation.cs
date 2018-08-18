@@ -11,18 +11,18 @@ namespace WInterop.Gdi
 {
     public class FontInformation
     {
-        public ENUMLOGFONTEXDV FontAttributes;
+        public EnumerateLogicalFontExtendedDesignVector FontAttributes;
         public NewTextMetricsExtended TextMetrics;
         public FontTypes FontType;
 
         public override string ToString()
         {
-            string fullName = FontAttributes.elfEnumLogfontEx.elfFullName.CreateString();
-            string style = FontAttributes.elfEnumLogfontEx.elfStyle.CreateString();
+            string fullName = FontAttributes.EnumLogicalFontEx.FullName.CreateString();
+            string style = FontAttributes.EnumLogicalFontEx.Style.CreateString();
 
             return fullName.EndsWith(style)
-                ? $"{fullName} {FontAttributes.elfEnumLogfontEx.elfScript.CreateString()} ({FontType})"
-                : $"{fullName} {style} {FontAttributes.elfEnumLogfontEx.elfScript.CreateString()} ({FontType})";
+                ? $"{fullName} {FontAttributes.EnumLogicalFontEx.Script.CreateString()} ({FontType})"
+                : $"{fullName} {style} {FontAttributes.EnumLogicalFontEx.Script.CreateString()} ({FontType})";
         }
     }
 }

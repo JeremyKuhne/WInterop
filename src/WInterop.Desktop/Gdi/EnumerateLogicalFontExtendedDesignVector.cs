@@ -8,11 +8,12 @@
 namespace WInterop.Gdi
 {
     /// <summary>
-    /// [ENUMTEXTMETRIC]
+    /// [ENUMLOGFONTEXDVW]
     /// </summary>
-    public struct EnumTextMetrics
+    /// <msdn>https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-tagenumlogfontexdvw</msdn>
+    public struct EnumerateLogicalFontExtendedDesignVector
     {
-        public NewTextMetricsExtended NewTextMetricsExtended;
-        public AxesList AxesList;
+        public EnumerateLogicalFontExtended EnumLogicalFontEx;
+        public DesignVector DesignVector;
     }
 }

@@ -93,13 +93,13 @@ namespace GdiTests
         [Fact]
         public unsafe void ENUMLOGFONTEXDV_Size()
         {
-            sizeof(ENUMLOGFONTEXDV).Should().Be(420);
+            sizeof(EnumerateLogicalFontExtendedDesignVector).Should().Be(420);
         }
 
         [Fact]
         public unsafe void ENUMLOGFONTEXDV_Blittable()
         {
-            GCHandle.Alloc(new ENUMLOGFONTEXDV(), GCHandleType.Pinned).Free();
+            GCHandle.Alloc(new EnumerateLogicalFontExtendedDesignVector(), GCHandleType.Pinned).Free();
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace GdiTests
         [Fact]
         public unsafe void ENUMLOGFONTEX_Size()
         {
-            sizeof(ENUMLOGFONTEX).Should().Be(348);
+            sizeof(EnumerateLogicalFontExtended).Should().Be(348);
         }
 
         [Fact]
@@ -146,9 +146,9 @@ namespace GdiTests
                 var info = Gdi.EnumerateFontFamilies(context, CharacterSet.Ansi, "Arial");
                 info.Count().Should().Be(4);
                 var regular = info.First();
-                regular.FontAttributes.elfEnumLogfontEx.elfFullName.CreateString().Should().Be("Arial");
-                regular.FontAttributes.elfEnumLogfontEx.elfStyle.CreateString().Should().Be("Regular");
-                regular.FontAttributes.elfEnumLogfontEx.elfScript.CreateString().Should().Be("Western");
+                regular.FontAttributes.EnumLogicalFontEx.FullName.CreateString().Should().Be("Arial");
+                regular.FontAttributes.EnumLogicalFontEx.Style.CreateString().Should().Be("Regular");
+                regular.FontAttributes.EnumLogicalFontEx.Script.CreateString().Should().Be("Western");
                 regular.TextMetrics.TextMetrics.Flags.Should().Be(TextMetricFlags.NTM_REGULAR | TextMetricFlags.NTM_TT_OPENTYPE | TextMetricFlags.NTM_DSIG);
                 regular.TextMetrics.TextMetrics.PitchAndFamily.PitchTypes.Should().Be(FontPitchTypes.VariablePitch | FontPitchTypes.TrueType | FontPitchTypes.Vector);
                 regular.TextMetrics.TextMetrics.PitchAndFamily.Family.Should().Be(FontFamilyType.Swiss);
