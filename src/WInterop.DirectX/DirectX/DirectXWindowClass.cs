@@ -5,19 +5,21 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using WInterop.Direct2d;
+using WInterop.DirectWrite;
 using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Windows;
 
-namespace WInterop.Direct2d
+namespace WInterop.DirectX
 {
-    public class Direct2dWindowClass : WindowClass
+    public class DirectXWindowClass : WindowClass
     {
         private bool _resourcesValid;
         private IWindowRenderTarget _renderTarget;
 
-        public unsafe Direct2dWindowClass(
+        public unsafe DirectXWindowClass(
             string className = default,
             ModuleInstance moduleInstance = default,
             ClassStyle classStyle = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
@@ -34,13 +36,14 @@ namespace WInterop.Direct2d
 
         protected IRenderTarget RenderTarget => _renderTarget;
 
-        protected static IFactory Factory { get; } = Direct2d.CreateFactory();
+        protected static Direct2d.IFactory Direct2dFactory { get; } = Direct2d.Direct2d.CreateFactory();
+        protected static DirectWrite.IFactory DirectWriteFactory { get; } = DirectWrite.DirectWrite.CreateFactory();
 
         private void CreateResourcesInternal(WindowHandle window)
         {
             if (!_resourcesValid)
             {
-                _renderTarget = Factory.CreateWindowRenderTarget(
+                _renderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, window.GetClientRectangle().Size));
                 CreateResources();
                 _resourcesValid = true;
@@ -51,7 +54,7 @@ namespace WInterop.Direct2d
         {
             if (!_resourcesValid)
             {
-                _renderTarget = Factory.CreateWindowRenderTarget(
+                _renderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, size.NewSize));
                 CreateResources();
                 _resourcesValid = true;
@@ -70,12 +73,18 @@ namespace WInterop.Direct2d
         {
         }
 
+        protected virtual void OnSize(WindowHandle window, in Message.Size sizeMessage)
+        {
+        }
+
         protected sealed override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
                 case MessageType.Size:
-                    CreateResourcesInternal(window, new Message.Size(wParam, lParam));
+                    var sizeMessage = new Message.Size(wParam, lParam);
+                    CreateResourcesInternal(window, in sizeMessage);
+                    OnSize(window, in sizeMessage);
                     break;
                 case MessageType.DisplayChange:
                     window.Invalidate(erase: false);

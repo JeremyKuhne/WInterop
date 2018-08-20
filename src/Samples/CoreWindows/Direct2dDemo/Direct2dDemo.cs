@@ -7,12 +7,13 @@
 
 using System.Drawing;
 using WInterop.Direct2d;
+using WInterop.DirectX;
 using WInterop.Windows;
 
 namespace Direct2dDemo
 {
     // https://docs.microsoft.com/en-us/windows/desktop/Direct2D/direct2d-quickstart
-    public class Direct2dDemo : Direct2dWindowClass
+    public class Direct2dDemo : DirectXWindowClass
     {
         private ISolidColorBrush _lightSlateGrayBrush;
         private ISolidColorBrush _cornflowerBlueBrush;

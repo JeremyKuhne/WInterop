@@ -16,8 +16,8 @@ namespace WInterop.DirectWrite.Native
     /// </summary>
     public static partial class Imports
     {
-        // https://docs.microsoft.com/en-us/windows/desktop/api/d2d1/nf-d2d1-d2d1createfactory
-        [DllImport(Libraries.D2Dd1, ExactSpelling = true)]
+        // https://docs.microsoft.com/en-us/windows/desktop/api/dwrite/nf-dwrite-dwritecreatefactory
+        [DllImport(Libraries.DWrite, ExactSpelling = true)]
         public static extern HRESULT DWriteCreateFactory(
             FactoryType factoryType,
             in Guid riid,

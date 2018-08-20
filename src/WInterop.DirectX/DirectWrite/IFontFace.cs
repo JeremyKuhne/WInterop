@@ -8,6 +8,7 @@
 using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using WInterop.Direct2d;
 
 namespace WInterop.DirectWrite
 {
@@ -181,20 +182,15 @@ namespace WInterop.DirectWrite
         /// <param name="isRightToLeft">If true, specifies that the advance direction is right to left. By default, the advance direction
         /// is left to right.</param>
         /// <param name="geometrySink">Interface the function calls back to draw each element of the geometry.</param>
-        /// <returns>
-        /// Standard HRESULT error code.
-        /// </returns>
-        void GetGlyphRunOutlineSTUB();
-        //STDMETHOD(GetGlyphRunOutline)(
-        //    FLOAT emSize,
-        //    _In_reads_(glyphCount) UINT16 const* glyphIndices,
-        //    _In_reads_opt_(glyphCount) FLOAT const* glyphAdvances,
-        //    _In_reads_opt_(glyphCount) DWRITE_GLYPH_OFFSET const* glyphOffsets,
-        //    UINT32 glyphCount,
-        //    BOOL isSideways,
-        //    BOOL isRightToLeft,
-        //    _In_ IDWriteGeometrySink* geometrySink
-        //    ) PURE;
+        unsafe void GetGlyphRunOutline(
+            float emSize,
+            ushort* glyphIndices,
+            float* glyphAdvances,
+            GlyphOffset* glyphOffsets,
+            uint glyphCount,
+            BOOL isSideways,
+            BOOL isRightToLeft,
+            IGeometrySink geometrySink);
 
         /// <summary>
         /// Determines the recommended rendering mode for the font given the specified size and rendering parameters.

@@ -7,12 +7,13 @@
 
 using System.Drawing;
 using WInterop.Direct2d;
+using WInterop.DirectX;
 using WInterop.Windows;
 
 namespace Direct2dDemo
 {
     // https://docs.microsoft.com/en-us/windows/desktop/Direct2D/how-to-draw-an-ellipse
-    public class DrawEllipse : Direct2dWindowClass
+    public class DrawEllipse : DirectXWindowClass
     {
         private ISolidColorBrush _blackBrush;
         private ISolidColorBrush _silverBrush;
@@ -21,7 +22,7 @@ namespace Direct2dDemo
         public DrawEllipse() : base()
         {
             StrokeStyleProperties style = new StrokeStyleProperties(dashCap: CapStyle.Triangle, miterLimit: 10.0f, dashStyle: DashStyle.DashDotDot);
-            _dashDotDotStyle = Factory.CreateStrokeStyle(style);
+            _dashDotDotStyle = Direct2dFactory.CreateStrokeStyle(style);
         }
 
         protected override void CreateResources()

@@ -26,5 +26,11 @@ namespace WInterop.DirectWrite
         /// the same range.  Features requiring a selector use this value to indicate the selector index. 
         /// </remarks>
         public readonly uint Parameter;
+
+        public FontFeature(FontFeatureTag nameTag, uint parameter)
+        {
+            NameTag = nameTag;
+            Parameter = parameter;
+        }
     }
 }

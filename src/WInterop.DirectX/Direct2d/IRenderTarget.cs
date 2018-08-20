@@ -9,6 +9,7 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using WInterop.DirectWrite;
 using WInterop.Errors;
 
 namespace WInterop.Direct2d
@@ -242,40 +243,38 @@ namespace WInterop.Direct2d
         /// Draws the text within the given layout rectangle and by default also performs
         /// baseline snapping.
         /// </summary>
-        void DrawTextSTUB();
-        //STDMETHOD_(void, DrawText)(
-        //    _In_reads_(stringLength) CONST WCHAR* string,
-        //    UINT32 stringLength,
-        //    _In_ IDWriteTextFormat* textFormat,
-        //    _In_ CONST D2D1_RECT_F *layoutRect,
-        //    _In_ ID2D1Brush *defaultFillBrush,
-        //    D2D1_DRAW_TEXT_OPTIONS options = D2D1_DRAW_TEXT_OPTIONS_NONE,
-        //    DWRITE_MEASURING_MODE measuringMode = DWRITE_MEASURING_MODE_NATURAL 
-        //    ) PURE;
+        [PreserveSig]
+        unsafe void DrawText(
+            char* @string,
+            uint stringLength,
+            ITextFormat textFormat,
+            in LtrbRectangleF layoutRect,
+            IBrush defaultFillBrush,
+            DrawTextOptions options = DrawTextOptions.None,
+            MeasuringMode measuringMode = MeasuringMode.Natural);
 
         /// <summary>
         /// Draw a text layout object. If the layout is not subsequently changed, this can
         /// be more efficient than DrawText when drawing the same layout repeatedly.
         /// </summary>
-        /// <param name="options">The specified text options. If D2D1_DRAW_TEXT_OPTIONS_CLIP
-        /// is used, the text is clipped to the layout bounds. These bounds are derived from
-        /// the origin and the layout bounds of the corresponding IDWriteTextLayout object.
+        /// <param name="options">
+        /// The specified text options. If <see cref="DrawTextOptions.Clip"/> is used, the text
+        /// is clipped to the layout bounds. These bounds are derived from the origin and the
+        /// layout bounds of the corresponding <see cref="ITextLayout"/> object.
         /// </param>
-        void DrawTextLayoutSTUB();
-        //STDMETHOD_(void, DrawTextLayout)(
-        //    D2D1_POINT_2F origin,
-        //    _In_ IDWriteTextLayout * textLayout,
-        //    _In_ ID2D1Brush* defaultFillBrush,
-        //    D2D1_DRAW_TEXT_OPTIONS options = D2D1_DRAW_TEXT_OPTIONS_NONE 
-        //    ) PURE;
+        [PreserveSig]
+        void DrawTextLayout(
+            PointF origin,
+            ITextLayout textLayout,
+            IBrush defaultFillBrush,
+            DrawTextOptions options = DrawTextOptions.None);
 
-        void DrawGlyphRunSTUB();
-        //STDMETHOD_(void, DrawGlyphRun)(
-        //    D2D1_POINT_2F baselineOrigin,
-        //    _In_ CONST DWRITE_GLYPH_RUN *glyphRun,
-        //    _In_ ID2D1Brush *foregroundBrush,
-        //    DWRITE_MEASURING_MODE measuringMode = DWRITE_MEASURING_MODE_NATURAL 
-        //    ) PURE;
+        [PreserveSig]
+        void DrawGlyphRun(
+            PointF baselineOrigin,
+            in GlyphRun glyphRun,
+            IBrush foregroundBrush,
+            MeasuringMode measuringMode = MeasuringMode.Natural);
 
         [PreserveSig]
         void SetTransform(

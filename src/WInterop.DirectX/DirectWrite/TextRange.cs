@@ -8,7 +8,7 @@
 namespace WInterop.DirectWrite
 {
     /// <summary>
-    /// The <see cref="TextRange"/> structure specifies a range of text positions where format is applied.
+    /// Specifies a range of text positions where format is applied.
     /// [DWRITE_TEXT_RANGE]
     /// </summary>
     public readonly struct TextRange
@@ -28,5 +28,8 @@ namespace WInterop.DirectWrite
             StartPosition = startPosition;
             Length = length;
         }
+
+        public static implicit operator TextRange((int StartPosition, int Length) tuple)
+            => new TextRange((uint)tuple.StartPosition, (uint)tuple.Length);
     }
 }

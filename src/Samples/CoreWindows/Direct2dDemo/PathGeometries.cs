@@ -9,12 +9,13 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using WInterop.Direct2d;
+using WInterop.DirectX;
 using WInterop.Errors;
 using WInterop.Windows;
 
 namespace Direct2dDemo
 {
-    public class PathGeometries : Direct2dWindowClass
+    public class PathGeometries : DirectXWindowClass
     {
         IPathGeometry _leftMountainGeometry;
         IPathGeometry _rightMountainGeometry;
@@ -28,7 +29,7 @@ namespace Direct2dDemo
         public PathGeometries() : base()
         {
             // Left mountain
-            _leftMountainGeometry = Factory.CreatePathGeometry();
+            _leftMountainGeometry = Direct2dFactory.CreatePathGeometry();
             var sink = _leftMountainGeometry.Open();
             sink.SetFillMode(FillMode.Winding);
             sink.BeginFigure(new PointF(346, 255), FigureBegin.Filled);
@@ -46,7 +47,7 @@ namespace Direct2dDemo
             sink.Close();
 
             // Right mountain
-            _rightMountainGeometry = Factory.CreatePathGeometry();
+            _rightMountainGeometry = Direct2dFactory.CreatePathGeometry();
             sink = _rightMountainGeometry.Open();
             sink.SetFillMode(FillMode.Winding);
             sink.BeginFigure(new PointF(575, 263), FigureBegin.Filled);
@@ -66,7 +67,7 @@ namespace Direct2dDemo
             sink.Close();
 
             // Sun
-            _sunGeometry = Factory.CreatePathGeometry();
+            _sunGeometry = Direct2dFactory.CreatePathGeometry();
             sink = _sunGeometry.Open();
             sink.SetFillMode(FillMode.Winding);
             sink.BeginFigure(new PointF(270, 255), FigureBegin.Filled);
@@ -101,7 +102,7 @@ namespace Direct2dDemo
             sink.Close();
 
             // River
-            _riverGeometry = Factory.CreatePathGeometry();
+            _riverGeometry = Direct2dFactory.CreatePathGeometry();
             sink = _riverGeometry.Open();
             sink.SetFillMode(FillMode.Winding);
             sink.BeginFigure(new PointF(183, 392), FigureBegin.Filled);

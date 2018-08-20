@@ -6,6 +6,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
+using System.Globalization;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using WInterop.Windows.Native;
@@ -40,9 +42,6 @@ namespace WInterop.DirectWrite
         /// <param name="collectionKey">Key used by the loader to identify a collection of font files.</param>
         /// <param name="collectionKeySize">Size in bytes of the collection key.</param>
         /// <param name="fontCollection">Receives a pointer to the system font collection object, or NULL in case of failure.</param>
-        /// <returns>
-        /// Standard HRESULT error code.
-        /// </returns>
         void CreateCustomFontCollectionSTUB();
         //STDMETHOD(CreateCustomFontCollection)(
         //    _In_ IDWriteFontCollectionLoader* collectionLoader,
@@ -55,9 +54,6 @@ namespace WInterop.DirectWrite
         /// Registers a custom font collection loader with the factory object.
         /// </summary>
         /// <param name="fontCollectionLoader">Application-defined font collection loader.</param>
-        /// <returns>
-        /// Standard HRESULT error code.
-        /// </returns>
         void RegisterFontCollectionLoaderSTUB();
         //STDMETHOD(RegisterFontCollectionLoader)(
         //    _In_ IDWriteFontCollectionLoader* fontCollectionLoader
@@ -85,9 +81,6 @@ namespace WInterop.DirectWrite
         /// to avoid extra disk access. Subsequent operations on the constructed object may fail
         /// if the user provided lastWriteTime doesn't match the file on the disk.</param>
         /// <param name="fontFile">Contains newly created font file reference object, or NULL in case of failure.</param>
-        /// <returns>
-        /// Standard HRESULT error code.
-        /// </returns>
         void CreateFontFileReferenceSTUB();
         //STDMETHOD(CreateFontFileReference)(
         //    _In_z_ WCHAR const* filePath,
@@ -133,9 +126,6 @@ namespace WInterop.DirectWrite
         /// If the font files contain a single face, this value should be zero.</param>
         /// <param name="fontFaceSimulationFlags">Font face simulation flags for algorithmic emboldening and italicization.</param>
         /// <param name="fontFace">Contains the newly created font face object, or NULL in case of failure.</param>
-        /// <returns>
-        /// Standard HRESULT error code.
-        /// </returns>
         void CreateFontFaceSTUB();
         //IFontFace CreateFontFace(
         //    FontFaceType fontFaceType,
@@ -174,9 +164,6 @@ namespace WInterop.DirectWrite
         /// Registers a font file loader with DirectWrite.
         /// </summary>
         /// <param name="fontFileLoader">Pointer to the implementation of the IDWriteFontFileLoader for a particular file resource type.</param>
-        /// <returns>
-        /// Standard HRESULT error code.
-        /// </returns>
         /// <remarks>
         /// This function registers a font file loader with DirectWrite.
         /// Font file loader interface handles loading font file resources of a particular type from a key.
@@ -221,17 +208,9 @@ namespace WInterop.DirectWrite
         /// Create a text format object used for text layout.
         /// </summary>
         /// <param name="fontFamilyName">Name of the font family</param>
-        /// <param name="fontCollection">Font collection. NULL indicates the system font collection.</param>
-        /// <param name="fontWeight">Font weight</param>
-        /// <param name="fontStyle">Font style</param>
-        /// <param name="fontStretch">Font stretch</param>
+        /// <param name="fontCollection">Font collection. 'null' indicates the system font collection.</param>
         /// <param name="fontSize">Logical size of the font in DIP units. A DIP ("device-independent pixel") equals 1/96 inch.</param>
         /// <param name="localeName">Locale name</param>
-        /// <param name="textFormat">Contains newly created text format object, or NULL in case of failure.</param>
-        /// <remarks>
-        /// If fontCollection is nullptr, the system font collection is used, grouped by typographic family name
-        /// (DWRITE_FONT_FAMILY_MODEL_WEIGHT_STRETCH_STYLE) without downloadable fonts.
-        /// </remarks>
         ITextFormat CreateTextFormat(
             [MarshalAs(UnmanagedType.LPWStr)]
             string fontFamilyName,
@@ -271,9 +250,8 @@ namespace WInterop.DirectWrite
         /// <param name="maxWidth">Width of the layout box.</param>
         /// <param name="maxHeight">Height of the layout box.</param>
         /// <param name="textLayout">The resultant object.</param>
-        ITextLayout CreateTextLayout(
-            [MarshalAs(UnmanagedType.LPWStr)]
-            string @string,
+        unsafe ITextLayout CreateTextLayout(
+            char* @string,
             uint stringLength,
             ITextFormat textFormat,
             float maxWidth,
@@ -376,5 +354,35 @@ namespace WInterop.DirectWrite
         //    _COM_Outptr_ IDWriteGlyphRunAnalysis** glyphRunAnalysis
         //    ) PURE;
 
+    }
+
+    public static class FactoryExtensions
+    {
+        public unsafe static ITextLayout CreateTextLayout(this IFactory factory, ReadOnlySpan<char> text, ITextFormat textFormat, SizeF maxSize)
+        {
+            fixed (char* c = &MemoryMarshal.GetReference(text))
+            {
+                return factory.CreateTextLayout(c, (uint)text.Length, textFormat, maxSize.Width, maxSize.Height);
+            }
+        }
+
+        public unsafe static ITextFormat CreateTextFormat(
+            this IFactory factory,
+            string fontFamilyName,
+            FontWeight fontWeight = FontWeight.Normal,
+            FontStyle fontStyle = FontStyle.Normal,
+            FontStretch fontStretch = FontStretch.Normal,
+            float fontSize = 12.0f,
+            string localeName = null)
+        {
+            return factory.CreateTextFormat(
+                fontFamilyName,
+                fontCollection: null,
+                fontWeight,
+                fontStyle,
+                fontStretch,
+                fontSize,
+                localeName ?? CultureInfo.CurrentCulture.Name);
+        }
     }
 }

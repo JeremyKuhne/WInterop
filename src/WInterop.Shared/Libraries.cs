@@ -18,7 +18,8 @@ namespace WInterop
         public const string Cabinet = "cabinet.dll";
         public const string Comctl32 = "comctl32.dll";
         public const string Crypt32 = "crypt32.dll";
-        public const string D2Dd1 = "D2d1.dll";
+        public const string D2Dd1 = "d2d1.dll";
+        public const string DWrite = "dwrite.dll";
         public const string Gdi32 = "gdi32.dll";
         public const string GdiPlus = "gdiplus.dll";
         public const string Kernel32 = "kernel32.dll";

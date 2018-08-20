@@ -43,7 +43,7 @@ namespace WInterop.DirectWrite
         /// <summary>
         /// Glyph advance widths.
         /// </summary>
-        public readonly float* glyphAdvances;
+        public readonly float* GlyphAdvances;
 
         /// <summary>
         /// Glyph offsets.

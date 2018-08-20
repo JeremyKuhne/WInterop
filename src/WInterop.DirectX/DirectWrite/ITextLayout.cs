@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace WInterop.DirectWrite
@@ -332,11 +333,9 @@ namespace WInterop.DirectWrite
         /// </summary>
         /// <param name="typography">Pointer to font typography setting.</param>
         /// <param name="textRange">Text range to which this change applies.</param>
-        void SetTypographySTUB();
-        //STDMETHOD(SetTypography)(
-        //    _In_ IDWriteTypography* typography,
-        //    DWRITE_TEXT_RANGE textRange
-        //    ) PURE;
+        void SetTypography(
+            ITypography typography,
+            TextRange textRange);
 
         /// <summary>
         /// Set locale name.
@@ -678,7 +677,7 @@ namespace WInterop.DirectWrite
         /// *actualLineCount from the function IDWriteTextLayout::GetLineMetrics,
         /// and the maxBidiReorderingDepth value from the DWRITE_TEXT_METRICS
         /// structure of the output argument *textMetrics from the function
-        /// IDWriteFactory::CreateTextLayout.
+        /// <see cref="IFactory.CreateTextLayout"/>.
         /// </summary>
         /// <param name="textPosition">First text position of the specified range.</param>
         /// <param name="textLength">Number of positions of the specified range.</param>
@@ -702,5 +701,14 @@ namespace WInterop.DirectWrite
             HitTestMetrics* hitTestMetrics,
             uint maxHitTestMetricsCount,
             out uint actualHitTestMetricsCount);
+    }
+
+    public static class TextLayoutExtensions
+    {
+        public static void SetMaxSize(this ITextLayout textLayout, SizeF maxSize)
+        {
+            textLayout.SetMaxHeight(maxSize.Height);
+            textLayout.SetMaxWidth(maxSize.Width);
+        }
     }
 }

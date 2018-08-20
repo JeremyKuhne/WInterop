@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi
 {
@@ -13,6 +14,7 @@ namespace WInterop.Gdi
     /// [AXESLIST]
     /// </summary>
     /// <msdn>https://msdn.microsoft.com/en-us/library/dd183360.aspx</msdn>
+    [StructLayout(LayoutKind.Sequential)]
     public struct AxesList
     {
         public const uint STAMP_AXESLIST = (0x8000000 + 'a' + ('l' << 8));

@@ -8,14 +8,15 @@
 using System;
 using WInterop.Windows;
 
-namespace Inception
+namespace DirectWriteDemo
 {
     static class Program
     {
         [STAThread]
         static void Main()
         {
-            Windows.CreateMainWindowAndRun(new Inception(), "Inception");
+            Windows.CreateMainWindowAndRun(new HelloWorld(), "DirectWrite Hello World");
+            Windows.CreateMainWindowAndRun(new CustomText(), "Custom Text Rendering");
         }
     }
 }
