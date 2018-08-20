@@ -7,7 +7,10 @@
 #include "aclapi.h"
 #include "lm.h"
 #include "d2d1.h"
+#include "d2d1_1.h"
 #include "dwrite.h"
+#include "d3d11.h"
+#include "dxgi1_2.h"
 
 BOOL APIENTRY DllMain(
     HMODULE hModule,

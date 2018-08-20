@@ -5,9 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using WInterop.Direct2d;
+using WInterop.Direct3d;
 using WInterop.DirectX;
+using WInterop.Errors;
 using WInterop.Windows;
 
 namespace Direct2dDemo
@@ -20,6 +24,14 @@ namespace Direct2dDemo
 
         protected override void CreateResources()
         {
+            Direct3d.CreateDirect2dCompatibleDevice(out IntPtr device, out IntPtr deviceContext);
+            Guid guid = new Guid(WInterop.Direct3d.InterfaceIds.IID_IDXGIDevice);
+            // IntPtr iUnknown = Marshal.GetIUnknownForObject(device);
+            HRESULT result = (HRESULT)Marshal.QueryInterface(
+                device,
+                ref guid,
+                out IntPtr dxgiDevice);
+            Direct2dFactory.CreateDevice(dxgiDevice);
             _lightSlateGrayBrush = RenderTarget.CreateSolidColorBrush(Color.LightSlateGray);
             _cornflowerBlueBrush = RenderTarget.CreateSolidColorBrush(Color.CornflowerBlue);
         }

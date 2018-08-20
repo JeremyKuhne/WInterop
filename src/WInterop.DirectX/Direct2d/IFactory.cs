@@ -13,13 +13,13 @@ using WInterop.DirectWrite;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// [ID2D1Factory]
+    /// [ID2D1Factory] {ID2D1Factory1]
     /// </summary>
     /// <remarks>
     /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/dd371246.aspx"/>
     /// </remarks>
     [ComImport,
-        Guid(InterfaceIds.IID_ID2D1Factory),
+        Guid(InterfaceIds.IID_ID2D1Factory1),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IFactory
     {
@@ -117,6 +117,112 @@ namespace WInterop.Direct2d
         /// </summary>
         IRenderTarget CreateDCRenderTarget(
             in RenderTargetProperties renderTargetProperties);
+
+        /// <summary>
+        /// This creates a new Direct2D device from the given IDXGIDevice.
+        /// </summary>
+        IDevice CreateDevice(
+            IntPtr dxgiDevice);
+    
+    ///// <summary>
+    ///// This creates a stroke style with the ability to preserve stroke width in various
+    ///// ways.
+    ///// </summary>
+    //STDMETHOD(CreateStrokeStyle)(
+    //    _In_ CONST D2D1_STROKE_STYLE_PROPERTIES1 *strokeStyleProperties,
+    //    _In_reads_opt_(dashesCount) CONST FLOAT *dashes,
+    //    UINT32 dashesCount,
+    //    _COM_Outptr_ ID2D1StrokeStyle1** strokeStyle 
+    //    ) PURE;
+    
+    //using ID2D1Factory::CreateStrokeStyle;
+    
+    ///// <summary>
+    ///// Creates a path geometry with new operational methods.
+    ///// </summary>
+    //STDMETHOD(CreatePathGeometry)(
+    //    _COM_Outptr_ ID2D1PathGeometry1 ** pathGeometry 
+    //    ) PURE;
+    
+    //using ID2D1Factory::CreatePathGeometry;
+    
+    ///// <summary>
+    ///// Creates a new drawing state block, this can be used in subsequent
+    ///// SaveDrawingState and RestoreDrawingState operations on the render target.
+    ///// </summary>
+    //STDMETHOD(CreateDrawingStateBlock)(
+    //    _In_opt_ CONST D2D1_DRAWING_STATE_DESCRIPTION1 *drawingStateDescription,
+    //    _In_opt_ IDWriteRenderingParams *textRenderingParams,
+    //    _COM_Outptr_ ID2D1DrawingStateBlock1 **drawingStateBlock 
+    //    ) PURE;
+    
+    //using ID2D1Factory::CreateDrawingStateBlock;
+    
+    ///// <summary>
+    ///// Creates a new GDI metafile.
+    ///// </summary>
+    //STDMETHOD(CreateGdiMetafile)(
+    //    _In_ IStream * metafileStream,
+    //    _COM_Outptr_ ID2D1GdiMetafile** metafile 
+    //    ) PURE;
+    
+    ///// <summary>
+    ///// This globally registers the given effect. The effect can later be instantiated
+    ///// by using the registered class id. The effect registration is reference counted.
+    ///// </summary>
+    //STDMETHOD(RegisterEffectFromStream)(
+    //    _In_ REFCLSID classId,
+    //    _In_ IStream* propertyXml,
+    //    _In_reads_opt_(bindingsCount) CONST D2D1_PROPERTY_BINDING *bindings,
+    //    UINT32 bindingsCount,
+    //    _In_ CONST PD2D1_EFFECT_FACTORY effectFactory 
+    //    ) PURE;
+    
+    ///// <summary>
+    ///// This globally registers the given effect. The effect can later be instantiated
+    ///// by using the registered class id. The effect registration is reference counted.
+    ///// </summary>
+    //STDMETHOD(RegisterEffectFromString)(
+    //    _In_ REFCLSID classId,
+    //    _In_ PCWSTR propertyXml,
+    //    _In_reads_opt_(bindingsCount) CONST D2D1_PROPERTY_BINDING *bindings,
+    //    UINT32 bindingsCount,
+    //    _In_ CONST PD2D1_EFFECT_FACTORY effectFactory 
+    //    ) PURE;
+    
+    ///// <summary>
+    ///// This unregisters the given effect by its class id, you need to call
+    ///// UnregisterEffect for every call to ID2D1Factory1::RegisterEffectFromStream and
+    ///// ID2D1Factory1::RegisterEffectFromString to completely unregister it.
+    ///// </summary>
+    //STDMETHOD(UnregisterEffect)(
+    //    _In_ REFCLSID classId 
+    //    ) PURE;
+    
+    ///// <summary>
+    ///// This returns all of the registered effects in the process, including any
+    ///// built-in effects.
+    ///// </summary>
+    ///// <param name="effectsReturned">The number of effects returned into the passed in
+    ///// effects array.</param>
+    ///// <param name="effectsRegistered">The number of effects currently registered in
+    ///// the system.</param>
+    //STDMETHOD(GetRegisteredEffects)(
+    //    _Out_writes_to_opt_(effectsCount, * effectsReturned) CLSID *effects,
+    //    UINT32 effectsCount,
+    //    _Out_opt_ UINT32* effectsReturned,
+    //    _Out_opt_ UINT32* effectsRegistered 
+    //    ) CONST PURE;
+
+    //    /// <summary>
+    //    /// This retrieves the effect properties for the given effect, all of the effect
+    //    /// properties will be set to a default value since an effect is not instantiated to
+    //    /// implement the returned property interface.
+    //    /// </summary>
+    //    STDMETHOD(GetEffectProperties)(
+    //        _In_ REFCLSID effectId,
+    //        _COM_Outptr_ ID2D1Properties** properties 
+    //    ) CONST PURE;
     }
 
     public static class FactoryExtensions
