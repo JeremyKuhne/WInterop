@@ -8,13 +8,13 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Security.Native;
+using WInterop.Security.Unsafe;
 using WInterop.Errors;
 using WInterop.Handles;
 using WInterop.SafeString.Types;
-using WInterop.Handles.Native;
+using WInterop.Handles.Unsafe;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Unsafe
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

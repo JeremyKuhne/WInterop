@@ -8,7 +8,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Native;
+using WInterop.Gdi.Unsafe;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Gdi

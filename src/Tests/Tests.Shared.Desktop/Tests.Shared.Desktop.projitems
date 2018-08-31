@@ -9,6 +9,7 @@
     <Import_RootNamespace>DesktopTests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Console\GeneralConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Direct2d\Factory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Direct2d\RenderTarget.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\LsaTests.cs" />

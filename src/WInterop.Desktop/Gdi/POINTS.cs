@@ -8,7 +8,7 @@
 namespace WInterop.Gdi
 {
     /// <summary>
-    /// [POINTS]
+    /// Point with two <see cref="short"/> values. [POINTS]
     /// </summary>
     /// <msdn>https://msdn.microsoft.com/en-us/library/dd162808.aspx</msdn>
     public struct PointS

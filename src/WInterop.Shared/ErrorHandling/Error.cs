@@ -275,16 +275,29 @@ namespace WInterop.Errors
         public static bool Succeeded(this HRESULT result) => SUCCEEDED(result);
         public static bool Failed(this HRESULT result) => FAILED(result);
         public static Exception GetException(this HRESULT result, string path = null) => GetIoExceptionForHResult(result, path);
+
+        /// <summary>
+        /// Throw a relevant exception if <paramref name="result"/> is a failure.
+        /// </summary>
+        /// <param name="path">Optional path or other input detail.</param>
         public static void ThrowIfFailed(this HRESULT result, string path = null)
         {
             if (result.Failed()) throw result.GetException(path);
         }
 
+        /// <summary>
+        /// Throw the last error code from windows if <paramref name="result"/> is false.
+        /// </summary>
+        /// <param name="path">Optional path or other input detail.</param>
         public static void ThrowLastErrorIfFalse(bool result, string path = null)
         {
             if (!result) throw GetIoExceptionForLastError(path);
         }
 
+        /// <summary>
+        /// Throw a relevant exception if <paramref name="error"/> is a failure.
+        /// </summary>
+        /// <param name="path">Optional path or other input detail.</param>
         public static void ThrowIfFailed(this WindowsError error, string path = null)
         {
             if (error != WindowsError.ERROR_SUCCESS) throw GetIoExceptionForError(error, path);

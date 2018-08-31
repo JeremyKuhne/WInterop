@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Security;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Unsafe
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/winefs/ns-winefs-_encryption_certificate_hash
     // https://msdn.microsoft.com/en-us/library/cc230500.aspx

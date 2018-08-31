@@ -7,7 +7,7 @@
 
 using WInterop.Errors;
 using WInterop.Support.Buffers;
-using WInterop.SystemInformation.Native;
+using WInterop.SystemInformation.Unsafe;
 
 namespace WInterop.SystemInformation
 {

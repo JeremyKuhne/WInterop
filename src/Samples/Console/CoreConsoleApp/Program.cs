@@ -99,17 +99,17 @@ namespace CoreConsoleApp
                 switch (i.EventType)
                 {
                     case EventType.Focus:
-                        System.Console.WriteLine($"Focus: {i.Data.FocusEvent.bSetFocus}");
+                        System.Console.WriteLine($"Focus: {i.Data.FocusEvent.SetFocus}");
                         break;
                     case EventType.Key:
                         var keyEvent = i.Data.KeyEvent;
-                        System.Console.WriteLine($"Key: Down = {keyEvent.bKeyDown} Char = '{keyEvent.uChar.UnicodeChar}' Virtual Key = {keyEvent.wVirtualKeyCode} Modifiers = {keyEvent.dwControlKeyState}");
-                        exit = keyEvent.wVirtualKeyCode == VirtualKey.C
-                            && (keyEvent.dwControlKeyState & (ControlKeyState.LeftCtrlPressed | ControlKeyState.RightCtrlPressed)) != 0;
+                        System.Console.WriteLine($"Key: Down = {keyEvent.KeyDown} Char = '{keyEvent.Char.UnicodeChar}' Virtual Key = {keyEvent.VirtualKeyCode} Modifiers = {keyEvent.ControlKeyState}");
+                        exit = keyEvent.VirtualKeyCode == VirtualKey.C
+                            && (keyEvent.ControlKeyState & (ControlKeyState.LeftCtrlPressed | ControlKeyState.RightCtrlPressed)) != 0;
                         break;
                     case EventType.Mouse:
                         var mouseEvent = i.Data.MouseEvent;
-                        System.Console.WriteLine($"Mouse: {mouseEvent.dwEventFlags} {mouseEvent.dwMousePosition.X}, {mouseEvent.dwMousePosition.Y}");
+                        System.Console.WriteLine($"Mouse: {mouseEvent.EventFlags} {mouseEvent.MousePosition.X}, {mouseEvent.MousePosition.Y}");
                         break;
                 }
 

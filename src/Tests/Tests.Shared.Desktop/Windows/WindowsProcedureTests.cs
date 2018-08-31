@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using WInterop.Windows;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 using Xunit;
 
 namespace WindowsTests

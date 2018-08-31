@@ -6,14 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using FluentAssertions;
-using WInterop.Direct2d;
-using WInterop.Direct2d.Native;
-using WInterop.Errors;
 using System.Drawing;
+using WInterop.Direct2d;
+using WInterop.Direct2d.Unsafe;
+using WInterop.Errors;
+using Xunit;
 
 namespace Direct2dTests
 {

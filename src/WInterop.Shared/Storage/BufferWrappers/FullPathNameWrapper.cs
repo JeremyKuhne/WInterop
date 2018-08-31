@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Support.Buffers;
-using WInterop.Storage.Native;
+using WInterop.Storage.Unsafe;
 
 namespace WInterop.Storage.BufferWrappers
 {

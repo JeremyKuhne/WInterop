@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.Security.Native;
+using WInterop.Security.Unsafe;
 using WInterop.Handles;
 
 namespace WInterop.Synchronization

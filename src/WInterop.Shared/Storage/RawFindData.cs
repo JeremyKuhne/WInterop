@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Storage.Unsafe;
 
 namespace WInterop.Storage
 {
@@ -15,16 +16,15 @@ namespace WInterop.Storage
     public unsafe ref struct RawFindData
     {
         private FILE_FULL_DIR_INFORMATION* _info;
-        private string _directory;
 
         public RawFindData(FILE_FULL_DIR_INFORMATION* info, string directory)
         {
             _info = info;
-            _directory = directory;
+            Directory = directory;
         }
 
         public ReadOnlySpan<char> FileName => _info->FileName;
-        public string Directory => _directory;
+        public string Directory { get; private set; }
         public FileAttributes FileAttributes => _info->FileAttributes;
         public ulong FileSize => (ulong)_info->AllocationSize;
 

@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Security.Native
+namespace WInterop.Security.Unsafe
 {
     /// <summary>
     /// Access control list (ACL) header.

@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Support;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 
 namespace WInterop.Windows
 {

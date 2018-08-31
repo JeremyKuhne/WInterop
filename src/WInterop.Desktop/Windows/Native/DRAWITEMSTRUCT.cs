@@ -6,9 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Gdi.Native;
+using WInterop.Gdi.Unsafe;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Unsafe
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/ns-winuser-tagdrawitemstruct
     public readonly struct DRAWITEMSTRUCT

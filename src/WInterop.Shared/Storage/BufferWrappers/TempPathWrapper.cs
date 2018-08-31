@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Support.Buffers;
-using WInterop.Storage.Native;
+using WInterop.Storage.Unsafe;
 
 namespace WInterop.Storage.BufferWrappers
 {

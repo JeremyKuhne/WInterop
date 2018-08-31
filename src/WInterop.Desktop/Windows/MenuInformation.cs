@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Gdi;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 
 namespace WInterop.Windows
 {

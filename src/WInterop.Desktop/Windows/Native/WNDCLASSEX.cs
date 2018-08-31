@@ -7,10 +7,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Native;
-using WInterop.Windows.Native;
+using WInterop.Gdi.Unsafe;
+using WInterop.Windows.Unsafe;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Unsafe
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

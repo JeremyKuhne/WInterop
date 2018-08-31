@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 
 namespace WInterop.Windows
 {

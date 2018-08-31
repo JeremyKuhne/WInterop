@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 
-namespace WInterop.WindowsStore.Native
+namespace WInterop.WindowsStore.Unsafe
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

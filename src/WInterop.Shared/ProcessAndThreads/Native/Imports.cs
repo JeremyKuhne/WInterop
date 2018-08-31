@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.ProcessAndThreads.Native
+namespace WInterop.ProcessAndThreads.Unsafe
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

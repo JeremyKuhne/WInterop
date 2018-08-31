@@ -9,7 +9,7 @@ using System;
 using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Windows;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 
 namespace Colors1
 {

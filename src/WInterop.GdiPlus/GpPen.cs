@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.GdiPlus.Unsafe;
 
 namespace WInterop.GdiPlus
 {
@@ -16,7 +17,7 @@ namespace WInterop.GdiPlus
         public void Dispose()
         {
             if (Handle != IntPtr.Zero)
-                GdiPlusMethods.ThrowIfFailed(GdiPlusMethods.Imports.GdipDeletePen(this));
+                GdiPlusMethods.ThrowIfFailed(Imports.GdipDeletePen(this));
         }
     }
 }

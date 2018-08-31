@@ -11,7 +11,7 @@ using WInterop.Errors;
 using WInterop.ProcessAndThreads;
 using WInterop.SafeString.Types;
 
-namespace WInterop.Security.Native
+namespace WInterop.Security.Unsafe
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

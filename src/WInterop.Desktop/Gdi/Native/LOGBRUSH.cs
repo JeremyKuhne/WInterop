@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Unsafe
 {
     // https://msdn.microsoft.com/en-us/library/dd145035.aspx
     public struct LOGBRUSH

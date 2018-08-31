@@ -8,11 +8,23 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>WInterop</RootNamespace>
+    <PackageVersion>0.3.0-alpha-083011923</PackageVersion>
+    <PackageLicenseUrl>https://github.com/JeremyKuhne/WInterop/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/JeremyKuhne/WInterop</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JeremyKuhne/WInterop/WInterop.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>master</RepositoryBranch>
+    <PackageReleaseNotes>Alpha release.</PackageReleaseNotes>
+    <Description>Managed interop library for Windows.</Description>
+    <Copyright>Copyright 2018</Copyright>
+    <PackageTags>PInvoke Win32</PackageTags>
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\WInterop.Shared\WInterop.Shared.projitems" Label="Shared" />
   <ItemGroup>
-    <Content Include="Gdi\BitBLT History.txt" />
+    <Content Include="Gdi\BitBLT History.txt">
+      <Pack>false</Pack>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Buffers" Version="4.5.0" />

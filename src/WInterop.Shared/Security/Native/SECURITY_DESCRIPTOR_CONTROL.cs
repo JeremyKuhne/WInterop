@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Security.Native
+namespace WInterop.Security.Unsafe
 {
     [Flags]
     public enum SECURITY_DESCRIPTOR_CONTROL : ushort

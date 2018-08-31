@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Globalization;
 using WInterop.Windows;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 
 namespace WInterop.Globalization
 {

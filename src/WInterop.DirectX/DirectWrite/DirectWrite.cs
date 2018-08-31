@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Errors;
-using WInterop.DirectWrite.Native;
+using WInterop.DirectWrite.Unsafe;
 
 namespace WInterop.DirectWrite
 {

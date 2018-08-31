@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Unsafe
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/ns-winuser-tagpaintstruct
     public readonly struct PAINTSTRUCT

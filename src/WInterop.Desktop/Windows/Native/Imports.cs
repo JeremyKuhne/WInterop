@@ -9,10 +9,10 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
-using WInterop.Gdi.Native;
+using WInterop.Gdi.Unsafe;
 using WInterop.Modules;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Unsafe
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

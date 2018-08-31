@@ -8,7 +8,7 @@
 using System;
 using System.Drawing;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Unsafe
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648381.aspx
     public struct CURSORINFO

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Security.Native
+namespace WInterop.Security.Unsafe
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379630.aspx">TOKEN_PRIVILEGES</a> structure.

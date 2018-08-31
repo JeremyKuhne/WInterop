@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Security.Native;
+using WInterop.Security.Unsafe;
 using WInterop.Errors;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;

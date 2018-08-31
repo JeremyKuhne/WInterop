@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Network.Native
+namespace WInterop.Network.Unsafe
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/lmaccess/ns-lmaccess-_user_info_2
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

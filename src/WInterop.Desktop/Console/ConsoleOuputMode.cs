@@ -12,7 +12,7 @@ namespace WInterop.Console
     /// <summary>
     /// Console output handle modes.
     /// </summary>
-    /// <remarks><see cref="https://docs.microsoft.com/en-us/windows/console/getconsolemode"/></remarks>
+    /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/getconsolemode"/></msdn>
     [Flags]
     public enum ConsoleOuputMode : uint
     {

@@ -8,9 +8,9 @@
 using System;
 using WInterop.SafeString.Types;
 using WInterop.Security;
-using WInterop.Security.Native;
+using WInterop.Security.Unsafe;
 
-namespace WInterop.Handles.Native
+namespace WInterop.Handles.Unsafe
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff557749.aspx
     public unsafe struct OBJECT_ATTRIBUTES

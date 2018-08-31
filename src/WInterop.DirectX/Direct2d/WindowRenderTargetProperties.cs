@@ -7,7 +7,7 @@
 
 using System.Drawing;
 using WInterop.Windows;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 
 namespace WInterop.Direct2d
 {

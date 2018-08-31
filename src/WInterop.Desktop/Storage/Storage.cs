@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Storage.Native;
+using WInterop.Storage.Unsafe;
 using WInterop.Handles;
 using WInterop.SafeString.Types;
 using WInterop.Support;
@@ -176,7 +176,7 @@ namespace WInterop.Storage
             fixed (char* c = &MemoryMarshal.GetReference(path))
             {
                 UNICODE_STRING name = new UNICODE_STRING(c, path.Length);
-                var attributes = new Handles.Native.OBJECT_ATTRIBUTES(
+                var attributes = new Handles.Unsafe.OBJECT_ATTRIBUTES(
                     &name,
                     objectAttributes,
                     rootDirectory,

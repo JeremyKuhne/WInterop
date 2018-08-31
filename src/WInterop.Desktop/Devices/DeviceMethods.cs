@@ -8,6 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Devices.Unsafe;
 using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Support.Buffers;

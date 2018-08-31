@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using WInterop.Errors;
-using WInterop.Storage.Native;
+using WInterop.Storage.Unsafe;
 
 namespace WInterop.Storage
 {

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Modules.Native
+namespace WInterop.Modules.Unsafe
 {
     public readonly struct HMODULE
     {

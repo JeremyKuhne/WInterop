@@ -12,7 +12,7 @@ using WInterop.Errors;
 using WInterop.Handles;
 using WInterop.Synchronization;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Unsafe
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

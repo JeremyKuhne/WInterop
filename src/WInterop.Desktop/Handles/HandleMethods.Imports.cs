@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Handles.Native;
+using WInterop.Handles.Unsafe;
 using WInterop.SafeString.Types;
 
 namespace WInterop.Handles

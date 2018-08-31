@@ -8,7 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using WInterop.Errors;
-using WInterop.Storage.Native;
+using WInterop.Storage.Unsafe;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 

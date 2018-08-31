@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Unsafe
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647578.aspx
     public struct MENUITEMINFO

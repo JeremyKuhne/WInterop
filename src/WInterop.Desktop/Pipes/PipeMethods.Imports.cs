@@ -8,7 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using WInterop.Security;
-using WInterop.Security.Native;
+using WInterop.Security.Unsafe;
 using WInterop.Pipes.Types;
 
 namespace WInterop.Pipes

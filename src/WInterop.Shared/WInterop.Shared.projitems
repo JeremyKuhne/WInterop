@@ -31,7 +31,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\DECIMAL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\DotNetStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Com\Native\DVTARGETDEVICE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\FADF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Com\Native\FORMATETC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Com\IDataObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\IEnumSTATSTG.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\InterfaceIds.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\IStorage.cs" />
@@ -41,6 +44,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Com\SafeComHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\StatFlag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\STATSTG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Com\STGMEDIUM.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\STGOPTIONS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\StorageCommit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\StorageFormat.cs" />
@@ -78,6 +82,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\NTSTATUS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WindowsError.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WInteropIOException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HBITMAP.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HBRUSH.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HDC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HFONT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HGDIOBJ.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HPEN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HRGN.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LANGID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\Language.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LCID.cs" />
@@ -230,35 +241,35 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_ACCESS_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_ALIGNMENT_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_ALLOCATION_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_ALL_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_ALL_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_BASIC_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_BOTH_DIR_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_DIRECTORY_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_BOTH_DIR_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_DIRECTORY_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_DISPOSITION_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_DISPOSITION_INFORMATION_EX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_EA_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_END_OF_FILE_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_FULL_DIR_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_FULL_EA_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_FULL_DIR_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_FULL_EA_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_ID_128.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_ID_BOTH_DIR_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_ID_BOTH_DIR_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_ID_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_INTERNAL_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_LINK_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_LINK_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_MODE_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_NAMES_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_NAME_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_NAMES_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_NAME_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_NETWORK_OPEN_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_PIPE_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_PIPE_LOCAL_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_PIPE_REMOTE_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_POSITION_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_PROCESS_IDS_USING_FILE_INFORMATION.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_RENAME_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_PROCESS_IDS_USING_FILE_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_RENAME_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_REPARSE_POINT_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_STANDARD_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_STANDARD_INFORMATION_EX.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILE_STREAM_INFORMATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\FILE_STREAM_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FINDEX_INFO_LEVELS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFirstFileExFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindResult.cs" />
@@ -310,7 +321,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\VolumeInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\WIN32_FILE_ATTRIBUTE_DATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\WIN32_FIND_DATA.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\WIN32_STREAM_ID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Native\WIN32_STREAM_ID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\BOOL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\BOOLEAN.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\CharSpanExtensions.cs" />
@@ -321,9 +332,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\HighLowUlong.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\LowHighUlong.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\SpanExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\TrailingByte.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\TrailingNativeInt.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\TrailingString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\TrailingArray.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\UCHAR.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Arrays.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\ActionWrapper.cs" />
@@ -375,16 +384,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\WindowsStore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\LParam.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\Native\HWND.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\Unsafe\HWND.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFullPath.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Com\Native\ComMethods.Imports.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Com\Native\" />
     <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Native\" />
   </ItemGroup>
   <ItemGroup>

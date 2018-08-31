@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Security.Native;
+using WInterop.Security.Unsafe;
 using WInterop.Ipc.Types;
 using WInterop.Errors;
 

@@ -16,7 +16,7 @@ using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
 using WInterop.Windows.BufferWrappers;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 
 namespace WInterop.Windows
 {
@@ -228,6 +228,8 @@ namespace WInterop.Windows
 
         public static WindowHandle GetShellWindow() => Imports.GetShellWindow();
 
+        public static WindowHandle GetActiveWindow() => Imports.GetActiveWindow();
+
         /// <summary>
         /// Gets the specified related Window to get given Window if it exists. Otherwise
         /// returns a null WindowHandle.
@@ -385,7 +387,7 @@ namespace WInterop.Windows
         public static BrushHandle SetClassBackgroundBrush(this in WindowHandle window, BrushHandle value, bool ownsHandle = true)
         {
             IntPtr result = SetClassLong(window, ClassLong.BackgroundBrush, value.HBRUSH.Value);
-            return new BrushHandle(new Gdi.Native.HBRUSH(result), ownsHandle);
+            return new BrushHandle(new Gdi.Unsafe.HBRUSH(result), ownsHandle);
         }
 
         public static bool ShowWindow(this in WindowHandle window, ShowWindowCommand command)
@@ -447,7 +449,7 @@ namespace WInterop.Windows
 
         public static Rectangle GetClientRectangle(this in WindowHandle window)
         {
-            if (!Imports.GetClientRect(window, out Gdi.Native.RECT rect))
+            if (!Imports.GetClientRect(window, out Gdi.Unsafe.RECT rect))
                 throw Error.GetIoExceptionForLastError();
 
             return rect;
@@ -455,7 +457,7 @@ namespace WInterop.Windows
 
         public static Rectangle GetWindowRectangle(this in WindowHandle window)
         {
-            if (!Imports.GetWindowRect(window, out Gdi.Native.RECT result))
+            if (!Imports.GetWindowRect(window, out Gdi.Unsafe.RECT result))
                 throw Error.GetIoExceptionForLastError();
 
             return result;
@@ -515,8 +517,8 @@ namespace WInterop.Windows
 
         public unsafe static int ScrollWindow(this in WindowHandle window, Point delta, Rectangle scroll, Rectangle clip)
         {
-            Gdi.Native.RECT scrollRect = scroll;
-            Gdi.Native.RECT clipRect = clip;
+            Gdi.Unsafe.RECT scrollRect = scroll;
+            Gdi.Unsafe.RECT clipRect = clip;
 
             int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, &scrollRect, &clipRect, IntPtr.Zero, null, ScrollWindowFlags.SW_ERASE | ScrollWindowFlags.SW_INVALIDATE);
 
@@ -693,7 +695,7 @@ namespace WInterop.Windows
 
         public static MonitorHandle MonitorFromRectangle(Rectangle rectangle, MonitorOption option = MonitorOption.DefaultToNull)
         {
-            Gdi.Native.RECT rect = rectangle;
+            Gdi.Unsafe.RECT rect = rectangle;
             return Imports.MonitorFromRect(in rect, option);
         }
 

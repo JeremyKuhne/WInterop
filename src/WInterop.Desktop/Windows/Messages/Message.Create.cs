@@ -8,7 +8,7 @@
 using System;
 using System.Drawing;
 using WInterop.Modules;
-using WInterop.Windows.Native;
+using WInterop.Windows.Unsafe;
 
 namespace WInterop.Windows
 {

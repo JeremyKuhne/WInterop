@@ -8,6 +8,7 @@
 using System;
 using WInterop.Errors;
 using WInterop.Handles;
+using WInterop.Registry.Unsafe;
 
 namespace WInterop.Registry
 {
@@ -56,10 +57,9 @@ namespace WInterop.Registry
         /// </summary>
         public bool IsSpecialKey => ((uint)handle & REG_CLASSES_SPECIAL_TAG) != 0;
 
-
         protected override bool ReleaseHandle()
         {
-            return Registry.Imports.RegCloseKey(handle) != WindowsError.ERROR_SUCCESS;
+            return Imports.RegCloseKey(handle) != WindowsError.ERROR_SUCCESS;
         }
     }
 }

@@ -7,9 +7,9 @@
 
 using System;
 using WInterop.Gdi;
-using WInterop.Gdi.Native;
+using WInterop.Gdi.Unsafe;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Unsafe
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647575.aspx
     public struct MENUINFO
