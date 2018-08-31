@@ -2,12 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Condition="Exists('..\dir.props')" Project="..\dir.props" />
 
-  <PropertyGroup>
-    <!-- SDK props pull in common props -->
-    <ImportCommonProps Condition="'$(ImportCommonProps)' == '' and '$(ImportSDKProps)' == 'true'">false</ImportCommonProps>
-  </PropertyGroup>
+  <!-- SDK props pull in common props -->
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-          Condition="'$(ImportCommonProps)' != 'false' and Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+          Condition="'$(ImportCommonProps)' == 'true' and Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
 
   <!-- Common repo directories -->
   <PropertyGroup>
@@ -70,10 +67,5 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <!-- https://github.com/Microsoft/msbuild/issues/1392 -->
-  <!-- <ItemDefinitionGroup Condition="'$(ImportSDKProps)' == 'true'"> -->
-    <!-- <Compile><Visible>true</Visible></Compile> -->
-  <!-- </ItemDefinitionGroup> -->
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition="'$(ImportSDKProps)' == 'true'" />
   <Import Project="il.props" Condition="'$(ImportILProps)' == 'true'" />
 </Project>

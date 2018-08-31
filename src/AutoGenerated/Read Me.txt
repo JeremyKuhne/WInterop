@@ -2,10 +2,6 @@
 Rather than put them in a consumer, creating a dummy project and including the relevant files in the Common project so that they show up
 in the consuming projects.
 
-Updating or rebuilding this project will force update the time stamp constants and the resultant version numbers.
-
-Note that this project has to be portable to allow for the resx generation to work correctly for other portable projects.
-(Due to the need for GetType extensions)
-
-Note that we still need to fix templating to build correctly from the command line. This functionality was removed on moving to VS2017 as
-the existing nuget package automation was busted.
+Unfortunately you need to manually run "Build:Transform All Templates" to regenerate. I'll likely write some simple template parser to deal
+with the lack of support for T4 templating in VS. Including the targets doesn't work right with SDK style projects and the build tasks are
+not officially published as a nuget package.
