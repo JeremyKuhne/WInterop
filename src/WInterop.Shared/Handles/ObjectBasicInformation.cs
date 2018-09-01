@@ -5,8 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Runtime.InteropServices;
-
 namespace WInterop.Handles
 {
     // The full struct isn't officially documented, names may be wrong.
@@ -23,8 +21,11 @@ namespace WInterop.Handles
     //
     // ACCESS_MASK
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374892.aspx
-    //
-    public struct OBJECT_BASIC_INFORMATION
+
+    /// <summary>
+    /// [OBJECT_BASIC_INFORMATION]
+    /// </summary>
+    public struct ObjectBasicInformation
     {
         public ObjectAttributes Attributes;
         public uint GrantedAccess;

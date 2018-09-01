@@ -45,7 +45,7 @@ namespace WInterop.Globalization
                 int cchSrc,
                 char* lpDestStr,
                 int cchDest,
-                NLSVERSIONINFOEX* lpVersionInformation,
+                NlsVersionInfoExtended* lpVersionInformation,
                 void* lpReserved,
                 LParam sortHandle);
         }

@@ -10,12 +10,15 @@ using System;
 namespace WInterop.Globalization
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd319087.aspx
-    public struct NLSVERSIONINFOEX
+    /// <summary>
+    /// [NLSVERSIONINFOEX]
+    /// </summary>
+    public struct NlsVersionInfoExtended
     {
-        public uint dwNLSVersionInfoSize;
-        public uint dwNLSVersion;
-        public uint dwDefinedVersion;
-        public uint dwEffectiveId;
-        public Guid guidCustomVersion;
+        public uint NLSVersionInfoSize;
+        public uint NLSVersion;
+        public uint DefinedVersion;
+        public uint EffectiveId;
+        public Guid CustomVersion;
     }
 }

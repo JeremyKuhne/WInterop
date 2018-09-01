@@ -7,7 +7,7 @@
 
 using WInterop.SafeString.Types;
 
-namespace WInterop.Handles
+namespace WInterop.Handles.Unsafe
 {
     // The full struct isn't officially documented, names may be wrong.
     //
@@ -17,7 +17,6 @@ namespace WInterop.Handles
     //          UNICODE_STRING TypeName;
     //          ULONG Reserved[22];    // reserved for internal use
     //      } PUBLIC_OBJECT_TYPE_INFORMATION, *PPUBLIC_OBJECT_TYPE_INFORMATION;
-    //
     public struct OBJECT_TYPE_INFORMATION
     {
         public UNICODE_STRING TypeName;

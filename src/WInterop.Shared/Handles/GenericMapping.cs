@@ -10,6 +10,10 @@ namespace WInterop.Handles
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446633.aspx
     // ACCESS_MASK
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374892.aspx
+
+    /// <summary>
+    /// [GENERIC_MAPPING]
+    /// </summary>
     public struct GENERIC_MAPPING
     {
         public uint GenericRead;
