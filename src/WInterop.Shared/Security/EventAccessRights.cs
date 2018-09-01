@@ -15,60 +15,61 @@ namespace WInterop.Security
     {
         /// <summary>
         /// Modify state access, which is required for the SetEvent, ResetEvent and PulseEvent functions.
+        /// [EVENT_MODIFY_STATE]
         /// </summary>
-        EVENT_MODIFY_STATE = 0x0002,
+        ModifyState = 0x0002,
 
         /// <summary>
-        /// All possible rights for an event object.
+        /// All possible rights for an event object. [EVENT_ALL_ACCESS]
         /// </summary>
-        EVENT_ALL_ACCESS = StandardAccessRights.All | 0x3,
+        AllAccess = StandardAccessRights.All | 0x3,
 
         /// <summary>
-        /// The right to delete the object.
+        /// The right to delete the object. [DELETE]
         /// </summary>
-        DELETE = StandardAccessRights.Delete,
+        Delete = StandardAccessRights.Delete,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
-        /// Doesn't include system access control list info (SACL).
+        /// Doesn't include system access control list info (SACL). [READ_CONTROL]
         /// </summary>
-        READ_CONTROL = StandardAccessRights.ReadControl,
+        ReadControl = StandardAccessRights.ReadControl,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
-        /// object's security descriptor.
+        /// object's security descriptor. [WRITE_DAC]
         /// </summary>
-        WRITE_DAC = StandardAccessRights.WriteDac,
+        WriteDac = StandardAccessRights.WriteDac,
 
         /// <summary>
-        /// The right to change the owner in the object's security descriptor.
+        /// The right to change the owner in the object's security descriptor. [WRITE_OWNER]
         /// </summary>
-        WRITE_OWNER = StandardAccessRights.WriteOwner,
+        WriteOwner = StandardAccessRights.WriteOwner,
 
         /// <summary>
         /// The right to use the object for synchronization. Enables a thread to wait
         /// until the object is in the signaled state.
         /// </summary>
-        SYNCHRONIZE = StandardAccessRights.Synchronize,
+        Synchronize = StandardAccessRights.Synchronize,
 
         /// <summary>
         /// Internally maps to KEY_READ.
         /// </summary>
-        GENERIC_READ = GenericAccessRights.Read,
+        GenericRead = GenericAccessRights.Read,
 
         /// <summary>
         /// Internally maps to KEY_WRITE.
         /// </summary>
-        GENERIC_WRITE = GenericAccessRights.Write,
+        GenericWrite = GenericAccessRights.Write,
 
         /// <summary>
         /// Internally maps to KEY_EXECUTE | KEY_CREATE_LINK.
         /// </summary>
-        GENERIC_EXECUTE = GenericAccessRights.Execute,
+        GenericExecute = GenericAccessRights.Execute,
 
         /// <summary>
         /// Internally maps to KEY_ALL_ACCESS.
         /// </summary>
-        GENERIC_ALL = GenericAccessRights.All
+        GenericAll = GenericAccessRights.All
     }
 }

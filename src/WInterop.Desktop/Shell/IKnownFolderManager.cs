@@ -35,14 +35,14 @@ namespace WInterop.Shell
 
         void RegisterFolder(
             [In, MarshalAs(UnmanagedType.LPStruct)] Guid rfid,
-            KNOWNFOLDER_DEFINITION pKFD);
+            KnownFolderDefinition pKFD);
 
         void UnregisterFolder(
             [In, MarshalAs(UnmanagedType.LPStruct)] Guid rfid);
 
         IKnownFolder FindFolderFromPath(
             [MarshalAs(UnmanagedType.LPWStr)] string pszPath,
-            FFFP_MODE mode);
+            FindFolderFromPathMode mode);
 
         IKnownFolder FindFolderFromIDList(
             ItemIdList pidl);
@@ -51,7 +51,7 @@ namespace WInterop.Shell
         string Redirect(
             [In, MarshalAs(UnmanagedType.LPStruct)] Guid rfid,
             WindowHandle hwnd,
-            KF_REDIRECT_FLAGS flags,
+            KnownFolderRedirectFlags flags,
             [MarshalAs(UnmanagedType.LPWStr)] string pszTargetPath,
             uint cFolders,
             SafeHandle pExclusion);

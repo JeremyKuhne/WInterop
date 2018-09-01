@@ -7,7 +7,7 @@
 
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.SafeString.Types;
+using WInterop.SafeString.Unsafe;
 
 namespace WInterop.SafeString
 {

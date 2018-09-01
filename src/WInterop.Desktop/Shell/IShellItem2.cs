@@ -28,23 +28,23 @@ namespace WInterop.Shell
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         new string GetDisplayName(
-            SIGDN sigdnName);
+            ShellItemDisplayNames sigdnName);
 
-        new SFGAOF GetAttributes(
-            SFGAOF sfgaoMask);
+        new Attributes GetAttributes(
+            Attributes sfgaoMask);
 
         new int Compare(
             IShellItem psi,
-            SICHINTF hint);
+            ShellItemCompareFlags hint);
 
         [return: MarshalAs(UnmanagedType.Interface)]
         object GetPropertyStore(
-            GETPROPERTYSTOREFLAGS flags,
+            GetPropertyStoreFlags flags,
             [In] ref Guid riid);
 
         [return: MarshalAs(UnmanagedType.Interface)]
         object GetPropertyStoreWithCreateObject(
-            GETPROPERTYSTOREFLAGS flags,
+            GetPropertyStoreFlags flags,
             [MarshalAs(UnmanagedType.Interface)] object punkCreateObject,
             [In] ref Guid riid);
 
@@ -52,41 +52,41 @@ namespace WInterop.Shell
         object GetPropertyStoreForKeys(
             SafeHandle rgKeys,
             uint cKeys,
-            GETPROPERTYSTOREFLAGS flags,
+            GetPropertyStoreFlags flags,
             [In] ref Guid riid);
 
         [return: MarshalAs(UnmanagedType.Interface)]
         object GetPropertyDescriptionList(
-            [In] ref PROPERTYKEY keyType,
+            [In] ref PropertyKey keyType,
             [In] ref Guid riid);
 
         void Update(
             IBindCtx pbc);
 
         PROPVARIANT GetProperty(
-            [In] ref PROPERTYKEY key);
+            [In] ref PropertyKey key);
 
         Guid GetCLSID(
-            [In] ref PROPERTYKEY key);
+            [In] ref PropertyKey key);
 
         FILETIME GetFileTime(
-            [In] ref PROPERTYKEY key);
+            [In] ref PropertyKey key);
 
         int GetInt32(
-            [In] ref PROPERTYKEY key);
+            [In] ref PropertyKey key);
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string GetString(
-            [In] ref PROPERTYKEY key);
+            [In] ref PropertyKey key);
 
         uint GetUInt32(
-            [In] ref PROPERTYKEY key);
+            [In] ref PropertyKey key);
 
         ulong GetUInt64(
-            [In] ref PROPERTYKEY key);
+            [In] ref PropertyKey key);
 
         [return: MarshalAs(UnmanagedType.Bool)]
         bool GetBool(
-            [In] ref PROPERTYKEY key);
+            [In] ref PropertyKey key);
     }
 }

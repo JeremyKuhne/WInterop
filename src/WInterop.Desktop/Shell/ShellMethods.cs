@@ -28,7 +28,7 @@ namespace WInterop.Shell
             return list;
         }
 
-        public static RegistryKeyHandle AssocQueryKey(ASSOCF flags, ASSOCKEY key, string association, string extraInfo)
+        public static RegistryKeyHandle AssocQueryKey(AssociationFlags flags, AssociationKey key, string association, string extraInfo)
         {
             HRESULT result = Imports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle);
             if (result != HRESULT.S_OK)
@@ -36,11 +36,11 @@ namespace WInterop.Shell
             return handle;
         }
 
-        public static string AssocQueryString(ASSOCF flags, ASSOCSTR @string, string association, string extraInfo)
+        public static string AssocQueryString(AssociationFlags flags, AssociationString @string, string association, string extraInfo)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
-                flags |= ASSOCF.NoTruncate;
+                flags |= AssociationFlags.NoTruncate;
 
                 HRESULT result;
                 uint count = buffer.CharCapacity;
@@ -61,7 +61,7 @@ namespace WInterop.Shell
         /// <summary>
         /// Get the path for the given known folder Guid.
         /// </summary>
-        public static string GetKnownFolderPath(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
+        public static string GetKnownFolderPath(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
         {
             HRESULT hr = Imports.SHGetKnownFolderPath(ref folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
             if (hr != HRESULT.S_OK)
@@ -73,7 +73,7 @@ namespace WInterop.Shell
         /// <summary>
         /// Get the Shell item id for the given known folder Guid.
         /// </summary>
-        public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KNOWN_FOLDER_FLAG flags = KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT)
+        public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
         {
             HRESULT hr = Imports.SHGetKnownFolderIDList(ref folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
             if (hr != HRESULT.S_OK)
@@ -85,7 +85,7 @@ namespace WInterop.Shell
         /// <summary>
         /// Get the name for a given Shell item ID.
         /// </summary>
-        public static string GetNameFromId(ItemIdList id, SIGDN form = SIGDN.NORMALDISPLAY)
+        public static string GetNameFromId(ItemIdList id, ShellItemDisplayNames form = ShellItemDisplayNames.NormalDisplay)
         {
             HRESULT hr = Imports.SHGetNameFromIDList(id, form, out string name);
             if (hr != HRESULT.S_OK)

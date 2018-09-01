@@ -27,13 +27,13 @@ namespace WInterop.Shell
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string GetDisplayName(
-            SIGDN sigdnName);
+            ShellItemDisplayNames sigdnName);
 
-        SFGAOF GetAttributes(
-            SFGAOF sfgaoMask);
+        Attributes GetAttributes(
+            Attributes sfgaoMask);
 
         int Compare(
             IShellItem psi,
-            SICHINTF hint);
+            ShellItemCompareFlags hint);
     }
 }

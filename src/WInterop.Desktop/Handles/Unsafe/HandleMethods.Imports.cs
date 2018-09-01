@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Handles.Unsafe;
-using WInterop.SafeString.Types;
+using WInterop.SafeString.Unsafe;
 
 namespace WInterop.Handles
 {

@@ -8,11 +8,10 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Security.Unsafe;
 using WInterop.Errors;
-using WInterop.Handles;
-using WInterop.SafeString.Types;
 using WInterop.Handles.Unsafe;
+using WInterop.SafeString.Unsafe;
+using WInterop.Security.Unsafe;
 
 namespace WInterop.Storage.Unsafe
 {

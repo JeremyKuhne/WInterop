@@ -57,7 +57,7 @@ namespace WInterop.Shell
         void GetAttributesOf(
             uint cidl,
             ItemIdList apidl,
-            ref SFGAOF rgfInOut);
+            ref Attributes rgfInOut);
 
         [return: MarshalAs(UnmanagedType.Interface)]
         object GetUIObjectOf(

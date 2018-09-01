@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Multimedia.Types
+namespace WInterop.Multimedia
 {
     // https://msdn.microsoft.com/en-us/library/dd743680.aspx
     [Flags]

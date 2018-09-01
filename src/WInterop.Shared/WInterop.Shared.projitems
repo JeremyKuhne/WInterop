@@ -125,10 +125,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Memory\MemoryDefines.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessAccessRights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessHandle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\PROCESS_MEMORY_COUNTERS_EX.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMemoryCountersExtended.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\SafeProcessHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ThreadHandle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SafeString\UNICODE_STRING.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SafeString\Unsafe\UNICODE_STRING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\Imports.cs" />
@@ -221,9 +221,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\DiskFreeSpace.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\DosMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\DriveType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\EFS_CERTIFICATE_BLOB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\ENCRYPTION_CERTIFICATE.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\ENCRYPTION_CERTIFICATE_LIST.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Unsafe\EFS_CERTIFICATE_BLOB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Unsafe\ENCRYPTION_CERTIFICATE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Unsafe\ENCRYPTION_CERTIFICATE_LIST.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\ExtendedDiskFreeSpace.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileAccessModes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileAccessRights.cs" />
@@ -236,7 +236,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileNotifyChange.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileStandardInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileSystemFeature.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FILETIME_.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileTime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileAccessInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileAlignmentInformation.cs" />
@@ -398,6 +398,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)Globalization\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Unsafe\" />
+    <Folder Include="$(MSBuildThisFileDirectory)SafeString\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)Synchronization\Unsafe\" />
   </ItemGroup>
   <ItemGroup>

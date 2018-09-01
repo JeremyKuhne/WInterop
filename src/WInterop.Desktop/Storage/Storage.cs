@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Storage.Unsafe;
 using WInterop.Handles;
-using WInterop.SafeString.Types;
+using WInterop.SafeString.Unsafe;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Security;

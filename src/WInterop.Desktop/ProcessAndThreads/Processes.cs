@@ -93,11 +93,11 @@ namespace WInterop.ProcessAndThreads
         /// Gets the specified process memory counters.
         /// </summary>
         /// <param name="process">The process to get memory info for for or null for the current process.</param>
-        public unsafe static PROCESS_MEMORY_COUNTERS_EX GetProcessMemoryInfo(SafeProcessHandle process = null)
+        public unsafe static ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle process = null)
         {
             if (process == null) process = GetCurrentProcess();
 
-            if (!Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(PROCESS_MEMORY_COUNTERS_EX)))
+            if (!Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(ProcessMemoryCountersExtended)))
                 throw Error.GetIoExceptionForLastError();
 
             return info;

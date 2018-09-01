@@ -33,7 +33,6 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Multimedia\Unsafe\" />
     <Folder Include="RemoteDesktop\Unsafe\" />
   </ItemGroup>
 </Project>

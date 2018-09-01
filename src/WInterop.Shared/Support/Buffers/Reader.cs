@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.SafeString.Types;
+using WInterop.SafeString.Unsafe;
 
 namespace WInterop.Support.Buffers
 {

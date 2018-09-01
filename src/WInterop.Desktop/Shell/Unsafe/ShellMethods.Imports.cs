@@ -11,6 +11,7 @@ using WInterop.Security;
 using WInterop.Errors;
 using WInterop.Registry;
 using WInterop.Shell;
+using WInterop.Shell.Unsafe;
 
 namespace WInterop.Shell
 {
@@ -25,7 +26,7 @@ namespace WInterop.Shell
             [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT SHGetKnownFolderPath(
                 ref Guid rfid,
-                KNOWN_FOLDER_FLAG dwFlags,
+                KnownFolderFlags dwFlags,
                 SafeHandle hToken,
                 out string ppszPath);
 
@@ -33,7 +34,7 @@ namespace WInterop.Shell
             [DllImport(Libraries.Shell32, ExactSpelling = true)]
             public static extern HRESULT SHGetKnownFolderIDList(
                 ref Guid rfid,
-                KNOWN_FOLDER_FLAG dwFlags,
+                KnownFolderFlags dwFlags,
                 SafeHandle hToken,
                 out ItemIdList ppidl);
 
@@ -41,7 +42,7 @@ namespace WInterop.Shell
             [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT SHGetNameFromIDList(
                 ItemIdList pidl,
-                SIGDN sigdnName,
+                ShellItemDisplayNames sigdnName,
                 out string ppszName);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773760.aspx
@@ -62,8 +63,8 @@ namespace WInterop.Shell
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773468.aspx
             [DllImport(Libraries.Shlwapi, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT AssocQueryKeyW(
-                ASSOCF flags,
-                ASSOCKEY key,
+                AssociationFlags flags,
+                AssociationKey key,
                 string pszAssoc,
                 string pszExtra,
                 out RegistryKeyHandle phkeyOut);
@@ -71,8 +72,8 @@ namespace WInterop.Shell
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773471.aspx
             [DllImport(Libraries.Shlwapi, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT AssocQueryStringW(
-                ASSOCF flags,
-                ASSOCSTR str,
+                AssociationFlags flags,
+                AssociationString str,
                 string pszAssoc,
                 string pszExtra,
                 SafeHandle pszOut,
@@ -81,8 +82,8 @@ namespace WInterop.Shell
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773473.aspx
             [DllImport(Libraries.Shlwapi, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern HRESULT AssocQueryStringByKeyW(
-                ASSOCF flags,
-                ASSOCSTR str,
+                AssociationFlags flags,
+                AssociationString str,
                 RegistryKeyHandle hkAssoc,
                 string pszExtra,
                 SafeHandle pszOut,

@@ -19,7 +19,7 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_ProgID()
         {
-            string value = ShellMethods.AssocQueryString(ASSOCF.NoUserSettings, ASSOCSTR.ProgId, ".txt", null);
+            string value = ShellMethods.AssocQueryString(AssociationFlags.NoUserSettings, AssociationString.ProgId, ".txt", null);
 
             if (!string.Equals(value, "txtfile"))
             {
@@ -31,7 +31,7 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_OpenCommand()
         {
-            string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.Command, ".txt", "open");
+            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.Command, ".txt", "open");
 
             // Example: "C:\Program Files (x86)\Notepad++\notepad++.exe" "%1"
             value.Should().Contain("%1");
@@ -40,7 +40,7 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_OpenCommandExecutable()
         {
-            string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.Executable, ".txt", "open");
+            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.Executable, ".txt", "open");
             // Example: C:\Program Files (x86)\Notepad++\notepad++.exe
             value.Should().EndWithEquivalent(".exe");
         }
@@ -48,14 +48,14 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_FriendlyDocName()
         {
-            string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.FriendlyDocName, ".txt", null);
+            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.FriendlyDocName, ".txt", null);
             value.Should().BeOneOf("TXT File", "Text Document");
         }
 
         [Fact]
         public void GetTextAssociation_FriendlyAppName()
         {
-            string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.FriendlyAppName, ".txt", null);
+            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.FriendlyAppName, ".txt", null);
             // Example: Notepad++ : a free (GNU) source code editor
             value.Should().StartWith("Notepad");
         }
@@ -63,7 +63,7 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_AppId()
         {
-            Action action = () => ShellMethods.AssocQueryString(ASSOCF.NoUserSettings, ASSOCSTR.AppId, ".txt", null);
+            Action action = () => ShellMethods.AssocQueryString(AssociationFlags.NoUserSettings, AssociationString.AppId, ".txt", null);
             // No application is associated with the specified file for this operation.
             action.Should().Throw<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x80070483));
         }
@@ -71,14 +71,14 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_ContentType()
         {
-            string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.ContentType, ".txt", null);
+            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.ContentType, ".txt", null);
             value.Should().Be(@"text/plain");
         }
 
         [Fact]
         public void GetTextAssociation_QuickTip()
         {
-            string value = ShellMethods.AssocQueryString(ASSOCF.None, ASSOCSTR.QuickTip, ".txt", null);
+            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.QuickTip, ".txt", null);
             value.Should().Be("prop:System.ItemTypeText;System.Size;System.DateModified");
 
             IPropertyDescriptionList list = ShellMethods.GetPropertyDescriptionListFromString(value);
@@ -94,7 +94,7 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_AppKey()
         {
-            RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.App, ".txt", null);
+            RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.App, ".txt", null);
 
             string name = Registry.QueryKeyName(key);
 
@@ -114,7 +114,7 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_BaseClassKey()
         {
-            RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.BaseClass, ".txt", null);
+            RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.BaseClass, ".txt", null);
 
             string name = Registry.QueryKeyName(key);
 
@@ -125,7 +125,7 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_ClassKey()
         {
-            RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.Class, ".txt", null);
+            RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.Class, ".txt", null);
 
             // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
             string name = Registry.QueryKeyName(key);
@@ -145,7 +145,7 @@ namespace ShellTests
         [Fact]
         public void GetTextAssociation_ShellExecClassKey()
         {
-            RegistryKeyHandle key = ShellMethods.AssocQueryKey(ASSOCF.None, ASSOCKEY.ShellExecClass, ".txt", null);
+            RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.ShellExecClass, ".txt", null);
 
             string name = Registry.QueryKeyName(key);
 

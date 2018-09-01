@@ -16,7 +16,7 @@ namespace WInterop.Shell
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IPropertyDescription
     {
-        PROPERTYKEY GetPropertyKey();
+        PropertyKey GetPropertyKey();
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string GetCanonicalName();
@@ -29,19 +29,19 @@ namespace WInterop.Shell
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string GetEditInvitation();
 
-        PROPDESC_TYPE_FLAGS GetTypeFlags(PROPDESC_TYPE_FLAGS mask);
+        PropertyTypeFlags GetTypeFlags(PropertyTypeFlags mask);
 
-        PROPDESC_VIEW_FLAGS GetViewFlags();
+        PropertyViewFlags GetViewFlags();
 
         uint GetDefaultColumnWidth();
 
-        PROPDESC_DISPLAYTYPE GetDisplayType();
+        PropertyDisplayType GetDisplayType();
 
-        SHCOLSTATE GetColumnState();
+        ColumnState GetColumnState();
 
-        PROPDESC_GROUPING_RANGE GetGroupingRange();
+        PropertyGroupingRange GetGroupingRange();
 
-        PROPDESC_RELATIVEDESCRIPTION_TYPE GetRelativeDescriptionType();
+        PropertyRelativeDescriptionType GetRelativeDescriptionType();
 
         void GetRelativeDescription(
             PROPVARIANT propvar1,
@@ -49,16 +49,16 @@ namespace WInterop.Shell
             [MarshalAs(UnmanagedType.LPWStr)] out string ppszDesc1,
             [MarshalAs(UnmanagedType.LPWStr)] out string ppszDesc2);
 
-        PROPDESC_SORTDESCRIPTION GetSortDescription();
+        PropertySortDescription GetSortDescription();
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string GetSortDescriptionLabel(
             [MarshalAs(UnmanagedType.Bool)] bool fDescending);
 
-        PROPDESC_AGGREGATION_TYPE GetAggregationType();
+        PropertyAggregationType GetAggregationType();
 
-        CONDITION_OPERATION GetConditionType(
-            out PROPDESC_CONDITION_TYPE pcontype);
+        ConditionOperation GetConditionType(
+            out PropertyConditionType pcontype);
 
         [return: MarshalAs(UnmanagedType.Interface)]
         object GetEnumTypeList(
@@ -70,7 +70,7 @@ namespace WInterop.Shell
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string FormatForDisplay(
             PROPVARIANT propvar,
-            PROPDESC_FORMAT_FLAGS pdfFlags);
+            PropertyFormatFlags pdfFlags);
 
         void IsValueCanonical(
             PROPVARIANT provar);

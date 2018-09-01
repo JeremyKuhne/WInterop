@@ -18,29 +18,29 @@ namespace WInterop.Shell
     {
         Guid GetId();
 
-        KF_CATEGORY GetCategory();
+        KnownFolderCategory GetCategory();
 
         [return: MarshalAs(UnmanagedType.Interface)]
         IShellItem GetShellItem(
-            KNOWN_FOLDER_FLAG dwFlags,
+            KnownFolderFlags dwFlags,
             [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string GetPath(
-            KNOWN_FOLDER_FLAG dwFlags);
+            KnownFolderFlags dwFlags);
 
         void SetPath(
-            KNOWN_FOLDER_FLAG dwFlags,
+            KnownFolderFlags dwFlags,
             [MarshalAs(UnmanagedType.LPWStr)] string pszPath);
 
         ItemIdList GetIDList(
-            KNOWN_FOLDER_FLAG dwFlags);
+            KnownFolderFlags dwFlags);
 
         Guid GetFolderType();
 
-        KF_REDIRECTION_CAPABILITIES GetRedirectionCapabilities();
+        KnownFolderRedirectionCapabilities GetRedirectionCapabilities();
 
         void GetFolderDefinition(
-            KNOWNFOLDER_DEFINITION pKFD);
+            KnownFolderDefinition pKFD);
     }
 }

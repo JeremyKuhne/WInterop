@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Security;
 
 namespace WInterop.Security
 {
@@ -15,46 +14,113 @@ namespace WInterop.Security
     [Flags]
     public enum PolicyAccessRights : uint
     {
-        POLICY_VIEW_LOCAL_INFORMATION             = 0x00000001,
-        POLICY_VIEW_AUDIT_INFORMATION             = 0x00000002,
-        POLICY_GET_PRIVATE_INFORMATION            = 0x00000004,
-        POLICY_TRUST_ADMIN                        = 0x00000008,
-        POLICY_CREATE_ACCOUNT                     = 0x00000010,
-        POLICY_CREATE_SECRET                      = 0x00000020,
-        POLICY_CREATE_PRIVILEGE                   = 0x00000040,
-        POLICY_SET_DEFAULT_QUOTA_LIMITS           = 0x00000080,
-        POLICY_SET_AUDIT_REQUIREMENTS             = 0x00000100,
-        POLICY_AUDIT_LOG_ADMIN                    = 0x00000200,
-        POLICY_SERVER_ADMIN                       = 0x00000400,
-        POLICY_LOOKUP_NAMES                       = 0x00000800,
-        POLICY_NOTIFICATION                       = 0x00001000,
-        POLICY_ALL_ACCESS = StandardAccessRights.Required
-            | POLICY_VIEW_LOCAL_INFORMATION
-            | POLICY_VIEW_AUDIT_INFORMATION
-            | POLICY_GET_PRIVATE_INFORMATION
-            | POLICY_TRUST_ADMIN
-            | POLICY_CREATE_ACCOUNT
-            | POLICY_CREATE_SECRET
-            | POLICY_CREATE_PRIVILEGE
-            | POLICY_SET_DEFAULT_QUOTA_LIMITS
-            | POLICY_SET_AUDIT_REQUIREMENTS
-            | POLICY_AUDIT_LOG_ADMIN
-            | POLICY_SERVER_ADMIN
-            | POLICY_LOOKUP_NAMES,
-        POLICY_READ = StandardAccessRights.Read
-            | POLICY_VIEW_AUDIT_INFORMATION
-            | POLICY_GET_PRIVATE_INFORMATION,
-        POLICY_WRITE = StandardAccessRights.Write
-            | POLICY_TRUST_ADMIN
-            | POLICY_CREATE_ACCOUNT
-            | POLICY_CREATE_SECRET
-            | POLICY_CREATE_PRIVILEGE
-            | POLICY_SET_DEFAULT_QUOTA_LIMITS
-            | POLICY_SET_AUDIT_REQUIREMENTS
-            | POLICY_AUDIT_LOG_ADMIN
-            | POLICY_SERVER_ADMIN,
-        POLICY_EXECUTE = StandardAccessRights.Execute
-            | POLICY_VIEW_LOCAL_INFORMATION
-            | POLICY_LOOKUP_NAMES
+        /// <summary>
+        /// [POLICY_VIEW_LOCAL_INFORMATION]
+        /// </summary>
+        ViewLocalInformation = 0x00000001,
+
+        /// <summary>
+        /// [POLICY_VIEW_AUDIT_INFORMATION]
+        /// </summary>
+        ViewAuditInformation = 0x00000002,
+
+        /// <summary>
+        /// [POLICY_GET_PRIVATE_INFORMATION]
+        /// </summary>
+        GetPrivateInformation = 0x00000004,
+
+        /// <summary>
+        /// [POLICY_TRUST_ADMIN]
+        /// </summary>
+        TrustAdmin = 0x00000008,
+
+        /// <summary>
+        /// [POLICY_CREATE_ACCOUNT]
+        /// </summary>
+        CreateAccount = 0x00000010,
+
+        /// <summary>
+        /// [POLICY_CREATE_SECRET]
+        /// </summary>
+        CreateSecret = 0x00000020,
+
+        /// <summary>
+        /// [POLICY_CREATE_PRIVILEGE]
+        /// </summary>
+        CreatePrivilege = 0x00000040,
+
+        /// <summary>
+        /// [POLICY_SET_DEFAULT_QUOTA_LIMITS]
+        /// </summary>
+        SetDefaultQuotaLimits = 0x00000080,
+
+        /// <summary>
+        /// [POLICY_SET_AUDIT_REQUIREMENTS]
+        /// </summary>
+        SetAuditRequirements = 0x00000100,
+
+        /// <summary>
+        /// [POLICY_AUDIT_LOG_ADMIN]
+        /// </summary>
+        AuditLogAdmin = 0x00000200,
+
+        /// <summary>
+        /// [POLICY_SERVER_ADMIN]
+        /// </summary>
+        ServerAdmin = 0x00000400,
+
+        /// <summary>
+        /// [POLICY_LOOKUP_NAMES]
+        /// </summary>
+        LookupNames = 0x00000800,
+
+        /// <summary>
+        /// [POLICY_NOTIFICATION]
+        /// </summary>
+        Notification = 0x00001000,
+
+        /// <summary>
+        /// [POLICY_ALL_ACCESS]
+        /// </summary>
+        AllAccess = StandardAccessRights.Required
+            | ViewLocalInformation
+            | ViewAuditInformation
+            | GetPrivateInformation
+            | TrustAdmin
+            | CreateAccount
+            | CreateSecret
+            | CreatePrivilege
+            | SetDefaultQuotaLimits
+            | SetAuditRequirements
+            | AuditLogAdmin
+            | ServerAdmin
+            | LookupNames,
+
+        /// <summary>
+        /// [POLICY_READ]
+        /// </summary>
+        Read = StandardAccessRights.Read
+            | ViewAuditInformation
+            | GetPrivateInformation,
+
+        /// <summary>
+        /// [POLICY_WRITE]
+        /// </summary>
+        Write = StandardAccessRights.Write
+            | TrustAdmin
+            | CreateAccount
+            | CreateSecret
+            | CreatePrivilege
+            | SetDefaultQuotaLimits
+            | SetAuditRequirements
+            | AuditLogAdmin
+            | ServerAdmin,
+
+        /// <summary>
+        /// [POLICY_EXECUTE]
+        /// </summary>
+        Execute = StandardAccessRights.Execute
+            | ViewLocalInformation
+            | LookupNames
     }
 }

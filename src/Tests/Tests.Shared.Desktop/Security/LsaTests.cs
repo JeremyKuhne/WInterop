@@ -17,7 +17,7 @@ namespace SecurityTests
         [Fact(Skip = "Need to conditionalize on admin access")]
         public void LsaOpenPolicy_StandardRead()
         {
-            LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.POLICY_READ);
+            LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.Read);
             handle.IsInvalid.Should().BeFalse();
         }
 

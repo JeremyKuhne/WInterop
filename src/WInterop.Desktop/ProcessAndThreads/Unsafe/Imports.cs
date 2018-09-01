@@ -42,7 +42,7 @@ namespace WInterop.ProcessAndThreads.Unsafe
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern bool K32GetProcessMemoryInfo(
             SafeProcessHandle process,
-            out PROCESS_MEMORY_COUNTERS_EX ppsmemCounters,
+            out ProcessMemoryCountersExtended ppsmemCounters,
             uint cb);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683215.aspx

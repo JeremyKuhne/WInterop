@@ -6,11 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Console;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Multimedia;
-using WInterop.Multimedia.Types;
 using WInterop.Windows;
 
 namespace HelloWin
@@ -66,7 +64,7 @@ namespace HelloWin
             switch (message)
             {
                 case MessageType.Create:
-                    MultimediaMethods.PlaySound(PlaySoundAlias.SystemHand, PlaySoundOptions.Async | PlaySoundOptions.NoDefault);
+                    Multimedia.PlaySound(PlaySoundAlias.SystemHand, PlaySoundOptions.Async | PlaySoundOptions.NoDefault);
                     return 0;
                 case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
