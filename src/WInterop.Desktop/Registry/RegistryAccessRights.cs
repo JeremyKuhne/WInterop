@@ -16,86 +16,119 @@ namespace WInterop.Registry
     [Flags]
     public enum RegistryAccessRights : uint
     {
-        KEY_QUERY_VALUE         = 0x0001,
-        KEY_SET_VALUE           = 0x0002,
-        KEY_CREATE_SUB_KEY      = 0x0004,
-        KEY_ENUMERATE_SUB_KEYS  = 0x0008,
-        KEY_NOTIFY              = 0x0010,
-        KEY_CREATE_LINK         = 0x0020,
+        /// <summary>
+        /// [KEY_QUERY_VALUE]
+        /// </summary>
+        QueryValue = 0x0001,
 
         /// <summary>
-        /// Forces accessing the 32 bit view of the registry.
+        /// [KEY_SET_VALUE]
         /// </summary>
-        KEY_WOW64_32KEY = 0x0200,
+        SetValue = 0x0002,
 
         /// <summary>
-        /// Forces accessing the 64 bit view of the registry.
+        /// [KEY_CREATE_SUB_KEY]
         /// </summary>
-        KEY_WOW64_64KEY         = 0x0100,
+        CreateSubkey = 0x0004,
 
         /// <summary>
-        /// Mask for the WOW_64 options.
+        /// [KEY_ENUMERATE_SUB_KEYS]
         /// </summary>
-        KEY_WOW64_RES           = 0x0300,
+        EnumerateSubkeys = 0x0008,
 
-        KEY_READ =
+        /// <summary>
+        /// [KEY_NOTIFY]
+        /// </summary>
+        Notify = 0x0010,
+
+        /// <summary>
+        /// [KEY_CREATE_LINK]
+        /// </summary>
+        CreateLink = 0x0020,
+
+        /// <summary>
+        /// Forces accessing the 32 bit view of the registry. [KEY_WOW64_32KEY]
+        /// </summary>
+        Wow6432Key = 0x0200,
+
+        /// <summary>
+        /// Forces accessing the 64 bit view of the registry. [KEY_WOW64_64KEY]
+        /// </summary>
+        Wow6464Key = 0x0100,
+
+        /// <summary>
+        /// [KEY_READ]
+        /// </summary>
+        Read =
             StandardAccessRights.Read
-            | KEY_QUERY_VALUE
-            | KEY_ENUMERATE_SUB_KEYS
-            | KEY_NOTIFY,
-        KEY_WRITE =
+            | QueryValue
+            | EnumerateSubkeys
+            | Notify,
+
+        /// <summary>
+        /// [KEY_WRITE]
+        /// </summary>
+        Write =
             StandardAccessRights.Write
-            | KEY_SET_VALUE
-            | KEY_CREATE_SUB_KEY,
-        KEY_EXECUTE = KEY_READ,
-        KEY_ALL_ACCESS = StandardAccessRights.Required
-            | KEY_QUERY_VALUE
-            | KEY_SET_VALUE
-            | KEY_CREATE_SUB_KEY
-            | KEY_ENUMERATE_SUB_KEYS
-            | KEY_NOTIFY
-            | KEY_CREATE_LINK,
+            | SetValue
+            | CreateSubkey,
+
+        /// <summary>
+        /// [KEY_EXECUTE]
+        /// </summary>
+        Execute = Read,
+
+        /// <summary>
+        /// [KEY_ALL_ACCESS]
+        /// </summary>
+        AllAccess = StandardAccessRights.Required
+            | QueryValue
+            | SetValue
+            | CreateSubkey
+            | EnumerateSubkeys
+            | Notify
+            | CreateLink,
 
         /// <summary>
         /// The right to delete the object.
         /// </summary>
-        DELETE = StandardAccessRights.Delete,
+        Delete = StandardAccessRights.Delete,
 
         /// <summary>
         /// The right to read the information in the object's security descriptor.
         /// Doesn't include system access control list info (SACL).
         /// </summary>
-        READ_CONTROL = StandardAccessRights.ReadControl,
+        ReadControl = StandardAccessRights.ReadControl,
 
         /// <summary>
         /// The right to modify the discretionary access control list (DACL) in the
         /// object's security descriptor.
         /// </summary>
-        WRITE_DAC = StandardAccessRights.WriteDac,
+        WriteDac = StandardAccessRights.WriteDac,
 
         /// <summary>
         /// The right to change the owner in the object's security descriptor.
         /// </summary>
-        WRITE_OWNER = StandardAccessRights.WriteOwner,
+        WriteOwner = StandardAccessRights.WriteOwner,
 
         /// <summary>
         /// Internally maps to KEY_READ.
         /// </summary>
-        GENERIC_READ = GenericAccessRights.Read,
+        GenericRead = GenericAccessRights.Read,
 
         /// <summary>
         /// Internally maps to KEY_WRITE.
         /// </summary>
-        GENERIC_WRITE = GenericAccessRights.Write,
+        GenericWrite = GenericAccessRights.Write,
 
         /// <summary>
         /// Internally maps to KEY_EXECUTE | KEY_CREATE_LINK.
         /// </summary>
-        GENERIC_EXECUTE = GenericAccessRights.Execute,
+        GenericExecute = GenericAccessRights.Execute,
 
         /// <summary>
         /// Internally maps to KEY_ALL_ACCESS.
         /// </summary>
-        GENERIC_ALL = GenericAccessRights.All
+        GenericAll = GenericAccessRights.All
     }
 }

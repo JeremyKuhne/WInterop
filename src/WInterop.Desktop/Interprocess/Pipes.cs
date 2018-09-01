@@ -7,10 +7,11 @@
 
 using Microsoft.Win32.SafeHandles;
 using WInterop.Errors;
+using WInterop.Interprocess.Unsafe;
 
-namespace WInterop.Pipes
+namespace WInterop.Interprocess
 {
-    public static partial class PipeMethods
+    public static partial class Pipes
     {
         public unsafe static void CreatePipe(out SafeFileHandle readPipe, out SafeFileHandle writePipe, uint bufferSize = 0)
         {

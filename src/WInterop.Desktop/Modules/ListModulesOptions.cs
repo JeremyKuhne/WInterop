@@ -9,9 +9,9 @@ namespace WInterop.Modules
 {
     public enum ListModulesOptions : uint
     {
-        LIST_MODULES_DEFAULT = 0x0,
-        LIST_MODULES_32BIT = 0x1,
-        LIST_MODULES_64BIT = 0x2,
-        LIST_MODULES_ALL = 0x3
+        Default = 0x0,
+        _32Bit = 0x1,
+        _64Bit = 0x2,
+        All = 0x3
     }
 }

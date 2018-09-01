@@ -7,7 +7,7 @@
 
 using WInterop.Handles;
 
-namespace WInterop.Pipes.Types
+namespace WInterop.Interprocess
 {
     public class PipeHandle : CloseHandle
     {

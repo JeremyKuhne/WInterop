@@ -13,21 +13,21 @@ namespace WInterop.Gdi
         /// <summary>
         /// (WHITE_PEN)
         /// </summary>
-        White = 6,
+        White = StockObject.WhitePen,
 
         /// <summary>
         /// (BLACK_PEN)
         /// </summary>
-        Black = 7,
+        Black = StockObject.BlackPen,
 
         /// <summary>
         /// (NULL_PEN)
         /// </summary>
-        Null = 8,
+        Null = StockObject.NullPen,
 
         /// <summary>
         /// (DC_PEN)
         /// </summary>
-        DeviceContext = 19
+        DeviceContext = StockObject.DeviceContextPen
     }
 }

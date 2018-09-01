@@ -10,7 +10,7 @@ namespace WInterop.Gdi
     // https://msdn.microsoft.com/en-us/library/dd144848.aspx
     public enum ArcDirection : int
     {
-        AD_COUNTERCLOCKWISE = 1,
-        AD_CLOCKWISE        = 2
+        CounterClockwise = 1,
+        Clockwise        = 2
     }
 }

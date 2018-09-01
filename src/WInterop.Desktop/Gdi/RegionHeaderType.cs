@@ -10,6 +10,6 @@ namespace WInterop.Gdi
     // https://msdn.microsoft.com/en-us/library/dd162941.aspx
     public enum RegionHeaderType : uint
     {
-        RDH_RECTANGLES  = 1
+        Rectangles  = 1
     }
 }

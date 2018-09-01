@@ -13,14 +13,14 @@ namespace WInterop.Gdi
     [Flags]
     public enum TextMetricFlags : uint
     {
-        NTM_ITALIC          = 0x00000001,
-        NTM_BOLD            = 0x00000020,
-        NTM_REGULAR         = 0x00000040,
-        NTM_NONNEGATIVE_AC  = 0x00010000,
-        NTM_PS_OPENTYPE     = 0x00020000,
-        NTM_TT_OPENTYPE     = 0x00040000,
-        NTM_MULTIPLEMASTER  = 0x00080000,
-        NTM_TYPE1           = 0x00100000,
-        NTM_DSIG            = 0x00200000
+        Italic = 0x00000001,
+        Bold = 0x00000020,
+        Regular = 0x00000040,
+        NonNegativeAC = 0x00010000,
+        PostScript = 0x00020000,
+        TrueType = 0x00040000,
+        MultipleMaster = 0x00080000,
+        Type1 = 0x00100000,
+        DigitalSignature = 0x00200000
     }
 }

@@ -10,8 +10,8 @@ namespace WInterop.Gdi
     // https://msdn.microsoft.com/en-us/library/dd145060.aspx
     public enum WorldTransformMode : uint
     {
-        MWT_IDENTITY       = 1,
-        MWT_LEFTMULTIPLY   = 2,
-        MWT_RIGHTMULTIPLY  = 3
+        Identity       = 1,
+        LeftMultiply   = 2,
+        RightMultiply  = 3
     }
 }

@@ -9,12 +9,12 @@ namespace WInterop.Gdi
 {
     public enum DeviceTechnology : int
     {
-        DT_PLOTTER         = 0,
-        DT_RASDISPLAY      = 1,
-        DT_RASPRINTER      = 2,
-        DT_RASCAMERA       = 3,
-        DT_CHARSTREAM      = 4,
-        DT_METAFILE        = 5,
-        DT_DISPFILE        = 6
+        Plotter = 0,
+        RasterDisplay = 1,
+        RasterPrinter = 2,
+        RasterCamera = 3,
+        CharacterStream = 4,
+        Metafile = 5,
+        DisplayFile = 6
     }
 }

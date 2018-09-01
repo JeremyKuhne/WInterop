@@ -10,23 +10,26 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Modules
 {
+    /// <summary>
+    /// [MODULEINFO]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684229.aspx
     [StructLayout(LayoutKind.Sequential)]
-    public struct MODULEINFO
+    public readonly struct ModuleInfo
     {
         /// <summary>
         /// Load address of the module- equivalent to HMODULE's value.
         /// </summary>
-        public IntPtr lpBaseOfDll;
+        public readonly IntPtr BaseOfDll;
 
         /// <summary>
         /// Size of the linear space that the module occupies, in bytes. From the PE header.
         /// </summary>
-        public uint SizeOfImage;
+        public readonly uint SizeOfImage;
 
         /// <summary>
         /// The entry point for the module. From the PE header.
         /// </summary>
-        public IntPtr EntryPoint;
+        public readonly IntPtr EntryPoint;
     }
 }

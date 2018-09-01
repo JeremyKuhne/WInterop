@@ -72,7 +72,7 @@ namespace WInterop.Modules
             public static extern bool K32GetModuleInformation(
                 SafeProcessHandle hProcess,
                 ModuleInstance hModule,
-                out MODULEINFO lpmodinfo,
+                out ModuleInfo lpmodinfo,
                 uint cb);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683195.aspx
@@ -99,7 +99,7 @@ namespace WInterop.Modules
         public static ModuleInstance GetModuleHandle(IntPtr address)
         {
             if (!Imports.GetModuleHandleExW(
-                GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                GetModuleFlags.FromAddress | GetModuleFlags.UnchangedRefCount,
                 address,
                 out var handle))
                 throw Error.GetIoExceptionForLastError();
@@ -112,7 +112,7 @@ namespace WInterop.Modules
         /// </summary>
         public static ModuleInstance GetModuleHandle(string moduleName)
         {
-            return new ModuleInstance(GetModuleHandleHelper(moduleName, GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT));
+            return new ModuleInstance(GetModuleHandleHelper(moduleName, GetModuleFlags.UnchangedRefCount));
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace WInterop.Modules
         /// </summary>
         public static ModuleInstance GetModuleHandleAndPin(string moduleName)
         {
-            return new ModuleInstance(GetModuleHandleHelper(moduleName, GetModuleFlags.GET_MODULE_HANDLE_EX_FLAG_PIN));
+            return new ModuleInstance(GetModuleHandleHelper(moduleName, GetModuleFlags.Pin));
         }
 
         /// <summary>
@@ -155,11 +155,11 @@ namespace WInterop.Modules
         /// </summary>
         /// <param name="process">The process for the given module or null for the current process.</param>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
-        public unsafe static MODULEINFO GetModuleInfo(ModuleInstance module, SafeProcessHandle process = null)
+        public unsafe static ModuleInfo GetModuleInfo(ModuleInstance module, SafeProcessHandle process = null)
         {
             if (process == null) process = Processes.GetCurrentProcess();
 
-            if (!Imports.K32GetModuleInformation(process, module, out var info, (uint)sizeof(MODULEINFO)))
+            if (!Imports.K32GetModuleInformation(process, module, out var info, (uint)sizeof(ModuleInfo)))
                 throw Error.GetIoExceptionForLastError();
 
             return info;
@@ -237,7 +237,7 @@ namespace WInterop.Modules
                 {
                     buffer.EnsureByteCapacity(sizeNeeded);
                     if (!Imports.K32EnumProcessModulesEx(process, buffer, (uint)buffer.ByteCapacity,
-                        out sizeNeeded, ListModulesOptions.LIST_MODULES_DEFAULT))
+                        out sizeNeeded, ListModulesOptions.Default))
                         throw Error.GetIoExceptionForLastError();
                 } while (sizeNeeded > buffer.ByteCapacity);
 

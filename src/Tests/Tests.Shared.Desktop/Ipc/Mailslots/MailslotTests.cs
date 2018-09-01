@@ -8,19 +8,19 @@
 using FluentAssertions;
 using Tests.Support;
 using WInterop.Storage;
-using WInterop.Ipc;
+using WInterop.Interprocess;
 using Xunit;
 
-namespace IpcTests
+namespace InterprocessTests
 {
-    public class Mailslots
+    public class Basic
     {
         [Fact]
         public void BasicCreateMailslot()
         {
             const string mailslotName = @"\\.\mailslot\basiccreatemailslottest";
 
-            using (var handle = MailslotMethods.CreateMailslot(mailslotName))
+            using (var handle = Mailslots.CreateMailslot(mailslotName))
             {
                 handle.IsInvalid.Should().BeFalse();
 
@@ -41,7 +41,7 @@ namespace IpcTests
         {
             const string mailslotName = @"\\.\mailslot\asynccreatemailslottest";
 
-            using (var handle = MailslotMethods.CreateMailslot(mailslotName))
+            using (var handle = Mailslots.CreateMailslot(mailslotName))
             {
                 handle.IsInvalid.Should().BeFalse();
 
@@ -61,13 +61,13 @@ namespace IpcTests
         [Fact]
         public void BasicGetInfo()
         {
-            using (var handle = MailslotMethods.CreateMailslot(
+            using (var handle = Mailslots.CreateMailslot(
                 name: @"\\?\mailslot\basicgetinfotest",
                 maxMessageSize: 256,
                 readTimeout: 1000))
             {
                 handle.IsInvalid.Should().BeFalse();
-                var info = MailslotMethods.GetMailslotInfo(handle);
+                var info = Mailslots.GetMailslotInfo(handle);
                 info.MessageCount.Should().Be(0);
                 info.NextSize.Should().Be(uint.MaxValue);
                 info.MaxMessageSize.Should().Be(256);
@@ -78,16 +78,16 @@ namespace IpcTests
         [Fact]
         public void BasicGetSetInfoDefaults()
         {
-            using (var handle = MailslotMethods.CreateMailslot(@"\\?\mailslot\basicgetsetinfodefaultstest"))
+            using (var handle = Mailslots.CreateMailslot(@"\\?\mailslot\basicgetsetinfodefaultstest"))
             {
                 handle.IsInvalid.Should().BeFalse();
-                var info = MailslotMethods.GetMailslotInfo(handle);
+                var info = Mailslots.GetMailslotInfo(handle);
                 info.MessageCount.Should().Be(0);
                 info.NextSize.Should().Be(uint.MaxValue);
                 info.MaxMessageSize.Should().Be(0);
                 info.ReadTimeout.Should().Be(0);
-                MailslotMethods.SetMailslotTimeout(handle, 100);
-                MailslotMethods.GetMailslotInfo(handle).ReadTimeout.Should().Be(100);
+                Mailslots.SetMailslotTimeout(handle, 100);
+                Mailslots.GetMailslotInfo(handle).ReadTimeout.Should().Be(100);
             }
         }
 
@@ -95,7 +95,7 @@ namespace IpcTests
         public void BasicWriteMailSlot()
         {
             const string mailslotName = @"\\?\mailslot\basicwritemailslottest";
-            using (var mailslotHandle = MailslotMethods.CreateMailslot(mailslotName))
+            using (var mailslotHandle = Mailslots.CreateMailslot(mailslotName))
             {
                 FileHelper.WriteAllText(mailslotName, "basicwritetest");
             }
@@ -105,7 +105,7 @@ namespace IpcTests
         public void BasicReadMailslot()
         {
             const string mailslotName = @"\\?\mailslot\basicreadmailslottest";
-            using (var mailslotHandle = MailslotMethods.CreateMailslot(mailslotName))
+            using (var mailslotHandle = Mailslots.CreateMailslot(mailslotName))
             {
                 string message = FileHelper.ReadAllText(mailslotName);
                 message.Should().BeNullOrEmpty();

@@ -13,14 +13,13 @@ namespace WInterop.Registry
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff553373.aspx
     public enum KeyInformationClass
     {
-        KeyBasicInformation = 0,
-        KeyNodeInformation = 1,
-        KeyFullInformation = 2,
-        KeyNameInformation = 3,
-        KeyCachedInformation = 4,
-        KeyFlagsInformation = 5,
-        KeyVirtualizationInformation = 6,
-        KeyHandleTagsInformation = 7,
-        MaxKeyInfoClass = 8
+        BasicInformation = 0,
+        NodeInformation = 1,
+        FullInformation = 2,
+        NameInformation = 3,
+        CachedInformation = 4,
+        FlagsInformation = 5,
+        VirtualizationInformation = 6,
+        HandleTagsInformation = 7
     }
 }

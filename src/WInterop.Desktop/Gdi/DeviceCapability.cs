@@ -13,69 +13,70 @@ namespace WInterop.Gdi
         /// <summary>
         /// Device driver version.
         /// </summary>
-        DRIVERVERSION = 0,
+        DriverVersion = 0,
 
         /// <summary>
         /// Device classification.
         /// </summary>
-        TECHNOLOGY = 2,
+        Technology = 2,
 
         /// <summary>
         /// Horizontal size in millimeters.
         /// </summary>
-        HORZSIZE = 4,
+        HorizontalSize = 4,
 
         /// <summary>
         /// Vertical size in millimeters.
         /// </summary>
-        VERTSIZE = 6,
+        VerticalSize = 6,
 
         /// <summary>
         /// Horizontal width in pixels.
         /// </summary>
-        HORZRES = 8,
+        HorzontalResolution = 8,
 
         /// <summary>
         /// Vertical height in pixels.
         /// </summary>
-        VERTRES = 10,
+        VerticalResolution = 10,
 
         /// <summary>
         /// Number of bits per pixel.
         /// </summary>
-        BITSPIXEL = 12,
-        PLANES = 14,
-        NUMBRUSHES = 16,
-        NUMPENS = 18,
-        NUMMARKERS = 20,
-        NUMFONTS = 22,
-        NUMCOLORS = 24,
-        PDEVICESIZE = 26,
-        CURVECAPS = 28,
-        LINECAPS = 30,
-        POLYGONALCAPS = 32,
-        TEXTCAPS = 34,
-        CLIPCAPS = 36,
-        RASTERCAPS = 38,
-        ASPECTX = 40,
-        ASPECTY = 42,
-        ASPECTXY = 44,
-        LOGPIXELSX = 88,
-        LOGPIXELSY = 90,
-        SIZEPALETTE = 104,
-        NUMRESERVED = 106,
-        COLORRES = 108,
-        PHYSICALWIDTH = 110,
-        PHYSICALHEIGHT = 111,
-        PHYSICALOFFSETX = 112,
-        PHYSICALOFFSETY = 113,
-        SCALINGFACTORX = 114,
-        SCALINGFACTORY = 115,
-        VREFRESH = 116,
-        DESKTOPVERTRES = 117,
-        DESKTOPHORZRES = 118,
-        BLTALIGNMENT = 119,
-        SHADEBLENDCAPS = 120,
-        COLORMGMTCAPS = 121
+        BitsPerPixel = 12,
+
+        Planes = 14,
+        NumberOfBrushes = 16,
+        NumberOfPens = 18,
+        NumberOfMarkers = 20,
+        NumberOfFonts = 22,
+        NumberOfColors = 24,
+        PDeviceSize = 26,
+        CurveCapabilities = 28,
+        LineCapabilities = 30,
+        PolygonalCapabilities = 32,
+        TextCapabilities = 34,
+        ClipCapabilities = 36,
+        RasterCapabilities = 38,
+        AspectX = 40,
+        AspectY = 42,
+        AspectXY = 44,
+        LogicalPixelsX = 88,
+        LogicalPixelsY = 90,
+        SizePalette = 104,
+        NumberOfReserved = 106,
+        ColorResolution = 108,
+        PhysicalWidth = 110,
+        PhysicalHeight = 111,
+        PhysicalOffsetX = 112,
+        PhysicalOffsetY = 113,
+        ScalingFactorX = 114,
+        ScalingFactorY = 115,
+        VerticalRefresh = 116,
+        DesktopVerticalResolution = 117,
+        DesktopHorizontalResolution = 118,
+        BlitAlignment = 119,
+        ShadeBlendCapabilities = 120,
+        ColorManagementCapabilities = 121
     }
 }

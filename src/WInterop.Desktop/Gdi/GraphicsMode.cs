@@ -10,7 +10,7 @@ namespace WInterop.Gdi
     // https://msdn.microsoft.com/en-us/library/dd144892.aspx
     public enum GraphicsMode : int
     {
-        GM_COMPATIBLE      = 1,
-        GM_ADVANCED        = 2
+        Compatible      = 1,
+        Advanced        = 2
     }
 }

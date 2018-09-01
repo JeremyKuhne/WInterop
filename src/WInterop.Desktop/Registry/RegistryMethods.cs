@@ -21,7 +21,7 @@ namespace WInterop.Registry
             {
                 NTSTATUS status;
                 uint resultLength;
-                while ((status = Imports.NtQueryKey(key, KeyInformationClass.KeyNameInformation, buffer.VoidPointer, (uint)buffer.ByteCapacity, out resultLength))
+                while ((status = Imports.NtQueryKey(key, KeyInformationClass.NameInformation, buffer.VoidPointer, (uint)buffer.ByteCapacity, out resultLength))
                     == NTSTATUS.STATUS_BUFFER_TOO_SMALL || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
                 {
                     buffer.EnsureByteCapacity(resultLength);
@@ -40,7 +40,7 @@ namespace WInterop.Registry
         public static RegistryKeyHandle OpenKey(
             RegistryKeyHandle key,
             string subKeyName,
-            RegistryAccessRights rights = RegistryAccessRights.KEY_READ)
+            RegistryAccessRights rights = RegistryAccessRights.Read)
         {
             WindowsError result = Imports.RegOpenKeyExW(key, subKeyName, 0, rights, out RegistryKeyHandle subKey);
             if (result != WindowsError.ERROR_SUCCESS)

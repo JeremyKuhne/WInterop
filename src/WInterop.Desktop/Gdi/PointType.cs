@@ -14,10 +14,10 @@ namespace WInterop.Gdi
         // we'll combine and create our own values for ease of use.
         // PT_CLOSEFIGURE     = 0x01,
 
-        PT_LINETO           = 0x02,
-        PT_LINETOANDCLOSE   = 0x03,
-        PT_BEZIERTO         = 0x04,
-        PT_BEZIERTOANDCLOSE = 0x05,
-        PT_MOVETO           = 0x06
+        LineTo           = 0x02,
+        LineToAndClose   = 0x03,
+        BezierTo         = 0x04,
+        BezierToAndClose = 0x05,
+        MoveTo           = 0x06
     }
 }

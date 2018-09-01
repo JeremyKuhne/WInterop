@@ -7,7 +7,7 @@
 
 using WInterop.Handles;
 
-namespace WInterop.Ipc.Types
+namespace WInterop.Interprocess
 {
     /// <summary>
     /// Safe handle for a mailslot

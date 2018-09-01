@@ -38,7 +38,7 @@ namespace ModuleTests
         public void LoadAsResource()
         {
             using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(),
-                LoadLibraryFlags.LOAD_LIBRARY_AS_IMAGE_RESOURCE | LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE))
+                LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
             {
                 handle.IsInvalid.Should().BeFalse();
             }
@@ -56,7 +56,7 @@ namespace ModuleTests
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
                 using (var handle = ModuleMethods.LoadLibrary(longPathLibrary,
-                    LoadLibraryFlags.LOAD_LIBRARY_AS_IMAGE_RESOURCE | LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE))
+                    LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
                 {
                     handle.IsInvalid.Should().BeFalse();
                 }
@@ -67,7 +67,7 @@ namespace ModuleTests
         public void LoadString()
         {
             using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(),
-                LoadLibraryFlags.LOAD_LIBRARY_AS_IMAGE_RESOURCE | LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE))
+                LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
             {
                 string resource = Windows.LoadString(handle, 101);
                 resource.Should().Be("Test");
@@ -85,7 +85,7 @@ namespace ModuleTests
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
                 using (var handle = ModuleMethods.LoadLibrary(longPathLibrary,
-                    LoadLibraryFlags.LOAD_LIBRARY_AS_IMAGE_RESOURCE | LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE))
+                    LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
                 {
                     string resource = Windows.LoadString(handle, 101);
                     resource.Should().Be("Test");
@@ -112,7 +112,7 @@ namespace ModuleTests
                 string longPathLibrary = Paths.Combine(longPath, "LoadAsBinaryFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
-                using (var handle = ModuleMethods.LoadLibrary(longPathLibrary, LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH))
+                using (var handle = ModuleMethods.LoadLibrary(longPathLibrary, LoadLibraryFlags.LoadWithAlteredSearchPath))
                 {
                     handle.IsInvalid.Should().BeFalse();
                 }
@@ -125,7 +125,7 @@ namespace ModuleTests
         [Fact]
         public void LoadFunction()
         {
-            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH))
+            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LoadWithAlteredSearchPath))
             {
                 handle.IsInvalid.Should().BeFalse();
                 var doubler = ModuleMethods.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
@@ -158,7 +158,7 @@ namespace ModuleTests
         [Fact]
         public void LoadFunctionStandard()
         {
-            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH))
+            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LoadWithAlteredSearchPath))
             {
                 handle.IsInvalid.Should().BeFalse();
                 var doubler = ModuleMethods.GetFunctionDelegate<DoubleDelegateStandard>(handle, "DoubleStdCall");
@@ -341,7 +341,7 @@ namespace ModuleTests
             var module = ModuleMethods.GetModuleHandle(null);
             module.Should().NotBe(ModuleTypes.ModuleInstance.Null);
             var info = ModuleMethods.GetModuleInfo(module);
-            info.lpBaseOfDll.Should().Be(module.DangerousGetHandle());
+            info.BaseOfDll.Should().Be(module.DangerousGetHandle());
         }
 
         [Fact]

@@ -21,8 +21,8 @@ namespace GdiTests
         public void EnumerateDisplayDevices()
         {
             var devices = Gdi.EnumerateDisplayDevices(null).ToArray();
-            devices.Should().Contain(d => (d.StateFlags & (DeviceState.DISPLAY_DEVICE_ACTIVE | DeviceState.DISPLAY_DEVICE_PRIMARY_DEVICE)) ==
-                (DeviceState.DISPLAY_DEVICE_ACTIVE | DeviceState.DISPLAY_DEVICE_PRIMARY_DEVICE));
+            devices.Should().Contain(d => (d.StateFlags & (DeviceState.Active | DeviceState.PrimaryDevice)) ==
+                (DeviceState.Active | DeviceState.PrimaryDevice));
         }
 
         [Fact]
@@ -64,8 +64,8 @@ namespace GdiTests
             // Null here should be the entire screen
             DeviceContext context = Gdi.GetDeviceContext(default);
             context.IsInvalid.Should().BeFalse();
-            int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HORZRES);
-            int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VERTRES);
+            int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HorzontalResolution);
+            int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VerticalResolution);
         }
 
         [Fact]
@@ -74,8 +74,8 @@ namespace GdiTests
             // Null here should be the entire screen
             DeviceContext context = Gdi.GetWindowDeviceContext(default);
             context.IsInvalid.Should().BeFalse();
-            int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HORZRES);
-            int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VERTRES);
+            int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HorzontalResolution);
+            int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VerticalResolution);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace GdiTests
                 regular.FontAttributes.EnumLogicalFontEx.FullName.CreateString().Should().Be("Arial");
                 regular.FontAttributes.EnumLogicalFontEx.Style.CreateString().Should().Be("Regular");
                 regular.FontAttributes.EnumLogicalFontEx.Script.CreateString().Should().Be("Western");
-                regular.TextMetrics.TextMetrics.Flags.Should().Be(TextMetricFlags.NTM_REGULAR | TextMetricFlags.NTM_TT_OPENTYPE | TextMetricFlags.NTM_DSIG);
+                regular.TextMetrics.TextMetrics.Flags.Should().Be(TextMetricFlags.Regular | TextMetricFlags.TrueType | TextMetricFlags.DigitalSignature);
                 regular.TextMetrics.TextMetrics.PitchAndFamily.PitchTypes.Should().Be(FontPitchTypes.VariablePitch | FontPitchTypes.TrueType | FontPitchTypes.Vector);
                 regular.TextMetrics.TextMetrics.PitchAndFamily.Family.Should().Be(FontFamilyType.Swiss);
                 regular.TextMetrics.FontSignature.UnicodeSubsetsOne.Should().Be(

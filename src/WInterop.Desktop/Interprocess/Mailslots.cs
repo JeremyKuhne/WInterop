@@ -6,44 +6,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Runtime.InteropServices;
-using WInterop.Security.Unsafe;
-using WInterop.Ipc.Types;
 using WInterop.Errors;
+using WInterop.Interprocess.Unsafe;
 
-namespace WInterop.Ipc
+namespace WInterop.Interprocess
 {
-    public static partial class MailslotMethods
+    public static partial class Mailslots
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365147.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern SafeMailslotHandle CreateMailslotW(
-                string lpName,
-                uint nMaxMessageSize,
-                uint lReadTimeout,
-                SECURITY_ATTRIBUTES* lpSecurityAttributes);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365435.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public unsafe static extern bool GetMailslotInfo(
-                SafeMailslotHandle hMailslot,
-                uint* lpMaxMessageSize,
-                uint* lpNextSize,
-                uint* lpMessageCount,
-                uint* lpReadTimeout);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365786.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public unsafe static extern bool SetMailslotInfo(
-                SafeMailslotHandle hMailslot,
-                uint lReadTimeout);
-        }
-
         /// <summary>
         /// Create a mailslot.
         /// </summary>
