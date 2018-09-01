@@ -5,15 +5,13 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
 namespace WInterop.Storage
 {
     /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh449407.aspx">CopyFile2ProgressRoutine</a> callback used by CopyFile2.
+    /// [FILE_DISPOSITION_INFORMATION_EX]
     /// </summary>
-    public delegate CopyFile2MessageAction CopyFile2ProgressRoutine(
-        IntPtr pMessage,
-        IntPtr pvCallbackContext
-        );
+    public struct FileDispositionInformationExtended
+    {
+        public FileDispositionFlags Flags;
+    }
 }

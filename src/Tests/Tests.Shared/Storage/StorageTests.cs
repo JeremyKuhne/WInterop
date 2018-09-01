@@ -124,8 +124,8 @@ namespace Tests.FileManagementTests
         public void GetFileAttributesExBasic()
         {
             string tempPath = Storage.GetTempPath();
-            var info = Storage.GetFileAttributesEx(tempPath);
-            info.dwFileAttributes.Should().HaveFlag(FileAttributes.Directory);
+            var info = Storage.GetFileAttributesExtended(tempPath);
+            info.FileAttributes.Should().HaveFlag(FileAttributes.Directory);
         }
 
         [Fact]
@@ -170,15 +170,15 @@ namespace Tests.FileManagementTests
                 using (var directory = Storage.CreateDirectoryHandle(tempPath))
                 {
                     var info = Storage.GetFileStandardInformation(directory);
-                    info.Directory.Should().BeTrue();
+                    info.Directory.IsTrue.Should().BeTrue();
                 }
 
                 using (var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew))
                 {
                     var info = Storage.GetFileStandardInformation(file);
-                    info.Directory.Should().BeFalse();
+                    info.Directory.IsTrue.Should().BeFalse();
                     info.NumberOfLinks.Should().Be(1);
-                    info.DeletePending.Should().BeFalse();
+                    info.DeletePending.IsTrue.Should().BeFalse();
                     info.AllocationSize.Should().Be(0);
                     info.EndOfFile.Should().Be(0);
                 }
@@ -196,13 +196,13 @@ namespace Tests.FileManagementTests
                 using (var directory = Storage.CreateDirectoryHandle(tempPath))
                 {
                     var directoryInfo = Storage.GetFileBasicInformation(directory);
-                    directoryInfo.Attributes.Should().HaveFlag(FileAttributes.Directory);
+                    directoryInfo.FileAttributes.Should().HaveFlag(FileAttributes.Directory);
 
                     using (var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew))
                     {
                         var fileInfo = Storage.GetFileBasicInformation(file);
-                        fileInfo.Attributes.Should().NotHaveFlag(FileAttributes.Directory);
-                        fileInfo.CreationTimeUtc.Should().BeAfter(directoryInfo.CreationTimeUtc);
+                        fileInfo.FileAttributes.Should().NotHaveFlag(FileAttributes.Directory);
+                        fileInfo.CreationTime.ToDateTimeUtc().Should().BeAfter(directoryInfo.CreationTime.ToDateTimeUtc());
                     }
                 }
             }
@@ -270,14 +270,14 @@ namespace Tests.FileManagementTests
             string tempFileName = Storage.GetTempFileName(tempPath, "tfn");
             try
             {
-                var originalInfo = Storage.GetFileAttributesEx(tempFileName);
-                originalInfo.dwFileAttributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
-                Storage.SetFileAttributes(tempFileName, originalInfo.dwFileAttributes | FileAttributes.ReadOnly);
-                var newInfo = Storage.GetFileAttributesEx(tempFileName);
-                newInfo.dwFileAttributes.Should().HaveFlag(FileAttributes.ReadOnly);
-                Storage.SetFileAttributes(tempFileName, originalInfo.dwFileAttributes);
-                newInfo = Storage.GetFileAttributesEx(tempFileName);
-                newInfo.dwFileAttributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
+                var originalInfo = Storage.GetFileAttributesExtended(tempFileName);
+                originalInfo.FileAttributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
+                Storage.SetFileAttributes(tempFileName, originalInfo.FileAttributes | FileAttributes.ReadOnly);
+                var newInfo = Storage.GetFileAttributesExtended(tempFileName);
+                newInfo.FileAttributes.Should().HaveFlag(FileAttributes.ReadOnly);
+                Storage.SetFileAttributes(tempFileName, originalInfo.FileAttributes);
+                newInfo = Storage.GetFileAttributesExtended(tempFileName);
+                newInfo.FileAttributes.Should().NotHaveFlag(FileAttributes.ReadOnly);
             }
             finally
             {
@@ -299,8 +299,8 @@ namespace Tests.FileManagementTests
                 string destination = temp.GetTestPath();
                 Storage.CopyFile(source, destination);
 
-                var info = Storage.GetFileAttributesEx(destination);
-                info.dwFileAttributes.Should().NotHaveFlag(FileAttributes.Directory);
+                var info = Storage.GetFileAttributesExtended(destination);
+                info.FileAttributes.Should().NotHaveFlag(FileAttributes.Directory);
             }
         }
 

@@ -45,7 +45,7 @@ namespace WInterop.Storage.Unsafe
         [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool GetFileInformationByHandle(
             SafeFileHandle hFile,
-            out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+            out ByHandleFileInformation lpFileInformation);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getshortpathnamew (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -59,7 +59,7 @@ namespace WInterop.Storage.Unsafe
         public static extern BOOLEAN CreateSymbolicLinkW(
             string lpSymlinkFileName,
             string lpTargetFileName,
-            SYMBOLIC_LINK_FLAG dwFlags);
+            SymbolicLinkFlag dwFlags);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-encryptfilew
         [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -285,12 +285,12 @@ namespace WInterop.Storage.Unsafe
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern NTSTATUS NtQueryAttributesFile(
             ref OBJECT_ATTRIBUTES ObjectAttributes,
-            out FILE_BASIC_INFORMATION FileInformation);
+            out FileBasicInformation FileInformation);
 
         // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/wdm/nf-wdm-zwqueryfullattributesfile
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern NTSTATUS NtQueryFullAttributesFile(
             ref OBJECT_ATTRIBUTES ObjectAttributes,
-            out FILE_NETWORK_OPEN_INFORMATION FileInformation);
+            out FileNetworkOpenInformation FileInformation);
     }
 }

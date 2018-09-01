@@ -8,6 +8,7 @@
 using FluentAssertions;
 using System;
 using WInterop.Storage;
+using WInterop.Storage.Unsafe;
 using Xunit;
 
 namespace Tests.File
@@ -17,18 +18,18 @@ namespace Tests.File
         [Fact]
         public unsafe void FileAttributeDataSize()
         {
-            sizeof(WIN32_FILE_ATTRIBUTE_DATA).Should().Be(36);
+            sizeof(Win32FileAttributeData).Should().Be(36);
 
             // An extra sanity check to make sure we're aligning correctly as
             // we're forcing uint size packing.
-            WIN32_FILE_ATTRIBUTE_DATA data = new WIN32_FILE_ATTRIBUTE_DATA();
-            ((ulong)&data.nFileSize - (ulong)&data).Should().Be(28);
+            Win32FileAttributeData data = new Win32FileAttributeData();
+            ((ulong)&data.FileSize - (ulong)&data).Should().Be(28);
         }
 
         [Fact]
         public unsafe void Win32FindDataSize()
         {
-            sizeof(WIN32_FIND_DATA).Should().Be(592);
+            sizeof(Win32FindData).Should().Be(592);
         }
 
         [Fact]

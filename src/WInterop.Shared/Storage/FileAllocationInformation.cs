@@ -5,15 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
 namespace WInterop.Storage
 {
     /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh449407.aspx">CopyFile2ProgressRoutine</a> callback used by CopyFile2.
+    /// Used to set the allocation size for a file. [FILE_ALLOCATION_INFORMATION]
     /// </summary>
-    public delegate CopyFile2MessageAction CopyFile2ProgressRoutine(
-        IntPtr pMessage,
-        IntPtr pvCallbackContext
-        );
+    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff540232.aspx"/></remarks>
+    public struct FileAllocationInformation
+    {
+        public long AllocationSize;
+    }
 }

@@ -24,9 +24,9 @@ namespace WInterop.Com
         public char* pwcsName;
         public StorageType type;
         public ulong cbSize;
-        public FILETIME mtime;
-        public FILETIME ctime;
-        public FILETIME atime;
+        public FileTime mtime;
+        public FileTime ctime;
+        public FileTime atime;
         public StorageMode grfMode;
         public LockType grfLocksSupported;
         public Guid clsid;

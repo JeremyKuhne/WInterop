@@ -24,7 +24,7 @@ namespace SystemInformationTests
         [Fact]
         public void GetSuiteMask()
         {
-            SystemInformation.GetSuiteMask().Should().HaveFlag(SuiteMask.VER_SUITE_SINGLEUSERTS);
+            SystemInformation.GetSuiteMask().Should().HaveFlag(SuiteMask.SingleUserTerminalServices);
         }
 
         [Fact]

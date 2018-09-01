@@ -44,17 +44,17 @@ namespace WInterop.Storage
         FileStandardInformation = 5,
 
         /// <summary>
-        /// Uses <see cref="FILE_INTERNAL_INFORMATION"/>.
+        /// Uses <see cref="WInterop.Storage.FileInternalInformation"/>.
         /// </summary>
         FileInternalInformation = 6,
 
         /// <summary>
-        /// Uses <see cref="FILE_EA_INFORMATION"/>.
+        /// Uses <see cref="FileExtendedAttributeInformation"/>.
         /// </summary>
         FileEaInformation = 7,
 
         /// <summary>
-        /// Uses <see cref="FILE_ACCESS_INFORMATION"/>.
+        /// Uses <see cref="WInterop.Storage.FileAccessInformation"/>.
         /// </summary>
         FileAccessInformation = 8,
 
@@ -86,7 +86,7 @@ namespace WInterop.Storage
         FileDispositionInformation = 13,
 
         /// <summary>
-        /// Uses <see cref="FILE_POSITION_INFORMATION"/>.
+        /// Uses <see cref="WInterop.Storage.FilePositionInformation"/>.
         /// </summary>
         FilePositionInformation = 14,
 
@@ -96,7 +96,7 @@ namespace WInterop.Storage
         FileFullEaInformation = 15,
 
         /// <summary>
-        /// Gets the file access mode (cannot set). Used with <see cref="FILE_MODE_INFORMATION"/>.
+        /// Gets the file access mode (cannot set). Used with <see cref="WInterop.Storage.FileModeInformation"/>.
         /// </summary>
         /// <remarks>
         /// Sadly not available via GetFileInformationByHandle yet.
@@ -104,7 +104,7 @@ namespace WInterop.Storage
         FileModeInformation = 16,
 
         /// <summary>
-        /// Uses <see cref="FILE_ALIGNMENT_INFORMATION"/>.
+        /// Uses <see cref="WInterop.Storage.FileAlignmentInformation"/>.
         /// </summary>
         FileAlignmentInformation = 17,
 
@@ -120,7 +120,7 @@ namespace WInterop.Storage
         FileAllInformation = 18,
 
         /// <summary>
-        /// Used to set the allocation size for a file. Uses <see cref="FILE_ALLOCATION_INFORMATION"/>.
+        /// Used to set the allocation size for a file. Uses <see cref="WInterop.Storage.FileAllocationInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232076.aspx"/>
@@ -128,7 +128,7 @@ namespace WInterop.Storage
         FileAllocationInformation = 19,
 
         /// <summary>
-        /// Used to set the end of file position. Uses <see cref="FILE_END_OF_FILE_INFORMATION"/>.
+        /// Used to set the end of file position. Uses <see cref="WInterop.Storage.FileEndOfFileInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232067.aspx"/>
@@ -159,7 +159,7 @@ namespace WInterop.Storage
 
         /// <summary>
         /// Used to get information on a named pipe that is associated with the end of the pipe
-        /// that is being queried. Uses <see cref="FILE_PIPE_LOCAL_INFORMATION"/>.
+        /// that is being queried. Uses <see cref="PipeLocalInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232083.aspx"/>
@@ -172,7 +172,7 @@ namespace WInterop.Storage
         /// the server end of a remote pipe. Therefore, this information class is usable only by the
         /// client to retrieve information associated with its end of the pipe.
         /// 
-        /// Uses <see cref="FILE_PIPE_REMOTE_INFORMATION"/>.
+        /// Uses <see cref="WInterop.Storage.PipeRemoteInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232120.aspx"/>
@@ -215,7 +215,7 @@ namespace WInterop.Storage
         FileQuotaInformation = 32,
 
         /// <summary>
-        /// Returns the reparse point information in <see cref="FILE_REPARSE_POINT_INFORMATION"/>.
+        /// Returns the reparse point information in <see cref="WInterop.Storage.FileReparsePointInformation"/>.
         /// </summary>
         FileReparsePointInformation = 33,
 

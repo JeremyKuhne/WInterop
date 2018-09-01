@@ -180,7 +180,7 @@ namespace Tests.File
         {
             using (var cleaner = new TestFileCleaner())
             {
-                IntPtr result = Imports.FindFirstFileW(cleaner.TempFolder, out WIN32_FIND_DATA findData);
+                IntPtr result = Imports.FindFirstFileW(cleaner.TempFolder, out Win32FindData findData);
                 try
                 {
                     IsValid(result).Should().BeTrue("root location exists");
@@ -232,15 +232,15 @@ namespace Tests.File
             using (var cleaner = new TestFileCleaner())
             {
                 bool success = Imports.GetFileAttributesExW(cleaner.TempFolder,
-                    GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA attributeData);
+                    GetFileExtendedInformationLevels.Standard, out Win32FileAttributeData attributeData);
                 success.Should().BeTrue("root location exists");
                 success = Imports.GetFileAttributesExW(cleaner.GetTestPath(),
-                    GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
+                    GetFileExtendedInformationLevels.Standard, out attributeData);
                 WindowsError error = Error.GetLastError();
                 success.Should().BeFalse("non-existant file");
                 error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
                 success = Imports.GetFileAttributesExW(Paths.Combine(cleaner.GetTestPath(), "NotHere"),
-                    GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out attributeData);
+                    GetFileExtendedInformationLevels.Standard, out attributeData);
                 error = Error.GetLastError();
                 success.Should().BeFalse("non-existant subdir");
                 error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
@@ -270,7 +270,7 @@ namespace Tests.File
                     action.Should().Throw<UnauthorizedAccessException>();
 
                     // Find file will work at this point.
-                    IntPtr findHandle = Imports.FindFirstFileW(path, out WIN32_FIND_DATA findData);
+                    IntPtr findHandle = Imports.FindFirstFileW(path, out Win32FindData findData);
                     findHandle.Should().NotBe(IntPtr.Zero);
                     try
                     {

@@ -19,10 +19,10 @@ namespace SystemInformationTests
         public void IsProcessorFeaturePresent()
         {
             // We shouldn't be able to run on the original Pentium, so this should always be false.
-            SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.PF_FLOATING_POINT_PRECISION_ERRATA).Should().BeFalse();
+            SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.FloatingPointPrecisionErrata).Should().BeFalse();
 
             // I don't think any platform doesn't support this
-            SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.PF_COMPARE_EXCHANGE_DOUBLE).Should().BeTrue();
+            SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.CompareExchangeDouble).Should().BeTrue();
         }
 
         // [Fact]
@@ -30,7 +30,7 @@ namespace SystemInformationTests
         {
             foreach (ProcessorFeature feature in Enum.GetValues(typeof(ProcessorFeature)))
             {
-                Debug.WriteLine($"{feature}: {WInterop.SystemInformation.SystemInformation.IsProcessorFeaturePresent(feature)}");
+                Debug.WriteLine($"{feature}: {SystemInformation.IsProcessorFeaturePresent(feature)}");
             }
         }
 
@@ -38,7 +38,7 @@ namespace SystemInformationTests
         public void CeipIsOptedIn()
         {
             // Can't really validate this, just make sure it doesn't blow up.
-            WInterop.SystemInformation.SystemInformation.CeipIsOptedIn();
+            SystemInformation.CeipIsOptedIn();
         }
 
         [Fact]

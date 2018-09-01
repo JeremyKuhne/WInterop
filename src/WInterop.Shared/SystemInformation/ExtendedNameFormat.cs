@@ -14,7 +14,7 @@ namespace WInterop.SystemInformation
     public enum ExtendedNameFormat : uint
     {
         Unknown = 0,
-        FullyQualifiedDN = 1,
+        FullyQualifiedDomainName = 1,
         SamCompatible = 2,
         Display = 3,
         UniqueId = 6,

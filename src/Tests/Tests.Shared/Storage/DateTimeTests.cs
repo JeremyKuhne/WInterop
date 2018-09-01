@@ -20,7 +20,7 @@ namespace Tests.File
             ]
         public void FromFileTimeTest(int high, int low, long expectedTicks)
         {
-            FILETIME fileTime = new FILETIME((uint)low, (uint)high);
+            FileTime fileTime = new FileTime((uint)low, (uint)high);
             fileTime.ToDateTimeUtc().ToLocalTime().Ticks.Should().Be(expectedTicks);
         }
     }

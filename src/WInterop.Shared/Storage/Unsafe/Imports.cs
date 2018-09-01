@@ -69,8 +69,8 @@ namespace WInterop.Storage.Unsafe
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern bool GetFileAttributesExW(
             string lpFileName,
-            GET_FILEEX_INFO_LEVELS fInfoLevelId,
-            out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
+            GetFileExtendedInformationLevels fInfoLevelId,
+            out Win32FileAttributeData lpFileInformation);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-setfileattributesw (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -105,14 +105,14 @@ namespace WInterop.Storage.Unsafe
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern IntPtr FindFirstFileW(
             string lpFileName,
-            out WIN32_FIND_DATA lpFindFileData);
+            out Win32FindData lpFindFileData);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findfirstfileexw (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern IntPtr FindFirstFileExW(
                 string lpFileName,
-                FINDEX_INFO_LEVELS fInfoLevelId,
-                out WIN32_FIND_DATA lpFindFileData,
+                FindExtendedInfoLevels fInfoLevelId,
+                out Win32FindData lpFindFileData,
                 uint fSearchOp,                        // This never actually has meaning and is likely a holdover of 9x
                                                         // set it to 0 to avoid failing parameter checks.
                 IntPtr lpSearchFilter,                 // Reserved
@@ -122,7 +122,7 @@ namespace WInterop.Storage.Unsafe
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool FindNextFileW(
             IntPtr hFindFile,
-            out WIN32_FIND_DATA lpFindFileData);
+            out Win32FindData lpFindFileData);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findclose (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, ExactSpelling = true)]

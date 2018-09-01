@@ -368,9 +368,9 @@ namespace WInterop.Storage
         /// <summary>
         /// Gets the file attributes for the given path.
         /// </summary>
-        public static WIN32_FILE_ATTRIBUTE_DATA GetFileAttributesEx(string path)
+        public static Win32FileAttributeData GetFileAttributesExtended(string path)
         {
-            if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
+            if (!Imports.GetFileAttributesExW(path, GetFileExtendedInformationLevels.Standard, out Win32FileAttributeData data))
                 throw Error.GetIoExceptionForLastError(path);
 
             return data;
@@ -392,7 +392,7 @@ namespace WInterop.Storage
         public static bool FileExists(string path)
         {
             var data = TryGetFileInfo(path);
-            return data.HasValue && (data.Value.dwFileAttributes & FileAttributes.Directory) != FileAttributes.Directory;
+            return data.HasValue && (data.Value.FileAttributes & FileAttributes.Directory) != FileAttributes.Directory;
         }
 
         /// <summary>
@@ -402,16 +402,16 @@ namespace WInterop.Storage
         public static bool DirectoryExists(string path)
         {
             var data = TryGetFileInfo(path);
-            return data.HasValue && (data.Value.dwFileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
+            return data.HasValue && (data.Value.FileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
         /// <summary>
         /// Tries to get file info, returns null if the given path doesn't exist.
         /// </summary>
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
-        public static WIN32_FILE_ATTRIBUTE_DATA? TryGetFileInfo(string path)
+        public static Win32FileAttributeData? TryGetFileInfo(string path)
         {
-            if (!Imports.GetFileAttributesExW(path, GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out WIN32_FILE_ATTRIBUTE_DATA data))
+            if (!Imports.GetFileAttributesExW(path, GetFileExtendedInformationLevels.Standard, out Win32FileAttributeData data))
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)
@@ -479,38 +479,38 @@ namespace WInterop.Storage
         /// <summary>
         /// Get standard file info from the given file handle.
         /// </summary>
-        public static FileStandardInfo GetFileStandardInformation(SafeFileHandle fileHandle)
+        public static FileStandardInformation GetFileStandardInformation(SafeFileHandle fileHandle)
         {
-            FILE_STANDARD_INFORMATION info;
+            FileStandardInformation info;
             unsafe
             {
                 if (!Imports.GetFileInformationByHandleEx(
                     fileHandle,
                     FileInfoClass.FileStandardInfo,
                     &info,
-                    (uint)sizeof(FILE_STANDARD_INFORMATION)))
+                    (uint)sizeof(FileStandardInformation)))
                     throw Error.GetIoExceptionForLastError();
             }
 
-            return new FileStandardInfo(info);
+            return info;
         }
 
         /// <summary>
         /// Get basic file info from the given file handle.
         /// </summary>
-        public static FileBasicInfo GetFileBasicInformation(SafeFileHandle fileHandle)
+        public static FileBasicInformation GetFileBasicInformation(SafeFileHandle fileHandle)
         {
-            FILE_BASIC_INFORMATION info;
+            FileBasicInformation info;
             unsafe
             {
                 if (!Imports.GetFileInformationByHandleEx(
                     fileHandle,
                     FileInfoClass.FileBasicInfo,
                     &info,
-                    (uint)sizeof(FILE_BASIC_INFORMATION)))
+                    (uint)sizeof(FileBasicInformation)))
                     throw Error.GetIoExceptionForLastError();
             }
-            return new FileBasicInfo(info);
+            return info;
         }
 
         /// <summary>

@@ -63,7 +63,7 @@ namespace WInterop.Registry.Unsafe
             out uint lpcMaxValueNameLen,
             out uint lpcMaxValueLen,
             out uint lpcbSecurityDescriptor,
-            out FILETIME lpftLastWriteTime);
+            out FileTime lpftLastWriteTime);
 
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556680.aspx 
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567060.aspx

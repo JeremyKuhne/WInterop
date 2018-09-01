@@ -45,9 +45,9 @@ namespace WInterop.Storage
         /// <summary>
         /// Gets the file information for the given handle.
         /// </summary>
-        public static BY_HANDLE_FILE_INFORMATION GetFileInformationByHandle(SafeFileHandle fileHandle)
+        public static ByHandleFileInformation GetFileInformationByHandle(SafeFileHandle fileHandle)
         {
-            if (!Imports.GetFileInformationByHandle(fileHandle, out BY_HANDLE_FILE_INFORMATION fileInformation))
+            if (!Imports.GetFileInformationByHandle(fileHandle, out ByHandleFileInformation fileInformation))
                 throw Error.GetIoExceptionForLastError();
 
             return fileInformation;
@@ -58,9 +58,8 @@ namespace WInterop.Storage
         /// </summary>
         public static void CreateSymbolicLink(string symbolicLinkPath, string targetPath, bool targetIsDirectory = false)
         {
-            if (!Imports.CreateSymbolicLinkW(symbolicLinkPath, targetPath,
-                targetIsDirectory ? SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_DIRECTORY : SYMBOLIC_LINK_FLAG.SYMBOLIC_LINK_FLAG_FILE))
-                throw Error.GetIoExceptionForLastError(symbolicLinkPath);
+            Error.ThrowLastErrorIfFalse(Imports.CreateSymbolicLinkW(symbolicLinkPath, targetPath,
+                targetIsDirectory ? SymbolicLinkFlag.Directory : SymbolicLinkFlag.File));
         }
 
         /// <summary>
@@ -395,9 +394,9 @@ namespace WInterop.Storage
         /// </summary>
         public unsafe static FileAccessRights GetRights(SafeFileHandle fileHandle)
         {
-            FILE_ACCESS_INFORMATION access = new FILE_ACCESS_INFORMATION();
+            FileAccessInformation access = new FileAccessInformation();
             NTSTATUS result = Imports.NtQueryInformationFile(fileHandle, out _,
-                &access, (uint)sizeof(FILE_ACCESS_INFORMATION), FileInformationClass.FileAccessInformation);
+                &access, (uint)sizeof(FileAccessInformation), FileInformationClass.FileAccessInformation);
             if (result != NTSTATUS.STATUS_SUCCESS)
                 throw Error.GetIoExceptionForNTStatus(result);
             return access.AccessFlags;

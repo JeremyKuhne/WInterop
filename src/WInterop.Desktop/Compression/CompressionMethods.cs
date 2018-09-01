@@ -43,7 +43,7 @@ namespace WInterop.Compression
             [DllImport(Libraries.Lz32, CharSet = CharSet.Unicode, ExactSpelling = true)]
             public static extern int LZOpenFileW(
                 string lpFileName,
-                ref OFSTRUCT lpReOpenBuf,
+                ref OpenFileStruct lpReOpenBuf,
                 OpenFileStyle wStyle);
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365226.aspx
@@ -132,7 +132,7 @@ namespace WInterop.Compression
 
             path = Paths.TrimTrailingSeparators(path);
             if (path[path.Length -1] != '_'
-                || Storage.Storage.GetFileAttributesEx(path).nFileSize <= (ulong)sizeof(LzxHeader))
+                || Storage.Storage.GetFileAttributesExtended(path).FileSize <= (ulong)sizeof(LzxHeader))
                 return filenameOnly ? Paths.GetLastSegment(path) : path;
 
             char replacement;
@@ -195,9 +195,9 @@ namespace WInterop.Compression
             out string uncompressedName,
             OpenFileStyle openStyle = OpenFileStyle.Read | OpenFileStyle.ShareCompat)
         {
-            OFSTRUCT ofs = new OFSTRUCT();
+            OpenFileStruct ofs = new OpenFileStruct();
             int result = ValidateLzResult(Imports.LZOpenFileW(path, ref ofs, openStyle), path);
-            uncompressedName = BufferHelper.GetNullTerminatedAsciiString(ofs.szPathName);
+            uncompressedName = ofs.PathName;
             return new LzHandle(result);
         }
 
@@ -205,7 +205,7 @@ namespace WInterop.Compression
             string path,
             OpenFileStyle openStyle = OpenFileStyle.Read | OpenFileStyle.ShareCompat)
         {
-            OFSTRUCT ofs = new OFSTRUCT();
+            OpenFileStruct ofs = new OpenFileStruct();
             return new LzHandle(ValidateLzResult(Imports.LZOpenFileW(path, ref ofs, openStyle), path));
         }
 
