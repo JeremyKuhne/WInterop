@@ -72,23 +72,24 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocationId.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveLockedException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\DriveNotReadyException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorMode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Facility.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FileExistsException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\FormatMessageFlags.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\HRESULT.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\NTSTATUS.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WindowsError.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\WInteropIOException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HBITMAP.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HBRUSH.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HDC.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HFONT.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HGDIOBJ.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HPEN.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Native\HRGN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\DriveLockedException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\DriveNotReadyException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\ErrorMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\Facility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\FileExistsException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\FormatMessageFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\HRESULT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\NTSTATUS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\Unsafe\Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\WindowsError.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\WInteropIOException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Unsafe\HBITMAP.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Unsafe\HBRUSH.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Unsafe\HDC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Unsafe\HFONT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Unsafe\HGDIOBJ.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Unsafe\HPEN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gdi\Unsafe\HRGN.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LANGID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\Language.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LCID.cs" />
@@ -130,11 +131,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)SafeString\UNICODE_STRING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Unsafe\Imports.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\CompressionMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\FdiHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Error.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\SecurityDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\AccessMask.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\AccessMode.cs" />
@@ -307,7 +308,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFileName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFindResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\SafeHandleStreamWrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Globalization\Native\GlobalizationMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\Unsafe\GlobalizationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
@@ -394,8 +395,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Com\Native\ComMethods.Imports.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Compression\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)Com\Native\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Globalization\Native\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Globalization\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Unsafe\" />
   </ItemGroup>
   <ItemGroup>

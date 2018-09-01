@@ -540,7 +540,7 @@ namespace WInterop.Windows
         public static int GetKeyboardSubType()
         {
             // Although not documented this API does not appear to clear last error
-            Error.Imports.SetLastError(WindowsError.ERROR_SUCCESS);
+            Errors.Unsafe.Imports.SetLastError(WindowsError.ERROR_SUCCESS);
 
             int result = Imports.GetKeyboardType(1);
             if (result == 0)

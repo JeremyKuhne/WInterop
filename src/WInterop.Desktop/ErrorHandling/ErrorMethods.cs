@@ -6,53 +6,21 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Runtime.InteropServices;
+using WInterop.Errors.Unsafe;
 
 namespace WInterop.Errors
 {
     public static partial class Error
     {
         /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679355.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern ErrorMode GetErrorMode();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679355.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern ErrorMode GetThreadErrorMode();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680621.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern ErrorMode SetErrorMode(
-                ErrorMode uMode);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680621.aspx
-            [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool SetThreadErrorMode(
-                ErrorMode dwNewMode,
-                out ErrorMode lpOldMode);
-
-        }
-
-        /// <summary>
         /// Gets the error mode for the current process.
         /// </summary>
-        public static ErrorMode GetProcessErrorMode()
-        {
-            return Imports.GetErrorMode();
-        }
+        public static ErrorMode GetProcessErrorMode() => Imports.GetErrorMode();
 
         /// <summary>
         /// Gets the error mode for the current thread.
         /// </summary>
-        public static ErrorMode GetThreadErrorMode()
-        {
-            return Imports.GetThreadErrorMode();
-        }
+        public static ErrorMode GetThreadErrorMode() => Imports.GetThreadErrorMode();
 
         /// <summary>
         /// Set a new error mode for the current thread.
@@ -60,8 +28,7 @@ namespace WInterop.Errors
         /// <returns>The old error mode for the thread.</returns>
         public static ErrorMode SetThreadErrorMode(ErrorMode mode)
         {
-            if (!Imports.SetThreadErrorMode(mode, out ErrorMode oldMode))
-                throw GetIoExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(Imports.SetThreadErrorMode(mode, out ErrorMode oldMode));
 
             return oldMode;
         }
