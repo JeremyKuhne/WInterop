@@ -7,71 +7,14 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Clipboard.Unsafe;
 using WInterop.Errors;
-using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Windows;
 
 namespace WInterop.Clipboard
 {
     public static partial class Clipboard
     {
-        /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649048.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool OpenClipboard(
-                WindowHandle hWndNewOwner);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649035.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool CloseClipboard();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649037.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool EmptyClipboard();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649047.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern bool IsClipboardFormatAvailable(
-                uint format);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649039.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern IntPtr GetClipboardData(
-                uint uFormat);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649036.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern int CountClipboardFormats();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649041.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern WindowHandle GetClipboardOwner();
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649040.aspx
-            [DllImport(Libraries.User32, SetLastError = true,ExactSpelling = true)]
-            public static extern int GetClipboardFormatNameW(
-                uint format,
-                SafeHandle lpszFormatName,
-                int cchMaxCount);
-
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public unsafe static extern bool GetUpdatedClipboardFormats(
-                ref uint lpuiFormats,
-                uint cFormats,
-                out uint pcFormatsOut);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649045.aspx
-            [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-            public static extern int GetPriorityClipboardFormat(
-                uint[] paFormatPriorityList,
-                int cFormats);
-        }
-
         /// <summary>
         /// This only works for types that aren't built in (e.g. defined in ClipboardFormat).
         /// </summary>

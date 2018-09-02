@@ -1,0 +1,124 @@
+﻿// ------------------------
+//    WInterop Framework
+// ------------------------
+
+// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Microsoft.Win32.SafeHandles;
+using System.Collections.Generic;
+using System.Linq;
+using WInterop.Communications.Unsafe;
+using WInterop.Errors;
+using WInterop.Registry;
+using WInterop.Storage;
+using WInterop.Windows;
+
+namespace WInterop.Communications
+{
+    public static partial class Communications
+    {
+        public unsafe static DeviceControlBlock GetCommState(SafeFileHandle fileHandle)
+        {
+            DeviceControlBlock dcb = new DeviceControlBlock()
+            {
+                DCBlength = (uint)sizeof(DeviceControlBlock)
+            };
+
+            if (!Imports.GetCommState(fileHandle, ref dcb))
+                throw Error.GetIoExceptionForLastError();
+
+            return dcb;
+        }
+
+        public unsafe static void SetCommState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
+        {
+            dcb.DCBlength = (uint)sizeof(DeviceControlBlock);
+
+            if (!Imports.GetCommState(fileHandle, ref dcb))
+                throw Error.GetIoExceptionForLastError();
+        }
+
+        public unsafe static DeviceControlBlock BuildDeviceControlBlock(string definition)
+        {
+            if (!Imports.BuildCommDCBW(definition, out DeviceControlBlock dcb))
+                throw Error.GetIoExceptionForLastError();
+
+            return dcb;
+        }
+
+        public static CommunicationsProperties GetCommunicationsProperties(SafeFileHandle fileHandle)
+        {
+            if (!Imports.GetCommProperties(fileHandle, out CommunicationsProperties properties))
+                throw Error.GetIoExceptionForLastError();
+
+            return properties;
+        }
+
+        public unsafe static CommunicationsConfig GetCommunicationsConfig(SafeFileHandle fileHandle)
+        {
+            CommunicationsConfig config = new CommunicationsConfig();
+            uint size = (uint)sizeof(CommunicationsConfig);
+
+            if (!Imports.GetCommConfig(fileHandle, ref config, ref size))
+                throw Error.GetIoExceptionForLastError();
+
+            return config;
+        }
+
+        /// <summary>
+        /// Get the default config values for the given com port.
+        /// </summary>
+        /// <param name="port">Simple name only (COM1, not \\.\COM1)</param>
+        public unsafe static CommunicationsConfig GetDefaultCommConfig(string port)
+        {
+            CommunicationsConfig config = new CommunicationsConfig();
+            uint size = (uint)sizeof(CommunicationsConfig);
+
+            if (!Imports.GetDefaultCommConfigW(port, ref config, ref size))
+                throw Error.GetIoExceptionForLastError();
+
+            return config;
+        }
+
+        /// <summary>
+        /// Pops the COM port configuration dialog and returns the selected settings.
+        /// </summary>
+        /// <exception cref="OperationCanceledException">Thrown if the dialog is cancelled.</exception>
+        public unsafe static CommunicationsConfig CommConfigDialog(string port, WindowHandle parent)
+        {
+            CommunicationsConfig config = GetDefaultCommConfig(port);
+
+            if (!Imports.CommConfigDialogW(port, parent, ref config))
+                throw Error.GetIoExceptionForLastError();
+
+            return config;
+        }
+
+        /// <summary>
+        /// Simple helper for CreateFile call that sets the expected values when opening a COM port.
+        /// </summary>
+        public static SafeFileHandle CreateComFileHandle(
+            string path,
+            FileAttributes fileAttributes = FileAttributes.None,
+            FileFlags fileFlags = FileFlags.None)
+        {
+            return Storage.Storage.CreateFile(
+                path,
+                CreationDisposition.OpenExisting,
+                DesiredAccess.GenericReadWrite,
+                0,
+                fileAttributes,
+                fileFlags);
+        }
+
+        public static IEnumerable<string> GetAvailableComPorts()
+        {
+            using (var key = Registry.Registry.OpenKey(
+                RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"HARDWARE\DEVICEMAP\SERIALCOMM"))
+            {
+                return Registry.Registry.GetValueDataDirect(key, RegistryValueType.REG_SZ).OfType<string>().ToArray();
+            }
+        }
+    }
+}

@@ -20,13 +20,13 @@ namespace CommunicationTests
         public void DcbIsBlittable()
         {
             // This will throw if the type is not blittable
-            GCHandle.Alloc(new DCB(), GCHandleType.Pinned).Should().NotBeNull();
+            GCHandle.Alloc(new DeviceControlBlock(), GCHandleType.Pinned).Should().NotBeNull();
         }
 
         [Fact]
         public unsafe void DcbIsCorrectSize()
         {
-            sizeof(DCB).Should().Be(28);
+            sizeof(DeviceControlBlock).Should().Be(28);
         }
 
         [Theory,
@@ -36,18 +36,18 @@ namespace CommunicationTests
             ]
         public unsafe void DcbDtrControl(DtrControl dtrControl)
         {
-            DCB dcb = new DCB()
+            DeviceControlBlock dcb = new DeviceControlBlock()
             {
-                fDtrControl = dtrControl
+                DtrControl = dtrControl
             };
 
-            dcb.fDtrControl.Should().Be(dtrControl);
+            dcb.DtrControl.Should().Be(dtrControl);
         }
 
         [Fact]
         public unsafe void BuildCommDcb()
         {
-            DCB dcb = Communications.BuildCommDCB(@"baud=1200 parity=N data=8 stop=1");
+            DeviceControlBlock dcb = Communications.BuildDeviceControlBlock(@"baud=1200 parity=N data=8 stop=1");
             dcb.BaudRate.Should().Be(CommBaudRate.CBR_1200);
             dcb.Parity.Should().Be(Parity.NOPARITY);
             dcb.ByteSize.Should().Be(8);
@@ -59,7 +59,7 @@ namespace CommunicationTests
         {
             using (SafeFileHandle handle = Communications.CreateComFileHandle(@"\\.\COM4"))
             {
-                COMMPROP properties = Communications.GetCommProperties(handle);
+                CommunicationsProperties properties = Communications.GetCommunicationsProperties(handle);
             }
         }
 
@@ -68,20 +68,20 @@ namespace CommunicationTests
         {
             using (SafeFileHandle handle = Communications.CreateComFileHandle(@"\\.\COM4"))
             {
-                COMMCONFIG config = Communications.GetCommConfig(handle);
+                CommunicationsConfig config = Communications.GetCommunicationsConfig(handle);
             }
         }
 
         [Fact(Skip = "Needs conditioned on specific com port availability")]
         public unsafe void GetDefaultCommConfig()
         {
-            COMMCONFIG config = Communications.GetDefaultCommConfig(@"COM4");
+            CommunicationsConfig config = Communications.GetDefaultCommConfig(@"COM4");
         }
 
         [Fact(Skip = "Needs to be run manually or with UI automation")]
         public unsafe void CommConfigDialog()
         {
-            COMMCONFIG config = Communications.CommConfigDialog(
+            CommunicationsConfig config = Communications.CommConfigDialog(
                 @"COM4",
                 Windows.GetForegroundWindow());
         }

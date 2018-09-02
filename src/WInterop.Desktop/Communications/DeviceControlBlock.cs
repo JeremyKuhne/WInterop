@@ -7,8 +7,11 @@
 
 namespace WInterop.Communications
 {
+    /// <summary>
+    /// [DCB]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363214.aspx
-    public struct DCB
+    public struct DeviceControlBlock
     {
         private const uint BinaryMask             = 0b0000000000000001;
         private const uint ParityMask             = 0b0000000000000010;
@@ -27,7 +30,7 @@ namespace WInterop.Communications
         public uint DCBlength;
         public CommBaudRate BaudRate;
         private uint _bitFields;
-        public ushort wReserved;
+        public ushort Reserved;
         public ushort XonLim;
         public ushort XoffLim;
         public byte ByteSize;
@@ -38,94 +41,94 @@ namespace WInterop.Communications
         public sbyte ErrorChar;
         public sbyte EofChar;
         public sbyte EvtChar;
-        public ushort wReserved1;
+        public ushort Reserved1;
 
         //DWORD fBinary  :1;
-        public bool fBinary
+        public bool Binary
         {
             get { return this[BinaryMask]; }
             set { this[BinaryMask] = value; }
         }
 
         //DWORD fParity  :1;
-        public bool fParity
+        public bool ParityFlag
         {
             get { return this[ParityMask]; }
             set { this[ParityMask] = value; }
         }
 
         //DWORD fOutxCtsFlow  :1;
-        public bool fOutxCtsFlow
+        public bool OutxCtsFlow
         {
             get { return this[CtsFlowMask]; }
             set { this[CtsFlowMask] = value; }
         }
 
         //DWORD fOutxDsrFlow  :1;
-        public bool fOutxDsrFlow
+        public bool OutxDsrFlow
         {
             get { return this[DsrFlowMask]; }
             set { this[DsrFlowMask] = value; }
         }
 
         //DWORD fDtrControl  :2;
-        public DtrControl fDtrControl
+        public DtrControl DtrControl
         {
             get { return (DtrControl)this[DtrControlMask, 4]; }
             set { this[DtrControlMask, 4] = (uint)value; }
         }
 
         //DWORD fDsrSensitivity  :1;
-        public bool fDsrSensitivity
+        public bool DsrSensitivity
         {
             get { return this[DsrSensitivityMask]; }
             set { this[DsrSensitivityMask] = value; }
         }
 
         //DWORD fTXContinueOnXoff  :1;
-        public bool fTXContinueOnXoff
+        public bool TXContinueOnXoff
         {
             get { return this[TXContinueMask]; }
             set { this[TXContinueMask] = value; }
         }
 
         //DWORD fOutX  :1;
-        public bool fOutX
+        public bool OutX
         {
             get { return this[OutMask]; }
             set { this[OutMask] = value; }
         }
 
         //DWORD fInX  :1;
-        public bool fInX
+        public bool InX
         {
             get { return this[InMask]; }
             set { this[InMask] = value; }
         }
 
         //DWORD fErrorChar  :1;
-        public bool fErrorChar
+        public bool ErrorCharFlag
         {
             get { return this[ErrorCharMask]; }
             set { this[ErrorCharMask] = value; }
         }
 
         //DWORD fNull  :1;
-        public bool fNull
+        public bool Null
         {
             get { return this[NullMask]; }
             set { this[NullMask] = value; }
         }
 
         //DWORD fRtsControl  :2;
-        public RtsControl fRtsControl
+        public RtsControl RtsControl
         {
             get { return (RtsControl)this[RtsControlMask, 12]; }
             set { this[DtrControlMask, 12] = (uint)value; }
         }
 
         //DWORD fAbortOnError  :1;
-        public bool fAbortOnError
+        public bool AbortOnError
         {
             get { return this[AbortOnErrorMask]; }
             set { this[AbortOnErrorMask] = value; }

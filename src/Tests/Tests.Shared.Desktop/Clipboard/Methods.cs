@@ -17,7 +17,7 @@ namespace ClipboardTests
         [Fact]
         public void GetClipboardFormatNameForBuiltIn()
         {
-            Action action = () => Clipboard.GetClipboardFormatName((uint)ClipboardFormat.CF_TEXT);
+            Action action = () => Clipboard.GetClipboardFormatName((uint)ClipboardFormat.Text);
 
             // You can't get the name for built-in types
             action.Should().Throw<ArgumentException>();

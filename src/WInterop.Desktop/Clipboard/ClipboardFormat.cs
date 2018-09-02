@@ -16,7 +16,7 @@ namespace WInterop.Clipboard
         /// <summary>
         /// [CF_TEXT]
         /// </summary>
-        CF_TEXT = 1,
+        Text = 1,
 
         /// <summary>
         /// Bitmap handle <see cref="Gdi.BitmapHandle"/>. [CF_BITMAP]
@@ -26,101 +26,102 @@ namespace WInterop.Clipboard
         /// <summary>
         /// [CF_METAFILEPICT]
         /// </summary>
-        CF_METAFILEPICT = 3,
+        MetafilePicture = 3,
 
         /// <summary>
         /// [CF_SYLK]
         /// </summary>
-        CF_SYLK = 4,
+        SymbolicLink = 4,
 
         /// <summary>
-        /// [CF_DIF]
+        /// Software Arts Data Interchange Format [CF_DIF]
         /// </summary>
-        CF_DIF = 5,
+        DataInterchangeFormat = 5,
 
         /// <summary>
-        /// [CF_TIFF]
+        /// Tagged image file format [CF_TIFF]
         /// </summary>
-        CF_TIFF = 6,
+        Tiff = 6,
 
         /// <summary>
         /// [CF_OEMTEXT]
         /// </summary>
-        CF_OEMTEXT = 7,
+        OemText = 7,
 
         /// <summary>
         /// Device independent bitmap. <see cref="Gdi.BitmapInfo"/>[CF_DIB]
         /// </summary>
-        CF_DIB = 8,
+        DeviceIndependentBitmap = 8,
 
         /// <summary>
         /// [CF_PALETTE]
         /// </summary>
-        CF_PALETTE = 9,
+        Palette = 9,
 
         /// <summary>
         /// [CF_PENDATA]
         /// </summary>
-        CF_PENDATA = 10,
+        PenData = 10,
 
         /// <summary>
-        /// [CF_RIFF]
+        /// Resource Interchange File Format [CF_RIFF]
         /// </summary>
-        CF_RIFF = 11,
+        Riff = 11,
 
         /// <summary>
         /// [CF_WAVE]
         /// </summary>
-        CF_WAVE = 12,
+        Wave = 12,
 
         /// <summary>
         /// [CF_UNICODETEXT]
         /// </summary>
-        CF_UNICODETEXT = 13,
+        UnicodeText = 13,
 
         /// <summary>
         /// [CF_ENHMETAFILE]
         /// </summary>
-        CF_ENHMETAFILE = 14,
+        EnhancedMetafile = 14,
 
         /// <summary>
-        /// [CF_HDROP]
+        /// A handle to type HDROP that identifies a list of files. Used with
+        /// DragQueryFile. [CF_HDROP]
         /// </summary>
-        CF_HDROP = 15,
+        HDrop = 15,
 
         /// <summary>
-        /// [CF_LOCALE]
+        /// Locale for <see cref="Text"/> data. [CF_LOCALE]
         /// </summary>
-        CF_LOCALE = 16,
+        Locale = 16,
 
         /// <summary>
         /// [CF_DIBV5]
         /// </summary>
-        CF_DIBV5 = 17,
+        DeviceIndependentBitmapV5 = 17,
 
         /// <summary>
         /// [CF_OWNERDISPLAY]
         /// </summary>
-        CF_OWNERDISPLAY = 0x0080,
+        OwnerDisplay = 0x0080,
 
         /// <summary>
-        /// [CF_DSPTEXT]
+        /// Display text associated with a private format. [CF_DSPTEXT]
         /// </summary>
-        CF_DSPTEXT = 0x0081,
+        DisplayText = 0x0081,
 
         /// <summary>
-        /// [CF_DSPBITMAP]
+        /// Display bitmap associated with a private format. [CF_DSPBITMAP]
         /// </summary>
-        CF_DSPBITMAP = 0x0082,
+        DisplayBitmap = 0x0082,
 
         /// <summary>
-        /// [CF_DSPMETAFILEPICT]
+        /// Display metafile associated with a private format. [CF_DSPMETAFILEPICT]
         /// </summary>
-        CF_DSPMETAFILEPICT = 0x0083,
+        DisplayMetafilePicture = 0x0083,
 
         /// <summary>
-        /// [CF_DSPENHMETAFILE]
+        /// Display enhanced metafile associated with a private format. [CF_DSPENHMETAFILE]
         /// </summary>
-        CF_DSPENHMETAFILE = 0x008E
+        DisplayEnhancedMetafile = 0x008E
     }
 }
