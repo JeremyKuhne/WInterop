@@ -10,21 +10,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ApiSets.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\CFHEADER.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\ERF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\CabinetFileHeader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\ExtractResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\FciError.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FDICABINETINFO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\CabinetInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\FdiError.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FDINOTIFICATION.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FDINOTIFICATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\FdiNotificationType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FNALLOC.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FNCLOSE.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FNFDINOTIFY.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FNFREE.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FNOPEN.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FNREAD.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FNSEEK.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\FNWRITE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FNALLOC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FNCLOSE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FNFDINOTIFY.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FNFREE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FNOPEN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FNREAD.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FNSEEK.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\FNWRITE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\LzError.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\LzException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\LzxHeader.cs" />
@@ -59,11 +59,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumPhysicalStoreCallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumSystemStoreCallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CertEnumSystemStoreLocationCallback.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_PHYSICAL_STORE_INFO.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_SYSTEM_STORE_INFO.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CERT_SYSTEM_STORE_RELOCATE_PARA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\CERT_PHYSICAL_STORE_INFO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\CERT_SYSTEM_STORE_INFO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\CERT_SYSTEM_STORE_RELOCATE_PARA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoDefines.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CRYPT_DATA_BLOB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\CRYPT_DATA_BLOB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\PhysicalStoreInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\StoreOpenFlags.cs" />
@@ -72,6 +72,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\SystemStoreLocationId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\DriveLockedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\DriveNotReadyException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\ErrorMode.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\GenericMapping.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleZeroIsInvalid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleZeroOrMinusOneIsInvalid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\Unsafe\OBJECT_ATTRIBUTES.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\ObjectAttributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\ObjectInformation.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Memory\HeapHandleCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\LocalHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\MemoryDefines.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Memory\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessAccessRights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessMemoryCountersExtended.cs" />
@@ -131,10 +134,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)SafeString\Unsafe\UNICODE_STRING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Unsafe\Imports.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compression\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\FdiHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Com\ComMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\CryptoMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Cryptography.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\SecurityDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\AccessMask.cs" />
@@ -270,7 +273,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FileStandardInformationExtended.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Unsafe\FILE_STREAM_INFORMATION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindExtendedInfoLevels.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFirstFileExFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\FindFirstFileExtendedFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FullFileInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\GetFinalPathNameByHandleFlags.cs" />
@@ -309,8 +312,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\Unsafe\GlobalizationMethods.Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Handles\HandleMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Memory\MemoryMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handles\Handles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Memory\Memory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Processes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Threads.cs" />
@@ -360,8 +363,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\Collections\CacheEventSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Conversion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Delegates.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support\Internal\Imports.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support\Internal\Macros.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Paths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Pointers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Strings.cs" />
@@ -380,7 +381,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemTime.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Query\NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsStore\WindowsStore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\LParam.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\Unsafe\HWND.cs" />
@@ -390,12 +391,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFullPath.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Com\Native\ComMethods.Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Com\Native\Imports.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Compression\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)Com\Native\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)Globalization\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)ProcessAndThreads\Unsafe\" />
     <Folder Include="$(MSBuildThisFileDirectory)SafeString\Unsafe\" />

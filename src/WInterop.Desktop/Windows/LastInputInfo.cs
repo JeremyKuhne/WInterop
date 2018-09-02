@@ -16,11 +16,11 @@ namespace WInterop.Windows
         /// <summary>
         /// Size of the struct in bytes.
         /// </summary>
-        public uint cbSize;
+        public uint Size;
 
         /// <summary>
         /// Tick count when the last input was recieved.
         /// </summary>
-        public uint dwTime;
+        public uint Time;
     }
 }

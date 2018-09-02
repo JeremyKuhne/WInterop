@@ -15,10 +15,10 @@ namespace WInterop.Windows
     /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646271.aspx"/></remarks>
     public struct KeyboardInput
     {
-        public VirtualKey wVk;
-        public ushort wScan;
-        public KeyEvent dwFlags;
-        public uint time;
-        public IntPtr dwExtraInfo;
+        public VirtualKey VirtualKey;
+        public ushort Scan;
+        public KeyEvent Flags;
+        public uint Time;
+        public IntPtr ExtraInfo;
     }
 }

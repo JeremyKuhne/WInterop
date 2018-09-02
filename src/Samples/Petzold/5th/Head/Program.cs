@@ -67,7 +67,8 @@ namespace Head
                     hwndList = Windows.CreateWindow(
                         className: "listbox",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard,
-                        bounds: new Rectangle(baseUnits.Width, baseUnits.Height * 3, baseUnits.Width * 13 + Windows.GetSystemMetrics(SystemMetric.CXVSCROLL), baseUnits.Height * 10),
+                        bounds: new Rectangle(baseUnits.Width, baseUnits.Height * 3,
+                            baseUnits.Width * 13 + Windows.GetSystemMetrics(SystemMetric.VerticalScrollWidth), baseUnits.Height * 10),
                         parentWindow: window,
                         menuHandle: (MenuHandle)ID_LIST,
                         instance: ModuleInstance);

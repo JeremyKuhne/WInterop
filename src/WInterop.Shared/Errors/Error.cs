@@ -11,7 +11,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
 using WInterop.Errors.Unsafe;
-using Internal = WInterop.Support.Internal;
 
 namespace WInterop.Errors
 {

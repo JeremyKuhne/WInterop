@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
-using WInterop.Support.Internal;
+using WInterop.Memory.Unsafe;
 
 namespace WInterop.Memory
 {

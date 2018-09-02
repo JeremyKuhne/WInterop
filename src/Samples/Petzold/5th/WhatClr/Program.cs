@@ -38,8 +38,8 @@ namespace WhatClr
                 dcScreen.GetTextMetrics(out tm);
             }
 
-            cxWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CXBORDER) + 12 * tm.AverageCharWidth;
-            cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.CYBORDER) + Windows.GetSystemMetrics(SystemMetric.CYCAPTION) + 2 * tm.Height;
+            cxWindow = 2 * Windows.GetSystemMetrics(SystemMetric.BorderWidth) + 12 * tm.AverageCharWidth;
+            cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.BorderHeight) + Windows.GetSystemMetrics(SystemMetric.CaptionAreaHeight) + 2 * tm.Height;
         }
 
         const int ID_TIMER = 1;

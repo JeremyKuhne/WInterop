@@ -11,17 +11,65 @@ namespace WInterop.Windows
     public enum CommandId : int
     {
         Error = 0,
-        IDOK           = 1,
-        IDCANCEL       = 2,
-        IDABORT        = 3,
-        IDRETRY        = 4,
-        IDIGNORE       = 5,
-        IDYES          = 6,
-        IDNO           = 7,
-        IDCLOSE        = 8,
-        IDHELP         = 9,
-        IDTRYAGAIN     = 10,
-        IDCONTINUE     = 11,
-        IDTIMEOUT      = 32000
+
+        /// <summary>
+        /// [IDOK]
+        /// </summary>
+        Ok = 1,
+
+        /// <summary>
+        /// [IDCANCEL]
+        /// </summary>
+        Cancel = 2,
+
+        /// <summary>
+        /// [IDABORT]
+        /// </summary>
+        Abort = 3,
+
+        /// <summary>
+        /// [IDRETRY]
+        /// </summary>
+        Retry = 4,
+
+        /// <summary>
+        /// [IDIGNORE]
+        /// </summary>
+        Ignore = 5,
+
+        /// <summary>
+        /// [IDYES]
+        /// </summary>
+        Yes = 6,
+
+        /// <summary>
+        /// [IDNO]
+        /// </summary>
+        No = 7,
+
+        /// <summary>
+        /// [IDCLOSE]
+        /// </summary>
+        Close = 8,
+
+        /// <summary>
+        /// [IDHELP]
+        /// </summary>
+        Help = 9,
+
+        /// <summary>
+        /// [IDTRYAGAIN]
+        /// </summary>
+        TryAgain = 10,
+
+        /// <summary>
+        /// [IDCONTINUE]
+        /// </summary>
+        Continue = 11,
+
+        /// <summary>
+        /// [IDTIMEOUT]
+        /// </summary>
+        Timeout = 32000
     }
 }

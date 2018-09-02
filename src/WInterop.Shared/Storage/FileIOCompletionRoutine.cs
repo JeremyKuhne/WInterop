@@ -15,7 +15,7 @@ namespace WInterop.Storage
     /// ReadFileEx, WriteFileEx, and ReadDirectoryChanges.
     /// </summary>
     public delegate void FileIOCompletionRoutine(
-        WindowsError dwErrorCode,
-        uint dwNumberOfBytesTransfered,
-        ref OVERLAPPED lpOverlapped);
+        WindowsError ErrorCode,
+        uint NumberOfBytesTransfered,
+        ref OVERLAPPED Overlapped);
 }

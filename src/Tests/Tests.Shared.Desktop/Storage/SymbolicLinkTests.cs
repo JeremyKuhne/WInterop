@@ -49,9 +49,9 @@ namespace StorageTests
                 using (var handle = Storage.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
                         .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
                         .Should().Be(extendedPath);
                 }
 
@@ -59,9 +59,9 @@ namespace StorageTests
                     ShareModes.ReadWrite, FileAttributes.None, FileFlags.OpenReparsePoint))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
                         .Should().Be(extendedLink);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
                         .Should().Be(extendedLink);
                 }
             }

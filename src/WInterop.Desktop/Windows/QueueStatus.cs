@@ -13,21 +13,21 @@ namespace WInterop.Windows
     [Flags]
     public enum QueueStatus : uint
     {
-        QS_KEY             = 0x0001,
-        QS_MOUSEMOVE       = 0x0002,
-        QS_MOUSEBUTTON     = 0x0004,
-        QS_POSTMESSAGE     = 0x0008,
-        QS_TIMER           = 0x0010,
-        QS_PAINT           = 0x0020,
-        QS_SENDMESSAGE     = 0x0040,
-        QS_HOTKEY          = 0x0080,
-        QS_ALLPOSTMESSAGE  = 0x0100,
-        QS_RAWINPUT        = 0x0400,
-        QS_TOUCH           = 0x0800,
-        QS_POINTER         = 0x1000,
-        QS_MOUSE           = QS_MOUSEMOVE | QS_MOUSEBUTTON,
-        QS_INPUT           = QS_MOUSE | QS_KEY | QS_RAWINPUT | QS_TOUCH | QS_POINTER,
-        QS_ALLEVENTS       = QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY,
-        QS_ALLINPUT        = QS_ALLEVENTS | QS_SENDMESSAGE
+        Key             = 0x0001,
+        MouseMove       = 0x0002,
+        MouseButton     = 0x0004,
+        PostMessage     = 0x0008,
+        Timer           = 0x0010,
+        Paint           = 0x0020,
+        SendMessage     = 0x0040,
+        HotKey          = 0x0080,
+        AllPostMessage  = 0x0100,
+        RawInput        = 0x0400,
+        Touch           = 0x0800,
+        Pointer         = 0x1000,
+        Mouse           = MouseMove | MouseButton,
+        Input           = Mouse | Key | RawInput | Touch | Pointer,
+        AllEvents       = Input | PostMessage | Timer | Paint | HotKey,
+        AllInput        = AllEvents | SendMessage
     }
 }

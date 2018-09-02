@@ -17,9 +17,9 @@ namespace WInterop.Storage
          long TotalBytesTransferred,
          long StreamSize,
          long StreamBytesTransferred,
-         uint dwStreamNumber,
-         CopyProgressCallbackReason dwCallbackReason,
-         IntPtr hSourceFile,
-         IntPtr hDestinationFile,
-         IntPtr lpData);
+         uint StreamNumber,
+         CopyProgressCallbackReason CallbackReason,
+         IntPtr SourceFile,
+         IntPtr DestinationFile,
+         IntPtr Data);
 }

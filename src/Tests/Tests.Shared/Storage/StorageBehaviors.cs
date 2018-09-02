@@ -274,7 +274,7 @@ namespace Tests.File
                     findHandle.Should().NotBe(IntPtr.Zero);
                     try
                     {
-                        findData.cFileName.CreateString().Should().Be(Paths.GetLastSegment(path));
+                        findData.FileName.CreateString().Should().Be(Paths.GetLastSegment(path));
                     }
                     finally
                     {

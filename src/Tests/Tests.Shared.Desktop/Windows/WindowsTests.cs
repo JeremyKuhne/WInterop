@@ -86,7 +86,7 @@ namespace WindowsTests
         [Fact]
         public void GetOwner_Desktop()
         {
-            var window = Windows.GetWindow(Windows.GetDesktopWindow(), GetWindowOption.GW_OWNER);
+            var window = Windows.GetWindow(Windows.GetDesktopWindow(), GetWindowOption.Owner);
             window.Should().Be(new WindowHandle());
         }
 

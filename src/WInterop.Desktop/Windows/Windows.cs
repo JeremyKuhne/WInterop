@@ -483,7 +483,7 @@ namespace WInterop.Windows
 
         public unsafe static int SetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo, bool redraw)
         {
-            scrollInfo.cbSize = (uint)sizeof(ScrollInfo);
+            scrollInfo.Size = (uint)sizeof(ScrollInfo);
             int result = Imports.SetScrollInfo(window, scrollBar, ref scrollInfo, redraw);
 
             return result;
@@ -500,14 +500,14 @@ namespace WInterop.Windows
 
         public unsafe static void GetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo)
         {
-            scrollInfo.cbSize = (uint)sizeof(ScrollInfo);
+            scrollInfo.Size = (uint)sizeof(ScrollInfo);
             if (!Imports.GetScrollInfo(window, scrollBar, ref scrollInfo))
                 throw Error.GetIoExceptionForLastError();
         }
 
         public unsafe static int ScrollWindow(this in WindowHandle window, Point delta)
         {
-            int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, null, null, IntPtr.Zero, null, ScrollWindowFlags.SW_ERASE | ScrollWindowFlags.SW_INVALIDATE);
+            int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, null, null, IntPtr.Zero, null, ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
 
             if (result == 0)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -520,7 +520,7 @@ namespace WInterop.Windows
             Gdi.Unsafe.RECT scrollRect = scroll;
             Gdi.Unsafe.RECT clipRect = clip;
 
-            int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, &scrollRect, &clipRect, IntPtr.Zero, null, ScrollWindowFlags.SW_ERASE | ScrollWindowFlags.SW_INVALIDATE);
+            int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, &scrollRect, &clipRect, IntPtr.Zero, null, ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
 
             if (result == 0)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);

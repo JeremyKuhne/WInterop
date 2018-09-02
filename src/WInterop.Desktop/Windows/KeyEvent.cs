@@ -13,9 +13,24 @@ namespace WInterop.Windows
     [Flags]
     public enum KeyEvent : uint
     {
-        KEYEVENTF_EXTENDEDKEY = 0x0001,
-        KEYEVENTF_KEYUP       = 0x0002,
-        KEYEVENTF_UNICODE     = 0x0004,
-        KEYEVENTF_SCANCODE    = 0x0008
+        /// <summary>
+        /// [KEYEVENTF_EXTENDEDKEY]
+        /// </summary>
+        ExtendedKey = 0x0001,
+
+        /// <summary>
+        /// [KEYEVENTF_KEYUP]
+        /// </summary>
+        KeyUp = 0x0002,
+
+        /// <summary>
+        /// [KEYEVENTF_UNICODE]
+        /// </summary>
+        Unicode = 0x0004,
+
+        /// <summary>
+        /// [KEYEVENTF_SCANCODE]
+        /// </summary>
+        ScanCode = 0x0008
     }
 }

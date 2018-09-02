@@ -10,18 +10,18 @@ namespace WInterop.Windows
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648395.aspx
     public enum SystemCursor : uint
     {
-        OCR_NORMAL         = 32512,
-        OCR_IBEAM          = 32513,
-        OCR_WAIT           = 32514,
-        OCR_CROSS          = 32515,
-        OCR_UP             = 32516,
-        OCR_SIZENWSE       = 32642,
-        OCR_SIZENESW       = 32643,
-        OCR_SIZEWE         = 32644,
-        OCR_SIZENS         = 32645,
-        OCR_SIZEALL        = 32646,
-        OCR_NO             = 32648,
-        OCR_HAND           = 32649,
-        OCR_APPSTARTING    = 32650
+        Normal         = 32512,
+        IBeam          = 32513,
+        Wait           = 32514,
+        Cross          = 32515,
+        Up             = 32516,
+        SizeNwse       = 32642,
+        SizeNesw       = 32643,
+        SizeWe         = 32644,
+        SizeNs         = 32645,
+        SizeAll        = 32646,
+        No             = 32648,
+        Hand           = 32649,
+        AppStarting    = 32650
     }
 }

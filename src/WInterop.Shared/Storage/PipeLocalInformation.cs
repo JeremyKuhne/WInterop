@@ -15,57 +15,57 @@ namespace WInterop.Storage
     /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff728846.aspx"/>
     /// <see cref="https://msdn.microsoft.com/en-us/library/cc232083.aspx"/>
     /// </remarks>
-    public struct PipeLocalInformation
+    public readonly struct PipeLocalInformation
     {
         /// <summary>
         /// Type of the named pipe (stream or message).
         /// </summary>
-        public PipeType NamedPipeType;
+        public readonly PipeType NamedPipeType;
 
         /// <summary>
         /// The pipe configuration (inbound, outbound, or full-duplex).
         /// </summary>
-        public PipeConfiguration NamedPipeConfiguration;
+        public readonly PipeConfiguration NamedPipeConfiguration;
 
         /// <summary>
         /// The maximum number of instances that can be createed for
         /// the pipe. Specified by the first instance.
         /// </summary>
-        public uint MaximumInstances;
+        public readonly uint MaximumInstances;
 
         /// <summary>
         /// The current number of instances.
         /// </summary>
-        public uint CurrentInstances;
+        public readonly uint CurrentInstances;
 
         /// <summary>
         /// Inbound quota, in bytes.
         /// </summary>
-        public uint InboundQuota;
+        public readonly uint InboundQuota;
 
         /// <summary>
         /// Amount of data available, in bytes, to be read.
         /// </summary>
-        public uint ReadDataAvailable;
+        public readonly uint ReadDataAvailable;
 
         /// <summary>
         /// Outbound quota, in bytes.
         /// </summary>
-        public uint OutboundQuota;
+        public readonly uint OutboundQuota;
 
         /// <summary>
         /// Write quota, in bytes.
         /// </summary>
-        public uint WriteQuotaAvailable;
+        public readonly uint WriteQuotaAvailable;
 
         /// <summary>
         /// Current state of the pipe.
         /// </summary>
-        public PipeState NamedPipeState;
+        public readonly PipeState NamedPipeState;
 
         /// <summary>
         /// Which end of the pipe.
         /// </summary>
-        public PipeEnd NamedPipeEnd;
+        public readonly PipeEnd NamedPipeEnd;
     }
 }

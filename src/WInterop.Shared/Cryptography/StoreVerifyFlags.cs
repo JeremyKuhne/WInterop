@@ -15,12 +15,39 @@ namespace WInterop.Cryptography.Types
     [Flags]
     public enum StoreVerifyFlags : uint
     {
-        CERT_STORE_SIGNATURE_FLAG = 0x00000001,
-        CERT_STORE_TIME_VALIDITY_FLAG = 0x00000002,
-        CERT_STORE_REVOCATION_FLAG = 0x00000004,
-        CERT_STORE_NO_CRL_FLAG = 0x00010000,
-        CERT_STORE_NO_ISSUER_FLAG = 0x00020000,
-        CERT_STORE_BASE_CRL_FLAG = 0x00000100,
-        CERT_STORE_DELTA_CRL_FLAG = 0x00000200
+        /// <summary>
+        /// [CERT_STORE_SIGNATURE_FLAG]
+        /// </summary>
+        Signature = 0x00000001,
+
+        /// <summary>
+        /// [CERT_STORE_TIME_VALIDITY_FLAG]
+        /// </summary>
+        TimeValidity = 0x00000002,
+
+        /// <summary>
+        /// [CERT_STORE_REVOCATION_FLAG]
+        /// </summary>
+        Revocation = 0x00000004,
+
+        /// <summary>
+        /// [CERT_STORE_NO_CRL_FLAG]
+        /// </summary>
+        NoCrl = 0x00010000,
+
+        /// <summary>
+        /// [CERT_STORE_NO_ISSUER_FLAG]
+        /// </summary>
+        NoIssuer = 0x00020000,
+
+        /// <summary>
+        /// [CERT_STORE_BASE_CRL_FLAG]
+        /// </summary>
+        BaseCrl = 0x00000100,
+
+        /// <summary>
+        /// [CERT_STORE_DELTA_CRL_FLAG]
+        /// </summary>
+        DeltaCrl = 0x00000200
     }
 }

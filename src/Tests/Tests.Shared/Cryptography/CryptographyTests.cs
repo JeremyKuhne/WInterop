@@ -38,10 +38,10 @@ namespace Tests.Cryptography
                 null;
 #endif
 
-            var localMachine = WInterop.Cryptography.Cryptography.EnumerateSystemStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE);
+            var localMachine = WInterop.Cryptography.Cryptography.EnumerateSystemStores(SystemStoreLocation.LocalMachine);
             localMachine.Should().NotBeEmpty();
 
-            var localMachineByName = WInterop.Cryptography.Cryptography.EnumerateSystemStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE, localMachineName);
+            var localMachineByName = WInterop.Cryptography.Cryptography.EnumerateSystemStores(SystemStoreLocation.LocalMachine, localMachineName);
 
             if (localMachineName != null)
                 localMachineByName.Should().OnlyContain(x => x.Name.StartsWith(localMachineName, StringComparison.Ordinal), "when specifying the machine name they should come back with the name");
@@ -61,7 +61,7 @@ namespace Tests.Cryptography
         public void BasicEnumeratePhysical()
         {
             string[] knownPhysical = { ".Default", ".AuthRoot", ".GroupPolicy", ".Enterprise" };
-            var physical = WInterop.Cryptography.Cryptography.EnumeratePhysicalStores(SystemStoreLocation.CERT_SYSTEM_STORE_LOCAL_MACHINE, "Root");
+            var physical = WInterop.Cryptography.Cryptography.EnumeratePhysicalStores(SystemStoreLocation.LocalMachine, "Root");
             knownPhysical.Should().BeSubsetOf(physical.Select(p => p.PhysicalStoreName));
         }
     }

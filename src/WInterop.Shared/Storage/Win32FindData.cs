@@ -15,18 +15,18 @@ namespace WInterop.Storage
     /// </summary>
     /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/desktop/api/minwinbase/ns-minwinbase-_win32_find_dataa"/></msdn>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public ref struct Win32FindData
+    public readonly struct Win32FindData
     {
-        public FileAttributes dwFileAttributes;
-        public FileTime ftCreationTime;
-        public FileTime ftLastAccessTime;
-        public FileTime ftLastWriteTime;
-        public HighLowUlong nFileSize;
-        public ReparseTag dwReserved0;
-        public uint dwReserved1;
-        private FixedString.Size260 _cFileName;
-        private FixedString.Size14 _cAlternateFileName;
-        public ReadOnlySpan<char> cFileName => _cFileName.Buffer;
-        public ReadOnlySpan<char> cAlternateFileName => _cAlternateFileName.Buffer;
+        public readonly FileAttributes FileAttributes;
+        public readonly FileTime CreationTime;
+        public readonly FileTime LastAccessTime;
+        public readonly FileTime LastWriteTime;
+        public readonly HighLowUlong FileSize;
+        public readonly ReparseTag ReparseTag; // dwReserved0
+        public readonly uint dwReserved1;
+        private readonly FixedString.Size260 _cFileName;
+        private readonly FixedString.Size14 _cAlternateFileName;
+        public ReadOnlySpan<char> FileName => _cFileName.Buffer;
+        public ReadOnlySpan<char> AlternateFileName => _cAlternateFileName.Buffer;
     }
 }

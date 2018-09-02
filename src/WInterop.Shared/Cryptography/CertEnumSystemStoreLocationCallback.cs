@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Cryptography.Types
+namespace WInterop.Cryptography
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376061.aspx
     [return: MarshalAs(UnmanagedType.Bool)]

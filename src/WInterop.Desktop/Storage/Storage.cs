@@ -261,7 +261,7 @@ namespace WInterop.Storage
                 lpProgressRoutine: null,
                 lpData: IntPtr.Zero,
                 pbCancel: ref cancel,
-                dwCopyFlags: overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS))
+                dwCopyFlags: overwrite ? 0 : CopyFileFlags.FailIfExists))
             {
                 throw Error.GetIoExceptionForLastError(source);
             }

@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using WInterop.Compression.Unsafe;
+
 namespace WInterop.Compression
 {
     public class LzCreateHandle : LzHandle
@@ -13,7 +15,7 @@ namespace WInterop.Compression
 
         protected override void Dispose(bool disposing)
         {
-            Compression.Imports.LZCloseFile(RawHandle);
+            Imports.LZCloseFile(RawHandle);
         }
     }
 }

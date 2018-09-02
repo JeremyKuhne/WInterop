@@ -18,52 +18,57 @@ namespace WInterop.Storage
     {
         /// <summary>
         /// The copy operation fails immediately if the target file already exists.
+        /// [COPY_FILE_FAIL_IF_EXISTS]
         /// </summary>
-        COPY_FILE_FAIL_IF_EXISTS = 0x00000001,
+        FailIfExists = 0x00000001,
 
         /// <summary>
         /// Progress of the copy is tracked in the target file in case the copy fails. The failed copy can be restarted at a later time by specifying the same values
         /// for lpExistingFileName and lpNewFileName as those used in the call that failed. This can significantly slow down the copy operation as the new file may
-        /// be flushed multiple times during the copy operation.
+        /// be flushed multiple times during the copy operation. [COPY_FILE_RESTARTABLE]
         /// </summary>
-        COPY_FILE_RESTARTABLE = 0x00000002,
+        Restartable = 0x00000002,
 
         /// <summary>
-        /// The file is copied and the original file is opened for write access.
+        /// The file is copied and the original file is opened for write access. [COPY_FILE_OPEN_SOURCE_FOR_WRITE]
         /// </summary>
-        COPY_FILE_OPEN_SOURCE_FOR_WRITE = 0x00000004,
+        OpenSourceForWrite = 0x00000004,
 
         /// <summary>
-        /// An attempt to copy an encrypted file will succeed even if the destination copy cannot be encrypted.
+        /// An attempt to copy an encrypted file will succeed even if the destination copy cannot be encrypted. [COPY_FILE_ALLOW_DECRYPTED_DESTINATION]
         /// </summary>
-        COPY_FILE_ALLOW_DECRYPTED_DESTINATION = 0x00000008,
+        AllowDecryptedDestination = 0x00000008,
 
         /// <summary>
-        /// If the source file is a symbolic link, the destination file is also a symbolic link pointing to the same file that the source symbolic link is pointing to.
+        /// If the source file is a symbolic link, the destination file is also a symbolic link pointing to the same file
+        /// that the source symbolic link is pointing to. [COPY_FILE_COPY_SYMLINK]
         /// </summary>
-        COPY_FILE_COPY_SYMLINK = 0x00000800,
+        CopySymlink = 0x00000800,
 
         /// <summary>
         /// The copy operation is performed using unbuffered I/O, bypassing system I/O cache resources. Recommended for very large file transfers.
+        /// [COPY_FILE_NO_BUFFERING]
         /// </summary>
-        COPY_FILE_NO_BUFFERING = 0x00001000,
+        NoBuffering = 0x00001000,
 
         /// <summary>
         /// (CopyFile2 only) The copy is attempted, specifying ACCESS_SYSTEM_SECURITY for the source file and ACCESS_SYSTEM_SECURITY | WRITE_DAC | WRITE_OWNER for the
         /// destination file. If these requests are denied the access request will be reduced to the highest privilege level for which access is granted. For
         /// more information see SACL Access Right. This can be used to allow the CopyFile2ProgressRoutine callback to perform operations requiring higher
-        /// privileges, such as copying the security attributes for the file.
+        /// privileges, such as copying the security attributes for the file. [COPY_FILE_REQUEST_SECURITY_PRIVILEGES]
         /// </summary>
-        COPY_FILE_REQUEST_SECURITY_PRIVILEGES = 0x00002000,
+        RequestSecurityPrivileges = 0x00002000,
 
         /// <summary>
-        /// (CopyFile2 only) The destination file is examined to see if it was copied using COPY_FILE_RESTARTABLE. If so the copy is resumed. If not the file will be fully copied.
+        /// (CopyFile2 only) The destination file is examined to see if it was copied using COPY_FILE_RESTARTABLE. If so the copy is resumed.
+        /// If not the file will be fully copied. [COPY_FILE_RESUME_FROM_PAUSE]
         /// </summary>
-        COPY_FILE_RESUME_FROM_PAUSE = 0x00004000,
+        ResumeFromPause = 0x00004000,
 
         /// <summary>
         /// (CopyFile2 only) Do not attempt to use the Windows Copy Offload mechanism. This is not generally recommended.
+        /// [COPY_FILE_NO_OFFLOAD]
         /// </summary>
-        COPY_FILE_NO_OFFLOAD = 0x00040000,
+        NoOffload = 0x00040000,
     }
 }

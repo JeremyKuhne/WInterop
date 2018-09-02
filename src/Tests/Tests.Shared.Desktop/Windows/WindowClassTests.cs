@@ -118,7 +118,7 @@ namespace WindowsTests
 
             try
             {
-                var info = Windows.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
+                var info = Windows.GetClassInfo(Modules.GetModuleHandle(null), atom);
                 info.ClassName.Should().Be(null);
                 info.ClassAtom.Should().Be(atom);
                 info.Style.Should().Be(ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw);
@@ -127,7 +127,7 @@ namespace WindowsTests
             {
                 Windows.UnregisterClass(atom, null);
                 Action action =
-                    () => Windows.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
+                    () => Windows.GetClassInfo(Modules.GetModuleHandle(null), atom);
                 action.Should().Throw<IOException>().And
                     .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_HANDLE));
             }
@@ -148,7 +148,7 @@ namespace WindowsTests
 
             try
             {
-                var info = Windows.GetClassInfo(ModuleMethods.GetModuleHandle(null), "RegisterClass_UnregisterClassName");
+                var info = Windows.GetClassInfo(Modules.GetModuleHandle(null), "RegisterClass_UnregisterClassName");
                 info.ClassName.Should().Be("RegisterClass_UnregisterClassName");
                 info.ClassAtom.Should().Be(Atom.Null);
                 info.Style.Should().Be(ClassStyle.HorizontalRedraw);
@@ -157,7 +157,7 @@ namespace WindowsTests
             {
                 Windows.UnregisterClass("RegisterClass_UnregisterClassName", null);
                 Action action =
-                    () => Windows.GetClassInfo(ModuleMethods.GetModuleHandle(null), "RegisterClass_UnregisterClassName");
+                    () => Windows.GetClassInfo(Modules.GetModuleHandle(null), "RegisterClass_UnregisterClassName");
                 action.Should().Throw<IOException>().And
                     .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
             }
@@ -228,7 +228,7 @@ namespace WindowsTests
 
                 try
                 {
-                    var info = Windows.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
+                    var info = Windows.GetClassInfo(Modules.GetModuleHandle(null), atom);
                     info.ClassExtraBytes.Should().Be(80);
 
                     IntPtr result = Windows.SetClassLong(window, (ClassLong)72, (IntPtr)0x0000BEEF);
@@ -273,7 +273,7 @@ namespace WindowsTests
 
                 try
                 {
-                    var info = Windows.GetClassInfo(ModuleMethods.GetModuleHandle(null), atom);
+                    var info = Windows.GetClassInfo(Modules.GetModuleHandle(null), atom);
                     info.WindowExtraBytes.Should().Be(80);
 
                     IntPtr result = window.SetWindowLong((WindowLong)72, (IntPtr)0x0000BEEF);

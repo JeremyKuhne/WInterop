@@ -63,7 +63,7 @@ namespace WInterop.Storage
         /// </summary>
         public static string GetFinalPathNameByHandle(
             SafeFileHandle fileHandle,
-            GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED | GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+            GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FileNameNormalized | GetFinalPathNameByHandleFlags.VolumeNameDos)
         {
             var wrapper = new FinalPathNameByHandleWrapper { FileHandle = fileHandle, Flags = flags };
             return BufferHelper.ApiInvoke(ref wrapper);
@@ -322,7 +322,7 @@ namespace WInterop.Storage
             {
                 dwSize = (uint)sizeof(COPYFILE2_EXTENDED_PARAMETERS),
                 pfCancel = &cancel,
-                dwCopyFlags = overwrite ? 0 : CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS
+                dwCopyFlags = overwrite ? 0 : CopyFileFlags.FailIfExists
             };
 
             HRESULT hr = Imports.CopyFile2(source, destination,  ref parameters);

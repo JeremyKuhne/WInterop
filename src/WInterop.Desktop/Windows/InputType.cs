@@ -10,8 +10,19 @@ namespace WInterop.Windows
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646270.aspx
     public enum InputType : uint
     {
-        INPUT_MOUSE = 0,
-        INPUT_KEYBOARD = 1,
-        INPUT_HARDWARE = 2
+        /// <summary>
+        /// [INPUT_MOUSE]
+        /// </summary>
+        Mouse = 0,
+
+        /// <summary>
+        /// [INPUT_MOUSE]
+        /// </summary>
+        Keyboard = 1,
+
+        /// <summary>
+        /// [INPUT_MOUSE]
+        /// </summary>
+        Hardware = 2
     }
 }

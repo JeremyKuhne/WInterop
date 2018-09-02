@@ -10,7 +10,14 @@ namespace WInterop.Windows
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633532(v=vs.85).aspx
     public enum LockCode : uint
     {
-        LSFW_LOCK = 1,
-        LSFW_UNLOCK = 2
+        /// <summary>
+        /// [LSFW_LOCK]
+        /// </summary>
+        Lock = 1,
+
+        /// <summary>
+        /// [LSFW_UNLOCK]
+        /// </summary>
+        Unlock = 2
     }
 }

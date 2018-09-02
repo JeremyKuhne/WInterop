@@ -13,7 +13,6 @@ namespace WInterop.Storage
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh449407.aspx">CopyFile2ProgressRoutine</a> callback used by CopyFile2.
     /// </summary>
     public delegate CopyFile2MessageAction CopyFile2ProgressRoutine(
-        IntPtr pMessage,
-        IntPtr pvCallbackContext
-        );
+        IntPtr Message,
+        IntPtr CallbackContext);
 }

@@ -14,12 +14,12 @@ namespace WInterop.Storage
     /// </summary>
     /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/ns-fileapi-_win32_file_attribute_data"/></msdn>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct Win32FileAttributeData
+    public readonly struct Win32FileAttributeData
     {
-        public FileAttributes FileAttributes;
-        public FileTime CreationTime;
-        public FileTime LastAccessTime;
-        public FileTime LastWriteTime;
-        public HighLowUlong FileSize;
+        public readonly FileAttributes FileAttributes;
+        public readonly FileTime CreationTime;
+        public readonly FileTime LastAccessTime;
+        public readonly FileTime LastWriteTime;
+        public readonly HighLowUlong FileSize;
     }
 }

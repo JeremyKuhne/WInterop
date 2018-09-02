@@ -6,15 +6,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Com;
+using WInterop.Com.Unsafe;
 using WInterop.Errors;
 
 namespace WInterop.Com
 {
     public static partial class ComMethods
     {
-        public static HRESULT PropVariantClear(IntPtr pvar) => Support.Internal.Imports.PropVariantClear(pvar);
-
         public unsafe static object CreateStorage(
             string path,
             Guid riid,

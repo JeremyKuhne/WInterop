@@ -44,17 +44,17 @@ namespace StorageTests
                     handle.IsInvalid.Should().BeFalse();
 
                     string extendedPath = @"\\?\" + filePath;
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
                         .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
                         .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
                         .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
                         .Should().StartWith(@"\\?\Volume");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
                         .Should().StartWith(@"\Device\");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
                         .Should().Be(filePath.Substring(2));
                 }
             }
@@ -72,17 +72,17 @@ namespace StorageTests
                     handle.IsInvalid.Should().BeFalse();
 
                     string extendedPath = @"\\?\" + filePath;
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
                         .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
                         .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
                         .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
                         .Should().StartWith(@"\\?\Volume");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
                         .Should().StartWith(@"\Device\");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
                         .Should().Be(filePath.Substring(2));
                 }
             }
@@ -103,17 +103,17 @@ namespace StorageTests
                 {
                     handle.IsInvalid.Should().BeFalse();
 
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_NORMALIZED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
                         .Should().Be(filePath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FILE_NAME_OPENED)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
                         .Should().Be(filePath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_DOS)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
                         .Should().Be(filePath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_GUID)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
                         .Should().StartWith(@"\\?\Volume");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NT)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
                         .Should().StartWith(@"\Device\");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VOLUME_NAME_NONE)
+                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
                         .Should().Be(filePath.Substring(6));
                 }
             }

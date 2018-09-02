@@ -10,7 +10,14 @@ namespace WInterop.Windows
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648381.aspx
     public enum CursorState : uint
     {
-        CURSOR_SHOWING    = 0x00000001,
-        CURSOR_SUPPRESSED = 0x00000002
+        /// <summary>
+        /// [CURSOR_SHOWING]
+        /// </summary>
+        Showing = 0x00000001,
+
+        /// <summary>
+        /// [CURSOR_SUPPRESSED]
+        /// </summary>
+        Suppressed = 0x00000002
     }
 }

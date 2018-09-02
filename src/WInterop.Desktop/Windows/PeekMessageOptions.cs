@@ -33,21 +33,21 @@ namespace WInterop.Windows
         /// <summary>
         /// Process mouse and keyboard messages. [PM_QS_INPUT]
         /// </summary>
-        Input = QueueStatus.QS_INPUT << 16,
+        Input = QueueStatus.Input << 16,
 
         /// <summary>
         /// Process all posted messages, including timers and hotkeys. [PM_QS_POSTMESSAGE]
         /// </summary>
-        PostMessage = (QueueStatus.QS_POSTMESSAGE | QueueStatus.QS_HOTKEY | QueueStatus.QS_TIMER) << 16,
+        PostMessage = (QueueStatus.PostMessage | QueueStatus.HotKey | QueueStatus.Timer) << 16,
 
         /// <summary>
         /// Process paint messages. [PM_QS_PAINT]
         /// </summary>
-        Paint = QueueStatus.QS_PAINT << 16,
+        Paint = QueueStatus.Paint << 16,
 
         /// <summary>
         /// Process all sent messages. [PM_QS_SENDMESSAGE]
         /// </summary>
-        SendMessage = QueueStatus.QS_SENDMESSAGE << 16
+        SendMessage = QueueStatus.SendMessage << 16
     }
 }

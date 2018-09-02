@@ -15,14 +15,14 @@ namespace WInterop.Storage
     /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff545822.aspx"/>
     /// GetFileAttributesEx calls NtQueryFullAttributesFile.
     /// </remarks>
-    public struct FileNetworkOpenInformation
+    public readonly struct FileNetworkOpenInformation
     {
-        public LongFileTime CreationTime;
-        public LongFileTime LastAccessTime;
-        public LongFileTime LastWriteTime;
-        public LongFileTime ChangeTime;
-        public long AllocationSize;
-        public long EndOfFile;
-        public FileAttributes FileAttributes;
+        public readonly LongFileTime CreationTime;
+        public readonly LongFileTime LastAccessTime;
+        public readonly LongFileTime LastWriteTime;
+        public readonly LongFileTime ChangeTime;
+        public readonly long AllocationSize;
+        public readonly long EndOfFile;
+        public readonly FileAttributes FileAttributes;
     }
 }

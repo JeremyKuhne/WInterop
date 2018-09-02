@@ -13,23 +13,23 @@ namespace WInterop.Storage
     public enum CopyProgressResult : uint
     {
         /// <summary>
-        /// Continue the copy operation.
+        /// Continue the copy operation. [PROGRESS_CONTINUE]
         /// </summary>
-        PROGRESS_CONTINUE = 0,
+        Continue = 0,
 
         /// <summary>
-        /// Cancel the copy operation and delete the destination file.
+        /// Cancel the copy operation and delete the destination file. [PROGRESS_CANCEL]
         /// </summary>
-        PROGRESS_CANCEL = 1,
+        Cancel = 1,
 
         /// <summary>
-        /// Stop the copy operation. It can be restarted at a later time.
+        /// Stop the copy operation. It can be restarted at a later time. [PROGRESS_STOP]
         /// </summary>
-        PROGRESS_STOP = 2,
+        Stop = 2,
 
         /// <summary>
-        /// Continue the copy operation, but stop invoking CopyProgressRoutine to report progress.
+        /// Continue the copy operation, but stop invoking CopyProgressRoutine to report progress. [PROGRESS_QUIET]
         /// </summary>
-        PROGRESS_QUIET = 3
+        Quiet = 3
     }
 }

@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Handles.Unsafe;
 
 namespace WInterop.Handles
 {
@@ -23,7 +24,7 @@ namespace WInterop.Handles
 
         protected override bool ReleaseHandle()
         {
-            Support.Internal.Imports.CloseHandle(handle);
+            Imports.CloseHandle(handle);
             return true;
         }
     }

@@ -13,13 +13,14 @@ namespace WInterop.Storage
     public enum CopyProgressCallbackReason : uint
     {
         /// <summary>
-        /// Another part of the data file was copied.
+        /// Another part of the data file was copied. [CALLBACK_CHUNK_FINISHED]
         /// </summary>
-        CALLBACK_CHUNK_FINISHED = 0x00000000,
+        ChunkFinished = 0x00000000,
 
         /// <summary>
         /// Another stream was created and is about to be copied. This is the callback reason given when the callback routine is first invoked.
+        /// [CALLBACK_STREAM_SWITCH]
         /// </summary>
-        CALLBACK_STREAM_SWITCH = 0x00000001
+        StreamSwitch = 0x00000001
     }
 }

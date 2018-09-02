@@ -116,7 +116,7 @@ namespace WInterop.Storage.Unsafe
                 uint fSearchOp,                        // This never actually has meaning and is likely a holdover of 9x
                                                         // set it to 0 to avoid failing parameter checks.
                 IntPtr lpSearchFilter,                 // Reserved
-                FindFirstFileExFlags dwAdditionalFlags);
+                FindFirstFileExtendedFlags dwAdditionalFlags);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findnextfilew (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]

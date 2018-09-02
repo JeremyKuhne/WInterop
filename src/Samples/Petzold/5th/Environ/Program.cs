@@ -61,7 +61,7 @@ namespace Environ
                         bounds: new Rectangle(
                             baseUnits.Width,
                             baseUnits.Height * 3,
-                            bounds.Width - baseUnits.Width - Windows.GetSystemMetrics(SystemMetric.CXVSCROLL),
+                            bounds.Width - baseUnits.Width - Windows.GetSystemMetrics(SystemMetric.VerticalScrollWidth),
                             bounds.Height - baseUnits.Height * 4),
                         parentWindow: window,
                         menuHandle: (MenuHandle)ID_LIST,
@@ -73,7 +73,7 @@ namespace Environ
                         bounds: new Rectangle(
                             baseUnits.Width,
                             baseUnits.Height,
-                            bounds.Width - baseUnits.Width - Windows.GetSystemMetrics(SystemMetric.CXVSCROLL),
+                            bounds.Width - baseUnits.Width - Windows.GetSystemMetrics(SystemMetric.VerticalScrollWidth),
                             baseUnits.Height),
                         parentWindow: window,
                         menuHandle: (MenuHandle)ID_TEXT,

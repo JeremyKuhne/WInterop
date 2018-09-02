@@ -14,17 +14,17 @@ namespace WInterop.Storage
     /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff728845.aspx"/>
     /// <see cref="https://msdn.microsoft.com/en-us/library/cc232082.aspx"/>
     /// </remarks>
-    public struct PipeInformation
+    public readonly struct PipeInformation
     {
         /// <summary>
         /// The read mode of the pipe. Attempting to change from stream to message mode
         /// is not supported (and will return STATUS_INVALID_PARAMETER).
         /// </summary>
-        public PipeReadMode ReadMode;
+        public readonly PipeReadMode ReadMode;
 
         /// <summary>
         /// The completion mode.
         /// </summary>
-        public PipeCompletionMode CompletionMode;
+        public readonly PipeCompletionMode CompletionMode;
     }
 }

@@ -8,6 +8,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using WInterop.Com.Unsafe;
+using WInterop.Errors;
 
 namespace WInterop.Com
 {
@@ -114,7 +116,7 @@ namespace WInterop.Com
 
             IntPtr handle = Interlocked.Exchange(ref this.handle, IntPtr.Zero);
             if (handle != IntPtr.Zero)
-                Support.Internal.Imports.PropVariantClear(handle);
+                Error.ThrowIfFailed(Imports.VariantClear(handle));
 
             return true;
         }

@@ -14,38 +14,38 @@ namespace WInterop.Storage
     public enum DriveType : uint
     {
         /// <summary>
-        /// The drive type cannot be determined.
+        /// The drive type cannot be determined. [DRIVE_UNKNOWN]
         /// </summary>
-        DRIVE_UNKNOWN = 0,
+        Unknown = 0,
 
         /// <summary>
-        /// The root path is invalid; for example, there is no volume mounted at the specified path.
+        /// The root path is invalid; for example, there is no volume mounted at the specified path. [DRIVE_NO_ROOT_DIR]
         /// </summary>
-        DRIVE_NO_ROOT_DIR = 1,
+        NoRootDir = 1,
 
         /// <summary>
-        /// The drive has removable media; for example, a floppy drive, thumb drive, or flash card reader.
+        /// The drive has removable media; for example, a floppy drive, thumb drive, or flash card reader. [DRIVE_REMOVABLE]
         /// </summary>
-        DRIVE_REMOVABLE = 2,
+        Removable = 2,
 
         /// <summary>
-        /// The drive has fixed media; for example, a hard disk drive or flash drive.
+        /// The drive has fixed media; for example, a hard disk drive or flash drive. [DRIVE_FIXED]
         /// </summary>
-        DRIVE_FIXED = 3,
+        Fixed = 3,
 
         /// <summary>
-        /// The drive is a remote (network) drive.
+        /// The drive is a remote (network) drive. [DRIVE_REMOTE]
         /// </summary>
-        DRIVE_REMOTE = 4,
+        Remote = 4,
 
         /// <summary>
-        /// The drive is a CD-ROM drive.
+        /// The drive is a CD-ROM drive. [DRIVE_CDROM]
         /// </summary>
-        DRIVE_CDROM = 5,
+        Cdrom = 5,
 
         /// <summary>
-        /// The drive is a RAM disk.
+        /// The drive is a RAM disk. [DRIVE_RAMDISK]
         /// </summary>
-        DRIVE_RAMDISK = 6
+        RamDisk = 6
     }
 }

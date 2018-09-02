@@ -37,7 +37,7 @@ namespace ModuleTests
         [Fact]
         public void LoadAsResource()
         {
-            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(),
+            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(),
                 LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
             {
                 handle.IsInvalid.Should().BeFalse();
@@ -55,7 +55,7 @@ namespace ModuleTests
                 string longPathLibrary = Paths.Combine(longPath, "LoadAsResourceFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
-                using (var handle = ModuleMethods.LoadLibrary(longPathLibrary,
+                using (var handle = Modules.LoadLibrary(longPathLibrary,
                     LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
                 {
                     handle.IsInvalid.Should().BeFalse();
@@ -66,7 +66,7 @@ namespace ModuleTests
         [Fact]
         public void LoadString()
         {
-            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(),
+            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(),
                 LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
             {
                 string resource = Windows.LoadString(handle, 101);
@@ -84,7 +84,7 @@ namespace ModuleTests
                 string longPathLibrary = Paths.Combine(longPath, "LoadStringFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
-                using (var handle = ModuleMethods.LoadLibrary(longPathLibrary,
+                using (var handle = Modules.LoadLibrary(longPathLibrary,
                     LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
                 {
                     string resource = Windows.LoadString(handle, 101);
@@ -96,7 +96,7 @@ namespace ModuleTests
         [Fact]
         public void LoadAsBinary()
         {
-            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(), 0))
+            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(), 0))
             {
                 handle.IsInvalid.Should().BeFalse();
             }
@@ -112,7 +112,7 @@ namespace ModuleTests
                 string longPathLibrary = Paths.Combine(longPath, "LoadAsBinaryFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
-                using (var handle = ModuleMethods.LoadLibrary(longPathLibrary, LoadLibraryFlags.LoadWithAlteredSearchPath))
+                using (var handle = Modules.LoadLibrary(longPathLibrary, LoadLibraryFlags.LoadWithAlteredSearchPath))
                 {
                     handle.IsInvalid.Should().BeFalse();
                 }
@@ -125,10 +125,10 @@ namespace ModuleTests
         [Fact]
         public void LoadFunction()
         {
-            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LoadWithAlteredSearchPath))
+            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LoadWithAlteredSearchPath))
             {
                 handle.IsInvalid.Should().BeFalse();
-                var doubler = ModuleMethods.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
+                var doubler = Modules.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
                 doubler(2).Should().Be(4);
             }
         }
@@ -143,10 +143,10 @@ namespace ModuleTests
                 string longPathLibrary = Paths.Combine(longPath, "LoadFunctionFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
-                using (var handle = ModuleMethods.LoadLibrary(longPathLibrary, 0))
+                using (var handle = Modules.LoadLibrary(longPathLibrary, 0))
                 {
                     handle.IsInvalid.Should().BeFalse();
-                    var doubler = ModuleMethods.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
+                    var doubler = Modules.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
                     doubler(2).Should().Be(4);
                 }
             }
@@ -158,10 +158,10 @@ namespace ModuleTests
         [Fact]
         public void LoadFunctionStandard()
         {
-            using (var handle = ModuleMethods.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LoadWithAlteredSearchPath))
+            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LoadWithAlteredSearchPath))
             {
                 handle.IsInvalid.Should().BeFalse();
-                var doubler = ModuleMethods.GetFunctionDelegate<DoubleDelegateStandard>(handle, "DoubleStdCall");
+                var doubler = Modules.GetFunctionDelegate<DoubleDelegateStandard>(handle, "DoubleStdCall");
                 doubler(2).Should().Be(4);
             }
         }
@@ -319,18 +319,18 @@ namespace ModuleTests
         [Fact]
         public void GetEntryModuleFileName()
         {
-            string path = ModuleMethods.GetModuleFileName(ModuleTypes.ModuleInstance.Null);
+            string path = Modules.GetModuleFileName(ModuleTypes.ModuleInstance.Null);
             path.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
         public void GetEntryModuleHandleAndFileName()
         {
-            var module = ModuleMethods.GetModuleHandle(null);
+            var module = Modules.GetModuleHandle(null);
             module.Should().NotBe(ModuleTypes.ModuleInstance.Null);
-            string pathByHandle = ModuleMethods.GetModuleFileName(module);
+            string pathByHandle = Modules.GetModuleFileName(module);
             pathByHandle.Should().NotBeNullOrWhiteSpace();
-            string pathByDefault = ModuleMethods.GetModuleFileName(ModuleTypes.ModuleInstance.Null);
+            string pathByDefault = Modules.GetModuleFileName(ModuleTypes.ModuleInstance.Null);
             // Strangely the path is cased differently when getting the module file name through GetModuleFileNameEx, but not GetModuleFileName.
             pathByHandle.Should().BeEquivalentTo(pathByDefault);
         }
@@ -338,24 +338,24 @@ namespace ModuleTests
         [Fact]
         public void GetEntryModuleInfo()
         {
-            var module = ModuleMethods.GetModuleHandle(null);
+            var module = Modules.GetModuleHandle(null);
             module.Should().NotBe(ModuleTypes.ModuleInstance.Null);
-            var info = ModuleMethods.GetModuleInfo(module);
+            var info = Modules.GetModuleInfo(module);
             info.BaseOfDll.Should().Be(module.DangerousGetHandle());
         }
 
         [Fact]
         public void GetProcessModules()
         {
-            var modules = ModuleMethods.GetProcessModules();
+            var modules = Modules.GetProcessModules();
             modules.Should().NotBeEmpty();
         }
 
         [Fact]
         public void GetProcessModulePaths()
         {
-            var modules = ModuleMethods.GetProcessModules();
-            var moduleNames = (from module in modules select ModuleMethods.GetModuleFileName(module)).ToArray();
+            var modules = Modules.GetProcessModules();
+            var moduleNames = (from module in modules select Modules.GetModuleFileName(module)).ToArray();
             moduleNames.Should().NotBeEmpty();
             moduleNames.Length.Should().Be(modules.Count());
         }

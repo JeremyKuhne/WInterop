@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Cryptography.Types
+namespace WInterop.Cryptography
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376059.aspx
     public delegate bool CertEnumSystemStoreCallback(

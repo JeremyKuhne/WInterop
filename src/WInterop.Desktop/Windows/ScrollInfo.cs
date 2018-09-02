@@ -13,12 +13,12 @@ namespace WInterop.Windows
     /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/bb787537.aspx"/></remarks>
     public struct ScrollInfo
     {
-        public uint cbSize;
-        public ScrollInfoMask fMask;
-        public int nMin;
-        public int nMax;
-        public uint nPage;
-        public int nPos;
-        public int nTrackPos;
+        public uint Size;
+        public ScrollInfoMask Mask;
+        public int Min;
+        public int Max;
+        public uint Page;
+        public int Position;
+        public int TrackPosition;
     }
 }

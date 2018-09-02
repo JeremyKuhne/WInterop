@@ -16,28 +16,33 @@ namespace WInterop.Storage
     public enum GetFinalPathNameByHandleFlags : uint
     {
         /// <summary>
-        /// Return the normalized drive name. This is the default.
+        /// Return the normalized drive name. This is the default. [FILE_NAME_NORMALIZED]
         /// </summary>
-        FILE_NAME_NORMALIZED = 0x0,
+        FileNameNormalized = 0x0,
+
         /// <summary>
-        /// Return the path with the drive letter. This is the default.
+        /// Return the path with the drive letter. This is the default. [VOLUME_NAME_DOS]
         /// </summary>
-        VOLUME_NAME_DOS = 0x0,
+        VolumeNameDos = 0x0,
+
         /// <summary>
-        /// Return the path with a volume GUID path instead of the drive name.
+        /// Return the path with a volume GUID path instead of the drive name. [VOLUME_NAME_GUID]
         /// </summary>
-        VOLUME_NAME_GUID = 0x1,
+        VolumeNameGuid = 0x1,
+
         /// <summary>
-        /// Return the path with the volume device path.
+        /// Return the path with the volume device path. [VOLUME_NAME_NT]
         /// </summary>
-        VOLUME_NAME_NT = 0x2,
+        VolumeNameNt = 0x2,
+
         /// <summary>
-        /// Return the path with no drive information.
+        /// Return the path with no drive information. [VOLUME_NAME_NONE]
         /// </summary>
-        VOLUME_NAME_NONE = 0x4,
+        VolumeNameNone = 0x4,
+
         /// <summary>
-        /// Return the opened file name (not normalized).
+        /// Return the opened file name (not normalized). [FILE_NAME_OPENED]
         /// </summary>
-        FILE_NAME_OPENED = 0x8,
+        FileNameOpened = 0x8,
     }
 }

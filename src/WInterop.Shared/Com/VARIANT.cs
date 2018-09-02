@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using WInterop.Handles;
 using WInterop.Support;
+using WInterop.Com.Unsafe;
+using WInterop.Errors;
 
 namespace WInterop.Com
 {
@@ -155,7 +157,8 @@ namespace WInterop.Com
         protected override bool ReleaseHandle()
         {
             IntPtr handle = Interlocked.Exchange(ref this.handle, IntPtr.Zero);
-            if (handle != IntPtr.Zero) Support.Internal.Imports.VariantClear(handle);
+            if (handle != IntPtr.Zero)
+                Error.ThrowIfFailed(Imports.VariantClear(handle));
 
             return true;
         }

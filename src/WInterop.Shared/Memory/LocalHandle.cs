@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Handles;
-using WInterop.Support.Internal;
+using WInterop.Memory.Unsafe;
 
 namespace WInterop.Memory
 {

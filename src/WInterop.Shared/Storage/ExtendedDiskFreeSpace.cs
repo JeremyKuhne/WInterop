@@ -7,21 +7,21 @@
 
 namespace WInterop.Storage
 {
-    public struct ExtendedDiskFreeSpace
+    public readonly struct ExtendedDiskFreeSpace
     {
         /// <summary>
         /// Total number of free bytes available to the current user
         /// </summary>
-        public ulong FreeBytesAvailable;
+        public readonly ulong FreeBytesAvailable;
 
         /// <summary>
         /// Total number of bytes available to the user
         /// </summary>
-        public ulong TotalNumberOfBytes;
+        public readonly ulong TotalNumberOfBytes;
 
         /// <summary>
         /// Total number of free bytes
         /// </summary>
-        public ulong TotalNumberOfFreeBytes;
+        public readonly ulong TotalNumberOfFreeBytes;
     }
 }

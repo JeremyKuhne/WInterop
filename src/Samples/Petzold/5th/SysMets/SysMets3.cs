@@ -32,16 +32,16 @@ namespace SysMets
                     // Set vertical scroll bar range and page size
                     si = new ScrollInfo
                     {
-                        fMask = ScrollInfoMask.Range | ScrollInfoMask.Page,
-                        nMin = 0,
-                        nMax = Metrics.SystemMetrics.Count - 1,
-                        nPage = (uint)(cyClient / cyChar),
+                        Mask = ScrollInfoMask.Range | ScrollInfoMask.Page,
+                        Min = 0,
+                        Max = Metrics.SystemMetrics.Count - 1,
+                        Page = (uint)(cyClient / cyChar),
                     };
                     window.SetScrollInfo(ScrollBar.Vertical, ref si, true);
 
                     // Set horizontal scroll bar range and page size
-                    si.nMax = 2 + iMaxWidth / cxChar;
-                    si.nPage = (uint)(cxClient / cxChar);
+                    si.Max = 2 + iMaxWidth / cxChar;
+                    si.Page = (uint)(cxClient / cxChar);
                     window.SetScrollInfo(ScrollBar.Horizontal, ref si, true);
 
                     return 0;
@@ -49,48 +49,48 @@ namespace SysMets
                     // Get all the vertical scroll bar information
                     si = new ScrollInfo
                     {
-                        fMask = ScrollInfoMask.All
+                        Mask = ScrollInfoMask.All
                     };
                     window.GetScrollInfo(ScrollBar.Vertical, ref si);
 
                     // Save the position for comparison later on
-                    int iVertPos = si.nPos;
+                    int iVertPos = si.Position;
 
                     switch ((ScrollCommand)wParam.LowWord)
                     {
                         case ScrollCommand.Top:
-                            si.nPos = si.nMin;
+                            si.Position = si.Min;
                             break;
                         case ScrollCommand.Bottom:
-                            si.nPos = si.nMax;
+                            si.Position = si.Max;
                             break;
                         case ScrollCommand.LineUp:
-                            si.nPos -= 1;
+                            si.Position -= 1;
                             break;
                         case ScrollCommand.LineDown:
-                            si.nPos += 1;
+                            si.Position += 1;
                             break;
                         case ScrollCommand.PageUp:
-                            si.nPos -= (int)si.nPage;
+                            si.Position -= (int)si.Page;
                             break;
                         case ScrollCommand.PageDown:
-                            si.nPos += (int)si.nPage;
+                            si.Position += (int)si.Page;
                             break;
                         case ScrollCommand.ThumbTrack:
-                            si.nPos = si.nTrackPos;
+                            si.Position = si.TrackPosition;
                             break;
                     }
 
                     // Set the position and then retrieve it. Due to adjustments
                     // by Windows it may not be the same as the value set.
-                    si.fMask = ScrollInfoMask.Position;
+                    si.Mask = ScrollInfoMask.Position;
                     window.SetScrollInfo(ScrollBar.Vertical, ref si, true);
                     window.GetScrollInfo(ScrollBar.Vertical, ref si);
 
                     // If the position has changed, scroll the window and update it
-                    if (si.nPos != iVertPos)
+                    if (si.Position != iVertPos)
                     {
-                        window.ScrollWindow(new Point(0, cyChar * (iVertPos - si.nPos)));
+                        window.ScrollWindow(new Point(0, cyChar * (iVertPos - si.Position)));
                         window.UpdateWindow();
                     }
                     return 0;
@@ -98,41 +98,41 @@ namespace SysMets
                     // Get all the horizontal scroll bar information
                     si = new ScrollInfo
                     {
-                        fMask = ScrollInfoMask.All
+                        Mask = ScrollInfoMask.All
                     };
                     window.GetScrollInfo(ScrollBar.Horizontal, ref si);
 
                     // Save the position for comparison later on
-                    int iHorzPos = si.nPos;
+                    int iHorzPos = si.Position;
                     switch ((ScrollCommand)wParam.LowWord)
                     {
                         case ScrollCommand.LineLeft:
-                            si.nPos -= 1;
+                            si.Position -= 1;
                             break;
                         case ScrollCommand.LineRight:
-                            si.nPos += 1;
+                            si.Position += 1;
                             break;
                         case ScrollCommand.PageLeft:
-                            si.nPos -= (int)si.nPage;
+                            si.Position -= (int)si.Page;
                             break;
                         case ScrollCommand.PageRight:
-                            si.nPos += (int)si.nPage;
+                            si.Position += (int)si.Page;
                             break;
                         case ScrollCommand.ThumbPosition:
-                            si.nPos = si.nTrackPos;
+                            si.Position = si.TrackPosition;
                             break;
                     }
 
                     // Set the position and then retrieve it. Due to adjustments
                     // by Windows it may not be the same as the value set.
-                    si.fMask = ScrollInfoMask.Position;
+                    si.Mask = ScrollInfoMask.Position;
                     window.SetScrollInfo(ScrollBar.Horizontal, ref si, true);
                     window.GetScrollInfo(ScrollBar.Horizontal, ref si);
 
                     // If the position has changed, scroll the window
-                    if (si.nPos != iHorzPos)
+                    if (si.Position != iHorzPos)
                     {
-                        window.ScrollWindow(new Point(cxChar * (iHorzPos - si.nPos), 0));
+                        window.ScrollWindow(new Point(cxChar * (iHorzPos - si.Position), 0));
                     }
                     return 0;
 
@@ -142,14 +142,14 @@ namespace SysMets
                         // Get vertical scroll bar position
                         si = new ScrollInfo
                         {
-                            fMask = ScrollInfoMask.Position
+                            Mask = ScrollInfoMask.Position
                         };
                         window.GetScrollInfo(ScrollBar.Vertical, ref si);
-                        iVertPos = si.nPos;
+                        iVertPos = si.Position;
 
                         // Get horizontal scroll bar position
                         window.GetScrollInfo(ScrollBar.Horizontal, ref si);
-                        iHorzPos = si.nPos;
+                        iHorzPos = si.Position;
 
                         // Find painting limits
                         int iPaintBeg = Math.Max(0, iVertPos + ps.Paint.Top / cyChar);

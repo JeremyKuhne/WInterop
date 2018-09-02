@@ -7,6 +7,7 @@
 
 using WInterop.ProcessAndThreads;
 using WInterop.Support.Buffers;
+using WInterop.Modules.Unsafe;
 
 namespace WInterop.Modules.BufferWrappers
 {
@@ -18,9 +19,9 @@ namespace WInterop.Modules.BufferWrappers
         uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
         {
             if (Process == null)
-                return ModuleMethods.Imports.GetModuleFileNameW(Module, buffer, buffer.CharCapacity);
+                return Imports.GetModuleFileNameW(Module, buffer, buffer.CharCapacity);
             else
-                return ModuleMethods.Imports.K32GetModuleFileNameExW(Process, Module, buffer, buffer.CharCapacity);
+                return Imports.K32GetModuleFileNameExW(Process, Module, buffer, buffer.CharCapacity);
         }
     }
 }

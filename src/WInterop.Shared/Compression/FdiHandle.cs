@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Handles;
+using WInterop.Compression.Unsafe;
 
 namespace WInterop.Compression
 {
@@ -15,7 +16,7 @@ namespace WInterop.Compression
 
         protected override bool ReleaseHandle()
         {
-            return Compression.Imports.FDIDestroy(handle);
+            return Imports.FDIDestroy(handle);
         }
     }
 }
