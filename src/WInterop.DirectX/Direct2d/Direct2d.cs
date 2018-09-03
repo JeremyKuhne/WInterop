@@ -17,9 +17,9 @@ namespace WInterop.Direct2d
             FactoryType factoryType = FactoryType.SingleThreaded,
             DebugLevel debugLevel = DebugLevel.None)
         {
-            Error.ThrowIfFailed(
-                Imports.D2D1CreateFactory(
-                    factoryType, new Guid(InterfaceIds.IID_ID2D1Factory), debugLevel, out IFactory factory));
+            Imports.D2D1CreateFactory(
+                factoryType, new Guid(InterfaceIds.IID_ID2D1Factory), debugLevel, out IFactory factory)
+                .ThrowIfFailed();
 
             return factory;
         }

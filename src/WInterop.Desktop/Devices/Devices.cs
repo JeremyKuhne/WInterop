@@ -23,7 +23,7 @@ namespace WInterop.Devices
         public unsafe static Guid QueryStableGuid(SafeHandle deviceHandle)
         {
             ControlCode controlCode = ControlCodes.MountDevice.QueryStableGuid;
-            MOUNTDEV_STABLE_GUID guid = new MOUNTDEV_STABLE_GUID();
+            Guid guid = new Guid();
 
             if (!Imports.DeviceIoControl(
                 hDevice: deviceHandle,
@@ -31,14 +31,14 @@ namespace WInterop.Devices
                 lpInBuffer: null,
                 nInBufferSize: 0,
                 lpOutBuffer: &guid,
-                nOutBufferSize: (uint)sizeof(MOUNTDEV_STABLE_GUID),
+                nOutBufferSize: (uint)sizeof(Guid),
                 lpBytesReturned: out _,
                 lpOverlapped: null))
             {
                 throw Error.GetIoExceptionForLastError();
             }
 
-            return guid.StableGuid;
+            return guid;
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(((MOUNTDEV_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_NAME));
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(error);
+                            throw error.GetIoException();
                     }
                 }
 
@@ -115,7 +115,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(error);
+                            throw error.GetIoException();
                     }
                 }
 
@@ -150,7 +150,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(((MOUNTDEV_UNIQUE_ID*)buffer.VoidPointer)->UniqueIdLength + (ulong)sizeof(MOUNTDEV_UNIQUE_ID));
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(error);
+                            throw error.GetIoException();
                     }
                 }
 
@@ -201,7 +201,7 @@ namespace WInterop.Devices
                                 outBuffer.EnsureByteCapacity(checked(outBuffer.ByteCapacity * 2));
                                 break;
                             default:
-                                throw Error.GetIoExceptionForError(error, volume);
+                                throw error.GetIoException(volume);
                         }
                     }
 
@@ -246,7 +246,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(buffer.ByteCapacity + 1024);
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(error);
+                            throw error.GetIoException();
                     }
                 }
 

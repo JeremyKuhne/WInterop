@@ -319,7 +319,7 @@ namespace Tests.File
 
                     // RemoveDirectory API call will throw
                     Action action = () => Storage.RemoveDirectory(directory);
-                    action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_DIR_NOT_EMPTY));
+                    action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)WindowsError.ERROR_DIR_NOT_EMPTY.ToHResult());
 
                     // Opening the directory for deletion will succeed, but have no impact
                     using (var directoryHandle = Storage.CreateFile(

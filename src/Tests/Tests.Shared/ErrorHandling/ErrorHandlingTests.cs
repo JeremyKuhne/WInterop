@@ -31,7 +31,7 @@ namespace Tests.ErrorHandling
             ]
         public void ErrorsMapToExceptions(WindowsError error, Type exceptionType)
         {
-            Error.GetIoExceptionForError(error).Should().BeOfType(exceptionType);
+            error.GetIoException().Should().BeOfType(exceptionType);
         }
 
         [Theory,
@@ -46,13 +46,13 @@ namespace Tests.ErrorHandling
         }
 
         [Theory,
-            InlineData(WindowsError.ERROR_ACCESS_DENIED, HRESULT.E_ACCESSDENIED),
+            InlineData(WindowsError.ERROR_ACCESS_DENIED, HResult.E_ACCESSDENIED),
             // This GetLastError() is already an HRESULT
-            InlineData(WindowsError.FVE_E_LOCKED_VOLUME, unchecked((HRESULT)WindowsError.FVE_E_LOCKED_VOLUME))
+            InlineData(WindowsError.FVE_E_LOCKED_VOLUME, unchecked((HResult)WindowsError.FVE_E_LOCKED_VOLUME))
             ]
-        public void WindowsErrorToHresultMappings(WindowsError error, HRESULT expected)
+        public void WindowsErrorToHresultMappings(WindowsError error, HResult expected)
         {
-            HRESULT result = Error.HRESULT_FROM_WIN32(error);
+            HResult result = error.ToHResult();
             result.Should().Be(expected);
         }
     }

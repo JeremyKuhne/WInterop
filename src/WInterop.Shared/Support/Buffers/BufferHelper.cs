@@ -274,7 +274,7 @@ namespace WInterop.Support.Buffers
                     if (ShouldThrow != null && !ShouldThrow(error))
                         return null;
 
-                    throw Error.GetIoExceptionForError(error, DetailForError);
+                    throw error.GetIoException(DetailForError);
                 }
 
                 buffer.Length = returnValue;

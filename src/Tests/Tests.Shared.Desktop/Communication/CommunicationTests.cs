@@ -30,9 +30,9 @@ namespace CommunicationTests
         }
 
         [Theory,
-            InlineData(DtrControl.DTR_CONTROL_DISABLE),
-            InlineData(DtrControl.DTR_CONTROL_ENABLE),
-            InlineData(DtrControl.DTR_CONTROL_HANDSHAKE)
+            InlineData(DtrControl.Disable),
+            InlineData(DtrControl.Enable),
+            InlineData(DtrControl.Handshake)
             ]
         public unsafe void DcbDtrControl(DtrControl dtrControl)
         {
@@ -48,16 +48,16 @@ namespace CommunicationTests
         public unsafe void BuildCommDcb()
         {
             DeviceControlBlock dcb = Communications.BuildDeviceControlBlock(@"baud=1200 parity=N data=8 stop=1");
-            dcb.BaudRate.Should().Be(CommBaudRate.CBR_1200);
-            dcb.Parity.Should().Be(Parity.NOPARITY);
+            dcb.BaudRate.Should().Be(CommBaudRate.Baud_1200);
+            dcb.Parity.Should().Be(Parity.None);
             dcb.ByteSize.Should().Be(8);
-            dcb.StopBits.Should().Be(StopBits.ONESTOPBIT);
+            dcb.StopBits.Should().Be(StopBits.One);
         }
 
         [Fact(Skip = "Needs conditioned on specific com port availability")]
         public unsafe void GetCommProperties()
         {
-            using (SafeFileHandle handle = Communications.CreateComFileHandle(@"\\.\COM4"))
+            using (SafeFileHandle handle = Communications.CreateComPortFileHandle(@"\\.\COM4"))
             {
                 CommunicationsProperties properties = Communications.GetCommunicationsProperties(handle);
             }
@@ -66,7 +66,7 @@ namespace CommunicationTests
         [Fact(Skip = "Needs conditioned on specific com port availability")]
         public unsafe void GetCommConfig()
         {
-            using (SafeFileHandle handle = Communications.CreateComFileHandle(@"\\.\COM4"))
+            using (SafeFileHandle handle = Communications.CreateComPortFileHandle(@"\\.\COM4"))
             {
                 CommunicationsConfig config = Communications.GetCommunicationsConfig(handle);
             }
@@ -75,13 +75,13 @@ namespace CommunicationTests
         [Fact(Skip = "Needs conditioned on specific com port availability")]
         public unsafe void GetDefaultCommConfig()
         {
-            CommunicationsConfig config = Communications.GetDefaultCommConfig(@"COM4");
+            CommunicationsConfig config = Communications.GetDefaultCommunicationsConfig(@"COM4");
         }
 
         [Fact(Skip = "Needs to be run manually or with UI automation")]
         public unsafe void CommConfigDialog()
         {
-            CommunicationsConfig config = Communications.CommConfigDialog(
+            CommunicationsConfig config = Communications.CommunicationsConfigDialog(
                 @"COM4",
                 Windows.GetForegroundWindow());
         }

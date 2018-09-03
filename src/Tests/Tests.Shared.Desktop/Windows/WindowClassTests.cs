@@ -29,7 +29,7 @@ namespace WindowsTests
         {
             Action action = () => Windows.GetClassInfo(null, Path.GetRandomFileName());
             action.Should().Throw<IOException>().And
-                .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
+                .HResult.Should().Be((int)WindowsError.ERROR_CLASS_DOES_NOT_EXIST.ToHResult());
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace WindowsTests
                 Action action =
                     () => Windows.GetClassInfo(Modules.GetModuleHandle(null), atom);
                 action.Should().Throw<IOException>().And
-                    .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_HANDLE));
+                    .HResult.Should().Be((int)WindowsError.ERROR_INVALID_HANDLE.ToHResult());
             }
         }
 
@@ -159,7 +159,7 @@ namespace WindowsTests
                 Action action =
                     () => Windows.GetClassInfo(Modules.GetModuleHandle(null), "RegisterClass_UnregisterClassName");
                 action.Should().Throw<IOException>().And
-                    .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_DOES_NOT_EXIST));
+                    .HResult.Should().Be((int)WindowsError.ERROR_CLASS_DOES_NOT_EXIST.ToHResult());
             }
         }
 
@@ -188,7 +188,7 @@ namespace WindowsTests
                 {
                     Action action = () => Windows.UnregisterClass(atom, null);
                     action.Should().Throw<IOException>().And
-                        .HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_CLASS_HAS_WINDOWS));
+                        .HResult.Should().Be((int)WindowsError.ERROR_CLASS_HAS_WINDOWS.ToHResult());
                 }
                 finally
                 {

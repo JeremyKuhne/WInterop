@@ -89,7 +89,7 @@ namespace WInterop.Storage
                             _lastEntryFound = true;
                             return null;
                         default:
-                            throw Error.GetIoExceptionForError(error);
+                            throw error.GetIoException();
                     }
                 }
 
@@ -113,7 +113,7 @@ namespace WInterop.Storage
                             _lastEntryFound = true;
                             return null;
                         default:
-                            throw Error.GetIoExceptionForError(error);
+                            throw error.GetIoException();
                     }
                 }
 

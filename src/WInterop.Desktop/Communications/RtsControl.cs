@@ -10,9 +10,9 @@ namespace WInterop.Communications
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363214.aspx
     public enum RtsControl : byte
     {
-        RTS_CONTROL_DISABLE = 0x00,
-        RTS_CONTROL_ENABLE = 0x01,
-        RTS_CONTROL_HANDSHAKE = 0x02,
-        RTS_CONTROL_TOGGLE = 0x03
+        Disable = 0x00,
+        Enable = 0x01,
+        Handshake = 0x02,
+        Toggle = 0x03
     }
 }

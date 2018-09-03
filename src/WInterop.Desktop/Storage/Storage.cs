@@ -14,7 +14,6 @@ using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Storage.Unsafe;
 using WInterop.Handles;
-using WInterop.SafeString.Unsafe;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Security;
@@ -174,7 +173,7 @@ namespace WInterop.Storage
         {
             fixed (char* c = &MemoryMarshal.GetReference(path))
             {
-                UNICODE_STRING name = new UNICODE_STRING(c, path.Length);
+                var name = new SafeString.Unsafe.UNICODE_STRING(c, path.Length);
                 var attributes = new Handles.Unsafe.OBJECT_ATTRIBUTES(
                     &name,
                     objectAttributes,
@@ -182,7 +181,7 @@ namespace WInterop.Storage
                     null,
                     null);
 
-                NTSTATUS status = Imports.NtCreateFile(
+                Imports.NtCreateFile(
                     out IntPtr handle,
                     desiredAccess,
                     ref attributes,
@@ -193,10 +192,8 @@ namespace WInterop.Storage
                     CreateDisposition: createDisposition,
                     CreateOptions: createOptions,
                     EaBuffer: null,
-                    EaLength: 0);
-
-                if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw Error.GetIoExceptionForNTStatus(status, path.ToString());
+                    EaLength: 0)
+                    .ThrowIfFailed(path.ToString());
 
                 return handle;
             }
@@ -299,14 +296,14 @@ namespace WInterop.Storage
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
+                NTStatus status = NTStatus.STATUS_BUFFER_OVERFLOW;
 
                 // Start with MAX_PATH
                 uint byteLength = 260 * sizeof(char);
 
                 FILE_NAME_INFORMATION* value = null;
 
-                while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
+                while (status == NTStatus.STATUS_BUFFER_OVERFLOW)
                 {
                     // Add space for the FileNameLength
                     buffer.EnsureByteCapacity(byteLength + sizeof(uint));
@@ -318,15 +315,14 @@ namespace WInterop.Storage
                         Length: checked((uint)buffer.ByteCapacity),
                         FileInformationClass: fileInformationClass);
 
-                    if (status == NTSTATUS.STATUS_SUCCESS || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
+                    if (status == NTStatus.STATUS_SUCCESS || status == NTStatus.STATUS_BUFFER_OVERFLOW)
                     {
                         value = (FILE_NAME_INFORMATION*)buffer.VoidPointer;
                         byteLength = value->FileNameLength;
                     }
                 }
 
-                if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw Error.GetIoExceptionForNTStatus(status);
+                status.ThrowIfFailed();
 
                 return value->FileName.CreateString();
             });
@@ -334,15 +330,13 @@ namespace WInterop.Storage
 
         unsafe private static void GetFileInformation(SafeFileHandle fileHandle, FileInformationClass fileInformationClass, void* value, uint size)
         {
-            NTSTATUS status = Imports.NtQueryInformationFile(
+            Imports.NtQueryInformationFile(
                 FileHandle: fileHandle,
                 IoStatusBlock: out _,
                 FileInformation: value,
                 Length: size,
-                FileInformationClass: fileInformationClass);
-
-            if (status != NTSTATUS.STATUS_SUCCESS)
-                throw Error.GetIoExceptionForNTStatus(status);
+                FileInformationClass: fileInformationClass)
+                .ThrowIfFailed();
         }
 
         /// <summary>
@@ -371,17 +365,17 @@ namespace WInterop.Storage
             fixed (char* e = ignoreCase ? expression.ToUpperInvariant() : expression)
             fixed (char* n = name)
             {
-                UNICODE_STRING* eus = null;
-                UNICODE_STRING* nus = null;
+                SafeString.Unsafe.UNICODE_STRING* eus = null;
+                SafeString.Unsafe.UNICODE_STRING* nus = null;
 
                 if (e != null)
                 {
-                    var temp = new UNICODE_STRING(e, expression.Length);
+                    var temp = new SafeString.Unsafe.UNICODE_STRING(e, expression.Length);
                     eus = &temp;
                 }
                 if (n != null)
                 {
-                    var temp = new UNICODE_STRING(n, name.Length);
+                    var temp = new SafeString.Unsafe.UNICODE_STRING(n, name.Length);
                     nus = &temp;
                 }
 
@@ -395,10 +389,8 @@ namespace WInterop.Storage
         public unsafe static FileAccessRights GetRights(SafeFileHandle fileHandle)
         {
             FileAccessInformation access = new FileAccessInformation();
-            NTSTATUS result = Imports.NtQueryInformationFile(fileHandle, out _,
-                &access, (uint)sizeof(FileAccessInformation), FileInformationClass.FileAccessInformation);
-            if (result != NTSTATUS.STATUS_SUCCESS)
-                throw Error.GetIoExceptionForNTStatus(result);
+            Imports.NtQueryInformationFile(fileHandle, out _,
+                &access, (uint)sizeof(FileAccessInformation), FileInformationClass.FileAccessInformation).ThrowIfFailed();
             return access.AccessFlags;
         }
 
@@ -410,23 +402,23 @@ namespace WInterop.Storage
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                NTSTATUS status = NTSTATUS.STATUS_INFO_LENGTH_MISMATCH;
+                NTStatus status = NTStatus.STATUS_INFO_LENGTH_MISMATCH;
 
-                while (status == NTSTATUS.STATUS_INFO_LENGTH_MISMATCH)
+                while (status == NTStatus.STATUS_INFO_LENGTH_MISMATCH)
                 {
                     status = Imports.NtQueryInformationFile(fileHandle, out IO_STATUS_BLOCK statusBlock,
                         buffer.VoidPointer, (uint)buffer.ByteCapacity, FileInformationClass.FileProcessIdsUsingFileInformation);
 
                     switch (status)
                     {
-                        case NTSTATUS.STATUS_SUCCESS:
+                        case NTStatus.STATUS_SUCCESS:
                             break;
-                        case NTSTATUS.STATUS_INFO_LENGTH_MISMATCH:
+                        case NTStatus.STATUS_INFO_LENGTH_MISMATCH:
                             // Not a big enough buffer
                             buffer.EnsureByteCapacity((ulong)statusBlock.Information);
                             break;
                         default:
-                            throw Error.GetIoExceptionForNTStatus(status);
+                            throw status.GetIoException();
                     }
                 }
 
@@ -463,7 +455,7 @@ namespace WInterop.Storage
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(error, deviceName);
+                            throw error.GetIoException(deviceName);
                     }
                 }
 
@@ -516,7 +508,7 @@ namespace WInterop.Storage
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(error, path);
+                            throw error.GetIoException(path);
                     }
                 }
 
@@ -545,7 +537,7 @@ namespace WInterop.Storage
                             buffer.EnsureCharCapacity(returnLength);
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(error, volumeName);
+                            throw error.GetIoException(volumeName);
                     }
                 }
 
@@ -574,8 +566,7 @@ namespace WInterop.Storage
                 // MSDN claims 50 is "reasonable", let's go double.
                 buffer.EnsureCharCapacity(100);
 
-                if (!Imports.GetVolumeNameForVolumeMountPointW(volumeMountPoint, buffer, buffer.CharCapacity))
-                    throw Error.GetIoExceptionForLastError(volumeMountPoint);
+                Error.ThrowLastErrorIfFalse(Imports.GetVolumeNameForVolumeMountPointW(volumeMountPoint, buffer, buffer.CharCapacity));
 
                 buffer.SetLengthToFirstNull();
                 return buffer.ToString();
@@ -585,10 +576,7 @@ namespace WInterop.Storage
         /// <summary>
         /// Get all volume names.
         /// </summary>
-        public static IEnumerable<string> GetVolumes()
-        {
-            return new VolumeNamesEnumerable();
-        }
+        public static IEnumerable<string> GetVolumes() => new VolumeNamesEnumerable();
 
         /// <summary>
         /// Get all of the folder mount points for the given volume. Requires admin access.
@@ -599,10 +587,7 @@ namespace WInterop.Storage
         /// access.
         /// </remarks>
         /// <param name="volumeName">Volume name in the form "\\?\Volume{guid}\"</param>
-        public static IEnumerable<string> GetVolumeMountPoints(string volumeName)
-        {
-            return new VolumeMountPointsEnumerable(volumeName);
-        }
+        public static IEnumerable<string> GetVolumeMountPoints(string volumeName) => new VolumeMountPointsEnumerable(volumeName);
 
         public static IEnumerable<BackupStreamInformation> GetAlternateStreamInformation(string path)
         {
@@ -641,7 +626,7 @@ namespace WInterop.Storage
         public unsafe static IEnumerable<SID> QueryUsersOnEncryptedFile(string path)
         {
             ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
-            Error.ThrowIfFailed(Imports.QueryUsersOnEncryptedFile(path, &hashList));
+            Imports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
             if (hashList->nCert_Hash == 0)
             {
                 Imports.FreeEncryptionCertificateHashList(hashList);
@@ -663,7 +648,7 @@ namespace WInterop.Storage
         public unsafe static bool RemoveUser(in SID sid, string path)
         {
             ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
-            Error.ThrowIfFailed(Imports.QueryUsersOnEncryptedFile(path, &hashList));
+            Imports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
 
             try
             {
@@ -678,7 +663,7 @@ namespace WInterop.Storage
                             pUsers = &users
                         };
 
-                        Error.ThrowIfFailed(Imports.RemoveUsersFromEncryptedFile(path, &removeList));
+                        Imports.RemoveUsersFromEncryptedFile(path, &removeList).ThrowIfFailed(path);
                         return true;
                     }
                     users++;

@@ -28,24 +28,9 @@ namespace WInterop.Errors
         /// <returns>The old error mode for the thread.</returns>
         public static ErrorMode SetThreadErrorMode(ErrorMode mode)
         {
-            Error.ThrowLastErrorIfFalse(Imports.SetThreadErrorMode(mode, out ErrorMode oldMode));
+            ThrowLastErrorIfFalse(Imports.SetThreadErrorMode(mode, out ErrorMode oldMode));
 
             return oldMode;
-        }
-
-        /// <summary>
-        /// Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
-        /// There are additional IOException derived errors for ease of client error handling.
-        /// </summary>
-        public static Exception GetIoExceptionForNTStatus(NTSTATUS status, string path = null)
-        {
-            switch (status)
-            {
-                case NTSTATUS.STATUS_NOT_IMPLEMENTED:
-                    return new NotImplementedException(path ?? WInteropStrings.NoValue);
-            }
-
-            return GetIoExceptionForError(NtStatusToWinError(status), path);
         }
     }
 }

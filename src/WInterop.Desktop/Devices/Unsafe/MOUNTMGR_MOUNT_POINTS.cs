@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Devices
+namespace WInterop.Devices.Unsafe
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562288.aspx
     public unsafe struct MOUNTMGR_MOUNT_POINTS

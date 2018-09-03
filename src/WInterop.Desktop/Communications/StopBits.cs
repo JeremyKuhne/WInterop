@@ -10,8 +10,8 @@ namespace WInterop.Communications
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363214.aspx
     public enum StopBits : byte
     {
-        ONESTOPBIT = 0,
-        ONE5STOPBITS = 1,
-        TWOSTOPBITS = 2
+        One = 0,
+        One5 = 1,
+        Two = 2
     }
 }

@@ -18,7 +18,7 @@ namespace WInterop.Communications
 {
     public static partial class Communications
     {
-        public unsafe static DeviceControlBlock GetCommState(SafeFileHandle fileHandle)
+        public unsafe static DeviceControlBlock GetCommunicationsState(SafeFileHandle fileHandle)
         {
             DeviceControlBlock dcb = new DeviceControlBlock()
             {
@@ -31,7 +31,7 @@ namespace WInterop.Communications
             return dcb;
         }
 
-        public unsafe static void SetCommState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
+        public unsafe static void SetCommunicationsState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
         {
             dcb.DCBlength = (uint)sizeof(DeviceControlBlock);
 
@@ -70,7 +70,7 @@ namespace WInterop.Communications
         /// Get the default config values for the given com port.
         /// </summary>
         /// <param name="port">Simple name only (COM1, not \\.\COM1)</param>
-        public unsafe static CommunicationsConfig GetDefaultCommConfig(string port)
+        public unsafe static CommunicationsConfig GetDefaultCommunicationsConfig(string port)
         {
             CommunicationsConfig config = new CommunicationsConfig();
             uint size = (uint)sizeof(CommunicationsConfig);
@@ -85,9 +85,9 @@ namespace WInterop.Communications
         /// Pops the COM port configuration dialog and returns the selected settings.
         /// </summary>
         /// <exception cref="OperationCanceledException">Thrown if the dialog is cancelled.</exception>
-        public unsafe static CommunicationsConfig CommConfigDialog(string port, WindowHandle parent)
+        public unsafe static CommunicationsConfig CommunicationsConfigDialog(string port, WindowHandle parent)
         {
-            CommunicationsConfig config = GetDefaultCommConfig(port);
+            CommunicationsConfig config = GetDefaultCommunicationsConfig(port);
 
             if (!Imports.CommConfigDialogW(port, parent, ref config))
                 throw Error.GetIoExceptionForLastError();
@@ -98,7 +98,7 @@ namespace WInterop.Communications
         /// <summary>
         /// Simple helper for CreateFile call that sets the expected values when opening a COM port.
         /// </summary>
-        public static SafeFileHandle CreateComFileHandle(
+        public static SafeFileHandle CreateComPortFileHandle(
             string path,
             FileAttributes fileAttributes = FileAttributes.None,
             FileFlags fileFlags = FileFlags.None)
@@ -117,7 +117,7 @@ namespace WInterop.Communications
             using (var key = Registry.Registry.OpenKey(
                 RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"HARDWARE\DEVICEMAP\SERIALCOMM"))
             {
-                return Registry.Registry.GetValueDataDirect(key, RegistryValueType.REG_SZ).OfType<string>().ToArray();
+                return Registry.Registry.GetValueDataDirect(key, RegistryValueType.String).OfType<string>().ToArray();
             }
         }
     }

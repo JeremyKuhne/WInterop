@@ -325,9 +325,7 @@ namespace WInterop.Storage
                 dwCopyFlags = overwrite ? 0 : CopyFileFlags.FailIfExists
             };
 
-            HRESULT hr = Imports.CopyFile2(source, destination,  ref parameters);
-            if (Error.FAILED(hr))
-                throw Error.GetIoExceptionForHResult(hr, source);
+            Imports.CopyFile2(source, destination, ref parameters).ThrowIfFailed();
         }
 
         /// <summary>
@@ -417,7 +415,7 @@ namespace WInterop.Storage
                 {
                     case WindowsError.ERROR_ACCESS_DENIED:
                     case WindowsError.ERROR_NETWORK_ACCESS_DENIED:
-                        throw Error.GetIoExceptionForError(error, path);
+                        throw error.GetIoException(path);
                     case WindowsError.ERROR_PATH_NOT_FOUND:
                     default:
                         return null;
@@ -464,9 +462,7 @@ namespace WInterop.Storage
                         buffer.VoidPointer,
                         checked((uint)buffer.ByteCapacity)))
                     {
-                        WindowsError error = Error.GetLastError();
-                        if (error != WindowsError.ERROR_MORE_DATA)
-                            throw Error.GetIoExceptionForError(error);
+                        Error.ThrowIfLastErrorNot(WindowsError.ERROR_MORE_DATA);
                         buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                     }
                 }
@@ -534,7 +530,7 @@ namespace WInterop.Storage
                                 buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                                 break;
                             default:
-                                throw Error.GetIoExceptionForError(error);
+                                throw error.GetIoException();
                         }
                     }
                 }
@@ -713,7 +709,7 @@ namespace WInterop.Storage
                                 // Nothing left to get
                                 return;
                             default:
-                                throw Error.GetIoExceptionForError(error);
+                                throw error.GetIoException();
                         }
                     }
 

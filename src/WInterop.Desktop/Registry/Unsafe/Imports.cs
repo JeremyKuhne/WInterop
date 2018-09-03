@@ -68,7 +68,7 @@ namespace WInterop.Registry.Unsafe
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556680.aspx 
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567060.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS NtQueryKey(
+        public unsafe static extern NTStatus NtQueryKey(
             RegistryKeyHandle KeyHandle,
             KeyInformationClass KeyInformationClass,
             void* KeyInformation,
@@ -78,7 +78,7 @@ namespace WInterop.Registry.Unsafe
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556514.aspx
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566453.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS NtEnumerateValueKey(
+        public unsafe static extern NTStatus NtEnumerateValueKey(
             RegistryKeyHandle KeyHandle,
             uint Index,
             KeyValueInformationClass KeyValueInformationClass,

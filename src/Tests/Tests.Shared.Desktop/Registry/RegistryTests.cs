@@ -77,7 +77,7 @@ namespace RegistryTests
             using (var key = Registry.OpenKey(
                 RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
             {
-                Registry.QueryValueType(key, "BuildNumber").Should().Be(RegistryValueType.REG_DWORD);
+                Registry.QueryValueType(key, "BuildNumber").Should().Be(RegistryValueType.Unsigned32BitInteger);
             }
         }
 

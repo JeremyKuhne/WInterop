@@ -93,16 +93,16 @@ namespace WInterop.DirectX
                     CreateResourcesInternal(window);
                     _renderTarget.BeginDraw();
                     OnPaint(window);
-                    HRESULT result = _renderTarget.EndDraw();
+                    HResult result = _renderTarget.EndDraw();
                     window.Validate();
 
-                    if (result == HRESULT.D2DERR_RECREATE_TARGET)
+                    if (result == HResult.D2DERR_RECREATE_TARGET)
                     {
                         _resourcesValid = false;
                     }
-                    else if (result != HRESULT.S_OK)
+                    else
                     {
-                        throw Error.GetIoExceptionForHResult(result);
+                        result.ThrowIfFailed();
                     }
                     break;
             }

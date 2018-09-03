@@ -18,7 +18,7 @@ namespace WInterop.DirectWrite.Unsafe
     {
         // https://docs.microsoft.com/en-us/windows/desktop/api/dwrite/nf-dwrite-dwritecreatefactory
         [DllImport(Libraries.DWrite, ExactSpelling = true)]
-        public static extern HRESULT DWriteCreateFactory(
+        public static extern HResult DWriteCreateFactory(
             FactoryType factoryType,
             in Guid riid,
             out IFactory ppIFactory);

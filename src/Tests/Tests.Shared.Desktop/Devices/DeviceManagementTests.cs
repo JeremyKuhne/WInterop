@@ -34,7 +34,7 @@ namespace DevicesTests
             {
                 Action action = () => WInterop.Devices.Devices.QuerySuggestedLinkName(handle);
                 action.Should().Throw<WInteropIOException>("this is an optional query, not aware of which drivers support this").
-                    And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_NOT_FOUND));
+                    And.HResult.Should().Be((int)WindowsError.ERROR_NOT_FOUND.ToHResult());
             }
         }
 

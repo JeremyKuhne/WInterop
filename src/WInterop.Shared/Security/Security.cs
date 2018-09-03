@@ -462,15 +462,13 @@ namespace WInterop.Security
             SID* sidp;
             SECURITY_DESCRIPTOR* descriptor;
 
-            WindowsError result = Imports.GetSecurityInfo(
+            Imports.GetSecurityInfo(
                 handle,
                 type,
                 SecurityInformation.Owner,
                 ppsidOwner: &sidp,
-                ppSecurityDescriptor: &descriptor);
-
-            if (result != WindowsError.ERROR_SUCCESS)
-                throw Error.GetIoExceptionForError(result);
+                ppSecurityDescriptor: &descriptor)
+                .ThrowIfFailed();
 
             SID sid = new SID(sidp);
             Memory.Memory.LocalFree((IntPtr)(descriptor));
@@ -485,15 +483,13 @@ namespace WInterop.Security
             SID* sidp;
             SECURITY_DESCRIPTOR* descriptor;
 
-            WindowsError result = Imports.GetSecurityInfo(
+            Imports.GetSecurityInfo(
                 handle,
                 type,
                 SecurityInformation.Group,
                 ppsidGroup: &sidp,
-                ppSecurityDescriptor: &descriptor);
-
-            if (result != WindowsError.ERROR_SUCCESS)
-                throw Error.GetIoExceptionForError(result);
+                ppSecurityDescriptor: &descriptor)
+                .ThrowIfFailed();
 
             SID sid = new SID(sidp);
             Memory.Memory.LocalFree((IntPtr)(descriptor));
@@ -508,15 +504,13 @@ namespace WInterop.Security
             ACL* acl;
             SECURITY_DESCRIPTOR* descriptor;
 
-            WindowsError result = Imports.GetSecurityInfo(
+            Imports.GetSecurityInfo(
                 handle,
                 type,
                 SecurityInformation.Dacl,
                 ppDacl: &acl,
-                ppSecurityDescriptor: &descriptor);
-
-            if (result != WindowsError.ERROR_SUCCESS)
-                throw Error.GetIoExceptionForError(result);
+                ppSecurityDescriptor: &descriptor)
+                .ThrowIfFailed();
 
             return new SecurityDescriptor(handle, type, descriptor);
         }

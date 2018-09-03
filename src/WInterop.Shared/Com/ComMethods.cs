@@ -67,7 +67,7 @@ namespace WInterop.Com
 
         public static bool IsStorageFile(string path)
         {
-            return Imports.StgIsStorageFile(path) == HRESULT.S_OK;
+            return Imports.StgIsStorageFile(path) == HResult.S_OK;
         }
     }
 }

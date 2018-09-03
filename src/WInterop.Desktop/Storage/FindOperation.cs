@@ -28,7 +28,7 @@ namespace WInterop.Storage
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void GetData()
             {
-                NTSTATUS status = Imports.NtQueryDirectoryFile(
+                NTStatus status = Imports.NtQueryDirectoryFile(
                     FileHandle: _directory,
                     Event: IntPtr.Zero,
                     ApcRoutine: null,
@@ -43,14 +43,14 @@ namespace WInterop.Storage
 
                 switch (status)
                 {
-                    case NTSTATUS.STATUS_NO_MORE_FILES:
+                    case NTStatus.STATUS_NO_MORE_FILES:
                         NoMoreFiles();
                         return;
-                    case NTSTATUS.STATUS_SUCCESS:
+                    case NTStatus.STATUS_SUCCESS:
                         Debug.Assert(statusBlock.Information.ToInt64() != 0);
                         break;
                     default:
-                        throw Error.GetIoExceptionForNTStatus(status);
+                        throw status.GetIoException();
                 }
             }
         }

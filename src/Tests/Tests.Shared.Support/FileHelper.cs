@@ -67,13 +67,13 @@ namespace Tests.Support
             if (!data.HasValue)
             {
                 // Nothing found
-                throw Error.GetIoExceptionForError(WindowsError.ERROR_PATH_NOT_FOUND, path);
+                WindowsError.ERROR_PATH_NOT_FOUND.Throw(path);
             }
 
             if ((data.Value.FileAttributes & FileAttributes.Directory) != FileAttributes.Directory)
             {
                 // Not a directory, a file
-                throw Error.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, path);
+                WindowsError.ERROR_FILE_EXISTS.Throw(path);
             }
 
             if ((data.Value.FileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)

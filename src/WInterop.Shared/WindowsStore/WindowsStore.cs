@@ -39,7 +39,7 @@ namespace WInterop.WindowsStore
                                 s_isWinRT = 1;
                                 break;
                             default:
-                                throw Error.GetIoExceptionForError(result);
+                                throw result.GetIoException();
                         }
                     }
                     catch (EntryPointNotFoundException)

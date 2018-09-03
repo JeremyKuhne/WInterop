@@ -13,12 +13,12 @@ namespace WInterop.Communications
     [Flags]
     public enum SettableParams : uint
     {
-        SP_PARITY         = 0x0001,
-        SP_BAUD           = 0x0002,
-        SP_DATABITS       = 0x0004,
-        SP_STOPBITS       = 0x0008,
-        SP_HANDSHAKING    = 0x0010,
-        SP_PARITY_CHECK   = 0x0020,
-        SP_RLSD           = 0x0040
+        Parity         = 0x0001,
+        Baud           = 0x0002,
+        DataBits       = 0x0004,
+        StopBits       = 0x0008,
+        HandShaking    = 0x0010,
+        ParityCheck    = 0x0020,
+        Rlsd           = 0x0040
     }
 }

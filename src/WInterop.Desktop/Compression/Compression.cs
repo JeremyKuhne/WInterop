@@ -129,10 +129,7 @@ namespace WInterop.Compression
             if (!throwOnError || result >= 0)
                 return result;
 
-            WindowsError error = Error.GetLastError();
-            if (error != WindowsError.ERROR_SUCCESS)
-                throw Error.GetIoExceptionForError(error, path);
-
+            Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS, path);
             throw new LzException((LzError)result, path);
         }
 
@@ -243,7 +240,7 @@ namespace WInterop.Compression
             bool useCreateFile = true)
         {
             if (!overwrite && Storage.Storage.PathExists(destination))
-                throw Error.GetIoExceptionForError(WindowsError.ERROR_FILE_EXISTS, destination);
+                WindowsError.ERROR_FILE_EXISTS.Throw(destination);
 
             using (LzHandle sourceHandle = useCreateFile ? LzCreateFile(source) : LzOpenFile(source))
             {

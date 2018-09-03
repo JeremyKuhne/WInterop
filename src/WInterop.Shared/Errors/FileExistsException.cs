@@ -20,6 +20,6 @@ namespace WInterop.Errors
             : this(message, DefaultError, innerException) { }
 
         public FileExistsException(string message, WindowsError error, Exception innerException = null)
-            : base(message, Error.HRESULT_FROM_WIN32(error), innerException) { }
+            : base(message, error.ToHResult(), innerException) { }
     }
 }

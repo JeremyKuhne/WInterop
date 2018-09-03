@@ -13,18 +13,18 @@ namespace WInterop.Communications
     [Flags]
     public enum EventMask : uint
     {
-        EV_RXCHAR          = 0x0001,
-        EV_RXFLAG          = 0x0002,
-        EV_TXEMPTY         = 0x0004,
-        EV_CTS             = 0x0008,
-        EV_DSR             = 0x0010,
-        EV_RLSD            = 0x0020,
-        EV_BREAK           = 0x0040,
-        EV_ERR             = 0x0080,
-        EV_RING            = 0x0100,
-        EV_PERR            = 0x0200,
-        EV_RX80FULL        = 0x0400,
-        EV_EVENT1          = 0x0800,
-        EV_EVENT2          = 0x1000
+        RxChar          = 0x0001,
+        RxFlag          = 0x0002,
+        TxEmtp         = 0x0004,
+        Cts             = 0x0008,
+        Dsr             = 0x0010,
+        Rlsd            = 0x0020,
+        Break           = 0x0040,
+        Err             = 0x0080,
+        Ring            = 0x0100,
+        PErr            = 0x0200,
+        Rx80Full        = 0x0400,
+        Event1          = 0x0800,
+        Event2          = 0x1000
     }
 }

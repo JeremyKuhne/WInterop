@@ -75,6 +75,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\DriveLockedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\DriveNotReadyException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\ErrorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\ErrorMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\Facility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\FileExistsException.cs" />

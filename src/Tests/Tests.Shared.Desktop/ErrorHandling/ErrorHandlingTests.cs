@@ -57,12 +57,12 @@ namespace DesktopTests
         }
 
         [Theory,
-            InlineData(NTSTATUS.STATUS_OBJECT_NAME_NOT_FOUND, WindowsError.ERROR_FILE_NOT_FOUND),
-            InlineData(NTSTATUS.STATUS_IO_TIMEOUT, WindowsError.ERROR_SEM_TIMEOUT),
-            InlineData(NTSTATUS.STATUS_NAME_TOO_LONG, WindowsError.ERROR_FILENAME_EXCED_RANGE),
-            InlineData(NTSTATUS.STATUS_OBJECT_NAME_INVALID, WindowsError.ERROR_INVALID_NAME)
+            InlineData(NTStatus.STATUS_OBJECT_NAME_NOT_FOUND, WindowsError.ERROR_FILE_NOT_FOUND),
+            InlineData(NTStatus.STATUS_IO_TIMEOUT, WindowsError.ERROR_SEM_TIMEOUT),
+            InlineData(NTStatus.STATUS_NAME_TOO_LONG, WindowsError.ERROR_FILENAME_EXCED_RANGE),
+            InlineData(NTStatus.STATUS_OBJECT_NAME_INVALID, WindowsError.ERROR_INVALID_NAME)
             ]
-        public void ConvertNtStatus(NTSTATUS status, WindowsError expected)
+        public void ConvertNtStatus(NTStatus status, WindowsError expected)
         {
             Error.NtStatusToWinError(status).Should().Be(expected);
         }

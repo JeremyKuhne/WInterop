@@ -396,7 +396,7 @@ namespace WInterop.Direct2d
         /// or when calling flush.
         /// </summary>
         [PreserveSig]
-        HRESULT EndDraw(
+        HResult EndDraw(
             out ulong tag1,
             out ulong tag2);
 
@@ -517,6 +517,6 @@ namespace WInterop.Direct2d
             renderTarget.SetTransform(ref identity);
         }
 
-        public static HRESULT EndDraw(this IRenderTarget renderTarget) => renderTarget.EndDraw(out _, out _);
+        public static HResult EndDraw(this IRenderTarget renderTarget) => renderTarget.EndDraw(out _, out _);
     }
 }

@@ -17,18 +17,18 @@ namespace WInterop.Errors
             : base(DefaultError) { }
 
         public DriveLockedException(string message, Exception innerException = null)
-            : base(message, Error.HRESULT_FROM_WIN32(DefaultError), innerException) { }
+            : base(message, DefaultError.ToHResult(), innerException) { }
 
-        public DriveLockedException(string message, HRESULT hresult, Exception innerException = null)
+        public DriveLockedException(string message, HResult hresult, Exception innerException = null)
             : base(message, hresult, innerException) { }
 
-        public DriveLockedException(HRESULT result)
+        public DriveLockedException(HResult result)
             : base(result) { }
 
         public DriveLockedException(WindowsError error)
             : base(error) { }
 
-        public DriveLockedException(NTSTATUS status)
+        public DriveLockedException(NTStatus status)
             : base(status) { }
     }
 }

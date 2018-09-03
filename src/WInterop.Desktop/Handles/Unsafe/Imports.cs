@@ -22,7 +22,7 @@ namespace WInterop.Handles.Unsafe
         // https://msdn.microsoft.com/en-us/library/bb432383.aspx
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567062.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public static extern NTSTATUS NtQueryObject(
+        public static extern NTStatus NtQueryObject(
             SafeHandle Handle,
             ObjectInformationClass ObjectInformationClass,
             IntPtr ObjectInformation,
@@ -32,7 +32,7 @@ namespace WInterop.Handles.Unsafe
         // https://msdn.microsoft.com/en-us/library/bb470234.aspx
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566492.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public static extern NTSTATUS NtOpenDirectoryObject(
+        public static extern NTStatus NtOpenDirectoryObject(
             out DirectoryObjectHandle DirectoryHandle,
             DirectoryObjectRights DesiredAccess,
             ref OBJECT_ATTRIBUTES ObjectAttributes);
@@ -40,7 +40,7 @@ namespace WInterop.Handles.Unsafe
         // https://msdn.microsoft.com/en-us/library/bb470236.aspx
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567030.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS NtOpenSymbolicLinkObject(
+        public unsafe static extern NTStatus NtOpenSymbolicLinkObject(
             out SymbolicLinkObjectHandle LinkHandle,
             SymbolicLinkObjectRights DesiredAccess,
             ref OBJECT_ATTRIBUTES ObjectAttributes);
@@ -48,14 +48,14 @@ namespace WInterop.Handles.Unsafe
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567068.aspx
         // https://msdn.microsoft.com/en-us/library/bb470241.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public static extern NTSTATUS NtQuerySymbolicLinkObject(
+        public static extern NTStatus NtQuerySymbolicLinkObject(
             SymbolicLinkObjectHandle LinkHandle,
             ref UNICODE_STRING LinkTarget,
             out uint ReturnedLength);
 
         // https://msdn.microsoft.com/en-us/library/bb470238.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public static extern NTSTATUS NtQueryDirectoryObject(
+        public static extern NTStatus NtQueryDirectoryObject(
             DirectoryObjectHandle DirectoryHandle,
             SafeHandle Buffer,
             uint Length,

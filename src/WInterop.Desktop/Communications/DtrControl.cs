@@ -10,8 +10,19 @@ namespace WInterop.Communications
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363214.aspx
     public enum DtrControl : byte
     {
-        DTR_CONTROL_DISABLE = 0x00,
-        DTR_CONTROL_ENABLE = 0x01,
-        DTR_CONTROL_HANDSHAKE = 0x02
+        /// <summary>
+        /// [DTR_CONTROL_DISABLE]
+        /// </summary>
+        Disable = 0x00,
+
+        /// <summary>
+        /// [DTR_CONTROL_ENABLE]
+        /// </summary>
+        Enable = 0x01,
+
+        /// <summary>
+        /// [DTR_CONTROL_HANDSHAKE]
+        /// </summary>
+        Handshake = 0x02
     }
 }

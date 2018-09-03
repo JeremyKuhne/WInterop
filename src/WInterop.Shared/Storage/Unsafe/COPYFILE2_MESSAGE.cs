@@ -120,7 +120,7 @@ namespace WInterop.Storage.Unsafe
         {
             public CopyFile2CopyPhase CopyPhase;
             public uint dwStreamNumber;
-            public HRESULT hrFailure;
+            public HResult hrFailure;
             private uint dwReserved;
             public ulong uliChunkNumber;
             public ulong uliStreamSize;

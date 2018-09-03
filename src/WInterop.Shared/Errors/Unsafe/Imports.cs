@@ -17,7 +17,7 @@ namespace WInterop.Errors.Unsafe
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern uint LsaNtStatusToWinError(NTSTATUS Status);
+        public static extern uint LsaNtStatusToWinError(NTStatus Status);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679351.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

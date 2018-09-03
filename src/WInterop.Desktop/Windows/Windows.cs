@@ -568,7 +568,7 @@ namespace WInterop.Windows
             var wrapper = new KeyNameTextWrapper { LParam = lParam };
 
             // It is possible that there may be no name for a key, in which case the api will return 0 with GetLastError of 0.
-            return BufferHelper.TruncatingApiInvoke(ref wrapper, null, Error.Failed);
+            return BufferHelper.TruncatingApiInvoke(ref wrapper, null, ErrorExtensions.Failed);
         }
 
         public static WindowHandle GetDialogItem(this in WindowHandle window, int id)
@@ -642,11 +642,24 @@ namespace WInterop.Windows
             WNDCLASSEX wndClass;
 
             fixed (char* c = className)
-                if (!Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, (IntPtr)c, out wndClass))
-                    throw Error.GetIoExceptionForLastError();
+                Error.ThrowLastErrorIfFalse(Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, (IntPtr)c, out wndClass));
 
             return wndClass;
         }
+
+        // How can I tell that somebody used the MAKEINTRESOURCE macro to smuggle an integer inside a pointer?
+        // https://blogs.msdn.microsoft.com/oldnewthing/20130925-00/?p=3123/
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648029.aspx
+
+        /// <summary>
+        /// Makes a resource pointer for the given value. [MAKEINTRESOURCE]
+        /// </summary>
+        public static IntPtr MakeIntResource(ushort integer) => (IntPtr)integer;
+
+        /// <summary>
+        /// Returns true if the given pointer is an int resource. [IS_INTRESOURCE]
+        /// </summary>
+        public static bool IsIntResource(IntPtr pointer) => ((ulong)pointer) >> 16 == 0;
 
         /// <summary>
         /// Get the specified string resource from the given library.

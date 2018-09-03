@@ -17,6 +17,6 @@ namespace WInterop.Errors
             : base(DefaultError) { }
 
         public DriveNotReadyException(string message, Exception innerException = null)
-            : base(message, Error.HRESULT_FROM_WIN32(DefaultError), innerException) { }
+            : base(message, DefaultError.ToHResult(), innerException) { }
     }
 }

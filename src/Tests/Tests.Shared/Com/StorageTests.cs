@@ -118,12 +118,12 @@ namespace ComTests
                 Action action = () => storage.RenameElement("name", "newname");
 
                 // Can't rename until after we close the stream
-                action.Should().Throw<COMException>().And.HResult.Should().Be((int)HRESULT.STG_E_ACCESSDENIED);
+                action.Should().Throw<COMException>().And.HResult.Should().Be((int)HResult.STG_E_ACCESSDENIED);
                 Marshal.ReleaseComObject(stream);
                 action();
 
                 action = () => stream = storage.OpenStream("name", IntPtr.Zero, StorageMode.ShareExclusive);
-                action.Should().Throw<COMException>().And.HResult.Should().Be((int)HRESULT.STG_E_FILENOTFOUND);
+                action.Should().Throw<COMException>().And.HResult.Should().Be((int)HResult.STG_E_FILENOTFOUND);
 
                 stream = storage.OpenStream("newname", IntPtr.Zero, StorageMode.ShareExclusive);
                 stream.Should().NotBeNull();

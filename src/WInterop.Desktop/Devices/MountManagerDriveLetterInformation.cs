@@ -7,10 +7,13 @@
 
 namespace WInterop.Devices
 {
+    /// <summary>
+    /// [MOUNTMGR_DRIVE_LETTER_INFORMATION]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562281.aspx
-    public struct MOUNTMGR_DRIVE_LETTER_INFORMATION
+    public readonly struct MountManagerDriveLetterInformation
     {
-        public BOOLEAN DriveLetterWasAssigned;
-        public UCHAR CurrentDriveLetter;
+        public readonly BOOLEAN DriveLetterWasAssigned;
+        public readonly UCHAR CurrentDriveLetter;
     }
 }

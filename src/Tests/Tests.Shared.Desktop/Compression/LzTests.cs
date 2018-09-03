@@ -107,7 +107,7 @@ namespace CompressionTests
                 string destination = cleaner.CreateTestFile($"CopyFile_NotOverExisting({useCreateFile})");
 
                 Action action = () => Compression.LzCopyFile(source, destination, overwrite: false, useCreateFile: useCreateFile);
-                action.Should().Throw<IOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_FILE_EXISTS));
+                action.Should().Throw<IOException>().And.HResult.Should().Be((int)WindowsError.ERROR_FILE_EXISTS.ToHResult());
             }
         }
 

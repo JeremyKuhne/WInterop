@@ -14,10 +14,7 @@ namespace WInterop.SafeString
     {
         public static unsafe void ToUpperInvariant(ref UNICODE_STRING value)
         {
-            NTSTATUS status = Imports.RtlUpcaseUnicodeString(ref value, ref value, false);
-
-            if (!Error.NT_SUCCESS(status))
-                Error.GetIoExceptionForNTStatus(status);
+            Imports.RtlUpcaseUnicodeString(ref value, ref value, false).ThrowIfFailed();
         }
     }
 }

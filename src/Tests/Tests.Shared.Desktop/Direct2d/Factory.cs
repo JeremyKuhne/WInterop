@@ -19,7 +19,7 @@ namespace Direct2dTests
         [Fact]
         public void Initialize()
         {
-            HRESULT result = Imports.D2D1CreateFactory(
+            HResult result = Imports.D2D1CreateFactory(
                 FactoryType.SingleThreaded, new Guid(InterfaceIds.IID_ID2D1Factory), DebugLevel.None, out IFactory factory);
 
             Ellipse ellipse = new Ellipse(new PointF(1.0f, 2.0f), 3.0f, 4.0f);

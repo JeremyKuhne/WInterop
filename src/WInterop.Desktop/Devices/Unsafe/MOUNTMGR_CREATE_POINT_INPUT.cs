@@ -5,8 +5,11 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Devices
+namespace WInterop.Devices.Unsafe
 {
+    /// <summary>
+    /// [MOUNTMGR_CREATE_POINT_INPUT]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562275.aspx
     public struct MOUNTMGR_CREATE_POINT_INPUT
     {

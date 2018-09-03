@@ -10,10 +10,10 @@ namespace WInterop.Communications
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363214.aspx
     public enum Parity : byte
     {
-        NOPARITY = 0,
-        ODDPARITY = 1,
-        EVENPARITY = 2,
-        MARKPARITY = 3,
-        SPACEPARITY = 4
+        None = 0,
+        Odd = 1,
+        Even = 2,
+        Mark = 3,
+        Space = 4
     }
 }

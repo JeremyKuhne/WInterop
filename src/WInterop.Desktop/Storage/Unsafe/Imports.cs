@@ -211,7 +211,7 @@ namespace WInterop.Storage.Unsafe
         // https://docs.microsoft.com/en-us/windows/desktop/api/winternl/nf-winternl-ntcreatefile
         // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntcreatefile
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS NtCreateFile(
+        public unsafe static extern NTStatus NtCreateFile(
             out IntPtr FileHandle,
             DesiredAccess DesiredAccess,
             ref OBJECT_ATTRIBUTES ObjectAttributes,
@@ -227,7 +227,7 @@ namespace WInterop.Storage.Unsafe
         // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntqueryinformationfile
         // http://www.pinvoke.net/default.aspx/ntdll/NtQueryInformationFile.html
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS NtQueryInformationFile(
+        public unsafe static extern NTStatus NtQueryInformationFile(
             SafeFileHandle FileHandle,
             out IO_STATUS_BLOCK IoStatusBlock,
             void* FileInformation,
@@ -236,7 +236,7 @@ namespace WInterop.Storage.Unsafe
 
         // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntsetinformationfile
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS NtSetInformationFile(
+        public unsafe static extern NTStatus NtSetInformationFile(
             SafeFileHandle FileHandle,
             out IO_STATUS_BLOCK IoStatusBlock,
             void* FileInformation,
@@ -244,7 +244,7 @@ namespace WInterop.Storage.Unsafe
 
         // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/nf-ntifs-ntquerydirectoryfile
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS NtQueryDirectoryFile(
+        public unsafe static extern NTStatus NtQueryDirectoryFile(
             IntPtr FileHandle,
             IntPtr Event,
             AsyncProcedureCall ApcRoutine,
@@ -258,7 +258,7 @@ namespace WInterop.Storage.Unsafe
             BOOLEAN RestartScan);
 
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS NtQueryDirectoryFile(
+        public unsafe static extern NTStatus NtQueryDirectoryFile(
             SafeFileHandle FileHandle,
             IntPtr Event,
             AsyncProcedureCall ApcRoutine,
@@ -282,13 +282,13 @@ namespace WInterop.Storage.Unsafe
 
         // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/ntqueryattributesfile
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern NTSTATUS NtQueryAttributesFile(
+        public static extern NTStatus NtQueryAttributesFile(
             ref OBJECT_ATTRIBUTES ObjectAttributes,
             out FileBasicInformation FileInformation);
 
         // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/wdm/nf-wdm-zwqueryfullattributesfile
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern NTSTATUS NtQueryFullAttributesFile(
+        public static extern NTStatus NtQueryFullAttributesFile(
             ref OBJECT_ATTRIBUTES ObjectAttributes,
             out FileNetworkOpenInformation FileInformation);
     }

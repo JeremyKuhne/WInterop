@@ -23,11 +23,11 @@ namespace WInterop.Shell
         /// <param name="celt">Number of elements to retrieve.</param>
         /// <param name="rgelt">Ids relative to the IShellFolder being enumerated.</param>
         /// <returns>
-        /// <see cref="HRESULT.S_OK"/> if the requested <paramref name="celt"/> elements were returned.
-        /// <see cref="HRESULT.S_FALSE"/> if less items than requested were returned.
+        /// <see cref="HResult.S_OK"/> if the requested <paramref name="celt"/> elements were returned.
+        /// <see cref="HResult.S_FALSE"/> if less items than requested were returned.
         /// </returns>
         [PreserveSig]
-        HRESULT Next(
+        HResult Next(
             uint celt,
             out ItemIdList rgelt,
             out uint pceltFetched);

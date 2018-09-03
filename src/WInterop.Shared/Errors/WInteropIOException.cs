@@ -15,16 +15,16 @@ namespace WInterop.Errors
         public WInteropIOException()
             : base() { }
 
-        public WInteropIOException(string message, HRESULT hresult, Exception innerException = null)
+        public WInteropIOException(string message, HResult hresult, Exception innerException = null)
             : base(message, innerException) { HResult = (int)hresult; }
 
-        public WInteropIOException(HRESULT result)
+        public WInteropIOException(HResult result)
             : this(Error.HResultToString(result), result) { }
 
         public WInteropIOException(WindowsError error)
-            : this(Error.LastErrorToString(error), Error.HRESULT_FROM_WIN32(error)) { }
+            : this(Error.LastErrorToString(error), error.ToHResult()) { }
 
-        public WInteropIOException(NTSTATUS status)
-            : this(Error.HRESULT_FROM_NT(status)) { }
+        public WInteropIOException(NTStatus status)
+            : this(status.ToHResult()) { }
     }
 }

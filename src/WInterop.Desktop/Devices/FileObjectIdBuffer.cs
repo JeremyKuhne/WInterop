@@ -9,9 +9,12 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Devices
 {
+    /// <summary>
+    /// [FILE_OBJECTID_BUFFER]
+    /// </summary>
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364393.aspx
     [StructLayout(LayoutKind.Explicit)]
-    public struct FILE_OBJECTID_BUFFER
+    public struct FileObjectIdBuffer
     {
         [FieldOffset(0)]
         public FixedByte.Size16 ObjectId;

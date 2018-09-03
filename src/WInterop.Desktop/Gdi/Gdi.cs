@@ -83,7 +83,7 @@ namespace WInterop.Gdi
         {
             StretchMode oldMode = Imports.SetStretchBltMode(context, mode);
             if ((WindowsError)oldMode == WindowsError.ERROR_INVALID_PARAMETER)
-                throw Error.GetIoExceptionForError(WindowsError.ERROR_INVALID_PARAMETER);
+                WindowsError.ERROR_INVALID_PARAMETER.Throw();
             return oldMode;
         }
 

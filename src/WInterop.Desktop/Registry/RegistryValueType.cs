@@ -13,84 +13,84 @@ namespace WInterop.Registry
     public enum RegistryValueType : uint
     {
         /// <summary>
-        /// No defined value type.
+        /// No defined value type. [REG_NONE]
         /// </summary>
-        REG_NONE = 0,
+        None = 0,
 
         /// <summary>
-        /// Null terminated string.
+        /// Null terminated string. [REG_SZ]
         /// </summary>
         /// <remarks>
         /// Unicode strings are returned from Unicode functions.
         /// </remarks>
-        REG_SZ = 1,
+        String = 1,
 
         /// <summary>
-        /// Null terminated string with unexpanded references to environment variables.
+        /// Null terminated string with unexpanded references to environment variables. [REG_EXPAND_SZ]
         /// </summary>
         /// <remarks>
         /// Use ExpandEnvironmentStrings to expand the references.
         /// Unicode strings are returned from Unicode functions.
         /// </remarks>
-        REG_EXPAND_SZ = 2,
+        ExpandString = 2,
 
         /// <summary>
-        /// Binary data.
+        /// Binary data. [REG_BINARY]
         /// </summary>
-        REG_BINARY = 3,
+        Binary = 3,
 
         /// <summary>
-        /// 32 bit unsigned integer.
+        /// 32 bit unsigned integer. [REG_DWORD]
         /// </summary>
-        REG_DWORD = 4,
+        Unsigned32BitInteger = 4,
 
         /// <summary>
-        /// Same as REG_DWORD.
+        /// Same as REG_DWORD. [REG_DWORD_LITTLE_ENDIAN]
         /// </summary>
-        REG_DWORD_LITTLE_ENDIAN = 4,
+        Unsigned32BitIntegerLittleEndian = 4,
 
         /// <summary>
-        /// 32 bit unsigned integer in big endian format.
+        /// 32 bit unsigned integer in big endian format. [REG_DWORD_BIG_ENDIAN]
         /// </summary>
-        REG_DWORD_BIG_ENDIAN = 5,
+        Unsigned32BitIntegerBigEndian = 5,
 
         /// <summary>
-        /// Null terminated string that contains the target path of a symbolic link.
+        /// Null terminated string that contains the target path of a symbolic link. [REG_LINK]
         /// </summary>
-        REG_LINK = 6,
+        SymbolicLink = 6,
 
         /// <summary>
-        /// Sequence of null-terminated strings terminated by an empty string.
+        /// Sequence of null-terminated strings terminated by an empty string. [REG_MULTI_SZ]
         /// </summary>
-        REG_MULTI_SZ = 7,
+        MultiString = 7,
 
         /// <summary>
         /// A device driver's list of hardware resources, used by the driver or one of
-        /// the physical devices it controls, in the \ResourceMap tree.
+        /// the physical devices it controls, in the \ResourceMap tree. [REG_RESOURCE_LIST]
         /// </summary>
-        REG_RESOURCE_LIST = 8,
+        ResourceList = 8,
 
         /// <summary>
         /// A list of hardware resources that a physical device is using, detected and written
-        /// into the \HardwareDescription tree by the system.
+        /// into the \HardwareDescription tree by the system. [REG_FULL_RESOURCE_DESCRIPTOR]
         /// </summary>
-        REG_FULL_RESOURCE_DESCRIPTOR = 9,
+        FullResourceDescriptor = 9,
 
         /// <summary>
         /// A device driver's list of possible hardware resources it or one of the physical
         /// devices it controls can use, from which the system writes a subset into the
-        /// \ResourceMap tree.
+        /// \ResourceMap tree. [REG_RESOURCE_REQUIREMENTS_LIST]
         /// </summary>
-        REG_RESOURCE_REQUIREMENTS_LIST = 10,
+        ResourceRequirementsList = 10,
 
         /// <summary>
-        /// 64 bit unsigned integer.
+        /// 64 bit unsigned integer. [REG_QWORD]
         /// </summary>
-        REG_QWORD = 11,
+        Unsigned64BitInteger = 11,
 
         /// <summary>
-        /// Same as reg qword.
+        /// Same as reg qword. [REG_QWORD_LITTLE_ENDIAN]
         /// </summary>
-        REG_QWORD_LITTLE_ENDIAN = 11
+        Unsigned64BitIntegerLittleEndian = 11
     }
 }

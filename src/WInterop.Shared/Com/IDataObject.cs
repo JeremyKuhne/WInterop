@@ -23,7 +23,7 @@ namespace WInterop.Com
         void QueryGetData(in FORMATETC pformatetc);
 
         [PreserveSig]
-        HRESULT GetCanonicalFormatEtc(
+        HResult GetCanonicalFormatEtc(
             in FORMATETC pformatectIn,
             ref FORMATETC pformatetcOut);
 
@@ -33,7 +33,7 @@ namespace WInterop.Com
             BOOL fRelease);
 
         [PreserveSig]
-        HRESULT EnumFormatEtc(
+        HResult EnumFormatEtc(
             uint dwDirection,
             // IEnumFORMATETC
             [MarshalAs(UnmanagedType.IUnknown)]
@@ -41,7 +41,7 @@ namespace WInterop.Com
 
         // Return E_NOTIMPL here
         [PreserveSig]
-        HRESULT DAdvise(
+        HResult DAdvise(
             in FORMATETC pformatetc,
             uint advf,
             // IAdviseSink
@@ -50,11 +50,11 @@ namespace WInterop.Com
 
         // Return OLE_E_ADVISENOTSUPPORTED
         [PreserveSig]
-        HRESULT DUnadvise(uint dwConnection);
+        HResult DUnadvise(uint dwConnection);
 
         // Return OLE_E_ADVISENOTSUPPORTED
         [PreserveSig]
-        HRESULT EnumDAdvise(
+        HResult EnumDAdvise(
             // IEnumSTATDATA
             out IntPtr ppenumAdvise);
     }

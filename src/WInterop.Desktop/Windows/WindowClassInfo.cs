@@ -49,7 +49,7 @@ namespace WInterop.Windows
 
             if (nativeClass.lpszMenuName != null)
             {
-                if (ResourceMacros.IS_INTRESOURCE((IntPtr)nativeClass.lpszMenuName))
+                if (Windows.IsIntResource((IntPtr)nativeClass.lpszMenuName))
                     windowClass.MenuId = (int)nativeClass.lpszMenuName;
                 else
                     windowClass.MenuName = new string(nativeClass.lpszMenuName);

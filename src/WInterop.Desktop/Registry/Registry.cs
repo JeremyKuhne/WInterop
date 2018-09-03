@@ -19,16 +19,14 @@ namespace WInterop.Registry
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                NTSTATUS status;
-                uint resultLength;
-                while ((status = Imports.NtQueryKey(key, KeyInformationClass.NameInformation, buffer.VoidPointer, (uint)buffer.ByteCapacity, out resultLength))
-                    == NTSTATUS.STATUS_BUFFER_TOO_SMALL || status == NTSTATUS.STATUS_BUFFER_OVERFLOW)
+                NTStatus status;
+                while ((status = Imports.NtQueryKey(key, KeyInformationClass.NameInformation, buffer.VoidPointer, (uint)buffer.ByteCapacity, out uint resultLength))
+                    == NTStatus.STATUS_BUFFER_TOO_SMALL || status == NTStatus.STATUS_BUFFER_OVERFLOW)
                 {
                     buffer.EnsureByteCapacity(resultLength);
                 }
 
-                if (status != NTSTATUS.STATUS_SUCCESS)
-                    Error.GetIoExceptionForNTStatus(status);
+                status.ThrowIfFailed();
 
                 return ((KEY_NAME_INFORMATION*)buffer.VoidPointer)->Name.CreateString();
             });
@@ -42,9 +40,7 @@ namespace WInterop.Registry
             string subKeyName,
             RegistryAccessRights rights = RegistryAccessRights.Read)
         {
-            WindowsError result = Imports.RegOpenKeyExW(key, subKeyName, 0, rights, out RegistryKeyHandle subKey);
-            if (result != WindowsError.ERROR_SUCCESS)
-                throw Error.GetIoExceptionForError(result);
+            Imports.RegOpenKeyExW(key, subKeyName, 0, rights, out RegistryKeyHandle subKey).ThrowIfFailed();
 
             return subKey;
         }
@@ -62,7 +58,7 @@ namespace WInterop.Registry
                 case WindowsError.ERROR_FILE_NOT_FOUND:
                     return false;
                 default:
-                    throw Error.GetIoExceptionForError(result);
+                    throw result.GetIoException();
             }
         }
 
@@ -78,9 +74,9 @@ namespace WInterop.Registry
                 case WindowsError.ERROR_SUCCESS:
                     return valueType;
                 case WindowsError.ERROR_FILE_NOT_FOUND:
-                    return RegistryValueType.REG_NONE;
+                    return RegistryValueType.None;
                 default:
-                    throw Error.GetIoExceptionForError(result);
+                    throw result.GetIoException();
             }
         }
 
@@ -111,7 +107,7 @@ namespace WInterop.Registry
                         case WindowsError.ERROR_FILE_NOT_FOUND:
                             return null;
                         default:
-                            throw Error.GetIoExceptionForError(result);
+                            throw result.GetIoException();
                     }
                 }
 
@@ -135,34 +131,34 @@ namespace WInterop.Registry
         /// temporary buffer for *each* invocation- making the direct call here avoids this extra
         /// buffer.
         /// </remarks>
-        public unsafe static IEnumerable<string> GetValueNamesDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.REG_NONE)
+        public unsafe static IEnumerable<string> GetValueNamesDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.None)
         {
             List<string> names = new List<string>();
 
             BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                NTSTATUS status;
+                NTStatus status;
                 while((status = Imports.NtEnumerateValueKey(
                     key,
                     (uint)names.Count,
                     KeyValueInformationClass.BasicInformation,
                     buffer.VoidPointer,
                     checked((uint)buffer.ByteCapacity),
-                    out uint resultLength)) != NTSTATUS.STATUS_NO_MORE_ENTRIES)
+                    out uint resultLength)) != NTStatus.STATUS_NO_MORE_ENTRIES)
                 {
                     switch (status)
                     {
-                        case NTSTATUS.STATUS_SUCCESS:
+                        case NTStatus.STATUS_SUCCESS:
                             KEY_VALUE_BASIC_INFORMATION* info = (KEY_VALUE_BASIC_INFORMATION*)buffer.VoidPointer;
-                            if (filterTo == RegistryValueType.REG_NONE || info->Type == filterTo)
+                            if (filterTo == RegistryValueType.None || info->Type == filterTo)
                                 names.Add(info->Name.CreateString());
                             break;
-                        case NTSTATUS.STATUS_BUFFER_OVERFLOW:
-                        case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
+                        case NTStatus.STATUS_BUFFER_OVERFLOW:
+                        case NTStatus.STATUS_BUFFER_TOO_SMALL:
                             buffer.EnsureByteCapacity(resultLength);
                             break;
                         default:
-                            throw Error.GetIoExceptionForNTStatus(status);
+                            throw status.GetIoException();
                     }
                 }
             });
@@ -186,34 +182,34 @@ namespace WInterop.Registry
         /// temporary buffer for *each* invocation- making the direct call here avoids this extra
         /// buffer.
         /// </remarks>
-        public unsafe static IEnumerable<object> GetValueDataDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.REG_NONE)
+        public unsafe static IEnumerable<object> GetValueDataDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.None)
         {
             List<object> data = new List<object>();
 
             BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                NTSTATUS status;
+                NTStatus status;
                 while ((status = Imports.NtEnumerateValueKey(
                     key,
                     (uint)data.Count,
                     KeyValueInformationClass.PartialInformation,
                     buffer.VoidPointer,
                     checked((uint)buffer.ByteCapacity),
-                    out uint resultLength)) != NTSTATUS.STATUS_NO_MORE_ENTRIES)
+                    out uint resultLength)) != NTStatus.STATUS_NO_MORE_ENTRIES)
                 {
                     switch (status)
                     {
-                        case NTSTATUS.STATUS_SUCCESS:
+                        case NTStatus.STATUS_SUCCESS:
                             KEY_VALUE_PARTIAL_INFORMATION* info = (KEY_VALUE_PARTIAL_INFORMATION*)buffer.VoidPointer;
-                            if (filterTo == RegistryValueType.REG_NONE || (*info).Type == filterTo)
+                            if (filterTo == RegistryValueType.None || (*info).Type == filterTo)
                                 data.Add(ReadValue(&(*info).Data, (*info).DataLength, (*info).Type));
                             break;
-                        case NTSTATUS.STATUS_BUFFER_OVERFLOW:
-                        case NTSTATUS.STATUS_BUFFER_TOO_SMALL:
+                        case NTStatus.STATUS_BUFFER_OVERFLOW:
+                        case NTStatus.STATUS_BUFFER_TOO_SMALL:
                             buffer.EnsureByteCapacity(resultLength);
                             break;
                         default:
-                            throw Error.GetIoExceptionForNTStatus(status);
+                            throw status.GetIoException();
                     }
                 }
             });
@@ -262,7 +258,7 @@ namespace WInterop.Registry
                             }
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(result);
+                            throw result.GetIoException();
                     }
                 }
             });
@@ -274,25 +270,25 @@ namespace WInterop.Registry
         {
             switch (valueType)
             {
-                case RegistryValueType.REG_SZ:
-                case RegistryValueType.REG_EXPAND_SZ:
-                case RegistryValueType.REG_LINK:
+                case RegistryValueType.String:
+                case RegistryValueType.ExpandString:
+                case RegistryValueType.SymbolicLink:
                     // Size includes the null
                     return new string((char*)buffer, 0, (int)(byteCount / sizeof(char)) - 1);
-                case RegistryValueType.REG_MULTI_SZ:
+                case RegistryValueType.MultiString:
                     return BufferHelper.SplitNullTerminatedStringList((IntPtr)buffer);
-                case RegistryValueType.REG_DWORD:
+                case RegistryValueType.Unsigned32BitInteger:
                     return *(uint*)buffer;
-                case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+                case RegistryValueType.Unsigned32BitIntegerBigEndian:
                     byte* b = (byte*)buffer;
                     return (*b << 24) | (*(b + 1) << 16) | (*(b + 2) << 8) | (*(b + 3));
-                case RegistryValueType.REG_QWORD:
+                case RegistryValueType.Unsigned64BitInteger:
                     return *(ulong*)buffer;
-                case RegistryValueType.REG_BINARY:
+                case RegistryValueType.Binary:
                 // The next three aren't defined yet, so we'll just return them as binary blobs
-                case RegistryValueType.REG_RESOURCE_LIST:               // CM_RESOURCE_LIST
-                case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:    // CM_FULL_RESOURCE_DESCRIPTOR
-                case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:  // CM_RESOURCE_LIST??
+                case RegistryValueType.ResourceList:                    // CM_RESOURCE_LIST
+                case RegistryValueType.FullResourceDescriptor:          // CM_FULL_RESOURCE_DESCRIPTOR
+                case RegistryValueType.ResourceRequirementsList:        // CM_RESOURCE_LIST??
                     byte[] outBuffer = new byte[byteCount];
                     fixed (void* outPointer = &outBuffer[0])
                     {

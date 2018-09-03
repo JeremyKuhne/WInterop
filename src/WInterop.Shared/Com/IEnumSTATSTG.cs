@@ -25,7 +25,7 @@ namespace WInterop.Com
         // skipped values, just whether it skipped them all or not.
 
         [PreserveSig]
-        HRESULT Skip(uint celt);
+        HResult Skip(uint celt);
 
         void Reset();
 

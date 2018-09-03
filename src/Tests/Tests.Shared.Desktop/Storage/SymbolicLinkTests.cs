@@ -95,7 +95,7 @@ namespace StorageTests
                 else
                 {
                     // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
-                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)WindowsError.ERROR_PRIVILEGE_NOT_HELD.ToHResult());
                 }
             }
         }
@@ -129,7 +129,7 @@ namespace StorageTests
                 else
                 {
                     // Can't create links unless you have admin rights SE_CREATE_SYMBOLIC_LINK_NAME SeCreateSymbolicLinkPrivilege
-                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)WindowsError.ERROR_PRIVILEGE_NOT_HELD.ToHResult());
                 }
             }
         }
@@ -154,7 +154,7 @@ namespace StorageTests
                 }
                 else
                 {
-                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_PRIVILEGE_NOT_HELD));
+                    action.Should().Throw<System.IO.IOException>().And.HResult.Should().Be((int)WindowsError.ERROR_PRIVILEGE_NOT_HELD.ToHResult());
                 }
             }
         }

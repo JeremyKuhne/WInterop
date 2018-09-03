@@ -45,7 +45,7 @@ namespace WInterop.Storage.Unsafe
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-copyfile2 (kernel32)
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern HRESULT CopyFile2(
+        public static extern HResult CopyFile2(
             string pwszExistingFileName,
             string pwszNewFileName,
             ref COPYFILE2_EXTENDED_PARAMETERS pExtendedParameters);

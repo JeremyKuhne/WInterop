@@ -60,7 +60,7 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378299.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern NTSTATUS LsaOpenPolicy(
+        public unsafe static extern NTStatus LsaOpenPolicy(
             UNICODE_STRING* SystemName,
             LSA_OBJECT_ATTRIBUTES* ObjectAttributes,
             PolicyAccessRights DesiredAccess,
@@ -68,21 +68,21 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public static extern WindowsError LsaNtStatusToWinError(NTSTATUS Status);
+        public static extern WindowsError LsaNtStatusToWinError(NTStatus Status);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721787.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public static extern NTSTATUS LsaClose(
+        public static extern NTStatus LsaClose(
             IntPtr ObjectHandle);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721796.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public static extern NTSTATUS LsaFreeMemory(
+        public static extern NTStatus LsaFreeMemory(
             IntPtr ObjectHandle);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721790.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public static extern NTSTATUS LsaEnumerateAccountRights(
+        public static extern NTStatus LsaEnumerateAccountRights(
             LsaHandle PolicyHandle,
             in SID AccountSid,
             out LsaMemoryHandle UserRights,

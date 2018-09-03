@@ -44,7 +44,7 @@ namespace WInterop.Shell
             ref Guid riid);
 
         [PreserveSig]
-        HRESULT CompareIDs(
+        HResult CompareIDs(
             LParam lParam,
             ItemIdList pidl1,
             ItemIdList pidl2);

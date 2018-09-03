@@ -15,12 +15,7 @@ namespace WInterop.Network
 {
     public static partial class Network
     {
-        public static void NetApiBufferFree(IntPtr buffer)
-        {
-            WindowsError result = Imports.NetApiBufferFree(buffer);
-            if (result != WindowsError.NERR_Success)
-                throw Error.GetIoExceptionForError(result);
-        }
+        public static void NetApiBufferFree(IntPtr buffer) => Imports.NetApiBufferFree(buffer).ThrowIfFailed();
 
         public unsafe static void AddLocalGroup(string groupName, string comment = null, string server = null)
         {
@@ -32,14 +27,12 @@ namespace WInterop.Network
                 char*[] data = new char*[] { fixedName, fixedComment };
                 fixed (void* buffer = data)
                 {
-                    WindowsError result = Imports.NetLocalGroupAdd(
+                    Imports.NetLocalGroupAdd(
                         servername: server,
                         level: level,
                         buf: buffer,
-                        parm_err: out uint parameter);
-
-                    if (result != WindowsError.NERR_Success)
-                        throw Error.GetIoExceptionForError(result, groupName);
+                        parm_err: out uint parameter)
+                        .ThrowIfFailed();
                 }
             }
         }
@@ -48,17 +41,15 @@ namespace WInterop.Network
         {
             var groups = new List<string>();
 
-            WindowsError result = Imports.NetLocalGroupEnum(
+            Imports.NetLocalGroupEnum(
                 servername: server,
                 level: 0,
                 bufptr: out var buffer,
                 prefmaxlen: Imports.MAX_PREFERRED_LENGTH,
                 entriesread: out uint entriesRead,
                 totalentries: out uint totalEntries,
-                resumehandle: IntPtr.Zero);
-
-            if (result != WindowsError.NERR_Success)
-                throw Error.GetIoExceptionForError(result, server);
+                resumehandle: IntPtr.Zero)
+                .ThrowIfFailed(server);
 
             foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
             {
@@ -72,7 +63,7 @@ namespace WInterop.Network
         {
             var members = new List<MemberInfo>();
 
-            WindowsError result = Imports.NetLocalGroupGetMembers(
+            Imports.NetLocalGroupGetMembers(
                 servername: server,
                 localgroupname: groupName,
                 level: 1,
@@ -80,10 +71,8 @@ namespace WInterop.Network
                 prefmaxlen: Imports.MAX_PREFERRED_LENGTH,
                 entriesread: out uint entriesRead,
                 totalentries: out uint totalEntries,
-                resumehandle: IntPtr.Zero);
-
-            if (result != WindowsError.NERR_Success)
-                throw Error.GetIoExceptionForError(result, server);
+                resumehandle: IntPtr.Zero)
+                .ThrowIfFailed();
 
             foreach (Imports.LOCALGROUP_MEMBERS_INFO_1 info in ReadStructsFromBuffer<Imports.LOCALGROUP_MEMBERS_INFO_1>(buffer, entriesRead))
             {
@@ -101,7 +90,7 @@ namespace WInterop.Network
         {
             var groups = new List<string>();
 
-            WindowsError result = Imports.NetUserEnum(
+            Imports.NetUserEnum(
                 servername: server,
                 level: 0,
                 filter: default,
@@ -109,10 +98,8 @@ namespace WInterop.Network
                 prefmaxlen: Imports.MAX_PREFERRED_LENGTH,
                 entriesread: out uint entriesRead,
                 totalentries: out uint totalEntries,
-                resume_handle: IntPtr.Zero);
-
-            if (result != WindowsError.NERR_Success)
-                throw Error.GetIoExceptionForError(result, server);
+                resume_handle: IntPtr.Zero)
+                .ThrowIfFailed(server);
 
             foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
             {
@@ -124,11 +111,7 @@ namespace WInterop.Network
 
         public static UserInfo2 GetUserInfo(string user, string server = null)
         {
-            WindowsError result = Imports.NetUserGetInfo(server, user, 2, out var buffer);
-
-            if (result != WindowsError.NERR_Success)
-                throw Error.GetIoExceptionForError(result, user);
-
+            Imports.NetUserGetInfo(server, user, 2, out var buffer).ThrowIfFailed(user);
             return new UserInfo2(buffer.ReadStructFromBuffer<USER_INFO_2>());
         }
 

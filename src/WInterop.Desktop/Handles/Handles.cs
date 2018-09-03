@@ -11,7 +11,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Handles.Unsafe;
-using WInterop.SafeString.Unsafe;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Handles
@@ -37,13 +36,11 @@ namespace WInterop.Handles
         {
             return (DirectoryObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
-                NTSTATUS status = Imports.NtOpenDirectoryObject(
+                Imports.NtOpenDirectoryObject(
                     DirectoryHandle: out var directory,
                     DesiredAccess: desiredAccess,
-                    ObjectAttributes: ref attributes);
-
-                if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw Error.GetIoExceptionForNTStatus(status, path);
+                    ObjectAttributes: ref attributes)
+                    .ThrowIfFailed(path);
 
                 return directory;
             });
@@ -58,13 +55,11 @@ namespace WInterop.Handles
         {
             return (SymbolicLinkObjectHandle)OpenObjectHelper(path, (attributes) =>
             {
-                NTSTATUS status = Imports.NtOpenSymbolicLinkObject(
+                Imports.NtOpenSymbolicLinkObject(
                     LinkHandle: out var link,
                     DesiredAccess: desiredAccess,
-                    ObjectAttributes: ref attributes);
-
-                if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw Error.GetIoExceptionForNTStatus(status, path);
+                    ObjectAttributes: ref attributes)
+                    .ThrowIfFailed();
 
                 return link;
             });
@@ -75,7 +70,7 @@ namespace WInterop.Handles
             fixed (char* pathPointer = path)
             {
                 ushort length = checked((ushort)(path.Length * sizeof(char)));
-                var objectName = new UNICODE_STRING
+                var objectName = new SafeString.Unsafe.UNICODE_STRING
                 {
                     Length = length,
                     MaximumLength = length,
@@ -103,16 +98,15 @@ namespace WInterop.Handles
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
-                UNICODE_STRING target = new UNICODE_STRING(buffer);
-                NTSTATUS status;
-                while ((status = Imports.NtQuerySymbolicLinkObject(linkHandle, ref target, out uint returnedLength)) == NTSTATUS.STATUS_BUFFER_TOO_SMALL)
+                var target = new SafeString.Unsafe.UNICODE_STRING(buffer);
+                NTStatus status;
+                while ((status = Imports.NtQuerySymbolicLinkObject(linkHandle, ref target, out uint returnedLength)) == NTStatus.STATUS_BUFFER_TOO_SMALL)
                 {
                     buffer.EnsureByteCapacity(returnedLength);
                     target.UpdateFromStringBuffer(buffer);
                 }
 
-                if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw Error.GetIoExceptionForNTStatus(status);
+                status.ThrowIfFailed();
 
                 buffer.Length = (uint)(target.Length / sizeof(char));
                 return buffer.ToString();
@@ -128,7 +122,7 @@ namespace WInterop.Handles
                 buffer.EnsureCharCapacity(1024);
 
                 uint context = 0;
-                NTSTATUS status;
+                NTStatus status;
 
                 do
                 {
@@ -141,10 +135,10 @@ namespace WInterop.Handles
                         Context: ref context,
                         ReturnLength: out uint returnLength);
 
-                    if (status != NTSTATUS.STATUS_SUCCESS && status != NTSTATUS.STATUS_MORE_ENTRIES)
+                    if (status != NTStatus.STATUS_SUCCESS && status != NTStatus.STATUS_MORE_ENTRIES)
                         break;
 
-                    UNICODE_STRING* name = (UNICODE_STRING*)buffer.VoidPointer;
+                    SafeString.Unsafe.UNICODE_STRING* name = (SafeString.Unsafe.UNICODE_STRING*)buffer.VoidPointer;
                     while (name->Length != 0)
                     {
                         infos.Add(new ObjectInformation
@@ -154,10 +148,9 @@ namespace WInterop.Handles
                         });
                     };
 
-                } while (status == NTSTATUS.STATUS_MORE_ENTRIES);
+                } while (status == NTStatus.STATUS_MORE_ENTRIES);
 
-                if (status != NTSTATUS.STATUS_SUCCESS)
-                    throw Error.GetIoExceptionForNTStatus(status);
+                status.ThrowIfFailed();
             });
 
             return infos.OrderBy(i => i.Name); ;
@@ -183,10 +176,10 @@ namespace WInterop.Handles
 
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
+                NTStatus status = NTStatus.STATUS_BUFFER_OVERFLOW;
                 uint returnLength = 260 * sizeof(char);
 
-                while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW || status == NTSTATUS.STATUS_BUFFER_TOO_SMALL)
+                while (status == NTStatus.STATUS_BUFFER_OVERFLOW || status == NTStatus.STATUS_BUFFER_TOO_SMALL)
                 {
                     buffer.EnsureByteCapacity(returnLength);
 
@@ -198,10 +191,9 @@ namespace WInterop.Handles
                         ReturnLength: out returnLength);
                 }
 
-                if (!Error.NT_SUCCESS(status))
-                    throw Error.GetIoExceptionForNTStatus(status);
+                status.ThrowIfFailed();
 
-                return ((UNICODE_STRING*)(buffer.VoidPointer))->ToString();
+                return ((SafeString.Unsafe.UNICODE_STRING*)(buffer.VoidPointer))->ToString();
             });
         }
 
@@ -212,12 +204,12 @@ namespace WInterop.Handles
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                NTSTATUS status = NTSTATUS.STATUS_BUFFER_OVERFLOW;
+                NTStatus status = NTStatus.STATUS_BUFFER_OVERFLOW;
 
                 // We'll initially give room for 50 characters for the type name
                 uint returnLength = (uint)sizeof(OBJECT_TYPE_INFORMATION) + 50 * sizeof(char);
 
-                while (status == NTSTATUS.STATUS_BUFFER_OVERFLOW || status == NTSTATUS.STATUS_BUFFER_TOO_SMALL || status == NTSTATUS.STATUS_INFO_LENGTH_MISMATCH)
+                while (status == NTStatus.STATUS_BUFFER_OVERFLOW || status == NTStatus.STATUS_BUFFER_TOO_SMALL || status == NTStatus.STATUS_INFO_LENGTH_MISMATCH)
                 {
                     buffer.EnsureByteCapacity(returnLength);
 
@@ -229,8 +221,7 @@ namespace WInterop.Handles
                         ReturnLength: out returnLength);
                 }
 
-                if (!Error.NT_SUCCESS(status))
-                    throw Error.GetIoExceptionForNTStatus(status);
+                status.ThrowIfFailed();
 
                 return ((OBJECT_TYPE_INFORMATION*)(buffer.VoidPointer))->TypeName.ToString();
             });

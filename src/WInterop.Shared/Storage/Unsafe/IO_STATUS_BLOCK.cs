@@ -36,7 +36,7 @@ namespace WInterop.Storage.Unsafe
             /// some other informational, warning, or error status.
             /// </summary>
             [FieldOffset(0)]
-            public NTSTATUS Status;
+            public NTStatus Status;
 
             /// <summary>
             /// Reserved for internal use.

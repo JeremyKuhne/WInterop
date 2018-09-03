@@ -152,44 +152,24 @@ namespace WInterop.Security
                 throw Error.GetIoExceptionForLastError();
         }
 
-        public static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
+        public unsafe static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
         {
             LSA_OBJECT_ATTRIBUTES attributes = new LSA_OBJECT_ATTRIBUTES();
-            LsaHandle handle;
-            NTSTATUS status;
-
-            unsafe
-            {
-                status = Imports.LsaOpenPolicy(null, &attributes, access, out handle);
-            }
-
-            if (status != NTSTATUS.STATUS_SUCCESS)
-                throw Error.GetIoExceptionForNTStatus(status);
-
+            Imports.LsaOpenPolicy(null, &attributes, access, out LsaHandle handle).ThrowIfFailed();
             return handle;
         }
 
         /// <summary>
         /// Convert an NTSTATUS to a Windows error code (returns ERROR_MR_MID_NOT_FOUND if unable to find an error)
         /// </summary>
-        public static WindowsError NtStatusToWinError(NTSTATUS status)
+        public static WindowsError NtStatusToWinError(NTStatus status)
         {
             return Imports.LsaNtStatusToWinError(status);
         }
 
-        public static void LsaClose(IntPtr handle)
-        {
-            NTSTATUS status = Imports.LsaClose(handle);
-            if (status != NTSTATUS.STATUS_SUCCESS)
-                throw Error.GetIoExceptionForNTStatus(status);
-        }
+        public static void LsaClose(IntPtr handle) => Imports.LsaClose(handle).ThrowIfFailed();
 
-        public static void LsaFreeMemory(IntPtr handle)
-        {
-            NTSTATUS status = Imports.LsaFreeMemory(handle);
-            if (status != NTSTATUS.STATUS_SUCCESS)
-                throw Error.GetIoExceptionForNTStatus(status);
-        }
+        public static void LsaFreeMemory(IntPtr handle) => Imports.LsaFreeMemory(handle).ThrowIfFailed();
 
         /// <summary>
         /// Enumerates rights explicitly given to the specified SID. If the given SID
@@ -197,15 +177,15 @@ namespace WInterop.Security
         /// </summary>
         public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, in SID sid)
         {
-            NTSTATUS status = Imports.LsaEnumerateAccountRights(policyHandle, in sid, out var rightsBuffer, out uint rightsCount);
+            NTStatus status = Imports.LsaEnumerateAccountRights(policyHandle, in sid, out var rightsBuffer, out uint rightsCount);
             switch (status)
             {
-                case NTSTATUS.STATUS_OBJECT_NAME_NOT_FOUND:
+                case NTStatus.STATUS_OBJECT_NAME_NOT_FOUND:
                     return Enumerable.Empty<string>();
-                case NTSTATUS.STATUS_SUCCESS:
+                case NTStatus.STATUS_SUCCESS:
                     break;
                 default:
-                    throw Error.GetIoExceptionForNTStatus(status);
+                    throw status.GetIoException();
             }
 
             List<string> rights = new List<string>();

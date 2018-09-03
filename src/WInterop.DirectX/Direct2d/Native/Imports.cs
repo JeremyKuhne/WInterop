@@ -18,7 +18,7 @@ namespace WInterop.Direct2d.Unsafe
     {
         // https://docs.microsoft.com/en-us/windows/desktop/api/d2d1/nf-d2d1-d2d1createfactory
         [DllImport(Libraries.D2Dd1, ExactSpelling = true)]
-        public static extern HRESULT D2D1CreateFactory(
+        public static extern HResult D2D1CreateFactory(
             FactoryType factoryType,
             in Guid riid,
             in DebugLevel pFactoryOptions,

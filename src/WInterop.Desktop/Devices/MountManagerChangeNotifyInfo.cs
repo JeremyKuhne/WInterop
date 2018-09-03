@@ -5,13 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
 namespace WInterop.Devices
 {
-    // Defined in mountdev.h
-    public struct MOUNTDEV_STABLE_GUID
+    /// <summary>
+    /// [MOUNTMGR_CHANGE_NOTIFY_INFO]
+    /// </summary>
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562273.aspx
+    public struct MountManagerChangeNotifyInfo
     {
-        public Guid StableGuid;
+        public uint EpicNumber;
     }
 }

@@ -77,7 +77,7 @@ namespace StorageTests
 
                     action = () => Storage.QueryUsersOnEncryptedFile(path);
                     action.Should().Throw<WInteropIOException>()
-                        .And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_FILE_NOT_ENCRYPTED));
+                        .And.HResult.Should().Be((int)WindowsError.ERROR_FILE_NOT_ENCRYPTED.ToHResult());
                 }
             }));
         }

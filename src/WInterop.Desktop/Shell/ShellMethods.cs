@@ -22,17 +22,15 @@ namespace WInterop.Shell
     {
         public static IPropertyDescriptionList GetPropertyDescriptionListFromString(string value)
         {
-            HRESULT result = Imports.PSGetPropertyDescriptionListFromString(value, new Guid(InterfaceIds.IID_IPropertyDescriptionList), out IPropertyDescriptionList list);
-            if (result != HRESULT.S_OK)
-                throw Error.GetIoExceptionForHResult(result);
+            Imports.PSGetPropertyDescriptionListFromString(value, new Guid(InterfaceIds.IID_IPropertyDescriptionList), out IPropertyDescriptionList list)
+                .ThrowIfFailed();
             return list;
         }
 
         public static RegistryKeyHandle AssocQueryKey(AssociationFlags flags, AssociationKey key, string association, string extraInfo)
         {
-            HRESULT result = Imports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle);
-            if (result != HRESULT.S_OK)
-                throw Error.GetIoExceptionForHResult(result);
+            Imports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle)
+                .ThrowIfFailed();
             return handle;
         }
 
@@ -42,15 +40,14 @@ namespace WInterop.Shell
             {
                 flags |= AssociationFlags.NoTruncate;
 
-                HRESULT result;
+                HResult result;
                 uint count = buffer.CharCapacity;
-                while ((result = Imports.AssocQueryStringW(flags, @string, association, extraInfo, buffer, ref count)) == HRESULT.E_POINTER)
+                while ((result = Imports.AssocQueryStringW(flags, @string, association, extraInfo, buffer, ref count)) == HResult.E_POINTER)
                 {
                     buffer.EnsureCharCapacity(count);
                 }
 
-                if (result != HRESULT.S_OK)
-                    throw Error.GetIoExceptionForHResult(result, association);
+                result.ThrowIfFailed(association);
 
                 // Count includes the null
                 buffer.Length = count - 1;
@@ -63,9 +60,8 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetKnownFolderPath(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
         {
-            HRESULT hr = Imports.SHGetKnownFolderPath(ref folderIdentifier, flags, EmptySafeHandle.Instance, out string path);
-            if (hr != HRESULT.S_OK)
-                throw Error.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
+            Imports.SHGetKnownFolderPath(ref folderIdentifier, flags, EmptySafeHandle.Instance, out string path)
+                .ThrowIfFailed();
 
             return path;
         }
@@ -75,9 +71,8 @@ namespace WInterop.Shell
         /// </summary>
         public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
         {
-            HRESULT hr = Imports.SHGetKnownFolderIDList(ref folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id);
-            if (hr != HRESULT.S_OK)
-                throw Error.GetIoExceptionForHResult(hr, folderIdentifier.ToString());
+            Imports.SHGetKnownFolderIDList(ref folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id)
+                .ThrowIfFailed();
 
             return id;
         }
@@ -87,10 +82,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetNameFromId(ItemIdList id, ShellItemDisplayNames form = ShellItemDisplayNames.NormalDisplay)
         {
-            HRESULT hr = Imports.SHGetNameFromIDList(id, form, out string name);
-            if (hr != HRESULT.S_OK)
-                throw Error.GetIoExceptionForHResult(hr);
-
+            Imports.SHGetNameFromIDList(id, form, out string name).ThrowIfFailed();
             return name;
         }
 

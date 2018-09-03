@@ -63,13 +63,13 @@ namespace WInterop.Com
         void Revert();
 
         [PreserveSig]
-        HRESULT LockRegion(
+        HResult LockRegion(
             long libOffset,
             long cb,
             uint dwLockType);
 
         [PreserveSig]
-        HRESULT UnlockRegion(
+        HResult UnlockRegion(
             long libOffset,
             long cb,
             uint dwLockType);

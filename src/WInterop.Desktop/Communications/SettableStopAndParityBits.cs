@@ -13,13 +13,13 @@ namespace WInterop.Communications
     [Flags]
     public enum SettableStopAndParityBits : ushort
     {
-        STOPBITS_10      = 0x0001,
-        STOPBITS_15      = 0x0002,
-        STOPBITS_20      = 0x0004,
-        PARITY_NONE      = 0x0100,
-        PARITY_ODD       = 0x0200,
-        PARITY_EVEN      = 0x0400,
-        PARITY_MARK      = 0x0800,
-        PARITY_SPACE     = 0x1000
+        StopBits10       = 0x0001,
+        StopBits15       = 0x0002,
+        StopBits20       = 0x0004,
+        ParityNone       = 0x0100,
+        ParityOdd        = 0x0200,
+        ParityEven       = 0x0400,
+        ParityMark       = 0x0800,
+        ParitySpace      = 0x1000
     }
 }

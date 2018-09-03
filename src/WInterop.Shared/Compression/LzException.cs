@@ -12,7 +12,7 @@ namespace WInterop.Compression
     public class LzException : WInteropIOException
     {
         public LzException(LzError error, string path = null)
-            : base(GetMessage(error, path), HRESULT.E_FAIL)
+            : base(GetMessage(error, path), Errors.HResult.E_FAIL)
         {
             Error = error;
         }

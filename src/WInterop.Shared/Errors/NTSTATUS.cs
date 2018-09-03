@@ -10,7 +10,7 @@ namespace WInterop.Errors
     /// <summary>
     /// NtStatus defines.
     /// </summary>
-    public enum NTSTATUS : int
+    public enum NTStatus : int
     {
         // NTSTATUS values
         // https://msdn.microsoft.com/en-us/library/cc704588.aspx

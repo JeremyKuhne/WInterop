@@ -107,16 +107,16 @@ namespace WInterop.Com
             // Ignore. (Should this return STG_E_INVALIDFUNCTION? It isn't clear from the docs.)
         }
 
-        HRESULT IStream.LockRegion(long libOffset, long cb, uint dwLockType)
+        HResult IStream.LockRegion(long libOffset, long cb, uint dwLockType)
         {
             // Not supported
-            return HRESULT.STG_E_INVALIDFUNCTION;
+            return HResult.STG_E_INVALIDFUNCTION;
         }
 
-        HRESULT IStream.UnlockRegion(long libOffset, long cb, uint dwLockType)
+        HResult IStream.UnlockRegion(long libOffset, long cb, uint dwLockType)
         {
             // Not supported
-            return HRESULT.STG_E_INVALIDFUNCTION;
+            return HResult.STG_E_INVALIDFUNCTION;
         }
 
         void IStream.Stat(out STATSTG pstatstg, StatFlag grfStatFlag)

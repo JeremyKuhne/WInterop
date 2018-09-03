@@ -116,7 +116,7 @@ namespace WInterop.Com
 
             IntPtr handle = Interlocked.Exchange(ref this.handle, IntPtr.Zero);
             if (handle != IntPtr.Zero)
-                Error.ThrowIfFailed(Imports.VariantClear(handle));
+                Imports.VariantClear(handle).ThrowIfFailed();
 
             return true;
         }

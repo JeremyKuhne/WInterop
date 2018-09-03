@@ -13,11 +13,11 @@ namespace WInterop.Communications
     [Flags]
     public enum SettableDataBits : ushort
     {
-        DATABITS_5       = 0x0001,
-        DATABITS_6       = 0x0002,
-        DATABITS_7       = 0x0004,
-        DATABITS_8       = 0x0008,
-        DATABITS_16      = 0x0010,
-        DATABITS_16X     = 0x0020
+        DataBits5       = 0x0001,
+        DataBits6       = 0x0002,
+        DataBits7       = 0x0004,
+        DataBits8       = 0x0008,
+        DataBits16      = 0x0010,
+        DataBits16x     = 0x0020
     }
 }

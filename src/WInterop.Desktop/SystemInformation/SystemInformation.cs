@@ -66,7 +66,7 @@ namespace WInterop.SystemInformation
                             buffer.EnsureCharCapacity(size);
                             break;
                         default:
-                            throw Error.GetIoExceptionForError(error);
+                            throw error.GetIoException();
                     }
                 }
 

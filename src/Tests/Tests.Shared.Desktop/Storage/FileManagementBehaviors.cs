@@ -31,10 +31,10 @@ namespace StorageTests
 
                 FindOperation<string> find = new FindOperation<string>(testFile);
                 Action action = () => find.FirstOrDefault();
-                action.Should().Throw<ArgumentException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_PARAMETER));
+                action.Should().Throw<ArgumentException>().And.HResult.Should().Be((int)WindowsError.ERROR_INVALID_PARAMETER.ToHResult());
 
                 action = () => Storage.CreateFile(Paths.AddTrailingSeparator(testFile), CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes);
-                action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)Error.HRESULT_FROM_WIN32(WindowsError.ERROR_INVALID_NAME));
+                action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)WindowsError.ERROR_INVALID_NAME.ToHResult());
             }
         }
 
