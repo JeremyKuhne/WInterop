@@ -13,10 +13,10 @@ namespace WInterop.Gdi.Unsafe
     public readonly struct PAINTSTRUCT
     {
         public readonly HDC hdc;
-        public readonly BOOL fErase;
+        public readonly Boolean32 fErase;
         public readonly RECT rcPaint;
-        public readonly BOOL fRestore;
-        public readonly BOOL fIncUpdate;
+        public readonly Boolean32 fRestore;
+        public readonly Boolean32 fIncUpdate;
         private readonly unsafe FixedByte.Size32 _rgbReserved;
         public Span<byte> rgbReserved => _rgbReserved.Buffer;
 

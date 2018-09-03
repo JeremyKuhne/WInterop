@@ -31,7 +31,7 @@ namespace WInterop.ProcessAndThreads
         {
             SafeProcessHandle handle = Imports.OpenProcess(desiredAccess, inheritHandle, processId);
             if (handle.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             return handle;
         }
     }

@@ -16,7 +16,7 @@ namespace WInterop.Interprocess
         public unsafe static void CreatePipe(out SafeFileHandle readPipe, out SafeFileHandle writePipe, uint bufferSize = 0)
         {
             if (!Imports.CreatePipe(out readPipe, out writePipe, null, bufferSize))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
     }
 }

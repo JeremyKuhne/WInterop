@@ -21,7 +21,7 @@ namespace WInterop.SafeString.Unsafe
         public static unsafe extern NTStatus RtlUpcaseUnicodeString(
             ref UNICODE_STRING DestinationString,
             ref UNICODE_STRING SourceString,
-            BOOLEAN AllocateDestinationString);
+            Boolean8 AllocateDestinationString);
 
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff561903.aspx
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]

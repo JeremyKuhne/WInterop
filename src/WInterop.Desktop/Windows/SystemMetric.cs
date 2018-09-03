@@ -52,7 +52,7 @@ namespace WInterop.Windows
         BorderHeight = 6,
 
         /// <summary>
-        /// [SM_CXDLGFRAME]
+        /// Horizontal border height for an unsizable window. [SM_CXDLGFRAME]
         /// </summary>
         DialogFrameHeight = 7,
 
@@ -62,428 +62,429 @@ namespace WInterop.Windows
         FixedFrameHeight = DialogFrameHeight,
 
         /// <summary>
-        /// [SM_CYDLGFRAME]
+        /// Vertical border width for an unsizable window. [SM_CYDLGFRAME]
         /// </summary>
-        CYDLGFRAME = 8,
+        DialogFrameWidth = 8,
 
         /// <summary>
-        /// [SM_]
+        /// Vertical border width for an unsizable window. [SM_CYFIXEDFRAME]
         /// </summary>
-        CYFIXEDFRAME = CYDLGFRAME,
+        FixedFrameWidth = DialogFrameWidth,
 
         /// <summary>
-        /// [SM_]
+        /// The height of the thumb box in a vertical scroll bar, in pixels. [SM_CYVTHUMB]
         /// </summary>
-        CYVTHUMB = 9,
+        VerticalThumbHeight = 9,
 
         /// <summary>
-        /// [SM_]
+        /// The width of the thumb box in a horizontal scroll bar, in pixels. [SM_CXHTHUMB]
         /// </summary>
-        CXHTHUMB = 10,
+        HorizontalThumbWidth = 10,
 
         /// <summary>
-        /// [SM_]
+        /// The default width of an icon, in pixels. [SM_CXICON]
         /// </summary>
-        CXICON = 11,
+        IconWidth = 11,
 
         /// <summary>
-        /// [SM_]
+        /// The default height of an icon, in pixels. [SM_CYICON]
         /// </summary>
-        CYICON = 12,
+        IconHeight = 12,
 
         /// <summary>
-        /// [SM_]
+        /// The width of a cursor, in pixels. [SM_CXCURSOR]
         /// </summary>
-        CXCURSOR = 13,
+        CursorWidth = 13,
 
         /// <summary>
-        /// [SM_]
+        /// The height of a cursor, in pixels. [SM_CYCURSOR]
         /// </summary>
-        CYCURSOR = 14,
+        CursorHeight = 14,
 
         /// <summary>
-        /// [SM_]
+        /// The height of a single-line menu bar, in pixels. [SM_CYMENU]
         /// </summary>
-        CYMENU = 15,
+        MenuHeight = 15,
 
         /// <summary>
-        /// [SM_]
+        /// The width of the client area for a full-screen window on the primary display monitor, in pixels. [SM_CXFULLSCREEN]
         /// </summary>
-        CXFULLSCREEN = 16,
+        FullScreenWindowWidth = 16,
 
         /// <summary>
-        /// [SM_]
+        /// The height of the client area for a full-screen window on the primary display monitor, in pixels. [SM_CYFULLSCREEN]
         /// </summary>
-        CYFULLSCREEN = 17,
+        FullScreenWindowHeight = 17,
 
         /// <summary>
-        /// [SM_]
+        /// For double byte character set versions of the system, this is the height of the Kanji window
+        /// at the bottom of the screen, in pixels. [SM_CYKANJIWINDOW]
         /// </summary>
-        CYKANJIWINDOW = 18,
+        KanjiWindowHeight = 18,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if a mouse is installed. [SM_MOUSEPRESENT]
         /// </summary>
-        MOUSEPRESENT = 19,
+        MousePresent = 19,
 
         /// <summary>
-        /// [SM_]
+        /// The height of the arrow bitmap on a vertical scroll bar, in pixels. [SM_CYVSCROLL]
         /// </summary>
-        CYVSCROLL = 20,
+        VerticalScrollArrowHeight = 20,
 
         /// <summary>
-        /// [SM_]
+        /// The width of the arrow bitmap on a horizontal scroll bar, in pixels. [SM_CXHSCROLL]
         /// </summary>
-        CXHSCROLL = 21,
+        HorizontalScrollArrowWidth = 21,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if debug User.exe is installed. [SM_DEBUG]
         /// </summary>
-        DEBUG = 22,
+        Debug = 22,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if the left and right buttons are swapped. [SM_SWAPBUTTON]
         /// </summary>
-        SWAPBUTTON = 23,
+        SwapButton = 23,
 
         /// <summary>
-        /// [SM_]
+        /// [SM_RESERVED1]
         /// </summary>
-        RESERVED1 = 24,
+        Reserved1 = 24,
 
         /// <summary>
-        /// [SM_]
+        /// [SM_RESERVED2]
         /// </summary>
-        RESERVED2 = 25,
+        Reserved2 = 25,
 
         /// <summary>
-        /// [SM_]
+        /// [SM_RESERVED3]
         /// </summary>
-        RESERVED3 = 26,
+        Reserved3 = 26,
 
         /// <summary>
-        /// [SM_]
+        /// [SM_RESERVED4]
         /// </summary>
-        RESERVED4 = 27,
+        Reserved4 = 27,
 
         /// <summary>
-        /// [SM_]
+        /// The minimum width of a window, in pixels. [SM_CXMIN]
         /// </summary>
-        CXMIN = 28,
+        MinimumWidth = 28,
 
         /// <summary>
-        /// [SM_]
+        /// The minimum height of a window, in pixels. [SM_CYMIN]
         /// </summary>
-        CYMIN = 29,
+        MinimumHeight = 29,
 
         /// <summary>
-        /// [SM_]
+        /// The width of a button in a window caption or title bar, in pixels. [SM_CXSIZE]
         /// </summary>
-        CXSIZE = 30,
+        SizeWidth = 30,
 
         /// <summary>
-        /// [SM_]
+        /// The height of a button in a window caption or title bar, in pixels. [SM_CYSIZE]
         /// </summary>
-        CYSIZE = 31,
+        SizeHeight = 31,
 
         /// <summary>
-        /// [SM_]
+        /// The thickness of the horizontal sizing border around the perimeter of a window that can be resized, in pixels. [SM_CXFRAME]
         /// </summary>
-        CXFRAME = 32,
+        FrameHeight = 32,
 
         /// <summary>
-        /// [SM_]
+        /// The thickness of the horizontal sizing border around the perimeter of a window that can be resized, in pixels. [SM_CXSIZEFRAME]
         /// </summary>
-        CXSIZEFRAME = CXFRAME,
+        SizeFrameHeight = FrameHeight,
 
         /// <summary>
-        /// [SM_]
+        /// The thickness of the vertical sizing border around the perimeter of a window that can be resized, in pixels. [SM_CYFRAME]
         /// </summary>
-        CYFRAME = 33,
+        FrameWidth = 33,
 
         /// <summary>
-        /// [SM_]
+        /// The thickness of the vertical sizing border around the perimeter of a window that can be resized, in pixels. [SM_CYSIZEFRAME]
         /// </summary>
-        CYSIZEFRAME = CYFRAME,
+        SizeFrameWidth = FrameWidth,
 
         /// <summary>
-        /// [SM_]
+        /// The minimum tracking width of a window, in pixels. [SM_CXMINTRACK]
         /// </summary>
-        CXMINTRACK = 34,
+        MinimumTrackingWidth = 34,
 
         /// <summary>
-        /// [SM_]
+        /// The minimum tracking height of a window, in pixels. [SM_CYMINTRACK]
         /// </summary>
-        CYMINTRACK = 35,
+        MinimumTrackingHeight = 35,
 
         /// <summary>
-        /// [SM_]
+        /// The width of the rectangle around the location of a first click in a double-click sequence, in pixels. [SM_CXDOUBLECLK]
         /// </summary>
-        CXDOUBLECLK = 36,
+        DoubleClickWidth = 36,
 
         /// <summary>
-        /// [SM_]
+        /// The height of the rectangle around the location of a first click in a double-click sequence, in pixels. [SM_CYDOUBLECLK]
         /// </summary>
-        CYDOUBLECLK = 37,
+        DoubleClickHeight = 37,
 
         /// <summary>
-        /// [SM_]
+        /// The height of a grid cell for items in large icon view, in pixels. [SM_CXICONSPACING]
         /// </summary>
-        CXICONSPACING = 38,
+        IconSpacingHeight = 38,
 
         /// <summary>
-        /// [SM_]
+        /// The width of a grid cell for items in large icon view, in pixels. [SM_CYICONSPACING]
         /// </summary>
-        CYICONSPACING = 39,
+        IconSpacingWidth = 39,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if drop-down menus are right-aligned with the corresponding menu-bar item. [SM_MENUDROPALIGNMENT]
         /// </summary>
-        MENUDROPALIGNMENT = 40,
+        MenuDropAlignment = 40,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if the Microsoft Windows for Pen computing extensions are installed. [SM_PENWINDOWS]
         /// </summary>
-        PENWINDOWS = 41,
+        PenWindows = 41,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if User32.dll supports DBCS. [SM_DBCSENABLED]
         /// </summary>
-        DBCSENABLED = 42,
+        DbcsEnabled = 42,
 
         /// <summary>
-        /// [SM_]
+        /// Number of buttons on the mouse. [SM_CMOUSEBUTTONS]
         /// </summary>
-        CMOUSEBUTTONS = 43,
+        MouseButtonsCount = 43,
 
         /// <summary>
-        /// [SM_]
+        /// Ignored. [SM_SECURE]
         /// </summary>
-        SECURE = 44,
+        Secure = 44,
 
         /// <summary>
-        /// [SM_]
+        /// The width of a window border, in pixels. [SM_CXEDGE]
         /// </summary>
-        CXEDGE = 45,
+        EdgeWidth = 45,
 
         /// <summary>
-        /// [SM_]
+        /// The height of a window border, in pixels. [SM_CYEDGE]
         /// </summary>
-        CYEDGE = 46,
+        EdgeHeight = 46,
 
         /// <summary>
-        /// [SM_]
+        /// The width of a grid cell for a minimized window, in pixels. [SM_CXMINSPACING]
         /// </summary>
-        CXMINSPACING = 47,
+        MinimumSpacingWidth = 47,
 
         /// <summary>
-        /// [SM_]
+        /// The height of a grid cell for a minimized window, in pixels. [SM_CYMINSPACING]
         /// </summary>
-        CYMINSPACING = 48,
+        MinimumSpacingHeight = 48,
 
         /// <summary>
-        /// [SM_]
+        /// The recommended width of a small icon, in pixels. [SM_CXSMICON]
         /// </summary>
-        CXSMICON = 49,
+        SmallIconWidth = 49,
 
         /// <summary>
-        /// [SM_]
+        /// The recommended height of a small icon, in pixels. [SM_CYSMICON]
         /// </summary>
-        CYSMICON = 50,
+        SmallIconHeight = 50,
 
         /// <summary>
-        /// [SM_]
+        /// The height of a small caption, in pixels. [SM_CYSMCAPTION]
         /// </summary>
-        CYSMCAPTION = 51,
+        SmallCaptionHeight = 51,
 
         /// <summary>
-        /// [SM_]
+        /// The wdith of small caption buttons, in pixels. [SM_CXSMSIZE]
         /// </summary>
-        CXSMSIZE = 52,
+        SmallCaptionButtonWidth = 52,
 
         /// <summary>
-        /// [SM_]
+        /// The height of small caption buttons, in pixels. [SM_CYSMSIZE]
         /// </summary>
-        CYSMSIZE = 53,
+        SmallCaptionButtonHeight = 53,
 
         /// <summary>
-        /// [SM_]
+        /// The width of menu bar buttons. [SM_CXMENUSIZE]
         /// </summary>
-        CXMENUSIZE = 54,
+        MenuBarButtonWidth = 54,
 
         /// <summary>
-        /// [SM_]
+        /// The height of menu bar buttons. [SM_CYMENUSIZE]
         /// </summary>
-        CYMENUSIZE = 55,
+        MenuBarButtonHeight = 55,
 
         /// <summary>
-        /// [SM_]
+        /// Flags on how the system minimizes windows. [SM_ARRANGE]
         /// </summary>
-        ARRANGE = 56,
+        Arrange = 56,
 
         /// <summary>
-        /// [SM_]
+        /// The width of a minimized window, in pixels. [SM_CXMINIMIZED]
         /// </summary>
-        CXMINIMIZED = 57,
+        MinimizedWidth = 57,
 
         /// <summary>
-        /// [SM_]
+        /// The height of a minimized window, in pixels. [SM_CYMINIMIZED]
         /// </summary>
-        CYMINIMIZED = 58,
+        MinimizedHeight = 58,
 
         /// <summary>
-        /// [SM_]
+        /// The default maximum width of a window that has a caption and sizing borders, in pixels. [SM_CXMAXTRACK]
         /// </summary>
-        CXMAXTRACK = 59,
+        MaximumTrackingWidth = 59,
 
         /// <summary>
-        /// [SM_]
+        /// The default maximum height of a window that has a caption and sizing borders, in pixels. [SM_CYMAXTRACK]
         /// </summary>
-        CYMAXTRACK = 60,
+        MaximumTrackingHeight = 60,
 
         /// <summary>
-        /// [SM_]
+        /// The default width, in pixels, of a maximized top-level window on the primary display monitor. [SM_CXMAXIMIZED]
         /// </summary>
-        CXMAXIMIZED = 61,
+        MaximizedWidth = 61,
 
         /// <summary>
-        /// [SM_]
+        /// The default height, in pixels, of a maximized top-level window on the primary display monitor. [SM_CYMAXIMIZED]
         /// </summary>
-        CYMAXIMIZED = 62,
+        MaximizedHeight = 62,
 
         /// <summary>
-        /// [SM_]
+        /// The least significant bit is set if a network is present. [SM_NETWORK]
         /// </summary>
-        NETWORK = 63,
+        Network = 63,
 
         /// <summary>
-        /// [SM_]
+        /// 1 if fail-safe boot, 2 if fail-safe with networking. [SM_CLEANBOOT]
         /// </summary>
-        CLEANBOOT = 67,
+        CleanBoot = 67,
 
         /// <summary>
-        /// [SM_]
+        /// Horizontal pixels that the mouse must move before a drag begins. [SM_CXDRAG]
         /// </summary>
-        CXDRAG = 68,
+        HorizontalDrag = 68,
 
         /// <summary>
-        /// [SM_]
+        /// Vertical pixels that the mouse must move before a drag begins. [SM_CYDRAG]
         /// </summary>
-        CYDRAG = 69,
+        VerticalDrag = 69,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if the user requires an application to present information visually. [SM_SHOWSOUNDS]
         /// </summary>
-        SHOWSOUNDS = 70,
+        ShowSounds = 70,
 
         /// <summary>
-        /// [SM_]
+        /// The width of the default menu check-mark bitmap, in pixels. [SM_CXMENUCHECK]
         /// </summary>
-        CXMENUCHECK = 71,
+        MenuCheckWidth = 71,
 
         /// <summary>
-        /// [SM_]
+        /// The height of the default menu check-mark bitmap, in pixels. [SM_CYMENUCHECK]
         /// </summary>
-        CYMENUCHECK = 72,
+        MenuCheckHeight = 72,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if the computer has a low-end (slow) processor. [SM_SLOWMACHINE]
         /// </summary>
-        SLOWMACHINE = 73,
+        SlowMachine = 73,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if the system is enabled for Hebrew and Arabic languages. [SM_MIDEASTENABLED]
         /// </summary>
-        MIDEASTENABLED = 74,
+        MideastEnabled = 74,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if a mouse wheel is present. [SM_MOUSEWHEELPRESENT]
         /// </summary>
-        MOUSEWHEELPRESENT = 75,
+        MouseWheelPresent = 75,
 
         /// <summary>
-        /// [SM_]
+        /// Left of the virtual screen. [SM_XVIRTUALSCREEN]
         /// </summary>
-        XVIRTUALSCREEN = 76,
+        VirtualScreenLeft = 76,
 
         /// <summary>
-        /// [SM_]
+        /// Top of the virtual screen. [SM_YVIRTUALSCREEN]
         /// </summary>
-        YVIRTUALSCREEN = 77,
+        VirtualScreenTop = 77,
 
         /// <summary>
-        /// [SM_]
+        /// The width of the virtual screen, in pixels. [SM_CXVIRTUALSCREEN]
         /// </summary>
-        CXVIRTUALSCREEN = 78,
+        VirtualScreenWidth = 78,
 
         /// <summary>
-        /// [SM_]
+        /// The height of the virtual screen, in pixels. [SM_CYVIRTUALSCREEN]
         /// </summary>
-        CYVIRTUALSCREEN = 79,
+        VirtualScreenHeight = 79,
 
         /// <summary>
-        /// [SM_]
+        /// The number of display monitors on a desktop. [SM_CMONITORS]
         /// </summary>
-        CMONITORS = 80,
+        MonitorsCount = 80,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if all the display monitors have the same color format. [SM_SAMEDISPLAYFORMAT]
         /// </summary>
-        SAMEDISPLAYFORMAT = 81,
+        SameDisplayFormat = 81,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if IMM/IME features are enabled. [SM_IMMENABLED]
         /// </summary>
-        IMMENABLED = 82,
+        ImmEnabled = 82,
 
         /// <summary>
-        /// [SM_]
+        /// The width of the left and right edges of the focus rectangle that the DrawFocusRect draws. [SM_CXFOCUSBORDER]
         /// </summary>
-        CXFOCUSBORDER = 83,
+        FocusBorderWidth = 83,
 
         /// <summary>
-        /// [SM_]
+        /// The height of the top and bottom edges of the focus rectangle drawn by DrawFocusRect. [SM_CYFOCUSBORDER]
         /// </summary>
-        CYFOCUSBORDER = 84,
+        FocusBorderHeight = 84,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if the Tablet PC Input Service is started. [SM_TABLETPC]
         /// </summary>
-        TABLETPC = 86,
+        TabletPC = 86,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if the current operating system is Windows Media Center Edition. [SM_MEDIACENTER]
         /// </summary>
-        MEDIACENTER = 87,
+        MediaCenter = 87,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if the current operating system is Windows Starter Edition. [SM_STARTER]
         /// </summary>
-        STARTER = 88,
+        Starter = 88,
 
         /// <summary>
-        /// [SM_]
+        /// Build number for Windows Server 2003 R2. [SM_SERVERR2]
         /// </summary>
-        SERVERR2 = 89,
+        ServerR2 = 89,
 
         /// <summary>
-        /// [SM_]
+        /// Nonzero if a mouse with a horizontal scroll wheel is installed. [SM_MOUSEHORIZONTALWHEELPRESENT]
         /// </summary>
-        MOUSEHORIZONTALWHEELPRESENT = 91,
+        MouseHorizontalWheelPresent = 91,
 
         /// <summary>
-        /// [SM_]
+        /// The amount of border padding for captioned windows, in pixels. [SM_CXPADDEDBORDER]
         /// </summary>
-        CXPADDEDBORDER = 92,
+        AddedBorderPadding = 92,
 
         /// <summary>
-        /// [SM_]
+        /// Type of digitizers that are installed. Returns <see cref="NaturalInputDevice"/> flags. [SM_DIGITIZER]
         /// </summary>
-        DIGITIZER = 94,
+        Digitizer = 94,
 
         /// <summary>
-        /// [SM_]
+        /// Aggregate maximum of the maximum number of contacts supported by every digitizer in the system. [SM_MAXIMUMTOUCHES]
         /// </summary>
-        MAXIMUMTOUCHES = 95
+        MaximumTouches = 95
     }
 }

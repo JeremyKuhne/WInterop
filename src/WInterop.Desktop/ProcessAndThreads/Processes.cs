@@ -29,7 +29,7 @@ namespace WInterop.ProcessAndThreads
             if (name == null) throw new ArgumentNullException(nameof(name));
 
             if (!Imports.SetEnvironmentVariableW(name, value))
-                throw Error.GetIoExceptionForLastError(name);
+                throw Error.GetExceptionForLastError(name);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace WInterop.ProcessAndThreads
             if (process == null) process = GetCurrentProcess();
 
             if (!Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(ProcessMemoryCountersExtended)))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return info;
         }

@@ -41,7 +41,7 @@ namespace WInterop.Storage
                 bProcessSecurity: true,
                 context: ref _context))
             {
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             }
 
             // Exit if at the end
@@ -60,7 +60,7 @@ namespace WInterop.Storage
                     bProcessSecurity: true,
                     context: ref _context))
                 {
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
                 }
             }
 
@@ -114,7 +114,7 @@ namespace WInterop.Storage
                     context: ref _context))
                 {
 #if DEBUG
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
 #endif
                 }
 

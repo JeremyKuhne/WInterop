@@ -45,6 +45,6 @@ namespace WInterop.DirectWrite
         /// <summary>
         /// The line is trimmed.
         /// </summary>
-        public readonly BOOL IsTrimmed;
+        public readonly Boolean32 IsTrimmed;
     };
 }

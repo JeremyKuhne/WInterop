@@ -19,6 +19,6 @@ namespace WInterop.Security
         public uint Length;
         public ImpersonationLevel ImpersonationLevel;
         public ContextTrackingMode ContextTrackingMode;
-        public BOOLEAN EffectiveOnly;
+        public Boolean8 EffectiveOnly;
     }
 }

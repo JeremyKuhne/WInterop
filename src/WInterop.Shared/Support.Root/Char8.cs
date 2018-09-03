@@ -7,9 +7,12 @@
 
 namespace WInterop
 {
-    public struct UCHAR
+    /// <summary>
+    /// Used for blitting CHAR and UCHAR. [CHAR] [UCHAR]
+    /// </summary>
+    public struct Char8
     {
         public byte Value;
-        public static implicit operator char(UCHAR c) => (char)c.Value;
+        public static implicit operator char(Char8 c) => (char)c.Value;
     }
 }

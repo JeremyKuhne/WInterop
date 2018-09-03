@@ -33,8 +33,8 @@ namespace WInterop.DirectWrite
             object renderer, // TODO: IDWriteTextRenderer
             float originX,
             float originY,
-            BOOL isSideways,
-            BOOL isRightToLeft,
+            Boolean32 isSideways,
+            Boolean32 isRightToLeft,
             [MarshalAs(UnmanagedType.IUnknown)]
             object clientDrawingEffect);
 

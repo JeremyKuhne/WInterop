@@ -17,7 +17,7 @@ namespace WInterop.Windows
         {
             MenuHandle menu = new MenuHandle(Imports.CreateMenu(), ownsHandle: true);
             if (menu.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             return menu;
         }
 
@@ -30,7 +30,7 @@ namespace WInterop.Windows
             fixed (char* c = text)
             {
                 if (!Imports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c))
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
             }
         }
     }

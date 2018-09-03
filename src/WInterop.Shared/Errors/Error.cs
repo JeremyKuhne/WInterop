@@ -109,7 +109,7 @@ namespace WInterop.Errors
         {
             WindowsError lastError = GetLastError();
             if (lastError != error)
-                throw lastError.GetIoException(path);
+                throw lastError.GetException(path);
         }
 
         /// <summary>
@@ -117,10 +117,10 @@ namespace WInterop.Errors
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // Want to try and force the get last error inline
-        public static Exception GetIoExceptionForLastError(string path = null)
+        public static Exception GetExceptionForLastError(string path = null)
         {
             WindowsError error = (WindowsError)Marshal.GetLastWin32Error();
-            return error.GetIoException(path);
+            return error.GetException(path);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace WInterop.Errors
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowLastErrorIfFalse(bool result, string path = null)
         {
-            if (!result) throw GetIoExceptionForLastError(path);
+            if (!result) throw GetExceptionForLastError(path);
         }
     }
 }

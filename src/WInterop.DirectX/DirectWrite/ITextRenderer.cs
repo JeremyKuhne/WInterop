@@ -27,7 +27,7 @@ namespace WInterop.DirectWrite
         /// unless doing animation that requires subpixel vertical placement.
         /// </summary>
         /// <param name="clientDrawingContext">The context passed to IDWriteTextLayout::Draw.</param>
-        new BOOL IsPixelSnappingDisabled(IntPtr clientDrawingContext);
+        new Boolean32 IsPixelSnappingDisabled(IntPtr clientDrawingContext);
 
         /// <summary>
         /// Gets the current transform that maps abstract coordinates to DIPs,
@@ -156,8 +156,8 @@ namespace WInterop.DirectWrite
             float originX,
             float originY,
             IInlineObject inlineObject,
-            BOOL isSideways,
-            BOOL isRightToLeft,
+            Boolean32 isSideways,
+            Boolean32 isRightToLeft,
             [MarshalAs(UnmanagedType.IUnknown)]
             object clientDrawingEffect);
     }

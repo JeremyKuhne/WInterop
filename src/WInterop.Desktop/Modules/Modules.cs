@@ -30,7 +30,7 @@ namespace WInterop.Modules
                 GetModuleFlags.FromAddress | GetModuleFlags.UnchangedRefCount,
                 address,
                 out var handle))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return new ModuleInstance(handle);
         }
@@ -65,7 +65,7 @@ namespace WInterop.Modules
             Func<IntPtr, GetModuleFlags, IntPtr> getHandle = (IntPtr n, GetModuleFlags f) =>
             {
                 if (!Imports.GetModuleHandleExW(f, n, out var handle))
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
                 return handle;
             };
 
@@ -88,7 +88,7 @@ namespace WInterop.Modules
             if (process == null) process = Processes.GetCurrentProcess();
 
             if (!Imports.K32GetModuleInformation(process, module, out var info, (uint)sizeof(ModuleInfo)))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return info;
         }
@@ -111,7 +111,7 @@ namespace WInterop.Modules
         public static void FreeLibrary(IntPtr handle)
         {
             if (!Imports.FreeLibrary(handle))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace WInterop.Modules
         {
             ModuleInstance handle = Imports.LoadLibraryExW(path, IntPtr.Zero, flags);
             if (handle.IsInvalid)
-                throw Error.GetIoExceptionForLastError(path);
+                throw Error.GetExceptionForLastError(path);
 
             return handle;
         }
@@ -143,7 +143,7 @@ namespace WInterop.Modules
         {
             IntPtr method = Imports.GetProcAddress(library, methodName);
             if (method == IntPtr.Zero)
-                throw Error.GetIoExceptionForLastError(methodName);
+                throw Error.GetExceptionForLastError(methodName);
 
             return Marshal.GetDelegateForFunctionPointer<DelegateType>(method);
         }
@@ -166,7 +166,7 @@ namespace WInterop.Modules
                     buffer.EnsureByteCapacity(sizeNeeded);
                     if (!Imports.K32EnumProcessModulesEx(process, buffer, (uint)buffer.ByteCapacity,
                         out sizeNeeded, ListModulesOptions.Default))
-                        throw Error.GetIoExceptionForLastError();
+                        throw Error.GetExceptionForLastError();
                 } while (sizeNeeded > buffer.ByteCapacity);
 
                 IntPtr* b = (IntPtr*)buffer.VoidPointer;

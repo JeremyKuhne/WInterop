@@ -52,7 +52,7 @@ namespace WInterop.Globalization
                 ignoreCase);
 
             if (result == 0)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             // CSTR_LESS_THAN            1           // string 1 less than string 2
             // CSTR_EQUAL                2           // string 1 equal to string 2
@@ -67,7 +67,7 @@ namespace WInterop.Globalization
         public static unsafe void ToUpperInvariant(char* input, int inputLength, char* output, int outputLength)
         {
             if (Imports.LCMapStringEx(null, LocaleMapFlags.UpperCase, input, inputLength, output, outputLength, null, null, InvariantSortHandle) == 0)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace WInterop.Globalization
         public static unsafe void ToLowerInvariant(char* input, int inputLength, char* output, int outputLength)
         {
             if (Imports.LCMapStringEx(null, LocaleMapFlags.LowerCase, input, inputLength, output, outputLength, null, null, InvariantSortHandle) == 0)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace WInterop.Globalization
         public static unsafe char ToUpperInvariant(char value)
         {
             if (Imports.LCMapStringEx(null, LocaleMapFlags.UpperCase, &value, 1, &value, 1, null, null, 0) == 0)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             return value;
         }
 
@@ -97,7 +97,7 @@ namespace WInterop.Globalization
         public static unsafe char ToLowerInvariant(char value)
         {
             if (Imports.LCMapStringEx(null, LocaleMapFlags.LowerCase, &value, 1, &value, 1, null, null, 0) == 0)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             return value;
         }
 
@@ -135,7 +135,7 @@ namespace WInterop.Globalization
             LParam sortHandle;
             fixed (char* l = locale)
                 if (Imports.LCMapStringEx(l, LocaleMapFlags.SortHandle, null, 0, (char*)&sortHandle, sizeof(LParam), null, null, 0) == 0)
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
             return sortHandle;
         }
     }

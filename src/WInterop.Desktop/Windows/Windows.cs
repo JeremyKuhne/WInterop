@@ -99,7 +99,7 @@ namespace WInterop.Windows
                 parameters);
 
             if (window.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return window;
         }
@@ -134,7 +134,7 @@ namespace WInterop.Windows
             }
 
             if (window.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return window;
         }
@@ -147,7 +147,7 @@ namespace WInterop.Windows
         public static void Beep(uint frequency, uint duration)
         {
             if (!Imports.Beep(frequency, duration))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace WInterop.Windows
         public static void MessageBeep(BeepType type = BeepType.SimpleBeep)
         {
             if (!Imports.MessageBeep(type))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static SystemParameters SystemParameters => SystemParameters.Instance;
@@ -243,7 +243,7 @@ namespace WInterop.Windows
         {
             WindowHandle parent = Imports.GetParent(window);
             if (parent.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return parent;
         }
@@ -270,7 +270,7 @@ namespace WInterop.Windows
                 marshaller.FillNative(out WNDCLASSEX native, ref windowClass);
                 atom = Imports.RegisterClassExW(ref native);
                 if (!atom.IsValid)
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
             }
 
             return atom;
@@ -283,7 +283,7 @@ namespace WInterop.Windows
         public static void UnregisterClass(Atom atom, ModuleInstance module = null)
         {
             if (!Imports.UnregisterClassW(atom, module ?? ModuleInstance.Null))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace WInterop.Windows
                 fixed (char* name = className)
                 {
                     if (!Imports.UnregisterClassW((IntPtr)name, module ?? ModuleInstance.Null))
-                        throw Error.GetIoExceptionForLastError();
+                        throw Error.GetExceptionForLastError();
                 }
             }
         }
@@ -307,7 +307,7 @@ namespace WInterop.Windows
         public static void DestroyWindow(this in WindowHandle window)
         {
             if (!Imports.DestroyWindow(window))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static IntPtr GetWindowLong(this in WindowHandle window, WindowLong index)
@@ -343,7 +343,7 @@ namespace WInterop.Windows
         public static void SetWindowText(this in WindowHandle window, string text)
         {
             if (!Imports.SetWindowTextW(window, text))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static IntPtr GetClassLong(this in WindowHandle window, ClassLong index)
@@ -398,7 +398,7 @@ namespace WInterop.Windows
         public static void MoveWindow(this in WindowHandle window, Rectangle position, bool repaint)
         {
             if (!Imports.MoveWindow(window, position.X, position.Y, position.Width, position.Height, repaint))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         /// <summary>
@@ -413,11 +413,11 @@ namespace WInterop.Windows
         /// <returns>False when <see cref="MessageType.Quit"/> is returned.</returns>
         public static bool GetMessage(out WindowMessage message, WindowHandle window = default, MessageType minMessage = MessageType.Null, MessageType maxMessage = MessageType.Null)
         {
-            BOOL result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
+            Boolean32 result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
 
             // One special case here is -1 for an error
             if (result.RawValue == unchecked((uint)-1))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return result;
         }
@@ -450,7 +450,7 @@ namespace WInterop.Windows
         public static Rectangle GetClientRectangle(this in WindowHandle window)
         {
             if (!Imports.GetClientRect(window, out Gdi.Unsafe.RECT rect))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return rect;
         }
@@ -458,7 +458,7 @@ namespace WInterop.Windows
         public static Rectangle GetWindowRectangle(this in WindowHandle window)
         {
             if (!Imports.GetWindowRect(window, out Gdi.Unsafe.RECT result))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return result;
         }
@@ -466,7 +466,7 @@ namespace WInterop.Windows
         public static void SetScrollRange(this in WindowHandle window, ScrollBar scrollBar, int min, int max, bool redraw)
         {
             if (!Imports.SetScrollRange(window, scrollBar, min, max, redraw))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static int SetScrollPosition(this in WindowHandle window, ScrollBar scrollBar, int position, bool redraw)
@@ -502,7 +502,7 @@ namespace WInterop.Windows
         {
             scrollInfo.Size = (uint)sizeof(ScrollInfo);
             if (!Imports.GetScrollInfo(window, scrollBar, ref scrollInfo))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public unsafe static int ScrollWindow(this in WindowHandle window, Point delta)
@@ -532,7 +532,7 @@ namespace WInterop.Windows
         {
             int result = Imports.GetKeyboardType(0);
             if (result == 0)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return (KeyboardType)result;
         }
@@ -553,7 +553,7 @@ namespace WInterop.Windows
         {
             int result = Imports.GetKeyboardType(2);
             if (result == 0)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return result;
         }
@@ -575,7 +575,7 @@ namespace WInterop.Windows
         {
             WindowHandle control = Imports.GetDlgItem(window, id);
             if (control.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             return control;
         }
 
@@ -587,14 +587,14 @@ namespace WInterop.Windows
         public static void ReleaseCapture()
         {
             if (!Imports.ReleaseCapture())
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static TimerId SetTimer(this in WindowHandle window, TimerId id, uint interval, TimerProcedure callback = null, uint delayTolerance = 0)
         {
             TimerId result = Imports.SetCoalescableTimer(window, id, interval, callback, delayTolerance);
             if (result == TimerId.Null)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return result;
         }
@@ -602,7 +602,7 @@ namespace WInterop.Windows
         public static void KillTimer(this in WindowHandle window, TimerId id)
         {
             if (!Imports.KillTimer(window, id))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static Color GetSystemColor(SystemColor systemColor) => Imports.GetSysColor(systemColor);
@@ -624,7 +624,7 @@ namespace WInterop.Windows
         {
             CommandId result = Imports.MessageBoxExW(owner, text, caption, type, 0);
             if (result == CommandId.Error)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return result;
         }
@@ -632,7 +632,7 @@ namespace WInterop.Windows
         public static WindowClassInfo GetClassInfo(this ModuleInstance instance, Atom atom)
         {
             if (!Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, atom, out WNDCLASSEX wndClass))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return wndClass;
         }
@@ -672,7 +672,7 @@ namespace WInterop.Windows
             // Passing 0 will give us a read only handle to the string resource
             int result = Imports.LoadStringW(library, identifier, out char* buffer, 0);
             if (result <= 0)
-                throw Error.GetIoExceptionForLastError(identifier.ToString());
+                throw Error.GetExceptionForLastError(identifier.ToString());
 
             // Null is not included in the result
             return new string(buffer, 0, result);
@@ -682,7 +682,7 @@ namespace WInterop.Windows
         {
             HICON handle = Imports.LoadIconW(ModuleInstance.Null, (char*)(uint)id);
             if (handle.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return new IconHandle(handle, ownsHandle: false);
         }
@@ -694,7 +694,7 @@ namespace WInterop.Windows
                 HICON handle = Imports.LoadIconW(module, n);
 
                 if (handle.IsInvalid)
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
 
                 return new IconHandle(handle, ownsHandle: false);
             }

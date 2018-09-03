@@ -23,7 +23,7 @@ namespace WInterop.SystemInformation.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724435.aspx
         [DllImport(Libraries.Secur32, SetLastError = true, ExactSpelling = true)]
-        public static extern BOOLEAN GetUserNameExW(
+        public static extern Boolean8 GetUserNameExW(
             ExtendedNameFormat NameFormat,
             SafeHandle lpNameBuffer,
             ref uint lpnSize);

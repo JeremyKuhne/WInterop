@@ -12,6 +12,6 @@ namespace WInterop.Security.Unsafe
     {
         public uint nLength;
         public unsafe SECURITY_DESCRIPTOR* lpSecurityDescriptor;
-        public BOOL bInheritHandle;
+        public Boolean32 bInheritHandle;
     }
 }

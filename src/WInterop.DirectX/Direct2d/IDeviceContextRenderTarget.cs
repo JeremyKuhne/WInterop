@@ -448,7 +448,7 @@ namespace WInterop.Direct2d
         /// supported.
         /// </summary>
         [PreserveSig]
-        new BOOL IsSupported(
+        new Boolean32 IsSupported(
             in RenderTargetProperties renderTargetProperties);
         #endregion
 

@@ -24,9 +24,9 @@ namespace WInterop.Gdi
         public int Escapement;
         public int Orientation;
         public int Weight;
-        public BOOLEAN Italic;
-        public BOOLEAN Underline;
-        public BOOLEAN StrikeOut;
+        public Boolean8 Italic;
+        public Boolean8 Underline;
+        public Boolean8 StrikeOut;
         public CharacterSet CharacterSet;
         public OutputPrecision OutputPrecision;
         public ClippingPrecision ClippingPrecision;

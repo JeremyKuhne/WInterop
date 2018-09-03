@@ -31,7 +31,7 @@ namespace Tests.ErrorHandling
             ]
         public void ErrorsMapToExceptions(WindowsError error, Type exceptionType)
         {
-            error.GetIoException().Should().BeOfType(exceptionType);
+            error.GetException().Should().BeOfType(exceptionType);
         }
 
         [Theory,

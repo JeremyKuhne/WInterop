@@ -26,7 +26,7 @@ namespace WInterop.Communications
             };
 
             if (!Imports.GetCommState(fileHandle, ref dcb))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return dcb;
         }
@@ -36,13 +36,13 @@ namespace WInterop.Communications
             dcb.DCBlength = (uint)sizeof(DeviceControlBlock);
 
             if (!Imports.GetCommState(fileHandle, ref dcb))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public unsafe static DeviceControlBlock BuildDeviceControlBlock(string definition)
         {
             if (!Imports.BuildCommDCBW(definition, out DeviceControlBlock dcb))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return dcb;
         }
@@ -50,7 +50,7 @@ namespace WInterop.Communications
         public static CommunicationsProperties GetCommunicationsProperties(SafeFileHandle fileHandle)
         {
             if (!Imports.GetCommProperties(fileHandle, out CommunicationsProperties properties))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return properties;
         }
@@ -61,7 +61,7 @@ namespace WInterop.Communications
             uint size = (uint)sizeof(CommunicationsConfig);
 
             if (!Imports.GetCommConfig(fileHandle, ref config, ref size))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return config;
         }
@@ -76,7 +76,7 @@ namespace WInterop.Communications
             uint size = (uint)sizeof(CommunicationsConfig);
 
             if (!Imports.GetDefaultCommConfigW(port, ref config, ref size))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return config;
         }
@@ -90,7 +90,7 @@ namespace WInterop.Communications
             CommunicationsConfig config = GetDefaultCommunicationsConfig(port);
 
             if (!Imports.CommConfigDialogW(port, parent, ref config))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return config;
         }

@@ -19,9 +19,9 @@ namespace WInterop.Storage
         public readonly ulong AllocationSize;
         public readonly ulong EndOfFile;
         public readonly uint NumberOfLinks;
-        public readonly BOOLEAN DeletePending;
-        public readonly BOOLEAN Directory;
-        public readonly BOOLEAN AlternateStream;
-        public readonly BOOLEAN MetadataAttribute;
+        public readonly Boolean8 DeletePending;
+        public readonly Boolean8 Directory;
+        public readonly Boolean8 AlternateStream;
+        public readonly Boolean8 MetadataAttribute;
     }
 }

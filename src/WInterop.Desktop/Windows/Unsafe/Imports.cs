@@ -401,7 +401,7 @@ namespace WInterop.Windows.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644936.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-        public static extern BOOL GetMessageW(
+        public static extern Boolean32 GetMessageW(
             out WindowMessage lpMsg,
             HWND hWnd,
             uint wMsgFilterMin,
@@ -1284,7 +1284,7 @@ namespace WInterop.Windows.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648003.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL TrackPopupMenuEx(
+        public unsafe static extern Boolean32 TrackPopupMenuEx(
             HWND hmenu,
             PopupMenuOptions fuFlags,
             int x,

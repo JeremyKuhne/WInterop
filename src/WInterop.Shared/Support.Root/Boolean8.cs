@@ -9,38 +9,34 @@ namespace WInterop
 {
     /// <summary>
     /// Using bool in a struct prevents the struct from being blittable.
-    /// This allows structs to marshal more effectively.
+    /// This allows structs to marshal more effectively. [BOOLEAN]
     /// </summary>
-    public readonly struct BOOL
+    /// <remarks>
+    /// While a bool is stored as an 8 bit value in managed code it isn't considered blittable
+    /// by parts of the CLR. You can pin with contained bool values directly, things like
+    /// GCHandle refuse to.
+    /// </remarks>
+    public struct Boolean8
     {
-        public uint RawValue { get; }
+        public byte RawValue;
 
-        public BOOL(bool b)
+        public Boolean8(bool b)
         {
-            RawValue = b ? 1u : 0u;
+            RawValue = b ? (byte)1 : (byte)0;
         }
 
-        public BOOL(uint value)
+        public Boolean8(byte value)
         {
             RawValue = value;
-        }
-
-        public BOOL(int value)
-        {
-            RawValue = (uint)value;
         }
 
         public bool IsTrue => RawValue != 0;
 
         public bool IsFalse => RawValue == 0;
 
-        public static implicit operator bool(BOOL b) => b.IsTrue;
+        public static implicit operator bool(Boolean8 b) => b.IsTrue;
 
-        public static implicit operator BOOL(bool b) => new BOOL(b);
-
-        public static implicit operator uint(BOOL b) => b.RawValue;
-
-        public static implicit operator BOOL(uint b) => new BOOL(b);
+        public static implicit operator Boolean8(bool b) => new Boolean8(b);
 
         public override string ToString()
         {

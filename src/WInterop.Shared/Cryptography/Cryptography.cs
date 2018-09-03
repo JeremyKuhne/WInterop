@@ -22,7 +22,7 @@ namespace WInterop.Cryptography
         public static void CloseStore(IntPtr handle)
         {
             if (!Imports.CertCloseStore(handle, dwFlags: 0))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         unsafe private static CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)

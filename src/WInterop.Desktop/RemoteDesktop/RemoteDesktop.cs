@@ -20,7 +20,7 @@ namespace WInterop.RemoteDesktop
         public static uint ProcessIdToSessionId(uint processId)
         {
             if (!Imports.ProcessIdToSessionId(processId, out uint sessionId))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return sessionId;
         }

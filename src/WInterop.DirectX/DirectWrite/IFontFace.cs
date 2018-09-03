@@ -62,7 +62,7 @@ namespace WInterop.DirectWrite
         /// Determines whether the font is a symbol font.
         /// </summary>
         [PreserveSig]
-        BOOL IsSymbolFont();
+        Boolean32 IsSymbolFont();
 
         /// <summary>
         /// Obtains design units and common metrics for the font face.
@@ -154,12 +154,12 @@ namespace WInterop.DirectWrite
         /// The context for the same tag may be different for each call,
         /// so each one must be held and released separately.
         /// </remarks>
-        unsafe BOOL TryGetFontTable(
+        unsafe Boolean32 TryGetFontTable(
             uint openTypeTableTag,
             void** tableData,
             out uint tableSize,
             out IntPtr tableContext,
-            out BOOL exists);
+            out Boolean32 exists);
 
         /// <summary>
         /// Releases the table obtained earlier from TryGetFontTable.
@@ -188,8 +188,8 @@ namespace WInterop.DirectWrite
             float* glyphAdvances,
             GlyphOffset* glyphOffsets,
             uint glyphCount,
-            BOOL isSideways,
-            BOOL isRightToLeft,
+            Boolean32 isSideways,
+            Boolean32 isRightToLeft,
             IGeometrySink geometrySink);
 
         /// <summary>
@@ -255,10 +255,10 @@ namespace WInterop.DirectWrite
             float emSize,
             float pixelsPerDip,
             Matrix3x2* transform,
-            BOOL useGdiNatural,
+            Boolean32 useGdiNatural,
             in ushort glyphIndices,
             uint glyphCount,
             out GlyphMetrics glyphMetrics,
-            BOOL isSideways);
+            Boolean32 isSideways);
     }
 }

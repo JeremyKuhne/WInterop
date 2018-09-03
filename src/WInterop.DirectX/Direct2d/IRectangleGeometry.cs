@@ -44,7 +44,7 @@ namespace WInterop.Direct2d
         /// Checks to see whether the corresponding penned and widened geometry contains the
         /// given point.
         /// </summary>
-        new BOOL StrokeContainsPoint(
+        new Boolean32 StrokeContainsPoint(
             PointF point,
             float strokeWidth,
             IStrokeStyle strokeStyle,
@@ -54,7 +54,7 @@ namespace WInterop.Direct2d
         /// <summary>
         /// Test whether the given fill of this geometry would contain this point.
         /// </summary>
-        new BOOL FillContainsPoint(
+        new Boolean32 FillContainsPoint(
             PointF point,
             Matrix3x2* worldTransform,
             float flatteningTolerance);

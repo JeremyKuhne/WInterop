@@ -56,7 +56,7 @@ namespace WInterop.DirectWrite
         /// isSideways = true and rotating the entire run 90 degrees to the right
         /// via a rotate transform.
         /// </summary>
-        public readonly BOOL IsSideways;
+        public readonly Boolean32 IsSideways;
 
         /// <summary>
         /// The implicit resolved bidi level of the run. Odd levels indicate

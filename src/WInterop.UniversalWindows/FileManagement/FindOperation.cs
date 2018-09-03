@@ -47,7 +47,7 @@ namespace WInterop.Storage
                             NoMoreFiles();
                             return;
                         default:
-                            throw error.GetIoException();
+                            throw error.GetException();
                     }
                 }
             }

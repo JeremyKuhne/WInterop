@@ -16,7 +16,7 @@ namespace WInterop.Windows.Unsafe
         public RECT rcBar;
         public HMENU hMenu;
         public HWND hwndMenu;
-        public BOOL fBarFocused;
-        public BOOL fFocused;
+        public Boolean32 fBarFocused;
+        public Boolean32 fFocused;
     }
 }

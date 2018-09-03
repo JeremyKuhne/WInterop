@@ -21,7 +21,7 @@ namespace WInterop.Storage
     {
         public const int OFS_MAXPATHNAME = 128;
         public byte Bytes;
-        public BOOLEAN FixedDisk;
+        public Boolean8 FixedDisk;
         private ushort nErrCode;
         private ushort Reserved1;
         private ushort Reserved2;

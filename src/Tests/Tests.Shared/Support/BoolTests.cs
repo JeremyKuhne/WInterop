@@ -19,13 +19,13 @@ namespace Tests.Support
         private struct BOOLTest
         {
             public int Foo;
-            public BOOL Bar;
+            public Boolean32 Bar;
         }
 
         private struct BOOLEANTest
         {
             public int Foo;
-            public BOOLEAN Bar;
+            public WInterop.Boolean8 Bar;
         }
 
         private struct BoolTest
@@ -39,7 +39,7 @@ namespace Tests.Support
         public void BOOLIsBlittable()
         {
             // This will throw if the type is not blittable
-            GCHandle.Alloc(new BOOL(), GCHandleType.Pinned).Should().NotBeNull();
+            GCHandle.Alloc(new Boolean32(), GCHandleType.Pinned).Should().NotBeNull();
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Tests.Support
         [Fact]
         public void BOOLConversion()
         {
-            BOOL B = true;
+            Boolean32 B = true;
             (B == true).Should().BeTrue("Comparison of TRUE with true is true");
             (B == false).Should().BeFalse("Comparison of TRUE with false is false");
             B.IsTrue.Should().BeTrue("IsTrue should be true when true");
@@ -79,7 +79,7 @@ namespace Tests.Support
         public void BOOLEANIsBlittable()
         {
             // This will throw if the type is not blittable
-            GCHandle.Alloc(new BOOLEAN(), GCHandleType.Pinned).Should().NotBeNull();
+            GCHandle.Alloc(new WInterop.Boolean8(), GCHandleType.Pinned).Should().NotBeNull();
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Tests.Support
         [Fact]
         public void BOOLEANConversion()
         {
-            BOOLEAN B = true;
+            WInterop.Boolean8 B = true;
             (B == true).Should().BeTrue("Comparison of TRUE with true is true");
             (B == false).Should().BeFalse("Comparison of TRUE with false is false");
             B.IsTrue.Should().BeTrue("IsTrue should be true when true");

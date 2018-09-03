@@ -32,7 +32,7 @@ namespace WInterop.DirectWrite
         /// be sure the font collection contains that font.</param>
         void GetSystemFontCollection(
             out IFontCollection fontCollection,
-            BOOL checkForUpdates);
+            Boolean32 checkForUpdates);
 
         /// <summary>
         /// Creates a font collection using a custom font collection loader.
@@ -290,7 +290,7 @@ namespace WInterop.DirectWrite
             float layoutHeight,
             float pixelsPerDip,
             Matrix3x2* transform,
-            BOOL useGdiNatural);
+            Boolean32 useGdiNatural);
 
         /// <summary>
         /// The application may call this function to create an inline object for trimming, using an ellipsis as the omission sign.

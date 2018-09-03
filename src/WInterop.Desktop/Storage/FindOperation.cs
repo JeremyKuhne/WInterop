@@ -50,7 +50,7 @@ namespace WInterop.Storage
                         Debug.Assert(statusBlock.Information.ToInt64() != 0);
                         break;
                     default:
-                        throw status.GetIoException();
+                        throw status.GetException();
                 }
             }
         }

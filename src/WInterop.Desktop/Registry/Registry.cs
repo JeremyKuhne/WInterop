@@ -58,7 +58,7 @@ namespace WInterop.Registry
                 case WindowsError.ERROR_FILE_NOT_FOUND:
                     return false;
                 default:
-                    throw result.GetIoException();
+                    throw result.GetException();
             }
         }
 
@@ -76,7 +76,7 @@ namespace WInterop.Registry
                 case WindowsError.ERROR_FILE_NOT_FOUND:
                     return RegistryValueType.None;
                 default:
-                    throw result.GetIoException();
+                    throw result.GetException();
             }
         }
 
@@ -107,7 +107,7 @@ namespace WInterop.Registry
                         case WindowsError.ERROR_FILE_NOT_FOUND:
                             return null;
                         default:
-                            throw result.GetIoException();
+                            throw result.GetException();
                     }
                 }
 
@@ -158,7 +158,7 @@ namespace WInterop.Registry
                             buffer.EnsureByteCapacity(resultLength);
                             break;
                         default:
-                            throw status.GetIoException();
+                            throw status.GetException();
                     }
                 }
             });
@@ -209,7 +209,7 @@ namespace WInterop.Registry
                             buffer.EnsureByteCapacity(resultLength);
                             break;
                         default:
-                            throw status.GetIoException();
+                            throw status.GetException();
                     }
                 }
             });
@@ -258,7 +258,7 @@ namespace WInterop.Registry
                             }
                             break;
                         default:
-                            throw result.GetIoException();
+                            throw result.GetException();
                     }
                 }
             });

@@ -13,7 +13,7 @@ namespace WInterop.Devices
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562281.aspx
     public readonly struct MountManagerDriveLetterInformation
     {
-        public readonly BOOLEAN DriveLetterWasAssigned;
-        public readonly UCHAR CurrentDriveLetter;
+        public readonly Boolean8 DriveLetterWasAssigned;
+        public readonly Char8 CurrentDriveLetter;
     }
 }

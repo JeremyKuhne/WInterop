@@ -36,8 +36,8 @@ namespace WInterop.Security
                 Privilege = luid
             };
 
-            if (!Imports.PrivilegeCheck(token, &set, out BOOL result))
-                throw Error.GetIoExceptionForLastError(privilege.ToString());
+            if (!Imports.PrivilegeCheck(token, &set, out Boolean32 result))
+                throw Error.GetExceptionForLastError(privilege.ToString());
 
             return result;
         }
@@ -73,8 +73,8 @@ namespace WInterop.Security
                 luids[i] = LookupPrivilegeValue(privileges[i]);
             }
 
-            if (!Imports.PrivilegeCheck(token, set, out BOOL result))
-                throw Error.GetIoExceptionForLastError();
+            if (!Imports.PrivilegeCheck(token, set, out Boolean32 result))
+                throw Error.GetExceptionForLastError();
 
             return result;
         }
@@ -128,7 +128,7 @@ namespace WInterop.Security
 
                 if (!Imports.CreateRestrictedToken(token, 0, (uint)sidsToDisable.Length, sids, 0, null, 0, null, out AccessToken restricted))
                 {
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
                 }
 
                 return restricted;
@@ -149,7 +149,7 @@ namespace WInterop.Security
         public static void RevertToSelf()
         {
             if (!Imports.RevertToSelf())
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public unsafe static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
@@ -185,7 +185,7 @@ namespace WInterop.Security
                 case NTStatus.STATUS_SUCCESS:
                     break;
                 default:
-                    throw status.GetIoException();
+                    throw status.GetException();
             }
 
             List<string> rights = new List<string>();

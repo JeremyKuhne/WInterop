@@ -26,28 +26,28 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379304.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL PrivilegeCheck(
+        public unsafe static extern Boolean32 PrivilegeCheck(
             AccessToken ClientToken,
             PrivilegeSet* RequiredPrivileges,
-            out BOOL pfResult);
+            out Boolean32 pfResult);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378612.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL ImpersonateLoggedOnUser(
+        public unsafe static extern Boolean32 ImpersonateLoggedOnUser(
             AccessToken hToken);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378610.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL ImpersonateAnonymousToken(
+        public unsafe static extern Boolean32 ImpersonateAnonymousToken(
             ThreadHandle thread);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern BOOL RevertToSelf();
+        public static extern Boolean32 RevertToSelf();
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446583.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern BOOL CreateRestrictedToken(
+        public static unsafe extern Boolean32 CreateRestrictedToken(
             AccessToken ExistingTokenHandle,
             uint Flags,
             uint DisableSidCount,

@@ -35,7 +35,7 @@ namespace WInterop.DirectWrite
         /// </summary>
         /// <param name="familyName">Name of the font family. The name is not case-sensitive but must otherwise exactly match a family name in the collection.</param>
         /// <param name="index">Receives the zero-based index of the matching font family if the family name was found or UINT_MAX otherwise.</param>
-        BOOL FindFamilyName(
+        Boolean32 FindFamilyName(
             [MarshalAs(UnmanagedType.LPWStr)]
             string familyName,
             out uint index);

@@ -32,7 +32,7 @@ namespace DigClock
     {
         public DigClock() : base(backgroundBrush: StockBrush.Black) { }
 
-        static BOOL[,] fSevenSegment =
+        static Boolean32[,] fSevenSegment =
         {
             { 1, 1, 1, 0, 1, 1, 1 }, // 0
             { 0, 0, 1, 0, 0, 1, 0 }, // 1
@@ -85,7 +85,7 @@ namespace DigClock
             hdc.OffsetWindowOrigin(-12, 0);
         }
 
-        static void DisplayTime(DeviceContext hdc, BOOL f24Hour, BOOL fSuppress)
+        static void DisplayTime(DeviceContext hdc, Boolean32 f24Hour, Boolean32 fSuppress)
         {
             SystemTime st = SystemInformation.GetLocalTime();
             if (f24Hour)

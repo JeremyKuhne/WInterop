@@ -17,7 +17,7 @@ namespace WInterop.Storage.Unsafe
     /// </remarks>
     public struct FILE_RENAME_INFORMATION
     {
-        public BOOLEAN ReplaceIfExists;
+        public Boolean8 ReplaceIfExists;
         public IntPtr RootDirectory;
         public uint FileNameLength;
         private char _FileName;

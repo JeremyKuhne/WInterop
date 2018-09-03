@@ -50,7 +50,7 @@ namespace WInterop.Console
             /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/key-event-record-str"/></msdn>
             public struct KeyEventRecord
             {
-                public BOOL KeyDown;
+                public Boolean32 KeyDown;
                 public ushort RepeatCount;
                 public VirtualKey VirtualKeyCode;
                 public ushort VirtualScanCode;
@@ -103,7 +103,7 @@ namespace WInterop.Console
             /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/focus-event-record-str"/></msdn>
             public struct FocusEventRecord
             {
-                public BOOL SetFocus;
+                public Boolean32 SetFocus;
             }
         }
     }

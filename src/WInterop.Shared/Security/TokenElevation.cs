@@ -15,6 +15,6 @@ namespace WInterop.Security
     /// </remarks>
     public struct TokenElevation
     {
-        public BOOL TokenIsElevated;
+        public Boolean32 TokenIsElevated;
     }
 }

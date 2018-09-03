@@ -75,7 +75,7 @@ namespace WInterop.Gdi
                 sourceOrigin.Y,
                 operation))
             {
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             }
         }
 

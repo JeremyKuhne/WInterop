@@ -14,7 +14,7 @@ namespace WInterop.GdiPlus
     {
         public uint GdiplusVersion;
         public IntPtr DebugEventCallback;
-        public BOOL SuppressBackgroundThread;
-        public BOOL SuppressExternalCodecs;
+        public Boolean32 SuppressBackgroundThread;
+        public Boolean32 SuppressExternalCodecs;
     }
 }

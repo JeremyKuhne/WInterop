@@ -33,6 +33,6 @@ namespace WInterop.DirectWrite
         /// Flag indicating whether the object is to be placed upright or alongside the text baseline
         /// for vertical text.
         /// </summary>
-        public readonly BOOL SupportsSideways;
+        public readonly Boolean32 SupportsSideways;
     }
 }

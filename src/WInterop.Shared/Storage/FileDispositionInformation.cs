@@ -25,6 +25,6 @@ namespace WInterop.Storage
         /// Whether or not the file should be deleted. This is ignored if the handle
         /// was opened with the DeleteOnClose flag.
         /// </summary>
-        public BOOLEAN DeleteFile;
+        public Boolean8 DeleteFile;
     }
 }

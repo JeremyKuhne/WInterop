@@ -977,14 +977,14 @@ namespace WInterop.Gdi.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/dd162890.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public static extern BOOL PtVisible(
+        public static extern Boolean32 PtVisible(
             HDC hdc,
             int X,
             int Y);
 
         // https://msdn.microsoft.com/en-us/library/dd162908.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public static extern BOOL RectVisible(
+        public static extern Boolean32 RectVisible(
             HDC hdc,
             [In] ref RECT lprc);
 

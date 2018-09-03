@@ -30,7 +30,7 @@ namespace WInterop.Com
         void SetData(
             in FORMATETC pformatetc,
             in STGMEDIUM pmedium,
-            BOOL fRelease);
+            Boolean32 fRelease);
 
         [PreserveSig]
         HResult EnumFormatEtc(

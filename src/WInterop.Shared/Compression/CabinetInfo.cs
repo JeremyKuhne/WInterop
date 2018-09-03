@@ -41,16 +41,16 @@ namespace WInterop.Compression
         /// <summary>
         /// True if a reserved area is present. [fReserve]
         /// </summary>
-        public BOOL ReserveAreaPresent;
+        public Boolean32 ReserveAreaPresent;
 
         /// <summary>
         /// If true has a file that is continued from the previous cabinet.
         /// </summary>
-        public BOOL HasPrevious;
+        public Boolean32 HasPrevious;
 
         /// <summary>
         /// If true has a file that is continues in the next cabinet.
         /// </summary>
-        public BOOL HasNext;
+        public Boolean32 HasNext;
     }
 }

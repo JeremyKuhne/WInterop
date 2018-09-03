@@ -18,6 +18,7 @@ namespace WInterop.Errors
         private const int STATUS_SEVERITY_WARNING = 0x2;
         private const int STATUS_SEVERITY_ERROR = 0x3;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Failed(this WindowsError error) => error != WindowsError.NO_ERROR;
 
         /// <summary>
@@ -27,16 +28,17 @@ namespace WInterop.Errors
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfFailed(this WindowsError error, string path = null)
         {
-            if (error != WindowsError.ERROR_SUCCESS) throw error.GetIoException(path);
+            if (error != WindowsError.ERROR_SUCCESS) throw error.GetException(path);
         }
 
-        public static void Throw(this WindowsError error, string path = null) => throw error.GetIoException(path);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Throw(this WindowsError error, string path = null) => throw error.GetException(path);
 
         /// <summary>
         /// Turns Windows errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetIoException(this WindowsError error, string path = null)
+        public static Exception GetException(this WindowsError error, string path = null)
         {
             // http://referencesource.microsoft.com/#mscorlib/system/io/__error.cs,142
 
@@ -47,6 +49,7 @@ namespace WInterop.Errors
             return Error.WindowsErrorToException(error, message, path);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Succeeded(this HResult hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms687197.aspx
@@ -54,6 +57,7 @@ namespace WInterop.Errors
             return hr >= 0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Failed(this HResult hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms693474.aspx
@@ -64,6 +68,7 @@ namespace WInterop.Errors
         /// <summary>
         /// Extracts the code portion of the specified HRESULT [HRESULT_CODE]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetCode(this HResult hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679761.aspx
@@ -74,6 +79,7 @@ namespace WInterop.Errors
         /// <summary>
         /// Extracts the facility of the specified HRESULT [HRESULT_FACILITY]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Facility GetFacility(this HResult hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680579.aspx
@@ -84,6 +90,7 @@ namespace WInterop.Errors
         /// <summary>
         /// Extracts the severity of the specified result [HRESULT_SEVERITY]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetSeverity(HResult hr)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms693761.aspx
@@ -94,6 +101,7 @@ namespace WInterop.Errors
         /// <summary>
         /// [HRESULT_FROM_WIN32]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HResult ToHResult(this WindowsError error)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680746.aspx
@@ -108,16 +116,17 @@ namespace WInterop.Errors
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfFailed(this HResult result, string path = null)
         {
-            if (result.Failed()) throw result.GetIoException(path);
+            if (result.Failed()) throw result.GetException(path);
         }
 
-        public static void Throw(this HResult result) => throw result.GetIoException();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Throw(this HResult result) => throw result.GetException();
 
         /// <summary>
         /// Turns HRESULT errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetIoException(this HResult hr, string path = null)
+        public static Exception GetException(this HResult hr, string path = null)
         {
             string message = path == null
                 ? $"{Error.HResultToString(hr)}"
@@ -142,45 +151,54 @@ namespace WInterop.Errors
         /// <summary>
         /// [HRESULT_FROM_NT]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HResult ToHResult(this NTStatus status) => (HResult)((int)status | FACILITY_NT_BIT);
 
         /// <summary>
         /// [NT_SUCCESS]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Success(this NTStatus status) => status >= 0;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Failed(this NTStatus status) => status < 0;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfFailed(this NTStatus status, string path = null)
         {
             if (status.Failed())
-                throw status.GetIoException(path);
+                throw status.GetException(path);
         }
 
-        public static void Throw(this NTStatus status) => throw status.GetIoException();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Throw(this NTStatus status) => throw status.GetException();
 
         /// <summary>
         /// [NT_INFORMATION]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsInformational(this NTStatus status) => (uint)status >> 30 == STATUS_SEVERITY_INFORMATIONAL;
 
         /// <summary>
         /// [NT_WARNING]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsWarning(this NTStatus status) => (uint)status >> 30 == STATUS_SEVERITY_WARNING;
 
         /// <summary>
         /// [NT_ERROR]
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsError(this NTStatus status) => (uint)status >> 30 == STATUS_SEVERITY_ERROR;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static WindowsError ToWindowsError(this NTStatus status) => Error.NtStatusToWinError(status);
 
         /// <summary>
         /// Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetIoException(this NTStatus status, string path = null)
+        public static Exception GetException(this NTStatus status, string path = null)
         {
             switch (status)
             {
@@ -188,7 +206,7 @@ namespace WInterop.Errors
                     return new NotImplementedException(path ?? WInteropStrings.NoValue);
             }
 
-            return status.ToWindowsError().GetIoException(path);
+            return status.ToWindowsError().GetException(path);
         }
     }
 }

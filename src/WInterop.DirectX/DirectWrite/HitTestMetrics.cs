@@ -50,11 +50,11 @@ namespace WInterop.DirectWrite
         /// <summary>
         /// Geometry encloses text?
         /// </summary>
-        public readonly BOOL IsText;
+        public readonly Boolean32 IsText;
 
         /// <summary>
         /// Range is trimmed.
         /// </summary>
-        public readonly BOOL IsTrimmed;
+        public readonly Boolean32 IsTrimmed;
     }
 }

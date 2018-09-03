@@ -25,7 +25,7 @@ namespace WInterop.DirectWrite
         /// unless doing animation that requires subpixel vertical placement.
         /// </summary>
         /// <param name="clientDrawingContext">The context passed to IDWriteTextLayout::Draw.</param>
-        BOOL IsPixelSnappingDisabled(IntPtr clientDrawingContext);
+        Boolean32 IsPixelSnappingDisabled(IntPtr clientDrawingContext);
 
         /// <summary>
         /// Gets the current transform that maps abstract coordinates to DIPs,

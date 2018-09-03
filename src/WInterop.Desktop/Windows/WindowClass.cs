@@ -109,7 +109,7 @@ namespace WInterop.Windows
 
                 Atom atom = Imports.RegisterClassExW(ref _wndClass);
                 if (!atom.IsValid)
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
                 Atom = atom;
                 return this;
             }

@@ -14,7 +14,7 @@ namespace WInterop.Devices.Unsafe
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct MOUNTDEV_SUGGESTED_LINK_NAME
     {
-        public BOOLEAN UseOnlyIfThereAreNoOtherLinks;
+        public Boolean8 UseOnlyIfThereAreNoOtherLinks;
         public ushort NameLength;
         private char _Name;
         public ReadOnlySpan<char> Name => TrailingArray<char>.GetBufferInBytes(ref _Name, NameLength);

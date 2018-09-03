@@ -86,7 +86,7 @@ namespace WInterop.Memory
         public static void LocalFree(IntPtr memory)
         {
             if (Imports.LocalFree(memory) != IntPtr.Zero)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
     }
 }

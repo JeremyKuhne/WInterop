@@ -66,7 +66,7 @@ namespace WInterop.Storage
                         return FindFirstVolume();
                     }
 
-                    throw error.GetIoException();
+                    throw error.GetException();
                 }
 
                 _buffer.SetLengthToFirstNull();
@@ -87,7 +87,7 @@ namespace WInterop.Storage
                             _lastEntryFound = true;
                             return null;
                         default:
-                            throw error.GetIoException();
+                            throw error.GetException();
                     }
                 }
 

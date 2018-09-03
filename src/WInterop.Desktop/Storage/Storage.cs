@@ -47,7 +47,7 @@ namespace WInterop.Storage
         public static ByHandleFileInformation GetFileInformationByHandle(SafeFileHandle fileHandle)
         {
             if (!Imports.GetFileInformationByHandle(fileHandle, out ByHandleFileInformation fileInformation))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return fileInformation;
         }
@@ -78,7 +78,7 @@ namespace WInterop.Storage
 
             SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, lpSecurityAttributes: null, creationDisposition, flags, hTemplateFile: IntPtr.Zero);
             if (handle.IsInvalid)
-                throw Error.GetIoExceptionForLastError(path);
+                throw Error.GetExceptionForLastError(path);
             return handle;
         }
 
@@ -260,7 +260,7 @@ namespace WInterop.Storage
                 pbCancel: ref cancel,
                 dwCopyFlags: overwrite ? 0 : CopyFileFlags.FailIfExists))
             {
-                throw Error.GetIoExceptionForLastError(source);
+                throw Error.GetExceptionForLastError(source);
             }
         }
 
@@ -418,7 +418,7 @@ namespace WInterop.Storage
                             buffer.EnsureByteCapacity((ulong)statusBlock.Information);
                             break;
                         default:
-                            throw status.GetIoException();
+                            throw status.GetException();
                     }
                 }
 
@@ -455,7 +455,7 @@ namespace WInterop.Storage
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw error.GetIoException(deviceName);
+                            throw error.GetException(deviceName);
                     }
                 }
 
@@ -485,7 +485,7 @@ namespace WInterop.Storage
                 }
 
                 if (result == 0)
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
 
                 buffer.Length = result;
                 return buffer.Split('\0', removeEmptyStrings: true);
@@ -508,7 +508,7 @@ namespace WInterop.Storage
                             buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
                             break;
                         default:
-                            throw error.GetIoException(path);
+                            throw error.GetException(path);
                     }
                 }
 
@@ -537,7 +537,7 @@ namespace WInterop.Storage
                             buffer.EnsureCharCapacity(returnLength);
                             break;
                         default:
-                            throw error.GetIoException(volumeName);
+                            throw error.GetException(volumeName);
                     }
                 }
 

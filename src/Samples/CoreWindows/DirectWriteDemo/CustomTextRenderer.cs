@@ -34,7 +34,7 @@ namespace DirectWriteDemo
             _fillBrush = fillBrush;
         }
 
-        public BOOL IsPixelSnappingDisabled(IntPtr clientDrawingContext) => false;
+        public Boolean32 IsPixelSnappingDisabled(IntPtr clientDrawingContext) => false;
 
         public Matrix3x2 GetCurrentTransform(IntPtr clientDrawingContext)
         {
@@ -116,8 +116,8 @@ namespace DirectWriteDemo
             float originX,
             float originY,
             IInlineObject inlineObject,
-            BOOL isSideways,
-            BOOL isRightToLeft,
+            Boolean32 isSideways,
+            Boolean32 isRightToLeft,
             [MarshalAs(UnmanagedType.IUnknown)] object clientDrawingEffect)
         {
             throw new NotImplementedException();

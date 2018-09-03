@@ -59,8 +59,8 @@ namespace WInterop.Handles.Unsafe
             DirectoryObjectHandle DirectoryHandle,
             SafeHandle Buffer,
             uint Length,
-            BOOLEAN ReturnSingleEntry,
-            BOOLEAN RestartScan,
+            Boolean8 ReturnSingleEntry,
+            Boolean8 RestartScan,
             ref uint Context,
             out uint ReturnLength);
 

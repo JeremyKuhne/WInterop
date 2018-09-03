@@ -26,7 +26,7 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446585.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL CreateWellKnownSid(
+        public unsafe static extern Boolean32 CreateWellKnownSid(
             WellKnownSID WellKnownSidType,
             SID* DomainSid,
             SID* pSid,
@@ -34,18 +34,18 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379154.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern BOOL IsWellKnownSid(
+        public unsafe static extern Boolean32 IsWellKnownSid(
             in SID pSid,
             WellKnownSID WellKnownSidType);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379151.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern BOOL IsValidSid(
+        public unsafe static extern Boolean32 IsValidSid(
             in SID pSid);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376399.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern BOOL ConvertSidToStringSidW(
+        public static extern Boolean32 ConvertSidToStringSidW(
             in SID Sid,
             out LocalHandle StringSid);
 
@@ -62,7 +62,7 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376404.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL CopySid(
+        public unsafe static extern Boolean32 CopySid(
             uint nDestinationSidLength,
             out SID pDestinationSid,
             SID* pSourceSid);
@@ -127,7 +127,7 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446635.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL GetAclInformation(
+        public unsafe static extern Boolean32 GetAclInformation(
             SecurityDescriptor pAcl,
             void* pAclInformation,
             uint nAclInformationLength,
@@ -135,7 +135,7 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374951.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL AddAccessAllowedAceEx(
+        public unsafe static extern Boolean32 AddAccessAllowedAceEx(
             SecurityDescriptor pAcl,
             uint dwAceRevision,
             // This is AceInheritence
@@ -148,19 +148,19 @@ namespace WInterop.Security.Unsafe
         public static extern bool OpenThreadToken(
             ThreadHandle ThreadHandle,
             AccessTokenRights DesiredAccess,
-            BOOL OpenAsSelf,
+            Boolean32 OpenAsSelf,
             out AccessToken TokenHandle);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379295.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern BOOL OpenProcessToken(
+        public static extern Boolean32 OpenProcessToken(
             IntPtr ProcessHandle,
             AccessTokenRights DesiredAccesss,
             out AccessToken TokenHandle);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL DuplicateTokenEx(
+        public unsafe static extern Boolean32 DuplicateTokenEx(
             AccessToken hExistingToken,
             AccessTokenRights dwDesiredAccess,
             SECURITY_ATTRIBUTES* lpTokenAttributes,
@@ -170,20 +170,20 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379590.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern BOOL SetThreadToken(
+        public static extern Boolean32 SetThreadToken(
             ThreadHandle Thread,
             AccessToken Token);
 
         // https://msdn.microsoft.com/en-us/library/aa379180.aspx
         [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern BOOL LookupPrivilegeValueW(
+        public static extern Boolean32 LookupPrivilegeValueW(
             string lpSystemName,
             string lpName,
             out LUID lpLuid);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379176.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern BOOL LookupPrivilegeNameW(
+        public static extern Boolean32 LookupPrivilegeNameW(
             IntPtr lpSystemName,
             ref LUID lpLuid,
             ref char lpName,
@@ -191,7 +191,7 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL GetTokenInformation(
+        public unsafe static extern Boolean32 GetTokenInformation(
             AccessToken TokenHandle,
             TokenInformation TokenInformationClass,
             void* TokenInformation,
@@ -200,9 +200,9 @@ namespace WInterop.Security.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern BOOL AdjustTokenPrivileges(
+        public unsafe static extern Boolean32 AdjustTokenPrivileges(
             AccessToken TokenHandle,
-            BOOL DisableAllPrivileges,
+            Boolean32 DisableAllPrivileges,
             TOKEN_PRIVILEGES* NewState,
             uint BufferLength,
             TOKEN_PRIVILEGES* PreviousState,

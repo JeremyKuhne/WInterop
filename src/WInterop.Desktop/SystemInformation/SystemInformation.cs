@@ -66,7 +66,7 @@ namespace WInterop.SystemInformation
                             buffer.EnsureCharCapacity(size);
                             break;
                         default:
-                            throw error.GetIoException();
+                            throw error.GetException();
                     }
                 }
 
@@ -107,7 +107,7 @@ namespace WInterop.SystemInformation
                 }
 
                 if (size == 0)
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
 
                 buffer.Length = size - 1;
                 return buffer.ToString();

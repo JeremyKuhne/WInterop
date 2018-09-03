@@ -325,8 +325,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Win32FileAttributeData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Win32FindData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Unsafe\WIN32_STREAM_ID.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\BOOL.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\BOOLEAN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\Boolean32.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\Boolean8.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\CharSpanExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\DrawingExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\FixedByte.cs" />
@@ -336,7 +336,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\LowHighUlong.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\SpanExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support.Root\TrailingArray.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\UCHAR.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support.Root\Char8.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Arrays.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\ActionWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\Buffers\BufferFuncWrapper.cs" />

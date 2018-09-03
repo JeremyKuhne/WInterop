@@ -30,7 +30,7 @@ namespace WInterop.DirectWrite
         /// <param name="localeName">Locale name to look for.</param>
         /// <param name="index">Receives the zero-based index of the locale name/string pair.</param>
         /// <returns>TRUE if the locale name exists or FALSE if not.</returns>
-        BOOL FindLocaleName(
+        Boolean32 FindLocaleName(
             [MarshalAs(UnmanagedType.LPWStr)]
             string localeName,
             out uint index);

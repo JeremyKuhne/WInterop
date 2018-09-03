@@ -89,7 +89,7 @@ namespace WInterop.Security
         private static LUID LookupPrivilegeValue(Privilege privilege)
         {
             if (!Imports.LookupPrivilegeValueW(null, GetPrivilegeConstant(privilege), out LUID luid))
-                throw Errors.Error.GetIoExceptionForLastError(privilege.ToString());
+                throw Errors.Error.GetExceptionForLastError(privilege.ToString());
 
             return luid;
         }
@@ -142,7 +142,7 @@ namespace WInterop.Security
         {
             TokenStatistics stats = default;
             if (!Imports.GetTokenInformation(token, TokenInformation.Statistics, &stats, (uint)sizeof(TokenStatistics), out uint _))
-                throw Errors.Error.GetIoExceptionForLastError();
+                throw Errors.Error.GetExceptionForLastError();
             return stats;
         }
 
@@ -208,7 +208,7 @@ namespace WInterop.Security
             byte* buffer = stackalloc byte[size];
 
             if (!Imports.GetTokenInformation(token, TokenInformation.User, buffer, (uint)size, out uint _))
-                throw Errors.Error.GetIoExceptionForLastError();
+                throw Errors.Error.GetExceptionForLastError();
 
             TOKEN_USER* user = (TOKEN_USER*)buffer;
             return new SidAndAttributes(CopySid(user->User.Sid), user->User.Attributes);
@@ -240,7 +240,7 @@ namespace WInterop.Security
             byte* buffer = stackalloc byte[size];
 
             if (!Imports.GetTokenInformation(token, TokenInformation.PrimaryGroup, buffer, (uint)size, out uint _))
-                throw Errors.Error.GetIoExceptionForLastError();
+                throw Errors.Error.GetExceptionForLastError();
 
             return CopySid(((TOKEN_PRIMARY_GROUP*)buffer)->PrimaryGroup);
         }
@@ -254,7 +254,7 @@ namespace WInterop.Security
 
             uint size = (uint)sizeof(SID);
             if (!Imports.CreateWellKnownSid(sidType, null, &sid, ref size))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return sid;
         }
@@ -276,7 +276,7 @@ namespace WInterop.Security
         public unsafe static string ConvertSidToString(this in SID sid)
         {
             if (!Imports.ConvertSidToStringSidW(sid, out var handle))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return new string((char*)handle);
         }
@@ -288,7 +288,7 @@ namespace WInterop.Security
         {
             byte* b = Imports.GetSidSubAuthorityCount(sid);
             if (b == null)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return *b;
         }
@@ -300,7 +300,7 @@ namespace WInterop.Security
         {
             uint* u = Imports.GetSidSubAuthority(sid, nSubAuthority);
             if (u == null)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return *u;
         }
@@ -308,7 +308,7 @@ namespace WInterop.Security
         private static unsafe SID CopySid(SID* source)
         {
             if (!Imports.CopySid((uint)sizeof(SID), out SID destination, source))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             return destination;
         }
 
@@ -376,7 +376,7 @@ namespace WInterop.Security
         public static AccessToken OpenProcessToken(AccessTokenRights desiredAccess)
         {
             if (!Imports.OpenProcessToken(Processes.GetCurrentProcess(), desiredAccess, out var processToken))
-                throw Error.GetIoExceptionForLastError(desiredAccess.ToString());
+                throw Error.GetExceptionForLastError(desiredAccess.ToString());
 
             return processToken;
         }
@@ -396,7 +396,7 @@ namespace WInterop.Security
                     (uint)sizeof(TokenElevation),
                     out _))
                 {
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
                 }
 
                 return elevation.TokenIsElevated;
@@ -442,7 +442,7 @@ namespace WInterop.Security
                 TokenType.Impersonation,
                 out AccessToken duplicatedToken))
             {
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             }
 
             return duplicatedToken;
@@ -451,7 +451,7 @@ namespace WInterop.Security
         public static void SetThreadToken(this ThreadHandle thread, AccessToken token)
         {
             if (!Imports.SetThreadToken(thread, token))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         /// <summary>

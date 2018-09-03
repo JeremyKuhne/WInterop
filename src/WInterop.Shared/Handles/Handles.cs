@@ -16,7 +16,7 @@ namespace WInterop.Handles
         public static void CloseHandle(IntPtr handle)
         {
             if (!Imports.CloseHandle(handle))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
     }
 }

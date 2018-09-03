@@ -46,7 +46,7 @@ namespace WInterop.DirectWrite
         /// Returns TRUE if the font is a symbol font or FALSE if not.
         /// </summary>
         [PreserveSig]
-        BOOL IsSymbolFont();
+        Boolean32 IsSymbolFont();
 
         /// <summary>
         /// Gets a localized strings collection containing the face names for the font (e.g., Regular or Bold), indexed by locale name.
@@ -66,7 +66,7 @@ namespace WInterop.DirectWrite
         /// Standard HRESULT error code. If the font does not contain the specified string, the return value is S_OK but 
         /// informationalStrings receives a NULL pointer and exists receives the value FALSE.
         /// </returns>
-        BOOL GetInformationalStrings(
+        Boolean32 GetInformationalStrings(
             InformationalStringId informationalStringID,
             out ILocalizedStrings informationalStrings);
 
@@ -88,7 +88,7 @@ namespace WInterop.DirectWrite
         /// </summary>
         /// <param name="unicodeValue">Unicode (UCS-4) character value.</param>
         /// <returns>Receives the value TRUE if the font supports the specified character or FALSE if not.</returns>
-        BOOL HasCharacter(uint unicodeValue);
+        Boolean32 HasCharacter(uint unicodeValue);
 
         /// <summary>
         /// Creates a font face object for the font.

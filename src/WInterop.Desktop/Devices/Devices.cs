@@ -35,7 +35,7 @@ namespace WInterop.Devices
                 lpBytesReturned: out _,
                 lpOverlapped: null))
             {
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
             }
 
             return guid;
@@ -80,7 +80,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(((MOUNTDEV_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_NAME));
                             break;
                         default:
-                            throw error.GetIoException();
+                            throw error.GetException();
                     }
                 }
 
@@ -115,7 +115,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
                             break;
                         default:
-                            throw error.GetIoException();
+                            throw error.GetException();
                     }
                 }
 
@@ -150,7 +150,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(((MOUNTDEV_UNIQUE_ID*)buffer.VoidPointer)->UniqueIdLength + (ulong)sizeof(MOUNTDEV_UNIQUE_ID));
                             break;
                         default:
-                            throw error.GetIoException();
+                            throw error.GetException();
                     }
                 }
 
@@ -201,7 +201,7 @@ namespace WInterop.Devices
                                 outBuffer.EnsureByteCapacity(checked(outBuffer.ByteCapacity * 2));
                                 break;
                             default:
-                                throw error.GetIoException(volume);
+                                throw error.GetException(volume);
                         }
                     }
 
@@ -246,7 +246,7 @@ namespace WInterop.Devices
                             buffer.EnsureByteCapacity(buffer.ByteCapacity + 1024);
                             break;
                         default:
-                            throw error.GetIoException();
+                            throw error.GetException();
                     }
                 }
 

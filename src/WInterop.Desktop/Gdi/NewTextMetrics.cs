@@ -31,9 +31,9 @@ namespace WInterop.Gdi
         public char LastChar;
         public char DefaultChar;
         public char BreakChar;
-        public BOOLEAN Italic;
-        public BOOLEAN Underlined;
-        public BOOLEAN StruckOut;
+        public Boolean8 Italic;
+        public Boolean8 Underlined;
+        public Boolean8 StruckOut;
         public PitchAndFamily PitchAndFamily;
         public CharacterSet CharacterSet;
         public TextMetricFlags Flags;

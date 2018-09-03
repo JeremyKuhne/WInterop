@@ -16,7 +16,7 @@ namespace WInterop.Storage.Unsafe
     {
         public uint dwSize;
         public CopyFileFlags dwCopyFlags;
-        public unsafe BOOL* pfCancel;
+        public unsafe Boolean32* pfCancel;
         public IntPtr pProgressRoutine;
         public IntPtr pvCallbackContext;
     }

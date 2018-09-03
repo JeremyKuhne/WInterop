@@ -28,7 +28,7 @@ namespace WInterop.Compression
         /// <summary>
         /// True if an error is present.
         /// </summary>
-        public BOOL ErrorPresent;
+        public Boolean32 ErrorPresent;
 
         [StructLayout(LayoutKind.Explicit)]
         public struct Error

@@ -55,7 +55,7 @@ namespace WInterop.Storage.Unsafe
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-createsymboliclinkw
         [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern BOOLEAN CreateSymbolicLinkW(
+        public static extern Boolean8 CreateSymbolicLinkW(
             string lpSymlinkFileName,
             string lpTargetFileName,
             SymbolicLinkFlag dwFlags);
@@ -253,9 +253,9 @@ namespace WInterop.Storage.Unsafe
             void* FileInformation,
             uint Length,
             FileInformationClass FileInformationClass,
-            BOOLEAN ReturnSingleEntry,
+            Boolean8 ReturnSingleEntry,
             UNICODE_STRING* FileName,
-            BOOLEAN RestartScan);
+            Boolean8 RestartScan);
 
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public unsafe static extern NTStatus NtQueryDirectoryFile(
@@ -267,17 +267,17 @@ namespace WInterop.Storage.Unsafe
             void* FileInformation,
             uint Length,
             FileInformationClass FileInformationClass,
-            BOOLEAN ReturnSingleEntry,
+            Boolean8 ReturnSingleEntry,
             UNICODE_STRING* FileName,
-            BOOLEAN RestartScan);
+            Boolean8 RestartScan);
 
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff546850.aspx
         // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/rtlisnameinexpression
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern BOOLEAN RtlIsNameInExpression(
+        public unsafe static extern Boolean8 RtlIsNameInExpression(
             UNICODE_STRING* Expression,
             UNICODE_STRING* Name,
-            BOOLEAN IgnoreCase,
+            Boolean8 IgnoreCase,
             IntPtr UpcaseTable);
 
         // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/ntqueryattributesfile

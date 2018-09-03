@@ -21,7 +21,7 @@ namespace WInterop.Windows
         {
             HCURSOR handle = Imports.LoadCursorW(ModuleInstance.Null, (char*)(uint)id);
             if (handle.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return new CursorHandle(handle, ownsHandle: false);
         }
@@ -30,7 +30,7 @@ namespace WInterop.Windows
         {
             HCURSOR handle = Imports.LoadCursorFromFileW(path);
             if (handle.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return new CursorHandle(handle, ownsHandle: false);
         }
@@ -48,7 +48,7 @@ namespace WInterop.Windows
         public static void SetSystemCursor(CursorHandle cursor, SystemCursor id)
         {
             if (!Imports.SetSystemCursor(cursor, id))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static int ShowCursor(bool show)
@@ -60,7 +60,7 @@ namespace WInterop.Windows
         {
             CursorHandle copy = Imports.CopyCursor(cursor);
             if (copy.IsInvalid)
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return copy;
         }
@@ -68,7 +68,7 @@ namespace WInterop.Windows
         public static Point GetCursorPosition()
         {
             if (!Imports.GetCursorPos(out Point point))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return point;
         }
@@ -76,7 +76,7 @@ namespace WInterop.Windows
         public static Point GetPhysicalCursorPosition()
         {
             if (!Imports.GetPhysicalCursorPos(out Point point))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
 
             return point;
         }
@@ -84,43 +84,43 @@ namespace WInterop.Windows
         public static void SetCursorPosition(Point point)
         {
             if (!Imports.SetCursorPos(point.X, point.Y))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static void SetPhysicalCursorPosition(Point point)
         {
             if (!Imports.SetPhysicalCursorPos(point.X, point.Y))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static void CreateCaret(this in WindowHandle window, BitmapHandle bitmap, Size size)
         {
             if (!Imports.CreateCaret(window, bitmap, size.Width, size.Height))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static void DestroyCaret()
         {
             if (!Imports.DestroyCaret())
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static void SetCaretPosition(Point point)
         {
             if (!Imports.SetCaretPos(point.X, point.Y))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static void ShowCaret(this in WindowHandle window)
         {
             if (!Imports.ShowCaret(window))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
 
         public static void HideCaret(this in WindowHandle window)
         {
             if (!Imports.HideCaret(window))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
     }
 }

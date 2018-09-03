@@ -47,8 +47,8 @@ namespace KeyView1
                     goto case MessageType.DisplayChange;
                 case MessageType.DisplayChange:
                     // Get maximum size of client area
-                    cxClientMax = Windows.GetSystemMetrics(SystemMetric.CXMAXIMIZED);
-                    cyClientMax = Windows.GetSystemMetrics(SystemMetric.CYMAXIMIZED);
+                    cxClientMax = Windows.GetSystemMetrics(SystemMetric.MaximizedWidth);
+                    cyClientMax = Windows.GetSystemMetrics(SystemMetric.MaximizedHeight);
 
                     // Get character size for fixed-pitch font
                     using (DeviceContext dc = window.GetDeviceContext())

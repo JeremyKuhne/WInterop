@@ -288,7 +288,7 @@ namespace WInterop.DirectWrite
         /// <param name="hasUnderline">The Boolean flag indicates whether underline takes place</param>
         /// <param name="textRange">Text range to which this change applies.</param>
         void SetUnderline(
-            BOOL hasUnderline,
+            Boolean32 hasUnderline,
             TextRange textRange);
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace WInterop.DirectWrite
         /// <param name="hasStrikethrough">The Boolean flag indicates whether strikethrough takes place</param>
         /// <param name="textRange">Text range to which this change applies.</param>
         void SetStrikethrough(
-            BOOL hasStrikethrough,
+            Boolean32 hasStrikethrough,
             TextRange textRange);
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace WInterop.DirectWrite
 
         unsafe void GetUnderline(
             uint currentPosition,
-            out BOOL hasUnderline,
+            out Boolean32 hasUnderline,
             TextRange* textRange);
 
         /// <summary>
@@ -461,7 +461,7 @@ namespace WInterop.DirectWrite
         /// <param name="textRange">The position range of the current format.</param>
         unsafe void GetStrikethrough(
             uint currentPosition,
-            out BOOL hasStrikethrough,
+            out Boolean32 hasStrikethrough,
             TextRange* textRange);
 
         /// <summary>
@@ -623,8 +623,8 @@ namespace WInterop.DirectWrite
         HitTestMetrics HitTestPoint(
             float pointX,
             float pointY,
-            out BOOL isTrailingHit,
-            out BOOL isInside);
+            out Boolean32 isTrailingHit,
+            out Boolean32 isInside);
 
         /// <summary>
         /// Given a text position and whether the caret is on the leading or trailing
@@ -652,7 +652,7 @@ namespace WInterop.DirectWrite
         /// </remarks>
         HitTestMetrics HitTestTextPosition(
             uint textPosition,
-            BOOL isTrailingHit,
+            Boolean32 isTrailingHit,
             out float pointX,
             out float pointY);
 

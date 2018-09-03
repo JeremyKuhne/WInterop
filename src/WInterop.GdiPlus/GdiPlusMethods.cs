@@ -24,7 +24,7 @@ namespace WInterop.GdiPlus
                 case GpStatus.Win32Error:
                     WindowsError error = Error.GetLastError();
                     if (error != WindowsError.ERROR_SUCCESS)
-                        return error.GetIoException();
+                        return error.GetException();
                     goto default;
                 default:
                     return new GdiPlusException(status);

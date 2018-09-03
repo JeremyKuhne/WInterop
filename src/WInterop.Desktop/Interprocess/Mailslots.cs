@@ -34,7 +34,7 @@ namespace WInterop.Interprocess
             }
 
             if (handle.IsInvalid)
-                throw Error.GetIoExceptionForLastError(name);
+                throw Error.GetExceptionForLastError(name);
 
             return handle;
         }
@@ -54,7 +54,7 @@ namespace WInterop.Interprocess
                     lpNextSize: &info.NextSize,
                     lpMessageCount: &info.MessageCount,
                     lpReadTimeout: &info.ReadTimeout))
-                    throw Error.GetIoExceptionForLastError();
+                    throw Error.GetExceptionForLastError();
             }
 
             return info;
@@ -67,7 +67,7 @@ namespace WInterop.Interprocess
         public static void SetMailslotTimeout(SafeMailslotHandle mailslotHandle, uint readTimeout)
         {
             if (!Imports.SetMailslotInfo(mailslotHandle, readTimeout))
-                throw Error.GetIoExceptionForLastError();
+                throw Error.GetExceptionForLastError();
         }
     }
 }
