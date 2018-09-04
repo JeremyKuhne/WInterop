@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Windows;
+using WInterop.Windows.Unsafe;
 
 namespace WInterop.Clipboard.Unsafe
 {
@@ -19,7 +20,7 @@ namespace WInterop.Clipboard.Unsafe
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649048.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool OpenClipboard(
-            WindowHandle hWndNewOwner);
+            HWND hWndNewOwner);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649035.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -45,7 +46,7 @@ namespace WInterop.Clipboard.Unsafe
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649041.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-        public static extern WindowHandle GetClipboardOwner();
+        public static extern HWND GetClipboardOwner();
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649040.aspx
         [DllImport(Libraries.User32, SetLastError = true,ExactSpelling = true)]
@@ -54,16 +55,33 @@ namespace WInterop.Clipboard.Unsafe
             SafeHandle lpszFormatName,
             int cchMaxCount);
 
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getupdatedclipboardformats
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public unsafe static extern bool GetUpdatedClipboardFormats(
             ref uint lpuiFormats,
             uint cFormats,
             out uint pcFormatsOut);
 
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-setclipboarddata
+        [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+        public static extern IntPtr SetClipboardData(
+            uint uFormat,
+            IntPtr hMem
+        );
+
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms649045.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern int GetPriorityClipboardFormat(
             uint[] paFormatPriorityList,
             int cFormats);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getopenclipboardwindow
+        [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
+        public static extern HWND GetOpenClipboardWindow();
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-registerclipboardformatw
+        [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
+        public static extern uint RegisterClipboardFormatW(
+            string lpszFormat);
     }
 }

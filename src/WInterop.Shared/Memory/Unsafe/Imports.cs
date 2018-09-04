@@ -71,6 +71,25 @@ namespace WInterop.Memory.Unsafe
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern IntPtr GetProcessHeap();
 
-        public static IntPtr ProcessHeap = GetProcessHeap();
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globalalloc
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern HGLOBAL GlobalAlloc(
+            GlobalMemoryFlags uFlags,
+            UIntPtr dwBytes);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globalfree
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern HGLOBAL GlobalFree(
+            HGLOBAL hMem);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globallock
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern IntPtr GlobalLock(
+            HGLOBAL hMem);
+
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globalunlock
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern Boolean32 GlobalUnlock(
+            HGLOBAL hMem);
     }
 }

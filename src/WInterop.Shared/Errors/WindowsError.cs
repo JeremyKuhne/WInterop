@@ -207,7 +207,7 @@ namespace WInterop.Errors
         ERROR_CLASS_HAS_WINDOWS = 1412,
         ERROR_INVALID_INDEX = 1413,
         ERROR_INVALID_ICON_HANDLE = 1414,
-
+        ERROR_CLIPBOARD_NOT_OPEN = 1418,
         RPC_S_SERVER_UNAVAILABLE = 1722,
 
         // From lmerr.h

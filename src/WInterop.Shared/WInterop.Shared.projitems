@@ -122,10 +122,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Handles\SymbolicLinkObjectRights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\UnwrapHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Libraries.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Memory\GlobalLock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Memory\GlobalMemoryFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\HeapHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\HeapHandleCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\LocalHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\MemoryDefines.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Memory\GlobalHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Memory\Unsafe\HGLOBAL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\Unsafe\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessAccessRights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessHandle.cs" />

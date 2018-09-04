@@ -40,6 +40,16 @@ namespace WInterop.Windows
         /// </summary>
         public static WindowHandle TopMost = new WindowHandle(new HWND(new IntPtr(-1)));
 
+        /// <summary>
+        /// Used to create and enumerate message only windows. [HWND_MESSAGE]
+        /// </summary>
+        public static WindowHandle Message = new WindowHandle(new HWND(new IntPtr(-3)));
+
+        /// <summary>
+        /// Used for sending broadcast messages. [HWND_BROADCAST]
+        /// </summary>
+        public static WindowHandle Broadcast = new WindowHandle(new HWND(new IntPtr(0xffff)));
+
         public WindowHandle(HWND hwnd) => HWND = hwnd;
 
         public static implicit operator HWND(WindowHandle handle) => handle.HWND;
@@ -61,5 +71,7 @@ namespace WInterop.Windows
         public static bool operator !=(WindowHandle a, WindowHandle b) => a.HWND != b.HWND;
 
         public bool IsInvalid => HWND.IsInvalid;
+
+        public bool IsNull => HWND.Value == IntPtr.Zero;
     }
 }

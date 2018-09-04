@@ -9,7 +9,9 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Clipboard.Unsafe;
 using WInterop.Errors;
+using WInterop.Memory;
 using WInterop.Support.Buffers;
+using WInterop.Windows;
 
 namespace WInterop.Clipboard
 {
@@ -81,6 +83,87 @@ namespace WInterop.Clipboard
         public static uint GetPriorityClipboardFormat(params uint[] formats)
         {
             return unchecked((uint)Imports.GetPriorityClipboardFormat(formats, formats.Length));
+        }
+
+        public static void OpenClipboard(WindowHandle window = default) => Error.ThrowLastErrorIfFalse(Imports.OpenClipboard(window));
+
+        public static void EmptyClipboard() => Error.ThrowLastErrorIfFalse(Imports.EmptyClipboard());
+
+        public static void CloseClipboard() => Error.ThrowLastErrorIfFalse(Imports.CloseClipboard());
+
+        public static WindowHandle GetOpenClipboardWindow()
+        {
+            // This API claims it sets last error, but I can get spurious errors when checking if
+            // null is an error. It clearly either never does or only does sometimes. Clearing last
+            // error before calling makes spurious errors go away.
+
+            Error.SetLastError(WindowsError.NO_ERROR);
+            WindowHandle handle = Imports.GetOpenClipboardWindow();
+            if (handle.IsInvalid)
+                Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
+
+            return handle;
+        }
+
+        public static WindowHandle GetClipboardOwner()
+        {
+            // This API claims it sets last error, but I can get spurious errors when checking if
+            // null is an error. It clearly either never does or only does sometimes. Clearing last
+            // error before calling makes spurious errors go away.
+
+            Error.SetLastError(WindowsError.NO_ERROR);
+            WindowHandle handle = Imports.GetClipboardOwner();
+            if (handle.IsInvalid)
+                Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
+
+            return handle;
+        }
+
+        /// <summary>
+        /// Set Unicode text in the clipboard under the given format.
+        /// </summary>
+        public static void SetClipboardText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.UnicodeText)
+        {
+            using (GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1) * sizeof(char)), GlobalMemoryFlags.Moveable))
+            {
+                using (GlobalLock globalLock = global.Lock)
+                {
+                    Span<char> buffer = globalLock.GetSpan<char>();
+                    span.CopyTo(buffer);
+                    buffer[buffer.Length - 1] = '\0';
+
+                    Imports.SetClipboardData((uint)format, globalLock.Pointer);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set binary text in the clipboard under the given format.
+        /// </summary>
+        public static void SetClipboardBinary(ReadOnlySpan<byte> span, ClipboardFormat format)
+        {
+            using (GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1)), GlobalMemoryFlags.Moveable))
+            {
+                using (GlobalLock globalLock = global.Lock)
+                {
+                    Span<byte> buffer = globalLock.GetSpan<byte>();
+                    span.CopyTo(buffer);
+                    buffer[buffer.Length - 1] = 0;
+
+                    Imports.SetClipboardData((uint)format, globalLock.Pointer);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Registers the given format if not already registered. Returns the format id.
+        /// </summary>
+        public static uint RegisterClipboardFormat(string format)
+        {
+            uint id = Imports.RegisterClipboardFormatW(format);
+            if (id == 0)
+                throw Error.GetExceptionForLastError(format);
+            return id;
         }
     }
 }

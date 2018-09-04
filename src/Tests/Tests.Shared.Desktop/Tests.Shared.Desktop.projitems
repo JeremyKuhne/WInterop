@@ -15,7 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Security\LsaTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\Basic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\BackupTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Clipboard\Methods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clipboard\Basic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Compression\LzTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\DeviceManagementTests.cs" />
