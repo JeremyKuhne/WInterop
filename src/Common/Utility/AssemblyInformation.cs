@@ -51,9 +51,10 @@ namespace WInterop.Support
         public const int MinorVersion = 3;
 
         public const string MajorMinorVersionString = "0.3";
-        public const string PatchLevelString = "0";
+        public const string PatchLevelString = "1";
         public const string BranchIdString = "1";
 
+        // Do not change the last ".0.0", see above.
         public const string AssemblyVersionString = MajorMinorVersionString + ".0.0";
 
         // Major.Minor.PatchLevel.MMDDbHHMM

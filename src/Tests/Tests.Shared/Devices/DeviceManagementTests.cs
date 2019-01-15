@@ -9,9 +9,9 @@ using FluentAssertions;
 using WInterop.Devices;
 using Xunit;
 
-namespace Tests.Devices
+namespace DeviceTests
 {
-    public class DeviceManagementTests
+    public class ControlCodeDecoding
     {
         [Fact]
         public void DecodeControlCode()

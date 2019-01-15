@@ -212,6 +212,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\ByHandleFileInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\CopyFile2ProgressRoutine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\CopyFile2CopyPhase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\LogicalDrives.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Unsafe\COPYFILE2_EXTENDED_PARAMETERS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Unsafe\COPYFILE2_MESSAGE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\CopyFile2MessageAction.cs" />
@@ -314,8 +315,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFileName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\FindTransforms.ToFindResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\SafeHandleStreamWrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Globalization\Unsafe\GlobalizationMethods.Imports.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Globalization\GlobalizationMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\Unsafe\Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globalization\Globalization.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Globalization\LocaleInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handles\Handles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Memory\Memory.cs" />

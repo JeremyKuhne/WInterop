@@ -9,9 +9,9 @@ using FluentAssertions;
 using WInterop.Windows;
 using Xunit;
 
-namespace DesktopTests.Resources
+namespace ResourceTests
 {
-    public class MenuTests
+    public class Menus
     {
         static LResult CallDefaultProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

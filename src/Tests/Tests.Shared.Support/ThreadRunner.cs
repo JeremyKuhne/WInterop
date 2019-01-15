@@ -11,14 +11,9 @@ using System.Threading;
 
 namespace Tests.Shared.Support
 {
-    public static class ThreadRunner
+    public class ThreadRunner
     {
-        /// <summary>
-        /// Helper to run code on a separate thread and propogate exceptions to the current thread.
-        /// Unlike Task.Run this won't use the ThreadPool to avoid messing up ThreadPool threads when
-        /// attempting to change native thread state.
-        /// </summary>
-        public static void Run(Action action)
+        private void InstanceRun(Action action)
         {
             Exception exception = null;
             void CatchException()
@@ -38,6 +33,16 @@ namespace Tests.Shared.Support
             thread.Join();
             if (exception != null)
                 ExceptionDispatchInfo.Capture(exception).Throw();
+        }
+
+        /// <summary>
+        /// Helper to run code on a separate thread and propogate exceptions to the current thread.
+        /// Unlike Task.Run this won't use the ThreadPool to avoid messing up ThreadPool threads when
+        /// attempting to change native thread state.
+        /// </summary>
+        public static void Run(Action action)
+        {
+            new ThreadRunner().InstanceRun(action);
         }
     }
 }

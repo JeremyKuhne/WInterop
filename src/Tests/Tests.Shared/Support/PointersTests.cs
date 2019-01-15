@@ -9,7 +9,7 @@ using Xunit;
 using FluentAssertions;
 using WInterop.Support;
 
-namespace Tests.Support
+namespace SupportTests
 {
     public class PointersTests
     {

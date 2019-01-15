@@ -11,7 +11,7 @@ using WInterop.Security;
 using WInterop.Support.Buffers;
 using Xunit;
 
-namespace Tests.Support.Buffers
+namespace BufferTests
 {
     public class ValueBufferTests
     {

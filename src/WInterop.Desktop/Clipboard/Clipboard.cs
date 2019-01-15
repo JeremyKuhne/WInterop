@@ -6,7 +6,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Buffers;
 using System.Runtime.InteropServices;
+using System.Text;
 using WInterop.Clipboard.Unsafe;
 using WInterop.Errors;
 using WInterop.Memory;
@@ -122,7 +124,7 @@ namespace WInterop.Clipboard
         /// <summary>
         /// Set Unicode text in the clipboard under the given format.
         /// </summary>
-        public static void SetClipboardText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.UnicodeText)
+        public static void SetClipboardUnicodeText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.UnicodeText)
         {
             using (GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1) * sizeof(char)), GlobalMemoryFlags.Moveable))
             {
@@ -138,9 +140,34 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Set binary text in the clipboard under the given format.
+        /// Set ASCII text in the clipboard under the given format.
         /// </summary>
-        public static void SetClipboardBinary(ReadOnlySpan<byte> span, ClipboardFormat format)
+        public static unsafe void SetClipboardAsciiText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.Text)
+        {
+            Encoding ascii = Encoding.ASCII;
+            fixed (char* c = span)
+            {
+                byte[] buffer = ArrayPool<byte>.Shared.Rent(ascii.GetByteCount(c, span.Length));
+                fixed (byte* b = buffer)
+                {
+                    int length = ascii.GetBytes(c, span.Length, b, buffer.Length);
+                    SetClipboardBinaryData(buffer.AsSpan(0, length), format);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set ASCII text in the clipboard under the given format.
+        /// </summary>
+        public static unsafe void SetClipboardAsciiText(ReadOnlySpan<char> span, string format)
+        {
+            SetClipboardAsciiText(span, (ClipboardFormat)RegisterClipboardFormat(format));
+        }
+
+        /// <summary>
+        /// Set binary data in the clipboard under the given format.
+        /// </summary>
+        public static void SetClipboardBinaryData(ReadOnlySpan<byte> span, ClipboardFormat format)
         {
             using (GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1)), GlobalMemoryFlags.Moveable))
             {
@@ -153,6 +180,14 @@ namespace WInterop.Clipboard
                     Imports.SetClipboardData((uint)format, globalLock.Pointer);
                 }
             }
+        }
+
+        /// <summary>
+        /// Set binary data in the clipboard under the given format.
+        /// </summary>
+        public static void SetClipboardBinaryData(ReadOnlySpan<byte> span, string format)
+        {
+            SetClipboardBinaryData(span, (ClipboardFormat)RegisterClipboardFormat(format));
         }
 
         /// <summary>

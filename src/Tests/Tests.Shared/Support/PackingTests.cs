@@ -9,7 +9,7 @@ using FluentAssertions;
 using System.Runtime.InteropServices;
 using Xunit;
 
-namespace Tests.Support
+namespace SupportTests
 {
     public class PackingTests
     {

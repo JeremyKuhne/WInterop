@@ -11,9 +11,9 @@ using System.IO;
 using WInterop.Errors;
 using Xunit;
 
-namespace Tests.ErrorHandling
+namespace ErrorHandlingTests
 {
-    public partial class ErrorHandlingTests
+    public partial class BasicTests
     {
         [Theory,
             InlineData(WindowsError.ERROR_FILE_NOT_FOUND, typeof(FileNotFoundException)),

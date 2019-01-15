@@ -11,7 +11,7 @@ using Xunit;
 
 namespace StorageTests
 {
-    public class DiskTests
+    public partial class DiskTests
     {
         [Fact]
         public void GetDiskFreeSpaceForCurrentDrive()

@@ -9,7 +9,7 @@ using FluentAssertions;
 using WInterop.WindowsStore;
 using Xunit;
 
-namespace Tests.Support
+namespace SupportTests
 {
     public class EnvironmentTests
     {

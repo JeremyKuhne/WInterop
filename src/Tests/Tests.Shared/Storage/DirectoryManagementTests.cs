@@ -11,9 +11,9 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace Tests.DirectoryManagement
+namespace StorageTests
 {
-    public class DirectoryManagementTests
+    public class DirectoryManagement
     {
         [Fact]
         public void GetCurrentDirectoryBasic()

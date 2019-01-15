@@ -9,7 +9,7 @@ using Xunit;
 using FluentAssertions;
 using WInterop.Globalization;
 
-namespace Tests.Globalization
+namespace GlobalizationTests
 {
     public class ComparisonTests
     {
@@ -41,7 +41,7 @@ namespace Tests.Globalization
             ]
         public void StringCompareInvariant(string first, string second, bool ignoreCase, int expected)
         {
-            GlobalizationMethods.CompareStringOrdinal(first, second, ignoreCase).Should().Be(expected);
+            Globalization.CompareStringOrdinal(first, second, ignoreCase).Should().Be(expected);
         }
     }
 }

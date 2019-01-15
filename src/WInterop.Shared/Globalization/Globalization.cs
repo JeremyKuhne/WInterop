@@ -10,10 +10,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Windows;
+using WInterop.Globalization.Unsafe;
 
 namespace WInterop.Globalization
 {
-    public static partial class GlobalizationMethods
+    public static partial class Globalization
     {
         public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
 
@@ -138,5 +139,10 @@ namespace WInterop.Globalization
                     throw Error.GetExceptionForLastError();
             return sortHandle;
         }
+
+        /// <summary>
+        /// Gets the current Windows ANSI code page.
+        /// </summary>
+        public static uint GetAnsiCodePage() => Imports.GetACP();
     }
 }

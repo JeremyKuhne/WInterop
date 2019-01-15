@@ -11,7 +11,7 @@ using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
 
-namespace Tests.Support
+namespace SupportTests
 {
     public class ConversionsTests
     {

@@ -10,9 +10,9 @@ using Xunit;
 using FluentAssertions;
 using WInterop.ProcessAndThreads;
 
-namespace DesktopTests.ProcessAndThreads
+namespace ProcessAndThreadTests
 {
-    public class ProcessTests
+    public partial class ProcessTests
     {
         [Fact]
         public void GetEnvironmentVariable_GetNullStringThrows()

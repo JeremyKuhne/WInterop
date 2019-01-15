@@ -10,7 +10,7 @@ using Xunit;
 using FluentAssertions;
 using WInterop.Globalization;
 
-namespace Tests.Globalization
+namespace GlobalizationTests
 {
     public class CasingTests
     {
@@ -22,7 +22,7 @@ namespace Tests.Globalization
             ]
         public void CharToUpperInvariant(char value, char expected)
         {
-            GlobalizationMethods.ToUpperInvariant(value).Should().Be(expected);
+            Globalization.ToUpperInvariant(value).Should().Be(expected);
         }
 
         [Theory,
@@ -33,7 +33,7 @@ namespace Tests.Globalization
             ]
         public void CharToLowerInvariant(char value, char expected)
         {
-            GlobalizationMethods.ToLowerInvariant(value).Should().Be(expected);
+            Globalization.ToLowerInvariant(value).Should().Be(expected);
         }
 
         [Theory,
@@ -46,7 +46,7 @@ namespace Tests.Globalization
         {
             // Copy the string so we don't run into any interning issues
             value = value == null ? null : String.Copy(value);
-            GlobalizationMethods.ToUpperInvariantUnsafe(value);
+            Globalization.ToUpperInvariantUnsafe(value);
             value.Should().Be(expected);
         }
 
@@ -60,7 +60,7 @@ namespace Tests.Globalization
         {
             // Copy the string so we don't run into any interning issues
             value = value == null ? null : String.Copy(value);
-            GlobalizationMethods.ToLowerInvariantUnsafe(value);
+            Globalization.ToLowerInvariantUnsafe(value);
             value.Should().Be(expected);
         }
     }

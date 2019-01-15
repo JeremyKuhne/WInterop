@@ -10,9 +10,9 @@ using WInterop.Errors;
 using WInterop.Windows;
 using Xunit;
 
-namespace DesktopTests
+namespace ErrorHandlingTests
 {
-    public partial class ErrorHandlingTests
+    public partial class Basic
     {
         [Fact]
         public void BasicBeep()

@@ -39,18 +39,37 @@ namespace StorageTests
         }
 
         [Theory,
-            Trait("Environment", "CurrentDirectory"),
+            InlineData('\0', (LogicalDrives)0),
+            InlineData(' ', (LogicalDrives)0),
+            InlineData('[', (LogicalDrives)0),
+            InlineData('a', LogicalDrives.A),
+            InlineData('A', LogicalDrives.A),
+            InlineData('Z', LogicalDrives.Z),
+            ]
+        public void ConvertDriveLetter(char letter, LogicalDrives expectedDrive)
+        {
+            Storage.GetLogicalDrive(letter).Should().Be(expectedDrive);
+        }
+
+        [Theory,
             InlineData(@"C:", @"C:\Users"),
-            InlineData(@"C", @"D:\C")
+            InlineData(@"C", @"*:\C")
             ]
         public void ValidateKnownRelativeBehaviors(string value, string expected)
         {
-            // TODO: Need to modify to work with actually present drives and skip if there
-            // isn't more than one.
+            char testDrive = Storage.GetNextAvailableDrive('C');
+            if (testDrive == '\0')
+            {
+                // No additional drives for testing the behavior here, skip
+                return;
+            }
 
-            // Set the current directory to D: and the hidden env for C:'s last current directory
+            expected = expected.Replace('*', testDrive);
+
+            // Set the current directory to the testdrive and the hidden environment
+            // variable for C:'s last current directory
             Processes.SetEnvironmentVariable(@"=C:", @"C:\Users");
-            using (new TempCurrentDirectory(@"D:\"))
+            using (new TempCurrentDirectory(testDrive + @":\"))
             {
                 Storage.GetFullPathName(value).Should().Be(expected);
             }
@@ -155,6 +174,6 @@ namespace StorageTests
                 $"'{expression ?? "<null>"}' in '{name ?? "<null>"}' with ignoreCase of {ignoreCase}");
         }
 
-        public static TheoryData<string, string, bool, bool> DosMatchData => Tests.File.DosMatcherTests.DosMatchData;
+        public static TheoryData<string, string, bool, bool> DosMatchData => DosMatcherTests.DosMatchData;
     }
 }

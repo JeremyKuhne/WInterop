@@ -10,12 +10,12 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace Tests.DiskManagement
+namespace StorageTests
 {
-    public class DiskTests
+    public partial class DiskTests
     {
         [Fact]
-        public void GetDiskFreeSpaceForCurrentDrive()
+        public void GetDiskFreeSpaceExtendedForCurrentDrive()
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {

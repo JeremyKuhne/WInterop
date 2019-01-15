@@ -10,11 +10,10 @@ using System;
 using Xunit;
 using System.Linq;
 using WInterop.Cryptography;
-using WInterop.Cryptography.Types;
 
-namespace Tests.Cryptography
+namespace CryptographyTests
 {
-    public class CryptographyTests
+    public class Basic
     {
         [Theory,
             InlineData(StoreName.TrustedPeople),

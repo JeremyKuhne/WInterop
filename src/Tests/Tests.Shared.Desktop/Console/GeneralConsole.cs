@@ -17,9 +17,9 @@ namespace ConsoleTests
         [Fact]
         public void GetConsoleWindow()
         {
-            // Tests don't run with an attached console.
+            // Tests run with an attached console. (This changed recently...)
             WindowHandle window = Console.GetConsoleWindow();
-            window.IsInvalid.Should().BeTrue();
+            window.IsInvalid.Should().BeFalse();
             window = Windows.GetActiveWindow();
         }
     }

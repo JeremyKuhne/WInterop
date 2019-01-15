@@ -10,9 +10,9 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace Tests
+namespace HandlesTests
 {
-    public partial class HandlesTests
+    public partial class Methods
     {
         [Fact]
         public void CanCreateHandleToMountPointManager()

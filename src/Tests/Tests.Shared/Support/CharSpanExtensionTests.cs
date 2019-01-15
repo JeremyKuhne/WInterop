@@ -10,7 +10,7 @@ using System;
 using WInterop;
 using Xunit;
 
-namespace Tests.Support
+namespace SupportTests
 {
     public class CharSpanExtensionTests
     {

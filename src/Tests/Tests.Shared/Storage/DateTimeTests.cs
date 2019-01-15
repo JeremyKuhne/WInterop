@@ -9,7 +9,7 @@ using FluentAssertions;
 using WInterop.Storage;
 using Xunit;
 
-namespace Tests.File
+namespace StorageTests
 {
     public class DateTimeTests
     {

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using WInterop.Support.Buffers;
 using Xunit;
 
-namespace Tests.Buffers
+namespace BufferTests
 {
     public class StringBufferTests
     {

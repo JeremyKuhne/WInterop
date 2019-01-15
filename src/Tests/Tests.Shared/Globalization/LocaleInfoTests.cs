@@ -8,7 +8,7 @@
 using Xunit;
 using WInterop.Globalization;
 
-namespace Tests.Globalization
+namespace GlobalizationTests
 {
     public class LocaleInfoTests
     {

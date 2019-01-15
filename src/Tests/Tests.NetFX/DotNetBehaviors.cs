@@ -12,7 +12,7 @@ using System.Reflection;
 using Tests.Support;
 using Xunit;
 
-namespace Tests.Desktop
+namespace DotNetTests
 {
     /// <summary>
     /// Tests to validate and document .NET API behaviors

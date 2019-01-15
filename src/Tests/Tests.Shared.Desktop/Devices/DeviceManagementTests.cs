@@ -12,7 +12,7 @@ using WInterop.Errors;
 using WInterop.Storage;
 using Xunit;
 
-namespace DevicesTests
+namespace DeviceTests
 {
     public class Basic
     {

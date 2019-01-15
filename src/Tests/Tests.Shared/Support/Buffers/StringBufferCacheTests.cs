@@ -9,7 +9,7 @@ using FluentAssertions;
 using WInterop.Support.Buffers;
 using Xunit;
 
-namespace Tests.Buffers
+namespace BufferTests
 {
     public class StringBufferCacheTests
     {

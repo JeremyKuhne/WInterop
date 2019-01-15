@@ -11,7 +11,7 @@ using WInterop.Storage;
 using WInterop.Storage.Unsafe;
 using Xunit;
 
-namespace Tests.File
+namespace StorageTests
 {
     public class FileManagementTypes
     {

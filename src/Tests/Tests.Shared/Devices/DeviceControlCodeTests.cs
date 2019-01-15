@@ -12,7 +12,7 @@ using Xunit;
 
 namespace DeviceTests
 {
-    public class DeviceControlCodeTests
+    public partial class ControlCodeConstruction
     {
         [Theory,
             // IOCTL_MOUNTMGR_CREATE_POINT                 CTL_CODE(MOUNTMGRCONTROLTYPE, 0, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)

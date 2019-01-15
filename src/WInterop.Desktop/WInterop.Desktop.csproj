@@ -8,7 +8,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>WInterop</RootNamespace>
-    <PackageVersion>0.3.0-alpha-083011923</PackageVersion>
+    <PackageVersion>0.3.1-alpha-090911715</PackageVersion>
     <PackageLicenseUrl>https://github.com/JeremyKuhne/WInterop/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/JeremyKuhne/WInterop</PackageProjectUrl>
     <RepositoryUrl>https://github.com/JeremyKuhne/WInterop/WInterop.git</RepositoryUrl>

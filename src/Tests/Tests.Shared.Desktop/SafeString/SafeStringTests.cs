@@ -11,9 +11,9 @@ using WInterop.SafeString.Unsafe;
 using WInterop.Support.Buffers;
 using Xunit;
 
-namespace DesktopTests.SafeString
+namespace SafeStringTests
 {
-    public class SafeStringTests
+    public class Basic
     {
         [Theory,
             InlineData("Fizzle", "FIZZLE"),

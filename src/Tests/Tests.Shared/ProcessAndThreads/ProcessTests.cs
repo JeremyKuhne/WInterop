@@ -10,9 +10,9 @@ using Xunit;
 using FluentAssertions;
 using WInterop.ProcessAndThreads;
 
-namespace Tests.ProcessAndThreads
+namespace ProcessAndThreadTests
 {
-    public class ProcessTests
+    public partial class ProcessTests
     {
         [Fact]
         public void GetCurrentProcessId()

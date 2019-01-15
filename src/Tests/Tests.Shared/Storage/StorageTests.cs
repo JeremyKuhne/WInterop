@@ -8,6 +8,7 @@
 using FluentAssertions;
 using System;
 using System.Linq;
+using System.Threading;
 using Tests.Shared.Support.Resources;
 using Tests.Support;
 using WInterop.Storage;
@@ -17,7 +18,7 @@ using WInterop.WindowsStore;
 using Xunit;
 using IO = System.IO;
 
-namespace Tests.FileManagementTests
+namespace StorageTests
 {
     public partial class FileManagementTests
     {
@@ -197,6 +198,7 @@ namespace Tests.FileManagementTests
                 {
                     var directoryInfo = Storage.GetFileBasicInformation(directory);
                     directoryInfo.FileAttributes.Should().HaveFlag(FileAttributes.Directory);
+                    Thread.Sleep(10);
 
                     using (var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew))
                     {

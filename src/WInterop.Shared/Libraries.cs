@@ -35,5 +35,6 @@ namespace WInterop
         public const string User32 = "user32.dll";
         public const string Userenv = "userenv.dll";
         public const string Winmm = "winmm.dll";
+        public const string Winnls = "winnls.dll";
     }
 }

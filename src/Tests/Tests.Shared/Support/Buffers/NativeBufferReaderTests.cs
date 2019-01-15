@@ -10,7 +10,7 @@ using System;
 using WInterop.Support.Buffers;
 using Xunit;
 
-namespace Tests.Buffers
+namespace BufferTests
 {
     public class NativeBufferReaderTests
     {

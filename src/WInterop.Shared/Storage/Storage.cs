@@ -921,9 +921,56 @@ namespace WInterop.Storage
             return freeSpace;
         }
 
+        /// <summary>
+        /// Helper for identifying the special invalid attributes.
+        /// </summary>
         public static bool AreInvalid(this FileAttributes attributes)
         {
             return attributes == FileAttributes.Invalid;
+        }
+
+        /// <summary>
+        /// Gets the flags for available drive letters.
+        /// </summary>
+        public static LogicalDrives GetLogicalDrives()
+        {
+            LogicalDrives drives = Imports.GetLogicalDrives();
+            if (drives == 0)
+                throw Error.GetExceptionForLastError();
+            return drives;
+        }
+
+        /// <summary>
+        /// Convert the given drive letter into a logical drive bit flag.
+        /// Returns default if impossible.
+        /// </summary>
+        public static LogicalDrives GetLogicalDrive(char letter)
+        {
+            letter = char.ToUpperInvariant(letter);
+            if (letter < 'A' || letter > 'Z')
+                return default;
+
+            return (LogicalDrives)(1 << (letter - 'A'));
+        }
+
+        /// <summary>
+        /// Return the next available drive letter after the given drive letter.
+        /// Returns default if no additional valid letters can be found.
+        /// </summary>
+        public static char GetNextAvailableDrive(char after)
+        {
+            after = char.ToUpperInvariant(after);
+            if (after < 'A' || after > 'Y')
+                return default;
+
+            uint drives = (uint)GetLogicalDrives();
+            for (int i = after - 'A' + 1; i < 26; i++)
+            {
+                if ((i & drives) > 0)
+                    return (char)('A' + i);
+            }
+
+            return default;
         }
     }
 }

@@ -12,7 +12,7 @@ using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
 
-namespace File
+namespace StorageTests
 {
     public class FindOperationTests
     {

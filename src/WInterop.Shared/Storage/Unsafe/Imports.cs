@@ -281,7 +281,7 @@ namespace WInterop.Storage.Unsafe
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getlogicaldrives
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public static extern uint GetLogicalDrives();
+        public static extern LogicalDrives GetLogicalDrives();
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getvolumeinformationw
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]

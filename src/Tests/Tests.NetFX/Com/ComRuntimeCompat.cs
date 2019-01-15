@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using WInterop.Com;
 using Xunit;
 
-namespace Tests.Desktop.Com
+namespace ComTests
 {
     /// <summary>
     /// Checking that we parse what the runtime puts out. The marshalling code is not available

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using WInterop.Support.Collections;
 using Xunit;
 
-namespace Tests.Collections
+namespace CollectionTests
 {
     public class CacheTests
     {
