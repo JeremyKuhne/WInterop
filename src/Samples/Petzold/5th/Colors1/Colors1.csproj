@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <!-- Currently the targets don't pull the manifest to the right location when targetting netcoreapp -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
