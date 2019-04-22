@@ -82,7 +82,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Errors\FormatMessageFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\HRESULT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\NTSTATUS.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Errors\Unsafe\Imports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\Native\Imports.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\WindowsError.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\WInteropIOException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Gdi\Unsafe\HBITMAP.cs" />
