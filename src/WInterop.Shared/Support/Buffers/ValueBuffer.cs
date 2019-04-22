@@ -9,7 +9,6 @@ using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace WInterop.Support.Buffers
 {
@@ -18,9 +17,7 @@ namespace WInterop.Support.Buffers
     /// </summary>
     public ref struct ValueBuffer<T> where T : unmanaged
     {
-        // We need to pin our backing byte array so our reinterpreted spans don't get mistracked
-        // if the backing byte[] array gets moved by the GC.
-        private GCHandle _handle;
+        private byte[] _buffer;
 
         /// <summary>
         /// Create the buffer with an initial span.
@@ -32,6 +29,7 @@ namespace WInterop.Support.Buffers
         public ValueBuffer(Span<T> span)
         {
             Span = span;
+            _buffer = null;
         }
 
         public Span<T> Span { get; private set; }
@@ -61,24 +59,29 @@ namespace WInterop.Support.Buffers
             int byteCapacity = capacity * sizeOfT + alignTo;
 
             byte[] newBuffer = ArrayPool<byte>.Shared.Rent(byteCapacity);
-            GCHandle newHandle = GCHandle.Alloc(newBuffer, GCHandleType.Pinned);
-
-            // Align if necessary
-            byte* p = (byte*)Unsafe.AsPointer(ref newBuffer[0]);
-            int offset = (int)((ulong)p % (uint)alignTo);
-            if (offset > 0)
+            fixed (byte* b = newBuffer)
             {
-                offset = alignTo - offset;
-                p += offset;
+                byte* p = b;
+
+                // Align if necessary
+                int offset = (int)((ulong)b % (uint)alignTo);
+                if (offset > 0)
+                {
+                    offset = alignTo - offset;
+                    p += offset;
+                }
+
+                Debug.Assert(((int)((ulong)p % (uint)alignTo)) == 0);
+
+                Span<T> newSpan = new Span<T>(p, (newBuffer.Length - offset) / sizeOfT);
+                Span.CopyTo(newSpan);
+                if (_buffer != null)
+                {
+                    ArrayPool<byte>.Shared.Return(_buffer);
+                }
+                _buffer = newBuffer;
+                Span = newSpan;
             }
-
-            Debug.Assert(((int)((ulong)p % (uint)alignTo)) == 0);
-
-            Span<T> newSpan = new Span<T>(p, (newBuffer.Length - offset) / sizeOfT);
-            Span.CopyTo(newSpan);
-            Dispose();
-            _handle = newHandle;
-            Span = newSpan;
         }
 
         public ref T this[int index] => ref Span[index];
@@ -86,10 +89,10 @@ namespace WInterop.Support.Buffers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            if (_handle.IsAllocated)
+            if (_buffer != null)
             {
-                ArrayPool<byte>.Shared.Return((byte[])_handle.Target);
-                _handle.Free();
+                ArrayPool<byte>.Shared.Return(_buffer);
+                _buffer = null;
             }
         }
     }

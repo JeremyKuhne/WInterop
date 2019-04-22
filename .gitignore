@@ -65,4 +65,6 @@ ipch/
 # C++ database files
 *.vc.opendb
 *.vc.db
-/src/.vs/
+
+# VS cache folder
+.vs/

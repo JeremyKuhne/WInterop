@@ -423,6 +423,7 @@ namespace WInterop.Security
         /// <summary>
         /// Duplicates a token. Token must have been created with <see cref="AccessTokenRights.Duplicate"/>.
         /// </summary>
+        /// <param name="token">The token to duplicate.</param>
         /// <param name="rights">Rights to apply to the token. default is all of the rights from the source token.</param>
         public unsafe static AccessToken DuplicateToken(
             this AccessToken token,
@@ -435,8 +436,8 @@ namespace WInterop.Security
                 token,
                 rights,
                 null,
-                ImpersonationLevel.Impersonation,
-                TokenType.Impersonation,
+                impersonationLevel,
+                tokenType,
                 out AccessToken duplicatedToken))
             {
                 throw Error.GetExceptionForLastError();

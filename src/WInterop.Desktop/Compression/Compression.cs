@@ -129,7 +129,6 @@ namespace WInterop.Compression
             if (!throwOnError || result >= 0)
                 return result;
 
-            Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS, path);
             throw new LzException((LzError)result, path);
         }
 

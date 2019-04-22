@@ -269,7 +269,7 @@ namespace WInterop.Support.Buffers
                 if (returnValue == 0)
                 {
                     // Failed
-                    WindowsError error = (WindowsError)Marshal.GetLastWin32Error();
+                    WindowsError error = Error.GetLastError();
 
                     if (ShouldThrow != null && !ShouldThrow(error))
                         return null;

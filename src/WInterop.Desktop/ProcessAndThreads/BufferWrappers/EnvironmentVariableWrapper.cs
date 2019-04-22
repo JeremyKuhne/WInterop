@@ -14,9 +14,12 @@ namespace WInterop.ProcessAndThreads.BufferWrappers
     {
         public string Name;
 
-        uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
+        unsafe uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
         {
-            return Imports.GetEnvironmentVariableW(Name, buffer, buffer.CharCapacity);
+            fixed (char* c = Name)
+            {
+                return Imports.GetEnvironmentVariableW(c, buffer.CharPointer, buffer.CharCapacity);
+            }
         }
     }
 }
