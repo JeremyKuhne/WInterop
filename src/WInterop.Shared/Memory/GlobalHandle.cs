@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Memory.Unsafe;
+using WInterop.Memory.Native;
 
 namespace WInterop.Memory
 {

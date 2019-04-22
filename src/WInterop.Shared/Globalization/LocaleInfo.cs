@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Errors;
-using WInterop.Globalization.Unsafe;
+using WInterop.Globalization.Native;
 
 namespace WInterop.Globalization
 {
@@ -28,7 +28,7 @@ namespace WInterop.Globalization
             char* data = stackalloc char[2];
             int result = Imports.GetLocaleInfoEx(localeName, (uint)LocaleInfoType.LOCALE_ITIME, data, 2);
             if (result != 2)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError(localeName);
 
             return data[0] == '1';
         }
@@ -41,7 +41,7 @@ namespace WInterop.Globalization
             char* data = stackalloc char[2];
             int result = Imports.GetLocaleInfoEx(localeName, (uint)LocaleInfoType.LOCALE_ITLZERO, data, 2);
             if (result != 2)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError(localeName);
 
             return data[0] == '1';
         }

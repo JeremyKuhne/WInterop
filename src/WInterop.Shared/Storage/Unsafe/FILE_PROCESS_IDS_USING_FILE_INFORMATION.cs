@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Storage.Unsafe
+namespace WInterop.Storage.Native
 {
     /// <summary>
     /// Gets all of the process IDs using the given file.

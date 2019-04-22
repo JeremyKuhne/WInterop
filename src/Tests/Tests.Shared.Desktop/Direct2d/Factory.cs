@@ -8,7 +8,7 @@
 using System;
 using System.Drawing;
 using WInterop.Direct2d;
-using WInterop.Direct2d.Unsafe;
+using WInterop.Direct2d.Native;
 using WInterop.Errors;
 using Xunit;
 

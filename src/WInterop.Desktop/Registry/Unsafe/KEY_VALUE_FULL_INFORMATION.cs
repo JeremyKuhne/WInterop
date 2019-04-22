@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Registry.Unsafe
+namespace WInterop.Registry.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff554217.aspx
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

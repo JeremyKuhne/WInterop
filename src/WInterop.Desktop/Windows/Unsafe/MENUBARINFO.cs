@@ -5,10 +5,10 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi.Unsafe;
-using WInterop.Windows.Unsafe;
+using WInterop.Gdi.Native;
+using WInterop.Windows.Native;
 
-namespace WInterop.Windows.Unsafe
+namespace WInterop.Windows.Native
 {
     public struct MENUBARINFO
     {

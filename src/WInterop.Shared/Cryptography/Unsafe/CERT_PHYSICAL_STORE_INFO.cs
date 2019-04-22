@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Cryptography.Unsafe
+namespace WInterop.Cryptography.Native
 {
     public struct CERT_PHYSICAL_STORE_INFO
     {

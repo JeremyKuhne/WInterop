@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Security;
 
-namespace WInterop.Network.Unsafe
+namespace WInterop.Network.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

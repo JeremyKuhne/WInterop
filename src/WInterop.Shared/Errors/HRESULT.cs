@@ -22,8 +22,9 @@ namespace WInterop.Errors
         STG_E_INVALIDFLAG = unchecked((int)0x800300FF),
         E_ACCESSDENIED = unchecked((int)0x80070005L),
         E_INVALIDARG = unchecked((int)0x80070057),
-        D2DERR_RECREATE_TARGET = unchecked((int)0x8899000C),
         D2DERR_WRONG_STATE = unchecked((int)0x88990001),
+        D2DERR_RECREATE_TARGET = unchecked((int)0x8899000C),
+        D2DERR_INVALID_PROPERTY = unchecked((int)0x88990029),
         WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT = unchecked((int)0x88982F80)
     }
 }

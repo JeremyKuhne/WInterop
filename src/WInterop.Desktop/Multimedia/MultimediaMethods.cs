@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Modules;
-using WInterop.Multimedia.Unsafe;
+using WInterop.Multimedia.Native;
 
 namespace WInterop.Multimedia
 {

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Gdi.Unsafe
+namespace WInterop.Gdi.Native
 {
     // https://msdn.microsoft.com/en-us/library/dd162711.aspx
     public struct EXTLOGPEN

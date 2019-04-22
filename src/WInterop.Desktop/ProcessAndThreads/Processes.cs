@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WInterop.Errors;
 using WInterop.ProcessAndThreads.BufferWrappers;
-using WInterop.ProcessAndThreads.Unsafe;
+using WInterop.ProcessAndThreads.Native;
 using WInterop.Support.Buffers;
 
 namespace WInterop.ProcessAndThreads
@@ -28,8 +28,9 @@ namespace WInterop.ProcessAndThreads
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            if (!Imports.SetEnvironmentVariableW(name, value))
-                throw Error.GetExceptionForLastError(name);
+            Error.ThrowLastErrorIfFalse(
+                Imports.SetEnvironmentVariableW(name, value),
+                name);
         }
 
         /// <summary>
@@ -96,8 +97,8 @@ namespace WInterop.ProcessAndThreads
         {
             if (process == null) process = GetCurrentProcess();
 
-            if (!Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(ProcessMemoryCountersExtended)))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(ProcessMemoryCountersExtended)));
 
             return info;
         }

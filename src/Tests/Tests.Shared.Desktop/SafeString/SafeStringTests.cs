@@ -7,7 +7,7 @@
 
 using FluentAssertions;
 using WInterop.SafeString;
-using WInterop.SafeString.Unsafe;
+using WInterop.SafeString.Native;
 using WInterop.Support.Buffers;
 using Xunit;
 

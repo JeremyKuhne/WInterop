@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Errors;
-using WInterop.SafeString.Unsafe;
+using WInterop.SafeString.Native;
 
 namespace WInterop.SafeString
 {

@@ -8,7 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using WInterop.Errors;
-using WInterop.Storage.Unsafe;
+using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
@@ -32,17 +32,15 @@ namespace WInterop.Storage
         public unsafe BackupStreamInformation? GetNextInfo()
         {
             void* buffer = _buffer.VoidPointer;
-            if (!Imports.BackupRead(
-                hFile: _fileHandle,
-                lpBuffer: buffer,
-                nNumberOfBytesToRead: s_headerSize,
-                lpNumberOfBytesRead: out uint bytesRead,
-                bAbort: false,
-                bProcessSecurity: true,
-                context: ref _context))
-            {
-                throw Error.GetExceptionForLastError();
-            }
+            Error.ThrowLastErrorIfFalse(
+                Imports.BackupRead(
+                    hFile: _fileHandle,
+                    lpBuffer: buffer,
+                    nNumberOfBytesToRead: s_headerSize,
+                    lpNumberOfBytesRead: out uint bytesRead,
+                    bAbort: false,
+                    bProcessSecurity: true,
+                    context: ref _context));
 
             // Exit if at the end
             if (bytesRead == 0) return null;
@@ -51,17 +49,15 @@ namespace WInterop.Storage
             if (streamId->dwStreamNameSize > 0)
             {
                 _buffer.EnsureByteCapacity(s_headerSize + streamId->dwStreamNameSize);
-                if (!Imports.BackupRead(
-                    hFile: _fileHandle,
-                    lpBuffer: Pointers.Offset(buffer, s_headerSize),
-                    nNumberOfBytesToRead: streamId->dwStreamNameSize,
-                    lpNumberOfBytesRead: out bytesRead,
-                    bAbort: false,
-                    bProcessSecurity: true,
-                    context: ref _context))
-                {
-                    throw Error.GetExceptionForLastError();
-                }
+                Error.ThrowLastErrorIfFalse(
+                    Imports.BackupRead(
+                        hFile: _fileHandle,
+                        lpBuffer: Pointers.Offset(buffer, s_headerSize),
+                        nNumberOfBytesToRead: streamId->dwStreamNameSize,
+                        lpNumberOfBytesRead: out bytesRead,
+                        bAbort: false,
+                        bProcessSecurity: true,
+                        context: ref _context));
             }
 
             if (streamId->Size > 0)
@@ -114,7 +110,7 @@ namespace WInterop.Storage
                     context: ref _context))
                 {
 #if DEBUG
-                    throw Error.GetExceptionForLastError();
+                    Error.ThrowLastError();
 #endif
                 }
 

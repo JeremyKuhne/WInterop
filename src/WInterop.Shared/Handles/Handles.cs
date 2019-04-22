@@ -7,16 +7,13 @@
 
 using System;
 using WInterop.Errors;
-using WInterop.Handles.Unsafe;
+using WInterop.Handles.Native;
 
 namespace WInterop.Handles
 {
     public static partial class Handles
     {
         public static void CloseHandle(IntPtr handle)
-        {
-            if (!Imports.CloseHandle(handle))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.CloseHandle(handle));
     }
 }

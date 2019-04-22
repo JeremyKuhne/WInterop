@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Cryptography.Unsafe
+namespace WInterop.Cryptography.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa381414.aspx
     [StructLayout(LayoutKind.Sequential)]

@@ -16,7 +16,7 @@ using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
 using WInterop.Windows.BufferWrappers;
-using WInterop.Windows.Unsafe;
+using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
@@ -99,7 +99,7 @@ namespace WInterop.Windows
                 parameters);
 
             if (window.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return window;
         }
@@ -134,7 +134,7 @@ namespace WInterop.Windows
             }
 
             if (window.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return window;
         }
@@ -145,19 +145,13 @@ namespace WInterop.Windows
         /// <param name="frequency">Frequency in hertz.</param>
         /// <param name="duration">Duration in milliseconds.</param>
         public static void Beep(uint frequency, uint duration)
-        {
-            if (!Imports.Beep(frequency, duration))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.Beep(frequency, duration));
 
         /// <summary>
         /// Play the specified sound (as defined in the Sound control panel).
         /// </summary>
         public static void MessageBeep(BeepType type = BeepType.SimpleBeep)
-        {
-            if (!Imports.MessageBeep(type))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.MessageBeep(type));
 
         public static SystemParameters SystemParameters => SystemParameters.Instance;
         public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
@@ -243,7 +237,7 @@ namespace WInterop.Windows
         {
             WindowHandle parent = Imports.GetParent(window);
             if (parent.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return parent;
         }
@@ -270,7 +264,7 @@ namespace WInterop.Windows
                 marshaller.FillNative(out WNDCLASSEX native, ref windowClass);
                 atom = Imports.RegisterClassExW(ref native);
                 if (!atom.IsValid)
-                    throw Error.GetExceptionForLastError();
+                    Error.ThrowLastError();
             }
 
             return atom;
@@ -283,32 +277,27 @@ namespace WInterop.Windows
         public static void UnregisterClass(Atom atom, ModuleInstance module = null)
         {
             if (!Imports.UnregisterClassW(atom, module ?? ModuleInstance.Null))
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
         }
 
         /// <summary>
         /// Unregisters the given class name.
         /// </summary>
-        public static void UnregisterClass(string className, ModuleInstance module)
+        public unsafe static void UnregisterClass(string className, ModuleInstance module)
         {
             if (className == null)
                 throw new ArgumentNullException(nameof(className));
 
-            unsafe
+            fixed (char* name = className)
             {
-                fixed (char* name = className)
-                {
-                    if (!Imports.UnregisterClassW((IntPtr)name, module ?? ModuleInstance.Null))
-                        throw Error.GetExceptionForLastError();
-                }
+                Error.ThrowLastErrorIfFalse(
+                    Imports.UnregisterClassW((IntPtr)name, module ?? ModuleInstance.Null),
+                    className);
             }
         }
 
         public static void DestroyWindow(this in WindowHandle window)
-        {
-            if (!Imports.DestroyWindow(window))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.DestroyWindow(window));
 
         public static IntPtr GetWindowLong(this in WindowHandle window, WindowLong index)
         {
@@ -341,10 +330,7 @@ namespace WInterop.Windows
         }
 
         public static void SetWindowText(this in WindowHandle window, string text)
-        {
-            if (!Imports.SetWindowTextW(window, text))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.SetWindowTextW(window, text));
 
         public static IntPtr GetClassLong(this in WindowHandle window, ClassLong index)
         {
@@ -382,12 +368,12 @@ namespace WInterop.Windows
         /// </summary>
         /// <param name="ownsHandle">
         /// Whether or not the returned brush should own the handle. If true the brush handle
-        /// will be deleted when disposed / finalized.
+        /// will be deleted when disposed or finalized.
         /// </param>
         public static BrushHandle SetClassBackgroundBrush(this in WindowHandle window, BrushHandle value, bool ownsHandle = true)
         {
             IntPtr result = SetClassLong(window, ClassLong.BackgroundBrush, value.HBRUSH.Value);
-            return new BrushHandle(new Gdi.Unsafe.HBRUSH(result), ownsHandle);
+            return new BrushHandle(new Gdi.Native.HBRUSH(result), ownsHandle);
         }
 
         public static bool ShowWindow(this in WindowHandle window, ShowWindowCommand command)
@@ -396,10 +382,8 @@ namespace WInterop.Windows
         }
 
         public static void MoveWindow(this in WindowHandle window, Rectangle position, bool repaint)
-        {
-            if (!Imports.MoveWindow(window, position.X, position.Y, position.Width, position.Height, repaint))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(
+                Imports.MoveWindow(window, position.X, position.Y, position.Width, position.Height, repaint));
 
         /// <summary>
         /// Dispatches sent messages, waiting for the next message in the calling thread's message queue.
@@ -408,8 +392,6 @@ namespace WInterop.Windows
         /// Get messages for the specified window or all thread windows and thread messages if default.
         /// If set to -1, will only return thread messages.
         /// </param>
-        /// <param name="minMessage"></param>
-        /// <param name="maxMessage"></param>
         /// <returns>False when <see cref="MessageType.Quit"/> is returned.</returns>
         public static bool GetMessage(out WindowMessage message, WindowHandle window = default, MessageType minMessage = MessageType.Null, MessageType maxMessage = MessageType.Null)
         {
@@ -417,7 +399,7 @@ namespace WInterop.Windows
 
             // One special case here is -1 for an error
             if (result.RawValue == unchecked((uint)-1))
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return result;
         }
@@ -449,24 +431,24 @@ namespace WInterop.Windows
 
         public static Rectangle GetClientRectangle(this in WindowHandle window)
         {
-            if (!Imports.GetClientRect(window, out Gdi.Unsafe.RECT rect))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetClientRect(window, out Gdi.Native.RECT rect));
 
             return rect;
         }
 
         public static Rectangle GetWindowRectangle(this in WindowHandle window)
         {
-            if (!Imports.GetWindowRect(window, out Gdi.Unsafe.RECT result))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetWindowRect(window, out Gdi.Native.RECT result));
 
             return result;
         }
 
         public static void SetScrollRange(this in WindowHandle window, ScrollBar scrollBar, int min, int max, bool redraw)
         {
-            if (!Imports.SetScrollRange(window, scrollBar, min, max, redraw))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.SetScrollRange(window, scrollBar, min, max, redraw));
         }
 
         public static int SetScrollPosition(this in WindowHandle window, ScrollBar scrollBar, int position, bool redraw)
@@ -501,8 +483,8 @@ namespace WInterop.Windows
         public unsafe static void GetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo)
         {
             scrollInfo.Size = (uint)sizeof(ScrollInfo);
-            if (!Imports.GetScrollInfo(window, scrollBar, ref scrollInfo))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetScrollInfo(window, scrollBar, ref scrollInfo));
         }
 
         public unsafe static int ScrollWindow(this in WindowHandle window, Point delta)
@@ -517,8 +499,8 @@ namespace WInterop.Windows
 
         public unsafe static int ScrollWindow(this in WindowHandle window, Point delta, Rectangle scroll, Rectangle clip)
         {
-            Gdi.Unsafe.RECT scrollRect = scroll;
-            Gdi.Unsafe.RECT clipRect = clip;
+            Gdi.Native.RECT scrollRect = scroll;
+            Gdi.Native.RECT clipRect = clip;
 
             int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, &scrollRect, &clipRect, IntPtr.Zero, null, ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
 
@@ -532,7 +514,7 @@ namespace WInterop.Windows
         {
             int result = Imports.GetKeyboardType(0);
             if (result == 0)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return (KeyboardType)result;
         }
@@ -540,7 +522,7 @@ namespace WInterop.Windows
         public static int GetKeyboardSubType()
         {
             // Although not documented this API does not appear to clear last error
-            Errors.Unsafe.Imports.SetLastError(WindowsError.ERROR_SUCCESS);
+            Errors.Native.Imports.SetLastError(WindowsError.ERROR_SUCCESS);
 
             int result = Imports.GetKeyboardType(1);
             if (result == 0)
@@ -553,7 +535,7 @@ namespace WInterop.Windows
         {
             int result = Imports.GetKeyboardType(2);
             if (result == 0)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return result;
         }
@@ -575,7 +557,7 @@ namespace WInterop.Windows
         {
             WindowHandle control = Imports.GetDlgItem(window, id);
             if (control.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
             return control;
         }
 
@@ -585,35 +567,26 @@ namespace WInterop.Windows
         }
 
         public static void ReleaseCapture()
-        {
-            if (!Imports.ReleaseCapture())
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.ReleaseCapture());
 
         public static TimerId SetTimer(this in WindowHandle window, TimerId id, uint interval, TimerProcedure callback = null, uint delayTolerance = 0)
         {
             TimerId result = Imports.SetCoalescableTimer(window, id, interval, callback, delayTolerance);
             if (result == TimerId.Null)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return result;
         }
 
         public static void KillTimer(this in WindowHandle window, TimerId id)
-        {
-            if (!Imports.KillTimer(window, id))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.KillTimer(window, id));
 
         public static Color GetSystemColor(SystemColor systemColor) => Imports.GetSysColor(systemColor);
 
         /// <summary>
         /// Gets the value for the given system metric.
         /// </summary>
-        public static int GetSystemMetrics(SystemMetric metric)
-        {
-            return Imports.GetSystemMetrics(metric);
-        }
+        public static int GetSystemMetrics(SystemMetric metric) => Imports.GetSystemMetrics(metric);
 
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.Ok)
         {
@@ -624,15 +597,15 @@ namespace WInterop.Windows
         {
             CommandId result = Imports.MessageBoxExW(owner, text, caption, type, 0);
             if (result == CommandId.Error)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return result;
         }
 
         public static WindowClassInfo GetClassInfo(this ModuleInstance instance, Atom atom)
         {
-            if (!Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, atom, out WNDCLASSEX wndClass))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, atom, out WNDCLASSEX wndClass));
 
             return wndClass;
         }
@@ -672,7 +645,7 @@ namespace WInterop.Windows
             // Passing 0 will give us a read only handle to the string resource
             int result = Imports.LoadStringW(library, identifier, out char* buffer, 0);
             if (result <= 0)
-                throw Error.GetExceptionForLastError(identifier.ToString());
+                Error.ThrowLastError(identifier.ToString());
 
             // Null is not included in the result
             return new string(buffer, 0, result);
@@ -682,7 +655,7 @@ namespace WInterop.Windows
         {
             HICON handle = Imports.LoadIconW(ModuleInstance.Null, (char*)(uint)id);
             if (handle.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return new IconHandle(handle, ownsHandle: false);
         }
@@ -694,7 +667,7 @@ namespace WInterop.Windows
                 HICON handle = Imports.LoadIconW(module, n);
 
                 if (handle.IsInvalid)
-                    throw Error.GetExceptionForLastError();
+                    Error.ThrowLastError();
 
                 return new IconHandle(handle, ownsHandle: false);
             }
@@ -708,7 +681,7 @@ namespace WInterop.Windows
 
         public static MonitorHandle MonitorFromRectangle(Rectangle rectangle, MonitorOption option = MonitorOption.DefaultToNull)
         {
-            Gdi.Unsafe.RECT rect = rectangle;
+            Gdi.Native.RECT rect = rectangle;
             return Imports.MonitorFromRect(in rect, option);
         }
 

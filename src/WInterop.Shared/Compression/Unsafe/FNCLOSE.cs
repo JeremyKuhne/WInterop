@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Compression.Unsafe
+namespace WInterop.Compression.Native
 {
     // https://msdn.microsoft.com/en-us/library/ff797930.aspx
 

@@ -7,9 +7,9 @@
 
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
-using WInterop.Security.Unsafe;
+using WInterop.Security.Native;
 
-namespace WInterop.Interprocess.Unsafe
+namespace WInterop.Interprocess.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

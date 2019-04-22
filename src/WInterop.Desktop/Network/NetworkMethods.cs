@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Network.Unsafe;
+using WInterop.Network.Native;
 
 namespace WInterop.Network
 {

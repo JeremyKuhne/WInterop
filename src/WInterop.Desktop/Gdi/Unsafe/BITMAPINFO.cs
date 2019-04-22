@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.Unsafe
+namespace WInterop.Gdi.Native
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-tagbitmapinfo
     [StructLayout(LayoutKind.Sequential)]

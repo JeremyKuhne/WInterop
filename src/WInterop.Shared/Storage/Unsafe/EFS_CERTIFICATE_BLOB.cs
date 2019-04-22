@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Storage.Unsafe
+namespace WInterop.Storage.Native
 {
     /// <summary>
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364015.aspx">EFS_CERTIFICATE_BLOB</a> structure.

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Handles.Unsafe;
+using WInterop.Handles.Native;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Handles
@@ -70,7 +70,7 @@ namespace WInterop.Handles
             fixed (char* pathPointer = path)
             {
                 ushort length = checked((ushort)(path.Length * sizeof(char)));
-                var objectName = new SafeString.Unsafe.UNICODE_STRING
+                var objectName = new SafeString.Native.UNICODE_STRING
                 {
                     Length = length,
                     MaximumLength = length,
@@ -98,7 +98,7 @@ namespace WInterop.Handles
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
-                var target = new SafeString.Unsafe.UNICODE_STRING(buffer);
+                var target = new SafeString.Native.UNICODE_STRING(buffer);
                 NTStatus status;
                 while ((status = Imports.NtQuerySymbolicLinkObject(linkHandle, ref target, out uint returnedLength)) == NTStatus.STATUS_BUFFER_TOO_SMALL)
                 {
@@ -138,7 +138,7 @@ namespace WInterop.Handles
                     if (status != NTStatus.STATUS_SUCCESS && status != NTStatus.STATUS_MORE_ENTRIES)
                         break;
 
-                    SafeString.Unsafe.UNICODE_STRING* name = (SafeString.Unsafe.UNICODE_STRING*)buffer.VoidPointer;
+                    SafeString.Native.UNICODE_STRING* name = (SafeString.Native.UNICODE_STRING*)buffer.VoidPointer;
                     while (name->Length != 0)
                     {
                         infos.Add(new ObjectInformation
@@ -193,7 +193,7 @@ namespace WInterop.Handles
 
                 status.ThrowIfFailed();
 
-                return ((SafeString.Unsafe.UNICODE_STRING*)(buffer.VoidPointer))->ToString();
+                return ((SafeString.Native.UNICODE_STRING*)(buffer.VoidPointer))->ToString();
             });
         }
 

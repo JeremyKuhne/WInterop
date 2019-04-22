@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Security.Unsafe
+namespace WInterop.Security.Native
 {
     /// <summary>
     /// <see cref="https://docs.microsoft.com/en-us/windows/desktop/api/accctrl/ns-accctrl-_objects_and_sid"/>

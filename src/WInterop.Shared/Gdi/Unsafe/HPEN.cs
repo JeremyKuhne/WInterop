@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Gdi.Unsafe
+namespace WInterop.Gdi.Native
 {
     public readonly struct HPEN
     {

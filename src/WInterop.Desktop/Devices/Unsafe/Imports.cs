@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Synchronization;
 
-namespace WInterop.Devices.Unsafe
+namespace WInterop.Devices.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Windows.Unsafe;
+using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
@@ -109,7 +109,7 @@ namespace WInterop.Windows
 
                 Atom atom = Imports.RegisterClassExW(ref _wndClass);
                 if (!atom.IsValid)
-                    throw Error.GetExceptionForLastError();
+                    Error.ThrowLastError();
                 Atom = atom;
                 return this;
             }

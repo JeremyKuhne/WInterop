@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
 
-namespace WInterop.SafeString.Unsafe
+namespace WInterop.SafeString.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380518.aspx
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff564879.aspx

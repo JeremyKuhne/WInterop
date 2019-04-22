@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using WInterop.Errors;
-using WInterop.Storage.Unsafe;
+using WInterop.Storage.Native;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Storage

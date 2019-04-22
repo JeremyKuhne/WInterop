@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Storage.Unsafe
+namespace WInterop.Storage.Native
 {
     /// <summary>
     /// Used to create an NTFS hard link to an existing file.

@@ -6,11 +6,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.SafeString.Unsafe;
+using WInterop.SafeString.Native;
 using WInterop.Security;
-using WInterop.Security.Unsafe;
+using WInterop.Security.Native;
 
-namespace WInterop.Handles.Unsafe
+namespace WInterop.Handles.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff557749.aspx
     public unsafe struct OBJECT_ATTRIBUTES

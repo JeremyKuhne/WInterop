@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Handles.Unsafe;
+using WInterop.Handles.Native;
 
 namespace WInterop.Handles
 {

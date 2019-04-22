@@ -9,7 +9,7 @@ using System;
 using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Text;
-using WInterop.Clipboard.Unsafe;
+using WInterop.Clipboard.Native;
 using WInterop.Errors;
 using WInterop.Memory;
 using WInterop.Support.Buffers;
@@ -197,7 +197,7 @@ namespace WInterop.Clipboard
         {
             uint id = Imports.RegisterClipboardFormatW(format);
             if (id == 0)
-                throw Error.GetExceptionForLastError(format);
+                Error.ThrowLastError(format);
             return id;
         }
     }

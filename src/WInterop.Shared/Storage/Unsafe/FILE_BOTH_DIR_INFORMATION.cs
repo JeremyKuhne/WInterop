@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Storage.Unsafe
+namespace WInterop.Storage.Native
 {
     // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/ns-ntifs-_file_both_dir_information
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

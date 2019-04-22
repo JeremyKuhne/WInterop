@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Handles;
-using WInterop.Storage.Unsafe;
+using WInterop.Storage.Native;
 
 namespace WInterop.Storage
 {

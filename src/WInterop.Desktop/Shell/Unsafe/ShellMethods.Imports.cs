@@ -11,7 +11,7 @@ using WInterop.Security;
 using WInterop.Errors;
 using WInterop.Registry;
 using WInterop.Shell;
-using WInterop.Shell.Unsafe;
+using WInterop.Shell.Native;
 
 namespace WInterop.Shell
 {

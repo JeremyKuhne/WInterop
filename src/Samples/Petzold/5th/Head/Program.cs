@@ -12,7 +12,7 @@ using System.Text;
 using WInterop.Gdi;
 using WInterop.Windows;
 using WInterop.Storage;
-using WInterop.Windows.Unsafe;
+using WInterop.Windows.Native;
 
 namespace Head
 {

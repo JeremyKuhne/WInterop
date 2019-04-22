@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Modules.BufferWrappers;
-using WInterop.Modules.Unsafe;
+using WInterop.Modules.Native;
 using WInterop.ProcessAndThreads;
 using WInterop.Support.Buffers;
 
@@ -26,11 +26,11 @@ namespace WInterop.Modules
         /// </summary>
         public static ModuleInstance GetModuleHandle(IntPtr address)
         {
-            if (!Imports.GetModuleHandleExW(
-                GetModuleFlags.FromAddress | GetModuleFlags.UnchangedRefCount,
-                address,
-                out var handle))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetModuleHandleExW(
+                    GetModuleFlags.FromAddress | GetModuleFlags.UnchangedRefCount,
+                    address,
+                    out var handle));
 
             return new ModuleInstance(handle);
         }
@@ -64,8 +64,9 @@ namespace WInterop.Modules
         {
             Func<IntPtr, GetModuleFlags, IntPtr> getHandle = (IntPtr n, GetModuleFlags f) =>
             {
-                if (!Imports.GetModuleHandleExW(f, n, out var handle))
-                    throw Error.GetExceptionForLastError();
+                Error.ThrowLastErrorIfFalse(
+                    Imports.GetModuleHandleExW(f, n, out var handle),
+                    moduleName);
                 return handle;
             };
 
@@ -85,10 +86,8 @@ namespace WInterop.Modules
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         public unsafe static ModuleInfo GetModuleInfo(ModuleInstance module, SafeProcessHandle process = null)
         {
-            if (process == null) process = Processes.GetCurrentProcess();
-
-            if (!Imports.K32GetModuleInformation(process, module, out var info, (uint)sizeof(ModuleInfo)))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.K32GetModuleInformation(process ?? Processes.GetCurrentProcess(), module, out var info, (uint)sizeof(ModuleInfo)));
 
             return info;
         }
@@ -109,10 +108,7 @@ namespace WInterop.Modules
         /// Free the given library.
         /// </summary>
         public static void FreeLibrary(IntPtr handle)
-        {
-            if (!Imports.FreeLibrary(handle))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.FreeLibrary(handle));
 
         /// <summary>
         /// Load the library at the given path.
@@ -121,7 +117,7 @@ namespace WInterop.Modules
         {
             ModuleInstance handle = Imports.LoadLibraryExW(path, IntPtr.Zero, flags);
             if (handle.IsInvalid)
-                throw Error.GetExceptionForLastError(path);
+                Error.GetLastError().Throw(path);
 
             return handle;
         }
@@ -143,7 +139,7 @@ namespace WInterop.Modules
         {
             IntPtr method = Imports.GetProcAddress(library, methodName);
             if (method == IntPtr.Zero)
-                throw Error.GetExceptionForLastError(methodName);
+                Error.GetLastError().Throw(methodName);
 
             return Marshal.GetDelegateForFunctionPointer<DelegateType>(method);
         }
@@ -164,9 +160,13 @@ namespace WInterop.Modules
                 do
                 {
                     buffer.EnsureByteCapacity(sizeNeeded);
-                    if (!Imports.K32EnumProcessModulesEx(process, buffer, (uint)buffer.ByteCapacity,
-                        out sizeNeeded, ListModulesOptions.Default))
-                        throw Error.GetExceptionForLastError();
+                    Error.ThrowLastErrorIfFalse(
+                        Imports.K32EnumProcessModulesEx(
+                            process,
+                            buffer,
+                            (uint)buffer.ByteCapacity,
+                            out sizeNeeded,
+                            ListModulesOptions.Default));
                 } while (sizeNeeded > buffer.ByteCapacity);
 
                 IntPtr* b = (IntPtr*)buffer.VoidPointer;

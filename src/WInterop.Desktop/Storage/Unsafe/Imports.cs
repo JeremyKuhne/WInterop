@@ -9,11 +9,11 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Handles.Unsafe;
-using WInterop.SafeString.Unsafe;
-using WInterop.Security.Unsafe;
+using WInterop.Handles.Native;
+using WInterop.SafeString.Native;
+using WInterop.Security.Native;
 
-namespace WInterop.Storage.Unsafe
+namespace WInterop.Storage.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

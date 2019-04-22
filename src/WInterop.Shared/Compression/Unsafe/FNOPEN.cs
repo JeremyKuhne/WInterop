@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.CRT.Types;
 
-namespace WInterop.Compression.Unsafe
+namespace WInterop.Compression.Native
 {
     // https://msdn.microsoft.com/en-us/library/ff797946.aspx
 

@@ -10,7 +10,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Unsafe;
+using WInterop.Gdi.Native;
 using WInterop.Support.Buffers;
 using WInterop.Windows;
 

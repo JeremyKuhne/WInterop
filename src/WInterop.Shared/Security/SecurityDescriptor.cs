@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Memory;
-using WInterop.Security.Unsafe;
+using WInterop.Security.Native;
 
 namespace WInterop.Security
 {

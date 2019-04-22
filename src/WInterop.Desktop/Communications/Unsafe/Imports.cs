@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using WInterop.Synchronization;
 using WInterop.Windows;
 
-namespace WInterop.Communications.Unsafe
+namespace WInterop.Communications.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

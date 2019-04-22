@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using WInterop.Errors;
 using WInterop.Support.Buffers;
-using WInterop.Registry.Unsafe;
+using WInterop.Registry.Native;
 
 namespace WInterop.Registry
 {

@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Storage.Unsafe;
+using WInterop.Storage.Native;
 using WInterop.Handles;
 using WInterop.Support;
 using WInterop.Support.Buffers;
@@ -46,8 +46,8 @@ namespace WInterop.Storage
         /// </summary>
         public static ByHandleFileInformation GetFileInformationByHandle(SafeFileHandle fileHandle)
         {
-            if (!Imports.GetFileInformationByHandle(fileHandle, out ByHandleFileInformation fileInformation))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetFileInformationByHandle(fileHandle, out ByHandleFileInformation fileInformation));
 
             return fileInformation;
         }
@@ -78,7 +78,7 @@ namespace WInterop.Storage
 
             SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, lpSecurityAttributes: null, creationDisposition, flags, hTemplateFile: IntPtr.Zero);
             if (handle.IsInvalid)
-                throw Error.GetExceptionForLastError(path);
+                Error.ThrowLastError(path);
             return handle;
         }
 
@@ -173,8 +173,8 @@ namespace WInterop.Storage
         {
             fixed (char* c = &MemoryMarshal.GetReference(path))
             {
-                var name = new SafeString.Unsafe.UNICODE_STRING(c, path.Length);
-                var attributes = new Handles.Unsafe.OBJECT_ATTRIBUTES(
+                var name = new SafeString.Native.UNICODE_STRING(c, path.Length);
+                var attributes = new Handles.Native.OBJECT_ATTRIBUTES(
                     &name,
                     objectAttributes,
                     rootDirectory,
@@ -252,16 +252,15 @@ namespace WInterop.Storage
         {
             bool cancel = false;
 
-            if (!Imports.CopyFileExW(
-                lpExistingFileName: source,
-                lpNewFileName: destination,
-                lpProgressRoutine: null,
-                lpData: IntPtr.Zero,
-                pbCancel: ref cancel,
-                dwCopyFlags: overwrite ? 0 : CopyFileFlags.FailIfExists))
-            {
-                throw Error.GetExceptionForLastError(source);
-            }
+            Error.ThrowLastErrorIfFalse(
+                Imports.CopyFileExW(
+                    lpExistingFileName: source,
+                    lpNewFileName: destination,
+                    lpProgressRoutine: null,
+                    lpData: IntPtr.Zero,
+                    pbCancel: ref cancel,
+                    dwCopyFlags: overwrite ? 0 : CopyFileFlags.FailIfExists),
+                source);
         }
 
         public static string GetFileName(SafeFileHandle fileHandle)
@@ -365,17 +364,17 @@ namespace WInterop.Storage
             fixed (char* e = ignoreCase ? expression.ToUpperInvariant() : expression)
             fixed (char* n = name)
             {
-                SafeString.Unsafe.UNICODE_STRING* eus = null;
-                SafeString.Unsafe.UNICODE_STRING* nus = null;
+                SafeString.Native.UNICODE_STRING* eus = null;
+                SafeString.Native.UNICODE_STRING* nus = null;
 
                 if (e != null)
                 {
-                    var temp = new SafeString.Unsafe.UNICODE_STRING(e, expression.Length);
+                    var temp = new SafeString.Native.UNICODE_STRING(e, expression.Length);
                     eus = &temp;
                 }
                 if (n != null)
                 {
-                    var temp = new SafeString.Unsafe.UNICODE_STRING(n, name.Length);
+                    var temp = new SafeString.Native.UNICODE_STRING(n, name.Length);
                     nus = &temp;
                 }
 
@@ -485,7 +484,7 @@ namespace WInterop.Storage
                 }
 
                 if (result == 0)
-                    throw Error.GetExceptionForLastError();
+                    Error.ThrowLastError();
 
                 buffer.Length = result;
                 return buffer.Split('\0', removeEmptyStrings: true);

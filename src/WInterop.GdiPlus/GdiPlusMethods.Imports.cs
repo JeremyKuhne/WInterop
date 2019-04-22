@@ -8,9 +8,9 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Unsafe;
+using WInterop.Gdi.Native;
 
-namespace WInterop.GdiPlus.Unsafe
+namespace WInterop.GdiPlus.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Compression.Unsafe
+namespace WInterop.Compression.Native
 {
     // https://msdn.microsoft.com/en-us/library/ff797928.aspx
     public struct FDINOTIFICATION

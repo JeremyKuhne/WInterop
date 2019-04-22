@@ -10,7 +10,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Support.Buffers;
-using WInterop.Errors.Unsafe;
+using WInterop.Errors.Native;
 
 namespace WInterop.Errors
 {
@@ -39,34 +39,6 @@ namespace WInterop.Errors
         /// <summary>
         /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-
-        public static partial class Imports
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
-            [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-            public static extern uint LsaNtStatusToWinError(NTSTATUS Status);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679351.aspx
-            public static uint FormatMessageW(
-                FormatMessageFlags dwFlags,
-                IntPtr lpSource,
-                uint dwMessageId,
-                // LANGID or 0 for auto lookup
-                uint dwLanguageId,
-                IntPtr lpBuffer,
-                // Size is in chars
-                uint nSize,
-                string[] Arguments) => Internal.Imports.FormatMessageW(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680627.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern void SetLastError(
-                WindowsError dwErrCode);
-
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679360.aspx
-            [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-            public static extern WindowsError GetLastError();
-        }
 
         // .NET's Win32Exception impements the error code lookup on FormatMessage using FORMAT_MESSAGE_FROM_SYSTEM.
         // It won't handle Network Errors (NERR_BASE..MAX_NERR), which come from NETMSG.DLL.
@@ -125,7 +97,6 @@ namespace WInterop.Errors
 
         public static WindowsError GetLastError() => Imports.GetLastError();
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] // Want to try and force the get last error inline
         public static void ThrowIfLastErrorNot(WindowsError error, string path = null)
         {
             WindowsError lastError = Imports.GetLastError();
@@ -135,13 +106,10 @@ namespace WInterop.Errors
 
         public static bool Failed(WindowsError error) => error != WindowsError.NO_ERROR;
 
-        /// <summary>
-        /// Turns the last Windows error into the appropriate exception (that maps with existing .NET behavior as much as possible).
-        /// There are additional IOException derived errors for ease of client error handling.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] // Want to try and force the get last error inline
-        public static Exception GetIoExceptionForLastError(string path = null)
-            => Imports.GetLastError().GetException(path);
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void ThrowLastError(string path = null)
+            => throw Imports.GetLastError().GetException(path);
 
         /// <summary>
         /// Try to get the string for an HRESULT
@@ -230,10 +198,9 @@ namespace WInterop.Errors
         /// Throw the last error code from windows if <paramref name="result"/> is false.
         /// </summary>
         /// <param name="path">Optional path or other input detail.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowLastErrorIfFalse(bool result, string path = null)
         {
-            if (!result) throw GetExceptionForLastError(path);
+            if (!result) GetLastError().Throw(path);
         }
     }
 }

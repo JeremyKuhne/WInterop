@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Gdi.Unsafe;
+using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -64,19 +64,17 @@ namespace WInterop.Gdi
             Rectangle destinationBounds,
             RasterOperation operation)
         {
-            if (!Imports.BitBlt(
-                destination,
-                destinationBounds.X,
-                destinationBounds.Y,
-                destinationBounds.Width,
-                destinationBounds.Height,
-                source,
-                sourceOrigin.X,
-                sourceOrigin.Y,
-                operation))
-            {
-                throw Error.GetExceptionForLastError();
-            }
+            Error.ThrowLastErrorIfFalse(
+                Imports.BitBlt(
+                    destination,
+                    destinationBounds.X,
+                    destinationBounds.Y,
+                    destinationBounds.Width,
+                    destinationBounds.Height,
+                    source,
+                    sourceOrigin.X,
+                    sourceOrigin.Y,
+                    operation));
         }
 
         public static StretchMode SetStretchBlitMode(this DeviceContext context, StretchMode mode)

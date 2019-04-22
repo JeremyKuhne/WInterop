@@ -11,7 +11,7 @@ using System;
 using Tests.Support;
 using WInterop.Errors;
 using WInterop.Storage;
-using WInterop.Storage.Unsafe;
+using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop;
 using Xunit;

@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Windows;
 
-namespace WInterop.Shell.Unsafe
+namespace WInterop.Shell.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct BROWSEINFO

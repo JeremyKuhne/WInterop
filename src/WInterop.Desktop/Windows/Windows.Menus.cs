@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Errors;
-using WInterop.Windows.Unsafe;
+using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
@@ -17,7 +17,7 @@ namespace WInterop.Windows
         {
             MenuHandle menu = new MenuHandle(Imports.CreateMenu(), ownsHandle: true);
             if (menu.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
             return menu;
         }
 
@@ -29,8 +29,8 @@ namespace WInterop.Windows
 
             fixed (char* c = text)
             {
-                if (!Imports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c))
-                    throw Error.GetExceptionForLastError();
+                Error.ThrowLastErrorIfFalse(
+                    Imports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c));
             }
         }
     }

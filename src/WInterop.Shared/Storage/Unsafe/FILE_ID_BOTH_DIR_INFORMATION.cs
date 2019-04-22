@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Storage.Unsafe
+namespace WInterop.Storage.Native
 {
     /// <summary>
     /// Used with GetFileInformationByHandleEx and FileIdBothDirectoryInfo/RestartInfo.

@@ -8,9 +8,9 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.SafeString.Unsafe;
+using WInterop.SafeString.Native;
 
-namespace WInterop.Handles.Unsafe
+namespace WInterop.Handles.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

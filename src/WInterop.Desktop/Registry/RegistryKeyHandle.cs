@@ -8,7 +8,7 @@
 using System;
 using WInterop.Errors;
 using WInterop.Handles;
-using WInterop.Registry.Unsafe;
+using WInterop.Registry.Native;
 
 namespace WInterop.Registry
 {

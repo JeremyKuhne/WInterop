@@ -7,7 +7,7 @@
 
 using WInterop.ProcessAndThreads;
 using WInterop.Support.Buffers;
-using WInterop.Modules.Unsafe;
+using WInterop.Modules.Native;
 
 namespace WInterop.Modules.BufferWrappers
 {

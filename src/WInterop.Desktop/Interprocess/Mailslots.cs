@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Errors;
-using WInterop.Interprocess.Unsafe;
+using WInterop.Interprocess.Native;
 
 namespace WInterop.Interprocess
 {
@@ -22,19 +22,14 @@ namespace WInterop.Interprocess
         /// Timeout, in milliseconds, that a read operation will wait for a message to be posted. 0 means do not wait, uint.MaxValue means
         /// wait indefinitely.
         /// </param>
-        public static SafeMailslotHandle CreateMailslot(string name, uint maxMessageSize = 0, uint readTimeout = 0)
+        public unsafe static SafeMailslotHandle CreateMailslot(string name, uint maxMessageSize = 0, uint readTimeout = 0)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
 
-            SafeMailslotHandle handle;
-
-            unsafe
-            {
-                handle = Imports.CreateMailslotW(name, maxMessageSize, readTimeout, null);
-            }
+            SafeMailslotHandle handle = Imports.CreateMailslotW(name, maxMessageSize, readTimeout, null);
 
             if (handle.IsInvalid)
-                throw Error.GetExceptionForLastError(name);
+                Error.ThrowLastError(name);
 
             return handle;
         }
@@ -42,20 +37,17 @@ namespace WInterop.Interprocess
         /// <summary>
         /// Get information for the given mailslot.
         /// </summary>
-        public static MailslotInfo GetMailslotInfo(SafeMailslotHandle mailslotHandle)
+        public unsafe static MailslotInfo GetMailslotInfo(SafeMailslotHandle mailslotHandle)
         {
             MailslotInfo info = new MailslotInfo();
 
-            unsafe
-            {
-                if (!Imports.GetMailslotInfo(
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetMailslotInfo(
                     hMailslot: mailslotHandle,
                     lpMaxMessageSize: &info.MaxMessageSize,
                     lpNextSize: &info.NextSize,
                     lpMessageCount: &info.MessageCount,
-                    lpReadTimeout: &info.ReadTimeout))
-                    throw Error.GetExceptionForLastError();
-            }
+                    lpReadTimeout: &info.ReadTimeout));
 
             return info;
         }
@@ -65,9 +57,6 @@ namespace WInterop.Interprocess
         /// </summary>
         /// <param name="readTimeout">Timeout for read operations in milliseconds. Set to uint.MaxValue for infinite timeout.</param>
         public static void SetMailslotTimeout(SafeMailslotHandle mailslotHandle, uint readTimeout)
-        {
-            if (!Imports.SetMailslotInfo(mailslotHandle, readTimeout))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.SetMailslotInfo(mailslotHandle, readTimeout));
     }
 }

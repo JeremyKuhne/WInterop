@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Handles;
-using WInterop.ProcessAndThreads.Unsafe;
+using WInterop.ProcessAndThreads.Native;
 
 namespace WInterop.ProcessAndThreads
 {

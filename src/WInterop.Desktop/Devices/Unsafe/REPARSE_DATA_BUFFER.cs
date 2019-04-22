@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Storage;
 
-namespace WInterop.Devices.Unsafe
+namespace WInterop.Devices.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff552012.aspx
     [StructLayout(LayoutKind.Explicit)]

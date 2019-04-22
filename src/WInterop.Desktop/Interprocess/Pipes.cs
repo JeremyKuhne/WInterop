@@ -7,16 +7,13 @@
 
 using Microsoft.Win32.SafeHandles;
 using WInterop.Errors;
-using WInterop.Interprocess.Unsafe;
+using WInterop.Interprocess.Native;
 
 namespace WInterop.Interprocess
 {
     public static partial class Pipes
     {
         public unsafe static void CreatePipe(out SafeFileHandle readPipe, out SafeFileHandle writePipe, uint bufferSize = 0)
-        {
-            if (!Imports.CreatePipe(out readPipe, out writePipe, null, bufferSize))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.CreatePipe(out readPipe, out writePipe, null, bufferSize));
     }
 }

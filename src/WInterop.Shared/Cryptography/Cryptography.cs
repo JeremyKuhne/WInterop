@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WInterop.Cryptography.Unsafe;
+using WInterop.Cryptography.Native;
 using WInterop.Errors;
 using WInterop.Handles;
 
@@ -20,10 +20,7 @@ namespace WInterop.Cryptography
         /// Attempts to close the given handle.
         /// </summary>
         public static void CloseStore(IntPtr handle)
-        {
-            if (!Imports.CertCloseStore(handle, dwFlags: 0))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.CertCloseStore(handle, dwFlags: 0));
 
         unsafe private static CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)
         {

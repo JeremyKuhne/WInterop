@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Errors;
-using WInterop.Memory.Unsafe;
+using WInterop.Memory.Native;
 
 namespace WInterop.Memory
 {
@@ -86,14 +86,14 @@ namespace WInterop.Memory
         public static void LocalFree(IntPtr memory)
         {
             if (Imports.LocalFree(memory) != IntPtr.Zero)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
         }
 
         public static GlobalHandle GlobalAlloc(ulong bytes, GlobalMemoryFlags flags)
         {
             HGLOBAL handle = Imports.GlobalAlloc(flags, (UIntPtr)bytes);
             if (handle.Value == IntPtr.Zero)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
             return new GlobalHandle(handle, bytes);
         }
 
@@ -101,7 +101,7 @@ namespace WInterop.Memory
         {
             IntPtr memory = Imports.GlobalLock(handle.HGLOBAL);
             if (memory == IntPtr.Zero)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
             return memory;
         }
 
@@ -114,7 +114,7 @@ namespace WInterop.Memory
         public static void GlobalFree(HGLOBAL handle)
         {
             if (Imports.GlobalFree(handle).Value != IntPtr.Zero)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
         }
     }
 }

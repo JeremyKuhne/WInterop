@@ -11,7 +11,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using WInterop.Windows;
 
-namespace WInterop.Gdi.Unsafe
+namespace WInterop.Gdi.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

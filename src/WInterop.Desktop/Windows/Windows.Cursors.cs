@@ -10,7 +10,7 @@ using System.Drawing;
 using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Windows.Unsafe;
+using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
@@ -21,7 +21,7 @@ namespace WInterop.Windows
         {
             HCURSOR handle = Imports.LoadCursorW(ModuleInstance.Null, (char*)(uint)id);
             if (handle.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError(id.ToString());
 
             return new CursorHandle(handle, ownsHandle: false);
         }
@@ -30,7 +30,7 @@ namespace WInterop.Windows
         {
             HCURSOR handle = Imports.LoadCursorFromFileW(path);
             if (handle.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError(path);
 
             return new CursorHandle(handle, ownsHandle: false);
         }
@@ -46,10 +46,7 @@ namespace WInterop.Windows
         /// on cursors loaded from resources before calling this method.
         /// </summary>
         public static void SetSystemCursor(CursorHandle cursor, SystemCursor id)
-        {
-            if (!Imports.SetSystemCursor(cursor, id))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.SetSystemCursor(cursor, id));
 
         public static int ShowCursor(bool show)
         {
@@ -60,67 +57,46 @@ namespace WInterop.Windows
         {
             CursorHandle copy = Imports.CopyCursor(cursor);
             if (copy.IsInvalid)
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             return copy;
         }
 
         public static Point GetCursorPosition()
         {
-            if (!Imports.GetCursorPos(out Point point))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetCursorPos(out Point point));
 
             return point;
         }
 
         public static Point GetPhysicalCursorPosition()
         {
-            if (!Imports.GetPhysicalCursorPos(out Point point))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetPhysicalCursorPos(out Point point));
 
             return point;
         }
 
         public static void SetCursorPosition(Point point)
-        {
-            if (!Imports.SetCursorPos(point.X, point.Y))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.SetCursorPos(point.X, point.Y));
 
         public static void SetPhysicalCursorPosition(Point point)
-        {
-            if (!Imports.SetPhysicalCursorPos(point.X, point.Y))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.SetPhysicalCursorPos(point.X, point.Y));
 
         public static void CreateCaret(this in WindowHandle window, BitmapHandle bitmap, Size size)
-        {
-            if (!Imports.CreateCaret(window, bitmap, size.Width, size.Height))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.CreateCaret(window, bitmap, size.Width, size.Height));
 
         public static void DestroyCaret()
-        {
-            if (!Imports.DestroyCaret())
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.DestroyCaret());
 
         public static void SetCaretPosition(Point point)
-        {
-            if (!Imports.SetCaretPos(point.X, point.Y))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.SetCaretPos(point.X, point.Y));
 
         public static void ShowCaret(this in WindowHandle window)
-        {
-            if (!Imports.ShowCaret(window))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.ShowCaret(window));
 
         public static void HideCaret(this in WindowHandle window)
-        {
-            if (!Imports.HideCaret(window))
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.HideCaret(window));
     }
 }

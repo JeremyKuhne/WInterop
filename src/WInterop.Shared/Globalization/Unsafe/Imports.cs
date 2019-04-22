@@ -8,9 +8,9 @@
 using System.Runtime.InteropServices;
 using WInterop.Globalization;
 using WInterop.Windows;
-using WInterop.Windows.Unsafe;
+using WInterop.Windows.Native;
 
-namespace WInterop.Globalization.Unsafe
+namespace WInterop.Globalization.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

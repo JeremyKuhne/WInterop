@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Memory.Unsafe
+namespace WInterop.Memory.Native
 {
     public readonly struct HGLOBAL
     {

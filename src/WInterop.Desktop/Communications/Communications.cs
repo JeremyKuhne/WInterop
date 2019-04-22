@@ -8,7 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System.Collections.Generic;
 using System.Linq;
-using WInterop.Communications.Unsafe;
+using WInterop.Communications.Native;
 using WInterop.Errors;
 using WInterop.Registry;
 using WInterop.Storage;
@@ -25,8 +25,8 @@ namespace WInterop.Communications
                 DCBlength = (uint)sizeof(DeviceControlBlock)
             };
 
-            if (!Imports.GetCommState(fileHandle, ref dcb))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetCommState(fileHandle, ref dcb));
 
             return dcb;
         }
@@ -35,22 +35,22 @@ namespace WInterop.Communications
         {
             dcb.DCBlength = (uint)sizeof(DeviceControlBlock);
 
-            if (!Imports.GetCommState(fileHandle, ref dcb))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetCommState(fileHandle, ref dcb));
         }
 
         public unsafe static DeviceControlBlock BuildDeviceControlBlock(string definition)
         {
-            if (!Imports.BuildCommDCBW(definition, out DeviceControlBlock dcb))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.BuildCommDCBW(definition, out DeviceControlBlock dcb));
 
             return dcb;
         }
 
         public static CommunicationsProperties GetCommunicationsProperties(SafeFileHandle fileHandle)
         {
-            if (!Imports.GetCommProperties(fileHandle, out CommunicationsProperties properties))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetCommProperties(fileHandle, out CommunicationsProperties properties));
 
             return properties;
         }
@@ -60,8 +60,8 @@ namespace WInterop.Communications
             CommunicationsConfig config = new CommunicationsConfig();
             uint size = (uint)sizeof(CommunicationsConfig);
 
-            if (!Imports.GetCommConfig(fileHandle, ref config, ref size))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetCommConfig(fileHandle, ref config, ref size));
 
             return config;
         }
@@ -75,8 +75,8 @@ namespace WInterop.Communications
             CommunicationsConfig config = new CommunicationsConfig();
             uint size = (uint)sizeof(CommunicationsConfig);
 
-            if (!Imports.GetDefaultCommConfigW(port, ref config, ref size))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetDefaultCommConfigW(port, ref config, ref size));
 
             return config;
         }
@@ -89,8 +89,8 @@ namespace WInterop.Communications
         {
             CommunicationsConfig config = GetDefaultCommunicationsConfig(port);
 
-            if (!Imports.CommConfigDialogW(port, parent, ref config))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.CommConfigDialogW(port, parent, ref config));
 
             return config;
         }

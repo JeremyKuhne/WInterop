@@ -8,7 +8,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.Unsafe
+namespace WInterop.Gdi.Native
 {
     // https://msdn.microsoft.com/en-us/library/dd183449.aspx
     [StructLayout(LayoutKind.Explicit)]

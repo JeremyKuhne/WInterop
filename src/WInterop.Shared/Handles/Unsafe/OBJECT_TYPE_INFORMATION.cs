@@ -5,9 +5,9 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.SafeString.Unsafe;
+using WInterop.SafeString.Native;
 
-namespace WInterop.Handles.Unsafe
+namespace WInterop.Handles.Native
 {
     // The full struct isn't officially documented, names may be wrong.
     //

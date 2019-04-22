@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using WInterop.Handles;
 using WInterop.Support;
-using WInterop.Com.Unsafe;
+using WInterop.Com.Native;
 using WInterop.Errors;
 
 namespace WInterop.Com

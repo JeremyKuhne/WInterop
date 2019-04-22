@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 
-namespace WInterop.Storage.Unsafe
+namespace WInterop.Storage.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh449413.aspx
     [StructLayout(LayoutKind.Sequential)]

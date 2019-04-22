@@ -8,7 +8,7 @@
 using System;
 using WInterop.Errors;
 using WInterop.Support.Buffers;
-using WInterop.WindowsStore.Unsafe;
+using WInterop.WindowsStore.Native;
 
 namespace WInterop.WindowsStore
 {

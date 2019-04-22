@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Windows.Unsafe
+namespace WInterop.Windows.Native
 {
     public readonly struct HMONITOR
     {

@@ -12,7 +12,7 @@ using WInterop.Storage;
 using WInterop.Handles;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Compression.Unsafe;
+using WInterop.Compression.Native;
 
 namespace WInterop.Compression
 {

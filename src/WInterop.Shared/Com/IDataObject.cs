@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Com.Unsafe;
+using WInterop.Com.Native;
 
 namespace WInterop.Com
 {

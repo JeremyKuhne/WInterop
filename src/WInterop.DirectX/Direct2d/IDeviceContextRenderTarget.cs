@@ -11,7 +11,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using WInterop.DirectWrite;
 using WInterop.Gdi;
-using WInterop.Gdi.Unsafe;
+using WInterop.Gdi.Native;
 
 namespace WInterop.Direct2d
 {

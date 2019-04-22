@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Storage.Unsafe
+namespace WInterop.Storage.Native
 {
     /// <summary>
     /// Used to query names of files in a directory.

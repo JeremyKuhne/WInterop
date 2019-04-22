@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Support.Buffers;
-using WInterop.Console.Unsafe;
+using WInterop.Console.Native;
 using WInterop.Windows;
 
 namespace WInterop.Console
@@ -53,7 +53,7 @@ namespace WInterop.Console
         {
             IntPtr handle = Imports.GetStdHandle(type);
             if (handle == (IntPtr)(-1))
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
 
             // If there is no associated standard handle, return null
             if (handle == IntPtr.Zero)
@@ -73,7 +73,7 @@ namespace WInterop.Console
             {
                 yield return buffer;
             }
-            throw Error.GetExceptionForLastError();
+            Error.ThrowLastError();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace WInterop.Console
             if (!Imports.PeekConsoleInputW(inputHandle, ref MemoryMarshal.GetReference(owner.Memory.Span), (uint)count, out uint read))
             {
                 owner.Dispose();
-                throw Error.GetExceptionForLastError();
+                Error.ThrowLastError();
             }
 
             return new OwnedMemoryEnumerable<InputRecord>(owner, 0, (int)read);
@@ -99,8 +99,8 @@ namespace WInterop.Console
         {
             fixed (char* c = &MemoryMarshal.GetReference(text))
             {
-                if (!Imports.WriteConsoleW(outputHandle, c, (uint)text.Length, out uint charsWritten))
-                    throw Error.GetExceptionForLastError();
+                Error.ThrowLastErrorIfFalse(
+                    Imports.WriteConsoleW(outputHandle, c, (uint)text.Length, out uint charsWritten));
 
                 return charsWritten;
             }

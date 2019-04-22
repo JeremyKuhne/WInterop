@@ -7,7 +7,7 @@
 
 using System;
 using WInterop.Errors;
-using WInterop.Direct2d.Unsafe;
+using WInterop.Direct2d.Native;
 
 namespace WInterop.Direct2d
 {

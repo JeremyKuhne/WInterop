@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Com.Unsafe
+namespace WInterop.Com.Native
 {
     // https://docs.microsoft.com/en-us/windows/desktop/api/objidl/ns-objidl-tagdvtargetdevice
     public struct DVTARGETDEVICE

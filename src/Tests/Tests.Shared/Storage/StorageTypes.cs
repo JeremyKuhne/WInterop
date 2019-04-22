@@ -8,7 +8,7 @@
 using FluentAssertions;
 using System;
 using WInterop.Storage;
-using WInterop.Storage.Unsafe;
+using WInterop.Storage.Native;
 using Xunit;
 
 namespace StorageTests

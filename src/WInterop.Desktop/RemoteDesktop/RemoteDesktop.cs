@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Errors;
-using WInterop.RemoteDesktop.Unsafe;
+using WInterop.RemoteDesktop.Native;
 
 namespace WInterop.RemoteDesktop
 {
@@ -19,8 +19,8 @@ namespace WInterop.RemoteDesktop
         /// <returns></returns>
         public static uint ProcessIdToSessionId(uint processId)
         {
-            if (!Imports.ProcessIdToSessionId(processId, out uint sessionId))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.ProcessIdToSessionId(processId, out uint sessionId));
 
             return sessionId;
         }

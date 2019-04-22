@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Security.Unsafe;
+using WInterop.Security.Native;
 using WInterop.Errors;
 using WInterop.Support.Buffers;
 using WInterop.SystemInformation;
@@ -36,8 +36,9 @@ namespace WInterop.Security
                 Privilege = luid
             };
 
-            if (!Imports.PrivilegeCheck(token, &set, out Boolean32 result))
-                throw Error.GetExceptionForLastError(privilege.ToString());
+            Error.ThrowLastErrorIfFalse(
+                Imports.PrivilegeCheck(token, &set, out Boolean32 result),
+                privilege.ToString());
 
             return result;
         }
@@ -73,8 +74,8 @@ namespace WInterop.Security
                 luids[i] = LookupPrivilegeValue(privileges[i]);
             }
 
-            if (!Imports.PrivilegeCheck(token, set, out Boolean32 result))
-                throw Error.GetExceptionForLastError();
+            Error.ThrowLastErrorIfFalse(
+                Imports.PrivilegeCheck(token, set, out Boolean32 result));
 
             return result;
         }
@@ -126,10 +127,8 @@ namespace WInterop.Security
                 for (int i = 0; i < sidsToDisable.Length; i++)
                     sids[i].Sid = &sid[i];
 
-                if (!Imports.CreateRestrictedToken(token, 0, (uint)sidsToDisable.Length, sids, 0, null, 0, null, out AccessToken restricted))
-                {
-                    throw Error.GetExceptionForLastError();
-                }
+                Error.ThrowLastErrorIfFalse(
+                    Imports.CreateRestrictedToken(token, 0, (uint)sidsToDisable.Length, sids, 0, null, 0, null, out AccessToken restricted));
 
                 return restricted;
             }
@@ -147,10 +146,7 @@ namespace WInterop.Security
         }
 
         public static void RevertToSelf()
-        {
-            if (!Imports.RevertToSelf())
-                throw Error.GetExceptionForLastError();
-        }
+            => Error.ThrowLastErrorIfFalse(Imports.RevertToSelf());
 
         public unsafe static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
         {

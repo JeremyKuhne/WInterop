@@ -7,7 +7,7 @@
 
 using System;
 
-namespace WInterop.Security.Unsafe
+namespace WInterop.Security.Native
 {
     [Flags]
     public enum AceTypePresent : uint

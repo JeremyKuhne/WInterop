@@ -8,10 +8,10 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Security.Unsafe;
+using WInterop.Security.Native;
 using WInterop.Storage;
 
-namespace WInterop.Com.Unsafe
+namespace WInterop.Com.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

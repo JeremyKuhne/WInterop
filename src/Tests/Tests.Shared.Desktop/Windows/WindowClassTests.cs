@@ -11,7 +11,7 @@ using System.IO;
 using WInterop.Errors;
 using WInterop.Modules;
 using WInterop.Windows;
-using WInterop.Windows.Unsafe;
+using WInterop.Windows.Native;
 using Xunit;
 
 namespace WindowsTests

@@ -8,7 +8,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Devices.Unsafe;
+using WInterop.Devices.Native;
 using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Support.Buffers;
@@ -22,21 +22,18 @@ namespace WInterop.Devices
         /// </summary>
         public unsafe static Guid QueryStableGuid(SafeHandle deviceHandle)
         {
-            ControlCode controlCode = ControlCodes.MountDevice.QueryStableGuid;
             Guid guid = new Guid();
 
-            if (!Imports.DeviceIoControl(
-                hDevice: deviceHandle,
-                dwIoControlCode: controlCode,
-                lpInBuffer: null,
-                nInBufferSize: 0,
-                lpOutBuffer: &guid,
-                nOutBufferSize: (uint)sizeof(Guid),
-                lpBytesReturned: out _,
-                lpOverlapped: null))
-            {
-                throw Error.GetExceptionForLastError();
-            }
+            Error.ThrowLastErrorIfFalse(
+                Imports.DeviceIoControl(
+                    hDevice: deviceHandle,
+                    dwIoControlCode: ControlCodes.MountDevice.QueryStableGuid,
+                    lpInBuffer: null,
+                    nInBufferSize: 0,
+                    lpOutBuffer: &guid,
+                    nOutBufferSize: (uint)sizeof(Guid),
+                    lpBytesReturned: out _,
+                    lpOverlapped: null));
 
             return guid;
         }

@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Compression.Unsafe
+namespace WInterop.Compression.Native
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate IntPtr FNFDINOTIFY(

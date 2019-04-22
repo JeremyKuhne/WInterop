@@ -8,7 +8,7 @@
 
 using System;
 
-namespace WInterop.Registry.Unsafe
+namespace WInterop.Registry.Native
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff553381.aspx
     public struct KEY_NAME_INFORMATION

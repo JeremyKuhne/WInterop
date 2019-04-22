@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.ProcessAndThreads;
 
-namespace WInterop.Modules.Unsafe
+namespace WInterop.Modules.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

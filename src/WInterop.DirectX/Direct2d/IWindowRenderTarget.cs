@@ -10,7 +10,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using WInterop.DirectWrite;
-using WInterop.Windows.Unsafe;
+using WInterop.Windows.Native;
 
 namespace WInterop.Direct2d
 {

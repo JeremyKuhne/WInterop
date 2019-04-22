@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Errors.Unsafe;
+using WInterop.Errors.Native;
 
 namespace WInterop.Errors
 {

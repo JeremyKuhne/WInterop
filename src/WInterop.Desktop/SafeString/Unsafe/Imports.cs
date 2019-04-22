@@ -8,7 +8,7 @@
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 
-namespace WInterop.SafeString.Unsafe
+namespace WInterop.SafeString.Native
 {
     /// <summary>
     /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.

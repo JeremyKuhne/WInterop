@@ -7,7 +7,7 @@
 
 using System.Drawing;
 
-namespace WInterop.Gdi.Unsafe
+namespace WInterop.Gdi.Native
 {
     // https://msdn.microsoft.com/en-us/library/dd145041.aspx
     public struct LOGPEN

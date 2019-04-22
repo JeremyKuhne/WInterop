@@ -7,7 +7,7 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Unsafe;
+using WInterop.Gdi.Native;
 
 namespace WInterop.Windows
 {

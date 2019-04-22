@@ -10,7 +10,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Gdi;
-using WInterop.GdiPlus.Unsafe;
+using WInterop.GdiPlus.Native;
 
 namespace WInterop.GdiPlus
 {

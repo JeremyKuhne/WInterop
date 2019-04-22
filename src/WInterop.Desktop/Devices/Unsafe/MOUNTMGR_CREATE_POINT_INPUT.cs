@@ -5,7 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Devices.Unsafe
+namespace WInterop.Devices.Native
 {
     /// <summary>
     /// [MOUNTMGR_CREATE_POINT_INPUT]

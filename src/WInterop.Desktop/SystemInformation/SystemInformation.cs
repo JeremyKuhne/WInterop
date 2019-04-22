@@ -7,7 +7,7 @@
 
 using WInterop.Errors;
 using WInterop.Support.Buffers;
-using WInterop.SystemInformation.Unsafe;
+using WInterop.SystemInformation.Native;
 
 namespace WInterop.SystemInformation
 {
@@ -107,7 +107,7 @@ namespace WInterop.SystemInformation
                 }
 
                 if (size == 0)
-                    throw Error.GetExceptionForLastError();
+                    Error.ThrowLastError();
 
                 buffer.Length = size - 1;
                 return buffer.ToString();
