@@ -214,10 +214,6 @@ namespace WInterop.Compression
             if (!throwOnError || result >= 0)
                 return result;
 
-            WindowsError error = Error.GetLastError();
-            if (error != WindowsError.ERROR_SUCCESS)
-                throw Error.GetIoExceptionForError(error, path);
-
             throw new LzException((LzError)result, path);
         }
 
