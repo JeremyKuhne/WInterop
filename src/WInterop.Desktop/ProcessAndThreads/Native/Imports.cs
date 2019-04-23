@@ -49,5 +49,32 @@ namespace WInterop.ProcessAndThreads.Native
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static extern uint GetProcessId(
             SafeProcessHandle Process);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683179.aspx
+        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+        public static extern ProcessHandle GetCurrentProcess();
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683180.aspx
+        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+        public static extern uint GetCurrentProcessId();
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683156.aspx
+        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+        public static extern string GetCommandLineW();
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684320.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern SafeProcessHandle OpenProcess(
+            ProcessAccessRights dwDesiredAccess,
+            bool bInheritHandle,
+            uint dwProcessId);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683182.aspx
+        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+        public static extern ThreadHandle GetCurrentThread();
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683180.aspx
+        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+        public static extern uint GetCurrentThreadId();
     }
 }

@@ -25,5 +25,46 @@ namespace WInterop.Cryptography.Native
             IntPtr hprov,
             string szSubsystemProtocol);
 
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559.aspx
+        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+        public static extern CertificateStoreHandle CertOpenStore(
+            IntPtr lpszStoreProvider,
+            uint dwMsgAndCertEncodingType,
+            IntPtr hCryptProv,
+            uint dwFlags,
+            IntPtr pvPara);
+
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376026.aspx
+        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+        public static extern bool CertCloseStore(
+            IntPtr hCertStore,
+            uint dwFlags);
+
+        // Example C Program: Listing System and Physical Stores
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa382362.aspx
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376060.aspx
+        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+        public static extern bool CertEnumSystemStoreLocation(
+            uint dwFlags,
+            IntPtr pvArg,
+            CertEnumSystemStoreLocationCallback pfnEnum);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376058.aspx
+        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+        public static extern bool CertEnumSystemStore(
+            uint dwFlags,
+            IntPtr pvSystemStoreLocationPara,
+            IntPtr pvArg,
+            CertEnumSystemStoreCallback pfnEnum);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376055.aspx
+        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+        public static extern bool CertEnumPhysicalStore(
+            IntPtr pvSystemStore,
+            uint dwFlags,
+            IntPtr pvArg,
+            CertEnumPhysicalStoreCallback pfnEnum);
     }
 }

@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	ProjectSection(SolutionItems) = preProject
 		docs\cominterop.md = docs\cominterop.md
 		docs\pinvoke.md = docs\pinvoke.md
+		README.md = README.md
 		docs\structs.md = docs\structs.md
 	EndProjectSection
 EndProject
@@ -94,8 +95,6 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tests.Shared.Desktop", "src\Tests\Tests.Shared.Desktop\Tests.Shared.Desktop.shproj", "{A6BC8AF5-E3BF-4F75-9FBA-FE5ED7D50AD2}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tests.Shared", "src\Tests\Tests.Shared\Tests.Shared.shproj", "{2035A6EE-3425-4EBA-8067-919ADAB2599E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.UniversalWindows", "src\WInterop.UniversalWindows\WInterop.UniversalWindows.csproj", "{5037BB6A-4389-4057-BB74-301067A4E067}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.NetFX", "src\Tests\Tests.NetFX\Tests.NetFX.csproj", "{E2D1B0A6-1EC9-488C-A138-8ADBC675A40B}"
 EndProject
@@ -615,22 +614,6 @@ Global
 		{F95CD2A5-479F-4EE2-A073-CED7F2BDF7EC}.Release|x64.Build.0 = Release|Any CPU
 		{F95CD2A5-479F-4EE2-A073-CED7F2BDF7EC}.Release|x86.ActiveCfg = Release|Any CPU
 		{F95CD2A5-479F-4EE2-A073-CED7F2BDF7EC}.Release|x86.Build.0 = Release|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Debug|ARM.Build.0 = Debug|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Debug|x64.Build.0 = Debug|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Debug|x86.Build.0 = Debug|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Release|ARM.ActiveCfg = Release|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Release|ARM.Build.0 = Release|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Release|x64.ActiveCfg = Release|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Release|x64.Build.0 = Release|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Release|x86.ActiveCfg = Release|Any CPU
-		{5037BB6A-4389-4057-BB74-301067A4E067}.Release|x86.Build.0 = Release|Any CPU
 		{E2D1B0A6-1EC9-488C-A138-8ADBC675A40B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E2D1B0A6-1EC9-488C-A138-8ADBC675A40B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2D1B0A6-1EC9-488C-A138-8ADBC675A40B}.Debug|ARM.ActiveCfg = Debug|Any CPU

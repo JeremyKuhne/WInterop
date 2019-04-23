@@ -226,5 +226,8 @@ namespace WInterop.Handles
                 return ((OBJECT_TYPE_INFORMATION*)(buffer.VoidPointer))->TypeName.ToString();
             });
         }
+
+        public static void CloseHandle(IntPtr handle)
+            => Error.ThrowLastErrorIfFalse(Imports.CloseHandle(handle));
     }
 }

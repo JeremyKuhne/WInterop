@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
+using WInterop.ProcessAndThreads;
 using WInterop.SafeString.Native;
 
 namespace WInterop.Handles.Native
@@ -69,5 +70,21 @@ namespace WInterop.Handles.Native
         //      ULONG NumberOfTypes;
         //      OBJECT_TYPE_INFORMATION TypeInformation;
         //  } OBJECT_TYPES_INFORMATION, *POBJECT_TYPES_INFORMATION;
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724211.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern bool CloseHandle(
+            IntPtr handle);
+
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724251.aspx
+        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
+        public static extern bool DuplicateHandle(
+            SafeProcessHandle hSourceProcessHandle,
+            IntPtr hSourceHandle,
+            SafeProcessHandle hTargetProcessHandle,
+            SafeHandle lpTargetHandle,
+            uint dwDesiredAccess,
+            bool bInheritHandle,
+            uint dwOptions);
     }
 }
