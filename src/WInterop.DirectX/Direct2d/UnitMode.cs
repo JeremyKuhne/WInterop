@@ -5,16 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.GraphicsInfrastructure
+namespace WInterop.Direct2d
 {
     /// <summary>
-    /// [DXGI_ALPHA_MODE]
+    /// This specifies what units should be accepted by the D2D API. [D2D1_UNIT_MODE]
     /// </summary>
-    public enum AlphaMode : uint
+    public enum UnitMode : uint
     {
-        Unspecified = 0,
-        Premultiplied = 1,
-        Straight = 2,
-        Ignore = 3
+        Dips = 0,
+        Pixels = 1
     }
 }

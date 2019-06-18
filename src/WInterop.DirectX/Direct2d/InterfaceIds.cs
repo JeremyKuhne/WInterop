@@ -18,6 +18,8 @@ namespace WInterop.Direct2d
         public const string IID_ID2D1BitmapRenderTarget = "2cd90695-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1Device = "47dd575d-ac05-4cdd-8049-9b02cd16f44c";
         public const string IID_ID2D1DeviceContext = "e8f7fe7a-191c-466d-ad95-975678bda998";
+        public const string IID_ID2D1Properties = "483473d7-cd46-4f9d-9d3a-3112aa80159d";
+        public const string IID_ID2D1Effect = "28211a43-7d89-476f-8181-2d6159b220ad";
         public const string IID_ID2D1Geometry = "2cd906a1-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1StrokeStyle = "2cd9069d-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1SimplifiedGeometrySink = "2cd9069e-12e2-11dc-9fed-001143a055f9";
@@ -32,11 +34,13 @@ namespace WInterop.Direct2d
         public const string IID_ID2D1DrawingStateBlock = "28506e39-ebf6-46a1-bb47-fd85565ab957";
         public const string IID_ID2D1Image = "65019f75-8da2-497c-b32c-dfa34e48ede6";
         public const string IID_ID2D1Bitmap = "a2296057-ea42-4099-983b-539fb6505426";
+        public const string IID_ID2D1Bitmap1 = "a898a84c-3873-4588-b08b-ebbf978df041";
         public const string IID_ID2D1Brush = "2cd906a8-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1BitmapBrush = "2cd906aa-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1SolidColorBrush = "2cd906a9-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1LinearGradientBrush = "2cd906ab-12e2-11dc-9fed-001143a055f9";
         public const string IID_ID2D1RadialGradientBrush = "2cd906ac-12e2-11dc-9fed-001143a055f9";
+        public const string IID_ID2D1ImageBrush = "fe9e984d-3f95-407c-b5db-cb94d4e8f87c";
         public const string IID_ID2D1GradientStopCollection = "2cd906a7-12e2-11dc-9fed-001143a055f9";
     }
 }

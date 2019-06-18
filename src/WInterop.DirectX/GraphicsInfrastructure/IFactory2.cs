@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Security;
 using WInterop.Windows.Native;
 
 namespace WInterop.GraphicsInfrastructure
@@ -15,8 +16,28 @@ namespace WInterop.GraphicsInfrastructure
     [ComImport,
         Guid(InterfaceIds.IID_IDXGIFactory2),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IFactory2
+    public interface IFactory2 : IObject
     {
+        #region IDXGIObject
+        new unsafe void SetPrivateData(
+            in Guid Name,
+            uint DataSize,
+            void* pData);
+
+        new void SetPrivateDataInterface(
+            in Guid Name,
+            [MarshalAs(UnmanagedType.IUnknown)]
+            object pUnknown);
+
+        new unsafe void GetPrivateData(
+            in Guid Name,
+            ref uint pDataSize,
+            void* pData);
+
+        [return: MarshalAs(UnmanagedType.IUnknown)]
+        new object GetParent(in Guid riid);
+        #endregion
+
         #region IID_IDXGIFactory
         void EnumAdaptersSTUB();
         //virtual HRESULT STDMETHODCALLTYPE EnumAdapters(
@@ -64,81 +85,44 @@ namespace WInterop.GraphicsInfrastructure
             [MarshalAs(UnmanagedType.IUnknown)]
             object pDevice,
             HWND hWnd,
-            in SwapChainDescription1 pDesc,
+            in SwapChainDescriptor1 pDesc,
+            IntPtr pFullscreenDesc = default,     // in DXGI_SWAP_CHAIN_FULLSCREEN_DESC
+            IntPtr pRestrictToOutput = default);  // IDXGIOutput
+
+        ISwapChain1 CreateSwapChainForCoreWindow(
+            [MarshalAs(UnmanagedType.IUnknown)]
+            object pDevice,
+            [MarshalAs(UnmanagedType.IUnknown)]
+            object pWindow,
+            in SwapChainDescriptor1 pDesc,
             IntPtr pFullscreenDesc,     // in DXGI_SWAP_CHAIN_FULLSCREEN_DESC
             IntPtr pRestrictToOutput);  // IDXGIOutput
 
-        void CreateSwapChainForCoreWindowSTUB();
-        //virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForCoreWindow(
-        //    /* [annotation][in] */
-        //    _In_ IUnknown *pDevice,
-        //    /* [annotation][in] */
-        //    _In_ IUnknown *pWindow,
-        //    /* [annotation][in] */
-        //    _In_  const DXGI_SWAP_CHAIN_DESC1* pDesc,
-        //    /* [annotation][in] */
-        //    _In_opt_  IDXGIOutput* pRestrictToOutput,
-        //    /* [annotation][out] */
-        //    _COM_Outptr_  IDXGISwapChain1** ppSwapChain) = 0;
+        LUID GetSharedResourceAdapterLuid(IntPtr hResource);
 
-        void GetSharedResourceAdapterLuidSTUB();
-        //virtual HRESULT STDMETHODCALLTYPE GetSharedResourceAdapterLuid(
-        //    /* [annotation] */
-        //    _In_ HANDLE hResource,
-        //    /* [annotation] */
-        //    _Out_ LUID *pLuid) = 0;
+        uint RegisterStereoStatusWindow(
+            HWND WindowHandle,
+            uint wMsg);
 
-        void RegisterStereoStatusWindowSTUB();
-        //virtual HRESULT STDMETHODCALLTYPE RegisterStereoStatusWindow(
-        //    /* [annotation][in] */
-        //    _In_ HWND WindowHandle,
-        //    /* [annotation][in] */
-        //    _In_ UINT wMsg,
-        //    /* [annotation][out] */
-        //    _Out_ DWORD *pdwCookie) = 0;
+        uint RegisterStereoStatusEvent(IntPtr hEvent);
 
-        void RegisterStereoStatusEventSTUB();
-        //virtual HRESULT STDMETHODCALLTYPE RegisterStereoStatusEvent(
-        //    /* [annotation][in] */
-        //    _In_ HANDLE hEvent,
-        //    /* [annotation][out] */
-        //    _Out_ DWORD *pdwCookie) = 0;
+        [PreserveSig]
+        void UnregisterStereoStatus(uint dwCookie);
 
-        void UnregisterStereoStatusSTUB();
-        //virtual void STDMETHODCALLTYPE UnregisterStereoStatus(
-        //    /* [annotation][in] */
-        //    _In_ DWORD dwCookie) = 0;
+        uint RegisterOcclusionStatusWindow(
+            HWND WindowHandle,
+            uint wMsg);
 
-        void RegisterOcclusionStatusWindowSTUB();
-        //virtual HRESULT STDMETHODCALLTYPE RegisterOcclusionStatusWindow(
-        //    /* [annotation][in] */
-        //    _In_ HWND WindowHandle,
-        //    /* [annotation][in] */
-        //    _In_ UINT wMsg,
-        //    /* [annotation][out] */
-        //    _Out_ DWORD *pdwCookie) = 0;
+        uint RegisterOcclusionStatusEvent(IntPtr hEvent);
 
-        void RegisterOcclusionStatusEventSTUB();
-        //virtual HRESULT STDMETHODCALLTYPE RegisterOcclusionStatusEvent(
-        //    /* [annotation][in] */
-        //    _In_ HANDLE hEvent,
-        //    /* [annotation][out] */
-        //    _Out_ DWORD *pdwCookie) = 0;
+        [PreserveSig]
+        void UnregisterOcclusionStatus(uint dwCookie);
 
-        void UnregisterOcclusionStatusSTUB();
-        //virtual void STDMETHODCALLTYPE UnregisterOcclusionStatus(
-        //    /* [annotation][in] */
-        //    _In_ DWORD dwCookie) = 0;
-
-        void CreateSwapChainForCompositionSTUB();
-        //virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForComposition(
-        //    /* [annotation][in] */
-        //    _In_ IUnknown *pDevice,
-        //    /* [annotation][in] */
-        //    _In_  const DXGI_SWAP_CHAIN_DESC1* pDesc,
-        //    /* [annotation][in] */
-        //    _In_opt_  IDXGIOutput* pRestrictToOutput,
-        //    /* [annotation][out] */
-        //    _COM_Outptr_  IDXGISwapChain1** ppSwapChain) = 0;
+        ISwapChain1 CreateSwapChainForComposition(
+            [MarshalAs(UnmanagedType.IUnknown)]
+            object pDevice,
+            in SwapChainDescriptor1 pDesc,
+            // IDXGIOutput
+            IntPtr pRestrictToOutput);
     }
 }

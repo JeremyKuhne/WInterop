@@ -64,7 +64,7 @@ namespace Direct2dTests
         public void CreateBitmap()
         {
             IBitmap bitmap = _fixture.RenderTarget.CreateBitmap(new Size(100, 100),
-                new BitmapProperties(new PixelFormat(WInterop.Dxgi.Format.DXGI_FORMAT_R32G32B32A32_FLOAT, AlphaMode.Ignore), 72, 72));
+                new BitmapProperties(new PixelFormat(WInterop.GraphicsInfrastructure.Format.R32G32B32A32_FLOAT, AlphaMode.Ignore), 72, 72));
 
             bitmap.Should().NotBeNull();
         }
@@ -73,7 +73,7 @@ namespace Direct2dTests
         public unsafe void CreateBitmapBrush()
         {
             IBitmap bitmap = _fixture.RenderTarget.CreateBitmap(new Size(10, 10),
-                new BitmapProperties(new PixelFormat(WInterop.Dxgi.Format.DXGI_FORMAT_R32G32B32A32_FLOAT, AlphaMode.Ignore), 72, 72));
+                new BitmapProperties(new PixelFormat(WInterop.GraphicsInfrastructure.Format.R32G32B32A32_FLOAT, AlphaMode.Ignore), 72, 72));
 
             IBitmapBrush brush = _fixture.RenderTarget.CreateBitmapBrush(bitmap, null, null);
             brush.Should().NotBeNull();
@@ -195,7 +195,7 @@ namespace Direct2dTests
         {
             _fixture.RenderTarget.GetPixelFormat(out PixelFormat pixelFormat);
             // BGRA
-            pixelFormat.Format.Should().Be(WInterop.Dxgi.Format.DXGI_FORMAT_B8G8R8A8_UNORM);
+            pixelFormat.Format.Should().Be(WInterop.GraphicsInfrastructure.Format.B8G8R8A8_UNORM);
         }
 
         [Fact]

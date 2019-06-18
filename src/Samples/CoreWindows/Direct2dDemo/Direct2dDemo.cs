@@ -12,6 +12,7 @@ using WInterop.Direct2d;
 using WInterop.Direct3d;
 using WInterop.DirectX;
 using WInterop.Errors;
+using WInterop.GraphicsInfrastructure;
 using WInterop.Windows;
 
 namespace Direct2dDemo
@@ -22,16 +23,39 @@ namespace Direct2dDemo
         private ISolidColorBrush _lightSlateGrayBrush;
         private ISolidColorBrush _cornflowerBlueBrush;
 
-        protected override void CreateResources()
+        protected override void CreateResources(WindowHandle window)
         {
-            Direct3d.CreateDirect2dCompatibleDevice(out IntPtr device, out IntPtr deviceContext);
-            Guid guid = new Guid(WInterop.Direct3d.InterfaceIds.IID_IDXGIDevice);
-            // IntPtr iUnknown = Marshal.GetIUnknownForObject(device);
-            HRESULT result = (HRESULT)Marshal.QueryInterface(
-                device,
-                ref guid,
-                out IntPtr dxgiDevice);
-            Direct2dFactory.CreateDevice(dxgiDevice);
+            Direct3d.CreateDirect2dCompatibleDevice(out object d3d11Device, out IntPtr deviceContext);
+            var dxgiDevice = (WInterop.GraphicsInfrastructure.IDevice1)d3d11Device;
+            WInterop.Direct2d.IDevice device = Direct2dFactory.CreateDevice(dxgiDevice);
+
+            SwapChainDescriptor1 descriptor = new SwapChainDescriptor1
+            {
+                Format = Format.B8G8R8A8_UNORM,                     // Most common swapchain format
+                SampleDescriptor = new SampleDescriptor(count: 1),  // No multisampling
+                BufferUsage = Usage.RenderTargetOutput,
+                BufferCount = 2,                                    // Use double buffering to enable flip
+                Scaling = Scaling.None,
+                SwapEffect = SwapEffect.FlipSequential              // Required for all apps
+            };
+
+            IObject adapter = dxgiDevice.GetAdapter();
+            IFactory2 factory = (IFactory2)adapter.GetParent(new Guid(WInterop.GraphicsInfrastructure.InterfaceIds.IID_IDXGIFactory2));
+            bool isCurrent = factory.IsCurrent();
+            ISwapChain1 swapChain = factory.CreateSwapChainForHwnd(dxgiDevice, window, in descriptor);
+            dxgiDevice.SetMaximumFrameLatency(1);
+
+            ISurface backBuffer = (ISurface)swapChain.GetBuffer(0, new Guid(WInterop.GraphicsInfrastructure.InterfaceIds.IID_IDXGISurface));
+            BitmapProperties1 properties = new BitmapProperties1(
+                new PixelFormat(Format.B8G8R8A8_UNORM, AlphaMode.Ignore),
+                96,
+                96,
+                BitmapOptions.Target | BitmapOptions.CannotDraw);
+
+            IDeviceContext context = device.CreateDeviceContext();
+            IBitmap targetBitmap = context.CreateBitmapFromDxgiSurface(backBuffer, properties);
+            context.SetTarget(targetBitmap);
+
             _lightSlateGrayBrush = RenderTarget.CreateSolidColorBrush(Color.LightSlateGray);
             _cornflowerBlueBrush = RenderTarget.CreateSolidColorBrush(Color.CornflowerBlue);
         }

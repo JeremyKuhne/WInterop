@@ -11,29 +11,34 @@ using System.Runtime.InteropServices;
 namespace WInterop.GraphicsInfrastructure
 {
     /// <summary>
-    /// [IDXGIObject]
+    /// [IDXGIDeviceSubObject]
     /// </summary>
     [ComImport,
-        Guid(InterfaceIds.IID_IDXGIObject),
+        Guid(InterfaceIds.IID_IDXGIDeviceSubObject),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IObject
+    public interface ISubObject : IObject
     {
-        unsafe void SetPrivateData(
+        #region IDXGIObject
+        new unsafe void SetPrivateData(
             in Guid Name,
             uint DataSize,
             void* pData);
 
-        void SetPrivateDataInterface(
+        new void SetPrivateDataInterface(
             in Guid Name,
             [MarshalAs(UnmanagedType.IUnknown)]
             object pUnknown);
 
-        unsafe void GetPrivateData(
+        new unsafe void GetPrivateData(
             in Guid Name,
             ref uint pDataSize,
             void* pData);
 
         [return: MarshalAs(UnmanagedType.IUnknown)]
-        object GetParent(in Guid riid);
+        new object GetParent(in Guid riid);
+        #endregion
+
+        [return: MarshalAs(UnmanagedType.IUnknown)]
+        object GetDevice(in Guid riid);
     }
 }

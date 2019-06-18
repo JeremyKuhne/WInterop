@@ -18,9 +18,9 @@ namespace DirectWriteDemo
         IRadialGradientBrush _radialGradientBrush;
         CustomTextRenderer _textRenderer;
 
-        protected override void CreateResources()
+        protected override void CreateResources(WindowHandle windowHandle)
         {
-            base.CreateResources();
+            base.CreateResources(windowHandle);
 
             // Gradient brush
             Span<GradientStop> stops = stackalloc[]

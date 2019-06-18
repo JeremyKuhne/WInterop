@@ -28,13 +28,13 @@ namespace WInterop.Direct2d
         /// Returns the size of the bitmap in resolution independent units.
         /// </summary>
         [PreserveSig]
-        SizeF GetSize();
+        void GetSize(out SizeF size); // https://github.com/dotnet/coreclr/issues/19474
 
         /// <summary>
         /// Returns the size of the bitmap in resolution dependent units, (pixels).
         /// </summary>
         [PreserveSig]
-        SizeU GetPixelSize();
+        void GetPixelSize(out SizeU size); // https://github.com/dotnet/coreclr/issues/19474
 
         /// <summary>
         /// Retrieve the format of the bitmap.

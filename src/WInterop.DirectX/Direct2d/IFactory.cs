@@ -122,7 +122,7 @@ namespace WInterop.Direct2d
         /// This creates a new Direct2D device from the given IDXGIDevice.
         /// </summary>
         IDevice CreateDevice(
-            IntPtr dxgiDevice);
+            GraphicsInfrastructure.IDevice dxgiDevice);
     
     ///// <summary>
     ///// This creates a stroke style with the ability to preserve stroke width in various

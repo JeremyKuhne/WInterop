@@ -14,7 +14,7 @@ namespace WInterop.Direct3d
 {
     public static class Direct3d
     {
-        public unsafe static void CreateDirect2dCompatibleDevice(out IntPtr device, out IntPtr deviceContext)
+        public unsafe static void CreateDirect2dCompatibleDevice(out object device, out IntPtr deviceContext)
         {
             FeatureLevel level;
 

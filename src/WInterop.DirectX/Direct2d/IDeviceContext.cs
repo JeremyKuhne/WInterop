@@ -10,7 +10,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using WInterop.DirectWrite;
-using WInterop.Errors;
+using WInterop.GraphicsInfrastructure;
 
 namespace WInterop.Direct2d
 {
@@ -454,13 +454,11 @@ namespace WInterop.Direct2d
         /// Creates a bitmap with extended bitmap properties, potentially from a block of
         /// memory.
         /// </summary>
-        STDMETHOD(CreateBitmap)(
-            D2D1_SIZE_U size,
-            _In_opt_ CONST void* sourceData,
-            UINT32 pitch,
-        _In_ CONST D2D1_BITMAP_PROPERTIES1* bitmapProperties,
-        _COM_Outptr_ ID2D1Bitmap1** bitmap 
-        ) PURE;
+        unsafe IBitmap1 CreateBitmap(
+            SizeU size,
+            void* sourceData,
+            uint pitch,
+            in BitmapProperties1 bitmapProperties);
     
         /// <summary>
         /// Create a D2D bitmap by copying a WIC bitmap.
@@ -501,290 +499,263 @@ namespace WInterop.Direct2d
         /// <summary>
         /// Creates a bitmap from a DXGI surface with a set of extended properties.
         /// </summary>
-        STDMETHOD(CreateBitmapFromDxgiSurface)(
-            _In_ IDXGISurface * surface,
-            _In_opt_ CONST D2D1_BITMAP_PROPERTIES1 *bitmapProperties,
-            _COM_Outptr_ ID2D1Bitmap1 **bitmap 
-            ) PURE;
+        IBitmap1 CreateBitmapFromDxgiSurface(
+            ISurface surface,
+            in BitmapProperties1 bitmapProperties);
 
-    /// <summary>
-    /// Create a new effect, the effect must either be built in or previously registered
-    /// through ID2D1Factory1::RegisterEffectFromStream or
-    /// ID2D1Factory1::RegisterEffectFromString.
-    /// </summary>
-    STDMETHOD(CreateEffect)(
-        _In_ REFCLSID effectId,
-        _COM_Outptr_ ID2D1Effect** effect 
-        ) PURE;
-    
-    /// <summary>
-    /// A gradient stop collection represents a set of stops in an ideal unit length.
-    /// This is the source resource for a linear gradient and radial gradient brush.
-    /// </summary>
-    /// <param name="preInterpolationSpace">Specifies both the input color space and the
-    /// space in which the color interpolation occurs.</param>
-    /// <param name="postInterpolationSpace">Specifies the color space colors will be
-    /// converted to after interpolation occurs.</param>
-    /// <param name="bufferPrecision">Specifies the precision in which the gradient
-    /// buffer will be held.</param>
-    /// <param name="extendMode">Specifies how the gradient will be extended outside of
-    /// the unit length.</param>
-    /// <param name="colorInterpolationMode">Determines if colors will be interpolated
-    /// in straight alpha or premultiplied alpha space.</param>
-    STDMETHOD(CreateGradientStopCollection)(
-        _In_reads_(straightAlphaGradientStopsCount) CONST D2D1_GRADIENT_STOP* straightAlphaGradientStops,
-        _In_range_(>=, 1) UINT32 straightAlphaGradientStopsCount,
-         D2D1_COLOR_SPACE preInterpolationSpace,
-        D2D1_COLOR_SPACE postInterpolationSpace,
-        D2D1_BUFFER_PRECISION bufferPrecision,
-        D2D1_EXTEND_MODE extendMode,
-        D2D1_COLOR_INTERPOLATION_MODE colorInterpolationMode,
-        _COM_Outptr_ ID2D1GradientStopCollection1 **gradientStopCollection1 
-        ) PURE;
-    
-    using ID2D1RenderTarget::CreateGradientStopCollection;
-    
-    /// <summary>
-    /// Creates an image brush, the input image can be any type of image, including a
-    /// bitmap, effect and a command list.
-    /// </summary>
-    STDMETHOD(CreateImageBrush)(
-        _In_opt_ ID2D1Image * image,
-        _In_ CONST D2D1_IMAGE_BRUSH_PROPERTIES *imageBrushProperties,
-        _In_opt_ CONST D2D1_BRUSH_PROPERTIES* brushProperties,
-        _COM_Outptr_ ID2D1ImageBrush** imageBrush 
-        ) PURE;
-    
-    STDMETHOD(CreateBitmapBrush)(
-        _In_opt_ ID2D1Bitmap * bitmap,
-        _In_opt_ CONST D2D1_BITMAP_BRUSH_PROPERTIES1 *bitmapBrushProperties,
-        _In_opt_ CONST D2D1_BRUSH_PROPERTIES* brushProperties,
-        _COM_Outptr_ ID2D1BitmapBrush1** bitmapBrush 
-        ) PURE;
-    
-    using ID2D1RenderTarget::CreateBitmapBrush;
-    
-    /// <summary>
-    /// Creates a new command list.
-    /// </summary>
-    STDMETHOD(CreateCommandList)(
-        _COM_Outptr_ ID2D1CommandList ** commandList 
-        ) PURE;
-    
-    /// <summary>
-    /// Indicates whether the format is supported by D2D.
-    /// </summary>
-    STDMETHOD_(BOOL, IsDxgiFormatSupported)(
-        DXGI_FORMAT format
-        ) CONST PURE;
-    
-    /// <summary>
-    /// Indicates whether the buffer precision is supported by D2D.
-    /// </summary>
-    STDMETHOD_(BOOL, IsBufferPrecisionSupported)(
-        D2D1_BUFFER_PRECISION bufferPrecision
-        ) CONST PURE;
-    
-    /// <summary>
-    /// This retrieves the local-space bounds in DIPs of the current image using the
-    /// device context DPI.
-    /// </summary>
-    STDMETHOD(GetImageLocalBounds)(
-        _In_ ID2D1Image * image,
-        _Out_ D2D1_RECT_F* localBounds 
-        ) CONST PURE;
+        /// <summary>
+        /// Create a new effect, the effect must either be built in or previously registered
+        /// through ID2D1Factory1::RegisterEffectFromStream or
+        /// ID2D1Factory1::RegisterEffectFromString.
+        /// </summary>
+        IEffect CreateEffect(Guid effectId);
+
+        /// <summary>
+        /// A gradient stop collection represents a set of stops in an ideal unit length.
+        /// This is the source resource for a linear gradient and radial gradient brush.
+        /// </summary>
+        /// <param name="preInterpolationSpace">Specifies both the input color space and the
+        /// space in which the color interpolation occurs.</param>
+        /// <param name="postInterpolationSpace">Specifies the color space colors will be
+        /// converted to after interpolation occurs.</param>
+        /// <param name="bufferPrecision">Specifies the precision in which the gradient
+        /// buffer will be held.</param>
+        /// <param name="extendMode">Specifies how the gradient will be extended outside of
+        /// the unit length.</param>
+        /// <param name="colorInterpolationMode">Determines if colors will be interpolated
+        /// in straight alpha or premultiplied alpha space.</param>
+        void CreateGradientStopCollectionSTUB();
+        //STDMETHOD(CreateGradientStopCollection)(
+        //    _In_reads_(straightAlphaGradientStopsCount) CONST D2D1_GRADIENT_STOP* straightAlphaGradientStops,
+        //    _In_range_(>=, 1) UINT32 straightAlphaGradientStopsCount,
+        //     D2D1_COLOR_SPACE preInterpolationSpace,
+        //    D2D1_COLOR_SPACE postInterpolationSpace,
+        //    D2D1_BUFFER_PRECISION bufferPrecision,
+        //    D2D1_EXTEND_MODE extendMode,
+        //    D2D1_COLOR_INTERPOLATION_MODE colorInterpolationMode,
+        //    _COM_Outptr_ ID2D1GradientStopCollection1 **gradientStopCollection1 
+        //    ) PURE;
+
+
+        /// <summary>
+        /// Creates an image brush, the input image can be any type of image, including a
+        /// bitmap, effect and a command list.
+        /// </summary>
+        IImageBrush CreateImageBrush(
+            IImage image,
+            in ImageBrushProperties imageBrushProperties,
+            in BrushProperties brushProperties);
+
+        void CreateBitmapBrushSTUB();
+        //STDMETHOD(CreateBitmapBrush)(
+        //_In_opt_ ID2D1Bitmap * bitmap,
+        //_In_opt_ CONST D2D1_BITMAP_BRUSH_PROPERTIES1 *bitmapBrushProperties,
+        //_In_opt_ CONST D2D1_BRUSH_PROPERTIES* brushProperties,
+        //_COM_Outptr_ ID2D1BitmapBrush1** bitmapBrush 
+        //) PURE;
+
+        /// <summary>
+        /// Creates a new command list.
+        /// </summary>
+        void CreateCommandListSTUB();
+        //STDMETHOD(CreateCommandList)(
+        //    _COM_Outptr_ ID2D1CommandList ** commandList 
+        //    ) PURE;
+
+        /// <summary>
+        /// Indicates whether the format is supported by D2D.
+        /// </summary>
+        [PreserveSig]
+        BOOL IsDxgiFormatSupported(Format format);
+
+        /// <summary>
+        /// Indicates whether the buffer precision is supported by D2D.
+        /// </summary>
+        [PreserveSig]
+        BOOL IsBufferPrecisionSupported(BufferPrecision bufferPrecision);
+
+        /// <summary>
+        /// This retrieves the local-space bounds in DIPs of the current image using the
+        /// device context DPI.
+        /// </summary>
+        LtrbRectangleF GetImageLocalBounds(IImage image);
 
         /// <summary>
         /// This retrieves the world-space bounds in DIPs of the current image using the
         /// device context DPI.
         /// </summary>
-        STDMETHOD(GetImageWorldBounds)(
-            _In_ ID2D1Image * image,
-            _Out_ D2D1_RECT_F* worldBounds 
-        ) CONST PURE;
+        LtrbRectangleF GetImageWorldBounds(IImage image);
 
         /// <summary>
         /// Retrieves the world-space bounds in DIPs of the glyph run using the device
         /// context DPI.
         /// </summary>
-        STDMETHOD(GetGlyphRunWorldBounds)(
-            D2D1_POINT_2F baselineOrigin,
-            _In_ CONST DWRITE_GLYPH_RUN *glyphRun,
-        DWRITE_MEASURING_MODE measuringMode,
-        _Out_ D2D1_RECT_F* bounds 
-        ) CONST PURE;
+        LtrbRectangleF GetGlyphRunWorldBounds(
+            PointF baselineOrigin,
+            in GlyphRun glyphRun,
+            MeasuringMode measuringMode);
 
         /// <summary>
         /// Retrieves the device associated with this device context.
         /// </summary>
-        STDMETHOD_(void, GetDevice)(
-            _Outptr_ ID2D1Device ** device 
-        ) CONST PURE;
+        [PreserveSig]
+        void GetDevice(out IDevice device);
 
         /// <summary>
         /// Sets the target for this device context to point to the given image. The image
-        /// can be a command list or a bitmap created with the D2D1_BITMAP_OPTIONS_TARGET
+        /// can be a command list or a bitmap created with the <see cref="BitmapOptions.Target"/>
         /// flag.
         /// </summary>
-        STDMETHOD_(void, SetTarget)(
-            _In_opt_ ID2D1Image * image 
-        ) PURE;
-    
-    /// <summary>
-    /// Gets the target that this device context is currently pointing to.
-    /// </summary>
-    STDMETHOD_(void, GetTarget)(
-        _Outptr_result_maybenull_ ID2D1Image ** image 
-        ) CONST PURE;
+        [PreserveSig]
+        void SetTarget(IImage image);
+
+        /// <summary>
+        /// Gets the target that this device context is currently pointing to.
+        /// </summary>
+        [PreserveSig]
+        void GetTarget(out IImage image);
 
         /// <summary>
         /// Sets tuning parameters for internal rendering inside the device context.
         /// </summary>
-        STDMETHOD_(void, SetRenderingControls)(
-            _In_ CONST D2D1_RENDERING_CONTROLS *renderingControls 
-        ) PURE;
-    
-    /// <summary>
-    /// This retrieves the rendering controls currently selected into the device
-    /// context.
-    /// </summary>
-    STDMETHOD_(void, GetRenderingControls)(
-        _Out_ D2D1_RENDERING_CONTROLS * renderingControls 
-        ) CONST PURE;
+        [PreserveSig]
+        void SetRenderingControlsSTUB();
+        //STDMETHOD_(void, SetRenderingControls)(
+        //    _In_ CONST D2D1_RENDERING_CONTROLS *renderingControls 
+        //) PURE;
+
+        /// <summary>
+        /// This retrieves the rendering controls currently selected into the device
+        /// context.
+        /// </summary>
+        [PreserveSig]
+        void GetRenderingControlsSTUB();
+        //STDMETHOD_(void, GetRenderingControls)(
+        //    _Out_ D2D1_RENDERING_CONTROLS * renderingControls 
+        //    ) CONST PURE;
 
         /// <summary>
         /// Changes the primitive blending mode for all of the rendering operations.
         /// </summary>
-        STDMETHOD_(void, SetPrimitiveBlend)(
-            D2D1_PRIMITIVE_BLEND primitiveBlend
-    
-            ) PURE;
+        [PreserveSig]
+        void SetPrimitiveBlend(PrimitiveBlend primitiveBlend);
 
         /// <summary>
         /// Returns the primitive blend currently selected into the device context.
         /// </summary>
-        STDMETHOD_(D2D1_PRIMITIVE_BLEND, GetPrimitiveBlend)(
-    
-            ) CONST PURE;
-    
-    /// <summary>
-    /// Changes the units used for all of the rendering operations.
-    /// </summary>
-    STDMETHOD_(void, SetUnitMode)(
-        D2D1_UNIT_MODE unitMode
-        ) PURE;
+        [PreserveSig]
+        PrimitiveBlend GetPrimitiveBlend();
+
+        /// <summary>
+        /// Changes the units used for all of the rendering operations.
+        /// </summary>
+        [PreserveSig]
+        void SetUnitMode(UnitMode unitMode);
 
         /// <summary>
         /// Returns the unit mode currently set on the device context.
         /// </summary>
-        STDMETHOD_(D2D1_UNIT_MODE, GetUnitMode)(
-    
-            ) CONST PURE;
-    
-    /// <summary>
-    /// Draws the glyph run with an extended description to describe the glyphs.
-    /// </summary>
-    STDMETHOD_(void, DrawGlyphRun)(
-        D2D1_POINT_2F baselineOrigin,
-        _In_ CONST DWRITE_GLYPH_RUN *glyphRun,
-        _In_opt_ CONST DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,
-        _In_ ID2D1Brush* foregroundBrush,
-        DWRITE_MEASURING_MODE measuringMode = DWRITE_MEASURING_MODE_NATURAL 
-        ) PURE;
-    
-    using ID2D1RenderTarget::DrawGlyphRun;
-    
-    /// <summary>
-    /// Draw an image to the device context. The image represents either a concrete
-    /// bitmap or the output of an effect graph.
-    /// </summary>
-    STDMETHOD_(void, DrawImage)(
-        _In_ ID2D1Image * image,
-        _In_opt_ CONST D2D1_POINT_2F *targetOffset = NULL,
-        _In_opt_ CONST D2D1_RECT_F* imageRectangle = NULL,
-        D2D1_INTERPOLATION_MODE interpolationMode = D2D1_INTERPOLATION_MODE_LINEAR,
-        D2D1_COMPOSITE_MODE compositeMode = D2D1_COMPOSITE_MODE_SOURCE_OVER 
-        ) PURE;
-    
-    /// <summary>
-    /// Draw a metafile to the device context.
-    /// </summary>
-    STDMETHOD_(void, DrawGdiMetafile)(
-        _In_ ID2D1GdiMetafile * gdiMetafile,
-        _In_opt_ CONST D2D1_POINT_2F *targetOffset = NULL 
-        ) PURE;
-    
-    STDMETHOD_(void, DrawBitmap)(
-        _In_ ID2D1Bitmap * bitmap,
-        _In_opt_ CONST D2D1_RECT_F *destinationRectangle,
-        FLOAT opacity,
-        D2D1_INTERPOLATION_MODE interpolationMode,
-        _In_opt_ CONST D2D1_RECT_F* sourceRectangle = NULL,
-        _In_opt_ CONST D2D1_MATRIX_4X4_F *perspectiveTransform = NULL 
-        ) PURE;
-    
-    using ID2D1RenderTarget::DrawBitmap;
-    
-    /// <summary>
-    /// Push a layer on the device context.
-    /// </summary>
-    STDMETHOD_(void, PushLayer)(
-        _In_ CONST D2D1_LAYER_PARAMETERS1 *layerParameters,
-        _In_opt_ ID2D1Layer *layer 
-        ) PURE;
-    
-    using ID2D1RenderTarget::PushLayer;
-    
-    /// <summary>
-    /// This indicates that a portion of an effect's input is invalid. This method can
-    /// be called many times.
-    /// </summary>
-    STDMETHOD(InvalidateEffectInputRectangle)(
-        _In_ ID2D1Effect * effect,
-        UINT32 input,
-        _In_ CONST D2D1_RECT_F* inputRectangle 
-        ) PURE;
-    
-    /// <summary>
-    /// Gets the number of invalid ouptut rectangles that have accumulated at the
-    /// effect.
-    /// </summary>
-    STDMETHOD(GetEffectInvalidRectangleCount)(
-        _In_ ID2D1Effect * effect,
-        _Out_ UINT32* rectangleCount 
-        ) PURE;
-    
-    /// <summary>
-    /// Gets the invalid rectangles that are at the output of the effect.
-    /// </summary>
-    STDMETHOD(GetEffectInvalidRectangles)(
-        _In_ ID2D1Effect * effect,
-        _Out_writes_(rectanglesCount) D2D1_RECT_F* rectangles,
-        UINT32 rectanglesCount 
-        ) PURE;
-    
-    /// <summary>
-    /// Gets the maximum region of each specified input which would be used during a
-    /// subsequent rendering operation
-    /// </summary>
-    STDMETHOD(GetEffectRequiredInputRectangles)(
-        _In_ ID2D1Effect * renderEffect,
-        _In_opt_ CONST D2D1_RECT_F *renderImageRectangle,
-        _In_reads_(inputCount) CONST D2D1_EFFECT_INPUT_DESCRIPTION *inputDescriptions,
-        _Out_writes_(inputCount) D2D1_RECT_F* requiredInputRects,
-        UINT32 inputCount 
-        ) PURE;
-    
-    /// <summary>
-    /// Fill using the alpha channel of the supplied opacity mask bitmap. The brush
-    /// opacity will be modulated by the mask. The render target antialiasing mode must
-    /// be set to aliased.
-    /// </summary>
-    STDMETHOD_(void, FillOpacityMask)(
-        _In_ ID2D1Bitmap * opacityMask,
-        _In_ ID2D1Brush* brush,
-        _In_opt_ CONST D2D1_RECT_F *destinationRectangle = NULL,
-        _In_opt_ CONST D2D1_RECT_F* sourceRectangle = NULL 
-        ) PURE;
+        [PreserveSig]
+        UnitMode GetUnitMode();
+
+        /// <summary>
+        /// Draws the glyph run with an extended description to describe the glyphs.
+        /// </summary>
+        [PreserveSig]
+        unsafe void DrawGlyphRun(
+            LtrbRectangleF baselineOrigin,
+            in GlyphRun glyphRun,
+            GlyphRunDescription* glyphRunDescription,
+            IBrush foregroundBrush,
+            MeasuringMode measuringMode = MeasuringMode.Natural);
+
+        /// <summary>
+        /// Draw an image to the device context. The image represents either a concrete
+        /// bitmap or the output of an effect graph.
+        /// </summary>
+        [PreserveSig]
+        unsafe void DrawImage(
+            IImage image,
+            LtrbRectangleF* targetOffset = null,
+            LtrbRectangleF* imageRectangle = null,
+            InterpolationMode interpolationMode = InterpolationMode.Linear,
+            CompositeMode compositeMode = CompositeMode.SourceOver);
+
+        /// <summary>
+        /// Draw a metafile to the device context.
+        /// </summary>
+        [PreserveSig]
+        void DrawGdiMetafileSTUB();
+        //STDMETHOD_(void, DrawGdiMetafile)(
+        //    _In_ ID2D1GdiMetafile * gdiMetafile,
+        //    _In_opt_ CONST D2D1_POINT_2F *targetOffset = NULL 
+        //    ) PURE;
+
+        [PreserveSig]
+        unsafe void DrawBitmap(
+            IBitmap bitmap,
+            LtrbRectangleF* destinationRectangle,
+            float opacity,
+            InterpolationMode interpolationMode,
+            LtrbRectangleF* sourceRectangle = null,
+            Matrix4x4* perspectiveTransform = null);
+
+        /// <summary>
+        /// Push a layer on the device context.
+        /// </summary>
+        [PreserveSig]
+        void PushLayerSTUB2();
+        //STDMETHOD_(void, PushLayer)(
+        //    _In_ CONST D2D1_LAYER_PARAMETERS1 *layerParameters,
+        //    _In_opt_ ID2D1Layer *layer 
+        //    ) PURE;
+
+        /// <summary>
+        /// This indicates that a portion of an effect's input is invalid. This method can
+        /// be called many times.
+        /// </summary>
+        void InvalidateEffectInputRectangle(
+            IEffect effect,
+            uint input,
+            in LtrbRectangleF inputRectangle);
+
+        /// <summary>
+        /// Gets the number of invalid ouptut rectangles that have accumulated at the
+        /// effect.
+        /// </summary>
+        void GetEffectInvalidRectangleCount(
+            IEffect effect,
+            out uint rectangleCount);
+
+        /// <summary>
+        /// Gets the invalid rectangles that are at the output of the effect.
+        /// </summary>
+        unsafe void GetEffectInvalidRectangles(
+            IEffect effect,
+            LtrbRectangleF* rectangles,
+            uint rectanglesCount);
+
+        /// <summary>
+        /// Gets the maximum region of each specified input which would be used during a
+        /// subsequent rendering operation
+        /// </summary>
+        unsafe void GetEffectRequiredInputRectangles(
+            IEffect renderEffect,
+            LtrbRectangleF* renderImageRectangle,
+            EffectInputDescription* inputDescriptions,
+            LtrbRectangleF* requiredInputRects,
+            uint inputCount);
+
+        /// <summary>
+        /// Fill using the alpha channel of the supplied opacity mask bitmap. The brush
+        /// opacity will be modulated by the mask. The render target antialiasing mode must
+        /// be set to aliased.
+        /// </summary>
+        [PreserveSig]
+        unsafe void FillOpacityMask(
+            IBitmap opacityMask,
+            IBrush brush,
+            LtrbRectangleF* destinationRectangle = null,
+            LtrbRectangleF* sourceRectangle = null); 
     }
 }

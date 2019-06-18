@@ -1,120 +1,131 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// ------------------------
+//    WInterop Framework
+// ------------------------
+
+// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
+using System.Runtime.InteropServices;
+using WInterop.Direct2d;
+using WInterop.Windows.Native;
 
 namespace WInterop.GraphicsInfrastructure
 {
     /// <summary>
     /// [IDXGISwapChain1]
     /// </summary>
-    public interface ISwapChain1
+    [ComImport,
+        Guid(InterfaceIds.IID_IDXGISwapChain1),
+        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface ISwapChain1 : ISubObject // Actually derives from ISwapChain
     {
+        #region IDXGIObject
+        new unsafe void SetPrivateData(
+            in Guid Name,
+            uint DataSize,
+            void* pData);
 
-        MIDL_INTERFACE("310d36a0-d2e7-4c0a-aa04-6a9d23b8886a")
-    IDXGISwapChain : public IDXGIDeviceSubObject
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE Present(
-            /* [in] */ UINT SyncInterval,
-            /* [in] */ UINT Flags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBuffer(
-            /* [in] */ UINT Buffer,
-            /* [annotation][in] */
-            _In_ REFIID riid,
-            /* [annotation][out][in] */
-            _COM_Outptr_  void** ppSurface) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFullscreenState(
-            /* [in] */ BOOL Fullscreen,
-            /* [annotation][in] */
-            _In_opt_ IDXGIOutput *pTarget) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetFullscreenState(
-            /* [annotation][out] */
-            _Out_opt_ BOOL *pFullscreen,
-            /* [annotation][out] */
-            _COM_Outptr_opt_result_maybenull_ IDXGIOutput **ppTarget) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDesc(
-            /* [annotation][out] */
-            _Out_ DXGI_SWAP_CHAIN_DESC *pDesc) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ResizeBuffers(
-            /* [in] */ UINT BufferCount,
-            /* [in] */ UINT Width,
-            /* [in] */ UINT Height,
-            /* [in] */ DXGI_FORMAT NewFormat,
-            /* [in] */ UINT SwapChainFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ResizeTarget(
-            /* [annotation][in] */
-            _In_  const DXGI_MODE_DESC* pNewTargetParameters) = 0;
+        new void SetPrivateDataInterface(
+            in Guid Name,
+            [MarshalAs(UnmanagedType.IUnknown)]
+            object pUnknown);
 
-        virtual HRESULT STDMETHODCALLTYPE GetContainingOutput(
-            /* [annotation][out] */
-            _COM_Outptr_ IDXGIOutput **ppOutput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetFrameStatistics(
-            /* [annotation][out] */
-            _Out_ DXGI_FRAME_STATISTICS *pStats) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetLastPresentCount(
-            /* [annotation][out] */
-            _Out_ UINT *pLastPresentCount) = 0;
-        
-    };
+        new unsafe void GetPrivateData(
+            in Guid Name,
+            ref uint pDataSize,
+            void* pData);
 
-    MIDL_INTERFACE("790a45f7-0d42-4876-983a-0a55cfe6f4aa")
-    IDXGISwapChain1 : public IDXGISwapChain
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE GetDesc1(
-            /* [annotation][out] */
-            _Out_ DXGI_SWAP_CHAIN_DESC1 *pDesc) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetFullscreenDesc(
-            /* [annotation][out] */
-            _Out_ DXGI_SWAP_CHAIN_FULLSCREEN_DESC *pDesc) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetHwnd(
-            /* [annotation][out] */
-            _Out_ HWND *pHwnd) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCoreWindow(
-            /* [annotation][in] */
-            _In_ REFIID refiid,
-            /* [annotation][out] */
-            _COM_Outptr_  void** ppUnk) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Present1(
-            /* [in] */ UINT SyncInterval,
-            /* [in] */ UINT PresentFlags,
-            /* [annotation][in] */
-            _In_  const DXGI_PRESENT_PARAMETERS* pPresentParameters) = 0;
+        [return: MarshalAs(UnmanagedType.IUnknown)]
+        new object GetParent(in Guid riid);
+        #endregion
 
-        virtual BOOL STDMETHODCALLTYPE IsTemporaryMonoSupported(void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRestrictToOutput(
-            /* [annotation][out] */
-            _Out_ IDXGIOutput **ppRestrictToOutput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBackgroundColor(
-            /* [annotation][in] */
-            _In_  const DXGI_RGBA* pColor) = 0;
+        #region IDXGIDeviceSubObject
+        [return: MarshalAs(UnmanagedType.IUnknown)]
+        new object GetDevice(in Guid riid);
+        #endregion
 
-        virtual HRESULT STDMETHODCALLTYPE GetBackgroundColor(
-            /* [annotation][out] */
-            _Out_ DXGI_RGBA *pColor) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRotation(
-            /* [annotation][in] */
-            _In_ DXGI_MODE_ROTATION Rotation) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRotation(
-            /* [annotation][out] */
-            _Out_ DXGI_MODE_ROTATION *pRotation) = 0;
-        
-    };
-}
+        #region IDXGISwapChain // "310d36a0-d2e7-4c0a-aa04-6a9d23b8886a"
+        void Present(
+            uint SyncInterval,
+            uint Flags);
+
+        [return: MarshalAs(UnmanagedType.IUnknown)]
+        object GetBuffer(
+            uint Buffer,
+            in Guid riid);
+
+        void SetFullscreenState(
+            BOOL Fullscreen,
+            // IDXGIOutput
+            IntPtr pTarget);
+
+        // Return is IDXGIOutput
+        IntPtr GetFullscreenState(BOOL pFullscreen);
+
+        void GetDescSTUB();
+        //void GetDesc(
+        //    /* [annotation][out] */
+        //    _Out_ DXGI_SWAP_CHAIN_DESC *pDesc) = 0;
+
+        void ResizeBuffers(
+            uint BufferCount,
+            uint Width,
+            uint Height,
+            Format NewFormat,
+            uint SwapChainFlags);
+
+        void ResizeTargetSTUB();
+        //virtual HRESULT STDMETHODCALLTYPE ResizeTarget(
+        //    /* [annotation][in] */
+        //    _In_  const DXGI_MODE_DESC* pNewTargetParameters) = 0;
+
+        // Return is IDXGIOutput
+        IntPtr GetContainingOutput();
+
+        void GetFrameStatisticsSTUB();
+        //virtual HRESULT STDMETHODCALLTYPE GetFrameStatistics(
+        //    /* [annotation][out] */
+        //    _Out_ DXGI_FRAME_STATISTICS *pStats) = 0;
+
+        uint GetLastPresentCount();
+        #endregion
+
+
+        void GetDesc1STUB();
+        //virtual HRESULT STDMETHODCALLTYPE GetDesc1(
+        //    /* [annotation][out] */
+        //    _Out_ DXGI_SWAP_CHAIN_DESC1 *pDesc) = 0;
+
+        void GetFullscreenDescSTUB();
+        //virtual HRESULT STDMETHODCALLTYPE GetFullscreenDesc(
+        //    /* [annotation][out] */
+        //    _Out_ DXGI_SWAP_CHAIN_FULLSCREEN_DESC *pDesc) = 0;
+
+        HWND GetHwnd();
+
+        // Return is IUnknown
+        IntPtr GetCoreWindow(in Guid refiid);
+
+        void Present1STUB();
+        //virtual HRESULT STDMETHODCALLTYPE Present1(
+        //    /* [in] */ UINT SyncInterval,
+        //    /* [in] */ UINT PresentFlags,
+        //    /* [annotation][in] */
+        //    _In_  const DXGI_PRESENT_PARAMETERS* pPresentParameters) = 0;
+
+        [PreserveSig]
+        BOOL IsTemporaryMonoSupported();
+
+        // Return is IDXGIOutput
+        IntPtr GetRestrictToOutput();
+
+        void SetBackgroundColor(in ColorF pColor);
+
+        ColorF GetBackgroundColor();
+
+        void SetRotation(ModeRotation Rotation);
+
+        ModeRotation GetRotation();
+    }
 }

@@ -45,7 +45,7 @@ namespace WInterop.DirectX
             {
                 _renderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, window.GetClientRectangle().Size));
-                CreateResources();
+                CreateResources(window);
                 _resourcesValid = true;
             }
         }
@@ -56,7 +56,7 @@ namespace WInterop.DirectX
             {
                 _renderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, size.NewSize));
-                CreateResources();
+                CreateResources(window);
                 _resourcesValid = true;
             }
             else
@@ -65,7 +65,7 @@ namespace WInterop.DirectX
             }
         }
 
-        protected virtual void CreateResources()
+        protected virtual void CreateResources(WindowHandle window)
         {
         }
 

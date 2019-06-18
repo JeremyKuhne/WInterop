@@ -29,7 +29,7 @@ namespace DirectWriteDemo
             _textFormat.SetParagraphAlignment(ParagraphAlignment.Center);
         }
 
-        protected override void CreateResources()
+        protected override void CreateResources(WindowHandle window)
         {
             string text = "Hello World From ... DirectWrite!";
             _blackBrush = RenderTarget.CreateSolidColorBrush(Color.Black);

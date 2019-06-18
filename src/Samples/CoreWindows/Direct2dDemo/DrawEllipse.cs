@@ -25,7 +25,7 @@ namespace Direct2dDemo
             _dashDotDotStyle = Direct2dFactory.CreateStrokeStyle(style);
         }
 
-        protected override void CreateResources()
+        protected override void CreateResources(WindowHandle window)
         {
             _blackBrush = RenderTarget.CreateSolidColorBrush(Color.Black);
             _silverBrush = RenderTarget.CreateSolidColorBrush(Color.Silver);

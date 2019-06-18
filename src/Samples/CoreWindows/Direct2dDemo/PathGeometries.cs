@@ -114,7 +114,7 @@ namespace Direct2dDemo
             sink.Close();
         }
 
-        protected override void CreateResources()
+        protected override void CreateResources(WindowHandle window)
         {
             _sceneBrush = RenderTarget.CreateSolidColorBrush(Color.Black);
 

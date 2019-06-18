@@ -30,7 +30,8 @@ namespace WInterop.Direct3d.Native
             FeatureLevel *pFeatureLevels,
             uint FeatureLevels,
             uint SDKVersion,
-            out IntPtr ppDevice,                // ID3D11Device
+            [MarshalAs(UnmanagedType.IUnknown)] // ID3D11Device
+            out object ppDevice,
             FeatureLevel* pFeatureLevel,
             out IntPtr ppImmediateContext);     // ID3D11DeviceContext
     }

@@ -5,14 +5,17 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.GraphicsInfrastructure
+namespace WInterop.Direct2d
 {
     /// <summary>
-    /// [DXGI_SAMPLE_DESC]
+    /// A blend mode that applies to all primitives drawn on the context. [D2D1_PRIMITIVE_BLEND]
     /// </summary>
-    public struct SampleDescription
+    public enum PrimitiveBlend : uint
     {
-        public uint Count;
-        public uint Quality;
+        SourceOver = 0,
+        Copy = 1,
+        Min = 2,
+        Add = 3,
+        Max = 4,
     }
 }

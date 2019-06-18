@@ -11,12 +11,12 @@ using System.Runtime.InteropServices;
 namespace WInterop.GraphicsInfrastructure
 {
     /// <summary>
-    /// [IDXGIDevice]
+    /// [IDXGIDevice1]
     /// </summary>
     [ComImport,
-        Guid(InterfaceIds.IID_IDXGIDevice),
+        Guid(InterfaceIds.IID_IDXGIDevice1),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IDevice : IObject
+    public interface IDevice1 : IDevice
     {
         #region IID_IDXGIObject
         new unsafe void SetPrivateData(
@@ -38,10 +38,11 @@ namespace WInterop.GraphicsInfrastructure
         new object GetParent(in Guid riid);
         #endregion
 
+        #region IDXGIDevice1
         // Return is IDXGIAdapter
-        IObject GetAdapter();
+        new IObject GetAdapter();
 
-        void CreateSurfaceSTUB();
+        new void CreateSurfaceSTUB();
         //virtual HRESULT STDMETHODCALLTYPE CreateSurface(
         //    /* [annotation][in] */
         //    _In_  const DXGI_SURFACE_DESC* pDesc,
@@ -52,7 +53,7 @@ namespace WInterop.GraphicsInfrastructure
         //    /* [annotation][out] */
         //    _COM_Outptr_  IDXGISurface** ppSurface) = 0;
 
-        void QueryResourceResidencySTUB();
+        new void QueryResourceResidencySTUB();
         //virtual HRESULT STDMETHODCALLTYPE QueryResourceResidency(
         //    /* [annotation][size_is][in] */
         //    _In_reads_(NumResources) IUnknown *const * ppResources,
@@ -60,8 +61,13 @@ namespace WInterop.GraphicsInfrastructure
         //   _Out_writes_(NumResources)  DXGI_RESIDENCY* pResidencyStatus,
         //   /* [in] */ UINT NumResources) = 0;
 
-        void SetGPUThreadPriority(int Priority);
+        new void SetGPUThreadPriority(int Priority);
 
-        int GetGPUThreadPriority();
+        new int GetGPUThreadPriority();
+        #endregion
+
+        void SetMaximumFrameLatency(uint MaxLatency);
+
+        uint GetMaximumFrameLatency();
     }
 }

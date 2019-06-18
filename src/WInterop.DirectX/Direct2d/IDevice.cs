@@ -28,7 +28,7 @@ namespace WInterop.Direct2d
         /// <summary>
         /// Creates a new device context with no initially assigned target.
         /// </summary>
-        IDeviceContext CreateDeviceContext(DeviceContextOptions options);
+        IDeviceContext CreateDeviceContext(DeviceContextOptions options = DeviceContextOptions.None);
 
         /// <summary>
         /// Creates a D2D print control.
