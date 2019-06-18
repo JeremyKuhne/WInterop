@@ -88,8 +88,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.GdiPlus", "src\WIn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Petzold", "Petzold", "{1C0A50A0-778D-4AF2-9F04-E95206DA34AC}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WInterop.Shared", "src\WInterop.Shared\WInterop.Shared.shproj", "{2322DE30-4C84-4D86-AC36-8E6C0E750C43}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreConsole", "src\Tests\CoreConsole\CoreConsole.csproj", "{F95CD2A5-479F-4EE2-A073-CED7F2BDF7EC}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tests.Shared.Desktop", "src\Tests\Tests.Shared.Desktop\Tests.Shared.Desktop.shproj", "{A6BC8AF5-E3BF-4F75-9FBA-FE5ED7D50AD2}"
@@ -120,7 +118,6 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\Tests\Tests.Shared.Support\Tests.Shared.Support.projitems*{1cc4af0d-dc51-4626-b08e-955f36898073}*SharedItemsImports = 13
 		src\Tests\Tests.Shared\Tests.Shared.projitems*{2035a6ee-3425-4eba-8067-919adab2599e}*SharedItemsImports = 13
-		src\WInterop.Shared\WInterop.Shared.projitems*{2322de30-4c84-4d86-ac36-8e6c0e750c43}*SharedItemsImports = 13
 		src\Tests\Tests.Shared.Desktop\Tests.Shared.Desktop.projitems*{a6bc8af5-e3bf-4f75-9fba-fe5ed7d50ad2}*SharedItemsImports = 13
 		src\Common\Common.projitems*{ac918478-f510-44dd-92ae-6e0b013546f5}*SharedItemsImports = 4
 		src\Common\Common.projitems*{e7caf10f-86b5-486f-9b76-bfc8b9ea41f8}*SharedItemsImports = 13
