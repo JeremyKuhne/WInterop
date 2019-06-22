@@ -15,6 +15,29 @@ namespace ProcessAndThreadTests
     public partial class ProcessTests
     {
         [Fact]
+        public void GetCurrentProcessId()
+        {
+            uint id = Processes.GetCurrentProcessId();
+            id.Should().NotBe(0);
+        }
+
+        [Fact]
+        public void GetCurrentProcess()
+        {
+            ProcessHandle handle = Processes.GetCurrentProcess();
+            handle.HANDLE.Should().Be(new IntPtr(-1));
+        }
+
+        [Fact]
+        public void OpenCurrentProcess()
+        {
+            using (SafeProcessHandle handle = Processes.OpenProcess(Processes.GetCurrentProcessId(), ProcessAccessRights.QueryLimitedInfomration))
+            {
+                handle.IsInvalid.Should().BeFalse();
+            }
+        }
+
+        [Fact]
         public void GetEnvironmentVariable_GetNullStringThrows()
         {
             Action action = () => Processes.GetEnvironmentVariable(null);

@@ -9,47 +9,14 @@
     <Import_RootNamespace>DesktopTests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Console\GeneralConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Direct2d\Factory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Direct2d\RenderTarget.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Security\LsaTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Security\Basic.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\BackupTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Clipboard\Basic.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Compression\LzTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Devices\DeviceManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\Encryption.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\Methods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\CreateDirectTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileInformationTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\SymbolicLinkTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\DEVMODE_Tests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\DISPLAY_DEVICE_Tests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Gdi\GeneralGdi.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Modules\Methods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\ErrorHandlingTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileManagementBehaviors.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\FileManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Handles\Methods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Ipc\Mailslots\MailslotTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NetworkManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProcessAndThreads\ProcessTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Registry\RegistryTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteDesktop\RemoteDesktopTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Resources\MenuTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SafeString\SafeStringTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Security\EnumerateRights.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Shell\AssociationTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Shell\ShellTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Support\TempCurrentDirectory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\SystemInformationTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\VolumeManagementTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowClassTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsProcedureTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Basic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Basic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInformation\Basic.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)ErrorHandling\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Security\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Storage\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Support\" />
   </ItemGroup>
 </Project>
