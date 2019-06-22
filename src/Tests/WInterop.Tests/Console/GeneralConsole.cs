@@ -17,9 +17,9 @@ namespace ConsoleTests
         [Fact]
         public void GetConsoleWindow()
         {
-            // Tests run with an attached console. (This changed recently...)
+            // Xunit tests in core don't have an attached console window
             WindowHandle window = Console.GetConsoleWindow();
-            window.IsInvalid.Should().BeFalse();
+            window.IsInvalid.Should().BeTrue();
             window = Windows.GetActiveWindow();
         }
     }

@@ -302,7 +302,7 @@ namespace StorageTests
             // NativeMethods.File.GetFullPathName(PathGenerator.CreatePathOfLength(@"C:\", short.MaxValue - 2));
         }
 
-        [Fact]
+        [Fact(Skip = "Needs updated for Windows 10 1903, which no longer holds names until handles are closed.")]
         public void LockedFileDirectoryDeletion()
         {
             using (var cleaner = new TestFileCleaner())

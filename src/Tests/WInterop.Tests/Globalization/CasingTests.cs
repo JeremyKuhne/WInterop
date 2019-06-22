@@ -45,7 +45,9 @@ namespace GlobalizationTests
         public void StringToUpperInvariantUnsafe(string value, string expected)
         {
             // Copy the string so we don't run into any interning issues
-            value = value == null ? null : String.Copy(value);
+#pragma warning disable CS0618 // Type or member is obsolete
+            value = value == null ? null : string.Copy(value);
+#pragma warning restore CS0618 // Type or member is obsolete
             Globalization.ToUpperInvariantUnsafe(value);
             value.Should().Be(expected);
         }
@@ -59,7 +61,9 @@ namespace GlobalizationTests
         public void StringToLowerInvariantUnsafe(string value, string expected)
         {
             // Copy the string so we don't run into any interning issues
-            value = value == null ? null : String.Copy(value);
+#pragma warning disable CS0618 // Type or member is obsolete
+            value = value == null ? null : string.Copy(value);
+#pragma warning restore CS0618 // Type or member is obsolete
             Globalization.ToLowerInvariantUnsafe(value);
             value.Should().Be(expected);
         }

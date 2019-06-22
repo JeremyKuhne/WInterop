@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.7.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -18,6 +19,19 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\WInterop.Desktop\WInterop.Desktop.csproj" />
+    <ProjectReference Include="..\..\WInterop.DirectX\WInterop.Direct2d.csproj" />
+    <ProjectReference Include="..\..\WInterop.GdiPlus\WInterop.GdiPlus.csproj" />
+    <!--
+      Adding a project ref like this gets build order correct and copies the native dll to the output
+      directory. The reference still gets a warning in the solution explorer, haven't dug in to find
+      a way to prevent that.
+    -->
+    <ProjectReference Include="..\NativeTestLibrary\NativeTestLibrary.vcxproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Content</OutputItemType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

@@ -20,7 +20,6 @@
     <PackageTags>PInvoke Win32</PackageTags>
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\WInterop.Shared\WInterop.Shared.projitems" Label="Shared" />
   <ItemGroup>
     <Content Include="Gdi\BitBLT History.txt">
       <Pack>false</Pack>
