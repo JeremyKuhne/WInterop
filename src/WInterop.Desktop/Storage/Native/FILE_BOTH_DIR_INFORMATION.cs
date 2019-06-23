@@ -22,7 +22,7 @@ namespace WInterop.Storage.Native
         public LongFileTime ChangeTime;
         public long EndOfFile;
         public long AllocationSize;
-        public FileAttributes FileAttributes;
+        public AllFileAttributes FileAttributes;
         public uint FileNameLength;
         public uint EaSize;
         public sbyte ShortNameLength;

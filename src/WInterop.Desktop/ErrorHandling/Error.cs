@@ -203,6 +203,15 @@ namespace WInterop.Errors
         }
 
         /// <summary>
+        /// Throw the last error code from windows if <paramref name="result"/> is zero.
+        /// </summary>
+        /// <param name="path">Optional path or other input detail.</param>
+        public static void ThrowLastErrorIfZero(uint result, string path = null)
+        {
+            if (result == 0) GetLastError().Throw(path);
+        }
+
+        /// <summary>
         /// Gets the error mode for the current process.
         /// </summary>
         public static ErrorMode GetProcessErrorMode() => Imports.GetErrorMode();

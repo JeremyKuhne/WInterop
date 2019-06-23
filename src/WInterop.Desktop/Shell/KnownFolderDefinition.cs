@@ -29,7 +29,7 @@ namespace WInterop.Shell
         private IntPtr pszLocalizedName;
         private IntPtr pszIcon;
         private IntPtr pszSecurity;
-        private FileAttributes dwAttributes;
+        private AllFileAttributes dwAttributes;
         private KnownFolderDefinitionFlags kfdFlags;
         private Guid ftidType;
 
@@ -122,7 +122,7 @@ namespace WInterop.Shell
             get { return Disposed ? null : Marshal.PtrToStringUni(pszSecurity); }
         }
 
-        public FileAttributes Attributes
+        public AllFileAttributes Attributes
         {
             get { return Disposed ? 0 : dwAttributes; }
         }

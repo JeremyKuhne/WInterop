@@ -155,8 +155,12 @@ namespace WInterop.Errors
 
         public static void ThrowIfFailed(this NTStatus status, string path = null)
         {
-            if (status.Failed())
-                status.Throw(path);
+            if (status.Failed()) status.Throw(path);
+        }
+
+        public static void ThrowIfFailed(this NTStatus status, ReadOnlySpan<char> path)
+        {
+            if (status.Failed()) status.Throw(path.ToString());
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

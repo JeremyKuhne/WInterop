@@ -5,6 +5,8 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+#nullable enable
+
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
@@ -42,17 +44,17 @@ namespace WInterop.Storage.Native
             uint dwFlags);
 
         // Ex version is supported by WinRT apps
-        // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfileinformationbyhandle
+        // https://docs.microsoft.com/windows/desktop/api/fileapi/nf-fileapi-getfileinformationbyhandle
         [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool GetFileInformationByHandle(
             SafeFileHandle hFile,
             out ByHandleFileInformation lpFileInformation);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getshortpathnamew (kernel32)
+        // https://docs.microsoft.com/windows/desktop/api/fileapi/nf-fileapi-getshortpathnamew (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern uint GetShortPathNameW(
-            string lpszLongPath,
-            SafeHandle lpszShortPath,
+        public unsafe static extern uint GetShortPathNameW(
+            char* lpszLongPath,
+            char* lpszShortPath,
             uint cchBuffer);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-createsymboliclinkw
@@ -157,7 +159,7 @@ namespace WInterop.Storage.Native
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-querydosdevicew
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern uint QueryDosDeviceW(
-            string lpDeviceName,
+            string? lpDeviceName,
             SafeHandle lpTargetPath,
             uint ucchMax);
 
@@ -184,9 +186,9 @@ namespace WInterop.Storage.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getvolumenameforvolumemountpointw
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern bool GetVolumeNameForVolumeMountPointW(
+        public unsafe static extern bool GetVolumeNameForVolumeMountPointW(
             string lpszVolumeMountPoint,
-            SafeHandle lpszVolumeName,
+            char* lpszVolumeName,
             uint cchBufferLength);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-backupread
@@ -219,7 +221,7 @@ namespace WInterop.Storage.Native
             ref OBJECT_ATTRIBUTES ObjectAttributes,
             out IO_STATUS_BLOCK IoStatusBlock,
             long* AllocationSize,
-            FileAttributes FileAttributes,
+            AllFileAttributes FileAttributes,
             ShareModes ShareAccess,
             CreateDisposition CreateDisposition,
             CreateOptions CreateOptions,
@@ -313,7 +315,7 @@ namespace WInterop.Storage.Native
         public static extern bool CopyFileExW(
             string lpExistingFileName,
             string lpNewFileName,
-            CopyProgressRoutine lpProgressRoutine,
+            CopyProgressRoutine? lpProgressRoutine,
             IntPtr lpData,
             ref bool pbCancel,
             CopyFileFlags dwCopyFlags);
@@ -337,7 +339,7 @@ namespace WInterop.Storage.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfileattributesw
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern FileAttributes GetFileAttributesW(
+        public static extern AllFileAttributes GetFileAttributesW(
             string lpFileName);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfileattributesexw (kernel32)
@@ -351,7 +353,7 @@ namespace WInterop.Storage.Native
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern bool SetFileAttributesW(
             string lpFileName,
-            FileAttributes dwFileAttributes);
+            AllFileAttributes dwFileAttributes);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfullpathnamew (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -418,10 +420,8 @@ namespace WInterop.Storage.Native
             void* lpFileInformation,
             uint dwBufferSize)
         {
-            using (var handle = new UnwrapHandle(hFile))
-            {
-                return GetFileInformationByHandleEx(handle, FileInformationClass, lpFileInformation, dwBufferSize);
-            }
+            using var handle = new UnwrapHandle(hFile);
+            return GetFileInformationByHandleEx(handle, FileInformationClass, lpFileInformation, dwBufferSize);
         }
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-deletefilew (kernel32)
@@ -560,25 +560,25 @@ namespace WInterop.Storage.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getvolumeinformationw
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern bool GetVolumeInformationW(
-            string lpRootPathName,
-            SafeHandle lpVolumeNameBuffer,
+        public unsafe static extern bool GetVolumeInformationW(
+            string? lpRootPathName,
+            char* lpVolumeNameBuffer,
             uint nVolumeNameSize,
             out uint lpVolumeSerialNumber,
             out uint lpMaximumComponentLength,
             out FileSystemFeature lpFileSystemFlags,
-            SafeHandle lpFileSystemNameBuffer,
+            char* lpFileSystemNameBuffer,
             uint nFileSystemNameSize);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getdrivetypew
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern DriveType GetDriveTypeW(
-            string lpRootPathName);
+            string? lpRootPathName);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getdiskfreespacew
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public unsafe static extern bool GetDiskFreeSpaceW(
-            string lpRootPathName,
+            string? lpRootPathName,
             uint* lpSectorsPerCluster,
             uint* lpBytesPerSector,
             uint* lpNumberOfFreeClusters,

@@ -46,7 +46,7 @@ namespace InterprocessTests
                 handle.IsInvalid.Should().BeFalse();
 
                 using (var fileHandle = Storage.CreateFile(mailslotName, CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
-                    FileAttributes.None, FileFlags.Overlapped))
+                    AllFileAttributes.None, FileFlags.Overlapped))
                 {
                     fileHandle.IsInvalid.Should().BeFalse();
                     Storage.GetFileType(fileHandle).Should().Be(FileType.Unknown);

@@ -42,7 +42,7 @@ namespace WInterop.Storage.Native
         /// any FILE_ATTRIBUTE that is currently set on the file, not just the
         /// ones documented.
         /// </remarks>
-        public FileAttributes FileAttributes;
+        public AllFileAttributes FileAttributes;
 
         /// <summary>
         /// The length of the file name in bytes (without null).

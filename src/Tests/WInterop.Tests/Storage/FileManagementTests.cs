@@ -7,8 +7,10 @@
 
 using FluentAssertions;
 using System;
+using System.IO;
 using System.Linq;
 using Tests.Support;
+using WInterop.Shell;
 using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
@@ -22,6 +24,9 @@ namespace StorageTests
         {
             string tempPath = Storage.GetTempPath();
             Storage.GetShortPathName(tempPath).Should().NotBeNullOrWhiteSpace();
+
+            string programFiles = ShellMethods.GetKnownFolderPath(KnownFolderIds.ProgramFiles);
+            Storage.GetShortPathName(programFiles).Should().Contain("~");
         }
 
         [Fact]
@@ -35,87 +40,81 @@ namespace StorageTests
         public void FinalPathNameVolumeNameBehavior()
         {
             // This test is asserting that the original volume name has nothing to do with the volume GetFinalPathNameByHandle returns
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string filePath = cleaner.CreateTestFile("FinalPathNameVolumeNameBehavior");
+
+            using (var handle = Storage.CreateFile(filePath.ToLower(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
             {
-                string filePath = cleaner.CreateTestFile("FinalPathNameVolumeNameBehavior");
+                handle.IsInvalid.Should().BeFalse();
 
-                using (var handle = Storage.CreateFile(filePath.ToLower(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
-                {
-                    handle.IsInvalid.Should().BeFalse();
-
-                    string extendedPath = @"\\?\" + filePath;
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
-                        .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
-                        .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
-                        .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
-                        .Should().StartWith(@"\\?\Volume");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
-                        .Should().StartWith(@"\Device\");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
-                        .Should().Be(filePath.Substring(2));
-                }
+                string extendedPath = @"\\?\" + filePath;
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
+                    .Should().Be(extendedPath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
+                    .Should().Be(extendedPath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
+                    .Should().Be(extendedPath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
+                    .Should().StartWith(@"\\?\Volume");
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
+                    .Should().StartWith(@"\Device\");
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
+                    .Should().Be(filePath.Substring(2));
             }
         }
 
         [Fact]
         public void FinalPathNameBasic()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string filePath = cleaner.CreateTestFile("FinalPathNameBehavior");
+
+            using (var handle = Storage.CreateFile(filePath.ToLower(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
             {
-                string filePath = cleaner.CreateTestFile("FinalPathNameBehavior");
+                handle.IsInvalid.Should().BeFalse();
 
-                using (var handle = Storage.CreateFile(filePath.ToLower(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
-                {
-                    handle.IsInvalid.Should().BeFalse();
-
-                    string extendedPath = @"\\?\" + filePath;
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
-                        .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
-                        .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
-                        .Should().Be(extendedPath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
-                        .Should().StartWith(@"\\?\Volume");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
-                        .Should().StartWith(@"\Device\");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
-                        .Should().Be(filePath.Substring(2));
-                }
+                string extendedPath = @"\\?\" + filePath;
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
+                    .Should().Be(extendedPath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
+                    .Should().Be(extendedPath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
+                    .Should().Be(extendedPath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
+                    .Should().StartWith(@"\\?\Volume");
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
+                    .Should().StartWith(@"\Device\");
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
+                    .Should().Be(filePath.Substring(2));
             }
         }
 
         [Fact]
         public void FinalPathNameLongPath()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+            string filePath = Path.Join(longPath, System.IO.Path.GetRandomFileName());
+
+            FileHelper.CreateDirectoryRecursive(longPath);
+            FileHelper.WriteAllText(filePath, "FinalPathNameLongPathPrefixRoundTripBehavior");
+
+            using (var handle = Storage.CreateFile(filePath, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
             {
-                string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
-                string filePath = Paths.Combine(longPath, System.IO.Path.GetRandomFileName());
+                handle.IsInvalid.Should().BeFalse();
 
-                FileHelper.CreateDirectoryRecursive(longPath);
-                FileHelper.WriteAllText(filePath, "FinalPathNameLongPathPrefixRoundTripBehavior");
-
-                using (var handle = Storage.CreateFile(filePath, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
-                {
-                    handle.IsInvalid.Should().BeFalse();
-
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
-                        .Should().Be(filePath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
-                        .Should().Be(filePath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
-                        .Should().Be(filePath);
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
-                        .Should().StartWith(@"\\?\Volume");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
-                        .Should().StartWith(@"\Device\");
-                    Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
-                        .Should().Be(filePath.Substring(6));
-                }
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)
+                    .Should().Be(filePath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameOpened)
+                    .Should().Be(filePath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameDos)
+                    .Should().Be(filePath);
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameGuid)
+                    .Should().StartWith(@"\\?\Volume");
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
+                    .Should().StartWith(@"\Device\");
+                Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
+                    .Should().Be(filePath.Substring(6));
             }
         }
 
@@ -133,7 +132,7 @@ namespace StorageTests
         {
             string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(@"C:\", 300);
             Action action = () => Storage.GetFileAttributes(longPath);
-            action.Should().Throw<System.IO.DirectoryNotFoundException>();
+            action.Should().Throw<DirectoryNotFoundException>();
         }
 
         [Fact]
@@ -230,15 +229,13 @@ namespace StorageTests
         [Fact]
         public void FileModeSynchronousFile()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string filePath = cleaner.GetTestPath();
+            using (var file = Storage.CreateFile(filePath, CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
             {
-                string filePath = cleaner.GetTestPath();
-                using (var file = Storage.CreateFile(filePath, CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
-                {
-                    file.IsInvalid.Should().BeFalse();
-                    var mode = Storage.GetFileMode(file);
-                    mode.Should().HaveFlag(FileAccessModes.SynchronousNotAlertable);
-                }
+                file.IsInvalid.Should().BeFalse();
+                var mode = Storage.GetFileMode(file);
+                mode.Should().HaveFlag(FileAccessModes.SynchronousNotAlertable);
             }
         }
 
@@ -249,7 +246,7 @@ namespace StorageTests
             {
                 string filePath = cleaner.GetTestPath();
                 using (var file = Storage.CreateFile(filePath, CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0,
-                    FileAttributes.None, FileFlags.Overlapped))
+                    AllFileAttributes.None, FileFlags.Overlapped))
                 {
                     file.IsInvalid.Should().BeFalse();
                     var mode = Storage.GetFileMode(file);

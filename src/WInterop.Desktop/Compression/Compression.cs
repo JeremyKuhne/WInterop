@@ -176,23 +176,23 @@ namespace WInterop.Compression
 
             if (destinationDirectory == null)
             {
-                destinationDirectory = Paths.Combine(Paths.TrimLastSegment(sourceDirectory), "Expanded", Paths.GetLastSegment(sourceDirectory));
+                destinationDirectory = Path.Join(Paths.TrimLastSegment(sourceDirectory), "Expanded", Paths.GetLastSegment(sourceDirectory));
             }
 
             foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
             {
                 string expandedName = GetExpandedNameEx(file, filenameOnly: true);
                 string targetDirectory = 
-                    Paths.TrimLastSegment(Paths.Combine(destinationDirectory, file.Substring(sourceDirectory.Length + 1)));
+                    Paths.TrimLastSegment(Path.Join(destinationDirectory, file.Substring(sourceDirectory.Length + 1)));
                 Directory.CreateDirectory(targetDirectory);
 
-                int result = LzCopyFile(file, Paths.Combine(targetDirectory, expandedName),
+                int result = LzCopyFile(file, Path.Join(targetDirectory, expandedName),
                     overwrite: overwrite, throwOnBadCompression: throwOnBadCompression);
 
                 if (result < 0)
                 {
                     // Bad source file perhaps, attempt a normal copy
-                    Storage.Storage.CopyFile(file, Paths.Combine(targetDirectory, Paths.GetLastSegment(file)), overwrite: overwrite);
+                    Storage.Storage.CopyFile(file, Path.Join(targetDirectory, Paths.GetLastSegment(file)), overwrite: overwrite);
                 }
             }
         }

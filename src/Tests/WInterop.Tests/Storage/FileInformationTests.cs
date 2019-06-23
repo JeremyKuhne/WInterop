@@ -19,49 +19,47 @@ namespace StorageTests
         [Fact]
         public void TestFileRights()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string testFile = cleaner.CreateTestFile(nameof(TestFileRights));
+
+            // CreateFile ALWAYS adds SYNCHRONIZE & FILE_READ_ATTRIBUTES.
+            using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadControl))
             {
-                string testFile = cleaner.CreateTestFile(nameof(TestFileRights));
+                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl | FileAccessRights.Synchronize);
+            }
 
-                // CreateFile ALWAYS adds SYNCHRONIZE & FILE_READ_ATTRIBUTES.
-                using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadControl))
-                {
-                    Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl | FileAccessRights.Synchronize);
-                }
+            using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes))
+            {
+                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
+            }
 
-                using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes))
-                {
-                    Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
-                }
+            using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.Synchronize))
+            {
+                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
+            }
 
-                using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.Synchronize))
-                {
-                    Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
-                }
+            using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
+            {
+                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl
+                    | FileAccessRights.Synchronize | FileAccessRights.ReadData | FileAccessRights.ReadExtendedAttributes);
+            }
 
-                using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
-                {
-                    Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl
-                        | FileAccessRights.Synchronize | FileAccessRights.ReadData | FileAccessRights.ReadExtendedAttributes);
-                }
+            // DesiredAccess.Synchronize is required for synchronous access.
+            string directTestFile = @"\??\" + testFile;
+            using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.Synchronize))
+            {
+                Storage.GetRights(handle).Should().Be(FileAccessRights.Synchronize);
+            }
 
-                // DesiredAccess.Synchronize is required for synchronous access.
-                string directTestFile = @"\??\" + testFile;
-                using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.Synchronize))
-                {
-                    Storage.GetRights(handle).Should().Be(FileAccessRights.Synchronize);
-                }
+            // Open async
+            using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes, ShareModes.ReadWrite, 0, 0))
+            {
+                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes);
+            }
 
-                // Open async
-                using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes, ShareModes.ReadWrite, 0, 0))
-                {
-                    Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes);
-                }
-
-                using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes | DesiredAccess.Synchronize, ShareModes.ReadWrite, 0, 0))
-                {
-                    Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
-                }
+            using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes | DesiredAccess.Synchronize, ShareModes.ReadWrite, 0, 0))
+            {
+                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
             }
         }
 

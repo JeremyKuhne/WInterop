@@ -27,7 +27,7 @@ namespace WInterop.Storage
 
         public long EndOfFile;
         public long AllocationSize;
-        public FileAttributes FileAttributes;
+        public AllFileAttributes FileAttributes;
 
         /// <summary>
         /// Size, in bytes, of the extended attributes for a file -or-

@@ -195,7 +195,7 @@ namespace WInterop.Storage
         OpenReparsePoint = 0x00200000,
 
         /// <summary>
-        /// Causes files that are marked with the <see cref="FileAttributes.Offline"/> attribute are not to be recalled
+        /// Causes files that are marked with the <see cref="AllFileAttributes.Offline"/> attribute are not to be recalled
         /// from remote storage. [FILE_OPEN_NO_RECALL]
         /// </summary>
         /// <remarks>

@@ -17,7 +17,7 @@ namespace WInterop.Storage
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public readonly struct Win32FindData
     {
-        public readonly FileAttributes FileAttributes;
+        public readonly AllFileAttributes FileAttributes;
         public readonly FileTime CreationTime;
         public readonly FileTime LastAccessTime;
         public readonly FileTime LastWriteTime;

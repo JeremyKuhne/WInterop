@@ -9,6 +9,7 @@ using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace WInterop.Support.Buffers
 {
@@ -30,6 +31,13 @@ namespace WInterop.Support.Buffers
         {
             Span = span;
             _buffer = null;
+        }
+
+        public ValueBuffer(int initialCapacity)
+        {
+            Span = default;
+            _buffer = null;
+            EnsureCapacity(initialCapacity);
         }
 
         public Span<T> Span { get; private set; }
@@ -74,7 +82,12 @@ namespace WInterop.Support.Buffers
                 Debug.Assert(((int)((ulong)p % (uint)alignTo)) == 0);
 
                 Span<T> newSpan = new Span<T>(p, (newBuffer.Length - offset) / sizeOfT);
-                Span.CopyTo(newSpan);
+
+                if (copy)
+                {
+                    Span.CopyTo(newSpan);
+                }
+
                 if (_buffer != null)
                 {
                     ArrayPool<byte>.Shared.Return(_buffer);
@@ -86,7 +99,8 @@ namespace WInterop.Support.Buffers
 
         public ref T this[int index] => ref Span[index];
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref T GetPinnableReference() => ref MemoryMarshal.GetReference(Span);
+
         public void Dispose()
         {
             if (_buffer != null)

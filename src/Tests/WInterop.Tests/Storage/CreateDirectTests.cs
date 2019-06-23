@@ -5,11 +5,11 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using FluentAssertions;
+using System;
+using System.IO;
 using Tests.Support;
 using WInterop.Storage;
-using WInterop.Support;
 using Xunit;
 
 namespace StorageTests
@@ -31,7 +31,7 @@ namespace StorageTests
                         file.IsInvalid.Should().BeFalse();
                     }
 
-                    Storage.FileExists(Paths.Combine(cleaner.TempFolder, fileName)).Should().BeTrue();
+                    Storage.FileExists(Path.Join(cleaner.TempFolder, fileName)).Should().BeTrue();
                 }
             }
         }
@@ -84,8 +84,8 @@ namespace StorageTests
                 {
                     directory.IsInvalid.Should().BeFalse("can open the root directory");
 
-                    string name = System.IO.Path.GetRandomFileName();
-                    string path = Paths.Combine(cleaner.TempFolder, name);
+                    string name = Path.GetRandomFileName();
+                    string path = Path.Join(cleaner.TempFolder, name);
                     Storage.CreateDirectory(path);
 
                     using (var subdir = Storage.CreateDirectoryHandle(directory, name))
@@ -105,11 +105,11 @@ namespace StorageTests
                 {
                     directory.IsInvalid.Should().BeFalse();
 
-                    string name = System.IO.Path.GetRandomFileName();
+                    string name = Path.GetRandomFileName();
                     using (var subdir = Storage.CreateDirectory(directory, name))
                     {
                         subdir.IsInvalid.Should().BeFalse();
-                        Storage.DirectoryExists(Paths.Combine(cleaner.TempFolder, name)).Should().BeTrue();
+                        Storage.DirectoryExists(Path.Join(cleaner.TempFolder, name)).Should().BeTrue();
                     }
                 }
             }

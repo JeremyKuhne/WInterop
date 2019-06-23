@@ -15,6 +15,7 @@ using WInterop.Storage;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using Xunit;
+using System.IO;
 
 namespace StorageTests
 {
@@ -111,7 +112,7 @@ namespace StorageTests
                 CreationDisposition.OpenExisting,
                 0,
                 ShareModes.ReadWrite,
-                FileAttributes.None,
+                AllFileAttributes.None,
                 FileFlags.BackupSemantics);
 
             handle.IsInvalid.Should().BeFalse();
@@ -128,7 +129,7 @@ namespace StorageTests
                 Action action = () => Storage.CopyFileEx(source, destination);
                 action.Should().Throw<System.IO.FileNotFoundException>();
 
-                source = Paths.Combine(source, "file");
+                source = Path.Join(source, "file");
                 action.Should().Throw<System.IO.DirectoryNotFoundException>();
             }
         }
@@ -144,7 +145,7 @@ namespace StorageTests
                     CreationDisposition.OpenExisting,
                     0,
                     ShareModes.ReadWrite,
-                    FileAttributes.None,
+                    AllFileAttributes.None,
                     FileFlags.BackupSemantics);
 
                 action.Should().Throw<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x8007007B));
@@ -162,7 +163,7 @@ namespace StorageTests
                 Action action = () => System.IO.File.Copy(source, destination);
                 action.Should().Throw<System.IO.FileNotFoundException>();
 
-                source = Paths.Combine(source, "file");
+                source = Path.Join(source, "file");
                 action.Should().Throw<System.IO.DirectoryNotFoundException>();
             }
         }

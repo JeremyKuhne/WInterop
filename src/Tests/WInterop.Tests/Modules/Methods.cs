@@ -17,6 +17,7 @@ using WInterop.Support;
 using Xunit;
 using ModuleTypes = WInterop.Modules;
 using System.Drawing;
+using System.IO;
 
 namespace ModuleTests
 {
@@ -26,10 +27,10 @@ namespace ModuleTests
 
         private string GetNativeTestLibraryLocation()
         {
-            string path = Paths.Combine(System.IO.Path.GetDirectoryName((new Uri(typeof(Basic).Assembly.CodeBase)).LocalPath), NativeTestLibrary);
+            string path = Path.Join(Path.GetDirectoryName((new Uri(typeof(Basic).Assembly.CodeBase)).LocalPath), NativeTestLibrary);
             if (!Storage.FileExists(path))
             {
-                throw new System.IO.FileNotFoundException(path);
+                throw new FileNotFoundException(path);
             }
             return path;
         }
@@ -52,7 +53,7 @@ namespace ModuleTests
                 string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
 
                 FileHelper.CreateDirectoryRecursive(longPath);
-                string longPathLibrary = Paths.Combine(longPath, "LoadAsResourceFromLongPath.dll");
+                string longPathLibrary = Path.Join(longPath, "LoadAsResourceFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
                 using (var handle = Modules.LoadLibrary(longPathLibrary,
@@ -81,7 +82,7 @@ namespace ModuleTests
             {
                 string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
                 FileHelper.CreateDirectoryRecursive(longPath);
-                string longPathLibrary = Paths.Combine(longPath, "LoadStringFromLongPath.dll");
+                string longPathLibrary = Path.Join(longPath, "LoadStringFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
                 using (var handle = Modules.LoadLibrary(longPathLibrary,
@@ -109,7 +110,7 @@ namespace ModuleTests
             {
                 string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
                 FileHelper.CreateDirectoryRecursive(longPath);
-                string longPathLibrary = Paths.Combine(longPath, "LoadAsBinaryFromLongPath.dll");
+                string longPathLibrary = Path.Join(longPath, "LoadAsBinaryFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
                 using (var handle = Modules.LoadLibrary(longPathLibrary, LoadLibraryFlags.LoadWithAlteredSearchPath))
@@ -140,7 +141,7 @@ namespace ModuleTests
             {
                 string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
                 FileHelper.CreateDirectoryRecursive(longPath);
-                string longPathLibrary = Paths.Combine(longPath, "LoadFunctionFromLongPath.dll");
+                string longPathLibrary = Path.Join(longPath, "LoadFunctionFromLongPath.dll");
                 Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
 
                 using (var handle = Modules.LoadLibrary(longPathLibrary, 0))

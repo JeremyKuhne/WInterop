@@ -10,11 +10,12 @@ using System;
 namespace WInterop.Storage
 {
     /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117.aspx">File attribute constants</a>. This is a superset of what is defined
-    /// in System.IO. Combined with SecurityQosFlags and FileFlags for CreateFile.
+    /// <a href="https://docs.microsoft.com/windows/desktop/FileIO/file-attribute-constants">File attribute constants</a>.
+    /// This is a superset of what is defined in <see cref="System.IO.FileAttributes"/>. Combined with
+    /// <see cref="SecurityQosFlags"/> and <see cref="FileFlags"/> for CreateFile.
     /// </summary>
     [Flags]
-    public enum FileAttributes : uint
+    public enum AllFileAttributes : uint
     {
         /// <summary>
         /// Not technically a defined attribute, added here for convenience.
@@ -74,7 +75,7 @@ namespace WInterop.Storage
 
         /// <summary>
         /// File is a reparse point and will be further parsed dependent on the reparse point type.
-        /// This is mutually exclusive with the ExtendedAttributes flag.
+        /// This is mutually exclusive with the <see cref="ExtendedAttributes"/> flag.
         /// [FILE_ATTRIBUTE_REPARSE_POINT]
         /// </summary>
         ReparsePoint = 0x00000400,
@@ -120,7 +121,7 @@ namespace WInterop.Storage
 
         /// <summary>
         /// File has extended attributes (FILE_EA_INFORMATION). This is mutually exclusive
-        /// with the ReparsePoint flag.
+        /// with the <see cref="ReparsePoint"/> flag.
         /// [FILE_ATTRIBUTE_EA]
         /// </summary>
         /// <remarks>

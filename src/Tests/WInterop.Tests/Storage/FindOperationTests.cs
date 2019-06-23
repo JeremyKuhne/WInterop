@@ -6,10 +6,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System.IO;
 using System.Linq;
 using Tests.Support;
 using WInterop.Storage;
-using WInterop.Support;
 using Xunit;
 
 namespace StorageTests
@@ -43,7 +43,7 @@ namespace StorageTests
         {
             using (var cleaner = new TestFileCleaner())
             {
-                FileHelper.WriteAllText(Paths.Combine(cleaner.TempFolder, "foo.txt"), nameof(SimpleFilterFind2));
+                FileHelper.WriteAllText(Path.Join(cleaner.TempFolder, "foo.txt"), nameof(SimpleFilterFind2));
                 var files = new FindOperation<string>(cleaner.TempFolder, "*.txt", true).ToArray();
                 files.Length.Should().Be(1);
                 files[0].Should().EndWith("foo.txt");
@@ -55,19 +55,19 @@ namespace StorageTests
         {
             using (var cleaner = new TestFileCleaner())
             {
-                string subdirA = Paths.Combine(cleaner.TempFolder, "A");
+                string subdirA = Path.Join(cleaner.TempFolder, "A");
                 Storage.CreateDirectory(subdirA);
-                string fileB = Paths.Combine(subdirA, "B");
+                string fileB = Path.Join(subdirA, "B");
                 FileHelper.WriteAllText(fileB, "B file");
-                string subdirC = Paths.Combine(subdirA, "C");
+                string subdirC = Path.Join(subdirA, "C");
                 Storage.CreateDirectory(subdirC);
-                string subdirD = Paths.Combine(subdirA, "D");
+                string subdirD = Path.Join(subdirA, "D");
                 Storage.CreateDirectory(subdirD);
-                string fileE = Paths.Combine(subdirD, "E");
+                string fileE = Path.Join(subdirD, "E");
                 FileHelper.WriteAllText(fileE, "E file");
 
                 var files = new FindOperation<string>(subdirA, recursive: true).ToArray();
-                files.Should().BeEquivalentTo(System.IO.Directory.GetFileSystemEntries(subdirA, "*", System.IO.SearchOption.AllDirectories));
+                files.Should().BeEquivalentTo(Directory.GetFileSystemEntries(subdirA, "*", System.IO.SearchOption.AllDirectories));
             }
         }
     }

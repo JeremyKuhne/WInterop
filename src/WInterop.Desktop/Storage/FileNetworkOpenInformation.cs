@@ -23,6 +23,6 @@ namespace WInterop.Storage
         public readonly LongFileTime ChangeTime;
         public readonly long AllocationSize;
         public readonly long EndOfFile;
-        public readonly FileAttributes FileAttributes;
+        public readonly AllFileAttributes FileAttributes;
     }
 }

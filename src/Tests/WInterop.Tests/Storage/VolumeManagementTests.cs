@@ -62,9 +62,13 @@ namespace StorageTests
         [Fact]
         public void BasicGetDriveType()
         {
+            // Null is the current directory's drive (likely Fixed)
+            var type = Storage.GetDriveType(null);
+            type.Should().NotBe(DriveType.Unknown);
+
             foreach (string drive in Storage.GetLogicalDriveStrings())
             {
-                var type = Storage.GetDriveType(drive);
+                type = Storage.GetDriveType(drive);
             }
         }
 

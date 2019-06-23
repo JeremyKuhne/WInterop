@@ -17,6 +17,6 @@ namespace WInterop.Storage
         public readonly LongFileTime LastAccessTime;
         public readonly LongFileTime LastWriteTime;
         public readonly LongFileTime ChangeTime;
-        public readonly FileAttributes FileAttributes;
+        public readonly AllFileAttributes FileAttributes;
     }
 }

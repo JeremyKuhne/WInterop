@@ -14,7 +14,7 @@ namespace WInterop.Storage.Native
     public ref struct CREATEFILE2_EXTENDED_PARAMETERS
     {
         public uint dwSize;
-        public FileAttributes dwFileAttributes;
+        public AllFileAttributes dwFileAttributes;
         public FileFlags dwFileFlags;
         public SecurityQosFlags dwSecurityQosFlags;
         public unsafe SECURITY_ATTRIBUTES* lpSecurityAttributes;

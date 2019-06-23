@@ -4,7 +4,7 @@ Managed wrappers for Windows APIs
 
 ## What it is
 
-A set of portable libraries with P/Invokes and wrapper methods for Windows APIs.
+A set of .NET 3.0 libraries with P/Invokes and wrapper methods for Windows APIs.
 
  - WInterop.Desktop.dll (Windows platform APIs (Win32, NT))
  - WInterop.GdiPlus.dll (GDI+ APIs)
@@ -24,8 +24,5 @@ WInterop is in an early stage of development. As it expands expect breaking chan
 - Provide utility code that makes it easier to write your own wrappers
 - Expose all P/Invokes and data types publicly to allow for advanced/custom usage
 - Make it easy to find implemented wrappers
-- Ease writing code that will run against different runtimes on Windows (.NET, .NET Core)
 - Allow targeting Windows 7 and above without writing separate libraries
-- Allow targeting .NET 4.7.2 and .NET Core
-
 

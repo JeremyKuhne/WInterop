@@ -13,6 +13,7 @@ using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
+using System.IO;
 
 namespace StorageTests
 {
@@ -35,12 +36,12 @@ namespace StorageTests
             // GetFinalPathName always points to the linked file unless you specifically open the reparse point
             using (var cleaner = new TestFileCleaner())
             {
-                string filePath = Paths.Combine(cleaner.TempFolder, "Target");
+                string filePath = Path.Join(cleaner.TempFolder, "Target");
                 string extendedPath = @"\\?\" + filePath;
 
                 FileHelper.WriteAllText(filePath, "CreateSymbolicLinkToFile");
 
-                string symbolicLink = Paths.Combine(cleaner.TempFolder, "Link");
+                string symbolicLink = Path.Join(cleaner.TempFolder, "Link");
                 string extendedLink = @"\\?\" + symbolicLink;
                 Storage.CreateSymbolicLink(symbolicLink, filePath);
                 Storage.FileExists(symbolicLink).Should().BeTrue("symbolic link should exist");
@@ -56,7 +57,7 @@ namespace StorageTests
                 }
 
                 using (var handle = Storage.CreateFile(symbolicLink.ToUpperInvariant(), CreationDisposition.OpenExisting, DesiredAccess.GenericRead,
-                    ShareModes.ReadWrite, FileAttributes.None, FileFlags.OpenReparsePoint))
+                    ShareModes.ReadWrite, AllFileAttributes.None, FileFlags.OpenReparsePoint))
                 {
                     handle.IsInvalid.Should().BeFalse();
                     Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.FileNameNormalized)

@@ -106,7 +106,7 @@ namespace WInterop.Storage
                     {
                         data = new RawFindData(_info, _path);
 
-                        if (_pending != null && (data.FileAttributes & FileAttributes.Directory) != 0
+                        if (_pending != null && (data.FileAttributes & AllFileAttributes.Directory) != 0
                             && FindFilters.NormalDirectory.NotSpecialDirectory(ref data))
                         {
                             // Stash directory to recurse into

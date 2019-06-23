@@ -59,5 +59,21 @@ namespace BufferTests
                 t.Dispose();
             }
         }
+
+        [Fact]
+        public void PassToStaticLocal()
+        {
+            static void Fix(in ValueBuffer<char> buffer)
+            {
+                buffer.EnsureCapacity(32);
+                buffer[0] = 'B';
+            }
+
+            // Ensure that this pattern passes by reference
+            using var buffer = new ValueBuffer<char>(1);
+            buffer[0] = 'A';
+            Fix(buffer);
+            buffer[0].Should().Be('B');
+        }
     }
 }

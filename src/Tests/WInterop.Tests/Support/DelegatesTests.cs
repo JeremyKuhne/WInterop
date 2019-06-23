@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System;
 using WInterop.Support;
 using Xunit;
 
@@ -13,15 +14,15 @@ namespace SupportTests
 {
     public class DelegatesTests
     {
-        private delegate bool StringToBool(string value);
+        private delegate bool SpanToBool(ReadOnlySpan<char> value);
 
         [Fact]
         public void SimpleGetDelegate()
         {
-            var endsInDirectorySeparator = Delegates.CreateDelegate<StringToBool>(@"WInterop.Support.Paths, " + Delegates.DesktopLibrary, "EndsInDirectorySeparator");
-            endsInDirectorySeparator.Should().NotBeNull();
-            endsInDirectorySeparator(@"a").Should().BeFalse();
-            endsInDirectorySeparator(@"a\").Should().BeTrue();
+            var beginsWithDirectorySeparator = Delegates.CreateDelegate<SpanToBool>(@"WInterop.Support.Paths, " + Delegates.DesktopLibrary, "BeginsWithDirectorySeparator");
+            beginsWithDirectorySeparator.Should().NotBeNull();
+            beginsWithDirectorySeparator(@"a").Should().BeFalse();
+            beginsWithDirectorySeparator(@"\a").Should().BeTrue();
         }
     }
 }

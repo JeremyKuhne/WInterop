@@ -100,7 +100,7 @@ namespace WInterop.Communications
         /// </summary>
         public static SafeFileHandle CreateComPortFileHandle(
             string path,
-            FileAttributes fileAttributes = FileAttributes.None,
+            AllFileAttributes fileAttributes = AllFileAttributes.None,
             FileFlags fileFlags = FileFlags.None)
         {
             return Storage.Storage.CreateFile(

@@ -49,7 +49,7 @@ namespace WInterop.Storage.Native
         /// sector or cluster size.
         /// </summary>
         public long AllocationSize;
-        public FileAttributes FileAttributes;
+        public AllFileAttributes FileAttributes;
         public uint FileNameLength;
         public uint EaSize;
         public sbyte ShortNameLength;

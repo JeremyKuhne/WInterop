@@ -38,12 +38,12 @@ namespace Tests.Support
 
             for (int i = 0; i < directoryCount; i++)
             {
-                Paths.Combine(fullPath, directory);
+                Paths.Join(fullPath, directory);
             }
 
             if (lastDirectory > 0)
             {
-                Paths.Combine(fullPath, directory.Substring(0, lastDirectory));
+                Paths.Join(fullPath, directory.Substring(0, lastDirectory));
             }
 
             return fullPath.ToString();

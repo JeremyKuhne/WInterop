@@ -7,7 +7,7 @@
 
 using System;
 using System.Diagnostics;
-using WInterop.Support;
+using System.IO;
 
 namespace WInterop.Storage
 {
@@ -17,7 +17,7 @@ namespace WInterop.Storage
         public string Directory { get; private set; }
         public string FileName { get; private set; }
         public string AlternateFileName { get; private set; }
-        public FileAttributes Attributes { get; private set; }
+        public AllFileAttributes Attributes { get; private set; }
         public DateTimeOffset CreationUtc { get; private set; }
         public DateTimeOffset LastAccessUtc { get; private set; }
         public DateTimeOffset LastWriteUtc { get; private set; }
@@ -36,6 +36,6 @@ namespace WInterop.Storage
             Length = (uint)findData.FileSize;
         }
 
-        private string DebuggerDisplay => Paths.Combine(Directory, FileName);
+        private string DebuggerDisplay => Path.Join(Directory, FileName);
     }
 }

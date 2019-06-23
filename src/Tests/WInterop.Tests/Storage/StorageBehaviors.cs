@@ -15,6 +15,7 @@ using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop;
 using Xunit;
+using System.IO;
 
 namespace StorageTests
 {
@@ -205,7 +206,7 @@ namespace StorageTests
                         Imports.FindClose(result);
                 }
 
-                result = Imports.FindFirstFileW(Paths.Combine(cleaner.GetTestPath(), "NotHere"), out findData);
+                result = Imports.FindFirstFileW(Path.Join(cleaner.GetTestPath(), "NotHere"), out findData);
                 error = Error.GetLastError();
 
                 try
@@ -239,7 +240,7 @@ namespace StorageTests
                 WindowsError error = Error.GetLastError();
                 success.Should().BeFalse("non-existant file");
                 error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
-                success = Imports.GetFileAttributesExW(Paths.Combine(cleaner.GetTestPath(), "NotHere"),
+                success = Imports.GetFileAttributesExW(Path.Join(cleaner.GetTestPath(), "NotHere"),
                     GetFileExtendedInformationLevels.Standard, out attributeData);
                 error = Error.GetLastError();
                 success.Should().BeFalse("non-existant subdir");
@@ -328,7 +329,7 @@ namespace StorageTests
                         CreationDisposition.OpenExisting,
                         DesiredAccess.ListDirectory | DesiredAccess.Delete,
                         ShareModes.ReadWrite | ShareModes.Delete,
-                        FileAttributes.None,
+                        AllFileAttributes.None,
                         FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
                     {
                         directoryHandle.IsInvalid.Should().BeFalse();
@@ -347,7 +348,7 @@ namespace StorageTests
                     CreationDisposition.OpenExisting,
                     DesiredAccess.ListDirectory | DesiredAccess.Delete,
                     ShareModes.ReadWrite | ShareModes.Delete,
-                    FileAttributes.None,
+                    AllFileAttributes.None,
                     FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
                 {
                     directoryHandle.IsInvalid.Should().BeFalse();
@@ -381,7 +382,7 @@ namespace StorageTests
                         CreationDisposition.OpenExisting,
                         DesiredAccess.ListDirectory | DesiredAccess.Delete,
                         ShareModes.ReadWrite | ShareModes.Delete,
-                        FileAttributes.None,
+                        AllFileAttributes.None,
                         FileFlags.BackupSemantics | FileFlags.DeleteOnClose);
                 }
 

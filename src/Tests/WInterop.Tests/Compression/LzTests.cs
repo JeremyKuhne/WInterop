@@ -159,7 +159,7 @@ namespace CompressionTests
                 byte[] data = new byte[CompressedFile1.Length];
                 CompressedFile1.CopyTo(data, 0);
                 data[9] = character;
-                string path = Paths.Combine(cleaner.TempFolder, compressedName);
+                string path = Path.Join(cleaner.TempFolder, compressedName);
                 FileHelper.WriteAllBytes(path, data);
                 Path.GetFileName(Compression.GetExpandedName(path)).Should().Be(expandedName);
             }
@@ -173,7 +173,7 @@ namespace CompressionTests
                 byte[] data = new byte[CompressedFile1.Length];
                 CompressedFile1.CopyTo(data, 0);
                 data[9] = character;
-                string path = Paths.Combine(cleaner.TempFolder, compressedName);
+                string path = Path.Join(cleaner.TempFolder, compressedName);
                 FileHelper.WriteAllBytes(path, data);
                 Path.GetFileName(Compression.GetExpandedNameEx(path)).Should().Be(expandedName);
             }

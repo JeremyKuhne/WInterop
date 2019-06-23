@@ -9,6 +9,14 @@ using System;
 
 namespace WInterop.Support
 {
+    /// <summary>
+    /// Wrapper for a <see cref="string"/> or <see cref="ReadOnlySpan{char}"/>.
+    /// </summary>
+    /// <remarks>
+    /// Use where you would want to take a <see cref="ReadOnlySpan{char}"/> but
+    /// also want to call <see cref="ToString()"/> without allocating a string
+    /// copy when you had a string to begin with.
+    /// </remarks>
     public readonly ref struct StringSpan
     {
         private readonly ReadOnlySpan<char> _span;

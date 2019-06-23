@@ -12,7 +12,7 @@ namespace WInterop.Storage
     /// </summary>
     public readonly struct ByHandleFileInformation
     {
-        public readonly FileAttributes FileAttributes;
+        public readonly AllFileAttributes FileAttributes;
         public readonly FileTime CreationTime;
         public readonly FileTime LastAccessTime;
         public readonly FileTime LastWriteTime;

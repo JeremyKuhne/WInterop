@@ -5,6 +5,7 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.IO;
 using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Support;
@@ -70,27 +71,27 @@ namespace Tests.Support
                 WindowsError.ERROR_PATH_NOT_FOUND.Throw(path);
             }
 
-            if ((data.Value.FileAttributes & FileAttributes.Directory) != FileAttributes.Directory)
+            if ((data.Value.FileAttributes & AllFileAttributes.Directory) != AllFileAttributes.Directory)
             {
                 // Not a directory, a file
                 WindowsError.ERROR_FILE_EXISTS.Throw(path);
             }
 
-            if ((data.Value.FileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            if ((data.Value.FileAttributes & AllFileAttributes.ReadOnly) == AllFileAttributes.ReadOnly)
             {
                 // Make it writable
-                Storage.SetFileAttributes(path, data.Value.FileAttributes & ~FileAttributes.ReadOnly);
+                Storage.SetFileAttributes(path, data.Value.FileAttributes & ~AllFileAttributes.ReadOnly);
             }
 
             // Reparse points don't need to be empty to be deleted. Deleting will simply disconnect the reparse point, which is what we want.
-            if ((data.Value.FileAttributes & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
+            if ((data.Value.FileAttributes & AllFileAttributes.ReparsePoint) != AllFileAttributes.ReparsePoint)
             {
                 foreach (FindResult findResult in new FindOperation<FindResult>(path))
                 {
-                    if ((findResult.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
-                        DeleteDirectoryRecursive(Paths.Combine(path, findResult.FileName));
+                    if ((findResult.Attributes & AllFileAttributes.Directory) == AllFileAttributes.Directory)
+                        DeleteDirectoryRecursive(Path.Join(path, findResult.FileName));
                     else
-                        Storage.DeleteFile(Paths.Combine(path, findResult.FileName));
+                        Storage.DeleteFile(Path.Join(path, findResult.FileName));
                 }
             }
 

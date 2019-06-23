@@ -227,7 +227,7 @@ namespace WInterop.Support.Buffers
 
             uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
             {
-                uint returnValue = 0;
+                uint returnValue;
 
                 // Ensure enough room for the output string
                 while ((returnValue = Invoker.Func(buffer)) > buffer.CharCapacity)

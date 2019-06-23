@@ -25,7 +25,7 @@ namespace WInterop.Storage
 
         public ReadOnlySpan<char> FileName => _info->FileName;
         public string Directory { get; private set; }
-        public FileAttributes FileAttributes => _info->FileAttributes;
+        public AllFileAttributes FileAttributes => _info->FileAttributes;
         public ulong FileSize => (ulong)_info->AllocationSize;
 
         public DateTimeOffset CreationTimeUtc => _info->CreationTime.ToDateTimeUtc();
