@@ -1019,7 +1019,7 @@ namespace WInterop.Storage
         {
             AllFileAttributes attributes = Imports.GetFileAttributesW(path);
             if (attributes == AllFileAttributes.Invalid)
-                Error.GetLastError().Throw(path);
+                Error.ThrowLastError(path);
 
             return attributes;
         }
@@ -1029,8 +1029,12 @@ namespace WInterop.Storage
         /// </summary>
         public static Win32FileAttributeData GetFileAttributesExtended(string path)
         {
+            Win32FileAttributeData data = default;
             Error.ThrowLastErrorIfFalse(
-                Imports.GetFileAttributesExW(path, GetFileExtendedInformationLevels.Standard, out Win32FileAttributeData data),
+                Imports.GetFileAttributesExW(
+                    path,
+                    GetFileExtendedInformationLevels.Standard,
+                    ref data),
                 path);
 
             return data;
@@ -1049,8 +1053,8 @@ namespace WInterop.Storage
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
         public static bool FileExists(string path)
         {
-            var data = TryGetFileInfo(path);
-            return data.HasValue && (data.Value.FileAttributes & AllFileAttributes.Directory) != AllFileAttributes.Directory;
+            Win32FileAttributeData? data = TryGetFileInfo(path);
+            return data.HasValue && !data.Value.FileAttributes.HasFlag(AllFileAttributes.Directory);
         }
 
         /// <summary>
@@ -1059,8 +1063,8 @@ namespace WInterop.Storage
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
         public static bool DirectoryExists(string path)
         {
-            var data = TryGetFileInfo(path);
-            return data.HasValue && (data.Value.FileAttributes & AllFileAttributes.Directory) == AllFileAttributes.Directory;
+            Win32FileAttributeData? data = TryGetFileInfo(path);
+            return data.HasValue && data.Value.FileAttributes.HasFlag(AllFileAttributes.Directory);
         }
 
         /// <summary>
@@ -1069,21 +1073,25 @@ namespace WInterop.Storage
         /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
         public static Win32FileAttributeData? TryGetFileInfo(string path)
         {
-            if (!Imports.GetFileAttributesExW(path, GetFileExtendedInformationLevels.Standard, out Win32FileAttributeData data))
+            Win32FileAttributeData data = default;
+            if (Imports.GetFileAttributesExW(
+                path,
+                GetFileExtendedInformationLevels.Standard,
+                ref data))
             {
-                WindowsError error = Error.GetLastError();
-                switch (error)
-                {
-                    case WindowsError.ERROR_ACCESS_DENIED:
-                    case WindowsError.ERROR_NETWORK_ACCESS_DENIED:
-                        throw error.GetException(path);
-                    case WindowsError.ERROR_PATH_NOT_FOUND:
-                    default:
-                        return null;
-                }
+                return data;
             }
 
-            return data;
+            WindowsError error = Error.GetLastError();
+            switch (error)
+            {
+                case WindowsError.ERROR_ACCESS_DENIED:
+                case WindowsError.ERROR_NETWORK_ACCESS_DENIED:
+                    throw error.GetException(path);
+                case WindowsError.ERROR_PATH_NOT_FOUND:
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
@@ -1451,21 +1459,26 @@ namespace WInterop.Storage
                 FileFlags.BackupSemantics);
         }
 
-        private struct GetCurrentDirectoryWrapper : IBufferFunc<StringBuffer, uint>
-        {
-            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
-            {
-                return Imports.GetCurrentDirectoryW(buffer.CharCapacity, buffer);
-            }
-        }
-
         /// <summary>
         /// Get the current directory.
         /// </summary>
-        public static string GetCurrentDirectory()
+        public unsafe static string GetCurrentDirectory()
         {
-            var wrapper = new GetCurrentDirectoryWrapper();
-            return BufferHelper.ApiInvoke(ref wrapper);
+            static uint Fix(ValueBuffer<char> buffer)
+            {
+                fixed (char* c = buffer)
+                {
+                    return Imports.GetCurrentDirectoryW((uint)buffer.Length, c);
+                }
+            }
+
+            using var buffer = new ValueBuffer<char>(Paths.MaxPath);
+            uint result;
+            while ((result = Fix(buffer)) > buffer.Length)
+                buffer.EnsureCapacity((int)result);
+
+            Error.ThrowLastErrorIfZero(result);
+            return buffer.Span.Slice(0, (int)result).ToString();
         }
 
         /// <summary>
@@ -1493,11 +1506,6 @@ namespace WInterop.Storage
         {
             Span<char> volumeName = stackalloc char[Paths.MaxPath + 1];
             Span<char> fileSystemName = stackalloc char[Paths.MaxPath + 1];
-
-            // Removable (floppy/optical) drives will prompt for media when calling this API. Setting the
-            // error mode will prevent this. Note that you will not get said prompt if the removable
-            // drive has not had media inserted and accessed since boot as the file system for removable
-            // drives is lazily loaded.
 
             fixed (char* v = volumeName)
             fixed (char* f = fileSystemName)
@@ -1527,10 +1535,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// 
+        /// Gets free space for the given drive.
         /// </summary>
-        /// <param name="rootPath"></param>
-        /// <returns></returns>
+        /// <param name="rootPath">Optional drive root, otherwise will use current directory's drive.</param>
         public unsafe static DiskFreeSpace GetDiskFreeSpace(string? rootPath)
         {
             DiskFreeSpace freeSpace;

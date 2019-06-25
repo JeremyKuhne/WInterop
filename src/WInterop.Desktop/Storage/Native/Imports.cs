@@ -347,7 +347,7 @@ namespace WInterop.Storage.Native
         public static extern bool GetFileAttributesExW(
             string lpFileName,
             GetFileExtendedInformationLevels fInfoLevelId,
-            out Win32FileAttributeData lpFileInformation);
+            ref Win32FileAttributeData lpFileInformation);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-setfileattributesw (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
@@ -543,11 +543,11 @@ namespace WInterop.Storage.Native
             string lpPathName,
             IntPtr lpSecurityAttributes);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-getcurrentdirectory
+        // https://docs.microsoft.com/windows/desktop/api/winbase/nf-winbase-getcurrentdirectory
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public static extern uint GetCurrentDirectoryW(
+        public unsafe static extern uint GetCurrentDirectoryW(
             uint nBufferLength,
-            SafeHandle lpBuffer);
+            char* lpBuffer);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-setcurrentdirectory
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]

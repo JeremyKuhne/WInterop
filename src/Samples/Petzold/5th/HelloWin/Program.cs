@@ -23,9 +23,6 @@ namespace HelloWin
         [STAThread]
         static void Main()
         {
-            // Hack for launching as a .NET Core Windows Application
-            WInterop.Console.Console.TryFreeConsole();
-
             const string szAppName = "HelloWin";
 
             ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));

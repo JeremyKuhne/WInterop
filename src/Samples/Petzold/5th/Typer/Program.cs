@@ -42,8 +42,7 @@ namespace Typer
                 case MessageType.Create:
                     using (DeviceContext dc = window.GetDeviceContext())
                     {
-                        using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                            OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
+                        using (FontHandle font = Gdi.CreateFont(characterSet: dwCharSet, pitch: FontPitch.FixedPitch))
                         {
                             dc.SelectObject(font);
                             dc.GetTextMetrics(out TextMetrics tm);
@@ -121,8 +120,7 @@ namespace Typer
                             window.HideCaret();
                             using (DeviceContext dc = window.GetDeviceContext())
                             {
-                                using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                                    OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
+                                using (FontHandle font = Gdi.CreateFont(characterSet: dwCharSet, pitch: FontPitch.FixedPitch))
                                 {
                                     dc.SelectObject(font);
                                     unsafe
@@ -182,8 +180,7 @@ namespace Typer
                                 window.HideCaret();
                                 using (DeviceContext dc = window.GetDeviceContext())
                                 {
-                                    using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                                        OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
+                                    using (FontHandle font = Gdi.CreateFont(characterSet: dwCharSet, pitch: FontPitch.FixedPitch))
                                     {
                                         dc.SelectObject(font);
                                         unsafe

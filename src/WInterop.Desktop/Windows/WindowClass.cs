@@ -43,7 +43,7 @@ namespace WInterop.Windows
             int windowExtraBytes = 0)
         {
             // Handle default values
-            className = className ?? Guid.NewGuid().ToString();
+            className ??= Guid.NewGuid().ToString();
 
             if (backgroundBrush == default)
                 backgroundBrush = SystemColor.Window;
@@ -60,16 +60,14 @@ namespace WInterop.Windows
             else if (cursor == CursorHandle.NoCursor)
                 cursor = default;
 
-            // Unfortunately GetHINSTANCE isn't part of .NET Standard
             if (moduleInstance == default)
             {
-                var method = typeof(Marshal).GetMethod("GetHINSTANCE");
                 Module module = Assembly.GetCallingAssembly().Modules.First();
-                moduleInstance = (IntPtr)method.Invoke(null, new object[] { module });
+                Marshal.GetHINSTANCE(module);
             }
 
             if (menuId != 0 && menuName != null)
-                throw new ArgumentException("Can only set menu name or ID.");
+                throw new ArgumentException("Can't set both " + nameof(menuName) + " and " + nameof(menuId) + ".");
 
             _windowProcedure = WindowProcedure;
             ModuleInstance = moduleInstance;
@@ -124,7 +122,15 @@ namespace WInterop.Windows
             IntPtr parameters = default,
             MenuHandle menuHandle = default)
         {
-            return CreateWindow(Windows.DefaultBounds, windowName, style, extendedStyle, isMainWindow, parentWindow, parameters, menuHandle);
+            return CreateWindow(
+                Windows.DefaultBounds,
+                windowName,
+                style,
+                extendedStyle,
+                isMainWindow,
+                parentWindow,
+                parameters,
+                menuHandle);
         }
 
         public WindowHandle CreateWindow(

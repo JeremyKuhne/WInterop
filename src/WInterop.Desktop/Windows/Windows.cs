@@ -14,7 +14,6 @@ using WInterop.Globalization;
 using WInterop.Modules;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.SystemInformation;
 using WInterop.Windows.BufferWrappers;
 using WInterop.Windows.Native;
 
@@ -46,9 +45,6 @@ namespace WInterop.Windows
             ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             MenuHandle menuHandle = default)
         {
-            // Hack for launching as a .NET Core Windows Application
-            Console.Console.TryFreeConsole();
-
             if (!windowClass.IsRegistered)
                 windowClass.Register();
 
@@ -69,7 +65,7 @@ namespace WInterop.Windows
                 DispatchMessage(ref message);
             }
 
-            // Make sure our window class doesn't get collected while were pumping
+            // Make sure our window class doesn't get collected while we're pumping messages
             GC.KeepAlive(windowClass);
         }
 
@@ -429,20 +425,25 @@ namespace WInterop.Windows
             Imports.PostQuitMessage(exitCode);
         }
 
+        /// <summary>
+        /// Returns the logical client coordinates of the given <paramref name="window"/>.
+        /// </summary>
         public static Rectangle GetClientRectangle(this in WindowHandle window)
         {
-            Error.ThrowLastErrorIfFalse(
-                Imports.GetClientRect(window, out Gdi.Native.RECT rect));
-
+            Gdi.Native.RECT rect = default;
+            Error.ThrowLastErrorIfFalse(Imports.GetClientRect(window, ref rect));
             return rect;
         }
 
+        /// <summary>
+        /// Dimensions of the bounding rectangle of the specified <paramref name="window"/>
+        /// in screen coordinates relative to the upper-left corner.
+        /// </summary>
         public static Rectangle GetWindowRectangle(this in WindowHandle window)
         {
-            Error.ThrowLastErrorIfFalse(
-                Imports.GetWindowRect(window, out Gdi.Native.RECT result));
-
-            return result;
+            Gdi.Native.RECT rect = default;
+            Error.ThrowLastErrorIfFalse(Imports.GetWindowRect(window, ref rect));
+            return rect;
         }
 
         public static void SetScrollRange(this in WindowHandle window, ScrollBar scrollBar, int min, int max, bool redraw)

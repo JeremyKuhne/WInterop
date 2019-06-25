@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Drawing;
 using WInterop.Gdi.Native;
 using WInterop.Windows;
 
@@ -35,7 +34,7 @@ namespace WInterop.Gdi
             _type = CollectionType.Release;
         }
 
-        public DeviceContext(HDC handle, WindowHandle windowHandle, in PAINTSTRUCT paint)
+        public DeviceContext(in PAINTSTRUCT paint, WindowHandle windowHandle)
         {
             _window = windowHandle;
             _type = CollectionType.EndPaint;
@@ -77,11 +76,6 @@ namespace WInterop.Gdi
             Delete,
             Release,
             EndPaint
-        }
-
-        public void TextOut(Point point, object p)
-        {
-            throw new NotImplementedException();
         }
     }
 }

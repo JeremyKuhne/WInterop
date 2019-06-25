@@ -161,7 +161,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern HDC BeginPaint(
             WindowHandle hwnd,
-            out PAINTSTRUCT lpPaint);
+            ref PAINTSTRUCT lpPaint);
 
         // https://msdn.microsoft.com/en-us/library/dd145002.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]

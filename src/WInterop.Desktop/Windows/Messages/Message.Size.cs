@@ -12,7 +12,7 @@ namespace WInterop.Windows
         public readonly ref struct Size
         {
             public System.Drawing.Size NewSize { get; }
-            public SizeType SizeType { get;  }
+            public SizeType SizeType { get; }
 
             public Size(WParam wParam, LParam lParam)
             {

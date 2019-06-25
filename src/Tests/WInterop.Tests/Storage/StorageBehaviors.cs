@@ -230,58 +230,56 @@ namespace StorageTests
         [Fact]
         public void GetFileAttributesBehavior_Basic()
         {
-            using (var cleaner = new TestFileCleaner())
-            {
-                bool success = Imports.GetFileAttributesExW(cleaner.TempFolder,
-                    GetFileExtendedInformationLevels.Standard, out Win32FileAttributeData attributeData);
-                success.Should().BeTrue("root location exists");
-                success = Imports.GetFileAttributesExW(cleaner.GetTestPath(),
-                    GetFileExtendedInformationLevels.Standard, out attributeData);
-                WindowsError error = Error.GetLastError();
-                success.Should().BeFalse("non-existant file");
-                error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
-                success = Imports.GetFileAttributesExW(Path.Join(cleaner.GetTestPath(), "NotHere"),
-                    GetFileExtendedInformationLevels.Standard, out attributeData);
-                error = Error.GetLastError();
-                success.Should().BeFalse("non-existant subdir");
-                error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
-            }
+            using var cleaner = new TestFileCleaner();
+            Win32FileAttributeData attributeData = default;
+
+            bool success = Imports.GetFileAttributesExW(cleaner.TempFolder,
+                GetFileExtendedInformationLevels.Standard, ref attributeData);
+            success.Should().BeTrue("root location exists");
+            success = Imports.GetFileAttributesExW(cleaner.GetTestPath(),
+                GetFileExtendedInformationLevels.Standard, ref attributeData);
+            WindowsError error = Error.GetLastError();
+            success.Should().BeFalse("non-existant file");
+            error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
+            success = Imports.GetFileAttributesExW(Path.Join(cleaner.GetTestPath(), "NotHere"),
+                GetFileExtendedInformationLevels.Standard, ref attributeData);
+            error = Error.GetLastError();
+            success.Should().BeFalse("non-existant subdir");
+            error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
         }
 
         [Fact(Skip = "Failing on RS5")]
         public void GetFileAttributesBehavior_DeletedFile()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string path = cleaner.CreateTestFile(nameof(GetFileAttributesBehavior_DeletedFile));
+            using (var handle = Storage.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All))
             {
-                string path = cleaner.CreateTestFile(nameof(GetFileAttributesBehavior_DeletedFile));
-                using (var handle = Storage.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All))
+                handle.IsInvalid.Should().BeFalse();
+                Storage.FileExists(path).Should().BeTrue();
+                Storage.DeleteFile(path);
+
+                // With the file deleted and the handle still open the file will still physically exist.
+                // Trying to access the file via a handle at this point will fail with access denied.
+
+                Action action = () => Storage.FileExists(path);
+                action.Should().Throw<UnauthorizedAccessException>();
+
+                action = () => Storage.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All,
+                    desiredAccess: DesiredAccess.ReadAttributes);
+                action.Should().Throw<UnauthorizedAccessException>();
+
+                // Find file will work at this point.
+                IntPtr findHandle = Imports.FindFirstFileW(path, out Win32FindData findData);
+                findHandle.Should().NotBe(IntPtr.Zero);
+                try
                 {
-                    handle.IsInvalid.Should().BeFalse();
-                    Storage.FileExists(path).Should().BeTrue();
-                    Storage.DeleteFile(path);
-
-                    // With the file deleted and the handle still open the file will still physically exist.
-                    // Trying to access the file via a handle at this point will fail with access denied.
-
-                    Action action = () => Storage.FileExists(path);
-                    action.Should().Throw<UnauthorizedAccessException>();
-
-                    action = () => Storage.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All,
-                        desiredAccess: DesiredAccess.ReadAttributes);
-                    action.Should().Throw<UnauthorizedAccessException>();
-
-                    // Find file will work at this point.
-                    IntPtr findHandle = Imports.FindFirstFileW(path, out Win32FindData findData);
-                    findHandle.Should().NotBe(IntPtr.Zero);
-                    try
-                    {
-                        // This is failing with a corrupted name
-                        findData.FileName.CreateString().Should().Be(Paths.GetLastSegment(path));
-                    }
-                    finally
-                    {
-                        Imports.FindClose(findHandle);
-                    }
+                    // This is failing with a corrupted name
+                    findData.FileName.CreateString().Should().Be(Paths.GetLastSegment(path));
+                }
+                finally
+                {
+                    Imports.FindClose(findHandle);
                 }
             }
         }
@@ -306,43 +304,23 @@ namespace StorageTests
         [Fact(Skip = "Needs updated for Windows 10 1903, which no longer holds names until handles are closed.")]
         public void LockedFileDirectoryDeletion()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string directory = cleaner.GetTestPath();
+            Storage.CreateDirectory(directory);
+            Storage.DirectoryExists(directory).Should().BeTrue();
+            string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion), directory);
+            using (var handle = Storage.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
             {
-                string directory = cleaner.GetTestPath();
-                Storage.CreateDirectory(directory);
-                Storage.DirectoryExists(directory).Should().BeTrue();
-                string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion), directory);
-                using (var handle = Storage.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
-                {
-                    handle.IsInvalid.Should().BeFalse();
+                handle.IsInvalid.Should().BeFalse();
 
-                    // Mark the file for deletion
-                    Storage.DeleteFile(file);
+                // Mark the file for deletion
+                Storage.DeleteFile(file);
 
-                    // RemoveDirectory API call will throw
-                    Action action = () => Storage.RemoveDirectory(directory);
-                    action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)WindowsError.ERROR_DIR_NOT_EMPTY.ToHResult());
+                // RemoveDirectory API call will throw
+                Action action = () => Storage.RemoveDirectory(directory);
+                action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)WindowsError.ERROR_DIR_NOT_EMPTY.ToHResult());
 
-                    // Opening the directory for deletion will succeed, but have no impact
-                    using (var directoryHandle = Storage.CreateFile(
-                        directory,
-                        CreationDisposition.OpenExisting,
-                        DesiredAccess.ListDirectory | DesiredAccess.Delete,
-                        ShareModes.ReadWrite | ShareModes.Delete,
-                        AllFileAttributes.None,
-                        FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
-                    {
-                        directoryHandle.IsInvalid.Should().BeFalse();
-                    }
-                }
-
-                // File will be gone now that the handle is closed
-                Storage.FileExists(file).Should().BeFalse();
-
-                // But the directory will still exist as it doesn't respect DeleteOnClose with an open handle when it is closed
-                Storage.DirectoryExists(directory).Should().BeTrue();
-
-                // Create a handle to the directory again with DeleteOnClose and it will actually delete the directory
+                // Opening the directory for deletion will succeed, but have no impact
                 using (var directoryHandle = Storage.CreateFile(
                     directory,
                     CreationDisposition.OpenExisting,
@@ -353,54 +331,70 @@ namespace StorageTests
                 {
                     directoryHandle.IsInvalid.Should().BeFalse();
                 }
-                Storage.DirectoryExists(directory).Should().BeFalse();
             }
+
+            // File will be gone now that the handle is closed
+            Storage.FileExists(file).Should().BeFalse();
+
+            // But the directory will still exist as it doesn't respect DeleteOnClose with an open handle when it is closed
+            Storage.DirectoryExists(directory).Should().BeTrue();
+
+            // Create a handle to the directory again with DeleteOnClose and it will actually delete the directory
+            using (var directoryHandle = Storage.CreateFile(
+                directory,
+                CreationDisposition.OpenExisting,
+                DesiredAccess.ListDirectory | DesiredAccess.Delete,
+                ShareModes.ReadWrite | ShareModes.Delete,
+                AllFileAttributes.None,
+                FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
+            {
+                directoryHandle.IsInvalid.Should().BeFalse();
+            }
+            Storage.DirectoryExists(directory).Should().BeFalse();
         }
 
 
         [Fact]
         public void LockedFileDirectoryDeletion2()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string directory = cleaner.GetTestPath();
+            Storage.CreateDirectory(directory);
+            Storage.DirectoryExists(directory).Should().BeTrue();
+            string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion2), directory);
+
+            SafeFileHandle directoryHandle = null;
+            using (var handle = Storage.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
             {
-                string directory = cleaner.GetTestPath();
-                Storage.CreateDirectory(directory);
-                Storage.DirectoryExists(directory).Should().BeTrue();
-                string file = cleaner.CreateTestFile(nameof(LockedFileDirectoryDeletion2), directory);
+                handle.IsInvalid.Should().BeFalse();
 
-                SafeFileHandle directoryHandle = null;
-                using (var handle = Storage.CreateFile(file, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.ReadWrite | ShareModes.Delete))
-                {
-                    handle.IsInvalid.Should().BeFalse();
+                // Mark the file for deletion
+                Storage.DeleteFile(file);
 
-                    // Mark the file for deletion
-                    Storage.DeleteFile(file);
+                // Open the directory handle
+                directoryHandle = Storage.CreateFile(
+                    directory,
+                    CreationDisposition.OpenExisting,
+                    DesiredAccess.ListDirectory | DesiredAccess.Delete,
+                    ShareModes.ReadWrite | ShareModes.Delete,
+                    AllFileAttributes.None,
+                    FileFlags.BackupSemantics | FileFlags.DeleteOnClose);
+            }
 
-                    // Open the directory handle
-                    directoryHandle = Storage.CreateFile(
-                        directory,
-                        CreationDisposition.OpenExisting,
-                        DesiredAccess.ListDirectory | DesiredAccess.Delete,
-                        ShareModes.ReadWrite | ShareModes.Delete,
-                        AllFileAttributes.None,
-                        FileFlags.BackupSemantics | FileFlags.DeleteOnClose);
-                }
+            try
+            {
+                // File will be gone now that the handle is closed
+                Storage.FileExists(file).Should().BeFalse();
 
-                try
-                {
-                    // File will be gone now that the handle is closed
-                    Storage.FileExists(file).Should().BeFalse();
+                directoryHandle.Close();
 
-                    directoryHandle.Close();
+                // The directory will not exist as the open handle was closed before it was closed
+                Storage.DirectoryExists(directory).Should().BeFalse();
 
-                    // The directory will not exist as the open handle was closed before it was closed
-                    Storage.DirectoryExists(directory).Should().BeFalse();
-
-                }
-                finally
-                {
-                    directoryHandle?.Close();
-                }
+            }
+            finally
+            {
+                directoryHandle?.Close();
             }
         }
     }

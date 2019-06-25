@@ -5,13 +5,14 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+#nullable enable
+
 using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Native;
-using WInterop.Support.Buffers;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -58,22 +59,29 @@ namespace WInterop.Gdi
 
         public static bool GetTextMetrics(this in DeviceContext context, out TextMetrics metrics) => Imports.GetTextMetricsW(context, out metrics);
 
+        /// <summary>
+        /// Creates a logical font with the specified characteristics that can be selected into a <see cref="DeviceContext"/>.
+        /// </summary>
+        /// <param name="height">"em" height of the font in logical pixels.</param>
+        /// <param name="width">Average character width in logical pixels.</param>
+        /// <param name="escapement">Angle in tenths of degrees.</param>
+        /// <param name="orientation">Angle in tenths of degrees.</param>
         public static FontHandle CreateFont(
-             int height,
-             int width,
-             int escapement,
-             int orientation,
-             FontWeight weight,
-             bool italic,
-             bool underline,
-             bool strikeout,
-             CharacterSet characterSet,
-             OutputPrecision outputPrecision,
-             ClippingPrecision clippingPrecision,
-             Quality quality,
-             FontPitch pitch,
-             FontFamilyType family,
-             string typeface)
+             int height = 0,
+             int width = 0,
+             int escapement = 0,
+             int orientation = 0,
+             FontWeight weight = FontWeight.DoNotCare,
+             bool italic = false,
+             bool underline = false,
+             bool strikeout = false,
+             CharacterSet characterSet = CharacterSet.Default,
+             OutputPrecision outputPrecision = OutputPrecision.Default,
+             ClippingPrecision clippingPrecision = ClippingPrecision.Default,
+             Quality quality = Quality.Default,
+             FontPitch pitch = FontPitch.Default,
+             FontFamilyType family = FontFamilyType.DoNotCare,
+             string? typeface = null)
         {
             return new FontHandle(Imports.CreateFontW(
                 height, width, escapement, orientation,

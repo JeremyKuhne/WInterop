@@ -51,47 +51,41 @@ namespace StorageTests
         [Fact]
         public void OpenFileDirect()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string path = cleaner.CreateTestFile(nameof(OpenFileDirect));
+            using (var file = Storage.CreateFileDirect(@"\??\" + path, CreateDisposition.Open))
             {
-                string path = cleaner.CreateTestFile(nameof(OpenFileDirect));
-                using (var file = Storage.CreateFileDirect(@"\??\" + path, CreateDisposition.Open))
-                {
-                    file.IsInvalid.Should().BeFalse();
-                }
+                file.IsInvalid.Should().BeFalse();
             }
         }
 
         [Fact]
         public void OpenFileDirect_WithSpan()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string path = @"\??\" + cleaner.CreateTestFile(nameof(OpenFileDirect_WithSpan));
+            string wrongPath = path + "foo";
+            using (var file = Storage.CreateFileDirect(wrongPath.AsSpan().Slice(0, path.Length), CreateDisposition.Open))
             {
-                string path = @"\??\" + cleaner.CreateTestFile(nameof(OpenFileDirect_WithSpan));
-                string wrongPath =  path + "foo";
-                using (var file = Storage.CreateFileDirect(wrongPath.AsSpan().Slice(0, path.Length), CreateDisposition.Open))
-                {
-                    file.IsInvalid.Should().BeFalse();
-                }
+                file.IsInvalid.Should().BeFalse();
             }
         }
 
         [Fact]
         public void OpenDirectoryDirect()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            using (var directory = Storage.CreateDirectoryHandle(cleaner.TempFolder))
             {
-                using (var directory = Storage.CreateDirectoryHandle(cleaner.TempFolder))
+                directory.IsInvalid.Should().BeFalse("can open the root directory");
+
+                string name = Path.GetRandomFileName();
+                string path = Path.Join(cleaner.TempFolder, name);
+                Storage.CreateDirectory(path);
+
+                using (var subdir = Storage.CreateDirectoryHandle(directory, name))
                 {
-                    directory.IsInvalid.Should().BeFalse("can open the root directory");
-
-                    string name = Path.GetRandomFileName();
-                    string path = Path.Join(cleaner.TempFolder, name);
-                    Storage.CreateDirectory(path);
-
-                    using (var subdir = Storage.CreateDirectoryHandle(directory, name))
-                    {
-                        subdir.IsInvalid.Should().BeFalse("can open subdir from handle");
-                    }
+                    subdir.IsInvalid.Should().BeFalse("can open subdir from handle");
                 }
             }
         }
@@ -99,18 +93,16 @@ namespace StorageTests
         [Fact]
         public void CreateDirectoryDirect()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            using (var directory = Storage.CreateDirectoryHandle(cleaner.TempFolder))
             {
-                using (var directory = Storage.CreateDirectoryHandle(cleaner.TempFolder))
-                {
-                    directory.IsInvalid.Should().BeFalse();
+                directory.IsInvalid.Should().BeFalse();
 
-                    string name = Path.GetRandomFileName();
-                    using (var subdir = Storage.CreateDirectory(directory, name))
-                    {
-                        subdir.IsInvalid.Should().BeFalse();
-                        Storage.DirectoryExists(Path.Join(cleaner.TempFolder, name)).Should().BeTrue();
-                    }
+                string name = Path.GetRandomFileName();
+                using (var subdir = Storage.CreateDirectory(directory, name))
+                {
+                    subdir.IsInvalid.Should().BeFalse();
+                    Storage.DirectoryExists(Path.Join(cleaner.TempFolder, name)).Should().BeTrue();
                 }
             }
         }

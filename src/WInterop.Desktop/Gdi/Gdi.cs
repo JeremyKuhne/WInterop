@@ -28,7 +28,11 @@ namespace WInterop.Gdi
         public static DeviceContext CreateCompatibleDeviceContext(this in DeviceContext context)
             => new DeviceContext(Imports.CreateCompatibleDC(context), ownsHandle: true);
 
-        public static int GetDeviceCapability(this in DeviceContext context, DeviceCapability capability) => Imports.GetDeviceCaps(context, capability);
+        /// <summary>
+        /// Gets a <paramref name="capability"/> for the given <paramref name="context"/>.
+        /// </summary>
+        public static int GetDeviceCapability(this in DeviceContext context, DeviceCapability capability)
+            => Imports.GetDeviceCaps(context, capability);
 
         public unsafe static DeviceContext CreateInformationContext(string driver, string device)
             => new DeviceContext(Imports.CreateICW(driver, device, null, null), ownsHandle: true);
@@ -180,7 +184,9 @@ namespace WInterop.Gdi
         /// </summary>
         public static DeviceContext BeginPaint(this in WindowHandle window)
         {
-            return new DeviceContext(Imports.BeginPaint(window, out PAINTSTRUCT paintStruct), window, paintStruct);
+            PAINTSTRUCT paintStruct = default;
+            Imports.BeginPaint(window, ref paintStruct);
+            return new DeviceContext(paintStruct, window);
         }
 
         /// <summary>
@@ -188,9 +194,10 @@ namespace WInterop.Gdi
         /// </summary>
         public static DeviceContext BeginPaint(this in WindowHandle window, out PaintStruct paintStruct)
         {
-            HDC hdc = Imports.BeginPaint(window, out PAINTSTRUCT ps);
+            PAINTSTRUCT ps = default;
+            Imports.BeginPaint(window, ref ps);
             paintStruct = ps;
-            return new DeviceContext(hdc, window, in ps);
+            return new DeviceContext(ps, window);
         }
 
         public unsafe static bool InvalidateRectangle(this in WindowHandle window, Rectangle rectangle, bool erase)

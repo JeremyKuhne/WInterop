@@ -173,13 +173,13 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool SetWindowPlacement(
             HWND hwnd,
-            [In] ref WINDOWPLACEMENT lpwndpl);
+            ref WINDOWPLACEMENT lpwndpl);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633519.aspx
+        // https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-getwindowrect
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool GetWindowRect(
             HWND hWnd,
-            out RECT lpRect);
+            ref RECT lpRect);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633534.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -375,11 +375,11 @@ namespace WInterop.Windows.Native
             void* pvParam,
             SystemParameterOptions fWinIni);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633503.aspx
+        // https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-getclientrect
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool GetClientRect(
             HWND hWnd,
-            out RECT lpRect);
+            ref RECT lpRect);
 
         // Note that AdjustWindowRect simply calls this method with an extended style of 0.
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632667.aspx
