@@ -21,9 +21,9 @@ namespace WInterop.Windows
         // Strange uses for window class atoms
         // https://blogs.msdn.microsoft.com/oldnewthing/20080501-00/?p=22503/
 
-        public uint ATOM;
+        public ushort ATOM;
 
-        public Atom(uint atom) => ATOM = atom;
+        public Atom(ushort atom) => ATOM = atom;
 
         public static Atom Null = new Atom(0);
 
@@ -41,6 +41,6 @@ namespace WInterop.Windows
 
         static public implicit operator uint(Atom atom) => atom.ATOM;
         static public implicit operator IntPtr(Atom atom) => (IntPtr)atom.ATOM;
-        static public implicit operator Atom(IntPtr atom) => new Atom((uint)atom);
+        static public implicit operator Atom(IntPtr atom) => new Atom((ushort)atom);
     }
 }

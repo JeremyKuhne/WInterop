@@ -30,7 +30,7 @@ namespace WInterop.Windows.Native
         public readonly ExtendedWindowStyles dwExStyle;
 
         public Atom Atom
-            => (lpszClass != null && Atom.IsAtom((IntPtr)lpszClass)) ? new Atom((uint)lpszClass) : default;
+            => (lpszClass != null && Atom.IsAtom((IntPtr)lpszClass)) ? new Atom((ushort)lpszClass) : default;
 
         public ReadOnlySpan<char> ClassName
             => (lpszClass != null && !Atom.IsAtom((IntPtr)lpszClass)) ? Conversion.NullTerminatedStringToSpan(lpszClass) : default;

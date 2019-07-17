@@ -19,6 +19,18 @@ namespace WindowsTests
     public class WindowClassTests
     {
         [Fact]
+        public unsafe void AtomSize()
+        {
+            sizeof(Atom).Should().Be(2);
+        }
+
+        [Fact]
+        public unsafe void CreateStructSize()
+        {
+            sizeof(CREATESTRUCT).Should().Be(Environment.Is64BitProcess ? 80 : 48);
+        }
+
+        [Fact]
         public unsafe void WindowClassSize()
         {
             sizeof(WNDCLASSEX).Should().Be(Environment.Is64BitProcess ? 80 : 48);
