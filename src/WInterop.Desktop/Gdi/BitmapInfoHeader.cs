@@ -11,7 +11,7 @@ namespace WInterop.Gdi
     /// Contains information about the dimensions and color format of a DIB.
     /// [BITMAPINFOHEADER]
     /// </summary>
-    /// <msdn>https://msdn.microsoft.com/en-us/library/dd183376.aspx</msdn>
+    /// <msdn>https://docs.microsoft.com/windows/win32/api/wingdi/ns-wingdi-tagbitmapinfoheader</msdn>
     public struct BitmapInfoHeader
     {
         public uint Size;

@@ -11,7 +11,7 @@ using WInterop.Windows;
 
 namespace WInterop.Gdi
 {
-    public struct DoubleBufferPaint : IDisposable
+    public ref struct DoubleBufferPaint
     {
         private DeviceContext _originalDC;
         private BitmapHandle _bitmap;

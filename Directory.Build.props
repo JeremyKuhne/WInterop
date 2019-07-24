@@ -64,7 +64,7 @@
     <GenerateAssemblyInfo Condition="'$(GenerateAssemblyInfo)' == ''">false</GenerateAssemblyInfo>
 
     <!-- Latest and greatest C# please -->
-    <LangVersion>latest</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <Import Project="il.props" Condition="'$(ImportILProps)' == 'true'" />

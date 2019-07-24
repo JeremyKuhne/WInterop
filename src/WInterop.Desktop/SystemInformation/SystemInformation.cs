@@ -175,5 +175,15 @@ namespace WInterop.SystemInformation
                 return buffer.ToString();
             });
         }
+
+        /// <summary>
+        /// Gets the real version info without lies.
+        /// </summary>
+        public unsafe static OsVersionInfo GetVersionInfo()
+        {
+            OsVersionInfo info = new OsVersionInfo { OSVersionInfoSize = (uint)sizeof(OsVersionInfo) };
+            Imports.RtlGetVersion(ref info).ThrowIfFailed();
+            return info;
+        }
     }
 }

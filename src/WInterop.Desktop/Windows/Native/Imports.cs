@@ -8,6 +8,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Gdi.Native;
 using WInterop.Modules;
@@ -864,6 +865,11 @@ namespace WInterop.Windows.Native
             int nCount,
             int nIDListBox);
 
+        // https://docs.microsoft.com/windows/win32/api/shlwapi/nc-shlwapi-dllgetversionproc
+        [DllImport(Libraries.Comctl32, EntryPoint = "DllGetVersion")]
+        public static extern HResult ComctlGetVersion(
+            ref DllVersionInfo versionInfo);
+
         // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761723.aspx
         [DllImport(Libraries.Comctl32, ExactSpelling = true)]
         public static extern void DrawInsert(
@@ -1324,8 +1330,8 @@ namespace WInterop.Windows.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getmonitorinfow
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern bool GetMonitorInfoW(
+        public unsafe static extern bool GetMonitorInfoW(
             HMONITOR hMonitor,
-            ref MonitorInfo lpmi);
+            void* lpmi);
     }
 }

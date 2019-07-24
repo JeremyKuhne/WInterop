@@ -109,5 +109,12 @@ namespace WindowsTests
             int keyCount = Windows.GetKeyboardFunctionKeyCount();
             keyCount.Should().BeGreaterOrEqualTo(10);
         }
+
+        [Fact]
+        public void GetCommonControlsVersion()
+        {
+            var version = Windows.GetCommonControlsVersion();
+            version.MajorVersion.Should().BeGreaterOrEqualTo(5);
+        }
     }
 }

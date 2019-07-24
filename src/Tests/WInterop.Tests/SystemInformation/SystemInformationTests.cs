@@ -46,5 +46,12 @@ namespace SystemInformationTests
         {
             SystemInformation.GetComputerName().Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
         }
+
+        [Fact]
+        public void GetVersionInfo()
+        {
+            OsVersionInfo info = SystemInformation.GetVersionInfo();
+            info.MajorVersion.Should().BeGreaterOrEqualTo(6, "Windows 7 was 6.1");
+        }
     }
 }

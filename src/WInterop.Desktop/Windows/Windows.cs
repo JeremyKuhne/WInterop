@@ -56,17 +56,26 @@ namespace WInterop.Windows
                 isMainWindow: true,
                 menuHandle: menuHandle);
 
-            mainWindow.ShowWindow(ShowWindowCommand.Normal);
-            mainWindow.UpdateWindow();
-
-            while (GetMessage(out WindowMessage message))
+            try
             {
-                TranslateMessage(ref message);
-                DispatchMessage(ref message);
-            }
+                mainWindow.ShowWindow(ShowWindowCommand.Normal);
+                mainWindow.UpdateWindow();
 
-            // Make sure our window class doesn't get collected while we're pumping messages
-            GC.KeepAlive(windowClass);
+                while (GetMessage(out WindowMessage message))
+                {
+                    TranslateMessage(ref message);
+                    DispatchMessage(ref message);
+                }
+
+                // Make sure our window class doesn't get collected while we're pumping messages
+                GC.KeepAlive(windowClass);
+            }
+            catch
+            {
+                // Hit the P/Invoke directly as we want to throw the original error.
+                Imports.DestroyWindow(mainWindow);
+                throw;
+            }
         }
 
         public unsafe static WindowHandle CreateWindow(
@@ -686,10 +695,24 @@ namespace WInterop.Windows
             return Imports.MonitorFromRect(in rect, option);
         }
 
-        public static MonitorInfo GetMonitorInfo(MonitorHandle monitor)
+        public unsafe static MonitorInfo GetMonitorInfo(this MonitorHandle monitor)
         {
             MonitorInfo info = MonitorInfo.Create();
-            Imports.GetMonitorInfoW(monitor, ref info);
+            Imports.GetMonitorInfoW(monitor, &info);
+            return info;
+        }
+
+        public unsafe static ExtendedMonitorInfo GetExtendedMonitorInfo(this MonitorHandle monitor)
+        {
+            ExtendedMonitorInfo info = ExtendedMonitorInfo.Create();
+            Imports.GetMonitorInfoW(monitor, &info);
+            return info;
+        }
+
+        public unsafe static DllVersionInfo GetCommonControlsVersion()
+        {
+            DllVersionInfo info = new DllVersionInfo { Size = (uint)sizeof(DllVersionInfo) };
+            Imports.ComctlGetVersion(ref info).ThrowIfFailed();
             return info;
         }
     }

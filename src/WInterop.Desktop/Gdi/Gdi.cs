@@ -21,6 +21,12 @@ namespace WInterop.Gdi
             => new DeviceContext(Imports.CreateDCW(driver, device, null, null), ownsHandle: true);
 
         /// <summary>
+        /// Creates a <see cref="DeviceContext"/> that covers all displays.
+        /// </summary>
+        public unsafe static DeviceContext CreateScreenDeviceContext()
+            => new DeviceContext(Imports.CreateDCW("DISPLAY", null, null, null), ownsHandle: true);
+
+        /// <summary>
         /// Returns an in memory device context that is compatible with the specified device.
         /// </summary>
         /// <param name="context">An existing device context or new DeviceContext() for the application's current screen.</param>
@@ -46,7 +52,7 @@ namespace WInterop.Gdi
         /// <summary>
         /// Get the device context for the screen.
         /// </summary>
-        public static DeviceContext GetDeviceContext() => new WindowHandle().GetDeviceContext();
+        public static DeviceContext GetDeviceContext() => GetDeviceContext(new WindowHandle());
 
         /// <summary>
         /// Get the device context for the specified window.

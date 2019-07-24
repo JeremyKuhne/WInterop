@@ -16,7 +16,7 @@ namespace WInterop.Modules.Native
     /// </summary>
     public static partial class Imports
     {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684179.aspx
+        // https://docs.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern RefCountedModuleInstance LoadLibraryExW(
             string lpFileName,

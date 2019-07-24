@@ -43,27 +43,28 @@ namespace WhatClr
         }
 
         const int ID_TIMER = 1;
-        DeviceContext dcScreen;
         Color cr, crLast;
-        
+
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
                 case MessageType.Create:
-                    dcScreen = Gdi.CreateDeviceContext("DISPLAY", null);
                     window.SetTimer(ID_TIMER, 100);
                     return 0;
                 case MessageType.Timer:
                     Point pt = Windows.GetCursorPosition();
-                    cr = dcScreen.GetPixel(pt);
-                    // Not sure why the sample did this
-                    // dcScreen.SetPixel(pt, 0);
-                    if (cr != crLast)
+
+                    using (DeviceContext dc = Gdi.CreateScreenDeviceContext())
                     {
-                        crLast = cr;
-                        window.GetDeviceContext().SetBackgroundColor(cr);
-                        window.Invalidate(erase: false);
+                        cr = dc.GetPixel(pt);
+
+                        if (cr != crLast)
+                        {
+                            crLast = cr;
+                            window.GetDeviceContext().SetBackgroundColor(cr);
+                            window.Invalidate(erase: false);
+                        }
                     }
                     return 0;
                 case MessageType.Paint:
@@ -77,7 +78,6 @@ namespace WhatClr
                     }
                     return 0;
                 case MessageType.Destroy:
-                    dcScreen.Dispose();
                     window.KillTimer(ID_TIMER);
                     break;
             }

@@ -10,7 +10,7 @@ using WInterop.Gdi.Native;
 
 namespace WInterop.Gdi
 {
-    public readonly struct PaintStruct
+    public readonly ref struct PaintStruct
     {
         /// <summary>
         /// The display DeviceContext for painting

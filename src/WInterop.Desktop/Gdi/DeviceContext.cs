@@ -14,7 +14,7 @@ namespace WInterop.Gdi
     /// <summary>
     /// DeviceContext handle (HDC)
     /// </summary>
-    public readonly struct DeviceContext : IDisposable
+    public readonly ref struct DeviceContext
     {
         public HDC Handle { get; }
         private readonly WindowHandle _window;

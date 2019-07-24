@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 
 namespace WInterop.SystemInformation.Native
 {
@@ -85,5 +86,17 @@ namespace WInterop.SystemInformation.Native
             string lpSrc,
             SafeHandle lpDst,
             uint nSize);
+
+        // https://docs.microsoft.com/windows-hardware/drivers/ddi/content/wdm/nf-wdm-rtlverifyversioninfo
+        [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+        public static extern NTStatus RtlVerifyVersionInfo(
+            ref OsVersionInfo VersionInfo,
+            VersionTypeMask TypeMask,
+            ulong ConditionMask);
+
+        // https://docs.microsoft.com/windows-hardware/drivers/ddi/content/wdm/nf-wdm-rtlverifyversioninfo
+        [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+        public static extern NTStatus RtlGetVersion(
+            ref OsVersionInfo VersionInfo);
     }
 }

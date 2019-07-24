@@ -26,7 +26,7 @@ namespace WInterop.Windows
 
         public unsafe static MonitorInfo Create() => new MonitorInfo(sizeof(MonitorInfo));
 
-        private MonitorInfo(int size)
+        internal MonitorInfo(int size)
         {
             this = default;
             cbSize = (uint)size;
