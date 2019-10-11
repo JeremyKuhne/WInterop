@@ -8,6 +8,13 @@
 #include "lm.h"
 #include "d2d1.h"
 #include "dwrite.h"
+#include "richedit.h"
+#include "shlwapi.h"
+#include "uxtheme.h"
+#include "Mshtmhst.h"
+#include "richole.h"
+#include "OleCtl.h"
+#include "winternl.h"
 
 BOOL APIENTRY DllMain(
     HMODULE hModule,
