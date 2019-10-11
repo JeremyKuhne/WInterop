@@ -48,7 +48,8 @@ namespace ErrorHandlingTests
         [Theory,
             InlineData(WindowsError.ERROR_ACCESS_DENIED, HResult.E_ACCESSDENIED),
             // This GetLastError() is already an HRESULT
-            InlineData(WindowsError.FVE_E_LOCKED_VOLUME, unchecked((HResult)WindowsError.FVE_E_LOCKED_VOLUME))
+            InlineData(WindowsError.FVE_E_LOCKED_VOLUME, unchecked((HResult)WindowsError.FVE_E_LOCKED_VOLUME)),
+            InlineData(WindowsError.ERROR_NO_MORE_ITEMS, unchecked((HResult)0x80070103))
             ]
         public void WindowsErrorToHresultMappings(WindowsError error, HResult expected)
         {
