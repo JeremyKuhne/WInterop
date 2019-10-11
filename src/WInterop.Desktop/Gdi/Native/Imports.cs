@@ -18,23 +18,23 @@ namespace WInterop.Gdi.Native
     /// </summary>
     public static partial class Imports
     {
-        // https://msdn.microsoft.com/en-us/library/dd144877.aspx
+        // https://msdn.microsoft.com/library/dd144877.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern int GetDeviceCaps(
             HDC hdc,
             DeviceCapability nIndex);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getwindowdc
+        // https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-getwindowdc
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern HDC GetWindowDC(
             WindowHandle hWnd);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getdc
+        // https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-getdc
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern HDC GetDC(
             WindowHandle hWnd);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createdcw
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-createdcw
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public unsafe static extern HDC CreateDCW(
             string pwszDriver,
@@ -42,7 +42,7 @@ namespace WInterop.Gdi.Native
             string pszPort,
             DeviceMode* pdm);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createicw
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-createicw
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public unsafe static extern HDC CreateICW(
             string pwszDriver,
@@ -50,62 +50,62 @@ namespace WInterop.Gdi.Native
             string pszPort,
             DeviceMode* pdm);
 
-        // https://msdn.microsoft.com/en-us/library/dd183489.aspx
+        // https://msdn.microsoft.com/library/dd183489.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HDC CreateCompatibleDC(
             HDC hdc);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-deletedc
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-deletedc
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool DeleteDC(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/dd162920.aspx
+        // https://msdn.microsoft.com/library/windows/desktop/dd162920.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool ReleaseDC(
             WindowHandle hWnd,
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd183399.aspx
+        // https://msdn.microsoft.com/library/dd183399.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool CancelDC(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd183533.aspx
+        // https://msdn.microsoft.com/library/dd183533.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HGDIOBJ GetStockObject(
             StockObject stockObject);
 
-        // https://msdn.microsoft.com/en-us/library/dd183518.aspx
+        // https://msdn.microsoft.com/library/dd183518.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HBRUSH CreateSolidBrush(
             COLORREF crColor);
 
-        // https://msdn.microsoft.com/en-us/library/dd144869.aspx
+        // https://msdn.microsoft.com/library/dd144869.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HGDIOBJ GetCurrentObject(
             HDC hdc,
             ObjectType uObjectType);
 
-        // https://msdn.microsoft.com/en-us/library/dd144904.aspx
+        // https://msdn.microsoft.com/library/dd144904.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern int GetObjectW(
             HGDIOBJ hgdiobj,
             int cbBuffer,
             void* lpvObject);
 
-        // https://msdn.microsoft.com/en-us/library/dd162957.aspx
+        // https://msdn.microsoft.com/library/dd162957.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HGDIOBJ SelectObject(
             HDC hdc,
             HGDIOBJ h);
 
-        // https://msdn.microsoft.com/en-us/library/dd183539.aspx
+        // https://msdn.microsoft.com/library/dd183539.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool DeleteObject(
             HGDIOBJ hObject);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/dd162609.aspx
+        // https://msdn.microsoft.com/library/windows/desktop/dd162609.aspx
         [DllImport(Libraries.User32, ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern bool EnumDisplayDevicesW(
             string lpDevice,
@@ -113,14 +113,14 @@ namespace WInterop.Gdi.Native
             ref DisplayDevice lpDisplayDevice,
             uint dwFlags);
 
-        // https://msdn.microsoft.com/en-us/library/dd162611.aspx
+        // https://msdn.microsoft.com/library/dd162611.aspx
         [DllImport(Libraries.User32, ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern bool EnumDisplaySettingsW(
             string lpszDeviceName,
             uint iModeNum,
             ref DeviceMode lpDevMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd183485.aspx
+        // https://msdn.microsoft.com/library/dd183485.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HBITMAP CreateBitmap(
             int nWidth,
@@ -129,54 +129,54 @@ namespace WInterop.Gdi.Native
             uint cBitsPerPel,
             IntPtr lpvBits);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createcompatiblebitmap
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-createcompatiblebitmap
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HBITMAP CreateCompatibleBitmap(
             HDC hdc,
             int cx,
             int cy);
 
-        // https://msdn.microsoft.com/en-us/library/dd144905.aspx
+        // https://msdn.microsoft.com/library/dd144905.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern ObjectType GetObjectType(
             HGDIOBJ h);
 
-        // https://msdn.microsoft.com/en-us/library/dd144925.aspx
+        // https://msdn.microsoft.com/library/dd144925.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HGDIOBJ GetStockObject(
             int fnObject);
 
-        // https://msdn.microsoft.com/en-us/library/dd145167.aspx
+        // https://msdn.microsoft.com/library/dd145167.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool UpdateWindow(
             WindowHandle hWnd);
 
-        // https://msdn.microsoft.com/en-us/library/dd145194.aspx
+        // https://msdn.microsoft.com/library/dd145194.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public unsafe static extern bool ValidateRect(
             WindowHandle hWnd,
             RECT* lpRect);
 
-        // https://msdn.microsoft.com/en-us/library/dd183362.aspx
+        // https://msdn.microsoft.com/library/dd183362.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern HDC BeginPaint(
             WindowHandle hwnd,
             ref PAINTSTRUCT lpPaint);
 
-        // https://msdn.microsoft.com/en-us/library/dd145002.aspx
+        // https://msdn.microsoft.com/library/dd145002.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public unsafe static extern bool InvalidateRect(
             WindowHandle hWnd,
             RECT* lpRect,
             bool bErase);
 
-        // https://msdn.microsoft.com/en-us/library/dd162598.aspx
+        // https://msdn.microsoft.com/library/dd162598.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool EndPaint(
             WindowHandle hwnd,
             in PAINTSTRUCT lpPaint);
 
-        // https://msdn.microsoft.com/en-us/library/dd162498.aspx
+        // https://msdn.microsoft.com/library/dd162498.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int DrawTextW(
             HDC hDC,
@@ -185,7 +185,7 @@ namespace WInterop.Gdi.Native
             ref RECT lpRect,
             TextFormat uFormat);
 
-        // https://msdn.microsoft.com/en-us/library/dd145133.aspx
+        // https://msdn.microsoft.com/library/dd145133.aspx
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool TextOutW(
             HDC hdc,
@@ -194,7 +194,7 @@ namespace WInterop.Gdi.Native
             ref char lpString,
             int cchString);
 
-        // https://msdn.microsoft.com/en-us/library/dd145129.aspx
+        // https://msdn.microsoft.com/library/dd145129.aspx
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int TabbedTextOutW(
             HDC hdc,
@@ -206,53 +206,53 @@ namespace WInterop.Gdi.Native
             int[] lpnTabStopPositions,
             int nTabOrigin);
 
-        // https://msdn.microsoft.com/en-us/library/dd144941.aspx
+        // https://msdn.microsoft.com/library/dd144941.aspx
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool GetTextMetricsW(
             HDC hdc,
             out TextMetrics lptm);
 
-        // https://msdn.microsoft.com/en-us/library/dd145091.aspx
+        // https://msdn.microsoft.com/library/dd145091.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern TextAlignment SetTextAlign(
             HDC hdc,
             TextAlignment fMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd144932.aspx
+        // https://msdn.microsoft.com/library/dd144932.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern TextAlignment GetTextAlign(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd145094.aspx
+        // https://msdn.microsoft.com/library/dd145094.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool SetTextJustification(
             HDC hdc,
             int nBreakExtra,
             int nBreakCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd145092.aspx
+        // https://msdn.microsoft.com/library/dd145092.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern int SetTextCharacterExtra(
             HDC hdc,
             int nCharExtra);
 
-        // https://msdn.microsoft.com/en-us/library/dd144933.aspx
+        // https://msdn.microsoft.com/library/dd144933.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern int GetTextCharacterExtra(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd145093.aspx
+        // https://msdn.microsoft.com/library/dd145093.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern COLORREF SetTextColor(
             HDC hdc,
             COLORREF crColor);
 
-        // https://msdn.microsoft.com/en-us/library/dd144934.aspx
+        // https://msdn.microsoft.com/library/dd144934.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern COLORREF GetTextColor(
             HDC hdc);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-createfontw
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-createfontw
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern HFONT CreateFontW(
             int nHeight,
@@ -278,7 +278,7 @@ namespace WInterop.Gdi.Native
             LParam lParam,
             uint dwFlags);
 
-        // https://msdn.microsoft.com/en-us/library/dd183354.aspx
+        // https://msdn.microsoft.com/library/dd183354.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool AngleArc(
             HDC hdc,
@@ -288,7 +288,7 @@ namespace WInterop.Gdi.Native
             float eStartAngle,
             float eSweepAngle);
 
-        // https://msdn.microsoft.com/en-us/library/dd183357.aspx
+        // https://msdn.microsoft.com/library/dd183357.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool Arc(
             HDC hdc,
@@ -301,7 +301,7 @@ namespace WInterop.Gdi.Native
             int nXEndArc,
             int nYEndArc);
 
-        // https://msdn.microsoft.com/en-us/library/dd183358.aspx
+        // https://msdn.microsoft.com/library/dd183358.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool ArcTo(
             HDC hdc,
@@ -314,19 +314,19 @@ namespace WInterop.Gdi.Native
             int nXRadial2,
             int nYRadial2);
 
-        // https://msdn.microsoft.com/en-us/library/dd144848.aspx
+        // https://msdn.microsoft.com/library/dd144848.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern ArcDirection GetArcDirection(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd144909.aspx
+        // https://msdn.microsoft.com/library/dd144909.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern COLORREF GetPixel(
             HDC hdc,
             int nXPos,
             int nYPos);
 
-        // https://msdn.microsoft.com/en-us/library/dd145078.aspx
+        // https://msdn.microsoft.com/library/dd145078.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern COLORREF SetPixel(
             HDC hdc,
@@ -334,7 +334,7 @@ namespace WInterop.Gdi.Native
             int Y,
             COLORREF crColor);
 
-        // https://msdn.microsoft.com/en-us/library/dd145079.aspx
+        // https://msdn.microsoft.com/library/dd145079.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool SetPixelV(
             HDC hdc,
@@ -342,14 +342,14 @@ namespace WInterop.Gdi.Native
             int Y,
             COLORREF crColor);
 
-        // https://msdn.microsoft.com/en-us/library/dd145029.aspx
+        // https://msdn.microsoft.com/library/dd145029.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool LineTo(
             HDC hdc,
             int nXEnd,
             int nYEnd);
 
-        // https://msdn.microsoft.com/en-us/library/dd145069.aspx
+        // https://msdn.microsoft.com/library/dd145069.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool MoveToEx(
             HDC hdc,
@@ -357,32 +357,32 @@ namespace WInterop.Gdi.Native
             int Y,
             Point* lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dd144910.aspx
+        // https://msdn.microsoft.com/library/dd144910.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern PolyFillMode GetPolyFillMode(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd145080.aspx
+        // https://msdn.microsoft.com/library/dd145080.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern PolyFillMode SetPolyFillMode(
             HDC hdc,
             PolyFillMode iPolyFillMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd162811.aspx
+        // https://msdn.microsoft.com/library/dd162811.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool PolyBezier(
             HDC hdc,
             ref Point lppt,
             uint cPoints);
 
-        // https://msdn.microsoft.com/en-us/library/dd162812.aspx
+        // https://msdn.microsoft.com/library/dd162812.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool PolyBezierTo(
             HDC hdc,
             ref Point lppt,
             uint cCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd162813.aspx
+        // https://msdn.microsoft.com/library/dd162813.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool PolyDraw(
             HDC hdc,
@@ -390,21 +390,21 @@ namespace WInterop.Gdi.Native
             ref PointType lpbTypes,
             int cCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd162815.aspx
+        // https://msdn.microsoft.com/library/dd162815.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool Polyline(
             HDC hdc,
             ref Point lppt,
             int cPoints);
 
-        // https://msdn.microsoft.com/en-us/library/dd162816.aspx
+        // https://msdn.microsoft.com/library/dd162816.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool PolylineTo(
             HDC hdc,
             ref Point lppt,
             uint cCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd162819.aspx
+        // https://msdn.microsoft.com/library/dd162819.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool PolyPolyline(
             HDC hdc,
@@ -412,13 +412,13 @@ namespace WInterop.Gdi.Native
             uint[] lpdwPolyPoints,
             uint cCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd162961.aspx
+        // https://msdn.microsoft.com/library/dd162961.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern ArcDirection SetArcDirection(
             HDC hdc,
             ArcDirection ArcDirection);
 
-        // https://msdn.microsoft.com/en-us/library/dd183428.aspx
+        // https://msdn.microsoft.com/library/dd183428.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool Chord(
             HDC hdc,
@@ -431,7 +431,7 @@ namespace WInterop.Gdi.Native
             int nXRadial2,
             int nYRadial2);
 
-        // https://msdn.microsoft.com/en-us/library/dd162510(v=vs.85).aspx
+        // https://msdn.microsoft.com/library/dd162510(v=vs.85).aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool Ellipse(
             HDC hdc,
@@ -440,33 +440,33 @@ namespace WInterop.Gdi.Native
             int nRightRect,
             int nBottomRect);
 
-        // https://msdn.microsoft.com/en-us/library/dd162719.aspx
+        // https://msdn.microsoft.com/library/dd162719.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool FillRect(
             HDC hDC,
             [In] ref RECT lprc,
             HBRUSH hbr);
 
-        // https://msdn.microsoft.com/en-us/library/dd144838.aspx
+        // https://msdn.microsoft.com/library/dd144838.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool FrameRect(
             HDC hDC,
             [In] ref RECT lprc,
             HBRUSH hbr);
 
-        // https://msdn.microsoft.com/en-us/library/dd145007.aspx
+        // https://msdn.microsoft.com/library/dd145007.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool InvertRect(
             HDC hDC,
             [In] ref RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd162479.aspx
+        // https://msdn.microsoft.com/library/dd162479.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool DrawFocusRect(
             HDC hDC,
             [In] ref RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd162799.aspx
+        // https://msdn.microsoft.com/library/dd162799.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool Pie(
             HDC hdc,
@@ -479,14 +479,14 @@ namespace WInterop.Gdi.Native
             int nXRadial2,
             int nYRadial2);
 
-        // https://msdn.microsoft.com/en-us/library/dd162814.aspx
+        // https://msdn.microsoft.com/library/dd162814.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool Polygon(
             HDC hdc,
             ref Point lpPoints,
             int nCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd162818.aspx
+        // https://msdn.microsoft.com/library/dd162818.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool PolyPolygon(
             HDC hdc,
@@ -494,7 +494,7 @@ namespace WInterop.Gdi.Native
             int[] lpPolyCounts,
             int nCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd162898.aspx
+        // https://msdn.microsoft.com/library/dd162898.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool Rectangle(
             HDC hdc,
@@ -503,7 +503,7 @@ namespace WInterop.Gdi.Native
             int nRightRect,
             int nBottomRect);
 
-        // https://msdn.microsoft.com/en-us/library/dd162944.aspx
+        // https://msdn.microsoft.com/library/dd162944.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool RoundRect(
             HDC hdc,
@@ -514,85 +514,85 @@ namespace WInterop.Gdi.Native
             int nWidth,
             int nHeight);
 
-        // https://msdn.microsoft.com/en-us/library/dd183434.aspx
+        // https://msdn.microsoft.com/library/dd183434.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool ClientToScreen(
             WindowHandle hWnd,
             ref Point lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dd183466.aspx
+        // https://msdn.microsoft.com/library/dd183466.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool CombineTransform(
             out Matrix3x2 lpxformResult,
             [In] ref Matrix3x2 lpxform1,
             [In] ref Matrix3x2 lpxform2);
 
-        // https://msdn.microsoft.com/en-us/library/dd162474.aspx
+        // https://msdn.microsoft.com/library/dd162474.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool DPtoLP(
             HDC hdc,
             ref Point lpPoints,
             int nCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd144870.aspx
+        // https://msdn.microsoft.com/library/dd144870.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetCurrentPositionEx(
             HDC hdc,
             out Point lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dn376360.aspx
+        // https://msdn.microsoft.com/library/dn376360.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool GetDisplayAutoRotationPreferences(
             out OrientationPreference pOrientation);
 
-        // https://msdn.microsoft.com/en-us/library/dd144892.aspx
+        // https://msdn.microsoft.com/library/dd144892.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern GraphicsMode GetGraphicsMode(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd144897.aspx
+        // https://msdn.microsoft.com/library/dd144897.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern MappingMode GetMapMode(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd144945.aspx
+        // https://msdn.microsoft.com/library/dd144945.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetViewportExtEx(
             HDC hdc,
             out Size lpSize);
 
-        // https://msdn.microsoft.com/en-us/library/dd144946.aspx
+        // https://msdn.microsoft.com/library/dd144946.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetViewportOrgEx(
             HDC hdc,
             out Point lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dd144948.aspx
+        // https://msdn.microsoft.com/library/dd144948.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetWindowExtEx(
             HDC hdc,
             out Size lpSize);
 
-        // https://msdn.microsoft.com/en-us/library/dd144949.aspx
+        // https://msdn.microsoft.com/library/dd144949.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetWindowOrgEx(
             HDC hdc,
             out Point lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dd144953.aspx
+        // https://msdn.microsoft.com/library/dd144953.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GetWorldTransform(
             HDC hdc,
             out Matrix3x2 lpXform);
 
-        // https://msdn.microsoft.com/en-us/library/dd145042.aspx
+        // https://msdn.microsoft.com/library/dd145042.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool LPtoDP(
             HDC hdc,
             ref Point lpPoints,
             int nCount);
 
-        // https://msdn.microsoft.com/en-us/library/dd145046.aspx
+        // https://msdn.microsoft.com/library/dd145046.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern int MapWindowPoints(
             WindowHandle hWndFrom,
@@ -600,14 +600,14 @@ namespace WInterop.Gdi.Native
             ref Point lpPoints,
             uint cPoints);
 
-        // https://msdn.microsoft.com/en-us/library/dd145060.aspx
+        // https://msdn.microsoft.com/library/dd145060.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool ModifyWorldTransform(
             HDC hdc,
             [In] ref Matrix3x2 lpXform,
             WorldTransformMode iMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd162748.aspx
+        // https://msdn.microsoft.com/library/dd162748.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool OffsetViewportOrgEx(
             HDC hdc,
@@ -615,7 +615,7 @@ namespace WInterop.Gdi.Native
             int nYOffset,
             Point* lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dd162749.aspx
+        // https://msdn.microsoft.com/library/dd162749.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool OffsetWindowOrgEx(
             HDC hdc,
@@ -623,7 +623,7 @@ namespace WInterop.Gdi.Native
             int nYOffset,
             Point* lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dd162947.aspx
+        // https://msdn.microsoft.com/library/dd162947.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool ScaleViewportExtEx(
             HDC hdc,
@@ -633,7 +633,7 @@ namespace WInterop.Gdi.Native
             int Ydenom,
             out Size lpSize);
 
-        // https://msdn.microsoft.com/en-us/library/dd162948.aspx
+        // https://msdn.microsoft.com/library/dd162948.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool ScaleWindowExtEx(
             HDC hdc,
@@ -643,30 +643,30 @@ namespace WInterop.Gdi.Native
             int Ydenom,
             out Size lpSize);
 
-        // https://msdn.microsoft.com/en-us/library/dd162952.aspx
+        // https://msdn.microsoft.com/library/dd162952.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool ScreenToClient(
             WindowHandle hWnd,
             ref Point lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dn376361.aspx
+        // https://msdn.microsoft.com/library/dn376361.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool SetDisplayAutoRotationPreferences(
             OrientationPreference orientation);
 
-        // https://msdn.microsoft.com/en-us/library/dd162977.aspx
+        // https://msdn.microsoft.com/library/dd162977.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool SetGraphicsMode(
             HDC hdc,
             GraphicsMode iMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd162980.aspx
+        // https://msdn.microsoft.com/library/dd162980.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern MappingMode SetMapMode(
             HDC hdc,
             MappingMode fnMapMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd145098.aspx
+        // https://msdn.microsoft.com/library/dd145098.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool SetViewportExtEx(
             HDC hdc,
@@ -674,7 +674,7 @@ namespace WInterop.Gdi.Native
             int nYExtent,
             Size* lpSize);
 
-        // https://msdn.microsoft.com/en-us/library/dd145099.aspx
+        // https://msdn.microsoft.com/library/dd145099.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool SetViewportOrgEx(
             HDC hdc,
@@ -682,7 +682,7 @@ namespace WInterop.Gdi.Native
             int nYExtent,
             Point* lpPoint);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-setwindowextex
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-setwindowextex
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool SetWindowExtEx(
             HDC hdc,
@@ -690,7 +690,7 @@ namespace WInterop.Gdi.Native
             int y,
             Size* lpSize);
 
-        // https://msdn.microsoft.com/en-us/library/dd145101.aspx
+        // https://msdn.microsoft.com/library/dd145101.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern bool SetWindowOrgEx(
             HDC hdc,
@@ -698,57 +698,57 @@ namespace WInterop.Gdi.Native
             int nYExtent,
             Point* lpPoint);
 
-        // https://msdn.microsoft.com/en-us/library/dd145104.aspx
+        // https://msdn.microsoft.com/library/dd145104.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool SetWorldTransform(
             HDC hdc,
             [In] ref Matrix3x2 lpXform);
 
-        // https://msdn.microsoft.com/en-us/library/dd183481.aspx
+        // https://msdn.microsoft.com/library/dd183481.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool CopyRect(
             out RECT lprcDst,
             [In] ref RECT lprcSrc);
 
-        // https://msdn.microsoft.com/en-us/library/dd162699.aspx
+        // https://msdn.microsoft.com/library/dd162699.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool EqualRect(
             [In] ref RECT lprc1,
             [In] ref RECT lprc2);
 
-        // https://msdn.microsoft.com/en-us/library/dd144994.aspx
+        // https://msdn.microsoft.com/library/dd144994.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool InflateRect(
             ref RECT lprc,
             int dx,
             int dy);
 
-        // https://msdn.microsoft.com/en-us/library/dd145001.aspx
+        // https://msdn.microsoft.com/library/dd145001.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool IntersectRect(
             out RECT lprcDst,
             [In] ref RECT lprcSrc1,
             [In] ref RECT lprcSrc2);
 
-        // https://msdn.microsoft.com/en-us/library/dd145017.aspx
+        // https://msdn.microsoft.com/library/dd145017.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool IsRectEmpty(
             [In] ref RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd162746.aspx
+        // https://msdn.microsoft.com/library/dd162746.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool OffsetRect(
             ref RECT lprc,
             int dx,
             int dy);
 
-        // https://msdn.microsoft.com/en-us/library/dd162882.aspx
+        // https://msdn.microsoft.com/library/dd162882.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool PtInRect(
             [In] ref RECT lprc,
             Point pt);
 
-        // https://msdn.microsoft.com/en-us/library/dd145085.aspx
+        // https://msdn.microsoft.com/library/dd145085.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool SetRect(
             out RECT lprc,
@@ -757,26 +757,26 @@ namespace WInterop.Gdi.Native
             int xRight,
             int yBottom);
 
-        // https://msdn.microsoft.com/en-us/library/dd145086.aspx
+        // https://msdn.microsoft.com/library/dd145086.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool SetRectEmpty(
             out RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd145125.aspx
+        // https://msdn.microsoft.com/library/dd145125.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool SubtractRect(
             out RECT lprcDst,
             [In] ref RECT lprcSrc1,
             [In] ref RECT lprcSrc2);
 
-        // https://msdn.microsoft.com/en-us/library/dd145163.aspx
+        // https://msdn.microsoft.com/library/dd145163.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool UnionRect(
             out RECT lprcDst,
             [In] ref RECT lprcSrc1,
             [In] ref RECT lprcSrc2);
 
-        // https://msdn.microsoft.com/en-us/library/dd183465.aspx
+        // https://msdn.microsoft.com/library/dd183465.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType CombineRgn(
             HRGN hrgnDest,
@@ -784,7 +784,7 @@ namespace WInterop.Gdi.Native
             HRGN hrgnSrc2,
             CombineRegionMode fnCombineMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd183496.aspx
+        // https://msdn.microsoft.com/library/dd183496.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HRGN CreateEllipticRgn(
             int nLeftRect,
@@ -792,19 +792,19 @@ namespace WInterop.Gdi.Native
             int nRightRect,
             int nBottomRect);
 
-        // https://msdn.microsoft.com/en-us/library/dd183497.aspx
+        // https://msdn.microsoft.com/library/dd183497.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HRGN CreateEllipticRgnIndirect(
             [In] ref RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd183511.aspx
+        // https://msdn.microsoft.com/library/dd183511.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern HRGN CreatePolygonRgn(
             Point* lppt,
             int cPoints,
             PolyFillMode fnPolyFillMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd183512.aspx
+        // https://msdn.microsoft.com/library/dd183512.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern HRGN CreatePolyPolygonRgn(
             Point* lppt,
@@ -812,7 +812,7 @@ namespace WInterop.Gdi.Native
             int nCount,
             PolyFillMode fnPolyFillMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd183514.aspx
+        // https://msdn.microsoft.com/library/dd183514.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HRGN CreateRectRgn(
             int nLeftRect,
@@ -820,12 +820,12 @@ namespace WInterop.Gdi.Native
             int nRightRect,
             int nBottomRect);
 
-        // https://msdn.microsoft.com/en-us/library/dd183515.aspx
+        // https://msdn.microsoft.com/library/dd183515.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HRGN CreateRectRgnIndirect(
             [In] ref RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd183516.aspx
+        // https://msdn.microsoft.com/library/dd183516.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HRGN CreateRoundRectRgn(
             int nLeftRect,
@@ -835,27 +835,27 @@ namespace WInterop.Gdi.Native
             int nWidthEllipse,
             int nHeightEllipse);
 
-        // https://msdn.microsoft.com/en-us/library/dd162700.aspx
+        // https://msdn.microsoft.com/library/dd162700.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool EqualRgn(
             HRGN hSrcRgn1,
             HRGN hSrcRgn2);
 
-        // https://msdn.microsoft.com/en-us/library/dd162706.aspx
+        // https://msdn.microsoft.com/library/dd162706.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public unsafe static extern HRGN ExtCreateRegion(
             [In] ref Matrix3x2 lpXform,
             uint nCount,
             RGNDATA* lpRgnData);
 
-        // https://msdn.microsoft.com/en-us/library/dd162720.aspx
+        // https://msdn.microsoft.com/library/dd162720.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool FillRgn(
             HDC hdc,
             HRGN hrgn,
             HBRUSH hbr);
 
-        // https://msdn.microsoft.com/en-us/library/dd144839.aspx
+        // https://msdn.microsoft.com/library/dd144839.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool FrameRgn(
             HDC hdc,
@@ -864,52 +864,52 @@ namespace WInterop.Gdi.Native
             int nWidth,
             int nHeight);
 
-        // https://msdn.microsoft.com/en-us/library/dd144920.aspx
+        // https://msdn.microsoft.com/library/dd144920.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern uint GetRegionData(
             HRGN hRgn,
             uint dwCount,
             IntPtr lpRgnData);
 
-        // https://msdn.microsoft.com/en-us/library/dd144921.aspx
+        // https://msdn.microsoft.com/library/dd144921.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType GetRgnBox(
             HRGN hrgn,
             out RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd145008.aspx
+        // https://msdn.microsoft.com/library/dd145008.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool InvertRgn(
             HDC hdc,
             HRGN hrgn);
 
-        // https://msdn.microsoft.com/en-us/library/dd162747.aspx
+        // https://msdn.microsoft.com/library/dd162747.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType OffsetRgn(
             HRGN hrgn,
             int nXOffset,
             int nYOffset);
 
-        // https://msdn.microsoft.com/en-us/library/dd162767.aspx
+        // https://msdn.microsoft.com/library/dd162767.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool PaintRgn(
             HDC hdc,
             HRGN hrgn);
 
-        // https://msdn.microsoft.com/en-us/library/dd162883.aspx
+        // https://msdn.microsoft.com/library/dd162883.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool PtInRegion(
             HRGN hrgn,
             int X,
             int Y);
 
-        // https://msdn.microsoft.com/en-us/library/dd162906.aspx
+        // https://msdn.microsoft.com/library/dd162906.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool RectInRegion(
             HRGN hrgn,
             [In] ref RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd145087.aspx
+        // https://msdn.microsoft.com/library/dd145087.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool SetRectRgn(
             HRGN hrgn,
@@ -918,7 +918,7 @@ namespace WInterop.Gdi.Native
             int nRightRect,
             int nBottomRect);
 
-        // https://msdn.microsoft.com/en-us/library/dd162702.aspx
+        // https://msdn.microsoft.com/library/dd162702.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType ExcludeClipRect(
             HDC hdc,
@@ -927,39 +927,39 @@ namespace WInterop.Gdi.Native
             int nRightRect,
             int nBottomRect);
 
-        // https://msdn.microsoft.com/en-us/library/dd162712.aspx
+        // https://msdn.microsoft.com/library/dd162712.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType ExtSelectClipRgn(
             HDC hdc,
             HRGN hrgn,
             CombineRegionMode fnMode);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-getclipbox
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-getclipbox
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType GetClipBox(
             HDC hdc,
             out RECT lprect);
 
-        // https://msdn.microsoft.com/en-us/library/dd144866.aspx
+        // https://msdn.microsoft.com/library/dd144866.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern int GetClipRgn(
             HDC hdc,
             HRGN hrgn);
 
-        // https://msdn.microsoft.com/en-us/library/dd144899.aspx
+        // https://msdn.microsoft.com/library/dd144899.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern int GetMetaRgn(
             HDC hdc,
             HRGN hrgn);
 
-        // https://msdn.microsoft.com/en-us/library/dd144918.aspx
+        // https://msdn.microsoft.com/library/dd144918.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern int GetRandomRgn(
             HDC hdc,
             HRGN hrgn,
             int iNum);
 
-        // https://msdn.microsoft.com/en-us/library/dd144998.aspx
+        // https://msdn.microsoft.com/library/dd144998.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType IntersectClipRect(
             HDC hdc,
@@ -968,55 +968,55 @@ namespace WInterop.Gdi.Native
             int nRightRect,
             int nBottomRect);
 
-        // https://msdn.microsoft.com/en-us/library/dd162745.aspx
+        // https://msdn.microsoft.com/library/dd162745.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType OffsetClipRgn(
             HDC hdc,
             int nXOffset,
             int nYOffset);
 
-        // https://msdn.microsoft.com/en-us/library/dd162890.aspx
+        // https://msdn.microsoft.com/library/dd162890.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern Boolean32 PtVisible(
             HDC hdc,
             int X,
             int Y);
 
-        // https://msdn.microsoft.com/en-us/library/dd162908.aspx
+        // https://msdn.microsoft.com/library/dd162908.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern Boolean32 RectVisible(
             HDC hdc,
             [In] ref RECT lprc);
 
-        // https://msdn.microsoft.com/en-us/library/dd162954(v=vs.85).aspx
+        // https://msdn.microsoft.com/library/dd162954(v=vs.85).aspx
         [DllImport(Libraries.Gdi32, SetLastError = true, ExactSpelling = true)]
         public static extern bool SelectClipPath(
             HDC hdc,
             CombineRegionMode iMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd162955.aspx
+        // https://msdn.microsoft.com/library/dd162955.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType SelectClipRgn(
             HDC hdc,
             HRGN hrgn);
 
-        // https://msdn.microsoft.com/en-us/library/dd145075.aspx
+        // https://msdn.microsoft.com/library/dd145075.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType SetMetaRgn(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd144853.aspx
+        // https://msdn.microsoft.com/library/dd144853.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern BackgroundMode GetBkMode(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd162965.aspx
+        // https://msdn.microsoft.com/library/dd162965.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern BackgroundMode SetBkMode(
             HDC hdc,
             BackgroundMode iBkMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd144922.aspx
+        // https://msdn.microsoft.com/library/dd144922.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern PenMixMode GetROP2(
             HDC hdc);
@@ -1026,41 +1026,41 @@ namespace WInterop.Gdi.Native
             HDC hdc,
             PenMixMode fnDrawMode);
 
-        // https://msdn.microsoft.com/en-us/library/dd144852.aspx
+        // https://msdn.microsoft.com/library/dd144852.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern COLORREF GetBkColor(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd162964.aspx
+        // https://msdn.microsoft.com/library/dd162964.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern COLORREF SetBkColor(
             HDC hdc,
             COLORREF crColor);
 
-        // https://msdn.microsoft.com/en-us/library/dd162969.aspx
+        // https://msdn.microsoft.com/library/dd162969.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern COLORREF SetDCBrushColor(
             HDC hdc,
             COLORREF crColor);
 
-        // https://msdn.microsoft.com/en-us/library/dd144872.aspx
+        // https://msdn.microsoft.com/library/dd144872.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern COLORREF GetDCBrushColor(
             HDC hdc);
 
-        // https://msdn.microsoft.com/en-us/library/dd144927.aspx
+        // https://msdn.microsoft.com/library/dd144927.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern HBRUSH GetSysColorBrush(
             SystemColor nIndex);
 
-        // https://msdn.microsoft.com/en-us/library/dd183509.aspx
+        // https://msdn.microsoft.com/library/dd183509.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HPEN CreatePen(
             PenStyle fnPenStyle,
             int nWidth,
             COLORREF crColor);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-extcreatepen
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-extcreatepen
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HPEN ExtCreatePen(
             uint iPenStyle,
@@ -1069,20 +1069,20 @@ namespace WInterop.Gdi.Native
             uint cStyle,
             uint[] pstyle);
 
-        // https://msdn.microsoft.com/en-us/library/dd144844.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-gdiflush
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool GdiFlush();
 
-        // https://msdn.microsoft.com/en-us/library/dd144845.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-gdigetbatchlimit
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern uint GdiGetBatchLimit();
 
-        // https://msdn.microsoft.com/en-us/library/dd144846.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-gdisetbatchlimit
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern uint GdiSetBatchLimit(
             uint dwLimit);
 
-        // https://msdn.microsoft.com/en-us/library/dd183370.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-bitblt
         [DllImport(Libraries.Gdi32, SetLastError = true, ExactSpelling = true)]
         public static extern bool BitBlt(
             HDC hdcDest,
@@ -1095,13 +1095,13 @@ namespace WInterop.Gdi.Native
             int nYSrc,
             RasterOperation dwRop);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-setstretchbltmode
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-setstretchbltmode
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern StretchMode SetStretchBltMode(
             HDC hdc,
             StretchMode mode);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/nf-wingdi-stretchblt
+        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-stretchblt
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool StretchBlt(
             HDC hdcDest,
@@ -1115,5 +1115,19 @@ namespace WInterop.Gdi.Native
             int wSrc,
             int hSrc,
             RasterOperation dwRop);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getboundsrect
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern BoundsState GetBoundsRect(
+            HDC hdc,
+            out RECT lprect,
+            BoundsState flags);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-setboundsrect
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern BoundsState SetBoundsRect(
+            HDC hdc,
+            ref RECT lprect,
+            BoundsState flags);
     }
 }

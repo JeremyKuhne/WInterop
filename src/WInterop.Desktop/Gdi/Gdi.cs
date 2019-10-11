@@ -23,7 +23,7 @@ namespace WInterop.Gdi
         /// <summary>
         /// Creates a <see cref="DeviceContext"/> that covers all displays.
         /// </summary>
-        public unsafe static DeviceContext CreateScreenDeviceContext()
+        public unsafe static DeviceContext CreateDesktopDeviceContext()
             => new DeviceContext(Imports.CreateDCW("DISPLAY", null, null, null), ownsHandle: true);
 
         /// <summary>
@@ -39,6 +39,16 @@ namespace WInterop.Gdi
         /// </summary>
         public static int GetDeviceCapability(this in DeviceContext context, DeviceCapability capability)
             => Imports.GetDeviceCaps(context, capability);
+
+        public static Size GetDeviceResolution(this in DeviceContext context)
+            => new Size(
+                context.GetDeviceCapability(DeviceCapability.HorzontalResolution),
+                context.GetDeviceCapability(DeviceCapability.VerticalResolution));
+
+        public static Size GetDesktopResolution(this in DeviceContext context)
+            => new Size(
+                context.GetDeviceCapability(DeviceCapability.DesktopHorizontalResolution),
+                context.GetDeviceCapability(DeviceCapability.DesktopVerticalResolution));
 
         public unsafe static DeviceContext CreateInformationContext(string driver, string device)
             => new DeviceContext(Imports.CreateICW(driver, device, null, null), ownsHandle: true);
@@ -213,122 +223,92 @@ namespace WInterop.Gdi
         }
 
         public unsafe static bool Invalidate(this in WindowHandle window, bool erase = true)
-        {
-            return Imports.InvalidateRect(window, null, erase);
-        }
+            => Imports.InvalidateRect(window, null, erase);
 
-        public static RegionHandle CreateEllipticRegion(int left, int top, int right, int bottom)
-        {
-            return new RegionHandle(Imports.CreateEllipticRgn(left, top, right, bottom));
-        }
+        public static RegionHandle CreateEllipticRegion(Rectangle bounds)
+            => new RegionHandle(Imports.CreateEllipticRgn(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom));
 
-        public static RegionHandle CreateRectangleRegion(int left, int top, int right, int bottom)
-        {
-            return new RegionHandle(Imports.CreateRectRgn(left, top, right, bottom));
-        }
+        public static RegionHandle CreateRectangleRegion(Rectangle rectangle)
+            => new RegionHandle(Imports.CreateRectRgn(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom));
 
-        public static RegionType CombineRegion(this in RegionHandle destination, RegionHandle sourceOne, RegionHandle sourceTwo, CombineRegionMode mode)
-        {
-            return Imports.CombineRgn(destination, sourceOne, sourceTwo, mode);
-        }
+        public static RegionType CombineRegion(
+            this in RegionHandle destination,
+            RegionHandle sourceOne,
+            RegionHandle sourceTwo,
+            CombineRegionMode mode)
+            => Imports.CombineRgn(destination, sourceOne, sourceTwo, mode);
 
         public static RegionType SelectClippingRegion(this in DeviceContext context, RegionHandle region)
-        {
-            return Imports.SelectClipRgn(context, region);
-        }
+            => Imports.SelectClipRgn(context, region);
+
+        public static bool GetViewportOrigin(this in DeviceContext context, out Point point)
+            => Imports.GetViewportOrgEx(context, out point);
 
         public static unsafe bool SetViewportOrigin(this in DeviceContext context, Point point)
-        {
-            return Imports.SetViewportOrgEx(context, point.X, point.Y, null);
-        }
+            => Imports.SetViewportOrgEx(context, point.X, point.Y, null);
+
+        public static bool GetWindowOrigin(this in DeviceContext context, out Point point)
+            => Imports.GetWindowOrgEx(context, out point);
 
         public static unsafe bool SetWindowOrigin(this in DeviceContext context, Point point)
-        {
-            return Imports.SetWindowOrgEx(context, point.X, point.Y, null);
-        }
+            => Imports.SetWindowOrgEx(context, point.X, point.Y, null);
 
         /// <summary>
         /// Shared brush, handle doesn't need disposed.
         /// </summary>
         public static BrushHandle GetSystemColorBrush(SystemColor systemColor)
-        {
-            return new BrushHandle(Imports.GetSysColorBrush(systemColor), ownsHandle: false);
-        }
+            => new BrushHandle(Imports.GetSysColorBrush(systemColor), ownsHandle: false);
 
         public static Color GetBackgroundColor(this in DeviceContext context)
-        {
-            return Imports.GetBkColor(context);
-        }
+            => Imports.GetBkColor(context);
 
         public static Color GetBrushColor(this in DeviceContext context)
-        {
-            return Imports.GetDCBrushColor(context);
-        }
+            => Imports.GetDCBrushColor(context);
 
-        public static Color SetBackgroundColor(this in DeviceContext context, Color color) => Imports.SetBkColor(context, color);
+        public static Color SetBackgroundColor(this in DeviceContext context, Color color)
+            => Imports.SetBkColor(context, color);
+
         public static Color SetBackgroundColor(this in DeviceContext context, SystemColor color)
             => Imports.SetBkColor(context, Windows.Windows.GetSystemColor(color));
 
-
         public static BackgroundMode SetBackgroundMode(this in DeviceContext context, BackgroundMode mode)
-        {
-            return Imports.SetBkMode(context, mode);
-        }
+            => Imports.SetBkMode(context, mode);
 
         public static BackgroundMode GetBackgroundMode(this in DeviceContext context)
-        {
-            return Imports.GetBkMode(context);
-        }
+            => Imports.GetBkMode(context);
 
         public static PenMixMode SetRasterOperation(this in DeviceContext context, PenMixMode foregroundMixMode)
-        {
-            return Imports.SetROP2(context, foregroundMixMode);
-        }
+            => Imports.SetROP2(context, foregroundMixMode);
 
         public static PenMixMode GetRasterOperation(this in DeviceContext context)
-        {
-            return Imports.GetROP2(context);
-        }
+            => Imports.GetROP2(context);
 
         public static bool ScreenToClient(this in WindowHandle window, ref Point point)
-        {
-            return Imports.ScreenToClient(window, ref point);
-        }
+            => Imports.ScreenToClient(window, ref point);
 
         public static bool ClientToScreen(this in WindowHandle window, ref Point point)
-        {
-            return Imports.ClientToScreen(window, ref point);
-        }
+            => Imports.ClientToScreen(window, ref point);
 
         public static bool DeviceToLogical(this in DeviceContext context, params Point[] points)
-        {
-            return DeviceToLogical(context, points.AsSpan());
-        }
+            => DeviceToLogical(context, points.AsSpan());
 
         public static bool DeviceToLogical(this in DeviceContext context, ReadOnlySpan<Point> points)
-        {
-            return Imports.DPtoLP(context, ref MemoryMarshal.GetReference(points), points.Length);
-        }
+            => Imports.DPtoLP(context, ref MemoryMarshal.GetReference(points), points.Length);
 
         public unsafe static bool LogicalToDevice(this in DeviceContext context, params Point[] points)
-        {
-            return LogicalToDevice(context, points);
-        }
+            => LogicalToDevice(context, points);
 
         public unsafe static bool LogicalToDevice(this in DeviceContext context, ReadOnlySpan<Point> points)
-        {
-            return Imports.LPtoDP(context, ref MemoryMarshal.GetReference(points), points.Length);
-        }
+            => Imports.LPtoDP(context, ref MemoryMarshal.GetReference(points), points.Length);
 
         public unsafe static bool OffsetWindowOrigin(this in DeviceContext context, int x, int y)
-        {
-            return Imports.OffsetWindowOrgEx(context, x, y, null);
-        }
+            => Imports.OffsetWindowOrgEx(context, x, y, null);
 
         public unsafe static bool OffsetViewportOrigin(this in DeviceContext context, int x, int y)
-        {
-            return Imports.OffsetViewportOrgEx(context, x, y, null);
-        }
+            => Imports.OffsetViewportOrgEx(context, x, y, null);
+
+        public static bool GetWindowExtents(this in DeviceContext context, out Size size)
+            => Imports.GetWindowExtEx(context, out size);
 
         /// <summary>
         /// Sets the logical ("window") dimensions of the device context.
@@ -336,8 +316,14 @@ namespace WInterop.Gdi
         public unsafe static bool SetWindowExtents(this in DeviceContext context, Size size)
             => Imports.SetWindowExtEx(context, size.Width, size.Height, null);
 
+        public static bool GetViewportExtents(this in DeviceContext context, out Size size)
+            => Imports.GetViewportExtEx(context, out size);
+
         public unsafe static bool SetViewportExtents(this in DeviceContext context, Size size)
             => Imports.SetViewportExtEx(context, size.Width, size.Height, null);
+
+        public static MappingMode GetMappingMode(this in DeviceContext context)
+            => Imports.GetMapMode(context);
 
         public static MappingMode SetMappingMode(this in DeviceContext context, MappingMode mapMode)
             => Imports.SetMapMode(context, mapMode);
@@ -345,6 +331,12 @@ namespace WInterop.Gdi
         public static Rectangle GetClipBox(this in DeviceContext context, out RegionType complexity)
         {
             complexity = Imports.GetClipBox(context, out RECT rect);
+            return rect;
+        }
+
+        public static Rectangle GetBoundsRect(this in DeviceContext context, out BoundsState state, bool reset = false)
+        {
+            state = Imports.GetBoundsRect(context, out RECT rect, reset ? BoundsState.Reset : default);
             return rect;
         }
     }

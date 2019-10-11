@@ -48,7 +48,6 @@ namespace WindowsTests
                 dc.IsInvalid.Should().BeFalse();
                 int bitsPerPixel = dc.GetDeviceCapability(DeviceCapability.BitsPerPixel);
                 int planes = dc.GetDeviceCapability(DeviceCapability.Planes);
-
             }
         }
     }
