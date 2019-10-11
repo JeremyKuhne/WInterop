@@ -233,16 +233,54 @@ namespace StorageTests
             using var cleaner = new TestFileCleaner();
             Win32FileAttributeData attributeData = default;
 
-            bool success = Imports.GetFileAttributesExW(cleaner.TempFolder,
-                GetFileExtendedInformationLevels.Standard, ref attributeData);
+            bool success = Imports.GetFileAttributesExW(
+                cleaner.TempFolder,
+                GetFileExtendedInformationLevels.Standard,
+                ref attributeData);
             success.Should().BeTrue("root location exists");
-            success = Imports.GetFileAttributesExW(cleaner.GetTestPath(),
-                GetFileExtendedInformationLevels.Standard, ref attributeData);
+
+            success = Imports.GetFileAttributesExW(
+                cleaner.GetTestPath(),
+                GetFileExtendedInformationLevels.Standard,
+                ref attributeData);
             WindowsError error = Error.GetLastError();
             success.Should().BeFalse("non-existant file");
             error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
-            success = Imports.GetFileAttributesExW(Path.Join(cleaner.GetTestPath(), "NotHere"),
-                GetFileExtendedInformationLevels.Standard, ref attributeData);
+
+            success = Imports.GetFileAttributesExW(
+                Path.Join(cleaner.GetTestPath(), "NotHere"),
+                GetFileExtendedInformationLevels.Standard,
+                ref attributeData);
+            error = Error.GetLastError();
+            success.Should().BeFalse("non-existant subdir");
+            error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
+        }
+
+        [Fact]
+        public void GetFileAttributesBehavior_BadCharactersOnNonExistantPath()
+        {
+            string tempPath = Path.GetTempPath();
+            Win32FileAttributeData attributeData = default;
+            bool success = Imports.GetFileAttributesExW(
+                tempPath,
+                GetFileExtendedInformationLevels.Standard,
+                ref attributeData);
+            success.Should().BeTrue("can get temp folder attributes");
+
+            // Try with a bad, non-existent subdir name
+            success = Imports.GetFileAttributesExW(
+                Path.Join(tempPath, @"""*"""),
+                GetFileExtendedInformationLevels.Standard,
+                ref attributeData);
+            WindowsError error = Error.GetLastError();
+            success.Should().BeFalse("non-existant subdir");
+            error.Should().Be(WindowsError.ERROR_INVALID_NAME);
+
+            // Try with a nested nonexistant subdir, with a bad subdir name
+            success = Imports.GetFileAttributesExW(
+                Path.Join(tempPath, Path.GetRandomFileName(), @"""*"""),
+                GetFileExtendedInformationLevels.Standard,
+                ref attributeData);
             error = Error.GetLastError();
             success.Should().BeFalse("non-existant subdir");
             error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
