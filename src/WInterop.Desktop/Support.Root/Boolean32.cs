@@ -13,38 +13,19 @@ namespace WInterop
     /// </summary>
     public readonly struct Boolean32
     {
-        public uint RawValue { get; }
+        public int RawValue { get; }
 
-        public Boolean32(bool b)
-        {
-            RawValue = b ? 1u : 0u;
-        }
+        public Boolean32(bool b) => RawValue = b ? 1 : 0;
+        public Boolean32(int value) => RawValue = value;
 
-        public Boolean32(uint value)
-        {
-            RawValue = value;
-        }
-
-        public Boolean32(int value)
-        {
-            RawValue = (uint)value;
-        }
-
-        public bool IsTrue => RawValue != 0;
-
-        public bool IsFalse => RawValue == 0;
+        public readonly bool IsTrue => RawValue != 0;
+        public readonly bool IsFalse => RawValue == 0;
 
         public static implicit operator bool(Boolean32 b) => b.IsTrue;
-
         public static implicit operator Boolean32(bool b) => new Boolean32(b);
+        public static implicit operator uint(Boolean32 b) => (uint)b.RawValue;
+        public static implicit operator Boolean32(uint b) => new Boolean32((int)b);
 
-        public static implicit operator uint(Boolean32 b) => b.RawValue;
-
-        public static implicit operator Boolean32(uint b) => new Boolean32(b);
-
-        public override string ToString()
-        {
-            return IsTrue.ToString();
-        }
+        public override string ToString() => IsTrue.ToString();
     }
 }

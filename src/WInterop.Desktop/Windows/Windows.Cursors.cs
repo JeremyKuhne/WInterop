@@ -98,5 +98,11 @@ namespace WInterop.Windows
 
         public static void HideCaret(this in WindowHandle window)
             => Error.ThrowLastErrorIfFalse(Imports.HideCaret(window));
+
+        public static Rectangle GetClipCursor()
+        {
+            Error.ThrowLastErrorIfFalse(Imports.GetClipCursor(out Gdi.Native.RECT rect));
+            return rect;
+        }
     }
 }
