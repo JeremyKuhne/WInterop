@@ -49,13 +49,13 @@ namespace Clover
 
                     Span<RegionHandle> hRgnTemp = stackalloc RegionHandle[6];
 
-                    hRgnTemp[0] = Gdi.CreateEllipticRegion(0, cyClient / 3, cxClient / 2, 2 * cyClient / 3);
-                    hRgnTemp[1] = Gdi.CreateEllipticRegion(cxClient / 2, cyClient / 3, cxClient, 2 * cyClient / 3);
-                    hRgnTemp[2] = Gdi.CreateEllipticRegion(cxClient / 3, 0, 2 * cxClient / 3, cyClient / 2);
-                    hRgnTemp[3] = Gdi.CreateEllipticRegion(cxClient / 3, cyClient / 2, 2 * cxClient / 3, cyClient);
-                    hRgnTemp[4] = Gdi.CreateRectangleRegion(0, 0, 1, 1);
-                    hRgnTemp[5] = Gdi.CreateRectangleRegion(0, 0, 1, 1);
-                    hRgnClip = Gdi.CreateRectangleRegion(0, 0, 1, 1);
+                    hRgnTemp[0] = Gdi.CreateEllipticRegion(Rectangle.FromLTRB(0, cyClient / 3, cxClient / 2, 2 * cyClient / 3));
+                    hRgnTemp[1] = Gdi.CreateEllipticRegion(Rectangle.FromLTRB(cxClient / 2, cyClient / 3, cxClient, 2 * cyClient / 3));
+                    hRgnTemp[2] = Gdi.CreateEllipticRegion(Rectangle.FromLTRB(cxClient / 3, 0, 2 * cxClient / 3, cyClient / 2));
+                    hRgnTemp[3] = Gdi.CreateEllipticRegion(Rectangle.FromLTRB(cxClient / 3, cyClient / 2, 2 * cxClient / 3, cyClient));
+                    hRgnTemp[4] = Gdi.CreateRectangleRegion(Rectangle.FromLTRB(0, 0, 1, 1));
+                    hRgnTemp[5] = Gdi.CreateRectangleRegion(Rectangle.FromLTRB(0, 0, 1, 1));
+                    hRgnClip = Gdi.CreateRectangleRegion(Rectangle.FromLTRB(0, 0, 1, 1));
                     hRgnTemp[4].CombineRegion(hRgnTemp[0], hRgnTemp[1], CombineRegionMode.Or);
                     hRgnTemp[5].CombineRegion(hRgnTemp[2], hRgnTemp[3], CombineRegionMode.Or);
                     hRgnClip.CombineRegion(hRgnTemp[4], hRgnTemp[5], CombineRegionMode.Xor);

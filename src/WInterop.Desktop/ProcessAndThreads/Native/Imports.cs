@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 
 namespace WInterop.ProcessAndThreads.Native
 {
@@ -73,8 +74,17 @@ namespace WInterop.ProcessAndThreads.Native
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static extern ThreadHandle GetCurrentThread();
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683180.aspx
+        // https://docs.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static extern uint GetCurrentThreadId();
+
+        // https://docs.microsoft.com/windows/win32/api/winternl/nf-winternl-ntqueryinformationprocess
+        [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+        public unsafe static extern NTStatus NtQueryInformationProcess(
+            SafeProcessHandle ProcessHandle,
+            ProcessInfoClass ProcessInformationClass,
+            void* ProcessInformation,
+            uint ProcessInformationLength,
+            uint* ReturnLength);
     }
 }

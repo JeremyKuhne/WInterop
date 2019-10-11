@@ -6,6 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop;
@@ -62,20 +63,43 @@ namespace GdiTests
         public void GetDeviceContext_NullWindow()
         {
             // Null here should be the entire screen
-            DeviceContext context = Gdi.GetDeviceContext(default);
+            using DeviceContext context = Gdi.GetDeviceContext(default);
             context.IsInvalid.Should().BeFalse();
-            int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HorzontalResolution);
-            int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VerticalResolution);
+            int pixeWidth = context.GetDeviceCapability(DeviceCapability.HorzontalResolution);
+            int pixelHeight = context.GetDeviceCapability(DeviceCapability.VerticalResolution);
         }
 
         [Fact]
         public void GetWindowDeviceContext_NullWindow()
         {
             // Null here should be the entire screen
-            DeviceContext context = Gdi.GetWindowDeviceContext(default);
+            using DeviceContext context = Gdi.GetWindowDeviceContext(default);
             context.IsInvalid.Should().BeFalse();
-            int pixelWidth = Gdi.GetDeviceCapability(context, DeviceCapability.HorzontalResolution);
-            int pixelHeight = Gdi.GetDeviceCapability(context, DeviceCapability.VerticalResolution);
+            int pixelWidth = context.GetDeviceCapability(DeviceCapability.HorzontalResolution);
+            int pixelHeight = context.GetDeviceCapability(DeviceCapability.VerticalResolution);
+        }
+
+        [Fact]
+        public void CreateDesktopDeviceContext()
+        {
+            using DeviceContext context = Gdi.CreateDesktopDeviceContext();
+
+            context.GetMappingMode().Should().Be(MappingMode.Text);
+            context.GetBoundsRect(out BoundsState state).Should().Be(Rectangle.Empty);
+            state.Should().Be(BoundsState.Reset);
+
+            Size resolution = context.GetDeviceResolution();
+            Size desktopResolution = context.GetDesktopResolution();
+
+            int pixelWidth = context.GetDeviceCapability(DeviceCapability.HorzontalResolution);
+            int pixelHeight = context.GetDeviceCapability(DeviceCapability.VerticalResolution);
+            context.GetViewportOrigin(out Point viewportOrigin).Should().BeTrue();
+            viewportOrigin.Should().Be(Size.Empty);
+            context.GetWindowOrigin(out Point windowOrigin).Should().BeTrue();
+            windowOrigin.Should().Be(Size.Empty);
+            context.GetViewportExtents(out Size viewportExtents).Should().BeTrue();
+            context.GetWindowExtents(out Size windowExtents).Should().BeTrue();
+            Rectangle clip = Windows.GetClipCursor();
         }
 
         [Fact]

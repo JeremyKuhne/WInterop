@@ -55,7 +55,7 @@ namespace WhatClr
                 case MessageType.Timer:
                     Point pt = Windows.GetCursorPosition();
 
-                    using (DeviceContext dc = Gdi.CreateScreenDeviceContext())
+                    using (DeviceContext dc = Gdi.CreateDesktopDeviceContext())
                     {
                         cr = dc.GetPixel(pt);
 
