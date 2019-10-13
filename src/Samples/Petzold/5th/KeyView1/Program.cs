@@ -28,15 +28,14 @@ namespace KeyView1
         }
     }
 
-    class KeyView1 : WindowClass
+    internal class KeyView1 : WindowClass
     {
-        int cxClientMax, cyClientMax, cxClient, cyClient, cxChar, cyChar;
-        int cLinesMax, cLines;
-        Rectangle rectScroll;
-        WindowMessage[] pmsg;
-
-        StringBuilder _sb = new StringBuilder(256);
-        char[] _chunk;
+        private int cyClientMax, cxClient, cyClient, cyChar;
+        private int cLinesMax, cLines;
+        private Rectangle rectScroll;
+        private WindowMessage[] pmsg;
+        private readonly StringBuilder _sb = new StringBuilder(256);
+        private ReadOnlyMemory<char> _chunk;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -47,7 +46,6 @@ namespace KeyView1
                     goto case MessageType.DisplayChange;
                 case MessageType.DisplayChange:
                     // Get maximum size of client area
-                    cxClientMax = Windows.GetSystemMetrics(SystemMetric.MaximizedWidth);
                     cyClientMax = Windows.GetSystemMetrics(SystemMetric.MaximizedHeight);
 
                     // Get character size for fixed-pitch font
@@ -55,7 +53,6 @@ namespace KeyView1
                     {
                         dc.SelectObject(StockFont.SystemFixed);
                         dc.GetTextMetrics(out TextMetrics tm);
-                        cxChar = tm.AverageCharWidth;
                         cyChar = tm.Height;
                     }
 
@@ -133,7 +130,7 @@ namespace KeyView1
                                     (0x80000000 & pmsg[i].lParam) != 0 ? "Up" : "Down",
                                     (VirtualKey)pmsg[i].wParam);
 
-                            dc.TextOut(new Point(0, (cyClient / cyChar - 1 - i) * cyChar), _chunk.AsSpan(0, _sb.Length));
+                            dc.TextOut(new Point(0, (cyClient / cyChar - 1 - i) * cyChar), _chunk.Span.Slice(0, _sb.Length));
                         }
                     }
                     return 0;

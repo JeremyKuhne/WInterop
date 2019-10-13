@@ -43,12 +43,10 @@ namespace WindowsTests
         {
             MonitorHandle handle = Windows.MonitorFromWindow(default, MonitorOption.DefaultToPrimary);
             ExtendedMonitorInfo info = handle.GetExtendedMonitorInfo();
-            using (DeviceContext dc = Gdi.CreateDeviceContext(info.DeviceName.ToString(), null))
-            {
-                dc.IsInvalid.Should().BeFalse();
-                int bitsPerPixel = dc.GetDeviceCapability(DeviceCapability.BitsPerPixel);
-                int planes = dc.GetDeviceCapability(DeviceCapability.Planes);
-            }
+            using DeviceContext dc = Gdi.CreateDeviceContext(info.DeviceName.ToString(), null);
+            dc.IsInvalid.Should().BeFalse();
+            int bitsPerPixel = dc.GetDeviceCapability(DeviceCapability.BitsPerPixel);
+            int planes = dc.GetDeviceCapability(DeviceCapability.Planes);
         }
     }
 }

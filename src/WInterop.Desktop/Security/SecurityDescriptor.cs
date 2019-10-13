@@ -22,9 +22,9 @@ namespace WInterop.Security
     /// </summary>
     public unsafe class SecurityDescriptor : LocalHandle
     {
-        private SECURITY_DESCRIPTOR_CONTROL _control;
-        private SafeHandle _objectHandle;
-        private ObjectType _objectType;
+        private readonly SECURITY_DESCRIPTOR_CONTROL _control;
+        private readonly SafeHandle? _objectHandle;
+        private readonly ObjectType _objectType;
 
         public SecurityDescriptor() : base() { }
 
@@ -106,9 +106,9 @@ namespace WInterop.Security
 
         private class ExplicitAccessEnumerable : LocalHandle, IEnumerable<ExplicitAccess>, IEnumerator<ExplicitAccess>
         {
-            private uint _count;
+            private readonly uint _count;
             private int _current;
-            private EXPLICIT_ACCESS* _entries;
+            private readonly EXPLICIT_ACCESS* _entries;
 
             public ExplicitAccessEnumerable() : base() { }
 

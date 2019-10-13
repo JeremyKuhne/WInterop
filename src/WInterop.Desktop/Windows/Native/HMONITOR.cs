@@ -17,7 +17,7 @@ namespace WInterop.Windows.Native
 
         public bool IsInvalid => Value == IntPtr.Zero || Value == (IntPtr)(-1);
 
-        public override bool Equals(object obj) => obj is HMONITOR other ? other.Value == Value : false;
+        public override bool Equals(object? obj) => obj is HMONITOR other ? other.Value == Value : false;
         public bool Equals(HMONITOR other) => other.Value == Value;
         public static bool operator ==(HMONITOR a, HMONITOR b) => a.Value == b.Value;
         public static bool operator !=(HMONITOR a, HMONITOR b) => a.Value != b.Value;

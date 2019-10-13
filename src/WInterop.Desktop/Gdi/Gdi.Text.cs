@@ -5,8 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#nullable enable
-
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -95,8 +93,10 @@ namespace WInterop.Gdi
             FontTypes fontType,
             LParam lParam)
         {
-            var info = (List<FontInformation>)GCHandle.FromIntPtr(lParam).Target;
-            info.Add(new FontInformation { FontType = fontType, TextMetrics = textMetrics, FontAttributes = fontAttributes });
+            var info = (List<FontInformation>?)GCHandle.FromIntPtr(lParam).Target;
+            info?.Add(new FontInformation { FontType = fontType, TextMetrics = textMetrics, FontAttributes = fontAttributes });
+
+            // Continue enumeration
             return 1;
         }
 

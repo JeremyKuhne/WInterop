@@ -25,7 +25,7 @@ namespace WInterop.Support.Buffers
 
         private struct ArrayPoolOwner<T> : IMemoryOwner<T>
         {
-            private T[] _array;
+            private T[]? _array;
 
             public ArrayPoolOwner(int minimumLength)
             {
@@ -36,8 +36,8 @@ namespace WInterop.Support.Buffers
             {
                 get
                 {
-                    T[] array = _array;
-                    if (array == null)
+                    T[]? array = _array;
+                    if (array is null)
                         throw new ObjectDisposedException(nameof(IMemoryOwner<T>));
 
                     return new Memory<T>(array);
@@ -46,7 +46,7 @@ namespace WInterop.Support.Buffers
 
             public void Dispose()
             {
-                T[] array = _array;
+                T[]? array = _array;
                 if (array != null)
                 {
                     _array = null;

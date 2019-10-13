@@ -39,7 +39,7 @@ namespace WInterop.Windows
         public static implicit operator LResult(IconHandle handle) => handle.HICON.Value;
         public static implicit operator IconHandle(IconId id) => Windows.LoadIcon(id);
 
-        public override bool Equals(object obj) => obj is IconHandle other ? other.HICON == HICON : false;
+        public override bool Equals(object? obj) => obj is IconHandle other ? other.HICON == HICON : false;
         public bool Equals(IconHandle other) => other.HICON == HICON;
         public static bool operator ==(IconHandle a, IconHandle b) => a.HICON == b.HICON;
         public static bool operator !=(IconHandle a, IconHandle b) => a.HICON != b.HICON;

@@ -221,7 +221,7 @@ namespace StorageTests
                 }
             }
 
-            bool IsValid(IntPtr value)
+            static bool IsValid(IntPtr value)
             {
                 return value != IntPtr.Zero && value != (IntPtr)(-1);
             }
@@ -291,34 +291,32 @@ namespace StorageTests
         {
             using var cleaner = new TestFileCleaner();
             string path = cleaner.CreateTestFile(nameof(GetFileAttributesBehavior_DeletedFile));
-            using (var handle = Storage.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All))
+            using var handle = Storage.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All);
+            handle.IsInvalid.Should().BeFalse();
+            Storage.FileExists(path).Should().BeTrue();
+            Storage.DeleteFile(path);
+
+            // With the file deleted and the handle still open the file will still physically exist.
+            // Trying to access the file via a handle at this point will fail with access denied.
+
+            Action action = () => Storage.FileExists(path);
+            action.Should().Throw<UnauthorizedAccessException>();
+
+            action = () => Storage.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All,
+                desiredAccess: DesiredAccess.ReadAttributes);
+            action.Should().Throw<UnauthorizedAccessException>();
+
+            // Find file will work at this point.
+            IntPtr findHandle = Imports.FindFirstFileW(path, out Win32FindData findData);
+            findHandle.Should().NotBe(IntPtr.Zero);
+            try
             {
-                handle.IsInvalid.Should().BeFalse();
-                Storage.FileExists(path).Should().BeTrue();
-                Storage.DeleteFile(path);
-
-                // With the file deleted and the handle still open the file will still physically exist.
-                // Trying to access the file via a handle at this point will fail with access denied.
-
-                Action action = () => Storage.FileExists(path);
-                action.Should().Throw<UnauthorizedAccessException>();
-
-                action = () => Storage.CreateFile(path, CreationDisposition.OpenExisting, shareMode: ShareModes.All,
-                    desiredAccess: DesiredAccess.ReadAttributes);
-                action.Should().Throw<UnauthorizedAccessException>();
-
-                // Find file will work at this point.
-                IntPtr findHandle = Imports.FindFirstFileW(path, out Win32FindData findData);
-                findHandle.Should().NotBe(IntPtr.Zero);
-                try
-                {
-                    // This is failing with a corrupted name
-                    findData.FileName.CreateString().Should().Be(Paths.GetLastSegment(path));
-                }
-                finally
-                {
-                    Imports.FindClose(findHandle);
-                }
+                // This is failing with a corrupted name
+                findData.FileName.CreateString().Should().Be(Paths.GetLastSegment(path));
+            }
+            finally
+            {
+                Imports.FindClose(findHandle);
             }
         }
 
@@ -359,16 +357,14 @@ namespace StorageTests
                 action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)WindowsError.ERROR_DIR_NOT_EMPTY.ToHResult());
 
                 // Opening the directory for deletion will succeed, but have no impact
-                using (var directoryHandle = Storage.CreateFile(
+                using var directoryHandle = Storage.CreateFile(
                     directory,
                     CreationDisposition.OpenExisting,
                     DesiredAccess.ListDirectory | DesiredAccess.Delete,
                     ShareModes.ReadWrite | ShareModes.Delete,
                     AllFileAttributes.None,
-                    FileFlags.BackupSemantics | FileFlags.DeleteOnClose))
-                {
-                    directoryHandle.IsInvalid.Should().BeFalse();
-                }
+                    FileFlags.BackupSemantics | FileFlags.DeleteOnClose);
+                directoryHandle.IsInvalid.Should().BeFalse();
             }
 
             // File will be gone now that the handle is closed

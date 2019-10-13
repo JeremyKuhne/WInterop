@@ -37,7 +37,7 @@ namespace WInterop.Com
         //  VT_ARRAY
         //  VT_BYREF
 
-        public override object GetData()
+        public override object? GetData()
         {
             VARENUM propertyType = RawVariantType;
             if ((propertyType & VARENUM.VT_BYREF) != 0
@@ -52,7 +52,7 @@ namespace WInterop.Com
                 throw new NotImplementedException();
             }
 
-            propertyType = propertyType & VARENUM.VT_TYPEMASK;
+            propertyType &= VARENUM.VT_TYPEMASK;
 
             switch (propertyType)
             {
@@ -66,9 +66,9 @@ namespace WInterop.Com
             return base.GetData();
         }
 
-        protected override unsafe object GetCoreType(VARENUM propertyType, void* data)
+        protected override unsafe object? GetCoreType(VARENUM propertyType, void* data)
         {
-            object value = base.GetCoreType(propertyType, data);
+            object? value = base.GetCoreType(propertyType, data);
             if (!ReferenceEquals(value, s_UnsupportedObject))
                 return value;
 

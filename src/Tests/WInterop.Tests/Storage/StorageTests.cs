@@ -80,10 +80,8 @@ namespace StorageTests
             string tempFileName = Storage.GetTempFileName(tempPath, "tfn");
             try
             {
-                using (var file = Storage.CreateFile(tempFileName, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
-                {
-                    file.IsInvalid.Should().BeFalse();
-                }
+                using var file = Storage.CreateFile(tempFileName, CreationDisposition.OpenExisting, DesiredAccess.GenericRead);
+                file.IsInvalid.Should().BeFalse();
             }
             finally
             {
@@ -96,11 +94,9 @@ namespace StorageTests
         {
             StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
             {
-                using (var file = Storage.CreateFile(@"C:\.", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
-                    AllFileAttributes.None, FileFlags.BackupSemantics))
-                {
-                    file.IsInvalid.Should().BeFalse();
-                }
+                using var file = Storage.CreateFile(@"C:\.", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite,
+                    AllFileAttributes.None, FileFlags.BackupSemantics);
+                file.IsInvalid.Should().BeFalse();
             });
         }
 
@@ -111,11 +107,9 @@ namespace StorageTests
             string tempPath = cleaner.TempFolder;
             string tempFileName = cleaner.GetTestPath();
 
-            using (var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew, DesiredAccess.GenericRead))
-            {
-                file.IsInvalid.Should().BeFalse();
-                File.Exists(tempFileName).Should().BeTrue();
-            }
+            using var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew, DesiredAccess.GenericRead);
+            file.IsInvalid.Should().BeFalse();
+            File.Exists(tempFileName).Should().BeTrue();
         }
 
         [Fact]
@@ -133,10 +127,8 @@ namespace StorageTests
             string tempPath = cleaner.TempFolder;
             string tempFileName = cleaner.GetTestPath();
 
-            using (var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew))
-            {
-                Storage.FlushFileBuffers(file);
-            }
+            using var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew);
+            Storage.FlushFileBuffers(file);
         }
 
         [Fact]
@@ -146,11 +138,9 @@ namespace StorageTests
             string tempPath = cleaner.TempFolder;
             string tempFileName = cleaner.GetTestPath();
 
-            using (var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew))
-            {
-                string fileName = Storage.GetFileNameLegacy(file);
-                tempFileName.Should().EndWith(fileName);
-            }
+            using var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew);
+            string fileName = Storage.GetFileNameLegacy(file);
+            tempFileName.Should().EndWith(fileName);
         }
 
         [Fact]
@@ -184,19 +174,15 @@ namespace StorageTests
             string tempPath = cleaner.TempFolder;
             string tempFileName = cleaner.GetTestPath();
 
-            using (var directory = Storage.CreateDirectoryHandle(tempPath))
-            {
-                var directoryInfo = Storage.GetFileBasicInformation(directory);
-                directoryInfo.FileAttributes.Should().HaveFlag(AllFileAttributes.Directory);
-                Thread.Sleep(10);
+            using var directory = Storage.CreateDirectoryHandle(tempPath);
+            var directoryInfo = Storage.GetFileBasicInformation(directory);
+            directoryInfo.FileAttributes.Should().HaveFlag(AllFileAttributes.Directory);
+            Thread.Sleep(10);
 
-                using (var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew))
-                {
-                    var fileInfo = Storage.GetFileBasicInformation(file);
-                    fileInfo.FileAttributes.Should().NotHaveFlag(AllFileAttributes.Directory);
-                    fileInfo.CreationTime.ToDateTimeUtc().Should().BeAfter(directoryInfo.CreationTime.ToDateTimeUtc());
-                }
-            }
+            using var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew);
+            var fileInfo = Storage.GetFileBasicInformation(file);
+            fileInfo.FileAttributes.Should().NotHaveFlag(AllFileAttributes.Directory);
+            fileInfo.CreationTime.ToDateTimeUtc().Should().BeAfter(directoryInfo.CreationTime.ToDateTimeUtc());
         }
 
         [Fact]
@@ -206,21 +192,17 @@ namespace StorageTests
             string tempPath = cleaner.TempFolder;
             string tempFileName = cleaner.GetTestPath();
 
-            using (var directory = Storage.CreateDirectoryHandle(tempPath))
-            {
-                var directoryInfo = Storage.GetStreamInformation(directory);
-                directoryInfo.Should().BeEmpty();
+            using var directory = Storage.CreateDirectoryHandle(tempPath);
+            var directoryInfo = Storage.GetStreamInformation(directory);
+            directoryInfo.Should().BeEmpty();
 
-                using (var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew))
-                {
-                    var fileInfo = Storage.GetStreamInformation(file);
-                    fileInfo.Should().HaveCount(1);
-                    var info = fileInfo.First();
-                    info.Name.Should().Be(@"::$DATA");
-                    info.Size.Should().Be(0);
-                    info.AllocationSize.Should().Be(0);
-                }
-            }
+            using var file = Storage.CreateFile(tempFileName, CreationDisposition.CreateNew);
+            var fileInfo = Storage.GetStreamInformation(file);
+            fileInfo.Should().HaveCount(1);
+            var info = fileInfo.First();
+            info.Name.Should().Be(@"::$DATA");
+            info.Size.Should().Be(0);
+            info.AllocationSize.Should().Be(0);
         }
 
         [Fact]
@@ -289,48 +271,23 @@ namespace StorageTests
             info.FileAttributes.Should().NotHaveFlag(AllFileAttributes.Directory);
         }
 
-        [Fact]
-        public void FindFirstFileNoFiles()
-        {
-            Storage.CreateFindOperation<string>(Storage.GetTempPath(), nameFilter: Path.GetRandomFileName())
-                .Should().BeEmpty();
-        }
-
-        [Theory,
-            InlineData("*"),
-            InlineData("*.*")]
-        public void FindFileEmptyFolder(string pattern)
-        {
-            using var temp = new TestFileCleaner();
-            string subdir = Path.Join(temp.TempFolder, "Subdir");
-            Storage.CreateDirectory(subdir);
-
-            Storage.CreateFindOperation(subdir, nameFilter: pattern,
-                findTransform: FindTransforms.ToFileName.Instance, findFilter: FindFilters.All.Instance)
-                .Should().Contain(new string[] { ".", ".." });
-        }
-
         [Theory,
             InlineData(new byte[] { 0xDE })
             ]
         public void WriteFileBasic(byte[] data)
         {
             using var temp = new TestFileCleaner();
-            using (var fileHandle = Storage.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
-            {
-                Storage.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
-                Storage.GetFilePointer(fileHandle).Should().Be(data.Length);
-            }
+            using var fileHandle = Storage.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0);
+            Storage.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
+            Storage.GetFilePointer(fileHandle).Should().Be(data.Length);
         }
 
         [Fact]
         public void GetFilePositionForEmptyFile()
         {
             using var temp = new TestFileCleaner();
-            using (var fileHandle = Storage.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
-            {
-                Storage.SetFilePointer(fileHandle, 0, MoveMethod.Current).Should().Be(0);
-            }
+            using var fileHandle = Storage.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0);
+            Storage.SetFilePointer(fileHandle, 0, MoveMethod.Current).Should().Be(0);
         }
 
         [Theory,
@@ -340,35 +297,29 @@ namespace StorageTests
         public void ReadWriteFileBasic(byte[] data)
         {
             using var temp = new TestFileCleaner();
-            using (var fileHandle = Storage.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
-            {
-                Storage.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
-                Storage.GetFilePointer(fileHandle).Should().Be(data.Length);
-                Storage.SetFilePointer(fileHandle, 0, MoveMethod.Begin);
-                byte[] outBuffer = new byte[data.Length];
-                Storage.ReadFile(fileHandle, outBuffer).Should().Be((uint)data.Length);
-                outBuffer.Should().BeEquivalentTo(data);
-            }
+            using var fileHandle = Storage.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0);
+            Storage.WriteFile(fileHandle, data).Should().Be((uint)data.Length);
+            Storage.GetFilePointer(fileHandle).Should().Be(data.Length);
+            Storage.SetFilePointer(fileHandle, 0, MoveMethod.Begin);
+            byte[] outBuffer = new byte[data.Length];
+            Storage.ReadFile(fileHandle, outBuffer).Should().Be((uint)data.Length);
+            outBuffer.Should().BeEquivalentTo(data);
         }
 
         [Fact]
         public void GetEmptyFileSize()
         {
             using var temp = new TestFileCleaner();
-            using (var fileHandle = Storage.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0))
-            {
-                Storage.GetFileSize(fileHandle).Should().Be(0);
-            }
+            using var fileHandle = Storage.CreateFile(temp.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite, 0);
+            Storage.GetFileSize(fileHandle).Should().Be(0);
         }
 
         [Fact]
         public void GetFileTypeDisk()
         {
             string tempPath = Storage.GetTempPath();
-            using (var directory = Storage.CreateDirectoryHandle(tempPath))
-            {
-                Storage.GetFileType(directory).Should().Be(FileType.Disk);
-            }
+            using var directory = Storage.CreateDirectoryHandle(tempPath);
+            Storage.GetFileType(directory).Should().Be(FileType.Disk);
         }
 
         [Theory,
@@ -381,11 +332,9 @@ namespace StorageTests
         {
             using var cleaner = new TestFileCleaner();
             string filePath = Path.Join(cleaner.TempFolder, fileName);
-            using (var handle = Storage.CreateFile(filePath, CreationDisposition.CreateNew))
-            {
-                handle.IsInvalid.Should().BeFalse();
-                Storage.FileExists(filePath).Should().BeTrue();
-            }
+            using var handle = Storage.CreateFile(filePath, CreationDisposition.CreateNew);
+            handle.IsInvalid.Should().BeFalse();
+            Storage.FileExists(filePath).Should().BeTrue();
         }
 
         [Theory,
@@ -398,12 +347,10 @@ namespace StorageTests
         {
             using var cleaner = new TestFileCleaner();
             string filePath = @"\\?\" + Path.Join(cleaner.TempFolder, fileName);
-            using (var handle = Storage.CreateFile(filePath, CreationDisposition.CreateNew))
-            {
-                handle.IsInvalid.Should().BeFalse();
-                Storage.FlushFileBuffers(handle);
-                Storage.FileExists(filePath).Should().BeTrue();
-            }
+            using var handle = Storage.CreateFile(filePath, CreationDisposition.CreateNew);
+            handle.IsInvalid.Should().BeFalse();
+            Storage.FlushFileBuffers(handle);
+            Storage.FileExists(filePath).Should().BeTrue();
         }
 
         [Fact]
@@ -489,20 +436,8 @@ namespace StorageTests
         public void FileTypeOfFile()
         {
             using var cleaner = new TestFileCleaner();
-            using (var testFile = Storage.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew))
-            {
-                Storage.GetFileType(testFile).Should().Be(FileType.Disk);
-            }
-        }
-
-        [Theory,
-            InlineData(@"C:\"),
-            InlineData(@"\\?\C:\")
-            ]
-        public void FindFirstFileHandlesRoots(string path)
-        {
-            Storage.CreateFindOperation<string>(path).Should().NotBeEmpty();
-            Storage.CreateFindOperation<string>(path, null).Should().NotBeEmpty();
+            using var testFile = Storage.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew);
+            Storage.GetFileType(testFile).Should().Be(FileType.Disk);
         }
 
         [Fact]
@@ -531,7 +466,7 @@ namespace StorageTests
         {
             using var cleaner = new TestFileCleaner();
             string filePath = cleaner.GetTestPath();
-            using (var stream = Storage.CreateFileStream(
+            using var stream = Storage.CreateFileStream(
                 path: filePath,
                 fileAccess: FileAccess.Write,
                 fileShare: FileShare.ReadWrite,
@@ -539,10 +474,8 @@ namespace StorageTests
                 fileAttributes: 0,
                 securityFlags: WindowsStore.IsWindowsStoreApplication()
                     ? SecurityQosFlags.None
-                    : SecurityQosFlags.QosPresent | SecurityQosFlags.Anonymous))
-            {
-                stream.Should().NotBeNull();
-            }
+                    : SecurityQosFlags.QosPresent | SecurityQosFlags.Anonymous);
+            stream.Should().NotBeNull();
         }
 
         [Theory,
@@ -561,10 +494,8 @@ namespace StorageTests
 
             Storage.CreateDirectory(tempDirectory);
             FileHelper.WriteAllText(Path.Join(tempDirectory, "GetDirectoryFilenamesFromHandle"), "GetDirectoryFilenamesFromHandle");
-            using (var handle = Storage.CreateDirectoryHandle(tempDirectory))
-            {
-                Storage.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", "..", "GetDirectoryFilenamesFromHandle" });
-            }
+            using var handle = Storage.CreateDirectoryHandle(tempDirectory);
+            Storage.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", "..", "GetDirectoryFilenamesFromHandle" });
         }
 
         [Fact]
@@ -574,10 +505,8 @@ namespace StorageTests
             string tempDirectory = cleaner.GetTestPath();
 
             Storage.CreateDirectory(tempDirectory);
-            using (var handle = Storage.CreateDirectoryHandle(tempDirectory))
-            {
-                Storage.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", ".." });
-            }
+            using var handle = Storage.CreateDirectoryHandle(tempDirectory);
+            Storage.GetDirectoryFilenames(handle).Should().Contain(new string[] { ".", ".." });
         }
 
         [Fact(Skip = "This is close to impossible to get to pass consistently")]
@@ -587,21 +516,20 @@ namespace StorageTests
             string cursorPath = cleaner.GetTestPath() + ".cur";
 
             // Create a handle with read only sharing and leave open
-            using (FileStream file = new FileStream(cursorPath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
+            using FileStream file = new FileStream(cursorPath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
+
+            // Write out a valid file
+            using (Stream data = TestFiles.GetTestCursor())
             {
-                // Write out a valid file
-                using (Stream data = TestFiles.GetTestCursor())
-                {
-                    data.CopyTo(file);
-                }
-                file.Flush();
-
-                // See that we can open a handle on it directly
-                using (FileStream file2 = new FileStream(cursorPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) { }
-
-                // Try letting the OS read it in
-                using (Windows.LoadCursorFromFile(cursorPath)) { };
+                data.CopyTo(file);
             }
+            file.Flush();
+
+            // See that we can open a handle on it directly
+            using (FileStream file2 = new FileStream(cursorPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) { }
+
+            // Try letting the OS read it in
+            using (Windows.LoadCursorFromFile(cursorPath)) { };
         }
     }
 }

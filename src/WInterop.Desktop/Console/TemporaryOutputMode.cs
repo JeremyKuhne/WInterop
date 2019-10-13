@@ -25,7 +25,8 @@ namespace WInterop.Console
         /// <param name="addFlag">Adds the given flags instead of just replacing the existing flags.</param>
         public TemporaryOutputMode(ConsoleOuputMode mode, bool addFlag = false)
         {
-            _handle = Console.GetStandardHandle(StandardHandleType.Output);
+            SafeFileHandle? handle = Console.GetStandardHandle(StandardHandleType.Output);
+            _handle = handle ?? throw new InvalidOperationException($"Could not get standard output handle.");
             _mode = Console.GetConsoleOutputMode(_handle);
             Console.SetConsoleOutputMode(_handle, addFlag ? mode | _mode : mode);
         }

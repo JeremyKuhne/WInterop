@@ -18,7 +18,7 @@ namespace WInterop.Support.Collections
         protected static string s_type = typeof(T).ToString();
 
         // Protected for testing
-        protected readonly T[] _itemsCache;
+        protected readonly T?[] _itemsCache;
 
         /// <summary>
         /// Create a cache with space for the specified number of items.
@@ -36,7 +36,7 @@ namespace WInterop.Support.Collections
         {
             CacheEventSource.Log.ObjectAquired(s_type);
 
-            T item;
+            T? item;
 
             for (int i = 0; i < _itemsCache.Length; i++)
             {
@@ -55,14 +55,16 @@ namespace WInterop.Support.Collections
         {
             CacheEventSource.Log.ObjectReleased(s_type);
 
+            T? temp = item;
+
             for (int i = 0; i < _itemsCache.Length; i++)
             {
-                item = Interlocked.Exchange(ref _itemsCache[i], item);
-                if (item == null) return;
+                temp = Interlocked.Exchange(ref _itemsCache[i], temp);
+                if (temp is null) return;
             }
 
             CacheEventSource.Log.ObjectDestroyed(s_type, "NoSlot");
-            (item as IDisposable)?.Dispose();
+            (temp as IDisposable)?.Dispose();
         }
 
         public void Dispose()

@@ -20,7 +20,7 @@ namespace WInterop.Windows.Native
 
         public bool IsInvalid => Value == IntPtr.Zero;
 
-        public override bool Equals(object obj) => obj is HICON other ? other.Value == Value : false;
+        public override bool Equals(object? obj) => obj is HICON other ? other.Value == Value : false;
         public bool Equals(HICON other) => other.Value == Value;
         public static bool operator ==(HICON a, HICON b) => a.Value == b.Value;
         public static bool operator !=(HICON a, HICON b) => a.Value != b.Value;

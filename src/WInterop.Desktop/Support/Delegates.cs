@@ -20,7 +20,8 @@ namespace WInterop.Support
         /// </summary>
         public static T CreateDelegate<T>(string typeName, string methodName) where T : class
         {
-            Type type = Type.GetType(typeName);
+            Type type = Type.GetType(typeName)
+                ?? throw new ArgumentException($"Could not get type {typeName}", nameof(typeName));
             Type[] parameters = GetDelegateParameters<T>();
             var method = type.GetRuntimeMethod(methodName, parameters);
             if (method == null)

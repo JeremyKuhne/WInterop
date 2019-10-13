@@ -149,7 +149,7 @@ namespace WInterop.Security.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379159.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
         public unsafe static extern bool LookupAccountNameW(
-            string lpSystemName,
+            string? lpSystemName,
             string lpAccountName,
             SID* Sid,
             ref uint cbSid,
@@ -161,7 +161,7 @@ namespace WInterop.Security.Native
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
 
         public unsafe static extern bool LookupAccountSidW(
-            string lpSystemName,
+            string? lpSystemName,
             in SID lpSid,
             SafeHandle lpName,
             ref uint cchName,
@@ -196,7 +196,7 @@ namespace WInterop.Security.Native
         // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-setsecurityinfo
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
         public unsafe static extern WindowsError SetSecurityInfo(
-            SafeHandle handle,
+            SafeHandle? handle,
             ObjectType ObjectType,
             SecurityInformation SecurityInfo,
             SID* psidOwner,
@@ -256,7 +256,7 @@ namespace WInterop.Security.Native
         // https://msdn.microsoft.com/en-us/library/aa379180.aspx
         [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern Boolean32 LookupPrivilegeValueW(
-            string lpSystemName,
+            string? lpSystemName,
             string lpName,
             out LUID lpLuid);
 

@@ -17,7 +17,7 @@ namespace WInterop.Network
     {
         public static void NetApiBufferFree(IntPtr buffer) => Imports.NetApiBufferFree(buffer).ThrowIfFailed();
 
-        public unsafe static void AddLocalGroup(string groupName, string comment = null, string server = null)
+        public unsafe static void AddLocalGroup(string groupName, string? comment = null, string? server = null)
         {
             uint level = string.IsNullOrEmpty(comment) ? 0u : 1;
 
@@ -37,32 +37,32 @@ namespace WInterop.Network
             }
         }
 
-        public static IEnumerable<string> EnumerateLocalGroups(string server = null)
+        public static IEnumerable<string> EnumerateLocalGroups(string? server = null)
         {
             var groups = new List<string>();
-
             Imports.NetLocalGroupEnum(
                 servername: server,
                 level: 0,
                 bufptr: out var buffer,
                 prefmaxlen: Imports.MAX_PREFERRED_LENGTH,
                 entriesread: out uint entriesRead,
-                totalentries: out uint totalEntries,
+                totalentries: out _,
                 resumehandle: IntPtr.Zero)
                 .ThrowIfFailed(server);
 
             foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
             {
-                groups.Add(Marshal.PtrToStringUni(pointer));
+                groups.Add(Marshal.PtrToStringUni(pointer) ?? string.Empty);
             }
+
+            buffer.Dispose();
 
             return groups;
         }
 
-        public static IEnumerable<MemberInfo> EnumerateGroupUsers(string groupName, string server = null)
+        public static IEnumerable<MemberInfo> EnumerateGroupUsers(string groupName, string? server = null)
         {
             var members = new List<MemberInfo>();
-
             Imports.NetLocalGroupGetMembers(
                 servername: server,
                 localgroupname: groupName,
@@ -70,7 +70,7 @@ namespace WInterop.Network
                 bufptr: out var buffer,
                 prefmaxlen: Imports.MAX_PREFERRED_LENGTH,
                 entriesread: out uint entriesRead,
-                totalentries: out uint totalEntries,
+                totalentries: out _,
                 resumehandle: IntPtr.Zero)
                 .ThrowIfFailed();
 
@@ -78,18 +78,19 @@ namespace WInterop.Network
             {
                 members.Add(new MemberInfo
                 {
-                    Name = Marshal.PtrToStringUni(info.lgrmi1_name),
+                    Name = Marshal.PtrToStringUni(info.lgrmi1_name) ?? string.Empty,
                     AccountType = info.lgrmi1_sidusage
                 });
             }
 
+            buffer.Dispose();
+
             return members;
         }
 
-        public static IEnumerable<string> EnumerateUsers(string server = null)
+        public static IEnumerable<string> EnumerateUsers(string? server = null)
         {
             var groups = new List<string>();
-
             Imports.NetUserEnum(
                 servername: server,
                 level: 0,
@@ -97,22 +98,26 @@ namespace WInterop.Network
                 bufptr: out var buffer,
                 prefmaxlen: Imports.MAX_PREFERRED_LENGTH,
                 entriesread: out uint entriesRead,
-                totalentries: out uint totalEntries,
+                totalentries: out _,
                 resume_handle: IntPtr.Zero)
                 .ThrowIfFailed(server);
 
             foreach (IntPtr pointer in ReadStructsFromBuffer<IntPtr>(buffer, entriesRead))
             {
-                groups.Add(Marshal.PtrToStringUni(pointer));
+                groups.Add(Marshal.PtrToStringUni(pointer) ?? string.Empty);
             }
+
+            buffer.Dispose();
 
             return groups;
         }
 
-        public static UserInfo2 GetUserInfo(string user, string server = null)
+        public static UserInfo2 GetUserInfo(string user, string? server = null)
         {
             Imports.NetUserGetInfo(server, user, 2, out var buffer).ThrowIfFailed(user);
-            return new UserInfo2(buffer.ReadStructFromBuffer<USER_INFO_2>());
+            var info =  new UserInfo2(buffer.ReadStructFromBuffer<USER_INFO_2>());
+            buffer.Dispose();
+            return info;
         }
 
         private unsafe static T ReadStructFromBuffer<T>(this NetApiBufferHandle buffer) where T : unmanaged

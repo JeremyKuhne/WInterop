@@ -51,15 +51,12 @@ namespace WInterop.Registry
         public unsafe static bool QueryValueExists(RegistryKeyHandle key, string valueName)
         {
             WindowsError result = Imports.RegQueryValueExW(key, valueName, null, null, null, null);
-            switch (result)
+            return result switch
             {
-                case WindowsError.ERROR_SUCCESS:
-                    return true;
-                case WindowsError.ERROR_FILE_NOT_FOUND:
-                    return false;
-                default:
-                    throw result.GetException();
-            }
+                WindowsError.ERROR_SUCCESS => true,
+                WindowsError.ERROR_FILE_NOT_FOUND => false,
+                _ => throw result.GetException(),
+            };
         }
 
         /// <summary>
@@ -69,18 +66,15 @@ namespace WInterop.Registry
         {
             RegistryValueType valueType = new RegistryValueType();
             WindowsError result = Imports.RegQueryValueExW(key, valueName, null, &valueType, null, null);
-            switch (result)
+            return result switch
             {
-                case WindowsError.ERROR_SUCCESS:
-                    return valueType;
-                case WindowsError.ERROR_FILE_NOT_FOUND:
-                    return RegistryValueType.None;
-                default:
-                    throw result.GetException();
-            }
+                WindowsError.ERROR_SUCCESS => valueType,
+                WindowsError.ERROR_FILE_NOT_FOUND => RegistryValueType.None,
+                _ => throw result.GetException(),
+            };
         }
 
-        public unsafe static object QueryValue(RegistryKeyHandle key, string valueName)
+        public unsafe static object? QueryValue(RegistryKeyHandle key, string valueName)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {

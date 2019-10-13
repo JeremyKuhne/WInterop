@@ -5,8 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#nullable enable
-
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
@@ -357,25 +355,25 @@ namespace WInterop.Storage.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfullpathnamew (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern uint GetFullPathNameW(
-            string lpFileName,
+        public unsafe static extern uint GetFullPathNameW(
+            char* lpFileName,
             uint nBufferLength,
-            SafeHandle lpBuffer,
-            IntPtr lpFilePart);
+            char* lpBuffer,
+            char* lpFilePart);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getfinalpathnamebyhandlew (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern uint GetFinalPathNameByHandleW(
+        public unsafe static extern uint GetFinalPathNameByHandleW(
             SafeFileHandle hFile,
-            SafeHandle lpszFilePath,
+            char* lpszFilePath,
             uint cchFilePath,
             GetFinalPathNameByHandleFlags dwFlags);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-getlongpathnamew (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern uint GetLongPathNameW(
-            string lpszShortPath,
-            SafeHandle lpszLongPath,
+        public unsafe static extern uint GetLongPathNameW(
+            char* lpszShortPath,
+            char* lpszLongPath,
             uint cchBuffer);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findfirstfilew
@@ -474,9 +472,9 @@ namespace WInterop.Storage.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-gettemppathw (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_2_0, SetLastError = true, ExactSpelling = true)]
-        public static extern uint GetTempPathW(
+        public unsafe static extern uint GetTempPathW(
             uint nBufferLength,
-            SafeHandle lpBuffer);
+            char* lpBuffer);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-gettempfilenamew (kernel32)
         [DllImport(ApiSets.api_ms_win_core_file_l1_1_0, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]

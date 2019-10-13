@@ -14,7 +14,6 @@ using WInterop.Globalization;
 using WInterop.Modules;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Windows.BufferWrappers;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows
@@ -25,7 +24,7 @@ namespace WInterop.Windows
 
         public static void CreateMainWindowAndRun(
             WindowClass windowClass,
-            string windowTitle = null,
+            string? windowTitle = null,
             WindowStyles style = WindowStyles.OverlappedWindow,
             ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             MenuHandle menuHandle = default)
@@ -40,7 +39,7 @@ namespace WInterop.Windows
         public static void CreateMainWindowAndRun(
             WindowClass windowClass,
             Rectangle bounds,
-            string windowTitle = null,
+            string? windowTitle = null,
             WindowStyles style = WindowStyles.OverlappedWindow,
             ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             MenuHandle menuHandle = default)
@@ -80,13 +79,13 @@ namespace WInterop.Windows
 
         public unsafe static WindowHandle CreateWindow(
             Atom classAtom,
-            string windowName = null,
+            string? windowName = null,
             WindowStyles style = WindowStyles.Overlapped,
             ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             Rectangle bounds = default,
             WindowHandle parentWindow = default,
             MenuHandle menuHandle = default,
-            ModuleInstance instance = null,
+            ModuleInstance? instance = null,
             IntPtr parameters = default)
         {
             WindowHandle window = Imports.CreateWindowExW(
@@ -111,13 +110,13 @@ namespace WInterop.Windows
 
         public unsafe static WindowHandle CreateWindow(
             string className,
-            string windowName = null,
+            string? windowName = null,
             WindowStyles style = WindowStyles.Overlapped,
             ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             Rectangle bounds = default,
             WindowHandle parentWindow = default,
             MenuHandle menuHandle = default,
-            ModuleInstance instance = default,
+            ModuleInstance? instance = default,
             IntPtr parameters = default)
         {
             WindowHandle window;
@@ -194,10 +193,17 @@ namespace WInterop.Windows
         public static LResult SendMessage(this in WindowHandle window, MessageType message, WParam wParam = default, LParam lParam = default)
             => Imports.SendMessageW(window, message, wParam, lParam);
 
-        public static string GetClassName(this in WindowHandle window)
+        public unsafe static string GetClassName(this WindowHandle window)
         {
-            var wrapper = new ClassNameWrapper { Window = window };
-            return BufferHelper.TruncatingApiInvoke(ref wrapper);
+            return PlatformInvoke.GrowableBufferInvoke(
+                (ref ValueBuffer<char> buffer) =>
+                {
+                    fixed (char* b = buffer)
+                    {
+                        return (uint)Imports.GetClassNameW(window, b, (int)buffer.Length);
+                    }
+                },
+                ReturnSizeSemantics.BufferTruncates);
         }
 
         public static WindowHandle GetFocus() => Imports.GetFocus();
@@ -279,7 +285,7 @@ namespace WInterop.Windows
         /// <summary>
         /// Unregisters the given class Atom.
         /// </summary>
-        public static void UnregisterClass(Atom atom, ModuleInstance module = null)
+        public static void UnregisterClass(Atom atom, ModuleInstance? module = null)
         {
             if (!Imports.UnregisterClassW(atom, module ?? ModuleInstance.Null))
                 Error.ThrowLastError();
@@ -288,7 +294,7 @@ namespace WInterop.Windows
         /// <summary>
         /// Unregisters the given class name.
         /// </summary>
-        public unsafe static void UnregisterClass(string className, ModuleInstance module)
+        public unsafe static void UnregisterClass(string className, ModuleInstance? module)
         {
             if (className == null)
                 throw new ArgumentNullException(nameof(className));
@@ -403,7 +409,7 @@ namespace WInterop.Windows
             Boolean32 result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
 
             // One special case here is -1 for an error
-            if (result.RawValue == unchecked((uint)-1))
+            if (result.RawValue == -1)
                 Error.ThrowLastError();
 
             return result;
@@ -555,12 +561,21 @@ namespace WInterop.Windows
             return Imports.GetKeyState(key);
         }
 
-        public static string GetKeyNameText(LParam lParam)
+        public unsafe static string GetKeyNameText(LParam lParam)
         {
-            var wrapper = new KeyNameTextWrapper { LParam = lParam };
+            return PlatformInvoke.GrowableBufferInvoke(
+                (ref ValueBuffer<char> buffer) =>
+                {
+                    fixed (char* b = buffer)
+                    {
+                        return checked((uint)Imports.GetKeyNameTextW(lParam, b, (int)buffer.Length));
+                    }
+                },
+                ReturnSizeSemantics.BufferTruncates,
 
-            // It is possible that there may be no name for a key, in which case the api will return 0 with GetLastError of 0.
-            return BufferHelper.TruncatingApiInvoke(ref wrapper, null, ErrorExtensions.Failed);
+                // It is possible that there may be no name for a key,
+                // in which case the api will return 0 with GetLastError of 0.
+                shouldThrow: ErrorExtensions.Failed);
         }
 
         public static WindowHandle GetDialogItem(this in WindowHandle window, int id)
@@ -579,7 +594,7 @@ namespace WInterop.Windows
         public static void ReleaseCapture()
             => Error.ThrowLastErrorIfFalse(Imports.ReleaseCapture());
 
-        public static TimerId SetTimer(this in WindowHandle window, TimerId id, uint interval, TimerProcedure callback = null, uint delayTolerance = 0)
+        public static TimerId SetTimer(this in WindowHandle window, TimerId id, uint interval, TimerProcedure? callback = null, uint delayTolerance = 0)
         {
             TimerId result = Imports.SetCoalescableTimer(window, id, interval, callback, delayTolerance);
             if (result == TimerId.Null)

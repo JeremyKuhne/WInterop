@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using WInterop.Errors;
 using WInterop.Storage.Native;
@@ -38,27 +39,31 @@ namespace WInterop.Storage
 
         private class VolumeMountPointsEnumerator : IEnumerator<string>
         {
-            private FindVolumeMountPointHandle _findHandle;
-            private string _volumeName;
+            private FindVolumeMountPointHandle? _findHandle;
+            private readonly string _volumeName;
             private bool _lastEntryFound;
-            private StringBuffer _buffer;
+            private StringBuffer? _buffer;
 
             public VolumeMountPointsEnumerator(string volumeName)
             {
                 _buffer = StringBuffer.Cache.Acquire();
                 _volumeName = volumeName;
+                Current = string.Empty;
                 Reset();
             }
 
             public string Current { get; private set; }
 
-            object IEnumerator.Current => Current;
+            object? IEnumerator.Current => Current;
 
             public bool MoveNext()
             {
                 if (_lastEntryFound) return false;
 
-                Current = _findHandle == null
+                if (_buffer == null)
+                    throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+
+                Current = _findHandle is null
                     ? FindFirstVolume()
                     : FindNextVolume();
 
@@ -67,6 +72,9 @@ namespace WInterop.Storage
 
             private string FindFirstVolume()
             {
+                if (_buffer == null)
+                    throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+
                 // Need at least some length on initial call or we'll get ERROR_INVALID_PARAMETER
                 _buffer.EnsureCharCapacity(400);
 
@@ -87,7 +95,7 @@ namespace WInterop.Storage
                             return FindFirstVolume();
                         case WindowsError.ERROR_NO_MORE_FILES:
                             _lastEntryFound = true;
-                            return null;
+                            return string.Empty;
                         default:
                             throw error.GetException();
                     }
@@ -99,6 +107,11 @@ namespace WInterop.Storage
 
             private string FindNextVolume()
             {
+                Debug.Assert(!(_findHandle is null));
+
+                if (_buffer == null)
+                    throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+
                 if (!Imports.FindNextVolumeMountPointW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
                     WindowsError error = Error.GetLastError();
@@ -111,7 +124,7 @@ namespace WInterop.Storage
                             return FindNextVolume();
                         case WindowsError.ERROR_NO_MORE_FILES:
                             _lastEntryFound = true;
-                            return null;
+                            return string.Empty;
                         default:
                             throw error.GetException();
                     }
@@ -136,15 +149,18 @@ namespace WInterop.Storage
             protected void Dispose(bool disposing)
             {
                 CloseHandle();
-                StringBuffer buffer = Interlocked.Exchange(ref _buffer, null);
-                if (buffer != null)
-                    StringBuffer.Cache.Release(buffer);
+
+                if (disposing)
+                {
+                    StringBuffer? buffer = Interlocked.Exchange(ref _buffer, null);
+                    if (buffer != null)
+                        StringBuffer.Cache.Release(buffer);
+                }
             }
 
             private void CloseHandle()
             {
                 _findHandle?.Dispose();
-                _findHandle = null;
             }
 
             ~VolumeMountPointsEnumerator()

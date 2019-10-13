@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Modules.BufferWrappers;
 using WInterop.Modules.Native;
 using WInterop.ProcessAndThreads;
 using WInterop.Support.Buffers;
@@ -62,13 +61,13 @@ namespace WInterop.Modules
 
         private unsafe static IntPtr GetModuleHandleHelper(string moduleName, GetModuleFlags flags)
         {
-            Func<IntPtr, GetModuleFlags, IntPtr> getHandle = (IntPtr n, GetModuleFlags f) =>
+            IntPtr getHandle(IntPtr n, GetModuleFlags f)
             {
                 Error.ThrowLastErrorIfFalse(
                     Imports.GetModuleHandleExW(f, n, out var handle),
                     moduleName);
                 return handle;
-            };
+            }
 
             if (moduleName == null)
                 return getHandle(IntPtr.Zero, flags);
@@ -84,7 +83,7 @@ namespace WInterop.Modules
         /// </summary>
         /// <param name="process">The process for the given module or null for the current process.</param>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
-        public unsafe static ModuleInfo GetModuleInfo(ModuleInstance module, SafeProcessHandle process = null)
+        public unsafe static ModuleInfo GetModuleInfo(ModuleInstance module, SafeProcessHandle? process = null)
         {
             Error.ThrowLastErrorIfFalse(
                 Imports.K32GetModuleInformation(process ?? Processes.GetCurrentProcess(), module, out var info, (uint)sizeof(ModuleInfo)));
@@ -97,11 +96,34 @@ namespace WInterop.Modules
         /// </summary>
         /// <param name="process">The process for the given module or null for the current process.</param>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
-        public static string GetModuleFileName(ModuleInstance module, SafeProcessHandle process = null)
+        public unsafe static string GetModuleFileName(ModuleInstance module, SafeProcessHandle? process = null)
         {
-            var wrapper = new ModuleFileNameWrapper { Module = module, Process = process };
-
-            return BufferHelper.TruncatingApiInvoke(ref wrapper);
+            if (process == null)
+            {
+                return PlatformInvoke.GrowableBufferInvoke(
+                    (ref ValueBuffer<char> buffer) =>
+                    {
+                        fixed (char* b = buffer)
+                        {
+                            return Imports.GetModuleFileNameW(module, b, buffer.Length);
+                        }
+                    },
+                    ReturnSizeSemantics.BufferTruncates
+                        | ReturnSizeSemantics.LastErrorInsufficientBuffer
+                        | ReturnSizeSemantics.SizeIncludesNullWhenTruncated);
+            }
+            else
+            {
+                return PlatformInvoke.GrowableBufferInvoke(
+                    (ref ValueBuffer<char> buffer) =>
+                    {
+                        fixed (char* b = buffer)
+                        {
+                            return Imports.K32GetModuleFileNameExW(process, module, b, buffer.Length);
+                        }
+                    },
+                    ReturnSizeSemantics.BufferTruncates);
+            }
         }
 
         /// <summary>
@@ -149,7 +171,7 @@ namespace WInterop.Modules
         /// </summary>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         /// <param name="process">The process to get modules for or null for the current process.</param>
-        public unsafe static IEnumerable<ModuleInstance> GetProcessModules(SafeProcessHandle process = null)
+        public unsafe static IEnumerable<ModuleInstance> GetProcessModules(SafeProcessHandle? process = null)
         {
             if (process == null) process = Processes.GetCurrentProcess();
 

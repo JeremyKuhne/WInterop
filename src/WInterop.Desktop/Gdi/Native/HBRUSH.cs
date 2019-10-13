@@ -23,7 +23,7 @@ namespace WInterop.Gdi.Native
         public static implicit operator HGDIOBJ(HBRUSH handle) => new HGDIOBJ(handle.Value);
         public static explicit operator HBRUSH(HGDIOBJ handle) => new HBRUSH(handle.Handle);
 
-        public override bool Equals(object obj) => obj is HBRUSH other ? other.Value == Value : false;
+        public override bool Equals(object? obj) => obj is HBRUSH other ? other.Value == Value : false;
         public bool Equals(HBRUSH other) => other.Value == Value;
         public static bool operator ==(HBRUSH a, HBRUSH b) => a.Value == b.Value;
         public static bool operator !=(HBRUSH a, HBRUSH b) => a.Value != b.Value;

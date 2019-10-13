@@ -30,7 +30,7 @@ namespace WInterop.Security.Native
             pstrName = sid;
         }
 
-        public string TrusteeName
+        public string? TrusteeName
         {
             get
             {

@@ -334,11 +334,11 @@ namespace WInterop.Windows.Native
             IntPtr lpszClass,
             out WNDCLASSEX lpwcx);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633582.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getclassnamew
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-        public static extern int GetClassNameW(
+        public unsafe static extern int GetClassNameW(
             HWND hWnd,
-            SafeHandle lpClassName,
+            char* lpClassName,
             int nMaxCount);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632679.aspx
@@ -347,7 +347,7 @@ namespace WInterop.Windows.Native
         public unsafe static extern HWND CreateWindowExW(
             ExtendedWindowStyles dwExStyle,
             char* lpClassName,
-            string lpWindowName,
+            string? lpWindowName,
             WindowStyles dwStyle,
             int x,
             int y,
@@ -615,11 +615,11 @@ namespace WInterop.Windows.Native
         public static extern int GetKeyboardType(
             int nTypeFlag);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646300.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getkeynametextw
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-        public static extern int GetKeyNameTextW(
+        public unsafe static extern int GetKeyNameTextW(
             int lParam,
-            SafeHandle lpString,
+            char* lpString,
             int cchSize);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646301.aspx
@@ -840,7 +840,7 @@ namespace WInterop.Windows.Native
             HWND hWnd,
             TimerId nIdEvent,
             uint uElapse,
-            TimerProcedure lpTimerFunc,
+            TimerProcedure? lpTimerFunc,
             uint uToleranceDelay);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724371.aspx

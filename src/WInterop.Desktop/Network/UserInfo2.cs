@@ -25,20 +25,19 @@ namespace WInterop.Network
 
         public unsafe UserInfo2(USER_INFO_2 data)
         {
-            string StringOrNull(char* c) => c == null ? null : new string(c);
+            static string StringOrEmpty(char* c) => c == null ? string.Empty : new string(c);
 
             Name = new string(data.usri2_name);
-            FullName = StringOrNull(data.usri2_full_name);
-            Comment = StringOrNull(data.usri2_comment);
-            UserComment = StringOrNull(data.usri2_usr_comment);
+            FullName = StringOrEmpty(data.usri2_full_name);
+            Comment = StringOrEmpty(data.usri2_comment);
+            UserComment = StringOrEmpty(data.usri2_usr_comment);
             UserPrivilege = data.usri2_priv;
             UserFlags = data.usri2_flags;
-            HomeDirectory = StringOrNull(data.usri2_home_dir);
-            LogonScript = StringOrNull(data.usri2_script_path);
-            Parameters = StringOrNull(data.usri2_parms);
-            Workstations = StringOrNull(data.usri2_workstations);
-            LogonServer = StringOrNull(data.usri2_logon_server);
-
+            HomeDirectory = StringOrEmpty(data.usri2_home_dir);
+            LogonScript = StringOrEmpty(data.usri2_script_path);
+            Parameters = StringOrEmpty(data.usri2_parms);
+            Workstations = StringOrEmpty(data.usri2_workstations);
+            LogonServer = StringOrEmpty(data.usri2_logon_server);
         }
     }
 }

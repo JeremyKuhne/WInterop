@@ -25,8 +25,8 @@ namespace SystemInformationTests
             SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.CompareExchangeDouble).Should().BeTrue();
         }
 
-        // [Fact]
-        private void DumpProcessorFeatures()
+        [Fact(Skip = "Just a helper test method.")]
+        public void DumpProcessorFeatures()
         {
             foreach (ProcessorFeature feature in Enum.GetValues(typeof(ProcessorFeature)))
             {

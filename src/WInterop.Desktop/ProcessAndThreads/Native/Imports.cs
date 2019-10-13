@@ -16,8 +16,8 @@ namespace WInterop.ProcessAndThreads.Native
     /// </summary>
     public static partial class Imports
     {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683188.aspx
-        [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        // https://docs.microsoft.com/windows/win32/api/processenv/nf-processenv-getenvironmentvariablew
+        [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public unsafe static extern uint GetEnvironmentVariableW(
             char* lpName,
             char* lpBuffer,

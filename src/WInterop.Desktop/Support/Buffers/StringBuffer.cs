@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.SafeString.Native;
@@ -612,7 +613,7 @@ namespace WInterop.Support.Buffers
                     for (uint i = 0; i < length; i++)
                     {
                         if ((splitWhite && char.IsWhiteSpace(*current))
-                         || (!splitWhite && ContainsChar(splitCharacters, *current)))
+                         || (!splitWhite && ContainsChar(splitCharacters!, *current)))
                         {
                             // Split
                             strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));

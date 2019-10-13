@@ -13,12 +13,18 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Support.Buffers
 {
+    public delegate void BufferAction<T>(ref ValueBuffer<T> buffer)
+        where T : unmanaged;
+
+    public delegate TResult BufferFunc<TBuffer, TResult>(ref ValueBuffer<TBuffer> buffer)
+        where TBuffer : unmanaged;
+
     /// <summary>
     /// Growable Span(T) buffer wrapper.
     /// </summary>
     public ref struct ValueBuffer<T> where T : unmanaged
     {
-        private byte[] _buffer;
+        private byte[]? _buffer;
 
         /// <summary>
         /// Create the buffer with an initial span.
@@ -42,7 +48,7 @@ namespace WInterop.Support.Buffers
 
         public Span<T> Span { get; private set; }
 
-        public int Length => Span.Length;
+        public uint Length => (uint)Span.Length;
 
         /// <summary>
         /// Ensure that the buffer has enough space for <paramref name="capacity"/>
@@ -101,6 +107,13 @@ namespace WInterop.Support.Buffers
 
         public ref T GetPinnableReference() => ref MemoryMarshal.GetReference(Span);
 
+        public string ToStringAndDispose(int length)
+        {
+            string result = Span.Slice(0, (int)length).ToString();
+            Dispose();
+            return result;
+        }
+
         public void Dispose()
         {
             if (_buffer != null)
@@ -108,6 +121,29 @@ namespace WInterop.Support.Buffers
                 ArrayPool<byte>.Shared.Return(_buffer);
                 _buffer = null;
             }
+        }
+
+        public static void Invoke<TBuffer>(
+            BufferAction<TBuffer> action,
+            int stackBufferSize = 128)
+            where TBuffer : unmanaged
+        {
+            Span<TBuffer> initialBuffer = stackalloc TBuffer[stackBufferSize];
+            ValueBuffer<TBuffer> buffer = new ValueBuffer<TBuffer>(initialBuffer);
+            action(ref buffer);
+            buffer.Dispose();
+        }
+
+        public static TResult Invoke<TBuffer, TResult>(
+            BufferFunc<TBuffer, TResult> func,
+            int stackBufferSize = 128)
+            where TBuffer : unmanaged
+        {
+            Span<TBuffer> initialBuffer = stackalloc TBuffer[stackBufferSize];
+            ValueBuffer<TBuffer> buffer = new ValueBuffer<TBuffer>(initialBuffer);
+            TResult result = func(ref buffer);
+            buffer.Dispose();
+            return result;
         }
     }
 }

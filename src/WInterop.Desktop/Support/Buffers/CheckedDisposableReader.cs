@@ -11,7 +11,7 @@ namespace WInterop.Support.Buffers
 {
     public class CheckedDisposableReader : CheckedReader, IDisposable
     {
-        private IDisposable _disposable;
+        private readonly IDisposable? _disposable;
 
         public CheckedDisposableReader(ISizedBuffer buffer) : base(buffer)
         {

@@ -55,8 +55,10 @@ namespace WInterop.Cryptography
             IntPtr pvArg)
         {
             GCHandle handle = GCHandle.FromIntPtr(pvArg);
-            var infos = (List<string>)handle.Target;
-            infos.Add(Marshal.PtrToStringUni(pvszStoreLocations));
+            var infos = (List<string>)(handle.Target ?? throw new InvalidOperationException());
+            string? result = Marshal.PtrToStringUni(pvszStoreLocations);
+            if (result != null)
+                infos.Add(result);
             return true;
         }
 
@@ -89,12 +91,12 @@ namespace WInterop.Cryptography
             IntPtr pvArg)
         {
             GCHandle handle = GCHandle.FromIntPtr(pvArg);
-            var infos = (List<SystemStoreInformation>)handle.Target;
+            var infos = (List<SystemStoreInformation>)(handle.Target ?? throw new InvalidOperationException());
             infos.Add(GetSystemNameAndKey(dwFlags, pvSystemStore));
             return true;
         }
 
-        public unsafe static IEnumerable<SystemStoreInformation> EnumerateSystemStores(SystemStoreLocation location, string name = null)
+        public unsafe static IEnumerable<SystemStoreInformation> EnumerateSystemStores(SystemStoreLocation location, string? name = null)
         {
             var info = new List<SystemStoreInformation>();
             GCHandle infoHandle = GCHandle.Alloc(info);
@@ -130,12 +132,12 @@ namespace WInterop.Cryptography
             IntPtr pvArg)
         {
             GCHandle handle = GCHandle.FromIntPtr(pvArg);
-            var infos = (List<PhysicalStoreInformation>)handle.Target;
+            var infos = (List<PhysicalStoreInformation>)(handle.Target ?? throw new InvalidOperationException());
 
             PhysicalStoreInformation info = new PhysicalStoreInformation
             {
                 SystemStoreInformation = GetSystemNameAndKey(dwFlags, pvSystemStore),
-                PhysicalStoreName = Marshal.PtrToStringUni(pwszStoreName)
+                PhysicalStoreName = Marshal.PtrToStringUni(pwszStoreName) ?? string.Empty
             };
             var physicalInfo = Marshal.PtrToStructure<CERT_PHYSICAL_STORE_INFO>(pStoreInfo);
             info.ProviderType = physicalInfo.pszOpenStoreProvider;
@@ -193,7 +195,7 @@ namespace WInterop.Cryptography
             else
             {
                 // The name is null terminated
-                info.Name = Marshal.PtrToStringUni(pvSystemStore);
+                info.Name = Marshal.PtrToStringUni(pvSystemStore) ?? string.Empty;
             }
 
             info.Location = (SystemStoreLocation)(dwFlags & CryptoDefines.CERT_SYSTEM_STORE_LOCATION_MASK);

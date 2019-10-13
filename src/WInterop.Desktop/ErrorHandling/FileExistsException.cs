@@ -16,10 +16,10 @@ namespace WInterop.Errors
         public FileExistsException()
             : base(DefaultError) { }
 
-        public FileExistsException(string message, Exception innerException = null)
+        public FileExistsException(string? message, Exception? innerException = null)
             : this(message, DefaultError, innerException) { }
 
-        public FileExistsException(string message, WindowsError error, Exception innerException = null)
+        public FileExistsException(string? message, WindowsError error, Exception? innerException = null)
             : base(message, error.ToHResult(), innerException) { }
     }
 }

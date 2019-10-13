@@ -38,7 +38,7 @@ namespace WInterop.Windows
         public static implicit operator LResult(CursorHandle handle) => handle.HCURSOR.Value;
         public static implicit operator CursorHandle(CursorId id) => Windows.LoadCursor(id);
 
-        public override bool Equals(object obj) => obj is CursorHandle other ? other.HCURSOR == HCURSOR : false;
+        public override bool Equals(object? obj) => obj is CursorHandle other ? other.HCURSOR == HCURSOR : false;
         public bool Equals(CursorHandle other) => other.HCURSOR == HCURSOR;
         public static bool operator ==(CursorHandle a, CursorHandle b) => a.HCURSOR == b.HCURSOR;
         public static bool operator !=(CursorHandle a, CursorHandle b) => a.HCURSOR != b.HCURSOR;

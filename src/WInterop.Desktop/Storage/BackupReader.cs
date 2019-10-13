@@ -17,12 +17,12 @@ namespace WInterop.Storage
     public class BackupReader : IDisposable
     {
         private IntPtr _context = IntPtr.Zero;
-        private SafeFileHandle _fileHandle;
-        private StringBuffer _buffer = StringBufferCache.Instance.Acquire();
+        private readonly SafeFileHandle _fileHandle;
+        private readonly StringBuffer _buffer = StringBufferCache.Instance.Acquire();
 
         // BackupReader requires us to read the header and its string separately. Given packing, the
         // string starts a uint in from the end.
-        private unsafe static uint s_headerSize = (uint)sizeof(WIN32_STREAM_ID) - sizeof(uint);
+        private static readonly unsafe uint s_headerSize = (uint)sizeof(WIN32_STREAM_ID) - sizeof(uint);
 
         public BackupReader(SafeFileHandle fileHandle)
         {
@@ -95,7 +95,6 @@ namespace WInterop.Storage
             {
                 StringBufferCache.Instance.Release(_buffer);
             }
-            _buffer = null;
 
             if (_context != IntPtr.Zero)
             {

@@ -18,7 +18,7 @@ namespace WInterop.Security
         public AccessMode Mode { get; }
         public Inheritance Inheritance { get; }
         public TrusteeType TrusteeType { get; }
-        public string TrusteeName { get; }
+        public string? TrusteeName { get; }
 
         public ExplicitAccess(EXPLICIT_ACCESS* access)
         {

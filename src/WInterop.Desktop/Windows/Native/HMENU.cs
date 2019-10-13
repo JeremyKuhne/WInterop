@@ -16,7 +16,7 @@ namespace WInterop.Windows.Native
         public HMENU(IntPtr handle) => Value = handle;
         public bool IsInvalid => Value == IntPtr.Zero;
 
-        public override bool Equals(object obj) => obj is HMENU other ? other.Value == Value : false;
+        public override bool Equals(object? obj) => obj is HMENU other ? other.Value == Value : false;
         public bool Equals(HMENU other) => other.Value == Value;
         public static bool operator ==(HMENU a, HMENU b) => a.Value == b.Value;
         public static bool operator !=(HMENU a, HMENU b) => a.Value != b.Value;

@@ -30,7 +30,7 @@ namespace WInterop.Support.Buffers
     /// </remarks>
     public class HeapBuffer : ISizedBuffer, IDisposable
     {
-        private HeapHandle _handle;
+        private HeapHandle? _handle;
 
         // By using a platform specific data type we can be assured of atomic reads/writes.
         // Anything more than a uint isn't addressable on 32bit as well.
@@ -57,8 +57,8 @@ namespace WInterop.Support.Buffers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                HeapHandle handle = _handle;
-                return handle == null ? null : handle.VoidPointer;
+                HeapHandle? handle = _handle;
+                return handle is null ? null : handle.VoidPointer;
             }
         }
 
@@ -126,6 +126,9 @@ namespace WInterop.Support.Buffers
 
         protected unsafe void UnlockedEnsureByteCapacity(ulong minCapacity)
         {
+            if (_handle is null)
+                throw new ObjectDisposedException(nameof(HeapBuffer));
+
             if (ByteCapacity < minCapacity)
             {
                 if (_handle.ByteLength < minCapacity) _handle.Resize(minCapacity);
@@ -172,7 +175,7 @@ namespace WInterop.Support.Buffers
 
         private unsafe void ReleaseHandle()
         {
-            HeapHandle handle;
+            HeapHandle? handle;
             _handleLock.EnterWriteLock();
             try
             {
@@ -199,7 +202,10 @@ namespace WInterop.Support.Buffers
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 ReleaseHandle();
+                _handleLock.Dispose();
+            }
         }
     }
 }

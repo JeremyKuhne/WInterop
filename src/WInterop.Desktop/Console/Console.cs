@@ -47,9 +47,10 @@ namespace WInterop.Console
             => Error.ThrowLastErrorIfFalse(Imports.SetConsoleMode(outputHandle, (uint)mode));
 
         /// <summary>
-        /// Get the specified standard handle.
+        ///  Get the specified standard handle.
         /// </summary>
-        public static SafeFileHandle GetStandardHandle(StandardHandleType type)
+        /// <returns>Handle or null if there is no associated handle for the given type.</returns>
+        public static SafeFileHandle? GetStandardHandle(StandardHandleType type)
         {
             IntPtr handle = Imports.GetStdHandle(type);
             if (handle == (IntPtr)(-1))
@@ -69,7 +70,7 @@ namespace WInterop.Console
         public static IEnumerable<InputRecord> ReadConsoleInput(SafeFileHandle inputHandle)
         {
             InputRecord buffer = new InputRecord();
-            while (Imports.ReadConsoleInputW(inputHandle, ref buffer, 1, out uint read))
+            while (Imports.ReadConsoleInputW(inputHandle, ref buffer, 1, out _))
             {
                 yield return buffer;
             }

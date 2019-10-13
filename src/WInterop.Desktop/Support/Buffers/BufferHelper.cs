@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using WInterop.Errors;
 
 namespace WInterop.Support.Buffers
 {
@@ -139,7 +138,7 @@ namespace WInterop.Support.Buffers
             var buffer = StringBufferCache.Instance.Acquire(minCharCapacity: MinBufferSize);
             try
             {
-                action.Action(buffer as BufferType);
+                action.Action((buffer as BufferType)!);
             }
             finally
             {
@@ -168,117 +167,12 @@ namespace WInterop.Support.Buffers
             var buffer2 = StringBufferCache.Instance.Acquire(minCharCapacity: MinBufferSize);
             try
             {
-                action.Action(buffer1 as BufferType, buffer2 as BufferType);
+                action.Action((buffer1 as BufferType)!, (buffer2 as BufferType)!);
             }
             finally
             {
                 StringBufferCache.Instance.Release(buffer1);
                 StringBufferCache.Instance.Release(buffer2);
-            }
-        }
-
-        /// <summary>
-        /// Uses the StringBuffer cache and increases the buffer size if needed. This is for APIs that follow the standard pattern of
-        /// returning required capacity + null or actual characters copied, and error with a return value of 0.
-        /// </summary>
-        /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
-        /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
-        public static string ApiInvoke<TBufferFunc>(
-            ref TBufferFunc invoker,
-            string detailForError = null,
-            Func<WindowsError, bool> shouldThrow = null)
-            where TBufferFunc : IBufferFunc<StringBuffer, uint>
-        {
-            ApiInvoker apiInvoker = new ApiInvoker
-            {
-                Invoker = new GrowBufferByReturnValue { Invoker = invoker },
-                DetailForError = detailForError,
-                ShouldThrow = shouldThrow
-            };
-
-            return BufferInvoke<ApiInvoker, StringBuffer, string>(ref apiInvoker);
-        }
-
-        /// <summary>
-        /// Uses the StringBuffer cache and increases the buffer size if needed. This is for APIs that follow the somewhat unfortunate pattern
-        /// of truncating the return string to fit the passed in buffer.
-        /// </summary>
-        /// <param name="detailForError">If an error is returned, this string is used to help construct the exception if present.</param>
-        /// <param name="shouldThrow">If provided will pass the error to the delegate to decide whether to throw or return null.</param>
-        public static string TruncatingApiInvoke<TBufferFunc>(
-            ref TBufferFunc invoker,
-            string detailForError = null,
-            Func<WindowsError, bool> shouldThrow = null)
-            where TBufferFunc : IBufferFunc<StringBuffer, uint>
-        {
-            ApiInvoker apiInvoker = new ApiInvoker
-            {
-                Invoker = new GrowBufferIfFull { Invoker = invoker },
-                DetailForError = detailForError,
-                ShouldThrow = shouldThrow
-            };
-
-            return BufferInvoke<ApiInvoker, StringBuffer, string>(ref apiInvoker);
-        }
-
-        private struct GrowBufferByReturnValue : IBufferFunc<StringBuffer, uint>
-        {
-            public IBufferFunc<StringBuffer, uint> Invoker;
-
-            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
-            {
-                uint returnValue;
-
-                // Ensure enough room for the output string
-                while ((returnValue = Invoker.Func(buffer)) > buffer.CharCapacity)
-                    buffer.EnsureCharCapacity(returnValue);
-
-                return returnValue;
-            }
-        }
-
-        private struct GrowBufferIfFull : IBufferFunc<StringBuffer, uint>
-        {
-            public IBufferFunc<StringBuffer, uint> Invoker;
-
-            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
-            {
-                uint returnValue = 0;
-
-                // Ensure enough room for the output string- some return the size with the null, some don't.
-                // We'll make sure we have enough for both cases.
-                while ((returnValue = Invoker.Func(buffer)) + 2 > buffer.CharCapacity)
-                {
-                    buffer.EnsureCharCapacity(buffer.CharCapacity < 256 ? 256 : checked(buffer.CharCapacity * 2));
-                }
-
-                return returnValue;
-            }
-        }
-
-        private struct ApiInvoker : IBufferFunc<StringBuffer, string>
-        {
-            public IBufferFunc<StringBuffer, uint> Invoker;
-            public string DetailForError;
-            public Func<WindowsError, bool> ShouldThrow;
-
-            string IBufferFunc<StringBuffer, string>.Func(StringBuffer buffer)
-            {
-                uint returnValue = Invoker.Func(buffer);
-
-                if (returnValue == 0)
-                {
-                    // Failed
-                    WindowsError error = Error.GetLastError();
-
-                    if (ShouldThrow != null && !ShouldThrow(error))
-                        return null;
-
-                    throw error.GetException(DetailForError);
-                }
-
-                buffer.Length = returnValue;
-                return buffer.ToString();
             }
         }
     }

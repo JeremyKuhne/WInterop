@@ -16,10 +16,10 @@ namespace WInterop.Errors
         public DriveLockedException()
             : base(DefaultError) { }
 
-        public DriveLockedException(string message, Exception innerException = null)
+        public DriveLockedException(string? message, Exception? innerException = null)
             : base(message, DefaultError.ToHResult(), innerException) { }
 
-        public DriveLockedException(string message, HResult hresult, Exception innerException = null)
+        public DriveLockedException(string? message, HResult hresult, Exception? innerException = null)
             : base(message, hresult, innerException) { }
 
         public DriveLockedException(HResult result)

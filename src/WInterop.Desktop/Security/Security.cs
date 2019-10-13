@@ -22,7 +22,7 @@ namespace WInterop.Security
         // In winnt.h
         private const uint PRIVILEGE_SET_ALL_NECESSARY = 1;
 
-        private static Dictionary<Privilege, string> s_privileges;
+        private static readonly Dictionary<Privilege, string> s_privileges;
 
         static Security()
         {
@@ -71,7 +71,7 @@ namespace WInterop.Security
         /// </summary>
         public static string GetPrivilegeConstant(Privilege privilege)
         {
-            if (!s_privileges.TryGetValue(privilege, out string value))
+            if (!s_privileges.TryGetValue(privilege, out string? value))
                 throw new ArgumentOutOfRangeException(nameof(privilege));
 
             return value;
@@ -183,7 +183,7 @@ namespace WInterop.Security
         /// </summary>
         public unsafe static IEnumerable<SidAndAttributes> GetTokenGroupSids(this AccessToken token)
         {
-            SidAndAttributes[] info = null;
+            SidAndAttributes[]? info = null;
 
             TokenInformationInvoke(token, TokenInformation.Groups,
                 buffer =>
@@ -200,7 +200,7 @@ namespace WInterop.Security
                     }
                 });
 
-            return info;
+            return info!;
         }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace WInterop.Security
         /// The target computer to look up the SID on. When null will look on the local machine
         /// then trusted domain controllers.
         /// </param>
-        public unsafe static AccountSidInformation LookupAccountSid(this in SID sid, string systemName = null)
+        public unsafe static AccountSidInformation LookupAccountSid(this in SID sid, string? systemName = null)
         {
             var wrapper = new LookupAccountSidWrapper(in sid, systemName);
             return BufferHelper.TwoBufferInvoke<LookupAccountSidWrapper, StringBuffer, AccountSidInformation>(ref wrapper);
@@ -332,10 +332,10 @@ namespace WInterop.Security
 
         private readonly struct LookupAccountSidWrapper : ITwoBufferFunc<StringBuffer, AccountSidInformation>
         {
-            private readonly string _systemName;
+            private readonly string? _systemName;
             private readonly SID _sid;
 
-            public LookupAccountSidWrapper(in SID sid, string systemName)
+            public LookupAccountSidWrapper(in SID sid, string? systemName)
             {
                 _systemName = systemName;
                 _sid = sid;
@@ -391,19 +391,17 @@ namespace WInterop.Security
         /// </summary>
         public unsafe static bool IsProcessElevated()
         {
-            using (AccessToken token = OpenProcessToken(AccessTokenRights.Read))
-            {
-                TokenElevation elevation = new TokenElevation();
-                Error.ThrowLastErrorIfFalse(
-                    Imports.GetTokenInformation(
-                        token,
-                        TokenInformation.Elevation,
-                        &elevation,
-                        (uint)sizeof(TokenElevation),
-                        out _));
+            using AccessToken token = OpenProcessToken(AccessTokenRights.Read);
+            TokenElevation elevation = new TokenElevation();
+            Error.ThrowLastErrorIfFalse(
+                Imports.GetTokenInformation(
+                    token,
+                    TokenInformation.Elevation,
+                    &elevation,
+                    (uint)sizeof(TokenElevation),
+                    out _));
 
-                return elevation.TokenIsElevated;
-            }
+            return elevation.TokenIsElevated;
         }
 
         /// <summary>
@@ -411,7 +409,7 @@ namespace WInterop.Security
         /// and is implicitly inheriting the process token).
         /// </summary>
         /// <param name="openAsSelf"></param>
-        public static AccessToken OpenThreadToken(AccessTokenRights desiredAccess, bool openAsSelf)
+        public static AccessToken? OpenThreadToken(AccessTokenRights desiredAccess, bool openAsSelf)
         {
             if (!Imports.OpenThreadToken(Threads.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
@@ -583,7 +581,10 @@ namespace WInterop.Security
         {
             unsafe string ITwoBufferFunc<StringBuffer, string>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
             {
-                string name = SystemInformation.SystemInformation.GetUserName(ExtendedNameFormat.SamCompatible);
+                string? name = SystemInformation.SystemInformation.GetUserName(ExtendedNameFormat.SamCompatible);
+
+                if (name is null)
+                    throw new InvalidOperationException($"Could not get the {nameof(ExtendedNameFormat.SamCompatible)} user name.");
 
                 SID sid = new SID();
                 uint sidLength = (uint)sizeof(SID);
@@ -629,10 +630,8 @@ namespace WInterop.Security
 
         public static void ImpersonateAnonymousToken()
         {
-            using (ThreadHandle thread = Threads.GetCurrentThread())
-            {
-                Error.ThrowLastErrorIfFalse(Imports.ImpersonateAnonymousToken(thread));
-            }
+            using ThreadHandle thread = Threads.GetCurrentThread();
+            Error.ThrowLastErrorIfFalse(Imports.ImpersonateAnonymousToken(thread));
         }
 
         public static void RevertToSelf()
@@ -664,22 +663,25 @@ namespace WInterop.Security
         public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, in SID sid)
         {
             NTStatus status = Imports.LsaEnumerateAccountRights(policyHandle, in sid, out var rightsBuffer, out uint rightsCount);
-            switch (status)
+            using (rightsBuffer)
             {
-                case NTStatus.STATUS_OBJECT_NAME_NOT_FOUND:
-                    return Enumerable.Empty<string>();
-                case NTStatus.STATUS_SUCCESS:
-                    break;
-                default:
-                    throw status.GetException();
+                switch (status)
+                {
+                    case NTStatus.STATUS_OBJECT_NAME_NOT_FOUND:
+                        return Enumerable.Empty<string>();
+                    case NTStatus.STATUS_SUCCESS:
+                        break;
+                    default:
+                        throw status.GetException();
+                }
+
+                List<string> rights = new List<string>();
+                Reader reader = new Reader(rightsBuffer);
+                for (int i = 0; i < rightsCount; i++)
+                    rights.Add(reader.ReadUNICODE_STRING());
+
+                return rights;
             }
-
-            List<string> rights = new List<string>();
-            Reader reader = new Reader(rightsBuffer);
-            for (int i = 0; i < rightsCount; i++)
-                rights.Add(reader.ReadUNICODE_STRING());
-
-            return rights;
         }
     }
 }

@@ -19,8 +19,6 @@ namespace BufferTests
 {
     public class StringBufferTests
     {
-        const string testString = "The quick brown fox jumped over the lazy dog.";
-
         [Theory,
             InlineData(0),
             InlineData(1),
@@ -28,20 +26,16 @@ namespace BufferTests
             ]
         public void ConstructWithInitialCapacity(uint capacity)
         {
-            using (var buffer = new StringBuffer(capacity))
-            {
-                buffer.CharCapacity.Should().Be(capacity);
-            }
+            using var buffer = new StringBuffer(capacity);
+            buffer.CharCapacity.Should().Be(capacity);
         }
 
         [Fact]
         public void ConstructFromEmptyString()
         {
-            using (var buffer = new StringBuffer(""))
-            {
-                buffer.ByteCapacity.Should().Be(0);
-                buffer.CharCapacity.Should().Be(0);
-            }
+            using var buffer = new StringBuffer("");
+            buffer.ByteCapacity.Should().Be(0);
+            buffer.CharCapacity.Should().Be(0);
         }
 
         [Theory,
@@ -50,20 +44,18 @@ namespace BufferTests
             ]
         public unsafe void ConstructFromString(string testString)
         {
-            using (var buffer = new StringBuffer(testString))
+            using var buffer = new StringBuffer(testString);
+            buffer.Length.Should().Be((uint)testString.Length);
+            buffer.CharCapacity.Should().Be((uint)testString.Length + 1);
+
+            for (int i = 0; i < testString.Length; i++)
             {
-                buffer.Length.Should().Be((uint)testString.Length);
-                buffer.CharCapacity.Should().Be((uint)testString.Length + 1);
-
-                for (int i = 0; i < testString.Length; i++)
-                {
-                    buffer[(uint)i].Should().Be(testString[i]);
-                }
-
-                ((char*)buffer.DangerousGetHandle().ToPointer())[testString.Length].Should().Be('\0', "should be null terminated");
-
-                buffer.ToString().Should().Be(testString);
+                buffer[(uint)i].Should().Be(testString[i]);
             }
+
+            ((char*)buffer.DangerousGetHandle().ToPointer())[testString.Length].Should().Be('\0', "should be null terminated");
+
+            buffer.ToString().Should().Be(testString);
         }
 
         [Theory,
@@ -72,48 +64,42 @@ namespace BufferTests
             ]
         public void ReduceLength(string testString)
         {
-            using (var buffer = new StringBuffer(testString))
-            {
-                buffer.CharCapacity.Should().Be((uint)testString.Length + 1);
+            using var buffer = new StringBuffer(testString);
+            buffer.CharCapacity.Should().Be((uint)testString.Length + 1);
 
-                for (int i = 1; i <= testString.Length; i++)
-                {
-                    buffer.Length = (uint)(testString.Length - i);
-                    buffer.ToString().Should().Be(testString.Substring(0, testString.Length - i));
-                    buffer.CharCapacity.Should().Be((uint)testString.Length + 1, "shouldn't reduce capacity when dropping length");
-                }
+            for (int i = 1; i <= testString.Length; i++)
+            {
+                buffer.Length = (uint)(testString.Length - i);
+                buffer.ToString().Should().Be(testString.Substring(0, testString.Length - i));
+                buffer.CharCapacity.Should().Be((uint)testString.Length + 1, "shouldn't reduce capacity when dropping length");
             }
         }
 
         [Fact]
         public void CanIndexChar()
         {
-            using (var buffer = new StringBuffer())
+            using var buffer = new StringBuffer
             {
-                buffer.Length = 1;
-                buffer[0] = 'Q';
-                buffer[0].Should().Be('Q');
-            }
+                Length = 1
+            };
+            buffer[0] = 'Q';
+            buffer[0].Should().Be('Q');
         }
 
         [Fact]
         public void GetOverIndexThrowsArgumentOutOfRange()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => { char c = buffer[0]; };
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => { char c = buffer[0]; };
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void SetOverIndexThrowsArgumentOutOfRange()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => { buffer[0] = 'Q'; };
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => { buffer[0] = 'Q'; };
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Theory,
@@ -124,15 +110,13 @@ namespace BufferTests
         {
             if (Environment.Is64BitProcess)
             {
-                using (var buffer = new StringBuffer())
-                {
-                    var length = typeof(HeapBuffer).GetField("_byteCapacity", BindingFlags.NonPublic | BindingFlags.Instance);
+                using var buffer = new StringBuffer();
+                var length = typeof(HeapBuffer).GetField("_byteCapacity", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                    ulong setValue = (ulong)uint.MaxValue * 2 + plusValue;
-                    length.SetValue(buffer, setValue);
+                ulong setValue = (ulong)uint.MaxValue * 2 + plusValue;
+                length.SetValue(buffer, setValue);
 
-                    buffer.CharCapacity.Should().Be(uint.MaxValue);
-                }
+                buffer.CharCapacity.Should().Be(uint.MaxValue);
             }
         }
 
@@ -144,11 +128,9 @@ namespace BufferTests
             ]
         public void CharCapacityFromByte(ulong byteCapacity, uint charCapacity)
         {
-            using (var buffer = new StringBuffer())
-            {
-                buffer.EnsureByteCapacity(byteCapacity);
-                buffer.CharCapacity.Should().Be(charCapacity);
-            }
+            using var buffer = new StringBuffer();
+            buffer.EnsureByteCapacity(byteCapacity);
+            buffer.CharCapacity.Should().Be(charCapacity);
         }
 
         [Theory,
@@ -158,11 +140,9 @@ namespace BufferTests
             ]
         public void EnsureCharCapacity(uint charCapacity)
         {
-            using (var buffer = new StringBuffer())
-            {
-                buffer.EnsureCharCapacity(charCapacity);
-                buffer.CharCapacity.Should().Be(charCapacity);
-            }
+            using var buffer = new StringBuffer();
+            buffer.EnsureCharCapacity(charCapacity);
+            buffer.CharCapacity.Should().Be(charCapacity);
         }
 
         [Theory,
@@ -173,33 +153,29 @@ namespace BufferTests
         {
             if (!Environment.Is64BitProcess)
             {
-                using (var buffer = new StringBuffer(initialBufferSize))
-                {
-                    Action action = () => buffer.EnsureCharCapacity(int.MaxValue + 1u);
-                    action.Should().Throw<OverflowException>();
-                }
+                using var buffer = new StringBuffer(initialBufferSize);
+                Action action = () => buffer.EnsureCharCapacity(int.MaxValue + 1u);
+                action.Should().Throw<OverflowException>();
             }
         }
 
         [Fact]
         public void MultithreadedSetLengthCapacityIsMax()
         {
-            using (var buffer = new StringBuffer(0))
+            using var buffer = new StringBuffer(0);
+            uint[] bufferLength = new uint[100];
+            for (uint i = 0; i < 100; i++)
             {
-                uint[] bufferLength = new uint[100];
-                for (uint i = 0; i < 100; i++)
-                {
-                    bufferLength[i] = i + 1;
-                }
-
-                Parallel.ForEach(bufferLength, length =>
-                {
-                    buffer.Length = length;
-                });
-
-                // Length will be random, but the capacity should be one extra for the null
-                buffer.ByteCapacity.Should().Be(202);
+                bufferLength[i] = i + 1;
             }
+
+            Parallel.ForEach(bufferLength, length =>
+            {
+                buffer.Length = length;
+            });
+
+            // Length will be random, but the capacity should be one extra for the null
+            buffer.ByteCapacity.Should().Be(202);
         }
 
         [Theory,
@@ -215,50 +191,40 @@ namespace BufferTests
             ]
         public void StartsWithOrdinal(string source, string value, bool expected)
         {
-            using (var buffer = new StringBuffer(source))
-            {
-                buffer.StartsWithOrdinal(value).Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(source);
+            buffer.StartsWithOrdinal(value).Should().Be(expected);
         }
 
         [Fact]
         public void StartsWithNullThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.StartsWithOrdinal(null);
-                action.Should().Throw<ArgumentNullException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.StartsWithOrdinal(null);
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
         public void SubStringEqualsNegativeCountThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.SubStringEquals("", startIndex: 0, count: -2);
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.SubStringEquals("", startIndex: 0, count: -2);
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void SubStringEqualsOverSizeCountThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.SubStringEquals("", startIndex: 0, count: 1);
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.SubStringEquals("", startIndex: 0, count: 1);
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void SubStringEqualsOverSizeCountWithIndexThrows()
         {
-            using (var buffer = new StringBuffer("A"))
-            {
-                Action action = () => buffer.SubStringEquals("", startIndex: 1, count: 1);
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer("A");
+            Action action = () => buffer.SubStringEquals("", startIndex: 1, count: 1);
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Theory,
@@ -280,10 +246,8 @@ namespace BufferTests
         ]
         public void SubStringEquals(string source, string value, int startIndex, int count, bool expected)
         {
-            using (var buffer = new StringBuffer(source))
-            {
-                buffer.SubStringEquals(value, startIndex: (uint)startIndex, count: count).Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(source);
+            buffer.SubStringEquals(value, startIndex: (uint)startIndex, count: count).Should().Be(expected);
         }
 
         [Theory,
@@ -351,168 +315,138 @@ namespace BufferTests
         [Fact]
         public void AppendStringMultithreaded()
         {
-            using (var buffer = new StringBuffer(0))
-            {
-                Parallel.For(0, 26, alpha =>
-                {
-                    buffer.Append(new string((char)('A' + alpha), count: 3));
-                });
+            using var buffer = new StringBuffer(0);
+            Parallel.For(0, 26, alpha =>
+{
+buffer.Append(new string((char)('A' + alpha), count: 3));
+});
 
-                AppendMultithreadedValidator(buffer);
-            }
+            AppendMultithreadedValidator(buffer);
         }
 
         [Fact]
         public void AppendStringBufferMultithreaded()
         {
-            using (var buffer = new StringBuffer(0))
-            {
-                Parallel.For(0, 26, alpha =>
-                {
-                    using (var sourceBuffer = new StringBuffer(4))
-                    {
-                        sourceBuffer.Append((char)('A' + alpha), count: 3);
-                        buffer.Append(sourceBuffer);
-                    }
-                });
+            using var buffer = new StringBuffer(0);
+            Parallel.For(0, 26, alpha =>
+{
+using var sourceBuffer = new StringBuffer(4);
+    sourceBuffer.Append((char)('A' + alpha), count: 3);
+buffer.Append(sourceBuffer);
+});
 
-                AppendMultithreadedValidator(buffer);
-            }
+            AppendMultithreadedValidator(buffer);
         }
 
         [Fact]
         public void AppendNullStringThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.Append((string)null);
-                action.Should().Throw<ArgumentNullException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.Append((string)null);
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
         public void AppendNullStringBufferIndexThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.Append((StringBuffer)null, 0);
-                action.Should().Throw<ArgumentNullException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.Append((StringBuffer)null, 0);
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
         public void AppendNullStringBufferIndexCountThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.Append((StringBuffer)null, 0, 0);
-                action.Should().Throw<ArgumentNullException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.Append((StringBuffer)null, 0, 0);
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
         public void AppendNegativeIndexThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.Append("a", startIndex: -1);
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.Append("a", startIndex: -1);
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void AppendOverIndexThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.Append("", startIndex: 1);
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.Append("", startIndex: 1);
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void AppendOverCountThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.Append("", startIndex: 0, count: 1);
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.Append("", startIndex: 0, count: 1);
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void AppendOverCountWithIndexThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.Append("A", startIndex: 1, count: 1);
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.Append("A", startIndex: 1, count: 1);
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void SubStringIndexOverLengthThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.SubString(startIndex: 1);
-                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.SubString(startIndex: 1);
+            action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
 
-                buffer.Append("a");
-                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
+            buffer.Append("a");
+            action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
 
-                buffer.Append("b");
-                action.Should().NotThrow();
-            }
+            buffer.Append("b");
+            action.Should().NotThrow();
         }
 
         [Fact]
         public void SubStringNegativeCountThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.SubString(startIndex: 0, count: -2);
-                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.SubString(startIndex: 0, count: -2);
+            action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
         }
 
         [Fact]
         public void SubStringCountOverLengthThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => buffer.SubString(startIndex: 0, count: 1);
-                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => buffer.SubString(startIndex: 0, count: 1);
+            action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
         }
 
         [Fact]
         public void SubStringImplicitCountOverMaxStringThrows()
         {
-            using (var buffer = new StringBuffer())
-            {
-                var length = buffer.GetType().GetField("_length", BindingFlags.NonPublic | BindingFlags.Instance);
+            using var buffer = new StringBuffer();
+            var length = buffer.GetType().GetField("_length", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                length.SetValue(buffer, (uint)int.MaxValue + 1);
-                Action action = () => buffer.SubString(startIndex: 0, count: -1);
-                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
-            }
+            length.SetValue(buffer, (uint)int.MaxValue + 1);
+            Action action = () => buffer.SubString(startIndex: 0, count: -1);
+            action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
         }
 
         [Fact]
         public void SubStringIndexPlusCountCombinedOutOfRangeThrows()
         {
-            using (var buffer = new StringBuffer("a"))
-            {
-                Action action = () => buffer.SubString(startIndex: 1, count: 1);
-                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
+            using var buffer = new StringBuffer("a");
+            Action action = () => buffer.SubString(startIndex: 1, count: 1);
+            action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("startIndex");
 
-                buffer.Append("b");
-                action.Should().NotThrow<ArgumentOutOfRangeException>();
+            buffer.Append("b");
+            action.Should().NotThrow<ArgumentOutOfRangeException>();
 
-                action = () => buffer.SubString(startIndex: 1, count: 2);
-                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
-            }
+            action = () => buffer.SubString(startIndex: 1, count: 2);
+            action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("count");
         }
 
         [Theory,
@@ -527,45 +461,37 @@ namespace BufferTests
         ]
         public void SubStringTest(string source, int startIndex, int count, string expected)
         {
-            using (var buffer = new StringBuffer(source))
-            {
-                buffer.SubString(startIndex: (uint)startIndex, count: count).Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(source);
+            buffer.SubString(startIndex: (uint)startIndex, count: count).Should().Be(expected);
         }
 
         [Fact]
         public void ToStringOverSizeThrowsOverflow()
         {
-            using (var buffer = new StringBuffer())
-            {
-                var length = buffer.GetType().GetField("_length", BindingFlags.NonPublic | BindingFlags.Instance);
+            using var buffer = new StringBuffer();
+            var length = buffer.GetType().GetField("_length", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                length.SetValue(buffer, (uint)int.MaxValue + 1);
-                Action action = () => buffer.ToString();
-                action.Should().Throw<OverflowException>();
-            }
+            length.SetValue(buffer, (uint)int.MaxValue + 1);
+            Action action = () => buffer.ToString();
+            action.Should().Throw<OverflowException>();
         }
 
         [Fact]
         public unsafe void SetLengthToFirstNullNoNull()
         {
-            using (var buffer = new StringBuffer("A"))
-            {
-                // Wipe out the last null
-                ((char*)buffer.DangerousGetHandle().ToPointer())[buffer.Length] = 'B';
-                buffer.SetLengthToFirstNull();
-                buffer.Length.Should().Be(1);
-            }
+            using var buffer = new StringBuffer("A");
+            // Wipe out the last null
+            ((char*)buffer.DangerousGetHandle().ToPointer())[buffer.Length] = 'B';
+            buffer.SetLengthToFirstNull();
+            buffer.Length.Should().Be(1);
         }
 
         [Fact]
         public unsafe void SetLengthToFirstNullEmptyBuffer()
         {
-            using (var buffer = new StringBuffer())
-            {
-                buffer.SetLengthToFirstNull();
-                buffer.Length.Should().Be(0);
-            }
+            using var buffer = new StringBuffer();
+            buffer.SetLengthToFirstNull();
+            buffer.Length.Should().Be(0);
         }
 
         [Theory,
@@ -576,24 +502,22 @@ namespace BufferTests
             ]
         public unsafe void SetLengthToFirstNullTests(string content, uint startLength, uint endLength)
         {
-            using (var buffer = new StringBuffer(content))
+            using var buffer = new StringBuffer(content);
+            // With existing content
+            buffer.Length.Should().Be(startLength);
+            buffer.SetLengthToFirstNull();
+            buffer.Length.Should().Be(endLength);
+
+            // Clear the buffer & manually copy in
+            buffer.Length = 0;
+            fixed (char* contentPointer = content)
             {
-                // With existing content
-                buffer.Length.Should().Be(startLength);
-                buffer.SetLengthToFirstNull();
-                buffer.Length.Should().Be(endLength);
-
-                // Clear the buffer & manually copy in
-                buffer.Length = 0;
-                fixed (char* contentPointer = content)
-                {
-                    Buffer.MemoryCopy(contentPointer, buffer.DangerousGetHandle().ToPointer(), (long)buffer.CharCapacity * 2, content.Length * sizeof(char));
-                }
-
-                buffer.Length.Should().Be(0);
-                buffer.SetLengthToFirstNull();
-                buffer.Length.Should().Be(endLength);
+                Buffer.MemoryCopy(contentPointer, buffer.DangerousGetHandle().ToPointer(), (long)buffer.CharCapacity * 2, content.Length * sizeof(char));
             }
+
+            buffer.Length.Should().Be(0);
+            buffer.SetLengthToFirstNull();
+            buffer.Length.Should().Be(endLength);
         }
 
         [Theory,
@@ -611,49 +535,45 @@ namespace BufferTests
         public void Split(string content, char splitChar)
         {
             // We want equivalence with built-in string behavior
-            using (var buffer = new StringBuffer(content))
-            {
-                buffer.Split(splitChar).Should().BeEquivalentTo(content?.Split(splitChar) ?? new string[] { "" });
-            }
+            using var buffer = new StringBuffer(content);
+            buffer.Split(splitChar).Should().BeEquivalentTo(content?.Split(splitChar) ?? new string[] { "" });
         }
 
         [Fact(Skip = "Slow test (intentional). Run when making StringBuffer changes.")]
         public void SplitWhileWriting()
         {
-            using (var buffer = new StringBuffer())
+            using var buffer = new StringBuffer();
+            var splitStrings = new ConcurrentBag<IEnumerable<string>>();
+
+            Task writeTask = new Task(() =>
             {
-                var splitStrings = new ConcurrentBag<IEnumerable<string>>();
-
-                Task writeTask = new Task(() =>
+                Parallel.For(1, 1000, i =>
                 {
-                    Parallel.For(1, 1000, i =>
-                    {
-                        buffer.Length = 0;
-                        Parallel.For(10, 100, j => buffer.Append($"{j} "));
-                    });
+                    buffer.Length = 0;
+                    Parallel.For(10, 100, j => buffer.Append($"{j} "));
                 });
+            });
 
-                Task splitTask = new Task(() =>
+            Task splitTask = new Task(() =>
+            {
+                Parallel.For(0, 25, i =>
                 {
-                    Parallel.For(0, 25, i =>
-                    {
                         // Sleep breifly to allow the content to change
                         Task.Delay(2).Wait();
-                        splitStrings.Add(buffer.Split());
-                    });
+                    splitStrings.Add(buffer.Split());
                 });
+            });
 
-                writeTask.Start();
-                splitTask.Start();
-                Task.WaitAll(writeTask, splitTask);
+            writeTask.Start();
+            splitTask.Start();
+            Task.WaitAll(writeTask, splitTask);
 
-                foreach (var split in splitStrings)
-                {
-                    // Should have nothing but valid numbers under 99 and the last should be an empty string
-                    int count = split.Count();
-                    split.Take(count - 1).Select(s => int.Parse(s)).All(i => i < 100).Should().Be(true);
-                    split.Last().Should().Be(string.Empty);
-                }
+            foreach (var split in splitStrings)
+            {
+                // Should have nothing but valid numbers under 99 and the last should be an empty string
+                int count = split.Count();
+                split.Take(count - 1).Select(s => int.Parse(s)).All(i => i < 100).Should().Be(true);
+                split.Last().Should().Be(string.Empty);
             }
         }
 
@@ -673,11 +593,9 @@ namespace BufferTests
         public void TrimEnd(string content, char[] trimChars, string expected)
         {
             // We want equivalence with built-in string behavior
-            using (var buffer = new StringBuffer(content))
-            {
-                buffer.TrimEnd(trimChars);
-                buffer.ToString().Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(content);
+            buffer.TrimEnd(trimChars);
+            buffer.ToString().Should().Be(expected);
         }
 
         [Theory,
@@ -697,10 +615,8 @@ namespace BufferTests
         public void SplitParams(string content, char[] splitChars)
         {
             // We want equivalence with built-in string behavior
-            using (var buffer = new StringBuffer(content))
-            {
-                buffer.Split(splitChars).Should().BeEquivalentTo(content?.Split(splitChars) ?? new string[] { "" });
-            }
+            using var buffer = new StringBuffer(content);
+            buffer.Split(splitChars).Should().BeEquivalentTo(content?.Split(splitChars) ?? new string[] { "" });
         }
 
         [Theory,
@@ -714,10 +630,8 @@ namespace BufferTests
             ]
         public void ContainsTests(string content, char value, bool expected)
         {
-            using (var buffer = new StringBuffer(content))
-            {
-                buffer.Contains(value).Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(content);
+            buffer.Contains(value).Should().Be(expected);
         }
 
         [Theory,
@@ -733,10 +647,8 @@ namespace BufferTests
             ]
         public void ContainsParamsTests(string content, char[] values, bool expected)
         {
-            using (var buffer = new StringBuffer(content))
-            {
-                buffer.Contains(values).Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(content);
+            buffer.Contains(values).Should().Be(expected);
         }
 
         [Theory,
@@ -749,31 +661,25 @@ namespace BufferTests
             ]
         public void CopyFromString(string content, string source, uint bufferIndex, int sourceIndex, int count, string expected)
         {
-            using (var buffer = new StringBuffer(content))
-            {
-                buffer.CopyFrom(bufferIndex, source, sourceIndex, count);
-                buffer.ToString().Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(content);
+            buffer.CopyFrom(bufferIndex, source, sourceIndex, count);
+            buffer.ToString().Should().Be(expected);
         }
 
         [Fact]
         public void CopyFromStringThrowsOnNull()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => { buffer.CopyFrom(0, null); };
-                action.Should().Throw<ArgumentNullException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => { buffer.CopyFrom(0, null); };
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
         public void CopyFromStringThrowsIndexingBeyondBufferLength()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => { buffer.CopyFrom(2, "a"); };
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => { buffer.CopyFrom(2, "a"); };
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Theory,
@@ -786,11 +692,9 @@ namespace BufferTests
             ]
         public void CopyFromStringThrowsIndexingBeyondStringLength(string value, int index, int count)
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => { buffer.CopyFrom(0, value, index, count); };
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => { buffer.CopyFrom(0, value, index, count); };
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Theory,
@@ -803,33 +707,27 @@ namespace BufferTests
             ]
         public void CopyToBufferString(string destination, string content, uint destinationIndex, uint bufferIndex, uint count, string expected)
         {
-            using (var buffer = new StringBuffer(content))
-            using (var destinationBuffer = new StringBuffer(destination))
-            {
-                buffer.CopyTo(bufferIndex, destinationBuffer, destinationIndex, count);
-                destinationBuffer.ToString().Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(content);
+            using var destinationBuffer = new StringBuffer(destination);
+            buffer.CopyTo(bufferIndex, destinationBuffer, destinationIndex, count);
+            destinationBuffer.ToString().Should().Be(expected);
         }
 
         [Fact]
         public void CopyToBufferOutOfRangeThrows()
         {
-            using (var buffer = new StringBuffer())
-            using (var destinationBuffer = new StringBuffer())
-            {
-                Action action = () => buffer.CopyTo(0, destinationBuffer, 1, 0);
-                action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("destinationIndex");
-            }
+            using var buffer = new StringBuffer();
+            using var destinationBuffer = new StringBuffer();
+            Action action = () => buffer.CopyTo(0, destinationBuffer, 1, 0);
+            action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("destinationIndex");
         }
 
         [Fact]
         public void CopyToBufferThrowsOnNull()
         {
-            using (var buffer = new StringBuffer())
-            {
-                Action action = () => { buffer.CopyTo(0, null, 0, 0); };
-                action.Should().Throw<ArgumentNullException>();
-            }
+            using var buffer = new StringBuffer();
+            Action action = () => { buffer.CopyTo(0, null, 0, 0); };
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Theory,
@@ -841,12 +739,10 @@ namespace BufferTests
             ]
         public void CopyToBufferThrowsIndexingBeyondSourceBufferLength(string source, uint index, uint count)
         {
-            using (var buffer = new StringBuffer(source))
-            using (var targetBuffer = new StringBuffer())
-            {
-                Action action = () => { buffer.CopyTo(index, targetBuffer, 0, count); };
-                action.Should().Throw<ArgumentOutOfRangeException>();
-            }
+            using var buffer = new StringBuffer(source);
+            using var targetBuffer = new StringBuffer();
+            Action action = () => { buffer.CopyTo(index, targetBuffer, 0, count); };
+            action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
@@ -854,14 +750,12 @@ namespace BufferTests
         {
             string testString = "Fo\0o";
 
-            using (var buffer = new StringBuffer())
+            using var buffer = new StringBuffer();
+            for (int i = 0; i < testString.Length; i++)
             {
-                for (int i = 0; i < testString.Length; i++)
-                {
-                    buffer.Append(testString[i]);
-                    buffer.Length.Should().Be((uint)i + 1);
-                    buffer.ToString().Should().Be(testString.Substring(0, i + 1));
-                }
+                buffer.Append(testString[i]);
+                buffer.Length.Should().Be((uint)i + 1);
+                buffer.ToString().Should().Be(testString.Substring(0, i + 1));
             }
         }
 
@@ -876,11 +770,9 @@ namespace BufferTests
             ]
         public void IndexOfTests(string source, char value, uint skip, uint expectedIndex, bool expectedValue)
         {
-            using (var buffer = new StringBuffer(source))
-            {
-                buffer.IndexOf(value, out uint index, skip).Should().Be(expectedValue);
-                index.Should().Be(expectedIndex);
-            }
+            using var buffer = new StringBuffer(source);
+            buffer.IndexOf(value, out uint index, skip).Should().Be(expectedValue);
+            index.Should().Be(expectedIndex);
         }
 
         [Theory,
@@ -902,11 +794,9 @@ namespace BufferTests
             ]
         public void AppendCharCountTests(string initialBuffer, char value, uint count, string expected)
         {
-            using (var buffer = new StringBuffer(initialBuffer))
-            {
-                buffer.Append(value, count);
-                buffer.ToString().Should().Be(expected);
-            }
+            using var buffer = new StringBuffer(initialBuffer);
+            buffer.Append(value, count);
+            buffer.ToString().Should().Be(expected);
         }
 
         private void AppendMultithreadedValidator(StringBuffer buffer)
@@ -932,15 +822,13 @@ namespace BufferTests
         [Fact]
         public void AppendCharCountMultithreaded()
         {
-            using (var buffer = new StringBuffer(0))
-            {
-                Parallel.For(0, 26, alpha =>
-                {
-                    buffer.Append((char)('A' + alpha), count: 3);
-                });
+            using var buffer = new StringBuffer(0);
+            Parallel.For(0, 26, alpha =>
+{
+buffer.Append((char)('A' + alpha), count: 3);
+});
 
-                AppendMultithreadedValidator(buffer);
-            }
+            AppendMultithreadedValidator(buffer);
         }
 
         [Fact]
@@ -956,19 +844,6 @@ namespace BufferTests
                 (buffer.CharPointer == null).Should().BeTrue("disposed char pointer should be null");
                 (buffer.BytePointer == null).Should().BeTrue("disposed byte pointer should be null");
                 (buffer.VoidPointer == null).Should().BeTrue("disposed void pointer should be null");
-            }
-        }
-
-        // [Fact]
-        private void AppendCharCountPerf()
-        {
-            using (var buffer = new StringBuffer())
-            {
-                for (int i = 0; i < 100000; i++)
-                {
-                    buffer.Length = 0;
-                    buffer.Append('a', 100000);
-                }
             }
         }
     }

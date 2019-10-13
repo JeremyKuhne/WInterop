@@ -6,7 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using WInterop.Handles;
 
@@ -22,7 +21,6 @@ namespace WInterop.Modules
     public class ModuleInstance : HandleZeroIsInvalid
     {
         public static ModuleInstance Null = new ModuleInstance(IntPtr.Zero);
-        private static MethodInfo _getHINSTANCE;
 
         public ModuleInstance() : this(ownsHandle: false) { }
 
@@ -32,18 +30,8 @@ namespace WInterop.Modules
 
         static public implicit operator ModuleInstance(IntPtr handle) => new ModuleInstance(handle);
 
-        public static ModuleInstance GetModuleForType<T>(T value) => GetModuleForType(typeof(T));
-
         public static ModuleInstance GetModuleForType(Type type)
-        {
-            // Unfortunately GetHINSTANCE isn't part of .NET Standard
-            if (_getHINSTANCE == null)
-            {
-                _getHINSTANCE = typeof(Marshal).GetMethod("GetHINSTANCE");
-            }
-
-            return (IntPtr)_getHINSTANCE.Invoke(null, new object[] { type.Module });
-        }
+            => Marshal.GetHINSTANCE(type.Module);
 
         protected override bool ReleaseHandle()
         {

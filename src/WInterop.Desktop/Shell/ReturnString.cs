@@ -15,29 +15,20 @@ namespace WInterop.Shell
     {
         private IntPtr _pointer;
 
-        public unsafe string ToString(ItemIdList pidl)
+
+        public unsafe override string ToString()
         {
             if (_pointer == IntPtr.Zero)
                 throw new ObjectDisposedException(nameof(ReturnString));
 
-            string result = null;
             STRRET* s = (STRRET*)_pointer.ToPointer();
-            switch (s->uType)
+            return (s->uType) switch
             {
-                case STRRET.STRRET_TYPE.STRRET_WSTR:
-                    result = new string(s->Data.pOleStr);
-                    break;
-                case STRRET.STRRET_TYPE.STRRET_CSTR:
-                    // https://docs.microsoft.com/en-us/windows/desktop/api/shlwapi/nf-shlwapi-shansitounicode
-                    throw new NotSupportedException();
-                case STRRET.STRRET_TYPE.STRRET_OFFSET:
-                    // https://docs.microsoft.com/en-us/windows/desktop/api/shlwapi/nf-shlwapi-shansitounicode
-                    throw new NotSupportedException();
-                default:
-                    throw new InvalidOperationException();
-            }
-
-            return result;
+                STRRET.STRRET_TYPE.STRRET_WSTR => new string(s->Data.pOleStr),
+                STRRET.STRRET_TYPE.STRRET_CSTR => throw new NotSupportedException(),
+                STRRET.STRRET_TYPE.STRRET_OFFSET => throw new NotSupportedException(),
+                _ => throw new InvalidOperationException()
+            };
         }
 
         public unsafe void Dispose()

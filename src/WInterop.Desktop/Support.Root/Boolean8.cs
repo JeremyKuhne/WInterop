@@ -16,31 +16,22 @@ namespace WInterop
     /// by parts of the CLR. You can pin with contained bool values directly, things like
     /// GCHandle refuse to.
     /// </remarks>
-    public struct Boolean8
+    public readonly struct Boolean8
     {
-        public byte RawValue;
+        public byte RawValue { get; }
 
-        public Boolean8(bool b)
-        {
-            RawValue = b ? (byte)1 : (byte)0;
-        }
+        public Boolean8(bool b) => RawValue = b ? (byte)1 : (byte)0;
 
-        public Boolean8(byte value)
-        {
-            RawValue = value;
-        }
+        public Boolean8(byte value) => RawValue = value;
 
-        public bool IsTrue => RawValue != 0;
+        public readonly bool IsTrue => RawValue != 0;
 
-        public bool IsFalse => RawValue == 0;
+        public readonly bool IsFalse => RawValue == 0;
 
         public static implicit operator bool(Boolean8 b) => b.IsTrue;
 
         public static implicit operator Boolean8(bool b) => new Boolean8(b);
 
-        public override string ToString()
-        {
-            return IsTrue.ToString();
-        }
+        public override string ToString() => IsTrue.ToString();
     }
 }

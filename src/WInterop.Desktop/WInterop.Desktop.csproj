@@ -6,6 +6,7 @@
     <AssemblyOriginatorKeyFile>..\WInterop.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <RootNamespace>WInterop</RootNamespace>
     <PackageVersion>0.3.1-alpha-090911715</PackageVersion>
@@ -27,5 +28,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Modules\BufferWrappers\" />
+    <Folder Include="ProcessAndThreads\BufferWrappers\" />
+    <Folder Include="Storage\BufferWrappers\" />
+    <Folder Include="Windows\BufferWrappers\" />
   </ItemGroup>
 </Project>

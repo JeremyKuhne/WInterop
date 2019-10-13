@@ -8,18 +8,18 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.IO;
-using WInterop.Console;
 
 namespace WInterop.Console
 {
     public class ConsoleStream : Stream
     {
-        private bool _output;
-        private SafeFileHandle _handle;
+        private readonly bool _output;
+        private readonly SafeFileHandle _handle;
 
         public ConsoleStream(StandardHandleType type)
         {
-            _handle = Console.GetStandardHandle(type);
+            SafeFileHandle? handle = Console.GetStandardHandle(type);
+            _handle = handle ?? throw new InvalidOperationException($"Could not get standard handle of type {type}.");
             _output = type != StandardHandleType.Input;
         }
 

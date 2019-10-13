@@ -31,10 +31,8 @@ namespace ProcessAndThreadTests
         [Fact]
         public void OpenCurrentProcess()
         {
-            using (SafeProcessHandle handle = Processes.OpenProcess(Processes.GetCurrentProcessId(), ProcessAccessRights.QueryLimitedInfomration))
-            {
-                handle.IsInvalid.Should().BeFalse();
-            }
+            using SafeProcessHandle handle = Processes.OpenProcess(Processes.GetCurrentProcessId(), ProcessAccessRights.QueryLimitedInfomration);
+            handle.IsInvalid.Should().BeFalse();
         }
 
         [Fact]
@@ -81,7 +79,7 @@ namespace ProcessAndThreadTests
             Processes.SetEnvironmentVariable(name, "BasicGetSetEnvironmentVariable");
             Processes.GetEnvironmentVariable(name).Should().Be("BasicGetSetEnvironmentVariable");
             Processes.SetEnvironmentVariable(name, null);
-            Processes.GetEnvironmentVariable(name).Should().BeNull();
+            Processes.GetEnvironmentVariable(name).Should().BeEmpty();
         }
 
         [Theory,
@@ -98,7 +96,7 @@ namespace ProcessAndThreadTests
             variables.Should().ContainKey(name);
             variables[name].Should().Be("test");
             Processes.SetEnvironmentVariable(name, null);
-            Processes.GetEnvironmentVariable(name).Should().BeNull();
+            Processes.GetEnvironmentVariable(name).Should().BeEmpty();
             variables = Processes.GetEnvironmentVariables();
             variables.Should().NotContainKey(name);
         }
@@ -125,10 +123,8 @@ namespace ProcessAndThreadTests
         public void GetCurrentProcessIdViaRealHandle()
         {
             uint id = Processes.GetCurrentProcessId();
-            using (var handle = Processes.OpenProcess(id, ProcessAccessRights.QueryLimitedInfomration))
-            {
-                Processes.GetProcessId(handle).Should().Be(id);
-            }
+            using var handle = Processes.OpenProcess(id, ProcessAccessRights.QueryLimitedInfomration);
+            Processes.GetProcessId(handle).Should().Be(id);
         }
     }
 }

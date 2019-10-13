@@ -5,8 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#nullable enable
-
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -19,7 +17,6 @@ using WInterop.Handles;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 using WInterop.Security;
-using WInterop.Storage.BufferWrappers;
 using WInterop.Synchronization;
 
 namespace WInterop.Storage
@@ -691,41 +688,50 @@ namespace WInterop.Storage
         /// <summary>
         /// Get the temporary directory path.
         /// </summary>
-        public static string GetTempPath()
+        public unsafe static string GetTempPath()
         {
-            var wrapper = new TempPathWrapper();
-            return BufferHelper.ApiInvoke(ref wrapper);
+            return PlatformInvoke.GrowableBufferInvoke(
+                (ref ValueBuffer<char> buffer) =>
+                {
+                    fixed (char* b = buffer)
+                    {
+                        return Imports.GetTempPathW(buffer.Length, b);
+                    }
+                });
         }
 
         /// <summary>
         /// Get the fully resolved path name.
         /// </summary>
-        public static string GetFullPathName(string path)
+        public unsafe static string GetFullPathName(string path)
         {
-            var wrapper = new FullPathNameWrapper { Path = path };
-            return BufferHelper.ApiInvoke(ref wrapper, path);
-        }
-
-        private struct FinalPathNameByHandleWrapper : IBufferFunc<StringBuffer, uint>
-        {
-            public SafeFileHandle FileHandle;
-            public GetFinalPathNameByHandleFlags Flags;
-
-            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
-            {
-                return Imports.GetFinalPathNameByHandleW(FileHandle, buffer, buffer.CharCapacity, Flags);
-            }
+            return PlatformInvoke.GrowableBufferInvoke(
+                (ref ValueBuffer<char> buffer) =>
+                {
+                    fixed (char* p = path)
+                    fixed (char* b = buffer)
+                    {
+                        return Imports.GetFullPathNameW(p, buffer.Length, b, null);
+                    }
+                },
+                detail: path);
         }
 
         /// <summary>
         /// Gets a canonical version of the given handle's path.
         /// </summary>
-        public static string GetFinalPathNameByHandle(
+        public unsafe static string GetFinalPathNameByHandle(
             SafeFileHandle fileHandle,
             GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FileNameNormalized | GetFinalPathNameByHandleFlags.VolumeNameDos)
         {
-            var wrapper = new FinalPathNameByHandleWrapper { FileHandle = fileHandle, Flags = flags };
-            return BufferHelper.ApiInvoke(ref wrapper);
+            return PlatformInvoke.GrowableBufferInvoke(
+                (ref ValueBuffer<char> buffer) =>
+                {
+                    fixed (char* b = buffer)
+                    {
+                        return Imports.GetFinalPathNameByHandleW(fileHandle, b, buffer.Length, flags);
+                    }
+                });
         }
 
         /// <summary>
@@ -752,23 +758,21 @@ namespace WInterop.Storage
             return GetFinalPathNameByHandle(fileHandle, finalPathFlags);
         }
 
-        private struct LongPathNameWrapper : IBufferFunc<StringBuffer, uint>
-        {
-            public string Path;
-
-            uint IBufferFunc<StringBuffer, uint>.Func(StringBuffer buffer)
-            {
-                return Imports.GetLongPathNameW(Path, buffer, buffer.CharCapacity);
-            }
-        }
-
         /// <summary>
         /// Get the long (non 8.3) path version of the given path.
         /// </summary>
-        public static string GetLongPathName(string path)
+        public unsafe static string GetLongPathName(string path)
         {
-            var wrapper = new LongPathNameWrapper { Path = path };
-            return BufferHelper.ApiInvoke(ref wrapper, path);
+            return PlatformInvoke.GrowableBufferInvoke(
+                (ref ValueBuffer<char> buffer) =>
+                {
+                    fixed (char* p = path)
+                    fixed (char* b = buffer)
+                    {
+                        return Imports.GetLongPathNameW(p, b, buffer.Length);
+                    }
+                },
+                detail: path);
         }
 
         /// <summary>
@@ -854,7 +858,7 @@ namespace WInterop.Storage
             FileFlags fileFlags,
             SecurityQosFlags securityQosFlags);
 
-        private static CreateFileDelegate s_createFileDelegate;
+        private static CreateFileDelegate? s_createFileDelegate;
 
         /// <summary>
         /// Wrapper that allows using System.IO defines where available. Calls CreateFile2 if available.
@@ -947,7 +951,7 @@ namespace WInterop.Storage
             string destination,
             bool overwrite);
 
-        private static CopyFileDelegate s_copyFileDelegate;
+        private static CopyFileDelegate? s_copyFileDelegate;
 
         /// <summary>
         /// CopyFile wrapper that attempts to use CopyFile2 if running as Windows Store app.
@@ -988,28 +992,6 @@ namespace WInterop.Storage
             };
 
             Imports.CopyFile2(source, destination, ref parameters).ThrowIfFailed();
-        }
-
-        /// <summary>
-        /// Creates a wrapper for finding files.
-        /// </summary>
-        /// <param name="directory">The directory to search in.</param>
-        /// <param name="recursive">True to find files recursively.</param>
-        /// <param name="nameFilter">
-        /// The filename filter. Can contain wildcards, full details can be found at
-        /// <a href="https://msdn.microsoft.com/en-us/library/ff469270.aspx">[MS-FSA] 2.1.4.4 Algorithm for Determining if a FileName Is in an Expression</a>.
-        /// If custom <paramref name="findFilter"/> is specified this parameter is ignored.
-        /// </param>
-        /// <param name="findFilter">Custom filter, if default behavior isn't desired. (Which is no "." or "..", and use the filter string.)</param>
-        /// <param name="findTransform">Custom transform, if the default transform isn't desired.</param>
-        public static FindOperation<T> CreateFindOperation<T>(
-            string directory,
-            string nameFilter = "*",
-            bool recursive = false,
-            IFindTransform<T>? findTransform = null,
-            IFindFilter? findFilter = null)
-        {
-            return new FindOperation<T>(directory, nameFilter, recursive, findTransform, findFilter);
         }
 
         /// <summary>

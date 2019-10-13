@@ -20,7 +20,7 @@ namespace WInterop.Globalization.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318103.aspx
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public unsafe static extern int GetLocaleInfoEx(
-            string lpLocaleName,
+            string? lpLocaleName,
             uint LCType,
             void* lpLCData,
             int cchData);

@@ -158,7 +158,7 @@ namespace WInterop.Devices
         /// <summary>
         /// Gets the DOS drive letter for the given volume if it has one.
         /// </summary>
-        public unsafe static string QueryDosVolumePath(string volume)
+        public unsafe static string? QueryDosVolumePath(string volume)
         {
             var mountManager = Storage.Storage.CreateFile(
                 @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0);
@@ -166,12 +166,12 @@ namespace WInterop.Devices
             ControlCode controlCode = ControlCodes.MountManager.QueryDosVolumePath;
 
             // Read ulong then get string
-            string dosVolumePath = null;
+            string? dosVolumePath = null;
 
             BufferHelper.BufferInvoke((StringBuffer inBuffer) =>
             {
                 // The input is MOUNTMGR_TARGET_NAME which is a short length in bytes followed by the unicode string
-                // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562289.aspx
+                // https://docs.microsoft.com/windows-hardware/drivers/ddi/content/mountmgr/ns-mountmgr-_mountmgr_target_name
 
                 inBuffer.Append((char)(volume.Length * sizeof(char)));
                     inBuffer.Append(volume);
@@ -216,7 +216,7 @@ namespace WInterop.Devices
         /// Gets reparse point names for symbolic links and mount points.
         /// </summary>
         /// <param name="fileHandle">Handle for the reparse point, must be opened with <see cref="FileAccessRights.ReadExtendedAttributes"/>.</param>
-        public unsafe static (string printName, string substituteName, ReparseTag tag) GetReparsePointNames(SafeFileHandle fileHandle)
+        public unsafe static (string? printName, string? substituteName, ReparseTag tag) GetReparsePointNames(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -249,8 +249,8 @@ namespace WInterop.Devices
 
                 ReparseTag reparseTag = ((REPARSE_DATA_BUFFER*)buffer.VoidPointer)->ReparseTag;
 
-                string printName = null;
-                string substitutename = null;
+                string? printName = null;
+                string? substitutename = null;
 
                 if (reparseTag == ReparseTag.MountPoint)
                 {

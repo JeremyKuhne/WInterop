@@ -49,7 +49,7 @@ namespace WInterop.Errors.Native
             IntPtr lpBuffer,
             // Size is in chars
             uint nSize,
-            string[] Arguments);
+            string[]? Arguments);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms680627.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

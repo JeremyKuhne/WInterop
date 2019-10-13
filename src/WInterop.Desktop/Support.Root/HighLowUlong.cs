@@ -13,12 +13,24 @@ namespace WInterop
     /// For easier access of ulongs where they are defined in native structs as separate
     /// high/low parts.
     /// </summary>
-    public struct HighLowUlong
+    public readonly struct HighLowUlong
     {
-        public uint High;
-        public uint Low;
+        public uint High { get; }
+        public uint Low { get; }
 
-        public static implicit operator HighLowUlong(ulong u) => new HighLowUlong { High = Conversion.HighWord(u), Low = Conversion.LowWord(u) };
+        public HighLowUlong(uint high, uint low)
+        {
+            High = high;
+            Low = low;
+        }
+
+        public HighLowUlong(ulong value)
+        {
+            High = Conversion.HighWord(value);
+            Low = Conversion.LowWord(value);
+        }
+
+        public static implicit operator HighLowUlong(ulong u) => new HighLowUlong(u);
         public static implicit operator ulong(HighLowUlong u) => Conversion.HighLowToLong(u.High, u.Low);
     }
 }

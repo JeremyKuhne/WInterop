@@ -23,7 +23,7 @@ namespace WInterop.Globalization
         /// <summary>
         /// Returns whether or not the specified locale uses a 24 hour clock.
         /// </summary>
-        public unsafe bool GetIs24HourClock(string localeName = null)
+        public unsafe bool GetIs24HourClock(string? localeName = null)
         {
             char* data = stackalloc char[2];
             int result = Imports.GetLocaleInfoEx(localeName, (uint)LocaleInfoType.LOCALE_ITIME, data, 2);
@@ -36,7 +36,7 @@ namespace WInterop.Globalization
         /// <summary>
         /// Returns whether or not the specified locale has leading zeros for hours.
         /// </summary>
-        public unsafe bool GetHoursHaveLeadingZeros(string localeName = null)
+        public unsafe bool GetHoursHaveLeadingZeros(string? localeName = null)
         {
             char* data = stackalloc char[2];
             int result = Imports.GetLocaleInfoEx(localeName, (uint)LocaleInfoType.LOCALE_ITLZERO, data, 2);

@@ -50,7 +50,7 @@ namespace WInterop.SystemInformation
         /// Gets the user name in the specified format. Returns null for
         /// formats that aren't mapped.
         /// </summary>
-        public static string GetUserName(ExtendedNameFormat format)
+        public static string? GetUserName(ExtendedNameFormat format)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {

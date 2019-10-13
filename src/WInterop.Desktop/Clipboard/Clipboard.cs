@@ -5,8 +5,6 @@
 // Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#nullable enable
-
 using System;
 using System.Buffers;
 using System.Runtime.InteropServices;
@@ -128,17 +126,13 @@ namespace WInterop.Clipboard
         /// </summary>
         public static void SetClipboardUnicodeText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.UnicodeText)
         {
-            using (GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1) * sizeof(char)), GlobalMemoryFlags.Moveable))
-            {
-                using (GlobalLock globalLock = global.Lock)
-                {
-                    Span<char> buffer = globalLock.GetSpan<char>();
-                    span.CopyTo(buffer);
-                    buffer[buffer.Length - 1] = '\0';
+            using GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1) * sizeof(char)), GlobalMemoryFlags.Moveable);
+            using GlobalLock globalLock = global.Lock;
+            Span<char> buffer = globalLock.GetSpan<char>();
+            span.CopyTo(buffer);
+            buffer[buffer.Length - 1] = '\0';
 
-                    Imports.SetClipboardData((uint)format, globalLock.Pointer);
-                }
-            }
+            Imports.SetClipboardData((uint)format, globalLock.Pointer);
         }
 
         /// <summary>
@@ -171,17 +165,13 @@ namespace WInterop.Clipboard
         /// </summary>
         public static void SetClipboardBinaryData(ReadOnlySpan<byte> span, ClipboardFormat format)
         {
-            using (GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1)), GlobalMemoryFlags.Moveable))
-            {
-                using (GlobalLock globalLock = global.Lock)
-                {
-                    Span<byte> buffer = globalLock.GetSpan<byte>();
-                    span.CopyTo(buffer);
-                    buffer[buffer.Length - 1] = 0;
+            using GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1)), GlobalMemoryFlags.Moveable);
+            using GlobalLock globalLock = global.Lock;
+            Span<byte> buffer = globalLock.GetSpan<byte>();
+            span.CopyTo(buffer);
+            buffer[buffer.Length - 1] = 0;
 
-                    Imports.SetClipboardData((uint)format, globalLock.Pointer);
-                }
-            }
+            Imports.SetClipboardData((uint)format, globalLock.Pointer);
         }
 
         /// <summary>

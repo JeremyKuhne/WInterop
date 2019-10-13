@@ -38,8 +38,8 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public unsafe static extern HDC CreateDCW(
             string pwszDriver,
-            string pwszDevice,
-            string pszPort,
+            string? pwszDevice,
+            string? pszPort,
             DeviceMode* pdm);
 
         // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-createicw
@@ -47,7 +47,7 @@ namespace WInterop.Gdi.Native
         public unsafe static extern HDC CreateICW(
             string pwszDriver,
             string pwszDevice,
-            string pszPort,
+            string? pszPort,
             DeviceMode* pdm);
 
         // https://msdn.microsoft.com/library/dd183489.aspx
@@ -268,7 +268,7 @@ namespace WInterop.Gdi.Native
             uint fdwClipPrecision,
             uint fdwQuality,
             uint fdwPitchAndFamily,
-            string lpszFace);
+            string? lpszFace);
 
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int EnumFontFamiliesExW(
@@ -1067,7 +1067,7 @@ namespace WInterop.Gdi.Native
             uint cWidth,
             in LOGBRUSH plbrush,
             uint cStyle,
-            uint[] pstyle);
+            uint[]? pstyle);
 
         // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-gdiflush
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]

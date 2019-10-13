@@ -13,12 +13,12 @@ namespace WInterop.Handles
     /// <summary>
     /// Use to scope unwrapping safe handles.
     /// </summary>
-    public struct UnwrapHandle : IDisposable
+    public readonly struct UnwrapHandle : IDisposable
     {
-        private SafeHandle _handle;
-        private bool _refCounted;
+        private readonly SafeHandle? _handle;
+        private readonly bool _refCounted;
 
-        public UnwrapHandle(SafeHandle handle)
+        public UnwrapHandle(SafeHandle? handle)
         {
             _handle = handle;
             _refCounted = false;
@@ -30,7 +30,7 @@ namespace WInterop.Handles
         public void Dispose()
         {
             if (_refCounted)
-                _handle.DangerousRelease();
+                _handle?.DangerousRelease();
         }
     }
 }

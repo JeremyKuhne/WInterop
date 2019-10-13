@@ -57,7 +57,7 @@ namespace WInterop.Windows
 
         public override int GetHashCode() => HWND.GetHashCode();
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is WindowHandle other
                 ? other.HWND == HWND

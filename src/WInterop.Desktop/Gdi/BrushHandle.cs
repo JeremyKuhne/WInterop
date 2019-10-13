@@ -46,7 +46,7 @@ namespace WInterop.Gdi
         public static implicit operator BrushHandle(StockBrush brush) => Gdi.GetStockBrush(brush);
         public static implicit operator BrushHandle(SystemColor color) => Gdi.GetSystemColorBrush(color);
 
-        public override bool Equals(object obj) => obj is BrushHandle other ? other.HBRUSH == HBRUSH : false;
+        public override bool Equals(object? obj) => obj is BrushHandle other ? other.HBRUSH == HBRUSH : false;
         public bool Equals(BrushHandle other) => other.HBRUSH == HBRUSH;
         public static bool operator ==(BrushHandle a, BrushHandle b) => a.HBRUSH == b.HBRUSH;
         public static bool operator !=(BrushHandle a, BrushHandle b) => a.HBRUSH != b.HBRUSH;

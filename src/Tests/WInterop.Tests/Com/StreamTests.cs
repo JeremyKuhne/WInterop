@@ -19,68 +19,61 @@ namespace ComTests
         [Fact]
         public unsafe void ComStreamConstruction()
         {
-            using (var cleaner = new TestFileCleaner())
-            {
-                string path = cleaner.GetTestPath();
-                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+            using var cleaner = new TestFileCleaner();
+            string path = cleaner.GetTestPath();
+            IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
 
-                ComStream stream;
-                using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))
-                {
-                    stream.ToString().Should().Be("mystream");
-                    stream.StorageMode.Should().Be(StorageMode.ReadWrite | StorageMode.ShareExclusive);
-                    stream.StorageType.Should().Be(StorageType.Stream);
-                    stream.CanRead.Should().BeTrue();
-                    stream.CanSeek.Should().BeTrue();
-                    stream.CanWrite.Should().BeTrue();
-                    stream.Length.Should().Be(0);
-                    stream.Position.Should().Be(0);
-                }
-                stream.Stream.Should().BeNull();
+            ComStream stream;
+            using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))
+            {
+                stream.ToString().Should().Be("mystream");
+                stream.StorageMode.Should().Be(StorageMode.ReadWrite | StorageMode.ShareExclusive);
+                stream.StorageType.Should().Be(StorageType.Stream);
+                stream.CanRead.Should().BeTrue();
+                stream.CanSeek.Should().BeTrue();
+                stream.CanWrite.Should().BeTrue();
+                stream.Length.Should().Be(0);
+                stream.Position.Should().Be(0);
             }
         }
 
         [Fact]
         public unsafe void ComStreamTextReadWrite()
         {
-            using (var cleaner = new TestFileCleaner())
+            using var cleaner = new TestFileCleaner();
+            string path = cleaner.GetTestPath();
+            IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+
+            ComStream stream;
+            using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))
             {
-                string path = cleaner.GetTestPath();
-                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
-
-                ComStream stream;
-                using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))
+                using (StreamWriter writer = new StreamWriter(stream, Encoding.Unicode, 1024, leaveOpen: true))
                 {
-                    using (StreamWriter writer = new StreamWriter(stream, Encoding.Unicode, 1024, leaveOpen: true))
-                    {
-                        writer.WriteLine("This is line one.");
-                        stream.Length.Should().Be(0);
-                        stream.Position.Should().Be(0);
-                        writer.Flush();
-                        stream.Length.Should().Be(40);
-                        stream.Position.Should().Be(40);
-                        writer.WriteLine("This is line two.");
-                        stream.Length.Should().Be(40);
-                        stream.Position.Should().Be(40);
-                        writer.Flush();
-                        stream.Length.Should().Be(78);
-                        stream.Position.Should().Be(78);
-                    }
-
-                    stream.Stream.Should().NotBeNull();
-
-                    using (StreamReader reader = new StreamReader(stream, Encoding.Unicode, detectEncodingFromByteOrderMarks: false, 1024, leaveOpen: true))
-                    {
-                        stream.Position = 0;
-                        stream.Position.Should().Be(0);
-                        reader.ReadLine().Should().Be("This is line one.");
-                        reader.ReadLine().Should().Be("This is line two.");
-                    }
-
-                    stream.Stream.Should().NotBeNull();
+                    writer.WriteLine("This is line one.");
+                    stream.Length.Should().Be(0);
+                    stream.Position.Should().Be(0);
+                    writer.Flush();
+                    stream.Length.Should().Be(40);
+                    stream.Position.Should().Be(40);
+                    writer.WriteLine("This is line two.");
+                    stream.Length.Should().Be(40);
+                    stream.Position.Should().Be(40);
+                    writer.Flush();
+                    stream.Length.Should().Be(78);
+                    stream.Position.Should().Be(78);
                 }
 
-                stream.Stream.Should().BeNull();
+                stream.Stream.Should().NotBeNull();
+
+                using (StreamReader reader = new StreamReader(stream, Encoding.Unicode, detectEncodingFromByteOrderMarks: false, 1024, leaveOpen: true))
+                {
+                    stream.Position = 0;
+                    stream.Position.Should().Be(0);
+                    reader.ReadLine().Should().Be("This is line one.");
+                    reader.ReadLine().Should().Be("This is line two.");
+                }
+
+                stream.Stream.Should().NotBeNull();
             }
         }
     }

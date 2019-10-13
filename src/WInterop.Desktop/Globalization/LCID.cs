@@ -22,7 +22,7 @@ namespace WInterop.Globalization
             RawValue = id;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is LCID other
                 ? other.RawValue == RawValue

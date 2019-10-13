@@ -17,8 +17,8 @@ namespace WInterop.Support.Buffers
     /// </summary>
     public struct OwnedMemoryEnumerable<T> : IEnumerable<T>, IEnumerator<T>
     {
-        private IMemoryOwner<T> _owner;
-        private Memory<T> _memory;
+        private readonly IMemoryOwner<T> _owner;
+        private readonly Memory<T> _memory;
         private int _index;
 
         public OwnedMemoryEnumerable(IMemoryOwner<T> owner)
@@ -39,15 +39,13 @@ namespace WInterop.Support.Buffers
         {
             get
             {
-                if (_index == -1)
-                    return default;
                 if (_index < 0)
                     throw new InvalidOperationException();
                 return _memory.Span[_index];
             }
         }
 
-        object IEnumerator.Current => Current;
+        object? IEnumerator.Current => Current;
 
         public IEnumerator<T> GetEnumerator()
         {

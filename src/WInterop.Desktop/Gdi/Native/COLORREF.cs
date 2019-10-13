@@ -45,7 +45,7 @@ namespace WInterop.Gdi.Native
 
         public bool IsInvalid => Value == 0xFFFFFFFF;
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is COLORREF other
                 ? Equals(other)

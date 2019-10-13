@@ -17,6 +17,7 @@ namespace WInterop.Com
     public class ComStream : Stream
     {
         private readonly bool _ownsStream;
+        private IStream? _stream;
 
         /// <summary>
         /// Construct a Stream wrapper around an <see cref="IStream"/> object.
@@ -25,7 +26,7 @@ namespace WInterop.Com
         /// <param name="ownsStream">If true (default), will release the <see cref="IStream"/> object when disposed.</param>
         public ComStream(IStream stream, bool ownsStream = true)
         {
-            Stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            _stream = stream ?? throw new ArgumentNullException(nameof(stream));
             _ownsStream = ownsStream;
             stream.Stat(out STATSTG stat, StatFlag.NoName);
             StorageType = stat.type;
@@ -39,7 +40,8 @@ namespace WInterop.Com
 
         public Guid ClassId { get; }
 
-        public IStream Stream { get; private set; }
+        public IStream Stream
+            => _stream ?? throw new ObjectDisposedException(nameof(ComStream));
 
         public override bool CanRead
             // Can read is the default, only can't if in Write only mode
@@ -54,9 +56,6 @@ namespace WInterop.Com
         {
             get
             {
-                if (Stream == null)
-                    throw new ObjectDisposedException(nameof(ComStream));
-
                 Stream.Stat(out STATSTG stat, StatFlag.NoName);
                 return (long)stat.cbSize;
             }
@@ -66,25 +65,16 @@ namespace WInterop.Com
         {
             get
             {
-                if (Stream == null)
-                    throw new ObjectDisposedException(nameof(ComStream));
-
                 return Stream.Seek(0, StreamSeek.Current);
             }
             set
             {
-                if (Stream == null)
-                    throw new ObjectDisposedException(nameof(ComStream));
-
                 Stream.Seek(value, StreamSeek.Set);
             }
         }
 
         public override void Flush()
         {
-            if (Stream == null)
-                throw new ObjectDisposedException(nameof(ComStream));
-
             Stream.Commit(StorageCommit.Default);
         }
 
@@ -101,9 +91,6 @@ namespace WInterop.Com
 
         public unsafe override void Write(byte[] buffer, int offset, int count)
         {
-            if (Stream == null)
-                throw new ObjectDisposedException(nameof(ComStream));
-
             fixed (byte* b = buffer)
             {
                 Stream.Write(b, (uint)count);
@@ -112,9 +99,6 @@ namespace WInterop.Com
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (Stream == null)
-                throw new ObjectDisposedException(nameof(ComStream));
-
             // Not surprisingly SeekOrigin is the same as STREAM_SEEK
             // (given the history of .NET and COM)
             return Stream.Seek(offset, (StreamSeek)origin);
@@ -122,16 +106,11 @@ namespace WInterop.Com
 
         public override void SetLength(long value)
         {
-            if (Stream == null)
-                throw new ObjectDisposedException(nameof(ComStream));
             Stream.SetSize(value);
         }
 
         public unsafe override string ToString()
         {
-            if (Stream == null)
-                throw new ObjectDisposedException(nameof(ComStream));
-
             Stream.Stat(out STATSTG stat, StatFlag.Default);
             string name = new string(stat.pwcsName);
             Marshal.FreeCoTaskMem((IntPtr)stat.pwcsName);
@@ -144,7 +123,8 @@ namespace WInterop.Com
             {
                 Marshal.ReleaseComObject(Stream);
             }
-            Stream = null;
+
+            _stream = null;
         }
     }
 }

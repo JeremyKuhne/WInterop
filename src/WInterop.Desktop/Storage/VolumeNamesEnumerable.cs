@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using WInterop.Errors;
 using WInterop.Storage.Native;
@@ -18,7 +19,7 @@ namespace WInterop.Storage
     /// <summary>
     /// Encapsulates a finding volume names.
     /// </summary>
-    public class VolumeNamesEnumerable : IEnumerable<string>
+    public sealed class VolumeNamesEnumerable : IEnumerable<string>
     {
         public IEnumerator<string> GetEnumerator() => new VolumeNamesEnumerator();
 
@@ -26,13 +27,14 @@ namespace WInterop.Storage
 
         private class VolumeNamesEnumerator : IEnumerator<string>
         {
-            private FindVolumeHandle _findHandle;
+            private FindVolumeHandle? _findHandle;
             private bool _lastEntryFound;
-            private StringBuffer _buffer;
+            private StringBuffer? _buffer;
 
             public VolumeNamesEnumerator()
             {
                 _buffer = StringBuffer.Cache.Acquire();
+                Current = string.Empty;
                 Reset();
             }
 
@@ -44,15 +46,18 @@ namespace WInterop.Storage
             {
                 if (_lastEntryFound) return false;
 
-                Current = _findHandle == null
+                Current = _findHandle is null
                     ? FindFirstVolume()
                     : FindNextVolume();
 
-                return Current != null;
+                return !_lastEntryFound;
             }
 
             private string FindFirstVolume()
             {
+                if (_buffer is null)
+                    throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
+
                 _findHandle = Imports.FindFirstVolumeW(
                     _buffer,
                     _buffer.CharCapacity);
@@ -75,6 +80,11 @@ namespace WInterop.Storage
 
             private string FindNextVolume()
             {
+                Debug.Assert(!(_findHandle is null));
+
+                if (_buffer is null)
+                    throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
+
                 if (!Imports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
                     WindowsError error = Error.GetLastError();
@@ -85,7 +95,7 @@ namespace WInterop.Storage
                             return FindNextVolume();
                         case WindowsError.ERROR_NO_MORE_FILES:
                             _lastEntryFound = true;
-                            return null;
+                            return string.Empty;
                         default:
                             throw error.GetException();
                     }
@@ -107,10 +117,13 @@ namespace WInterop.Storage
                 GC.SuppressFinalize(this);
             }
 
-            protected void Dispose(bool disposing)
+            private void Dispose(bool disposing)
             {
-                CloseHandle();
-                StringBuffer buffer = Interlocked.Exchange(ref _buffer, null);
+                if (disposing)
+                {
+                    CloseHandle();
+                }
+                StringBuffer? buffer = Interlocked.Exchange(ref _buffer, null);
                 if (buffer != null)
                     StringBuffer.Cache.Release(buffer);
             }

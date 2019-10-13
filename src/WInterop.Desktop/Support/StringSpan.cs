@@ -20,7 +20,7 @@ namespace WInterop.Support
     public readonly ref struct StringSpan
     {
         private readonly ReadOnlySpan<char> _span;
-        private readonly string _string;
+        private readonly string? _string;
 
         public StringSpan(ReadOnlySpan<char> span)
         {

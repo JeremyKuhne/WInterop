@@ -21,9 +21,9 @@ namespace SupportTests
             ]
         public void HighLowUlongValues(uint high, uint low, ulong expected)
         {
-            HighLowUlong hl = new HighLowUlong { High = high, Low = low };
+            HighLowUlong hl = new HighLowUlong(high, low);
             ((ulong)hl).Should().Be(expected, "high low converts correctly");
-            LowHighUlong lh = new LowHighUlong { High = high, Low = low };
+            LowHighUlong lh = new LowHighUlong(low, high);
             ((ulong)lh).Should().Be(expected, "low high converts correctly");
             hl = expected;
             ((ulong)hl).Should().Be(expected, "high low roundtrips");

@@ -30,14 +30,14 @@ namespace WInterop.Windows
         public ModuleInstance ModuleInstance { get; }
 
         public unsafe WindowClass(
-            string className = default,
-            ModuleInstance moduleInstance = default,
+            string? className = default,
+            ModuleInstance? moduleInstance = default,
             ClassStyle classStyle = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
             BrushHandle backgroundBrush = default,
             IconHandle icon = default,
             IconHandle smallIcon = default,
             CursorHandle cursor = default,
-            string menuName = null,
+            string? menuName = null,
             int menuId = 0,
             int classExtraBytes = 0,
             int windowExtraBytes = 0)
@@ -60,11 +60,7 @@ namespace WInterop.Windows
             else if (cursor == CursorHandle.NoCursor)
                 cursor = default;
 
-            if (moduleInstance == default)
-            {
-                Module module = Assembly.GetCallingAssembly().Modules.First();
-                Marshal.GetHINSTANCE(module);
-            }
+            moduleInstance ??= new ModuleInstance(Marshal.GetHINSTANCE(Assembly.GetCallingAssembly().Modules.First()));
 
             if (menuId != 0 && menuName != null)
                 throw new ArgumentException("Can't set both " + nameof(menuName) + " and " + nameof(menuId) + ".");
@@ -114,7 +110,7 @@ namespace WInterop.Windows
         }
 
         public WindowHandle CreateWindow(
-            string windowName = null,
+            string? windowName = null,
             WindowStyles style = WindowStyles.Overlapped,
             ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             bool isMainWindow = false,
@@ -135,7 +131,7 @@ namespace WInterop.Windows
 
         public WindowHandle CreateWindow(
             Rectangle bounds,
-            string windowName = null,
+            string? windowName = null,
             WindowStyles style = WindowStyles.Overlapped,
             ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
             bool isMainWindow = false,

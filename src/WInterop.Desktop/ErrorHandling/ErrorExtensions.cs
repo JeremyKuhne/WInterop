@@ -13,7 +13,7 @@ namespace WInterop.Errors
     public static class ErrorExtensions
     {
         private const int FACILITY_NT_BIT = 0x10000000;
-        private const int STATUS_SEVERITY_SUCCESS = 0x0;
+        // private const int STATUS_SEVERITY_SUCCESS = 0x0;
         private const int STATUS_SEVERITY_INFORMATIONAL = 0x1;
         private const int STATUS_SEVERITY_WARNING = 0x2;
         private const int STATUS_SEVERITY_ERROR = 0x3;
@@ -24,7 +24,7 @@ namespace WInterop.Errors
         /// Throw a relevant exception if <paramref name="error"/> is a failure.
         /// </summary>
         /// <param name="path">Optional path or other input detail.</param>
-        public static void ThrowIfFailed(this WindowsError error, string path = null)
+        public static void ThrowIfFailed(this WindowsError error, string? path = null)
         {
             if (error != WindowsError.ERROR_SUCCESS) error.Throw(path);
         }
@@ -32,13 +32,13 @@ namespace WInterop.Errors
         // Throws prevent inlining of methods. Try to force methods that throw to not get inlined
         // to ensure callers can be inlined.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void Throw(this WindowsError error, string path = null) => throw error.GetException(path);
+        public static void Throw(this WindowsError error, string? path = null) => throw error.GetException(path);
 
         /// <summary>
         /// Turns Windows errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetException(this WindowsError error, string path = null)
+        public static Exception GetException(this WindowsError error, string? path = null)
         {
             // http://referencesource.microsoft.com/#mscorlib/system/io/__error.cs,142
 
@@ -107,35 +107,32 @@ namespace WInterop.Errors
         /// Throw a relevant exception if <paramref name="result"/> is a failure.
         /// </summary>
         /// <param name="path">Optional path or other input detail.</param>
-        public static void ThrowIfFailed(this HResult result, string path = null)
+        public static void ThrowIfFailed(this HResult result, string? path = null)
         {
-            if (result.Failed()) result.Throw();
+            if (result.Failed()) result.Throw(path);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void Throw(this HResult result) => throw result.GetException();
+        public static void Throw(this HResult result, string? path = null) => throw result.GetException(path);
 
         /// <summary>
         /// Turns HRESULT errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetException(this HResult hr, string path = null)
+        public static Exception GetException(this HResult hr, string? path = null)
         {
             string message = path == null
                 ? $"{Error.HResultToString(hr)}"
                 : $"{Error.HResultToString(hr)} '{path}'";
 
-            switch (hr)
+            return hr switch
             {
-                case HResult.E_ACCESSDENIED:
-                    return new UnauthorizedAccessException(message);
-                case HResult.E_INVALIDARG:
-                    return new ArgumentException(message);
-                default:
-                    return hr.GetFacility() == Facility.Win32
+                HResult.E_ACCESSDENIED => new UnauthorizedAccessException(message),
+                HResult.E_INVALIDARG => new ArgumentException(message),
+                _ => hr.GetFacility() == Facility.Win32
                         ? Error.WindowsErrorToException((WindowsError)hr.GetCode(), message, path)
-                        : new WInteropIOException(message, hr);
-            }
+                        : new WInteropIOException(message, hr),
+            };
         }
 
         // [MS-ERREF] NTSTATUS
@@ -153,7 +150,7 @@ namespace WInterop.Errors
 
         public static bool Failed(this NTStatus status) => status < 0;
 
-        public static void ThrowIfFailed(this NTStatus status, string path = null)
+        public static void ThrowIfFailed(this NTStatus status, string? path = null)
         {
             if (status.Failed()) status.Throw(path);
         }
@@ -164,7 +161,7 @@ namespace WInterop.Errors
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void Throw(this NTStatus status, string path = null) => throw status.GetException(path);
+        public static void Throw(this NTStatus status, string? path = null) => throw status.GetException(path);
 
         /// <summary>
         /// [NT_INFORMATION]
@@ -187,15 +184,13 @@ namespace WInterop.Errors
         /// Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
         /// There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetException(this NTStatus status, string path = null)
+        public static Exception GetException(this NTStatus status, string? path = null)
         {
-            switch (status)
+            return status switch
             {
-                case NTStatus.STATUS_NOT_IMPLEMENTED:
-                    return new NotImplementedException(path ?? WInteropStrings.NoValue);
-            }
-
-            return status.ToWindowsError().GetException(path);
+                NTStatus.STATUS_NOT_IMPLEMENTED => new NotImplementedException(path ?? WInteropStrings.NoValue),
+                _ => status.ToWindowsError().GetException(path),
+            };
         }
     }
 }

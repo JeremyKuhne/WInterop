@@ -77,12 +77,12 @@ namespace WInterop.Compression.Native
         /// <param name="lpCompressedName">MAX_PATH (260 char) buffer for the uncompressed name of the file.</param>
         /// <returns>Handle or LZ error code (as LZOpenFileW).</returns>
         [DllImport(Libraries.Lz32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern int LZCreateFileW(
+        public unsafe static extern int LZCreateFileW(
             string lpFileName,
             DesiredAccess dwAccess,
             ShareModes dwShareMode,
             CreationDisposition dwCreate,
-            SafeHandle lpCompressedName);
+            char* lpCompressedName);
 
         /// <summary>
         /// Matching close method for LZCreateFileW.

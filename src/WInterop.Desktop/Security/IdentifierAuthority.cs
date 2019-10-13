@@ -90,17 +90,14 @@ namespace WInterop.Security
             _Value.Buffer[5] = knownAuthority;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            switch (obj)
+            return obj switch
             {
-                case IdentifierAuthority authority:
-                    return Equals(authority);
-                case byte[] bytes:
-                    return Value.SequenceEqual(new ReadOnlySpan<byte>(bytes));
-                default:
-                    return false;
-            }
+                IdentifierAuthority authority => Equals(authority),
+                byte[] bytes => Value.SequenceEqual(new ReadOnlySpan<byte>(bytes)),
+                _ => false,
+            };
         }
 
         public bool Equals(IdentifierAuthority other) => Value.SequenceEqual(other.Value);

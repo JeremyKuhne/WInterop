@@ -49,43 +49,42 @@ namespace WInterop.Errors
             FormatMessageFlags flags,
             params string[] args)
         {
-            using (StringBuffer buffer = new StringBuffer())
+            using StringBuffer buffer = new StringBuffer();
+
+            // Don't use line breaks
+            flags |= FormatMessageFlags.MaxWidthMask;
+            if (args == null || args.Length == 0) flags |= FormatMessageFlags.IgnoreInserts;
+
+            WindowsError lastError = WindowsError.ERROR_INSUFFICIENT_BUFFER;
+            uint capacity = byte.MaxValue;
+            uint result = 0;
+
+            while (lastError == WindowsError.ERROR_INSUFFICIENT_BUFFER && capacity <= short.MaxValue)
             {
-                // Don't use line breaks
-                flags |= FormatMessageFlags.MaxWidthMask;
-                if (args == null || args.Length == 0) flags |= FormatMessageFlags.IgnoreInserts;
+                buffer.EnsureCharCapacity(capacity);
+                result = Imports.FormatMessageW(
+                    dwFlags: flags,
+                    lpSource: source,
+                    dwMessageId: messageId,
+                    // Do the default language lookup
+                    dwLanguageId: 0,
+                    lpBuffer: buffer.DangerousGetHandle(),
+                    nSize: buffer.CharCapacity,
+                    Arguments: args);
 
-                WindowsError lastError = WindowsError.ERROR_INSUFFICIENT_BUFFER;
-                uint capacity = byte.MaxValue;
-                uint result = 0;
-
-                while (lastError == WindowsError.ERROR_INSUFFICIENT_BUFFER && capacity <= short.MaxValue)
+                if (result == 0)
                 {
-                    buffer.EnsureCharCapacity(capacity);
-                    result = Imports.FormatMessageW(
-                        dwFlags: flags,
-                        lpSource: source,
-                        dwMessageId: messageId,
-                        // Do the default language lookup
-                        dwLanguageId: 0,
-                        lpBuffer: buffer.DangerousGetHandle(),
-                        nSize: buffer.CharCapacity,
-                        Arguments: args);
-
-                    if (result == 0)
-                    {
-                        lastError = GetLastError();
-                        capacity = (uint)Math.Min(capacity * 2, short.MaxValue);
-                    }
-                    else
-                    {
-                        buffer.Length = result;
-                        return buffer.ToString();
-                    }
+                    lastError = GetLastError();
+                    capacity = (uint)Math.Min(capacity * 2, short.MaxValue);
                 }
-
-                throw new IOException("Failed to get error string.", (int)lastError.ToHResult());
+                else
+                {
+                    buffer.Length = result;
+                    return buffer.ToString();
+                }
             }
+
+            throw new IOException("Failed to get error string.", (int)lastError.ToHResult());
         }
 
         public static WindowsError NtStatusToWinError(NTStatus status)
@@ -97,7 +96,7 @@ namespace WInterop.Errors
 
         public static WindowsError GetLastError() => Imports.GetLastError();
 
-        public static void ThrowIfLastErrorNot(WindowsError error, string path = null)
+        public static void ThrowIfLastErrorNot(WindowsError error, string? path = null)
         {
             WindowsError lastError = Imports.GetLastError();
             if (lastError != error)
@@ -107,7 +106,7 @@ namespace WInterop.Errors
         public static bool Failed(WindowsError error) => error != WindowsError.NO_ERROR;
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void ThrowLastError(string path = null)
+        public static void ThrowLastError(string? path = null)
             => throw Imports.GetLastError().GetException(path);
 
         /// <summary>
@@ -127,8 +126,8 @@ namespace WInterop.Errors
             else
             {
                 // Hope that we get a rational IErrorInfo
-                Exception exception = Marshal.GetExceptionForHR((int)hr);
-                message = exception.Message;
+                Exception? exception = Marshal.GetExceptionForHR((int)hr);
+                message = exception?.Message ?? "Invalid HRESULT value";
             }
 
             return Enum.IsDefined(typeof(HResult), hr)
@@ -154,7 +153,7 @@ namespace WInterop.Errors
                     : $"Error {error}: {message}";
         }
 
-        internal static Exception WindowsErrorToException(WindowsError error, string message, string path)
+        internal static Exception WindowsErrorToException(WindowsError error, string? message, string? path)
         {
             switch (error)
             {
@@ -197,7 +196,7 @@ namespace WInterop.Errors
         /// Throw the last error code from windows if <paramref name="result"/> is false.
         /// </summary>
         /// <param name="path">Optional path or other input detail.</param>
-        public static void ThrowLastErrorIfFalse(bool result, string path = null)
+        public static void ThrowLastErrorIfFalse(bool result, string? path = null)
         {
             if (!result) GetLastError().Throw(path);
         }
@@ -206,9 +205,10 @@ namespace WInterop.Errors
         /// Throw the last error code from windows if <paramref name="result"/> is zero.
         /// </summary>
         /// <param name="path">Optional path or other input detail.</param>
-        public static void ThrowLastErrorIfZero(uint result, string path = null)
+        public static uint ThrowLastErrorIfZero(uint result, string? path = null)
         {
             if (result == 0) GetLastError().Throw(path);
+            return result;
         }
 
         /// <summary>

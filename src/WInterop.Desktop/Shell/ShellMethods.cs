@@ -91,7 +91,8 @@ namespace WInterop.Shell
         /// </summary>
         public static IKnownFolderManager GetKnownFolderManager()
         {
-            return (IKnownFolderManager)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid(ClassIds.CLSID_KnownFolderManager)));
+            return (IKnownFolderManager)(Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid(ClassIds.CLSID_KnownFolderManager)))
+                ?? throw new InvalidOperationException());
         }
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace WInterop.Shell
         /// Collapses common path segments into the equivalent environment string.
         /// Returns null if unsuccessful.
         /// </summary>
-        public static string UnexpandEnvironmentStrings(string path)
+        public static string? UnexpandEnvironmentStrings(string path)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {

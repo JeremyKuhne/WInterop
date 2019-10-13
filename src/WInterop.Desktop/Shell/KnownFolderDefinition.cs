@@ -19,7 +19,7 @@ namespace WInterop.Shell
     [StructLayout(LayoutKind.Sequential)]
     public class KnownFolderDefinition : IDisposable
     {
-        private KnownFolderCategory category;
+        private readonly KnownFolderCategory category;
         private IntPtr pszName;
         private IntPtr pszDescription;
         private Guid fidParent;
@@ -29,8 +29,8 @@ namespace WInterop.Shell
         private IntPtr pszLocalizedName;
         private IntPtr pszIcon;
         private IntPtr pszSecurity;
-        private AllFileAttributes dwAttributes;
-        private KnownFolderDefinitionFlags kfdFlags;
+        private readonly AllFileAttributes dwAttributes;
+        private readonly KnownFolderDefinitionFlags kfdFlags;
         private Guid ftidType;
 
         // Can't use a bool here as the class will no longer be blittable
@@ -77,12 +77,12 @@ namespace WInterop.Shell
             get { return Disposed ? 0 : category; }
         }
 
-        public string Name
+        public string? Name
         {
             get { return Disposed ? null : Marshal.PtrToStringUni(pszName); }
         }
 
-        public string Description
+        public string? Description
         {
             get { return Disposed ? null : Marshal.PtrToStringUni(pszDescription); }
         }
@@ -92,32 +92,32 @@ namespace WInterop.Shell
             get { return Disposed ? Guid.Empty : fidParent; }
         }
 
-        public string RelativePath
+        public string? RelativePath
         {
             get { return Disposed ? null : Marshal.PtrToStringUni(pszRelativePath); }
         }
 
-        public string ParsingName
+        public string? ParsingName
         {
             get { return Disposed ? null : Marshal.PtrToStringUni(pszParsingName); }
         }
 
-        public string Tooltip
+        public string? Tooltip
         {
             get { return Disposed ? null : Marshal.PtrToStringUni(pszTooltip); }
         }
 
-        public string LocalizedName
+        public string? LocalizedName
         {
             get { return Disposed ? null : Marshal.PtrToStringUni(pszLocalizedName); }
         }
 
-        public string Icon
+        public string? Icon
         {
             get { return Disposed ? null : Marshal.PtrToStringUni(pszIcon); }
         }
 
-        public string Security
+        public string? Security
         {
             get { return Disposed ? null : Marshal.PtrToStringUni(pszSecurity); }
         }

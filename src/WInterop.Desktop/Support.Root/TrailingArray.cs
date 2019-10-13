@@ -19,9 +19,9 @@ namespace WInterop
     /// a buffer. If you have an actual struct (Foo, not Foo*), the trailing array will have been
     /// truncated as the values aren't actually part of the struct.
     /// </remarks>
-    public struct TrailingArray<T> where T : unmanaged
+    public readonly struct TrailingArray<T> where T : unmanaged
     {
-        private T _firstItem;
+        private readonly T _firstItem;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe static ReadOnlySpan<T> GetBuffer(ref T first, uint count, uint offset = 0)

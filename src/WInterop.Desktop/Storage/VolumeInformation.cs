@@ -9,7 +9,7 @@ namespace WInterop.Storage
 {
     public struct VolumeInformation
     {
-        public string RootPathName;
+        public string? RootPathName;
         public string VolumeName;
         public uint VolumeSerialNumber;
         public uint MaximumComponentLength;

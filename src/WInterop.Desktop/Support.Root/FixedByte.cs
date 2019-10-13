@@ -12,6 +12,8 @@ namespace WInterop
 {
     public unsafe static class FixedByte
     {
+        // These structs can't be marked as readonly (yet) due to the fixed buffer.
+
         public struct Size6
         {
             private const int Size = 6;

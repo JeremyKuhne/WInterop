@@ -62,7 +62,7 @@ namespace WInterop.Com
             get { return (RawVariantType & VARENUM.VT_ARRAY) != 0; }
         }
 
-        public unsafe virtual object GetData()
+        public unsafe virtual object? GetData()
         {
             VARENUM propertyType = VariantType;
 
@@ -92,7 +92,7 @@ namespace WInterop.Com
                 data = handle.ToPointer();
             }
 
-            object result = GetCoreType(propertyType, data);
+            object? result = GetCoreType(propertyType, data);
             if (ReferenceEquals(result, s_UnsupportedObject))
                 throw new InvalidOleVariantTypeException();
 
@@ -109,7 +109,7 @@ namespace WInterop.Com
         //  VT_ARRAY
         //  VT_BYREF
         //
-        protected virtual unsafe object GetCoreType(VARENUM propertyType, void* data)
+        protected virtual unsafe object? GetCoreType(VARENUM propertyType, void* data)
         {
             switch (propertyType)
             {

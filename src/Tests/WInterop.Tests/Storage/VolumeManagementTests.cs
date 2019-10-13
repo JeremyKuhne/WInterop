@@ -21,7 +21,7 @@ namespace StorageTests
             var names = Storage.QueryDosDevice(null).ToArray();
             names.Should().Contain("Global");
             names.Should().Contain("C:");
-            names[names.Length - 1].Should().NotBeNullOrEmpty("we split correctly");
+            names[^1].Should().NotBeNullOrEmpty("we split correctly");
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace StorageTests
         {
             var volumeNames = Storage.GetVolumes().ToArray();
             volumeNames.Length.Should().BeGreaterThan(0);
-            volumeNames[0].Should().StartWith(@"\\?\Volume{");
+            volumeNames.Should().OnlyContain(x => x.StartsWith(@"\\?\Volume{"));
         }
 
         [Fact(Skip = "Needs admin access and the API this is calling appears buggy.")]

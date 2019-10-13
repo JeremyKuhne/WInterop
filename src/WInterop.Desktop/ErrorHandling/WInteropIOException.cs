@@ -15,7 +15,7 @@ namespace WInterop.Errors
         public WInteropIOException()
             : base() { }
 
-        public WInteropIOException(string message, HResult hresult, Exception innerException = null)
+        public WInteropIOException(string? message, HResult hresult, Exception? innerException = null)
             : base(message, innerException) { HResult = (int)hresult; }
 
         public WInteropIOException(HResult result)

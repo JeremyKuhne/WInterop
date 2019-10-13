@@ -24,7 +24,7 @@ namespace WInterop.Windows
 
         public override int GetHashCode() => HMONITOR.GetHashCode();
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is MonitorHandle other
                 ? other.HMONITOR == HMONITOR

@@ -32,7 +32,7 @@ namespace WInterop.Windows
         public static implicit operator HMENU(MenuHandle handle) => handle.HMENU;
         public static explicit operator MenuHandle(int id) => new MenuHandle(new HMENU((IntPtr)id), ownsHandle: true);
 
-        public override bool Equals(object obj) => obj is MenuHandle other ? other.HMENU == HMENU : false;
+        public override bool Equals(object? obj) => obj is MenuHandle other ? other.HMENU == HMENU : false;
         public bool Equals(MenuHandle other) => other.HMENU == HMENU;
         public static bool operator ==(MenuHandle a, MenuHandle b) => a.HMENU == b.HMENU;
         public static bool operator !=(MenuHandle a, MenuHandle b) => a.HMENU != b.HMENU;

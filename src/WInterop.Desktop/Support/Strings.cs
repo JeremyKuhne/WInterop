@@ -13,8 +13,6 @@ namespace WInterop.Support
 {
     public static class Strings
     {
-        private static FieldInfo s_chunkChars;
-
         /// <summary>
         /// Single allocation replacement of a single character in a string.
         /// </summary>
@@ -35,15 +33,11 @@ namespace WInterop.Support
             }
         }
 
-        public static char[] GetChunk(this StringBuilder builder)
+        public static ReadOnlyMemory<char> GetChunk(this StringBuilder builder)
         {
-            if (s_chunkChars == null)
-            {
-                // Evil, but a useful performance hack until netcoreapp3.0.
-                s_chunkChars = typeof(StringBuilder).GetField("m_ChunkChars", BindingFlags.Instance | BindingFlags.NonPublic);
-            }
-
-            return (char[])s_chunkChars.GetValue(builder);
+            var enumerator = builder.GetChunks();
+            enumerator.MoveNext();
+            return enumerator.Current;
         }
     }
 }

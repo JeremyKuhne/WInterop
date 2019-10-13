@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.IO;
-using WInterop.Errors;
+using System.IO.Enumeration;
 using WInterop.Storage;
 using WInterop.Support;
 
@@ -16,38 +16,26 @@ namespace Tests.Support
     {
         public static void WriteAllBytes(string path, byte[] data)
         {
-            using (var stream = Storage.CreateFileStream(path,
-                DesiredAccess.GenericWrite, ShareModes.ReadWrite, CreationDisposition.OpenAlways))
-            {
-                using (var writer = new System.IO.BinaryWriter(stream))
-                {
-                    writer.Write(data);
-                }
-            }
+            using var stream = Storage.CreateFileStream(path,
+                DesiredAccess.GenericWrite, ShareModes.ReadWrite, CreationDisposition.OpenAlways);
+            using var writer = new System.IO.BinaryWriter(stream);
+            writer.Write(data);
         }
 
         public static void WriteAllText(string path, string text)
         {
-            using (var stream = Storage.CreateFileStream(path,
-                DesiredAccess.GenericWrite, ShareModes.ReadWrite, CreationDisposition.OpenAlways))
-            {
-                using (var writer = new System.IO.StreamWriter(stream))
-                {
-                    writer.Write(text);
-                }
-            }
+            using var stream = Storage.CreateFileStream(path,
+                DesiredAccess.GenericWrite, ShareModes.ReadWrite, CreationDisposition.OpenAlways);
+            using var writer = new System.IO.StreamWriter(stream);
+            writer.Write(text);
         }
 
         public static string ReadAllText(string path)
         {
-            using (var stream = Storage.CreateFileStream(path,
-                DesiredAccess.GenericRead, ShareModes.ReadWrite, CreationDisposition.OpenExisting))
-            {
-                using (var reader = new System.IO.StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+            using var stream = Storage.CreateFileStream(path,
+                DesiredAccess.GenericRead, ShareModes.ReadWrite, CreationDisposition.OpenExisting);
+            using var reader = new System.IO.StreamReader(stream);
+            return reader.ReadToEnd();
         }
 
         public static string CreateDirectoryRecursive(string path)
@@ -62,41 +50,38 @@ namespace Tests.Support
             return path;
         }
 
+        private class MakeWritableEnumerator : FileSystemEnumerator<string>
+        {
+            public MakeWritableEnumerator(string directory)
+                : base(directory, new EnumerationOptions
+                {
+                    RecurseSubdirectories = true
+                })
+            { }
+
+            protected override bool ShouldIncludeEntry(ref FileSystemEntry entry)
+            {
+                if (entry.Attributes.HasFlag(FileAttributes.ReadOnly))
+                {
+                    // Make it writable
+                    Storage.SetFileAttributes(
+                        entry.ToFullPath(),
+                        (AllFileAttributes)(entry.Attributes & ~FileAttributes.ReadOnly));
+                }
+
+                return false;
+            }
+
+            protected override string TransformEntry(ref FileSystemEntry entry)
+                => string.Empty;
+        }
+
         public static void DeleteDirectoryRecursive(string path)
         {
-            var data = Storage.TryGetFileInfo(path);
-            if (!data.HasValue)
-            {
-                // Nothing found
-                WindowsError.ERROR_PATH_NOT_FOUND.Throw(path);
-            }
+            using var enumerator = new MakeWritableEnumerator(path);
+            while (enumerator.MoveNext()) { }
 
-            if ((data.Value.FileAttributes & AllFileAttributes.Directory) != AllFileAttributes.Directory)
-            {
-                // Not a directory, a file
-                WindowsError.ERROR_FILE_EXISTS.Throw(path);
-            }
-
-            if ((data.Value.FileAttributes & AllFileAttributes.ReadOnly) == AllFileAttributes.ReadOnly)
-            {
-                // Make it writable
-                Storage.SetFileAttributes(path, data.Value.FileAttributes & ~AllFileAttributes.ReadOnly);
-            }
-
-            // Reparse points don't need to be empty to be deleted. Deleting will simply disconnect the reparse point, which is what we want.
-            if ((data.Value.FileAttributes & AllFileAttributes.ReparsePoint) != AllFileAttributes.ReparsePoint)
-            {
-                foreach (FindResult findResult in new FindOperation<FindResult>(path))
-                {
-                    if ((findResult.Attributes & AllFileAttributes.Directory) == AllFileAttributes.Directory)
-                        DeleteDirectoryRecursive(Path.Join(path, findResult.FileName));
-                    else
-                        Storage.DeleteFile(Path.Join(path, findResult.FileName));
-                }
-            }
-
-            // We've either emptied or we're a reparse point, delete the directory
-            Storage.RemoveDirectory(path);
+            Directory.Delete(path, recursive: true);
         }
 
         public static void EnsurePathDirectoryExists(string path)

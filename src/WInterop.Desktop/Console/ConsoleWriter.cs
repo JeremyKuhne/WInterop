@@ -24,7 +24,7 @@ namespace WInterop.Console
         private readonly object _lock = new object();
         private readonly bool _autoFlush;
 
-        private byte[] _buffer;
+        private byte[]? _buffer;
         private int _position;
 
         private ConsoleWriter(ConsoleStream stream, Encoding encoding, bool autoFlush = true)
@@ -66,26 +66,26 @@ namespace WInterop.Console
         public override void WriteLine(double value) => InternalWrite(value, newLine: true);
         public override void Write(decimal value) => InternalWrite(value);
         public override void WriteLine(decimal value) => InternalWrite(value, newLine: true);
-        public override void Write(char[] buffer) => InternalWrite(buffer);
-        public override void WriteLine(char[] buffer) => InternalWrite(buffer, newLine: true);
+        public override void Write(char[]? buffer) => InternalWrite(buffer);
+        public override void WriteLine(char[]? buffer) => InternalWrite(buffer, newLine: true);
         public override void Write(char[] buffer, int index, int count)
             => InternalWrite(buffer.AsSpan(index, count));
         public override void WriteLine(char[] buffer, int index, int count)
             => InternalWrite(buffer.AsSpan(index, count), newLine: true);
-        public override void Write(string value) => InternalWrite(value.AsSpan());
-        public override void WriteLine(string value) => InternalWrite(value.AsSpan(), newLine: true);
-        public override void Write(string format, object arg0) => InternalWrite(format, arg0: arg0);
-        public override void WriteLine(string format, object arg0) => InternalWrite(format, arg0: arg0, newLine: true);
-        public override void Write(string format, object arg0, object arg1)
+        public override void Write(string? value) => InternalWrite(value.AsSpan());
+        public override void WriteLine(string? value) => InternalWrite(value.AsSpan(), newLine: true);
+        public override void Write(string? format, object? arg0) => InternalWrite(format, arg0: arg0);
+        public override void WriteLine(string? format, object? arg0) => InternalWrite(format, arg0: arg0, newLine: true);
+        public override void Write(string? format, object? arg0, object? arg1)
             => InternalWrite(format, arg0: arg0, arg1: arg1);
-        public override void WriteLine(string format, object arg0, object arg1)
+        public override void WriteLine(string? format, object? arg0, object? arg1)
             => InternalWrite(format, arg0: arg0, arg1: arg1, newLine: true);
-        public override void Write(string format, object arg0, object arg1, object arg2)
+        public override void Write(string? format, object? arg0, object? arg1, object? arg2)
             => InternalWrite(format, arg0: arg0, arg1: arg1, arg2: arg2);
-        public override void WriteLine(string format, object arg0, object arg1, object arg2)
+        public override void WriteLine(string? format, object? arg0, object? arg1, object? arg2)
             => InternalWrite(format, arg0: arg0, arg1: arg1, arg2: arg2, newLine: true);
-        public override void Write(string format, params object[] arg) => InternalWrite(format, arg: arg);
-        public override void WriteLine(string format, params object[] arg) => InternalWrite(format, arg: arg, newLine: true);
+        public override void Write(string format, params object?[] arg) => InternalWrite(format, arg: arg);
+        public override void WriteLine(string format, params object?[] arg) => InternalWrite(format, arg: arg, newLine: true);
 
         private unsafe void InternalWrite(char value, bool newLine = false)
         {
@@ -199,43 +199,43 @@ namespace WInterop.Console
             }
         }
 
-        private void InternalWrite(string format, object arg0, bool newLine = false)
+        private void InternalWrite(string? format, object? arg0, bool newLine = false)
         {
             StringBuilder builder = _builder.Value;
             lock (_lock)
             {
-                builder.AppendFormat(format, arg0);
+                builder.AppendFormat(format ?? string.Empty, arg0);
                 Encode(builder, newLine);
                 if (_autoFlush)
                     FlushInternal();
             }
         }
 
-        private void InternalWrite(string format, object arg0, object arg1, bool newLine = false)
+        private void InternalWrite(string? format, object? arg0, object? arg1, bool newLine = false)
         {
             StringBuilder builder = _builder.Value;
             lock (_lock)
             {
-                builder.AppendFormat(format, arg0, arg1);
+                builder.AppendFormat(format ?? string.Empty, arg0, arg1);
                 Encode(builder, newLine);
                 if (_autoFlush)
                     FlushInternal();
             }
         }
 
-        private void InternalWrite(string format, object arg0, object arg1, object arg2, bool newLine = false)
+        private void InternalWrite(string? format, object? arg0, object? arg1, object? arg2, bool newLine = false)
         {
             StringBuilder builder = _builder.Value;
             lock (_lock)
             {
-                builder.AppendFormat(format, arg0, arg1, arg2);
+                builder.AppendFormat(format ?? string.Empty, arg0, arg1, arg2);
                 Encode(builder, newLine);
                 if (_autoFlush)
                     FlushInternal();
             }
         }
 
-        private void InternalWrite(string format, object[] arg, bool newLine = false)
+        private void InternalWrite(string format, object?[] arg, bool newLine = false)
         {
             StringBuilder builder = _builder.Value;
             lock (_lock)
@@ -258,6 +258,9 @@ namespace WInterop.Console
 
         private unsafe void Encode(ReadOnlySpan<char> span, bool newLine = false)
         {
+            if (_buffer is null)
+                return;
+
             EncodeInternal(span);
             if (newLine)
                 EncodeInternal(CoreNewLine);
@@ -275,7 +278,7 @@ namespace WInterop.Console
                     {
                         _encoder.Convert(
                             c + charsUsed, count,
-                            b + _position, _buffer.Length - _position,
+                            b + _position, _buffer!.Length - _position,
                             flush: true,
                             out charsUsed,
                             out int bytesUsed,
@@ -295,7 +298,7 @@ namespace WInterop.Console
 
         private void FlushInternal()
         {
-            if (_position != 0)
+            if (_position != 0 && !(_buffer is null))
             {
                 _stream.Write(_buffer, 0, _position);
                 _position = 0;
@@ -312,7 +315,7 @@ namespace WInterop.Console
 
         protected override void Dispose(bool disposing)
         {
-            byte[] buffer = Interlocked.Exchange(ref _buffer, null);
+            byte[]? buffer = Interlocked.Exchange(ref _buffer, null);
             if (buffer != null)
                 ArrayPool<byte>.Shared.Return(buffer);
         }

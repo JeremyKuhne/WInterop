@@ -29,7 +29,7 @@ namespace WInterop.Network.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370434.aspx
         [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public unsafe static extern WindowsError NetLocalGroupAdd(
-            string servername,
+            string? servername,
             uint level,
             void* buf,
             out uint parm_err);
@@ -49,7 +49,7 @@ namespace WInterop.Network.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370440.aspx
         [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern WindowsError NetLocalGroupEnum(
-            string servername,
+            string? servername,
             uint level,
             out NetApiBufferHandle bufptr,
             uint prefmaxlen,
@@ -68,7 +68,7 @@ namespace WInterop.Network.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370601.aspx
         [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern WindowsError NetLocalGroupGetMembers(
-            string servername,
+            string? servername,
             string localgroupname,
             uint level,
             out NetApiBufferHandle bufptr,
@@ -104,7 +104,7 @@ namespace WInterop.Network.Native
         // https://docs.microsoft.com/en-us/windows/desktop/api/lmaccess/nf-lmaccess-netuserenum
         [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern WindowsError NetUserEnum(
-            string servername,
+            string? servername,
             uint level,
             UserEnumFilter filter,
             out NetApiBufferHandle bufptr,
@@ -116,7 +116,7 @@ namespace WInterop.Network.Native
         // https://docs.microsoft.com/en-us/windows/desktop/api/lmaccess/nf-lmaccess-netusergetinfo
         [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern WindowsError NetUserGetInfo(
-            string servername,
+            string? servername,
             string username,
             uint level,
             out NetApiBufferHandle bufptr);

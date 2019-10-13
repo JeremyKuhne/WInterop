@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WInterop.Errors;
-using WInterop.ProcessAndThreads.BufferWrappers;
 using WInterop.ProcessAndThreads.Native;
 using WInterop.Support.Buffers;
 
@@ -34,19 +33,24 @@ namespace WInterop.ProcessAndThreads
         }
 
         /// <summary>
-        /// Get the given enivronment variable.
+        /// Get the given enivronment variable. Returns empty string if the variable isn't found.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
-        public static string GetEnvironmentVariable(string name)
+        public unsafe static string GetEnvironmentVariable(string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            var wrapper = new EnvironmentVariableWrapper { Name = name };
-
-            return BufferHelper.ApiInvoke(
-                ref wrapper,
-                name,
-                error => error != WindowsError.ERROR_ENVVAR_NOT_FOUND);
+            return PlatformInvoke.GrowableBufferInvoke(
+                (ref ValueBuffer<char> buffer) =>
+                {
+                    fixed (char* n = name)
+                    fixed (char* b = buffer)
+                    {
+                        return Imports.GetEnvironmentVariableW(n, b, buffer.Length);
+                    }
+                },
+                detail: name,
+                shouldThrow: (WindowsError error) => error != WindowsError.ERROR_ENVVAR_NOT_FOUND);
         }
 
         /// <summary>
@@ -81,19 +85,17 @@ namespace WInterop.ProcessAndThreads
         /// <remarks>Names can have an equals character as the first character. Be cautious when splitting or use GetEnvironmentVariables().</remarks>
         public static IEnumerable<string> GetEnvironmentStrings()
         {
-            using (var buffer = Imports.GetEnvironmentStringsW())
-            {
-                if (buffer.IsInvalid) return Enumerable.Empty<string>();
+            using var buffer = Imports.GetEnvironmentStringsW();
+            if (buffer.IsInvalid) return Enumerable.Empty<string>();
 
-                return BufferHelper.SplitNullTerminatedStringList(buffer.DangerousGetHandle());
-            }
+            return BufferHelper.SplitNullTerminatedStringList(buffer.DangerousGetHandle());
         }
 
         /// <summary>
         /// Gets the specified process memory counters.
         /// </summary>
         /// <param name="process">The process to get memory info for for or null for the current process.</param>
-        public unsafe static ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle process = null)
+        public unsafe static ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle? process = null)
         {
             if (process == null) process = GetCurrentProcess();
 

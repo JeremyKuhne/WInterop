@@ -17,7 +17,7 @@ namespace WInterop.Windows.Native
 
         public bool IsInvalid => Value == IntPtr.Zero || Value == (IntPtr)(-1);
 
-        public override bool Equals(object obj) => obj is HWND other ? other.Value == Value : false;
+        public override bool Equals(object? obj) => obj is HWND other ? other.Value == Value : false;
         public bool Equals(HWND other) => other.Value == Value;
         public static bool operator ==(HWND a, HWND b) => a.Value == b.Value;
         public static bool operator !=(HWND a, HWND b) => a.Value != b.Value;

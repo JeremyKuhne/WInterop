@@ -10,9 +10,12 @@ namespace WInterop
     /// <summary>
     /// Used for blitting CHAR and UCHAR. [CHAR] [UCHAR]
     /// </summary>
-    public struct Char8
+    public readonly struct Char8
     {
-        public byte Value;
+        public byte Value { get; }
+
+        public Char8(byte value) => Value = value;
+
         public static implicit operator char(Char8 c) => (char)c.Value;
     }
 }
