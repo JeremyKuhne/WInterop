@@ -110,7 +110,8 @@ namespace WInterop.Com
         public unsafe static ICollection<string?> GetMemberNames(this ITypeInfo typeInfo, MemberId id, uint count)
         {
             BasicString* names = stackalloc BasicString[(int)(count)];
-            typeInfo.GetNames(id, names, count, out count).ThrowIfFailed($"Failed to get names for member id: {id.Value}");
+            typeInfo.GetNames(id, names, count, out count)
+                .ThrowIfFailed($"Failed to get names for member id: {id.Value}");
 
             var results = new List<string?>((int)count);
             for (int i = 0; i < count; i++)
@@ -121,6 +122,14 @@ namespace WInterop.Com
             return results;
         }
 
+        public unsafe static string? GetMemberName(this ITypeInfo typeInfo, MemberId id)
+        {
+            BasicString name;
+            typeInfo.GetDocumentation(id, &name)
+                .ThrowIfFailed($"Failed to get documention for member id: {id.Value}");
+            return name.ToStringAndFree();
+        }
+
         public unsafe static string? GetVariableName(this ITypeInfo typeInfo, uint variableIndex)
         {
             typeInfo.GetVarDesc(variableIndex, out VARDESC* description)
@@ -129,9 +138,7 @@ namespace WInterop.Com
             MemberId id = description->memid;
             typeInfo.ReleaseVarDesc(description);
 
-            BasicString* names = stackalloc BasicString[1];
-            typeInfo.GetNames(id, names, 1, out uint count).ThrowIfFailed($"Failed to get names for member id: {id.Value}");
-            return names[0].ToStringAndFree();
+            return typeInfo.GetMemberName(id);
         }
     }
 }

@@ -74,10 +74,10 @@ namespace WInterop.Com
         [PreserveSig]
         HResult GetDocumentation(
             MemberId memid,
-            BasicString* pBstrName,
-            BasicString* pBstrDocString,
-            out uint pdwHelpContext,
-            BasicString* pBstrHelpFile);
+            BasicString* pBstrName = null,
+            BasicString* pBstrDocString = null,
+            uint* pdwHelpContext = null,
+            BasicString* pBstrHelpFile = null);
 
         [PreserveSig]
         HResult GetDllEntry(

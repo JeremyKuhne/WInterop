@@ -49,8 +49,8 @@ namespace WInterop.Tests.Com
             attributes->idldescType.Flags.Should().Be(IdlFlag.None);
             attributes->guid.Should().Be(new Guid("{00000000-0000-0000-c000-000000000046}"));
             attributes->lcid.Should().Be((LocaleId)0);
-            attributes->memidConstructor.Should().Be((MemberId)(-1));
-            attributes->memidDestructor.Should().Be((MemberId)(-1));
+            attributes->memidConstructor.Should().Be(MemberId.Nil);
+            attributes->memidDestructor.Should().Be(MemberId.Nil);
             attributes->tdescAlias.vt.Should().Be(VariantType.Empty);
 
             typeInfo.ReleaseTypeAttr(attributes);
@@ -62,6 +62,13 @@ namespace WInterop.Tests.Com
             TypeLibTests.LoadStdOle2(out ITypeLib typeLib);
             ITypeInfo typeInfo = typeLib.GetTypeInfoByName("IUnknown");
 
+            // From OleView:
+            //
+            // [restricted]
+            // HRESULT _stdcall QueryInterface(
+            //                [in] GUID* riid, 
+            //                [out] void** ppvObj);
+
             HResult result = typeInfo.GetFuncDesc(0, out FUNCDESC* description);
             result.Should().Be(HResult.S_OK);
 
@@ -72,27 +79,28 @@ namespace WInterop.Tests.Com
             description->funckind.Should().Be(FunctionKind.PureVirtual);
             description->invkind.Should().Be(InvokeKind.Function);
             description->wFuncFlags.Should().Be(FunctionFlags.Restricted);
+
+            // Return type
             description->elemdescFunc.tdesc.vt.Should().Be(VariantType.HResult);
 
-            description->lprgelemdescParam[0].tdesc.vt.Should().Be(VariantType.Pointer);
-            description->lprgelemdescParam[0].Union.paramdesc.wParamFlags.Should().Be(ParameterFlags.In);
-            description->lprgelemdescParam[0].tdesc.Union.lptdesc->vt.Should().Be(VariantType.UserDefined);
-            RefTypeHandle handle = description->lprgelemdescParam[0].tdesc.Union.lptdesc->Union.hreftype;
+            // First arg GUID*
+            ELEMDESC* element = description->lprgelemdescParam;
 
-            BasicString name;
+            element->tdesc.vt.Should().Be(VariantType.Pointer);
+            element->Union.paramdesc.wParamFlags.Should().Be(ParameterFlags.In);
+            element->tdesc.Union.lptdesc->vt.Should().Be(VariantType.UserDefined);
+            RefTypeHandle handle = element->tdesc.Union.lptdesc->Union.hreftype;
+
             result = typeInfo.GetRefTypeInfo(handle, out ITypeInfo userDefined);
             result.Should().Be(HResult.S_OK);
-            result = userDefined.GetDocumentation(MemberId.Nil, &name, null, out uint _, null);
-            result.Should().Be(HResult.S_OK);
-            name.ToStringAndFree().Should().Be("GUID");
+            userDefined.GetMemberName(MemberId.Nil).Should().Be("GUID");
 
-            description->lprgelemdescParam[1].tdesc.vt.Should().Be(VariantType.Pointer);
-            description->lprgelemdescParam[1].Union.paramdesc.wParamFlags.Should().Be(ParameterFlags.Out);
-
-            //[restricted]
-            //HRESULT _stdcall QueryInterface(
-            //                [in] GUID* riid, 
-            //                [out] void** ppvObj);
+            // Second arg void**
+            element++;
+            element->tdesc.vt.Should().Be(VariantType.Pointer);
+            element->Union.paramdesc.wParamFlags.Should().Be(ParameterFlags.Out);
+            element->tdesc.Union.lptdesc->vt.Should().Be(VariantType.Pointer);
+            element->tdesc.Union.lptdesc->Union.lptdesc->vt.Should().Be(VariantType.Void);
 
             typeInfo.ReleaseFuncDesc(description);
         }
@@ -152,6 +160,7 @@ namespace WInterop.Tests.Com
             HResult result = typeInfo.GetVarDesc(0, out VARDESC* description);
             result.Should().Be(HResult.S_OK);
 
+            // uint
             description->varkind.Should().Be(VariableKind.PerInstance);
             description->wVarFlags.Should().Be((VariableFlags)0);
             description->elemdescVar.tdesc.vt.Should().Be(VariantType.UInt32);
@@ -161,6 +170,7 @@ namespace WInterop.Tests.Com
             result = typeInfo.GetVarDesc(1, out description);
             result.Should().Be(HResult.S_OK);
 
+            // ushort
             description->varkind.Should().Be(VariableKind.PerInstance);
             description->wVarFlags.Should().Be((VariableFlags)0);
             description->elemdescVar.tdesc.vt.Should().Be(VariantType.UInt16);
@@ -170,6 +180,7 @@ namespace WInterop.Tests.Com
             result = typeInfo.GetVarDesc(2, out description);
             result.Should().Be(HResult.S_OK);
 
+            // ushort
             description->varkind.Should().Be(VariableKind.PerInstance);
             description->wVarFlags.Should().Be((VariableFlags)0);
             description->elemdescVar.tdesc.vt.Should().Be(VariantType.UInt16);
@@ -179,6 +190,7 @@ namespace WInterop.Tests.Com
             result = typeInfo.GetVarDesc(3, out description);
             result.Should().Be(HResult.S_OK);
 
+            // Fixed 8 byte array
             description->varkind.Should().Be(VariableKind.PerInstance);
             description->wVarFlags.Should().Be((VariableFlags)0);
             description->elemdescVar.tdesc.vt.Should().Be(VariantType.CArray);
