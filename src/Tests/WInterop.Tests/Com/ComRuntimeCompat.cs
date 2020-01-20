@@ -30,10 +30,10 @@ namespace ComTests
 
             byte* b = stackalloc byte[24];
 
-            using (VARIANT v = new VARIANT((IntPtr)b, ownsHandle: true))
+            using (Variant v = new Variant((IntPtr)b, ownsHandle: true))
             {
                 Marshal.GetNativeVariantForObject(d, v.DangerousGetHandle());
-                v.VariantType.Should().Be(VARENUM.VT_DECIMAL);
+                v.VariantType.Should().Be(VariantType.Decimal);
                 var data = v.GetData();
                 data.Should().NotBeNull();
                 data.Should().BeOfType<decimal>();
@@ -51,10 +51,10 @@ namespace ComTests
         {
             byte* b = stackalloc byte[24];
 
-            using (VARIANT v = new VARIANT((IntPtr)b, ownsHandle: true))
+            using (Variant v = new Variant((IntPtr)b, ownsHandle: true))
             {
                 Marshal.GetNativeVariantForObject(value, v.DangerousGetHandle());
-                v.VariantType.Should().Be(VARENUM.VT_R8);
+                v.VariantType.Should().Be(VariantType.Double);
                 var data = v.GetData();
                 data.Should().NotBeNull();
                 data.Should().BeOfType<double>();
@@ -71,10 +71,10 @@ namespace ComTests
         {
             byte* b = stackalloc byte[24];
 
-            using (VARIANT v = new VARIANT((IntPtr)b, ownsHandle: true))
+            using (Variant v = new Variant((IntPtr)b, ownsHandle: true))
             {
                 Marshal.GetNativeVariantForObject(value, v.DangerousGetHandle());
-                v.VariantType.Should().Be(VARENUM.VT_BSTR);
+                v.VariantType.Should().Be(VariantType.BasicString);
                 var data = v.GetData();
                 data.Should().NotBeNull();
                 data.Should().BeOfType<string>();

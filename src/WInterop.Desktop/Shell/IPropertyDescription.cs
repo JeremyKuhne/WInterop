@@ -21,7 +21,7 @@ namespace WInterop.Shell
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string GetCanonicalName();
 
-        VARENUM GetPropertyType();
+        VariantType GetPropertyType();
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         string GetDisplayName();

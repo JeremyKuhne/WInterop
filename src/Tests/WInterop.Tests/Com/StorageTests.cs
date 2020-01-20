@@ -24,7 +24,7 @@ namespace ComTests
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.GetTestPath();
-                object created = ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                object created = Com.CreateStorage(path, InterfaceIds.IID_IStorage);
                 created.Should().NotBeNull();
                 IStorage storage = created as IStorage;
                 storage.Should().NotBeNull();
@@ -43,8 +43,8 @@ namespace ComTests
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.GetTestPath();
-                object created = ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
-                ComMethods.IsStorageFile(path).Should().BeTrue();
+                object created = Com.CreateStorage(path, InterfaceIds.IID_IStorage);
+                Com.IsStorageFile(path).Should().BeTrue();
             }
         }
 
@@ -54,12 +54,12 @@ namespace ComTests
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.GetTestPath();
-                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
                 Guid guid = new Guid();
                 storage.SetClass(ref guid);
                 storage.Commit(StorageCommit.Default);
                 Marshal.ReleaseComObject(storage);
-                storage = (IStorage)ComMethods.OpenStorage(path, InterfaceIds.IID_IStorage);
+                storage = (IStorage)Com.OpenStorage(path, InterfaceIds.IID_IStorage);
                 storage.Should().NotBeNull();
 
                 storage.Stat(out var stats, StatFlag.Default);
@@ -75,7 +75,7 @@ namespace ComTests
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.GetTestPath();
-                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
                 IStorage subStorage = storage.CreateStorage("substorage", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
                 subStorage.Should().NotBeNull();
 
@@ -91,7 +91,7 @@ namespace ComTests
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.GetTestPath();
-                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
                 IStream stream = storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
                 stream.Should().NotBeNull();
 
@@ -107,7 +107,7 @@ namespace ComTests
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.GetTestPath();
-                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
                 IStream stream = storage.CreateStream("name", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
                 stream.Should().NotBeNull();
 
@@ -136,7 +136,7 @@ namespace ComTests
             using (var cleaner = new TestFileCleaner())
             {
                 string path = cleaner.GetTestPath();
-                IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+                IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
                 IStream stream = storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
                 IStorage subStorage = storage.CreateStorage("substorage", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive);
                 storage.Commit();

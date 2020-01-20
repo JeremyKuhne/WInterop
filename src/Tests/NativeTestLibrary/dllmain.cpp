@@ -15,6 +15,7 @@
 #include "richole.h"
 #include "OleCtl.h"
 #include "winternl.h"
+#include "UIAutomation.h"
 
 BOOL APIENTRY DllMain(
     HMODULE hModule,

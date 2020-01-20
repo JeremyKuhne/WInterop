@@ -7,7 +7,14 @@
 
 namespace WInterop.Errors
 {
-    // https://msdn.microsoft.com/en-us/library/cc231198.aspx
+    /// <summary>
+    ///  HRESULT codes.
+    ///  <see cref="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a"/>
+    /// </summary>
+    /// <remarks>
+    ///  SCODE (Status Code) values are equivalent to HRESULT values on 32 & 64 bit platforms. On
+    ///  16 bit platforms they need to be converted by doing a logical AND with 0x800FFFFF.
+    /// </remarks>
     public enum HResult : int
     {
         S_OK = 0,

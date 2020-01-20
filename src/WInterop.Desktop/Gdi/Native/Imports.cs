@@ -776,13 +776,13 @@ namespace WInterop.Gdi.Native
             [In] ref RECT lprcSrc1,
             [In] ref RECT lprcSrc2);
 
-        // https://msdn.microsoft.com/library/dd183465.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-combinergn
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType CombineRgn(
             HRGN hrgnDest,
             HRGN hrgnSrc1,
             HRGN hrgnSrc2,
-            CombineRegionMode fnCombineMode);
+            CombineRegionMode iMode);
 
         // https://msdn.microsoft.com/library/dd183496.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]

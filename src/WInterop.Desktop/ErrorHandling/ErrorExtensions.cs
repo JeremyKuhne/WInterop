@@ -21,7 +21,7 @@ namespace WInterop.Errors
         public static bool Failed(this WindowsError error) => error != WindowsError.NO_ERROR;
 
         /// <summary>
-        /// Throw a relevant exception if <paramref name="error"/> is a failure.
+        ///  Throw a relevant exception if <paramref name="error"/> is a failure.
         /// </summary>
         /// <param name="path">Optional path or other input detail.</param>
         public static void ThrowIfFailed(this WindowsError error, string? path = null)
@@ -35,8 +35,8 @@ namespace WInterop.Errors
         public static void Throw(this WindowsError error, string? path = null) => throw error.GetException(path);
 
         /// <summary>
-        /// Turns Windows errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
-        /// There are additional IOException derived errors for ease of client error handling.
+        ///  Turns Windows errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
+        ///  There are additional IOException derived errors for ease of client error handling.
         /// </summary>
         public static Exception GetException(this WindowsError error, string? path = null)
         {
@@ -64,7 +64,7 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Extracts the code portion of the specified HRESULT [HRESULT_CODE]
+        ///  Extracts the code portion of the specified HRESULT [HRESULT_CODE]
         /// </summary>
         public static int GetCode(this HResult hr)
         {
@@ -74,7 +74,7 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Extracts the facility of the specified HRESULT [HRESULT_FACILITY]
+        ///  Extracts the facility of the specified HRESULT [HRESULT_FACILITY]
         /// </summary>
         public static Facility GetFacility(this HResult hr)
         {
@@ -84,7 +84,7 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Extracts the severity of the specified result [HRESULT_SEVERITY]
+        ///  Extracts the severity of the specified result [HRESULT_SEVERITY]
         /// </summary>
         public static int GetSeverity(HResult hr)
         {
@@ -94,7 +94,7 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Convert a Windows error to an HRESULT. [HRESULT_FROM_WIN32]
+        ///  Convert a Windows error to an HRESULT. [HRESULT_FROM_WIN32]
         /// </summary>
         public static HResult ToHResult(this WindowsError error)
         {
@@ -104,33 +104,33 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Throw a relevant exception if <paramref name="result"/> is a failure.
+        ///  Throw a relevant exception if <paramref name="result"/> is a failure.
         /// </summary>
-        /// <param name="path">Optional path or other input detail.</param>
-        public static void ThrowIfFailed(this HResult result, string? path = null)
+        /// <param name="detail">Optional path or other input detail.</param>
+        public static void ThrowIfFailed(this HResult result, string? detail = null)
         {
-            if (result.Failed()) result.Throw(path);
+            if (result.Failed()) result.Throw(detail);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void Throw(this HResult result, string? path = null) => throw result.GetException(path);
+        public static void Throw(this HResult result, string? detail = null) => throw result.GetException(detail);
 
         /// <summary>
-        /// Turns HRESULT errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
-        /// There are additional IOException derived errors for ease of client error handling.
+        ///  Turns HRESULT errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
+        ///  There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetException(this HResult hr, string? path = null)
+        public static Exception GetException(this HResult hr, string? detail = null)
         {
-            string message = path == null
+            string message = detail == null
                 ? $"{Error.HResultToString(hr)}"
-                : $"{Error.HResultToString(hr)} '{path}'";
+                : $"{Error.HResultToString(hr)} '{detail}'";
 
             return hr switch
             {
                 HResult.E_ACCESSDENIED => new UnauthorizedAccessException(message),
                 HResult.E_INVALIDARG => new ArgumentException(message),
                 _ => hr.GetFacility() == Facility.Win32
-                        ? Error.WindowsErrorToException((WindowsError)hr.GetCode(), message, path)
+                        ? Error.WindowsErrorToException((WindowsError)hr.GetCode(), message, detail)
                         : new WInteropIOException(message, hr),
             };
         }
@@ -139,12 +139,12 @@ namespace WInterop.Errors
         // https://msdn.microsoft.com/en-us/library/cc231200.aspx
 
         /// <summary>
-        /// [HRESULT_FROM_NT]
+        ///  [HRESULT_FROM_NT]
         /// </summary>
         public static HResult ToHResult(this NTStatus status) => (HResult)((int)status | FACILITY_NT_BIT);
 
         /// <summary>
-        /// [NT_SUCCESS]
+        ///  [NT_SUCCESS]
         /// </summary>
         public static bool Success(this NTStatus status) => status >= 0;
 
@@ -164,32 +164,32 @@ namespace WInterop.Errors
         public static void Throw(this NTStatus status, string? path = null) => throw status.GetException(path);
 
         /// <summary>
-        /// [NT_INFORMATION]
+        ///  [NT_INFORMATION]
         /// </summary>
         public static bool IsInformational(this NTStatus status) => (uint)status >> 30 == STATUS_SEVERITY_INFORMATIONAL;
 
         /// <summary>
-        /// [NT_WARNING]
+        ///  [NT_WARNING]
         /// </summary>
         public static bool IsWarning(this NTStatus status) => (uint)status >> 30 == STATUS_SEVERITY_WARNING;
 
         /// <summary>
-        /// [NT_ERROR]
+        ///  [NT_ERROR]
         /// </summary>
         public static bool IsError(this NTStatus status) => (uint)status >> 30 == STATUS_SEVERITY_ERROR;
 
         public static WindowsError ToWindowsError(this NTStatus status) => Error.NtStatusToWinError(status);
 
         /// <summary>
-        /// Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
-        /// There are additional IOException derived errors for ease of client error handling.
+        ///  Turns NTSTATUS errors into the appropriate exception (that maps with existing .NET behavior as much as possible).
+        ///  There are additional IOException derived errors for ease of client error handling.
         /// </summary>
-        public static Exception GetException(this NTStatus status, string? path = null)
+        public static Exception GetException(this NTStatus status, string? detail = null)
         {
             return status switch
             {
-                NTStatus.STATUS_NOT_IMPLEMENTED => new NotImplementedException(path ?? WInteropStrings.NoValue),
-                _ => status.ToWindowsError().GetException(path),
+                NTStatus.STATUS_NOT_IMPLEMENTED => new NotImplementedException(detail ?? WInteropStrings.NoValue),
+                _ => status.ToWindowsError().GetException(detail),
             };
         }
     }

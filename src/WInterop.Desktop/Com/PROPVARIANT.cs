@@ -13,7 +13,7 @@ using WInterop.Errors;
 
 namespace WInterop.Com
 {
-    public class PROPVARIANT : VARIANT
+    public class PROPVARIANT : Variant
     {
         public PROPVARIANT() : this(ownsHandle: true)
         {
@@ -39,34 +39,34 @@ namespace WInterop.Com
 
         public override object? GetData()
         {
-            VARENUM propertyType = RawVariantType;
-            if ((propertyType & VARENUM.VT_BYREF) != 0
-                || (propertyType & VARENUM.VT_ARRAY) != 0)
+            VariantType propertyType = RawVariantType;
+            if ((propertyType & VariantType.ByRef) != 0
+                || (propertyType & VariantType.Array) != 0)
             {
                 // Not legit for PROPVARIANT
                 throw new InvalidOleVariantTypeException();
             }
 
-            if ((propertyType & VARENUM.VT_VECTOR) != 0)
+            if ((propertyType & VariantType.Vector) != 0)
             {
                 throw new NotImplementedException();
             }
 
-            propertyType &= VARENUM.VT_TYPEMASK;
+            propertyType &= VariantType.TypeMask;
 
             switch (propertyType)
             {
-                case VARENUM.VT_DISPATCH:
-                case VARENUM.VT_UNKNOWN:
-                case VARENUM.VT_DECIMAL:
-                case VARENUM.VT_UINT:
+                case VariantType.IDispatch:
+                case VariantType.IUnknown:
+                case VariantType.Decimal:
+                case VariantType.UnsignedInteger:
                     throw new InvalidOleVariantTypeException();
             }
 
             return base.GetData();
         }
 
-        protected override unsafe object? GetCoreType(VARENUM propertyType, void* data)
+        protected override unsafe object? GetCoreType(VariantType propertyType, void* data)
         {
             object? value = base.GetCoreType(propertyType, data);
             if (!ReferenceEquals(value, s_UnsupportedObject))
@@ -74,26 +74,26 @@ namespace WInterop.Com
 
             switch (propertyType)
             {
-                case VARENUM.VT_I8:
+                case VariantType.Int64:
                     return *((long*)data);
-                case VARENUM.VT_UI8:
+                case VariantType.UInt64:
                     return *((ulong*)data);
-                case VARENUM.VT_LPSTR:
+                case VariantType.LPSTR:
                     return Marshal.PtrToStringAnsi((IntPtr)data);
-                case VARENUM.VT_LPWSTR:
+                case VariantType.LPWSTR:
                     return Marshal.PtrToStringUni((IntPtr)data);
-                case VARENUM.VT_CLSID:
+                case VariantType.ClassId:
                     return Marshal.PtrToStructure<Guid>((IntPtr)(*((void**)data)));
-                case VARENUM.VT_FILETIME:
-                case VARENUM.VT_BLOB:
-                case VARENUM.VT_STREAM:
-                case VARENUM.VT_STORAGE:
-                case VARENUM.VT_STREAMED_OBJECT:
-                case VARENUM.VT_STORED_OBJECT:
-                case VARENUM.VT_VERSIONED_STREAM:
-                case VARENUM.VT_BLOB_OBJECT:
-                case VARENUM.VT_CF:
-                case VARENUM.VT_VECTOR:
+                case VariantType.FileTime:
+                case VariantType.Blob:
+                case VariantType.Stream:
+                case VariantType.Storage:
+                case VariantType.StreamedObject:
+                case VariantType.StoredObject:
+                case VariantType.VersionedStream:
+                case VariantType.BlobObject:
+                case VariantType.ClipboardFormat:
+                case VariantType.Vector:
                 default:
                     return s_UnsupportedObject;
             }

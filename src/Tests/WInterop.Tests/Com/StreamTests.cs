@@ -21,7 +21,7 @@ namespace ComTests
         {
             using var cleaner = new TestFileCleaner();
             string path = cleaner.GetTestPath();
-            IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+            IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
 
             ComStream stream;
             using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))
@@ -42,7 +42,7 @@ namespace ComTests
         {
             using var cleaner = new TestFileCleaner();
             string path = cleaner.GetTestPath();
-            IStorage storage = (IStorage)ComMethods.CreateStorage(path, InterfaceIds.IID_IStorage);
+            IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
 
             ComStream stream;
             using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))

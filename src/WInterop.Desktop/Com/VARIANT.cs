@@ -16,60 +16,60 @@ using WInterop.Errors;
 namespace WInterop.Com
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms221627.aspx
-    public class VARIANT : HandleZeroOrMinusOneIsInvalid
+    public class Variant : HandleZeroOrMinusOneIsInvalid
     {
         protected const ulong DataOffset = 8;
         protected const ulong NativeSize = 24;
         protected static object s_UnsupportedObject = new object();
 
-        public VARIANT() : this(ownsHandle: true)
+        public Variant() : this(ownsHandle: true)
         {
         }
 
-        public VARIANT(bool ownsHandle) : base(ownsHandle)
+        public Variant(bool ownsHandle) : base(ownsHandle)
         {
         }
 
-        public VARIANT(IntPtr handle, bool ownsHandle)
+        public Variant(IntPtr handle, bool ownsHandle)
             : base(ownsHandle)
         {
             this.handle = handle;
         }
 
-        public VARENUM VariantType
+        public VariantType VariantType
         {
-            get { return RawVariantType & VARENUM.VT_TYPEMASK; }
+            get { return RawVariantType & VariantType.TypeMask; }
         }
 
-        protected unsafe VARENUM RawVariantType
+        protected unsafe VariantType RawVariantType
         {
             get
             {
                 if (IsInvalid)
-                    return VARENUM.VT_EMPTY;
+                    return VariantType.Empty;
 
-                return *((VARENUM*)handle.ToPointer());
+                return *((VariantType*)handle.ToPointer());
             }
         }
 
         public bool IsByRef
         {
-            get { return (RawVariantType & VARENUM.VT_BYREF) != 0; }
+            get { return (RawVariantType & VariantType.ByRef) != 0; }
         }
 
         public virtual bool IsArray
         {
-            get { return (RawVariantType & VARENUM.VT_ARRAY) != 0; }
+            get { return (RawVariantType & VariantType.Array) != 0; }
         }
 
         public unsafe virtual object? GetData()
         {
-            VARENUM propertyType = VariantType;
+            VariantType propertyType = VariantType;
 
             switch (propertyType)
             {
-                case VARENUM.VT_EMPTY:
-                case VARENUM.VT_NULL:
+                case VariantType.Empty:
+                case VariantType.Null:
                     return null;
             }
 
@@ -84,7 +84,7 @@ namespace WInterop.Com
             {
                 data = *((void**)data);
             }
-            else if (propertyType == VARENUM.VT_DECIMAL)
+            else if (propertyType == VariantType.Decimal)
             {
                 // DECIMAL starts at the beginning of the VARIANT, with the VARIANT's type occupying
                 // the reserved ushort in the DECIMAL and the DECIMAL occupying the reserved WORDs
@@ -109,45 +109,45 @@ namespace WInterop.Com
         //  VT_ARRAY
         //  VT_BYREF
         //
-        protected virtual unsafe object? GetCoreType(VARENUM propertyType, void* data)
+        protected virtual unsafe object? GetCoreType(VariantType propertyType, void* data)
         {
             switch (propertyType)
             {
-                case VARENUM.VT_I4:
-                case VARENUM.VT_INT:
-                case VARENUM.VT_ERROR: // SCODE
+                case VariantType.Int32:
+                case VariantType.Integer:
+                case VariantType.Error: // SCODE
                     return *((int*)data);
-                case VARENUM.VT_UI4:
-                case VARENUM.VT_UINT:
+                case VariantType.UInt32:
+                case VariantType.UnsignedInteger:
                     return *((uint*)data);
-                case VARENUM.VT_I2:
+                case VariantType.Int16:
                     return *((short*)data);
-                case VARENUM.VT_UI2:
+                case VariantType.UInt16:
                     return *((ushort*)data);
-                case VARENUM.VT_I1:
+                case VariantType.SignedByte:
                     return *((sbyte*)data);
-                case VARENUM.VT_UI1:
+                case VariantType.UnsignedByte:
                     return *((byte*)data);
-                case VARENUM.VT_CY: // Currency (long long)
+                case VariantType.Currency: // Currency (long long)
                     return *((long*)data);
-                case VARENUM.VT_R4:
+                case VariantType.Single:
                     return *((float*)data);
-                case VARENUM.VT_R8:
+                case VariantType.Double:
                     return *((double*)data);
-                case VARENUM.VT_DECIMAL:
+                case VariantType.Decimal:
                     return (*((DECIMAL*)data)).ToDecimal();
-                case VARENUM.VT_BOOL:
+                case VariantType.Boolean:
                     // VARIANT_TRUE is -1
                     return *((short*)data) == -1;
-                case VARENUM.VT_BSTR:
+                case VariantType.BasicString:
                     return Marshal.PtrToStringBSTR((IntPtr)(*((void**)data)));
-                case VARENUM.VT_VARIANT:
-                    return new VARIANT(new IntPtr(*((void**)data)), ownsHandle: false);
-                case VARENUM.VT_DATE:
+                case VariantType.Variant:
+                    return new Variant(new IntPtr(*((void**)data)), ownsHandle: false);
+                case VariantType.Date:
                     return Conversion.VariantDateToDateTime(*((double*)data));
-                case VARENUM.VT_RECORD:
-                case VARENUM.VT_DISPATCH:
-                case VARENUM.VT_UNKNOWN:
+                case VariantType.Record:
+                case VariantType.IDispatch:
+                case VariantType.IUnknown:
                     throw new NotImplementedException();
                 default:
                     return s_UnsupportedObject;
