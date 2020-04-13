@@ -89,7 +89,7 @@ namespace WInterop.Errors
 
         public static WindowsError NtStatusToWinError(NTStatus status)
         {
-            return (WindowsError)Imports.LsaNtStatusToWinError(status);
+            return (WindowsError)Imports.RtlNtStatusToDosError(status);
         }
 
         public static void SetLastError(WindowsError error) => Imports.SetLastError(error);

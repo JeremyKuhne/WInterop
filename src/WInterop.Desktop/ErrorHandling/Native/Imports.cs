@@ -34,11 +34,16 @@ namespace WInterop.Errors.Native
             ErrorMode dwNewMode,
             out ErrorMode lpOldMode);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721800.aspx
-        [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
+        //  https://docs.microsoft.com/windows/win32/api/winternl/nf-winternl-rtlntstatustodoserror
+        [DllImport(Libraries.Ntdll, ExactSpelling = true)]
+        public static extern uint RtlNtStatusToDosError(NTStatus Status);
+
+        // LsaNtStatusToWinError is another entry point to RtlNtStatusToDosError
+        // https://docs.microsoft.com/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
         public static extern uint LsaNtStatusToWinError(NTStatus Status);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms679351.aspx
+        // https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-formatmessage
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern uint FormatMessageW(
             FormatMessageFlags dwFlags,

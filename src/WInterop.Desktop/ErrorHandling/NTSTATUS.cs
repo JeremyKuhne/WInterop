@@ -104,6 +104,16 @@ namespace WInterop.Errors
         STATUS_INVALID_PARAMETER = unchecked((int)0xC000000D),
 
         /// <summary>
+        /// A device that does not exist was specified.
+        /// </summary>
+        STATUS_NO_SUCH_DEVICE = unchecked((int)0xC000000E),
+
+        /// <summary>
+        /// The file does not exist. (File Not Found)
+        /// </summary>
+        STATUS_NO_SUCH_FILE = unchecked((int)0xC000000F),
+
+        /// <summary>
         /// {Access Denied} A process has requested access to an object but has not been granted those access rights.
         /// </summary>
         STATUS_ACCESS_DENIED = unchecked((int)0xC0000022),
