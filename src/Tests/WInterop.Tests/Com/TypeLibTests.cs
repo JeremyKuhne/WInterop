@@ -73,7 +73,7 @@ namespace WInterop.Tests.Com
                     index: i,
                     &name,
                     &doc,
-                    out uint _,
+                    null,
                     &helpFile);
 
                 result.Should().Be(HResult.S_OK);

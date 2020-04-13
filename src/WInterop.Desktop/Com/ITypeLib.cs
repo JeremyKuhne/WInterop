@@ -32,7 +32,7 @@ namespace WInterop.Com
         HResult GetTypeInfoOfGuid(
             ref Guid guid,
             out ITypeInfo ppTinfo);
-        
+
         HResult GetLibAttr(
             TypeLibraryAttributes** ppTLibAttr);
 
@@ -43,7 +43,7 @@ namespace WInterop.Com
             int index,
             BasicString* pBstrName,
             BasicString* pBstrDocString,
-            out uint pdwHelpContext,
+            uint* pdwHelpContext,
             BasicString* pBstrHelpFile);
 
         HResult IsName(
