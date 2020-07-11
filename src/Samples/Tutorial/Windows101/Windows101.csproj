@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <LangVersion>8.0</LangVersion>
     <ApplicationManifest>app1.manifest</ApplicationManifest>
   </PropertyGroup>
 

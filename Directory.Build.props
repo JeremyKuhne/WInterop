@@ -17,6 +17,8 @@
 
     <!-- Input Directories -->
     <PackagesDir Condition="'$(PackagesDir)'==''">$(RepoDir)packages\</PackagesDir>
+
+    <TargetFramework>netcoreapp5.0</TargetFramework>
   </PropertyGroup>
 
   <!-- Set default Configuration and Platform -->
@@ -64,8 +66,13 @@
     <GenerateAssemblyInfo Condition="'$(GenerateAssemblyInfo)' == ''">false</GenerateAssemblyInfo>
 
     <!-- Latest and greatest C# please -->
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>preview</LangVersion>
+
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.Net.Compilers.Toolset" Version="3.7.0-3.20302.9" />
+  </ItemGroup>
 
   <Import Project="il.props" Condition="'$(ImportILProps)' == 'true'" />
 </Project>
