@@ -1,15 +1,16 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 
-namespace WInterop.Com
+namespace WInterop.Com.Native
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms221482.aspx
+    /// <summary>
+    ///  <see cref="SAFEARRAY"/> flags.
+    /// </summary>
+    /// <remarks>
+    ///  <see cref="https://docs.microsoft.com/windows/win32/api/oaidl/ns-oaidl-safearray"/>
+    /// </remarks>
     [Flags]
     public enum FADF : ushort
     {
@@ -70,6 +71,7 @@ namespace WInterop.Com
         /// An array of VARIANTs.
         /// </summary>
         VARIANT = 0x800,
+
         RESERVED = 0xf008
     }
 }
