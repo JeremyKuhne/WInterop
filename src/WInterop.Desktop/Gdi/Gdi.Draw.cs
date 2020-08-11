@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -22,6 +18,9 @@ namespace WInterop.Gdi
 
         public static BrushHandle GetCurrentBrush(in this DeviceContext context)
             => new BrushHandle((HBRUSH)Imports.GetCurrentObject(context, ObjectType.Brush), ownsHandle: false);
+
+        public static PaletteHandle GetCurrentPalette(in this DeviceContext context)
+            => new PaletteHandle((HPALETTE)Imports.GetCurrentObject(context, ObjectType.Palette), ownsHandle: false);
 
         public static BrushHandle GetStockBrush(StockBrush brush)
             => new BrushHandle((HBRUSH)Imports.GetStockObject((int)brush), ownsHandle: false);
@@ -46,7 +45,7 @@ namespace WInterop.Gdi
                 null));
         }
 
-        public unsafe static Color GetPenColor(PenHandle pen)
+        public static unsafe Color GetPenColor(PenHandle pen)
         {
             switch (Imports.GetObjectType(pen))
             {
@@ -79,7 +78,7 @@ namespace WInterop.Gdi
         public static bool SetPixel(this in DeviceContext context, Point point, Color color)
             => Imports.SetPixelV(context, point.X, point.Y, color);
 
-        public unsafe static bool MoveTo(this in DeviceContext context, Point point)
+        public static unsafe bool MoveTo(this in DeviceContext context, Point point)
             => Imports.MoveToEx(context, point.X, point.Y, null);
 
         public static bool LineTo(this in DeviceContext context, Point point) => Imports.LineTo(context, point.X, point.Y);
@@ -110,34 +109,34 @@ namespace WInterop.Gdi
 
         public static bool FillRectangle(this in DeviceContext context, Rectangle rectangle, BrushHandle brush)
         {
-            RECT rect = rectangle;
+            Rect rect = rectangle;
             return Imports.FillRect(context, ref rect, brush);
         }
 
         public static bool FrameRectangle(this in DeviceContext context, Rectangle rectangle, BrushHandle brush)
         {
-            RECT rect = rectangle;
+            Rect rect = rectangle;
             return Imports.FrameRect(context, ref rect, brush);
         }
 
         public static bool InvertRectangle(this in DeviceContext context, Rectangle rectangle)
         {
-            RECT rect = rectangle;
+            Rect rect = rectangle;
             return Imports.InvertRect(context, ref rect);
         }
 
         public static bool DrawFocusRectangle(this in DeviceContext context, Rectangle rectangle)
         {
-            RECT rect = rectangle;
+            Rect rect = rectangle;
             return Imports.DrawFocusRect(context, ref rect);
         }
 
-        public unsafe static bool PolyBezier(this in DeviceContext context, params Point[] points)
+        public static unsafe bool PolyBezier(this in DeviceContext context, params Point[] points)
         {
             return PolyBezier(context, points.AsSpan());
         }
 
-        public unsafe static bool PolyBezier(this in DeviceContext context, ReadOnlySpan<Point> points)
+        public static unsafe bool PolyBezier(this in DeviceContext context, ReadOnlySpan<Point> points)
         {
             return Imports.PolyBezier(context, ref MemoryMarshal.GetReference(points), (uint)points.Length);
         }

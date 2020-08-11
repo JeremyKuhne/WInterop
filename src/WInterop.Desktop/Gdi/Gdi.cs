@@ -1,12 +1,9 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
@@ -17,25 +14,25 @@ namespace WInterop.Gdi
 {
     public static partial class Gdi
     {
-        public unsafe static DeviceContext CreateDeviceContext(string driver, string device)
+        public static unsafe DeviceContext CreateDeviceContext(string driver, string device)
             => new DeviceContext(Imports.CreateDCW(driver, device, null, null), ownsHandle: true);
 
         /// <summary>
-        /// Creates a <see cref="DeviceContext"/> that covers all displays.
+        ///  Creates a <see cref="DeviceContext"/> that covers all displays.
         /// </summary>
-        public unsafe static DeviceContext CreateDesktopDeviceContext()
+        public static unsafe DeviceContext CreateDesktopDeviceContext()
             => new DeviceContext(Imports.CreateDCW("DISPLAY", null, null, null), ownsHandle: true);
 
         /// <summary>
-        /// Returns an in memory device context that is compatible with the specified device.
+        ///  Returns an in memory device context that is compatible with the specified device.
         /// </summary>
-        /// <param name="context">An existing device context or new DeviceContext() for the application's current screen.</param>
+        /// <param name="context">An existing device context or default for the application's current screen.</param>
         /// <returns>A 1 by 1 monochrome memory device context.</returns>
         public static DeviceContext CreateCompatibleDeviceContext(this in DeviceContext context)
             => new DeviceContext(Imports.CreateCompatibleDC(context), ownsHandle: true);
 
         /// <summary>
-        /// Gets a <paramref name="capability"/> for the given <paramref name="context"/>.
+        ///  Gets a <paramref name="capability"/> for the given <paramref name="context"/>.
         /// </summary>
         public static int GetDeviceCapability(this in DeviceContext context, DeviceCapability capability)
             => Imports.GetDeviceCaps(context, capability);
@@ -50,22 +47,22 @@ namespace WInterop.Gdi
                 context.GetDeviceCapability(DeviceCapability.DesktopHorizontalResolution),
                 context.GetDeviceCapability(DeviceCapability.DesktopVerticalResolution));
 
-        public unsafe static DeviceContext CreateInformationContext(string driver, string device)
+        public static unsafe DeviceContext CreateInformationContext(string driver, string device)
             => new DeviceContext(Imports.CreateICW(driver, device, null, null), ownsHandle: true);
 
         /// <summary>
-        /// Get the device context for the client area of the specified window.
+        ///  Get the device context for the client area of the specified window.
         /// </summary>
         public static DeviceContext GetDeviceContext(this in WindowHandle window)
             => new DeviceContext(Imports.GetDC(window), window);
 
         /// <summary>
-        /// Get the device context for the screen.
+        ///  Get the device context for the screen.
         /// </summary>
         public static DeviceContext GetDeviceContext() => GetDeviceContext(new WindowHandle());
 
         /// <summary>
-        /// Get the device context for the specified window.
+        ///  Get the device context for the specified window.
         /// </summary>
         /// <param name="window">The window handle, or null for the primary display monitor.</param>
         /// <returns>Returns a device context for the entire window, not just the client area.</returns>
@@ -126,9 +123,8 @@ namespace WInterop.Gdi
                 operation);
         }
 
-
         /// <summary>
-        /// Enumerate display device info for the given device name.
+        ///  Enumerate display device info for the given device name.
         /// </summary>
         /// <param name="deviceName">The device to enumerate or null for all devices.</param>
         public static IEnumerable<DisplayDevice> EnumerateDisplayDevices(string deviceName)
@@ -165,7 +161,7 @@ namespace WInterop.Gdi
         }
 
         /// <summary>
-        /// Selects the given object into the specified device context.
+        ///  Selects the given object into the specified device context.
         /// </summary>
         /// <returns>The previous object or null if failed OR null if the given object was a region.</returns>
         public static GdiObjectHandle SelectObject(this in DeviceContext context, GdiObjectHandle @object)
@@ -183,20 +179,20 @@ namespace WInterop.Gdi
 
         public static bool UpdateWindow(this in WindowHandle window) => Imports.UpdateWindow(window);
 
-        public unsafe static bool ValidateRectangle(this in WindowHandle window, ref Rectangle rectangle)
+        public static unsafe bool ValidateRectangle(this in WindowHandle window, ref Rectangle rectangle)
         {
-            RECT rect = rectangle;
+            Rect rect = rectangle;
             return Imports.ValidateRect(window, &rect);
         }
 
         /// <summary>
-        /// Validates the entire Window.
+        ///  Validates the entire Window.
         /// </summary>
-        public unsafe static bool Validate(this in WindowHandle window)
+        public static unsafe bool Validate(this in WindowHandle window)
             => Imports.ValidateRect(window, null);
 
         /// <summary>
-        /// Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
+        ///  Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
         /// </summary>
         public static DeviceContext BeginPaint(this in WindowHandle window)
         {
@@ -206,7 +202,7 @@ namespace WInterop.Gdi
         }
 
         /// <summary>
-        /// Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
+        ///  Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
         /// </summary>
         public static DeviceContext BeginPaint(this in WindowHandle window, out PaintStruct paintStruct)
         {
@@ -216,13 +212,13 @@ namespace WInterop.Gdi
             return new DeviceContext(ps, window);
         }
 
-        public unsafe static bool InvalidateRectangle(this in WindowHandle window, Rectangle rectangle, bool erase)
+        public static unsafe bool InvalidateRectangle(this in WindowHandle window, Rectangle rectangle, bool erase)
         {
-            RECT rect = rectangle;
+            Rect rect = rectangle;
             return Imports.InvalidateRect(window, &rect, erase);
         }
 
-        public unsafe static bool Invalidate(this in WindowHandle window, bool erase = true)
+        public static unsafe bool Invalidate(this in WindowHandle window, bool erase = true)
             => Imports.InvalidateRect(window, null, erase);
 
         public static RegionHandle CreateEllipticRegion(Rectangle bounds)
@@ -241,20 +237,52 @@ namespace WInterop.Gdi
         public static RegionType SelectClippingRegion(this in DeviceContext context, RegionHandle region)
             => Imports.SelectClipRgn(context, region);
 
-        public static bool GetViewportOrigin(this in DeviceContext context, out Point point)
-            => Imports.GetViewportOrgEx(context, out point);
+        public static Rectangle GetClipBox(this in DeviceContext context, out RegionType regionType)
+        {
+            regionType = Imports.GetClipBox(context, out Rect rect);
+            return rect;
+        }
+
+        public static RegionHandle GetClippingRegion(this in DeviceContext context, out bool hasRegion)
+        {
+            HRGN hrgn = Imports.CreateRectRgn(0, 0, 0, 0);
+            int result = Imports.GetClipRgn(context, hrgn);
+            hasRegion = result switch
+            {
+                0 => false,
+                1 => true,
+                _ => throw new WInteropIOException("Failed to get the clipping region")
+            };
+
+            return new RegionHandle(hrgn);
+        }
+
+        public static Point GetViewportOrigin(this in DeviceContext context)
+            => GetViewportOrigin(context, out _);
+
+        public static Point GetViewportOrigin(this in DeviceContext context, out bool success)
+        {
+            success = Imports.GetViewportOrgEx(context, out Point point);
+            return point;
+        }
 
         public static unsafe bool SetViewportOrigin(this in DeviceContext context, Point point)
             => Imports.SetViewportOrgEx(context, point.X, point.Y, null);
 
-        public static bool GetWindowOrigin(this in DeviceContext context, out Point point)
-            => Imports.GetWindowOrgEx(context, out point);
+        public static Point GetWindowOrigin(this in DeviceContext context)
+            => GetWindowOrigin(context, out _);
+
+        public static Point GetWindowOrigin(this in DeviceContext context, out bool success)
+        {
+            success = Imports.GetWindowOrgEx(context, out Point point);
+            return point;
+        }
 
         public static unsafe bool SetWindowOrigin(this in DeviceContext context, Point point)
             => Imports.SetWindowOrgEx(context, point.X, point.Y, null);
 
         /// <summary>
-        /// Shared brush, handle doesn't need disposed.
+        ///  Shared brush, handle doesn't need disposed.
         /// </summary>
         public static BrushHandle GetSystemColorBrush(SystemColor systemColor)
             => new BrushHandle(Imports.GetSysColorBrush(systemColor), ownsHandle: false);
@@ -295,31 +323,31 @@ namespace WInterop.Gdi
         public static bool DeviceToLogical(this in DeviceContext context, ReadOnlySpan<Point> points)
             => Imports.DPtoLP(context, ref MemoryMarshal.GetReference(points), points.Length);
 
-        public unsafe static bool LogicalToDevice(this in DeviceContext context, params Point[] points)
+        public static unsafe bool LogicalToDevice(this in DeviceContext context, params Point[] points)
             => LogicalToDevice(context, points);
 
-        public unsafe static bool LogicalToDevice(this in DeviceContext context, ReadOnlySpan<Point> points)
+        public static unsafe bool LogicalToDevice(this in DeviceContext context, ReadOnlySpan<Point> points)
             => Imports.LPtoDP(context, ref MemoryMarshal.GetReference(points), points.Length);
 
-        public unsafe static bool OffsetWindowOrigin(this in DeviceContext context, int x, int y)
+        public static unsafe bool OffsetWindowOrigin(this in DeviceContext context, int x, int y)
             => Imports.OffsetWindowOrgEx(context, x, y, null);
 
-        public unsafe static bool OffsetViewportOrigin(this in DeviceContext context, int x, int y)
+        public static unsafe bool OffsetViewportOrigin(this in DeviceContext context, int x, int y)
             => Imports.OffsetViewportOrgEx(context, x, y, null);
 
         public static bool GetWindowExtents(this in DeviceContext context, out Size size)
             => Imports.GetWindowExtEx(context, out size);
 
         /// <summary>
-        /// Sets the logical ("window") dimensions of the device context.
+        ///  Sets the logical ("window") dimensions of the device context.
         /// </summary>
-        public unsafe static bool SetWindowExtents(this in DeviceContext context, Size size)
+        public static unsafe bool SetWindowExtents(this in DeviceContext context, Size size)
             => Imports.SetWindowExtEx(context, size.Width, size.Height, null);
 
         public static bool GetViewportExtents(this in DeviceContext context, out Size size)
             => Imports.GetViewportExtEx(context, out size);
 
-        public unsafe static bool SetViewportExtents(this in DeviceContext context, Size size)
+        public static unsafe bool SetViewportExtents(this in DeviceContext context, Size size)
             => Imports.SetViewportExtEx(context, size.Width, size.Height, null);
 
         public static MappingMode GetMappingMode(this in DeviceContext context)
@@ -328,16 +356,46 @@ namespace WInterop.Gdi
         public static MappingMode SetMappingMode(this in DeviceContext context, MappingMode mapMode)
             => Imports.SetMapMode(context, mapMode);
 
-        public static Rectangle GetClipBox(this in DeviceContext context, out RegionType complexity)
+        public static Rectangle GetBoundsRect(this in DeviceContext context, out BoundsState state, bool reset = false)
         {
-            complexity = Imports.GetClipBox(context, out RECT rect);
+            state = Imports.GetBoundsRect(context, out Rect rect, reset ? BoundsState.Reset : default);
             return rect;
         }
 
-        public static Rectangle GetBoundsRect(this in DeviceContext context, out BoundsState state, bool reset = false)
+        public static unsafe Span<PaletteEntry> GetPaletteEntries(this in PaletteHandle palette)
         {
-            state = Imports.GetBoundsRect(context, out RECT rect, reset ? BoundsState.Reset : default);
-            return rect;
+            uint count = Imports.GetPaletteEntries(palette, 0, 0, null);
+
+            if (count == 0)
+                return Span<PaletteEntry>.Empty;
+
+            PaletteEntry[] entries = new PaletteEntry[count];
+
+            fixed (PaletteEntry* pe = entries)
+            {
+                count = Imports.GetPaletteEntries(palette, 0, count, pe);
+            }
+
+            Debug.Assert(count == entries.Length);
+            return new Span<PaletteEntry>(entries, 0, (int)count);
+        }
+
+        public static unsafe Span<PaletteEntry> GetSystemPaletteEntries(this in DeviceContext context)
+        {
+            uint count = Imports.GetSystemPaletteEntries(context, 0, 0, null);
+
+            if (count == 0)
+                return Span<PaletteEntry>.Empty;
+
+            PaletteEntry[] entries = new PaletteEntry[count];
+
+            fixed (PaletteEntry* pe = entries)
+            {
+                count = Imports.GetSystemPaletteEntries(context, 0, count, pe);
+            }
+
+            Debug.Assert(count == entries.Length);
+            return new Span<PaletteEntry>(entries, 0, (int)count);
         }
     }
 }

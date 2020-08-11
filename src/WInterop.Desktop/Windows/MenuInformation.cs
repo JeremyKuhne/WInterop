@@ -1,12 +1,9 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using WInterop.Gdi;
+using WInterop.Gdi.Native;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows
@@ -16,9 +13,11 @@ namespace WInterop.Windows
         public MenuInfoMembers Mask;
         public MenuStyles Style;
         public uint MaxHeight;
-        public BrushHandle Background;
+        private HBRUSH _background;
         public uint ContextHelpId;
         public UIntPtr MenuData;
+
+        public BrushHandle Background => new BrushHandle(_background, ownsHandle: false);
 
         public static implicit operator MenuInformation(MENUINFO info)
         {
@@ -27,13 +26,13 @@ namespace WInterop.Windows
                 Mask = info.fMask,
                 Style = info.dwStyle,
                 MaxHeight = info.cyMax,
-                Background = new BrushHandle(info.hbrBack, ownsHandle: false),
+                _background = info.hbrBack,
                 ContextHelpId = info.dwContextHelpID,
                 MenuData = info.dwMenuData
             };
         }
 
-        public unsafe static implicit operator MENUINFO(MenuInformation info)
+        public static unsafe implicit operator MENUINFO(MenuInformation info)
         {
             return new MENUINFO
             {

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,14 +9,17 @@ namespace WInterop.GdiPlus
     {
         private UIntPtr _token;
 
-        public GdiPlusSession()
+        public GdiPlusSession(uint version = 2)
         {
-            _token = GdiPlusMethods.Startup();
+            _token = GdiPlus.Startup(version);
         }
+
+        ~GdiPlusSession() => Dispose();
 
         public void Dispose()
         {
-            GdiPlusMethods.Shutdown(_token);
+            GC.SuppressFinalize(this);
+            GdiPlus.Shutdown(_token);
             _token = UIntPtr.Zero;
         }
     }

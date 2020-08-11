@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,9 +10,9 @@ using WInterop.Windows.Native;
 namespace Colors1
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 9-1, Pages 359-362.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 9-1, Pages 359-362.
     /// </summary>
     static class Program
     {
@@ -30,8 +26,8 @@ namespace Colors1
     class Colors1 : WindowClass
     {
         Color[] crPrim = { Color.Red, Color.Green, Color.Blue };
-        BrushHandle[] hBrush = new BrushHandle[3];
-        BrushHandle hBrushStatic;
+        BrushHolder[] hBrush = new BrushHolder[3];
+        BrushHolder hBrushStatic;
         WindowHandle[] hwndScroll = new WindowHandle[3];
         WindowHandle[] hwndLabel = new WindowHandle[3];
         WindowHandle[] hwndValue = new WindowHandle[3];
@@ -169,7 +165,7 @@ namespace Colors1
                     window.InvalidateRectangle(rcColor, true);
                     return 0;
                 case MessageType.ControlColorScrollBar:
-                    return hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)];
+                    return (BrushHandle)hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)];
                 case MessageType.ControlColorStatic:
                     id = (int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id);
 
@@ -178,7 +174,7 @@ namespace Colors1
                         DeviceContext dc = (DeviceContext)wParam;
                         dc.SetTextColor(crPrim[id % 3]);
                         dc.SetBackgroundColor(Windows.GetSystemColor(SystemColor.ButtonHighlight));
-                        return hBrushStatic;
+                        return (BrushHandle)hBrushStatic;
                     }
                     break;
                 case MessageType.SystemColorChange:

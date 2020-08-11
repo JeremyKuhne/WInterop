@@ -1,13 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
+using WInterop.Gdi.Native;
 using WInterop.Modules;
 using WInterop.Windows.Native;
 
@@ -24,14 +21,20 @@ namespace WInterop.Windows
         public ModuleInstance Instance;
         public IconHandle Icon;
         public CursorHandle Cursor;
-        public BrushHandle Background;
         public string MenuName;
         public int MenuId;
         public string ClassName;
         public Atom ClassAtom;
         public IconHandle SmallIcon;
+        private HBRUSH _background;
 
-        public unsafe static implicit operator WindowClassInfo(WNDCLASSEX nativeClass)
+        public BrushHandle Background
+        {
+            get => new BrushHandle(_background, ownsHandle: false);
+            set => _background = value.HBRUSH;
+        }
+
+        public static unsafe implicit operator WindowClassInfo(WNDCLASSEX nativeClass)
         {
             var windowClass = new WindowClassInfo
             {
@@ -43,7 +46,7 @@ namespace WInterop.Windows
                 Instance = nativeClass.hInstance,
                 Icon = new IconHandle(nativeClass.hIcon, ownsHandle: false),
                 Cursor = new CursorHandle(nativeClass.hCursor, ownsHandle: false),
-                Background = new BrushHandle(nativeClass.hbrBackground, ownsHandle: false),
+                _background = new BrushHandle(nativeClass.hbrBackground, ownsHandle: false),
                 SmallIcon = new IconHandle(nativeClass.hIconSm, ownsHandle: false)
             };
 

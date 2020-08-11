@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,7 +9,7 @@ using WInterop.Gdi.Native;
 namespace WInterop.GdiPlus.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -26,27 +22,32 @@ namespace WInterop.GdiPlus.Native
         // It is also noted in the documentation that the creation methods may return an
         // out of memory error for other issues other than out of memory.
 
-        // https://msdn.microsoft.com/en-us/library/ms534077.aspx
-        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
-        public static extern GpStatus GdiplusStartup(
-            out UIntPtr token,
-            in GdiplusStartupInput input,
-            out GdiplusStartupOutput output);
+        // MOST imports here are from the flat projection. As this is just a single page
+        // with all of the signatures links on the Gdip* imports are to the relevant C++ api.
+        //
+        // https://docs.microsoft.com/windows/win32/gdiplus/-gdiplus-graphics-flat
 
-        // https://msdn.microsoft.com/en-us/library/ms534076.aspx
+        // https://docs.microsoft.com/windows/win32/api/gdiplusinit/nf-gdiplusinit-gdiplusstartup
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
-        public static extern void GdiplusShutdown(
-            UIntPtr token);
+        public static extern unsafe GpStatus GdiplusStartup(
+            nuint** token,
+            GdiPlusStartupInput* input,
+            GdiPlusStartupOutput** output);
 
-        // https://msdn.microsoft.com/en-us/library/ms536160.aspx
+        // https://docs.microsoft.com/windows/win32/api/gdiplusinit/nf-gdiplusinit-gdiplusshutdown
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
-        public static extern GpStatus GdipCreateFromHDC(
+        public static extern unsafe void GdiplusShutdown(
+            nuint* token);
+
+        // https://docs.microsoft.com/windows/win32/api/gdiplusgraphics/nf-gdiplusgraphics-graphics-fromhdc(inhdc)
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipCreateFromHDC(
             HDC hdc,
-            out GpGraphics graphics);
+            GpGraphics* graphics);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern GpStatus GdipDeleteGraphics(
-            IntPtr grpahics);
+            GpGraphics graphics);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern GpStatus GdipSetSmoothingMode(
@@ -54,30 +55,41 @@ namespace WInterop.GdiPlus.Native
             SmoothingMode smoothingMode);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
-        public static extern GpStatus GdipCreatePen1(
+        public static extern unsafe GpStatus GdipCreatePen1(
             ARGB color,
             float width,
             GpUnit unit,
-            out GpPen pen);
+            GpPen* pen);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern GpStatus GdipSetPenColor(
+            GpPen pen,
+            ARGB argb);
+
+        [SuppressGCTransition]
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipGetPenColor(
+            GpPen pen,
+            ARGB* argb);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern GpStatus GdipDeletePen(
             GpPen pen);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
-        public static extern GpStatus GdipCreateSolidFill(
+        public static extern unsafe GpStatus GdipCreateSolidFill(
             ARGB color,
-            out GpBrush brush);
+            GpBrush* brush);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern GpStatus GdipDeleteBrush(
-            IntPtr brush);
+            GpBrush brush);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern GpStatus GdipDrawLinesI(
+        public static extern unsafe GpStatus GdipDrawLinesI(
             GpGraphics graphics,
             GpPen pen,
-            ref Point points,
+            Point* points,
             int count);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
@@ -93,5 +105,9 @@ namespace WInterop.GdiPlus.Native
         public static extern GpStatus GdipGraphicsClear(
             GpGraphics graphics,
             ARGB color);
+
+        // https://docs.microsoft.com/windows/win32/api/Gdiplusgraphics/nf-gdiplusgraphics-graphics-gethalftonepalette
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern HPALETTE GdipCreateHalftonePalette();
     }
 }

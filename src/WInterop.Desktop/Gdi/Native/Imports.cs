@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,11 +10,12 @@ using WInterop.Windows;
 namespace WInterop.Gdi.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
-        // https://msdn.microsoft.com/library/dd144877.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getdevicecaps
+        [SuppressGCTransition]
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern int GetDeviceCaps(
             HDC hdc,
@@ -36,7 +33,7 @@ namespace WInterop.Gdi.Native
 
         // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-createdcw
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern HDC CreateDCW(
+        public static extern unsafe HDC CreateDCW(
             string pwszDriver,
             string? pwszDevice,
             string? pszPort,
@@ -44,13 +41,13 @@ namespace WInterop.Gdi.Native
 
         // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-createicw
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern HDC CreateICW(
+        public static extern unsafe HDC CreateICW(
             string pwszDriver,
             string pwszDevice,
             string? pszPort,
             DeviceMode* pdm);
 
-        // https://msdn.microsoft.com/library/dd183489.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-createcompatibledc
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HDC CreateCompatibleDC(
             HDC hdc);
@@ -71,6 +68,17 @@ namespace WInterop.Gdi.Native
         public static extern bool CancelDC(
             HDC hdc);
 
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-savedc
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern int SaveDC(
+            HDC hdc);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-restoredc
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern int RestoreDC(
+            HDC hdc,
+            int nSavedDC);
+
         // https://msdn.microsoft.com/library/dd183533.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HGDIOBJ GetStockObject(
@@ -89,7 +97,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd144904.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern int GetObjectW(
+        public static extern unsafe int GetObjectW(
             HGDIOBJ hgdiobj,
             int cbBuffer,
             void* lpvObject);
@@ -153,9 +161,9 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd145194.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public unsafe static extern bool ValidateRect(
+        public static extern unsafe bool ValidateRect(
             WindowHandle hWnd,
-            RECT* lpRect);
+            Rect* lpRect);
 
         // https://msdn.microsoft.com/library/dd183362.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
@@ -165,9 +173,9 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd145002.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public unsafe static extern bool InvalidateRect(
+        public static extern unsafe bool InvalidateRect(
             WindowHandle hWnd,
-            RECT* lpRect,
+            Rect* lpRect,
             bool bErase);
 
         // https://msdn.microsoft.com/library/dd162598.aspx
@@ -182,7 +190,7 @@ namespace WInterop.Gdi.Native
             HDC hDC,
             ref char lpchText,
             int nCount,
-            ref RECT lpRect,
+            ref Rect lpRect,
             TextFormat uFormat);
 
         // https://msdn.microsoft.com/library/dd145133.aspx
@@ -351,7 +359,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd145069.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern bool MoveToEx(
+        public static extern unsafe bool MoveToEx(
             HDC hdc,
             int X,
             int Y,
@@ -444,27 +452,27 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool FillRect(
             HDC hDC,
-            [In] ref RECT lprc,
+            [In] ref Rect lprc,
             HBRUSH hbr);
 
         // https://msdn.microsoft.com/library/dd144838.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool FrameRect(
             HDC hDC,
-            [In] ref RECT lprc,
+            [In] ref Rect lprc,
             HBRUSH hbr);
 
         // https://msdn.microsoft.com/library/dd145007.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool InvertRect(
             HDC hDC,
-            [In] ref RECT lprc);
+            [In] ref Rect lprc);
 
         // https://msdn.microsoft.com/library/dd162479.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool DrawFocusRect(
             HDC hDC,
-            [In] ref RECT lprc);
+            [In] ref Rect lprc);
 
         // https://msdn.microsoft.com/library/dd162799.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -529,7 +537,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd162474.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern bool DPtoLP(
+        public static extern unsafe bool DPtoLP(
             HDC hdc,
             ref Point lpPoints,
             int nCount);
@@ -609,7 +617,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd162748.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern bool OffsetViewportOrgEx(
+        public static extern unsafe bool OffsetViewportOrgEx(
             HDC hdc,
             int nXOffset,
             int nYOffset,
@@ -617,7 +625,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd162749.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern bool OffsetWindowOrgEx(
+        public static extern unsafe bool OffsetWindowOrgEx(
             HDC hdc,
             int nXOffset,
             int nYOffset,
@@ -668,7 +676,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd145098.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern bool SetViewportExtEx(
+        public static extern unsafe bool SetViewportExtEx(
             HDC hdc,
             int nXExtent,
             int nYExtent,
@@ -676,7 +684,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd145099.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern bool SetViewportOrgEx(
+        public static extern unsafe bool SetViewportOrgEx(
             HDC hdc,
             int nXExtent,
             int nYExtent,
@@ -684,7 +692,7 @@ namespace WInterop.Gdi.Native
 
         // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-setwindowextex
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern bool SetWindowExtEx(
+        public static extern unsafe bool SetWindowExtEx(
             HDC hdc,
             int x,
             int y,
@@ -692,7 +700,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd145101.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern bool SetWindowOrgEx(
+        public static extern unsafe bool SetWindowOrgEx(
             HDC hdc,
             int nXExtent,
             int nYExtent,
@@ -707,51 +715,51 @@ namespace WInterop.Gdi.Native
         // https://msdn.microsoft.com/library/dd183481.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool CopyRect(
-            out RECT lprcDst,
-            [In] ref RECT lprcSrc);
+            out Rect lprcDst,
+            [In] ref Rect lprcSrc);
 
         // https://msdn.microsoft.com/library/dd162699.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool EqualRect(
-            [In] ref RECT lprc1,
-            [In] ref RECT lprc2);
+            [In] ref Rect lprc1,
+            [In] ref Rect lprc2);
 
         // https://msdn.microsoft.com/library/dd144994.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool InflateRect(
-            ref RECT lprc,
+            ref Rect lprc,
             int dx,
             int dy);
 
         // https://msdn.microsoft.com/library/dd145001.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool IntersectRect(
-            out RECT lprcDst,
-            [In] ref RECT lprcSrc1,
-            [In] ref RECT lprcSrc2);
+            out Rect lprcDst,
+            [In] ref Rect lprcSrc1,
+            [In] ref Rect lprcSrc2);
 
         // https://msdn.microsoft.com/library/dd145017.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool IsRectEmpty(
-            [In] ref RECT lprc);
+            [In] ref Rect lprc);
 
         // https://msdn.microsoft.com/library/dd162746.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool OffsetRect(
-            ref RECT lprc,
+            ref Rect lprc,
             int dx,
             int dy);
 
         // https://msdn.microsoft.com/library/dd162882.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool PtInRect(
-            [In] ref RECT lprc,
+            [In] ref Rect lprc,
             Point pt);
 
         // https://msdn.microsoft.com/library/dd145085.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool SetRect(
-            out RECT lprc,
+            out Rect lprc,
             int xLeft,
             int yTop,
             int xRight,
@@ -760,21 +768,21 @@ namespace WInterop.Gdi.Native
         // https://msdn.microsoft.com/library/dd145086.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool SetRectEmpty(
-            out RECT lprc);
+            out Rect lprc);
 
         // https://msdn.microsoft.com/library/dd145125.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool SubtractRect(
-            out RECT lprcDst,
-            [In] ref RECT lprcSrc1,
-            [In] ref RECT lprcSrc2);
+            out Rect lprcDst,
+            [In] ref Rect lprcSrc1,
+            [In] ref Rect lprcSrc2);
 
         // https://msdn.microsoft.com/library/dd145163.aspx
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool UnionRect(
-            out RECT lprcDst,
-            [In] ref RECT lprcSrc1,
-            [In] ref RECT lprcSrc2);
+            out Rect lprcDst,
+            [In] ref Rect lprcSrc1,
+            [In] ref Rect lprcSrc2);
 
         // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-combinergn
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -795,18 +803,18 @@ namespace WInterop.Gdi.Native
         // https://msdn.microsoft.com/library/dd183497.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HRGN CreateEllipticRgnIndirect(
-            [In] ref RECT lprc);
+            [In] ref Rect lprc);
 
         // https://msdn.microsoft.com/library/dd183511.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern HRGN CreatePolygonRgn(
+        public static extern unsafe HRGN CreatePolygonRgn(
             Point* lppt,
             int cPoints,
             PolyFillMode fnPolyFillMode);
 
         // https://msdn.microsoft.com/library/dd183512.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern HRGN CreatePolyPolygonRgn(
+        public static extern unsafe HRGN CreatePolyPolygonRgn(
             Point* lppt,
             int[] lpPolyCounts,
             int nCount,
@@ -823,7 +831,7 @@ namespace WInterop.Gdi.Native
         // https://msdn.microsoft.com/library/dd183515.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern HRGN CreateRectRgnIndirect(
-            [In] ref RECT lprc);
+            [In] ref Rect lprc);
 
         // https://msdn.microsoft.com/library/dd183516.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -843,7 +851,7 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd162706.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public unsafe static extern HRGN ExtCreateRegion(
+        public static extern unsafe HRGN ExtCreateRegion(
             [In] ref Matrix3x2 lpXform,
             uint nCount,
             RGNDATA* lpRgnData);
@@ -875,7 +883,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType GetRgnBox(
             HRGN hrgn,
-            out RECT lprc);
+            out Rect lprc);
 
         // https://msdn.microsoft.com/library/dd145008.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -907,7 +915,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool RectInRegion(
             HRGN hrgn,
-            [In] ref RECT lprc);
+            [In] ref Rect lprc);
 
         // https://msdn.microsoft.com/library/dd145087.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
@@ -938,9 +946,9 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern RegionType GetClipBox(
             HDC hdc,
-            out RECT lprect);
+            out Rect lprect);
 
-        // https://msdn.microsoft.com/library/dd144866.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getcliprgn
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern int GetClipRgn(
             HDC hdc,
@@ -986,7 +994,7 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern Boolean32 RectVisible(
             HDC hdc,
-            [In] ref RECT lprc);
+            [In] ref Rect lprc);
 
         // https://msdn.microsoft.com/library/dd162954(v=vs.85).aspx
         [DllImport(Libraries.Gdi32, SetLastError = true, ExactSpelling = true)]
@@ -1010,7 +1018,8 @@ namespace WInterop.Gdi.Native
         public static extern BackgroundMode GetBkMode(
             HDC hdc);
 
-        // https://msdn.microsoft.com/library/dd162965.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-setbkmode
+        [SuppressGCTransition]
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern BackgroundMode SetBkMode(
             HDC hdc,
@@ -1120,14 +1129,37 @@ namespace WInterop.Gdi.Native
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern BoundsState GetBoundsRect(
             HDC hdc,
-            out RECT lprect,
+            out Rect lprect,
             BoundsState flags);
 
         // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-setboundsrect
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern BoundsState SetBoundsRect(
             HDC hdc,
-            ref RECT lprect,
+            ref Rect lprect,
             BoundsState flags);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getpaletteentries
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe uint GetPaletteEntries(
+            HPALETTE hpal,
+            uint iStart,
+            uint cEntries,
+            PaletteEntry* pPalEntries);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getsystempaletteentries
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe uint GetSystemPaletteEntries(
+            HDC hdc,
+            uint iStart,
+            uint cEntries,
+            PaletteEntry* pPalEntries);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-selectpalette
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern HPALETTE SelectPalette(
+            HDC hdc,
+            HPALETTE hPal,
+            Boolean32 bForceBkgd);
     }
 }

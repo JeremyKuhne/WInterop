@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi;
+using System;
 
-namespace WInterop.Windows.Native
+namespace WInterop.GdiPlus.Native
 {
-    public struct TPMPARAMS
+    public readonly struct GpPen
     {
-        public uint cbSize;
-        public Rect rcExclude;
+        public IntPtr Handle { get; }
     }
 }

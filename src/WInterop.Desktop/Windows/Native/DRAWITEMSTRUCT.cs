@@ -1,11 +1,8 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using WInterop.Gdi;
 using WInterop.Gdi.Native;
 
 namespace WInterop.Windows.Native
@@ -20,7 +17,7 @@ namespace WInterop.Windows.Native
         public readonly OwnerDrawStates itemState;
         public readonly HWND hwndItem;
         public readonly HDC hDC;
-        public readonly RECT rcItem;
+        public readonly Rect rcItem;
         public readonly IntPtr itemData;
     }
 }

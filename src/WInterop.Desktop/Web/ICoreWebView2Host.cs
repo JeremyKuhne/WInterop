@@ -1,14 +1,9 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Errors;
-using WInterop.Gdi.Native;
+using WInterop.Gdi;
 using WInterop.Web.Native;
 using WInterop.Windows.Native;
 
@@ -21,7 +16,7 @@ namespace WInterop.Web
     {
         Boolean32 IsVisible { get; set; }
 
-        RECT Bounds { get; set; }
+        Rect Bounds { get; set; }
 
         double ZoomFactor { get; set; }
 
@@ -35,7 +30,7 @@ namespace WInterop.Web
         //    /* [in] */ EventRegistrationToken token) = 0;
 
         void SetBoundsAndZoomFactor(
-            RECT bounds,
+            Rect bounds,
             double zoomFactor);
 
         void MoveFocus_Stub();

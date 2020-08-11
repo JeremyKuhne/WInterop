@@ -1,9 +1,9 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+#pragma warning disable SA1303 // Const field names should begin with upper-case letter
+#pragma warning disable SA1310 // Field names should not contain underscore
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace WInterop
 {
@@ -23,9 +23,12 @@ namespace WInterop
 
         // COM API sets not available on Win7
         // Windows 8.0
+
         public const string api_ms_win_core_com_l1_1_0 = "api-ms-win-core-com-l1-1-0.dll";
+
         // Windows 8.1
         public const string api_ms_win_core_com_l1_1_1 = "api-ms-win-core-com-l1-1-1.dll";
+
         // Windows 10.0?
         // CreateILockBytesOnHGlobal, FmtIdToPropStgName, GetConvertStg, GetHGlobalFromILockBytes, PropStgNameToFmtId, ReadClassStg, ReadClassStm,
         // StgCreateDocfile, StgCreateDocfileOnILockBytes, StgCreatePropSetStg, StgCreatePropStg, StgCreateStorageEx, StgIsStorageFile, StgIsStorageILockBytes,
@@ -128,4 +131,8 @@ namespace WInterop
         // Available on Windows 7
         public const string api_ms_win_security_lsalookup_l1_1_0 = "api-ms-win-security-lsalookup-l1-1-0.dll";
     }
+
+#pragma warning restore SA1310 // Field names should not contain underscore
+#pragma warning restore SA1303 // Const field names should begin with upper-case letter
+#pragma warning restore IDE1006 // Naming Styles
 }
