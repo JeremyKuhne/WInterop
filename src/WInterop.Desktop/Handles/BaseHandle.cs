@@ -27,7 +27,7 @@ namespace WInterop.Handles
             SetHandle(handle);
         }
 
-        public unsafe static implicit operator void*(BaseHandle handle) => handle == null ? null : handle.handle.ToPointer();
+        public static unsafe implicit operator void*(BaseHandle handle) => handle == null ? null : handle.handle.ToPointer();
         public static explicit operator IntPtr(BaseHandle handle) => handle?.DangerousGetHandle() ?? IntPtr.Zero;
     }
 }

@@ -114,7 +114,7 @@ namespace WInterop.Storage
         /// <remarks>
         /// Aggregate of FileBasicInformation, FileStandardInformation, FileInternalInformation,
         /// FileEaInformation, FilePositionInformation, & FileNameInformation.
-        /// 
+        ///
         /// https://msdn.microsoft.com/en-us/library/ff469436.aspx
         /// </remarks>
         FileAllInformation = 18,
@@ -171,7 +171,7 @@ namespace WInterop.Storage
         /// pipe that is being queried. Remote information is not available for local pipes or for
         /// the server end of a remote pipe. Therefore, this information class is usable only by the
         /// client to retrieve information associated with its end of the pipe.
-        /// 
+        ///
         /// Uses <see cref="PipeRemoteInformation"/>.
         /// </summary>
         /// <remarks>

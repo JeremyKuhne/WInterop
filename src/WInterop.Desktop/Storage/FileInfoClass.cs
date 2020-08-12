@@ -179,7 +179,7 @@ namespace WInterop.Storage
         FileIdInfo,
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryDirectoryFile & FileIdExtdDirectoryInformation with RestartScan
@@ -188,7 +188,7 @@ namespace WInterop.Storage
         FileIdExtdDirectoryInfo,
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <remarks>
         /// Thunks to NtQueryDirectoryFile & FileIdExtdDirectoryInformation with RestartScan
@@ -197,7 +197,7 @@ namespace WInterop.Storage
         FileIdExtdDirectoryRestartInfo,
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <remarks>
         /// Only valid for SetFileInformationByHandle. Thunks to NtSetInformationFile.

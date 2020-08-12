@@ -1,13 +1,9 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 using WInterop.Devices.Native;
 using WInterop.Errors;
 using WInterop.Storage;
@@ -18,11 +14,11 @@ namespace WInterop.Devices
     public static partial class Devices
     {
         /// <summary>
-        /// Get the stable Guid for the given device handle.
+        ///  Get the stable Guid for the given device handle.
         /// </summary>
-        public unsafe static Guid QueryStableGuid(SafeHandle deviceHandle)
+        public static unsafe Guid QueryStableGuid(SafeHandle deviceHandle)
         {
-            Guid guid = new Guid();
+            Guid guid = default;
 
             Error.ThrowLastErrorIfFalse(
                 Imports.DeviceIoControl(
@@ -39,22 +35,22 @@ namespace WInterop.Devices
         }
 
         /// <summary>
-        /// Get the device name for the given handle.
+        ///  Get the device name for the given handle.
         /// </summary>
-        public unsafe static string QueryDeviceName(SafeHandle deviceHandle)
+        public static unsafe string QueryDeviceName(SafeHandle deviceHandle)
         {
             return GetMountDevName(deviceHandle, ControlCodes.MountDevice.QueryDeviceName);
         }
 
         /// <summary>
-        /// Get the interface name for the given handle.
+        ///  Get the interface name for the given handle.
         /// </summary>
-        public unsafe static string QueryInterfacename(SafeHandle deviceHandle)
+        public static unsafe string QueryInterfacename(SafeHandle deviceHandle)
         {
             return GetMountDevName(deviceHandle, ControlCodes.MountDevice.QueryInterfaceName);
         }
 
-        private unsafe static string GetMountDevName(SafeHandle deviceHandle, ControlCode controlCode)
+        private static unsafe string GetMountDevName(SafeHandle deviceHandle, ControlCode controlCode)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -86,11 +82,11 @@ namespace WInterop.Devices
         }
 
         /// <summary>
-        /// Get the suggested link name for the device in the "\DosDevices\" format.
+        ///  Get the suggested link name for the device in the "\DosDevices\" format.
         /// </summary>
-        public unsafe static string QuerySuggestedLinkName(SafeHandle deviceHandle)
+        public static unsafe string QuerySuggestedLinkName(SafeHandle deviceHandle)
         {
-            return BufferHelper.BufferInvoke(((HeapBuffer buffer) =>
+            return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 buffer.EnsureByteCapacity((ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
                 ControlCode controlCode = ControlCodes.MountDevice.QuerySuggestedLinkName;
@@ -109,21 +105,22 @@ namespace WInterop.Devices
                     switch (error)
                     {
                         case WindowsError.ERROR_MORE_DATA:
-                            buffer.EnsureByteCapacity(((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->NameLength + (ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
+                            buffer.EnsureByteCapacity(((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->NameLength
+                                + (ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
                             break;
                         default:
                             throw error.GetException();
                     }
                 }
 
-                return (((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->Name).CreateString();
-            }));
+                return ((MOUNTDEV_SUGGESTED_LINK_NAME*)buffer.VoidPointer)->Name.CreateString();
+            });
         }
 
         /// <summary>
-        /// Get the unique ID as presented to the mount manager by a device.
+        ///  Get the unique ID as presented to the mount manager by a device.
         /// </summary>
-        public unsafe static byte[] QueryUniqueId(SafeHandle deviceHandle)
+        public static unsafe byte[] QueryUniqueId(SafeHandle deviceHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -156,9 +153,9 @@ namespace WInterop.Devices
         }
 
         /// <summary>
-        /// Gets the DOS drive letter for the given volume if it has one.
+        ///  Gets the DOS drive letter for the given volume if it has one.
         /// </summary>
-        public unsafe static string? QueryDosVolumePath(string volume)
+        public static unsafe string? QueryDosVolumePath(string volume)
         {
             var mountManager = Storage.Storage.CreateFile(
                 @"\\?\MountPointManager", CreationDisposition.OpenExisting, 0);
@@ -213,10 +210,12 @@ namespace WInterop.Devices
         }
 
         /// <summary>
-        /// Gets reparse point names for symbolic links and mount points.
+        ///  Gets reparse point names for symbolic links and mount points.
         /// </summary>
-        /// <param name="fileHandle">Handle for the reparse point, must be opened with <see cref="FileAccessRights.ReadExtendedAttributes"/>.</param>
-        public unsafe static (string? printName, string? substituteName, ReparseTag tag) GetReparsePointNames(SafeFileHandle fileHandle)
+        /// <param name="fileHandle">
+        ///  Handle for the reparse point, must be opened with <see cref="FileAccessRights.ReadExtendedAttributes"/>.
+        /// </param>
+        public static unsafe (string? printName, string? substituteName, ReparseTag tag) GetReparsePointNames(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {

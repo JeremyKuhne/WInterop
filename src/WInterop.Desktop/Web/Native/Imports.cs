@@ -34,7 +34,7 @@ namespace WInterop.Web.Native
             out string versionInfo);
 
         [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
-        public unsafe static extern HResult CompareBrowserVersions(
+        public static unsafe extern HResult CompareBrowserVersions(
             string version1,
             string version2,
             int* result);

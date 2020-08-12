@@ -103,7 +103,7 @@ namespace WInterop.Shell
 
             // https://docs.microsoft.com/en-us/windows/desktop/api/shlobj_core/nf-shlobj_core-shgetpathfromidlistex
             [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-            public unsafe static extern bool SHGetPathFromIDListEx(
+            public static unsafe extern bool SHGetPathFromIDListEx(
                 ItemIdList pidl,
                 char* pszPath,
                 uint cchPath,

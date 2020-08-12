@@ -41,7 +41,7 @@ namespace WInterop.Compression.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365226.aspx
         [DllImport(Libraries.Lz32, ExactSpelling = true)]
-        public unsafe static extern int LZRead(
+        public static unsafe extern int LZRead(
             int hFile,
             byte* lpBuffer,
             int cbRead);
@@ -77,7 +77,7 @@ namespace WInterop.Compression.Native
         /// <param name="lpCompressedName">MAX_PATH (260 char) buffer for the uncompressed name of the file.</param>
         /// <returns>Handle or LZ error code (as LZOpenFileW).</returns>
         [DllImport(Libraries.Lz32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern int LZCreateFileW(
+        public static unsafe extern int LZCreateFileW(
             string lpFileName,
             DesiredAccess dwAccess,
             ShareModes dwShareMode,

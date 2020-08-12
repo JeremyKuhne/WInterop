@@ -37,6 +37,6 @@ namespace WInterop.Windows
         /// The window procedure has processed the message.
         /// The thread that sent the message is no longer blocked. [ISMEX_REPLIED]
         /// </summary>
-        Replied = 0x00000008 
+        Replied = 0x00000008
     }
 }

@@ -1,17 +1,11 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 
 namespace WInterop.Security.Native
 {
-    /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379630.aspx">TOKEN_PRIVILEGES</a> structure.
-    /// </summary>
+    /// <docs>https://docs.microsoft.com/windows/win32/api/winnt/ns-winnt-token_privileges</docs>
     public struct TOKEN_PRIVILEGES
     {
         public uint PrivilegeCount;
@@ -19,7 +13,7 @@ namespace WInterop.Security.Native
         // This is an ANYSIZE_ARRAY
         private LuidAndAttributes _Privileges;
 
-        unsafe public ReadOnlySpan<LuidAndAttributes> Privileges
+        public unsafe ReadOnlySpan<LuidAndAttributes> Privileges
         {
             get { fixed (LuidAndAttributes* p = &_Privileges) { return new ReadOnlySpan<LuidAndAttributes>(p, (int)PrivilegeCount); } }
         }

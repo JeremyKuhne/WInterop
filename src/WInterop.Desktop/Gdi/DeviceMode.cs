@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,14 +8,13 @@ using System.Runtime.InteropServices;
 namespace WInterop.Gdi
 {
     /// <summary>
-    /// [DEVMODE]
+    ///  [DEVMODE]
     /// </summary>
-    /// <msdn>https://msdn.microsoft.com/en-us/library/windows/desktop/dd183565.aspx</msdn>
+    /// <docs>https://docs.microsoft.com/windows/win32/api/wingdi/ns-wingdi-devmodew</docs>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct DeviceMode
     {
-        public static unsafe DeviceMode Create()
-            => new DeviceMode { Size = (ushort)sizeof(DeviceMode) };
+        public static unsafe DeviceMode Create() => new DeviceMode { Size = (ushort)sizeof(DeviceMode) };
 
         private const int CCHDEVICENAME = 32;
         private const int CCHFORMNAME = 32;
@@ -50,11 +45,10 @@ namespace WInterop.Gdi
         public uint ICMIntent;
         public uint MediaType;
         public uint DitherType;
-        private uint Reserved1;
-        private uint Reserved2;
+        public uint Reserved1;
+        public uint Reserved2;
         public uint PanningWidth;
         public uint PanningHeight;
-
 
         [StructLayout(LayoutKind.Explicit)]
         public struct DisplayFlagsOrNupUnion
@@ -62,7 +56,7 @@ namespace WInterop.Gdi
             [FieldOffset(0)]
             public DisplayFlags DisplayFlags;
             [FieldOffset(0)]
-            public uint dmNup;
+            public uint Nup;
         }
 
         [StructLayout(LayoutKind.Explicit)]
@@ -132,12 +126,12 @@ namespace WInterop.Gdi
         public enum Orientation : short
         {
             /// <summary>
-            /// [DMORIENT_PORTRAIT]
+            ///  [DMORIENT_PORTRAIT]
             /// </summary>
             Portrait = 1,
 
             /// <summary>
-            /// [DMORIENT_LANDSCAPE]
+            ///  [DMORIENT_LANDSCAPE]
             /// </summary>
             Landscape = 2
         }
@@ -145,22 +139,22 @@ namespace WInterop.Gdi
         public enum DisplayOrientation : uint
         {
             /// <summary>
-            /// [DMDO_DEFAULT]
+            ///  [DMDO_DEFAULT]
             /// </summary>
             Default = 0,
 
             /// <summary>
-            /// [DMDO_90]
+            ///  [DMDO_90]
             /// </summary>
             Rotate90 = 1,
 
             /// <summary>
-            /// [DMDO_180]
+            ///  [DMDO_180]
             /// </summary>
             Rotate180 = 2,
 
             /// <summary>
-            /// [DMDO_270]
+            ///  [DMDO_270]
             /// </summary>
             Rotate270 = 3
         }
@@ -168,17 +162,17 @@ namespace WInterop.Gdi
         public enum FixedOutput : uint
         {
             /// <summary>
-            /// [DMDFO_DEFAULT]
+            ///  [DMDFO_DEFAULT]
             /// </summary>
             Default = 0,
 
             /// <summary>
-            /// [DMDFO_STRETCH]
+            ///  [DMDFO_STRETCH]
             /// </summary>
             Stretch = 1,
 
             /// <summary>
-            /// [DMDFO_CENTER]
+            ///  [DMDFO_CENTER]
             /// </summary>
             Center = 2
         }
@@ -187,12 +181,12 @@ namespace WInterop.Gdi
         public enum DisplayFlags
         {
             /// <summary>
-            /// [DM_INTERLACED]
+            ///  [DM_INTERLACED]
             /// </summary>
             Interlaced = 0x00000002,
 
             /// <summary>
-            /// [DMDISPLAYFLAGS_TEXTMODE]
+            ///  [DMDISPLAYFLAGS_TEXTMODE]
             /// </summary>
             TextMode = 0x00000004
         }

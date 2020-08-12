@@ -1,22 +1,18 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 using WInterop.Errors;
-using WInterop.Storage.Native;
 using WInterop.Handles;
+using WInterop.Security;
+using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Security;
 using WInterop.Synchronization;
 
 namespace WInterop.Storage
@@ -24,9 +20,9 @@ namespace WInterop.Storage
     public static partial class Storage
     {
         /// <summary>
-        /// Get the short (8.3) path version of the given path.
+        ///  Get the short (8.3) path version of the given path.
         /// </summary>
-        public unsafe static string GetShortPathName(string path)
+        public static unsafe string GetShortPathName(string path)
         {
             static uint Fix(string path, in ValueBuffer<char> buffer)
             {
@@ -47,7 +43,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets file information for the given handle.
+        ///  Gets file information for the given handle.
         /// </summary>
         public static ByHandleFileInformation GetFileInformationByHandle(SafeFileHandle fileHandle)
         {
@@ -58,19 +54,21 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Creates symbolic links.
+        ///  Creates symbolic links.
         /// </summary>
         public static void CreateSymbolicLink(string symbolicLinkPath, string targetPath, bool targetIsDirectory = false)
         {
-            Error.ThrowLastErrorIfFalse(Imports.CreateSymbolicLinkW(symbolicLinkPath, targetPath,
+            Error.ThrowLastErrorIfFalse(Imports.CreateSymbolicLinkW(
+                symbolicLinkPath,
+                targetPath,
                 targetIsDirectory ? SymbolicLinkFlag.Directory : SymbolicLinkFlag.File));
         }
 
         /// <summary>
-        /// CreateFile wrapper. Desktop only. Prefer File.CreateFile() as it will handle all supported platforms.
+        ///  CreateFile wrapper. Desktop only. Prefer File.CreateFile() as it will handle all supported platforms.
         /// </summary>
         /// <remarks>Not available in Windows Store applications.</remarks>
-        public unsafe static SafeFileHandle CreateFileW(
+        public static unsafe SafeFileHandle CreateFileW(
             string path,
             DesiredAccess desiredAccess,
             ShareModes shareMode,
@@ -81,16 +79,24 @@ namespace WInterop.Storage
         {
             uint flags = (uint)fileAttributes | (uint)fileFlags | (uint)securityQosFlags;
 
-            SafeFileHandle handle = Imports.CreateFileW(path, desiredAccess, shareMode, lpSecurityAttributes: null, creationDisposition, flags, hTemplateFile: IntPtr.Zero);
+            SafeFileHandle handle = Imports.CreateFileW(
+                path,
+                desiredAccess,
+                shareMode,
+                lpSecurityAttributes: null,
+                creationDisposition,
+                flags,
+                hTemplateFile: IntPtr.Zero);
+
             if (handle.IsInvalid)
                 Error.ThrowLastError(path);
             return handle;
         }
 
         /// <summary>
-        /// NtCreateFile wrapper.
+        ///  NtCreateFile wrapper.
         /// </summary>
-        public unsafe static SafeFileHandle CreateFileDirect(
+        public static unsafe SafeFileHandle CreateFileDirect(
             string path,
             CreateDisposition createDisposition,
             DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
@@ -99,14 +105,21 @@ namespace WInterop.Storage
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
         {
-            return CreateFileRelative(path, null, createDisposition, desiredAccess, shareAccess,
-                fileAttributes, createOptions, objectAttributes);
+            return CreateFileRelative(
+                path,
+                rootDirectory: null,
+                createDisposition,
+                desiredAccess,
+                shareAccess,
+                fileAttributes,
+                createOptions,
+                objectAttributes);
         }
 
         /// <summary>
-        /// NtCreateFile wrapper.
+        ///  NtCreateFile wrapper.
         /// </summary>
-        public unsafe static SafeFileHandle CreateFileDirect(
+        public static unsafe SafeFileHandle CreateFileDirect(
             ReadOnlySpan<char> path,
             CreateDisposition createDisposition,
             DesiredAccess desiredAccess = DesiredAccess.GenericReadWrite | DesiredAccess.Synchronize,
@@ -115,12 +128,19 @@ namespace WInterop.Storage
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
         {
-            return CreateFileRelative(path, null, createDisposition, desiredAccess, shareAccess,
-                fileAttributes, createOptions, objectAttributes);
+            return CreateFileRelative(
+                path,
+                rootDirectory: null,
+                createDisposition,
+                desiredAccess,
+                shareAccess,
+                fileAttributes,
+                createOptions,
+                objectAttributes);
         }
 
         /// <summary>
-        /// Create a file handle using an optional base directory handle.
+        ///  Create a file handle using an optional base directory handle.
         /// </summary>
         /// <param name="path">
         /// Full path (or relative path if <paramref name="rootDirectory"/> is specified.
@@ -128,7 +148,7 @@ namespace WInterop.Storage
         /// <param name="rootDirectory">
         /// Optional handle to the directory the path is relative to.
         /// </param>
-        public unsafe static SafeFileHandle CreateFileRelative(
+        public static unsafe SafeFileHandle CreateFileRelative(
             ReadOnlySpan<char> path,
             SafeFileHandle? rootDirectory,
             CreateDisposition createDisposition,
@@ -138,11 +158,11 @@ namespace WInterop.Storage
             CreateOptions createOptions = CreateOptions.SynchronousIoNonalert,
             ObjectAttributes objectAttributes = ObjectAttributes.CaseInsensitive)
         {
-            using var handle = new UnwrapHandle(rootDirectory);
+            using var rootDirectoryHandle = new UnwrapHandle(rootDirectory);
             return new SafeFileHandle(
                 CreateFileRelative(
                     path,
-                    handle,
+                    rootDirectoryHandle,
                     createDisposition,
                     desiredAccess,
                     shareAccess,
@@ -153,15 +173,15 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Create a file handle using an optional base directory handle.
+        ///  Create a file handle using an optional base directory handle.
         /// </summary>
         /// <param name="path">
-        /// Full path (or relative path if <paramref name="rootDirectory"/> is specified.
+        ///  Full path (or relative path if <paramref name="rootDirectory"/> is specified.
         /// </param>
         /// <param name="rootDirectory">
-        /// Optional handle to the directory the path is relative to.
+        ///  Optional handle to the directory the path is relative to.
         /// </param>
-        public unsafe static IntPtr CreateFileRelative(
+        public static unsafe IntPtr CreateFileRelative(
             ReadOnlySpan<char> path,
             IntPtr rootDirectory,
             CreateDisposition createDisposition,
@@ -199,7 +219,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Wrapper to create a directory within another directory
+        ///  Wrapper to create a directory within another directory
         /// </summary>
         public static SafeFileHandle CreateDirectory(SafeFileHandle rootDirectory, string name)
         {
@@ -214,7 +234,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Creates a directory handle from an existing directory handle.
+        ///  Creates a directory handle from an existing directory handle.
         /// </summary>
         public static SafeFileHandle CreateDirectoryHandle(SafeFileHandle rootDirectory, string subdirectoryPath)
         {
@@ -229,7 +249,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Creates a raw directory handle from an existing directory handle.
+        ///  Creates a raw directory handle from an existing directory handle.
         /// </summary>
         public static IntPtr CreateDirectoryHandle(IntPtr rootDirectory, string subdirectoryPath)
         {
@@ -244,7 +264,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// CopyFileEx wrapper. Desktop only. Prefer File.CopyFile() as it will handle all supported platforms.
+        ///  CopyFileEx wrapper. Desktop only. Prefer File.CopyFile() as it will handle all supported platforms.
         /// </summary>
         /// <param name="overwrite">Overwrite an existing file if true.</param>
         public static void CopyFileEx(string source, string destination, bool overwrite = false)
@@ -266,11 +286,11 @@ namespace WInterop.Storage
         {
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545817.aspx
 
-            //  typedef struct _FILE_NAME_INFORMATION
-            //  {
-            //      ULONG FileNameLength;
-            //      WCHAR FileName[1];
-            //  } FILE_NAME_INFORMATION, *PFILE_NAME_INFORMATION;
+            // typedef struct _FILE_NAME_INFORMATION
+            // {
+            //     ULONG FileNameLength;
+            //     WCHAR FileName[1];
+            // } FILE_NAME_INFORMATION, *PFILE_NAME_INFORMATION;
 
             return GetFileInformationString(fileHandle, FileInformationClass.FileNameInformation);
         }
@@ -282,7 +302,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// This is the short name for the file/directory name, not the path. Available from WindowsStore.
+        ///  This is the short name for the file/directory name, not the path. Available from WindowsStore.
         /// </summary>
         public static string GetShortName(SafeFileHandle fileHandle)
         {
@@ -290,7 +310,9 @@ namespace WInterop.Storage
             return GetFileInformationString(fileHandle, FileInformationClass.FileAlternateNameInformation);
         }
 
-        private unsafe static string GetFileInformationString(SafeFileHandle fileHandle, FileInformationClass fileInformationClass)
+        private static unsafe string GetFileInformationString(
+            SafeFileHandle fileHandle,
+            FileInformationClass fileInformationClass)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -307,11 +329,11 @@ namespace WInterop.Storage
                     buffer.EnsureByteCapacity(byteLength + sizeof(uint));
 
                     status = Imports.NtQueryInformationFile(
-                        FileHandle: fileHandle,
+                        fileHandle,
                         IoStatusBlock: out _,
                         FileInformation: buffer.VoidPointer,
                         Length: checked((uint)buffer.ByteCapacity),
-                        FileInformationClass: fileInformationClass);
+                        fileInformationClass);
 
                     if (status == NTStatus.STATUS_SUCCESS || status == NTStatus.STATUS_BUFFER_OVERFLOW)
                     {
@@ -326,7 +348,7 @@ namespace WInterop.Storage
             });
         }
 
-        unsafe private static void GetFileInformation(SafeFileHandle fileHandle, FileInformationClass fileInformationClass, void* value, uint size)
+        private static unsafe void GetFileInformation(SafeFileHandle fileHandle, FileInformationClass fileInformationClass, void* value, uint size)
         {
             Imports.NtQueryInformationFile(
                 FileHandle: fileHandle,
@@ -338,9 +360,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets the file mode for the given handle.
+        ///  Gets the file mode for the given handle.
         /// </summary>
-        public unsafe static FileAccessModes GetFileMode(SafeFileHandle fileHandle)
+        public static unsafe FileAccessModes GetFileMode(SafeFileHandle fileHandle)
         {
             FileAccessModes info;
             GetFileInformation(fileHandle, FileInformationClass.FileModeInformation, &info, sizeof(FileAccessModes));
@@ -348,10 +370,10 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Return whether or not the given expression matches the given name. Takes standard
-        /// Windows wildcards (*, ?, &lt;, &gt; &quot;).
+        ///  Return whether or not the given expression matches the given name. Takes standard Windows wildcards
+        ///  (*, ?, &lt;, &gt; &quot;).
         /// </summary>
-        public unsafe static bool IsNameInExpression(string expression, string name, bool ignoreCase)
+        public static unsafe bool IsNameInExpression(string expression, string name, bool ignoreCase)
         {
             if (string.IsNullOrEmpty(expression) || string.IsNullOrEmpty(name))
                 return false;
@@ -371,6 +393,7 @@ namespace WInterop.Storage
                     var temp = new SafeString.Native.UNICODE_STRING(e, expression.Length);
                     eus = &temp;
                 }
+
                 if (n != null)
                 {
                     var temp = new SafeString.Native.UNICODE_STRING(n, name.Length);
@@ -382,11 +405,11 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the access rights applied to the given file handle.
+        ///  Get the access rights applied to the given file handle.
         /// </summary>
-        public unsafe static FileAccessRights GetRights(SafeFileHandle fileHandle)
+        public static unsafe FileAccessRights GetRights(SafeFileHandle fileHandle)
         {
-            FileAccessInformation access = new FileAccessInformation();
+            FileAccessInformation access = default;
             Imports.NtQueryInformationFile(
                 fileHandle,
                 IoStatusBlock: out _,
@@ -400,7 +423,7 @@ namespace WInterop.Storage
         /// Get the ids for all processes that have a handle to this file system object.
         /// Does not include the current process.
         /// </summary>
-        public unsafe static IEnumerable<UIntPtr> GetProcessIds(SafeFileHandle fileHandle)
+        public static unsafe IEnumerable<UIntPtr> GetProcessIds(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -408,8 +431,12 @@ namespace WInterop.Storage
 
                 while (status == NTStatus.STATUS_INFO_LENGTH_MISMATCH)
                 {
-                    status = Imports.NtQueryInformationFile(fileHandle, out IO_STATUS_BLOCK statusBlock,
-                        buffer.VoidPointer, (uint)buffer.ByteCapacity, FileInformationClass.FileProcessIdsUsingFileInformation);
+                    status = Imports.NtQueryInformationFile(
+                        fileHandle,
+                        out IO_STATUS_BLOCK statusBlock,
+                        buffer.VoidPointer,
+                        (uint)buffer.ByteCapacity,
+                        FileInformationClass.FileProcessIdsUsingFileInformation);
 
                     switch (status)
                     {
@@ -429,11 +456,11 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Returns the mapping for the specified DOS device name or the full list of DOS device names if passed null.
+        ///  Returns the mapping for the specified DOS device name or the full list of DOS device names if passed null.
         /// </summary>
         /// <remarks>
-        /// This will look up the symbolic link target from the dos device namespace (\??\) when a name is specified.
-        /// It performs the equivalent of NtOpenDirectoryObject, NtOpenSymbolicLinkObject, then NtQuerySymbolicLinkObject.
+        ///  This will look up the symbolic link target from the dos device namespace (\??\) when a name is specified.
+        ///  It performs the equivalent of NtOpenDirectoryObject, NtOpenSymbolicLinkObject, then NtQuerySymbolicLinkObject.
         /// </remarks>
         public static IEnumerable<string> QueryDosDevice(string deviceName)
         {
@@ -472,7 +499,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets a set of strings for the defined logical drives in the system.
+        ///  Gets a set of strings for the defined logical drives in the system.
         /// </summary>
         public static IEnumerable<string> GetLogicalDriveStrings()
         {
@@ -495,7 +522,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Returns the path of the volume mount point for the specified path.
+        ///  Returns the path of the volume mount point for the specified path.
         /// </summary>
         public static string GetVolumePathName(string path)
         {
@@ -520,9 +547,11 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Returns the list of all paths where the given volume name is mounted.
+        ///  Returns the list of all paths where the given volume name is mounted.
         /// </summary>
-        /// <param name="volumeName">A volume GUID path for the volume (\\?\Volume{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}\).</param>
+        /// <param name="volumeName">
+        ///  A volume GUID path for the volume (\\?\Volume{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}\).
+        /// </param>
         public static IEnumerable<string> GetVolumePathNamesForVolumeName(string volumeName)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
@@ -557,9 +586,10 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets the GUID format (\\?\Volume{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}\) of the given volume mount point path.
+        ///  Gets the GUID format (\\?\Volume{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}\) of the given volume mount
+        ///  point path.
         /// </summary>
-        public unsafe static string GetVolumeNameForVolumeMountPoint(string volumeMountPoint)
+        public static unsafe string GetVolumeNameForVolumeMountPoint(string volumeMountPoint)
         {
             // MSDN claims 50 is the largest size
             Span<char> buffer = stackalloc char[50];
@@ -577,17 +607,16 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get all volume names.
+        ///  Get all volume names.
         /// </summary>
         public static IEnumerable<string> GetVolumes() => new VolumeNamesEnumerable();
 
         /// <summary>
-        /// Get all of the folder mount points for the given volume. Requires admin access.
+        ///  Get all of the folder mount points for the given volume. Requires admin access.
         /// </summary>
         /// <remarks>
-        /// This API seems busted/flaky. Use GetVolumePathNamesForVolumeName() instead to
-        /// get all mount points (folders *and* drive letter mounts) without requiring admin
-        /// access.
+        ///  This API seems busted/flaky. Use GetVolumePathNamesForVolumeName() instead to get all mount points
+        ///  (folders *and* drive letter mounts) without requiring admin access.
         /// </remarks>
         /// <param name="volumeName">Volume name in the form "\\?\Volume{guid}\"</param>
         public static IEnumerable<string> GetVolumeMountPoints(string volumeName)
@@ -625,7 +654,7 @@ namespace WInterop.Storage
         public static void DecryptFile(string path)
             => Error.ThrowLastErrorIfFalse(Imports.DecryptFileW(path, 0), path);
 
-        public unsafe static IEnumerable<SID> QueryUsersOnEncryptedFile(string path)
+        public static unsafe IEnumerable<SID> QueryUsersOnEncryptedFile(string path)
         {
             ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
             Imports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
@@ -647,7 +676,7 @@ namespace WInterop.Storage
             return sids;
         }
 
-        public unsafe static bool RemoveUser(in SID sid, string path)
+        public static unsafe bool RemoveUser(in SID sid, string path)
         {
             ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
             Imports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
@@ -668,6 +697,7 @@ namespace WInterop.Storage
                         Imports.RemoveUsersFromEncryptedFile(path, &removeList).ThrowIfFailed(path);
                         return true;
                     }
+
                     users++;
                 }
 
@@ -686,9 +716,9 @@ namespace WInterop.Storage
         // https://blogs.technet.microsoft.com/askcore/2010/08/25/ntfs-file-attributes/
 
         /// <summary>
-        /// Get the temporary directory path.
+        ///  Get the temporary directory path.
         /// </summary>
-        public unsafe static string GetTempPath()
+        public static unsafe string GetTempPath()
         {
             return PlatformInvoke.GrowableBufferInvoke(
                 (ref ValueBuffer<char> buffer) =>
@@ -701,9 +731,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the fully resolved path name.
+        ///  Get the fully resolved path name.
         /// </summary>
-        public unsafe static string GetFullPathName(string path)
+        public static unsafe string GetFullPathName(string path)
         {
             return PlatformInvoke.GrowableBufferInvoke(
                 (ref ValueBuffer<char> buffer) =>
@@ -718,9 +748,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets a canonical version of the given handle's path.
+        ///  Gets a canonical version of the given handle's path.
         /// </summary>
-        public unsafe static string GetFinalPathNameByHandle(
+        public static unsafe string GetFinalPathNameByHandle(
             SafeFileHandle fileHandle,
             GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FileNameNormalized | GetFinalPathNameByHandleFlags.VolumeNameDos)
         {
@@ -735,7 +765,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets a canonical version of the given file's path.
+        ///  Gets a canonical version of the given file's path.
         /// </summary>
         /// <param name="resolveLinks">True to get the destination of links rather than the link itself.</param>
         public static string GetFinalPathName(StringSpan path, GetFinalPathNameByHandleFlags finalPathFlags, bool resolveLinks)
@@ -759,9 +789,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the long (non 8.3) path version of the given path.
+        ///  Get the long (non 8.3) path version of the given path.
         /// </summary>
-        public unsafe static string GetLongPathName(string path)
+        public static unsafe string GetLongPathName(string path)
         {
             return PlatformInvoke.GrowableBufferInvoke(
                 (ref ValueBuffer<char> buffer) =>
@@ -776,7 +806,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get a temporary file name. Creates a 0 length file.
+        ///  Get a temporary file name. Creates a 0 length file.
         /// </summary>
         /// <param name="path">The directory for the file.</param>
         /// <param name="prefix">Three character prefix for the filename.</param>
@@ -800,13 +830,13 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Delete the given file.
+        ///  Delete the given file.
         /// </summary>
         public static void DeleteFile(string path)
             => Error.ThrowLastErrorIfFalse(Imports.DeleteFileW(path), path);
 
         /// <summary>
-        /// Wrapper that allows getting a file stream using System.IO defines.
+        ///  Wrapper that allows getting a file stream using System.IO defines.
         /// </summary>
         public static System.IO.Stream CreateFileStream(
             StringSpan path,
@@ -828,7 +858,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get a stream for the specified file.
+        ///  Get a stream for the specified file.
         /// </summary>
         public static System.IO.Stream CreateFileStream(
             StringSpan path,
@@ -861,7 +891,7 @@ namespace WInterop.Storage
         private static CreateFileDelegate? s_createFileDelegate;
 
         /// <summary>
-        /// Wrapper that allows using System.IO defines where available. Calls CreateFile2 if available.
+        ///  Wrapper that allows using System.IO defines where available. Calls CreateFile2 if available.
         /// </summary>
         public static SafeFileHandle CreateFileSystemIo(
             StringSpan path,
@@ -883,7 +913,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// CreateFile wrapper that attempts to use CreateFile2 if running as Windows Store app.
+        ///  CreateFile wrapper that attempts to use CreateFile2 if running as Windows Store app.
         /// </summary>
         public static SafeFileHandle CreateFile(
             StringSpan path,
@@ -914,7 +944,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// CreateFile2 wrapper. Only available on Windows 8 and above.
+        ///  CreateFile2 wrapper. Only available on Windows 8 and above.
         /// </summary>
         public static unsafe SafeFileHandle CreateFile2(
             StringSpan path,
@@ -954,7 +984,7 @@ namespace WInterop.Storage
         private static CopyFileDelegate? s_copyFileDelegate;
 
         /// <summary>
-        /// CopyFile wrapper that attempts to use CopyFile2 if running as Windows Store app.
+        ///  CopyFile wrapper that attempts to use CopyFile2 if running as Windows Store app.
         /// </summary>
         public static void CopyFile(string source, string destination, bool overwrite = false)
         {
@@ -979,9 +1009,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// CopyFile2 wrapper. Only available on Windows8 and above.
+        ///  CopyFile2 wrapper. Only available on Windows8 and above.
         /// </summary>
-        public unsafe static void CopyFile2(string source, string destination, bool overwrite = false)
+        public static unsafe void CopyFile2(string source, string destination, bool overwrite = false)
         {
             Boolean32 cancel = false;
             COPYFILE2_EXTENDED_PARAMETERS parameters = new COPYFILE2_EXTENDED_PARAMETERS()
@@ -995,7 +1025,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets file attributes for the given path.
+        ///  Gets file attributes for the given path.
         /// </summary>
         public static AllFileAttributes GetFileAttributes(string path)
         {
@@ -1007,7 +1037,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets the file attributes for the given path.
+        ///  Gets the file attributes for the given path.
         /// </summary>
         public static Win32FileAttributeData GetFileAttributesExtended(string path)
         {
@@ -1023,16 +1053,20 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Simple wrapper to check if a given path exists.
+        ///  Simple wrapper to check if a given path exists.
         /// </summary>
-        /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///  Thrown if there aren't rights to get attributes on the given path.
+        /// </exception>
         public static bool PathExists(string path)
             => TryGetFileInfo(path).HasValue;
 
         /// <summary>
-        /// Simple wrapper to check if a given path exists and is a file.
+        ///  Simple wrapper to check if a given path exists and is a file.
         /// </summary>
-        /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///  Thrown if there aren't rights to get attributes on the given path.
+        ///  </exception>
         public static bool FileExists(string path)
         {
             Win32FileAttributeData? data = TryGetFileInfo(path);
@@ -1040,9 +1074,11 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Simple wrapper to check if a given path exists and is a directory.
+        ///  Simple wrapper to check if a given path exists and is a directory.
         /// </summary>
-        /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///  Thrown if there aren't rights to get attributes on the given path.
+        /// </exception>
         public static bool DirectoryExists(string path)
         {
             Win32FileAttributeData? data = TryGetFileInfo(path);
@@ -1050,9 +1086,11 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Tries to get file info, returns null if the given path doesn't exist.
+        ///  Tries to get file info, returns null if the given path doesn't exist.
         /// </summary>
-        /// <exception cref="UnauthorizedAccessException">Thrown if there aren't rights to get attributes on the given path.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///  Thrown if there aren't rights to get attributes on the given path.
+        /// </exception>
         public static Win32FileAttributeData? TryGetFileInfo(string path)
         {
             Win32FileAttributeData data = default;
@@ -1077,7 +1115,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Sets the file attributes for the given path.
+        ///  Sets the file attributes for the given path.
         /// </summary>
         public static void SetFileAttributes(string path, AllFileAttributes attributes)
             => Error.ThrowLastErrorIfFalse(
@@ -1085,19 +1123,20 @@ namespace WInterop.Storage
                 path);
 
         /// <summary>
-        /// Flush file buffers.
+        ///  Flush file buffers.
         /// </summary>
         public static void FlushFileBuffers(SafeFileHandle fileHandle)
             => Error.ThrowLastErrorIfFalse(Imports.FlushFileBuffers(fileHandle));
 
         /// <summary>
-        /// Gets the file name from the given handle. This uses GetFileInformationByHandleEx, which does not give back the volume
-        /// name for the path- but is available from Windows Store apps.
+        ///  Gets the file name from the given handle. This uses GetFileInformationByHandleEx, which does not give back
+        ///  the volume name for the path- but is available from Windows Store apps.
         /// </summary>
         /// <remarks>
-        /// The exact data that is returned is somewhat complicated and is described in the documentation for ZwQueryInformationFile.
+        ///  The exact data that is returned is somewhat complicated and is described in the documentation for
+        ///  ZwQueryInformationFile.
         /// </remarks>
-        public unsafe static string GetFileNameLegacy(SafeFileHandle fileHandle)
+        public static unsafe string GetFileNameLegacy(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -1119,9 +1158,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get standard file info from the given file handle.
+        ///  Get standard file info from the given file handle.
         /// </summary>
-        public unsafe static FileStandardInformation GetFileStandardInformation(SafeFileHandle fileHandle)
+        public static unsafe FileStandardInformation GetFileStandardInformation(SafeFileHandle fileHandle)
         {
             FileStandardInformation info;
             Error.ThrowLastErrorIfFalse(
@@ -1134,9 +1173,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get basic file info from the given file handle.
+        ///  Get basic file info from the given file handle.
         /// </summary>
-        public unsafe static FileBasicInformation GetFileBasicInformation(SafeFileHandle fileHandle)
+        public static unsafe FileBasicInformation GetFileBasicInformation(SafeFileHandle fileHandle)
         {
             FileBasicInformation info;
             Error.ThrowLastErrorIfFalse(
@@ -1149,9 +1188,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the list of data streams for the given handle.
+        ///  Get the list of data streams for the given handle.
         /// </summary>
-        public unsafe static IEnumerable<StreamInformation> GetStreamInformation(SafeFileHandle fileHandle)
+        public static unsafe IEnumerable<StreamInformation> GetStreamInformation(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -1178,13 +1217,13 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Synchronous wrapper for ReadFile.
+        ///  Synchronous wrapper for ReadFile.
         /// </summary>
         /// <param name="fileHandle">Handle to the file to read.</param>
         /// <param name="buffer">Buffer to read bytes into.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="fileHandle"/> is null.</exception>
         /// <returns>The number of bytes read.</returns>
-        public unsafe static uint ReadFile(SafeFileHandle fileHandle, Span<byte> buffer, ulong? fileOffset = null)
+        public static unsafe uint ReadFile(SafeFileHandle fileHandle, Span<byte> buffer, ulong? fileOffset = null)
         {
             if (fileHandle == null) throw new ArgumentNullException("fileHandle");
             if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException("fileHandle");
@@ -1207,14 +1246,14 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Synchronous wrapper for WriteFile.
+        ///  Synchronous wrapper for WriteFile.
         /// </summary>
         /// <param name="fileHandle">Handle to the file to write.</param>
         /// <param name="data">Data to write.</param>
         /// <param name="fileOffset">Offset into the file, or null for current.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="fileHandle"/> is null.</exception>
         /// <returns>The number of bytes written.</returns>
-        public unsafe static uint WriteFile(SafeFileHandle fileHandle, Span<byte> data, ulong? fileOffset = null)
+        public static unsafe uint WriteFile(SafeFileHandle fileHandle, Span<byte> data, ulong? fileOffset = null)
         {
             if (fileHandle == null) throw new ArgumentNullException("fileHandle");
             if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException("fileHandle");
@@ -1237,7 +1276,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Set the file pointer position for the given file.
+        ///  Set the file pointer position for the given file.
         /// </summary>
         /// <param name="distance">Offset.</param>
         /// <param name="moveMethod">Start position.</param>
@@ -1251,7 +1290,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the position of the pointer for the given file.
+        ///  Get the position of the pointer for the given file.
         /// </summary>
         public static long GetFilePointer(SafeFileHandle fileHandle)
         {
@@ -1259,7 +1298,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the size of the given file.
+        ///  Get the size of the given file.
         /// </summary>
         public static long GetFileSize(SafeFileHandle fileHandle)
         {
@@ -1270,7 +1309,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the type of the given file handle.
+        ///  Get the type of the given file handle.
         /// </summary>
         public static FileType GetFileType(SafeFileHandle fileHandle)
         {
@@ -1282,9 +1321,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets the filenames in the specified directory. Includes "." and "..".
+        ///  Gets the filenames in the specified directory. Includes "." and "..".
         /// </summary>
-        public unsafe static IEnumerable<string> GetDirectoryFilenames(SafeFileHandle directoryHandle)
+        public static unsafe IEnumerable<string> GetDirectoryFilenames(SafeFileHandle directoryHandle)
         {
             List<string> filenames = new List<string>();
             GetFullDirectoryInfoHelper(directoryHandle, buffer =>
@@ -1300,9 +1339,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets all of the info for files within the given directory handle.
+        ///  Gets all of the info for files within the given directory handle.
         /// </summary>
-        public unsafe static IEnumerable<FullFileInformation> GetDirectoryInformation(SafeFileHandle directoryHandle)
+        public static unsafe IEnumerable<FullFileInformation> GetDirectoryInformation(SafeFileHandle directoryHandle)
         {
             List<FullFileInformation> infos = new List<FullFileInformation>();
             GetFullDirectoryInfoHelper(directoryHandle, buffer =>
@@ -1317,7 +1356,7 @@ namespace WInterop.Storage
             return infos;
         }
 
-        private unsafe static void GetFullDirectoryInfoHelper(SafeFileHandle directoryHandle, Action<HeapBuffer> action)
+        private static unsafe void GetFullDirectoryInfoHelper(SafeFileHandle directoryHandle, Action<HeapBuffer> action)
         {
             BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -1357,50 +1396,41 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Returns true if the given tag is owned by Microsoft.
+        ///  Returns true if the given tag is owned by Microsoft.
         /// </summary>
-        public static bool IsReparseTagMicrosoft(ReparseTag reparseTag)
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff549452.aspx
-            return ((uint)reparseTag & 0x80000000) != 0;
-        }
+        /// <docs>https://docs.microsoft.com/windows-hardware/drivers/ddi/ntifs/nf-ntifs-isreparsetagmicrosoft</docs>
+        public static bool IsReparseTagMicrosoft(ReparseTag reparseTag) => ((uint)reparseTag & 0x80000000) != 0;
 
         /// <summary>
-        /// Returns true if the given tag is a name surrogate.
+        ///  Returns true if the given tag is a name surrogate.
         /// </summary>
-        public static bool IsReparseTagNameSurrogate(ReparseTag reparseTag)
-        {
-            // https://msdn.microsoft.com/en-us/library/windows/hardware/ff549462.aspx
-            return ((uint)reparseTag & 0x20000000) != 0;
-        }
+        /// <docs>https://docs.microsoft.com/windows-hardware/drivers/ddi/ntifs/nf-ntifs-isreparsetagnamesurrogate</docs>
+        public static bool IsReparseTagNameSurrogate(ReparseTag reparseTag) => ((uint)reparseTag & 0x20000000) != 0;
 
         /// <summary>
-        /// Returns true if the reparse point can have children.
+        ///  Returns true if the reparse point can have children.
         /// </summary>
-        public static bool IsReparseTagDirectory(ReparseTag reparseTag)
-        {
-            return ((uint)reparseTag & 0x10000000) != 0;
-        }
+        public static bool IsReparseTagDirectory(ReparseTag reparseTag) => ((uint)reparseTag & 0x10000000) != 0;
 
         /// <summary>
-        /// Get the owner SID for the given handle.
+        ///  Get the owner SID for the given handle.
         /// </summary>
-        public unsafe static SID GetOwner(this SafeFileHandle handle)
+        public static unsafe SID GetOwner(this SafeFileHandle handle)
             => Security.Security.GetOwner(handle, ObjectType.File);
 
         /// <summary>
-        /// Get the primary group SID for the given handle.
+        ///  Get the primary group SID for the given handle.
         /// </summary>
-        public unsafe static SID GetPrimaryGroup(this SafeFileHandle handle)
+        public static unsafe SID GetPrimaryGroup(this SafeFileHandle handle)
             => Security.Security.GetPrimaryGroup(handle, ObjectType.File);
 
         /// <summary>
-        /// Get the discretionary access control list for the given handle.
+        ///  Get the discretionary access control list for the given handle.
         /// </summary>
-        public unsafe static SecurityDescriptor GetAccessControlList(this SafeFileHandle handle)
+        public static unsafe SecurityDescriptor GetAccessControlList(this SafeFileHandle handle)
             => Security.Security.GetAccessControlList(handle, ObjectType.File);
 
-        public unsafe static void ChangeAccess(
+        public static unsafe void ChangeAccess(
             this SafeFileHandle handle,
             in SID sid,
             FileAccessRights rights,
@@ -1412,7 +1442,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Remove the given directory.
+        ///  Remove the given directory.
         /// </summary>
         public static void RemoveDirectory(string path)
             => Error.ThrowLastErrorIfFalse(
@@ -1420,7 +1450,7 @@ namespace WInterop.Storage
                 path);
 
         /// <summary>
-        /// Create the given directory.
+        ///  Create the given directory.
         /// </summary>
         public static void CreateDirectory(string path)
             => Error.ThrowLastErrorIfFalse(
@@ -1428,7 +1458,7 @@ namespace WInterop.Storage
                 path);
 
         /// <summary>
-        /// Simple wrapper to allow creating a file handle for an existing directory.
+        ///  Simple wrapper to allow creating a file handle for an existing directory.
         /// </summary>
         public static SafeFileHandle CreateDirectoryHandle(StringSpan directoryPath, DesiredAccess desiredAccess = DesiredAccess.ListDirectory)
         {
@@ -1442,9 +1472,9 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the current directory.
+        ///  Get the current directory.
         /// </summary>
-        public unsafe static string GetCurrentDirectory()
+        public static unsafe string GetCurrentDirectory()
         {
             static uint Fix(ValueBuffer<char> buffer)
             {
@@ -1464,7 +1494,7 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Set the current directory.
+        ///  Set the current directory.
         /// </summary>
         public static void SetCurrentDirectory(StringSpan path)
             => Error.ThrowLastErrorIfFalse(
@@ -1472,19 +1502,18 @@ namespace WInterop.Storage
                 path.ToString());
 
         /// <summary>
-        /// Get the drive type for the given root path.
+        ///  Get the drive type for the given root path.
         /// </summary>
         public static DriveType GetDriveType(string? rootPath)
             => Imports.GetDriveTypeW(Paths.AddTrailingSeparator(rootPath));
 
         /// <summary>
-        /// Gets volume information for the given volume root path.
+        ///  Gets volume information for the given volume root path.
         /// </summary>
         /// <param name="rootPath">
-        /// The root path for the volume or UNC share. If null will use
-        /// the root of the current directory.
+        ///  The root path for the volume or UNC share. If null will use the root of the current directory.
         /// </param>
-        public unsafe static VolumeInformation GetVolumeInformation(string? rootPath)
+        public static unsafe VolumeInformation GetVolumeInformation(string? rootPath)
         {
             Span<char> volumeName = stackalloc char[Paths.MaxPath + 1];
             Span<char> fileSystemName = stackalloc char[Paths.MaxPath + 1];
@@ -1517,10 +1546,10 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Gets free space for the given drive.
+        ///  Gets free space for the given drive.
         /// </summary>
         /// <param name="rootPath">Optional drive root, otherwise will use current directory's drive.</param>
-        public unsafe static DiskFreeSpace GetDiskFreeSpace(string? rootPath)
+        public static unsafe DiskFreeSpace GetDiskFreeSpace(string? rootPath)
         {
             DiskFreeSpace freeSpace;
 
@@ -1536,7 +1565,7 @@ namespace WInterop.Storage
             return freeSpace;
         }
 
-        public unsafe static ExtendedDiskFreeSpace GetDiskFreeSpaceExtended(string directory)
+        public static unsafe ExtendedDiskFreeSpace GetDiskFreeSpaceExtended(string directory)
         {
             ExtendedDiskFreeSpace freeSpace;
 
@@ -1552,15 +1581,12 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Helper for identifying the special invalid attributes.
+        ///  Helper for identifying the special invalid attributes.
         /// </summary>
-        public static bool AreInvalid(this AllFileAttributes attributes)
-        {
-            return attributes == AllFileAttributes.Invalid;
-        }
+        public static bool AreInvalid(this AllFileAttributes attributes) => attributes == AllFileAttributes.Invalid;
 
         /// <summary>
-        /// Gets the flags for available drive letters.
+        ///  Gets the flags for available drive letters.
         /// </summary>
         public static LogicalDrives GetLogicalDrives()
         {
@@ -1571,21 +1597,17 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Convert the given drive letter into a logical drive bit flag.
-        /// Returns default if impossible.
+        ///  Convert the given drive letter into a logical drive bit flag. Returns default if impossible.
         /// </summary>
         public static LogicalDrives GetLogicalDrive(char letter)
         {
             letter = char.ToUpperInvariant(letter);
-            if (letter < 'A' || letter > 'Z')
-                return default;
-
-            return (LogicalDrives)(1 << (letter - 'A'));
+            return letter < 'A' || letter > 'Z' ? default : (LogicalDrives)(1 << (letter - 'A'));
         }
 
         /// <summary>
-        /// Return the next available drive letter after the given drive letter.
-        /// Returns default if no additional valid letters can be found.
+        ///  Return the next available drive letter after the given drive letter. Returns default if no additional
+        ///  valid letters can be found.
         /// </summary>
         public static char GetNextAvailableDrive(char after)
         {

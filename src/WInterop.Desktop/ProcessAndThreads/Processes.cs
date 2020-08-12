@@ -36,7 +36,7 @@ namespace WInterop.ProcessAndThreads
         /// Get the given enivronment variable. Returns empty string if the variable isn't found.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
-        public unsafe static string GetEnvironmentVariable(string name)
+        public static unsafe string GetEnvironmentVariable(string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
@@ -95,7 +95,7 @@ namespace WInterop.ProcessAndThreads
         /// Gets the specified process memory counters.
         /// </summary>
         /// <param name="process">The process to get memory info for for or null for the current process.</param>
-        public unsafe static ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle? process = null)
+        public static unsafe ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle? process = null)
         {
             if (process == null) process = GetCurrentProcess();
 

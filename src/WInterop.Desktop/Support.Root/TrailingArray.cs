@@ -24,11 +24,11 @@ namespace WInterop
         private readonly T _firstItem;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static ReadOnlySpan<T> GetBuffer(ref T first, uint count, uint offset = 0)
+        public static unsafe ReadOnlySpan<T> GetBuffer(ref T first, uint count, uint offset = 0)
             => Unsafe.As<T, TrailingArray<T>>(ref first).GetBuffer(count, offset);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static ReadOnlySpan<T> GetBufferInBytes(ref T first, uint countInBytes, uint offsetInBytes = 0)
+        public static unsafe ReadOnlySpan<T> GetBufferInBytes(ref T first, uint countInBytes, uint offsetInBytes = 0)
             => Unsafe.As<T, TrailingArray<T>>(ref first).GetBuffer(countInBytes / (uint)sizeof(T), offsetInBytes / (uint)sizeof(T));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

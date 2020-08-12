@@ -23,7 +23,7 @@ namespace WInterop.Memory.Native
         // unsigned __int3264 which is platform specific (uint on 32bit and ulong on 64bit).
         // UIntPtr can encapsulate this as it wraps void* and has unsigned constructors.
         // (IntPtr also wraps void*, but uses signed constructors.)
-        // 
+        //
         // SIZE_T:
         // https://msdn.microsoft.com/en-us/library/cc441980.aspx
 

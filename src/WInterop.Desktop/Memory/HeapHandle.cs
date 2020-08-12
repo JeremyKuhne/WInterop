@@ -19,7 +19,7 @@ namespace WInterop.Memory
     /// Uses new Heap* methods instead of Local* methods, which are depreciated.  While both calls utilize the same underlying
     /// heap allocation, Local* adds some overhead (*significant* overhead if LMEM_MOVEABLE is used). .NET forces LMEM_FIXED
     /// with LocalAlloc for Marshal.AllocHGlobal so it doesn't hit the super slow path.
-    /// 
+    ///
     /// Windows attempts to grab space from the low fragmentation heap if the requested memory is below a platform specific
     /// threshold and certain flags aren't in play (such as NO_SERIALIZE).
     /// </remarks>

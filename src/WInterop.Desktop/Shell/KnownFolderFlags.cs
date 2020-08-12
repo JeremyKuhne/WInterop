@@ -59,7 +59,7 @@ namespace WInterop.Shell
         /// Do not verify the folder's existence before attempting to retrieve the path or IDList. If this flag is not set, an attempt is
         /// made to verify that the folder is truly present at the path. If that verification fails due to the folder being absent or
         /// inaccessible, the function returns a failure code and no path is returned.
-        /// 
+        ///
         /// If the folder is located on a network, the function might take a longer time to execute. Setting this flag can reduce that lag time.
         /// </summary>
         DontVerify = 0x00004000,

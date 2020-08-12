@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
@@ -10,10 +6,10 @@ using System.Runtime.InteropServices;
 namespace WInterop.Security.Native
 {
     /// <summary>
-    /// Access control list (ACL) header.
+    ///  Access control list (ACL) header.
     /// </summary>
     /// <remarks>
-    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374931.aspx"/>
+    ///  <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374931.aspx"/>
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     public struct ACL

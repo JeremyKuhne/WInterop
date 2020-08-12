@@ -49,12 +49,12 @@ namespace WInterop.Com
         HResult GetRefTypeOfImplType(
             uint index,
             out RefTypeHandle pRefType);
-        
+
         [PreserveSig]
         HResult GetImplTypeFlags(
             uint index,
             out int pImplTypeFlags);
-        
+
         [PreserveSig]
         HResult GetIDsOfNames(
             char** rgszNames,
@@ -70,7 +70,7 @@ namespace WInterop.Com
             VARIANT* pVarResult,
             EXCEPINFO* pExcepInfo,
             out uint puArgErr);
-        
+
         [PreserveSig]
         HResult GetDocumentation(
             MemberId memid,

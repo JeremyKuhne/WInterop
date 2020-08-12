@@ -71,7 +71,7 @@ namespace WInterop.Gdi
             return new DeviceContext(Imports.GetWindowDC(window), window);
         }
 
-        public static BitmapHandle CreateCompatibleBitmap(this in DeviceContext context, Size size) => 
+        public static BitmapHandle CreateCompatibleBitmap(this in DeviceContext context, Size size) =>
             new BitmapHandle(Imports.CreateCompatibleBitmap(context, size.Width, size.Height));
 
         public static void BitBlit(

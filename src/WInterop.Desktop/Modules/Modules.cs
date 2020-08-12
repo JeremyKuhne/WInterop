@@ -59,7 +59,7 @@ namespace WInterop.Modules
             return new RefCountedModuleInstance(GetModuleHandleHelper(moduleName, 0));
         }
 
-        private unsafe static IntPtr GetModuleHandleHelper(string moduleName, GetModuleFlags flags)
+        private static unsafe IntPtr GetModuleHandleHelper(string moduleName, GetModuleFlags flags)
         {
             IntPtr getHandle(IntPtr n, GetModuleFlags f)
             {
@@ -83,7 +83,7 @@ namespace WInterop.Modules
         /// </summary>
         /// <param name="process">The process for the given module or null for the current process.</param>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
-        public unsafe static ModuleInfo GetModuleInfo(ModuleInstance module, SafeProcessHandle? process = null)
+        public static unsafe ModuleInfo GetModuleInfo(ModuleInstance module, SafeProcessHandle? process = null)
         {
             Error.ThrowLastErrorIfFalse(
                 Imports.K32GetModuleInformation(process ?? Processes.GetCurrentProcess(), module, out var info, (uint)sizeof(ModuleInfo)));
@@ -96,7 +96,7 @@ namespace WInterop.Modules
         /// </summary>
         /// <param name="process">The process for the given module or null for the current process.</param>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
-        public unsafe static string GetModuleFileName(ModuleInstance module, SafeProcessHandle? process = null)
+        public static unsafe string GetModuleFileName(ModuleInstance module, SafeProcessHandle? process = null)
         {
             if (process == null)
             {
@@ -154,7 +154,7 @@ namespace WInterop.Modules
         ///     private delegate int DoubleDelegate(int value);
         ///
         /// And it's native signature:
-        /// 
+        ///
         ///     extern "C" __declspec (dllexport) int Double(int);
         /// </remarks>
         public static DelegateType GetFunctionDelegate<DelegateType>(ModuleInstance library, string methodName)
@@ -171,7 +171,7 @@ namespace WInterop.Modules
         /// </summary>
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         /// <param name="process">The process to get modules for or null for the current process.</param>
-        public unsafe static IEnumerable<ModuleInstance> GetProcessModules(SafeProcessHandle? process = null)
+        public static unsafe IEnumerable<ModuleInstance> GetProcessModules(SafeProcessHandle? process = null)
         {
             if (process == null) process = Processes.GetCurrentProcess();
 

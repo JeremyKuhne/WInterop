@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Storage;
@@ -6,7 +9,7 @@ using WInterop.Storage;
 namespace WInterop.Registry.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static class Imports
     {
@@ -25,7 +28,7 @@ namespace WInterop.Registry.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724911.aspx
         [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern WindowsError RegQueryValueExW(
+        public static unsafe extern WindowsError RegQueryValueExW(
             RegistryKeyHandle hKey,
             string lpValueName,
             void* lpReserved,
@@ -39,7 +42,7 @@ namespace WInterop.Registry.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724865.aspx
         [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern WindowsError RegEnumValueW(
+        public static unsafe extern WindowsError RegEnumValueW(
             RegistryKeyHandle hKey,
             uint dwIndex,
             void* lpValueName,
@@ -65,10 +68,10 @@ namespace WInterop.Registry.Native
             out uint lpcbSecurityDescriptor,
             out FileTime lpftLastWriteTime);
 
-        // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556680.aspx 
+        // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556680.aspx
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567060.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public unsafe static extern NTStatus NtQueryKey(
+        public static unsafe extern NTStatus NtQueryKey(
             RegistryKeyHandle KeyHandle,
             KeyInformationClass KeyInformationClass,
             void* KeyInformation,
@@ -78,7 +81,7 @@ namespace WInterop.Registry.Native
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556514.aspx
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566453.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public unsafe static extern NTStatus NtEnumerateValueKey(
+        public static unsafe extern NTStatus NtEnumerateValueKey(
             RegistryKeyHandle KeyHandle,
             uint Index,
             KeyValueInformationClass KeyValueInformationClass,

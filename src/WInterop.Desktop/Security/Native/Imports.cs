@@ -27,19 +27,19 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379304.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 PrivilegeCheck(
+        public static unsafe extern Boolean32 PrivilegeCheck(
             AccessToken ClientToken,
             PrivilegeSet* RequiredPrivileges,
             out Boolean32 pfResult);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378612.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 ImpersonateLoggedOnUser(
+        public static unsafe extern Boolean32 ImpersonateLoggedOnUser(
             AccessToken hToken);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378610.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 ImpersonateAnonymousToken(
+        public static unsafe extern Boolean32 ImpersonateAnonymousToken(
             ThreadHandle thread);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
@@ -61,7 +61,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378299.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern NTStatus LsaOpenPolicy(
+        public static unsafe extern NTStatus LsaOpenPolicy(
             UNICODE_STRING* SystemName,
             LSA_OBJECT_ATTRIBUTES* ObjectAttributes,
             PolicyAccessRights DesiredAccess,
@@ -105,7 +105,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446585.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 CreateWellKnownSid(
+        public static unsafe extern Boolean32 CreateWellKnownSid(
             WellKnownSID WellKnownSidType,
             SID* DomainSid,
             SID* pSid,
@@ -113,13 +113,13 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379154.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern Boolean32 IsWellKnownSid(
+        public static unsafe extern Boolean32 IsWellKnownSid(
             in SID pSid,
             WellKnownSID WellKnownSidType);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379151.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern Boolean32 IsValidSid(
+        public static unsafe extern Boolean32 IsValidSid(
             in SID pSid);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376399.aspx
@@ -130,25 +130,25 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446658.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern byte* GetSidSubAuthorityCount(
+        public static unsafe extern byte* GetSidSubAuthorityCount(
             in SID pSid);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446657.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern uint* GetSidSubAuthority(
+        public static unsafe extern uint* GetSidSubAuthority(
             in SID pSid,
             uint nSubAuthority);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376404.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 CopySid(
+        public static unsafe extern Boolean32 CopySid(
             uint nDestinationSidLength,
             out SID pDestinationSid,
             SID* pSourceSid);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379159.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
-        public unsafe static extern bool LookupAccountNameW(
+        public static unsafe extern bool LookupAccountNameW(
             string? lpSystemName,
             string lpAccountName,
             SID* Sid,
@@ -160,7 +160,7 @@ namespace WInterop.Security.Native
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379166.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
 
-        public unsafe static extern bool LookupAccountSidW(
+        public static unsafe extern bool LookupAccountSidW(
             string? lpSystemName,
             in SID lpSid,
             SafeHandle lpName,
@@ -171,7 +171,7 @@ namespace WInterop.Security.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-getsecurityinfo
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern WindowsError GetSecurityInfo(
+        public static unsafe extern WindowsError GetSecurityInfo(
             SafeHandle handle,
             ObjectType ObjectType,
             SecurityInformation SecurityInfo,
@@ -183,7 +183,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446645.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true, CharSet = CharSet.Unicode)]
-        public unsafe static extern WindowsError GetNamedSecurityInfoW(
+        public static unsafe extern WindowsError GetNamedSecurityInfoW(
             string pObjectName,
             ObjectType ObjectType,
             SecurityInformation SecurityInfo,
@@ -195,7 +195,7 @@ namespace WInterop.Security.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-setsecurityinfo
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern WindowsError SetSecurityInfo(
+        public static unsafe extern WindowsError SetSecurityInfo(
             SafeHandle? handle,
             ObjectType ObjectType,
             SecurityInformation SecurityInfo,
@@ -206,7 +206,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446635.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 GetAclInformation(
+        public static unsafe extern Boolean32 GetAclInformation(
             SecurityDescriptor pAcl,
             void* pAclInformation,
             uint nAclInformationLength,
@@ -214,7 +214,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374951.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 AddAccessAllowedAceEx(
+        public static unsafe extern Boolean32 AddAccessAllowedAceEx(
             SecurityDescriptor pAcl,
             uint dwAceRevision,
             // This is AceInheritence
@@ -239,7 +239,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 DuplicateTokenEx(
+        public static unsafe extern Boolean32 DuplicateTokenEx(
             AccessToken hExistingToken,
             AccessTokenRights dwDesiredAccess,
             SECURITY_ATTRIBUTES* lpTokenAttributes,
@@ -270,7 +270,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 GetTokenInformation(
+        public static unsafe extern Boolean32 GetTokenInformation(
             AccessToken TokenHandle,
             TokenInformation TokenInformationClass,
             void* TokenInformation,
@@ -279,7 +279,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern Boolean32 AdjustTokenPrivileges(
+        public static unsafe extern Boolean32 AdjustTokenPrivileges(
             AccessToken TokenHandle,
             Boolean32 DisableAllPrivileges,
             TOKEN_PRIVILEGES* NewState,
@@ -289,14 +289,14 @@ namespace WInterop.Security.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/Aclapi/nf-aclapi-getexplicitentriesfromaclw
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern WindowsError GetExplicitEntriesFromAclW(
+        public static unsafe extern WindowsError GetExplicitEntriesFromAclW(
             ACL* pacl,
             out uint pcCountOfExplicitEntries,
             EXPLICIT_ACCESS** pListOfExplicitEntries);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-setentriesinaclw
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public unsafe static extern WindowsError SetEntriesInAclW(
+        public static unsafe extern WindowsError SetEntriesInAclW(
             uint cCountOfExplicitEntries,
             EXPLICIT_ACCESS* pListOfExplicitEntries,
             ACL* OldAcl,

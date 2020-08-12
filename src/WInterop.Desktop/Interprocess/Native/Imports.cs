@@ -18,7 +18,7 @@ namespace WInterop.Interprocess.Native
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365152.aspx
         [DllImport(Libraries.Kernel32, ExactSpelling = true, SetLastError = true)]
-        public unsafe static extern bool CreatePipe(
+        public static unsafe extern bool CreatePipe(
             out SafeFileHandle hReadPipe,
             out SafeFileHandle hWritePipe,
             SECURITY_ATTRIBUTES* lpPipeAttributes,
@@ -26,7 +26,7 @@ namespace WInterop.Interprocess.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365150.aspx
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
-        public unsafe static extern PipeHandle CreateNamedPipeW(
+        public static unsafe extern PipeHandle CreateNamedPipeW(
             string lpName,
             uint dwOpenMode,
             uint dwPipeMode,
@@ -38,7 +38,7 @@ namespace WInterop.Interprocess.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365147.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern SafeMailslotHandle CreateMailslotW(
+        public static unsafe extern SafeMailslotHandle CreateMailslotW(
             string lpName,
             uint nMaxMessageSize,
             uint lReadTimeout,
@@ -46,7 +46,7 @@ namespace WInterop.Interprocess.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365435.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool GetMailslotInfo(
+        public static unsafe extern bool GetMailslotInfo(
             SafeMailslotHandle hMailslot,
             uint* lpMaxMessageSize,
             uint* lpNextSize,
@@ -55,7 +55,7 @@ namespace WInterop.Interprocess.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365786.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool SetMailslotInfo(
+        public static unsafe extern bool SetMailslotInfo(
             SafeMailslotHandle hMailslot,
             uint lReadTimeout);
     }

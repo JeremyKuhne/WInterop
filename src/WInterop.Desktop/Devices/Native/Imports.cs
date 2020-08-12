@@ -17,7 +17,7 @@ namespace WInterop.Devices.Native
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363216.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool DeviceIoControl(
+        public static unsafe extern bool DeviceIoControl(
             SafeHandle hDevice,
             ControlCode dwIoControlCode,
             void* lpInBuffer,

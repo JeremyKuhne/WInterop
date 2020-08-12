@@ -40,7 +40,7 @@ namespace WInterop.Security
         /// <summary>
         /// Creator SID authority. Used with Creator Owner, Creator Group, and Creator Owner Server well-known SIDs.
         /// (S-1-3-0, S-1-3-1, and S-1-3-2)
-        /// 
+        ///
         /// These SIDs are used as ACL placeholders and are replaced by user, group, and machine SIDs of the security
         /// principal. [SECURITY_CREATOR_SID_AUTHORITY]
         /// </summary>

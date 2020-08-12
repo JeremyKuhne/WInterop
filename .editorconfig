@@ -7,6 +7,9 @@ root = true
 # SA1300: Element should begin with upper-case letter
 dotnet_diagnostic.SA1300.severity = none
 
+# SA1306: Field names should begin with lower-case letter
+dotnet_diagnostic.SA1306.severity = none
+
 # SA1307: Accessible fields should begin with upper-case letter
 dotnet_diagnostic.SA1307.severity = none
 
@@ -295,3 +298,33 @@ dotnet_diagnostic.SA1310.severity = silent
 
 # SA1133: Do not combine attributes
 dotnet_diagnostic.SA1133.severity = none
+
+# SA1604: Element documentation should have summary
+dotnet_diagnostic.SA1604.severity = silent
+
+# SA1500: Braces for multi-line statements should not share line
+dotnet_diagnostic.SA1500.severity = silent
+
+# SA1203: Constants should appear before fields
+dotnet_diagnostic.SA1203.severity = none
+
+# SA1137: Elements should have the same indentation
+dotnet_diagnostic.SA1137.severity = silent
+
+# SA1011: Closing square brackets should be spaced correctly
+dotnet_diagnostic.SA1011.severity = silent
+
+# SA1618: Generic type parameters should be documented
+dotnet_diagnostic.SA1618.severity = silent
+
+# SA1127: Generic type constraints should be on their own line
+dotnet_diagnostic.SA1127.severity = none
+
+# SA1009: Closing parenthesis should be spaced correctly
+dotnet_diagnostic.SA1009.severity = none
+
+# SA1501: Statement should not be on a single line
+dotnet_diagnostic.SA1501.severity = silent
+
+# SA1311: Static readonly fields should begin with upper-case letter
+dotnet_diagnostic.SA1311.severity = none

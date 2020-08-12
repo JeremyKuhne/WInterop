@@ -19,7 +19,7 @@ namespace WInterop.Globalization.Native
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318103.aspx
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern int GetLocaleInfoEx(
+        public static unsafe extern int GetLocaleInfoEx(
             string? lpLocaleName,
             uint LCType,
             void* lpLCData,
@@ -27,7 +27,7 @@ namespace WInterop.Globalization.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317762.aspx
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern int CompareStringOrdinal(
+        public static unsafe extern int CompareStringOrdinal(
             ref char lpString1,
             int cchCount1,
             ref char lpString2,
@@ -36,7 +36,7 @@ namespace WInterop.Globalization.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318702.aspx
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern int LCMapStringEx(
+        public static unsafe extern int LCMapStringEx(
             char* lpLocaleName,
             LocaleMapFlags dwMapFlags,
             char* lpSrcStr,

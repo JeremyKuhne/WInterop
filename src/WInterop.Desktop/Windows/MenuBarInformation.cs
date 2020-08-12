@@ -32,7 +32,7 @@ namespace WInterop.Windows
             };
         }
 
-        public unsafe static explicit operator MENUBARINFO(MenuBarInformation info)
+        public static unsafe explicit operator MENUBARINFO(MenuBarInformation info)
         {
             return new MENUBARINFO
             {

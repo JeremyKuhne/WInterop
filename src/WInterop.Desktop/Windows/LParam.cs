@@ -28,8 +28,8 @@ namespace WInterop.Windows
         public static implicit operator LParam(IntPtr value) => new LParam(value);
         public static implicit operator IntPtr(LParam lParam) => lParam.Value;
 
-        public unsafe static implicit operator void* (LParam lParam) => lParam.Value.ToPointer();
-        public unsafe static implicit operator LParam(void* value) => new LParam((IntPtr)value);
+        public static unsafe implicit operator void* (LParam lParam) => lParam.Value.ToPointer();
+        public static unsafe implicit operator LParam(void* value) => new LParam((IntPtr)value);
         public static explicit operator WindowHandle(LParam lParam) => new HWND(lParam.Value);
         public static explicit operator LParam(WindowHandle value) => new LParam(value.HWND.Value);
 

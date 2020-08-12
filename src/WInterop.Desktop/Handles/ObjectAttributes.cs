@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,7 +7,6 @@ namespace WInterop.Handles
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff564586.aspx
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff547804.aspx
-    // 
     [Flags]
     public enum ObjectAttributes : uint
     {

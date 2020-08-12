@@ -37,7 +37,7 @@ namespace WInterop.Modules.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool GetModuleHandleExW(
+        public static unsafe extern bool GetModuleHandleExW(
             GetModuleFlags dwFlags,
             IntPtr lpModuleName,
             out IntPtr moduleHandle);
@@ -45,14 +45,14 @@ namespace WInterop.Modules.Native
         // The non-ex version is more performant for the current process.
         // https://docs.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern uint GetModuleFileNameW(
+        public static unsafe extern uint GetModuleFileNameW(
             ModuleInstance hModule,
             char* lpFileName,
             uint nSize);
 
         // https://docs.microsoft.com/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern uint K32GetModuleFileNameExW(
+        public static unsafe extern uint K32GetModuleFileNameExW(
             SafeProcessHandle hProcess,
             ModuleInstance hModule,
             char* lpFileName,

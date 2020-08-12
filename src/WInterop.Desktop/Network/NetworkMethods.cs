@@ -17,7 +17,7 @@ namespace WInterop.Network
     {
         public static void NetApiBufferFree(IntPtr buffer) => Imports.NetApiBufferFree(buffer).ThrowIfFailed();
 
-        public unsafe static void AddLocalGroup(string groupName, string? comment = null, string? server = null)
+        public static unsafe void AddLocalGroup(string groupName, string? comment = null, string? server = null)
         {
             uint level = string.IsNullOrEmpty(comment) ? 0u : 1;
 
@@ -120,14 +120,14 @@ namespace WInterop.Network
             return info;
         }
 
-        private unsafe static T ReadStructFromBuffer<T>(this NetApiBufferHandle buffer) where T : unmanaged
+        private static unsafe T ReadStructFromBuffer<T>(this NetApiBufferHandle buffer) where T : unmanaged
         {
             uint size = (uint)sizeof(T);
             buffer.Initialize(numElements: 1, sizeOfEachElement: size);
             return buffer.Read<T>(0);
         }
 
-        private unsafe static IEnumerable<T> ReadStructsFromBuffer<T>(this NetApiBufferHandle buffer, uint count) where T : unmanaged
+        private static unsafe IEnumerable<T> ReadStructsFromBuffer<T>(this NetApiBufferHandle buffer, uint count) where T : unmanaged
         {
             uint size = (uint)sizeof(T);
             var items = new List<T>((int)count);

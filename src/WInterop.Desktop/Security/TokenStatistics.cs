@@ -36,5 +36,5 @@ namespace WInterop.Security
         /// </summary>
         public LUID ModifiedId;
     }
-    
+
 }

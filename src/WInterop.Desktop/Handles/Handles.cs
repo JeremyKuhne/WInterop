@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -28,7 +24,7 @@ namespace WInterop.Handles
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff554383.aspx
 
         /// <summary>
-        /// Open a handle to a directory object at the given NT path.
+        ///  Open a handle to a directory object at the given NT path.
         /// </summary>
         public static DirectoryObjectHandle OpenDirectoryObject(
             string path,
@@ -47,7 +43,7 @@ namespace WInterop.Handles
         }
 
         /// <summary>
-        /// Open a handle to a symbolic link at the given NT path.
+        ///  Open a handle to a symbolic link at the given NT path.
         /// </summary>
         public static SymbolicLinkObjectHandle OpenSymbolicLinkObject(
             string path,
@@ -65,7 +61,7 @@ namespace WInterop.Handles
             });
         }
 
-        private unsafe static SafeHandle OpenObjectHelper(string path, Func<OBJECT_ATTRIBUTES, SafeHandle> invoker)
+        private static unsafe SafeHandle OpenObjectHelper(string path, Func<OBJECT_ATTRIBUTES, SafeHandle> invoker)
         {
             fixed (char* pathPointer = path)
             {
@@ -92,7 +88,7 @@ namespace WInterop.Handles
         }
 
         /// <summary>
-        /// Get the symbolic link's target path.
+        ///  Get the symbolic link's target path.
         /// </summary>
         public static string GetSymbolicLinkTarget(SymbolicLinkObjectHandle linkHandle)
         {
@@ -113,7 +109,7 @@ namespace WInterop.Handles
             });
         }
 
-        public unsafe static IEnumerable<ObjectInformation> GetDirectoryEntries(DirectoryObjectHandle directoryHandle)
+        public static unsafe IEnumerable<ObjectInformation> GetDirectoryEntries(DirectoryObjectHandle directoryHandle)
         {
             List<ObjectInformation> infos = new List<ObjectInformation>();
 
@@ -146,20 +142,19 @@ namespace WInterop.Handles
                             Name = name++->ToString(),
                             TypeName = name++->ToString()
                         });
-                    };
-
+                    }
                 } while (status == NTStatus.STATUS_MORE_ENTRIES);
 
                 status.ThrowIfFailed();
             });
 
-            return infos.OrderBy(i => i.Name); ;
+            return infos.OrderBy(i => i.Name);
         }
 
         /// <summary>
-        /// Get the name fot he given handle. This is typically the NT path of the object.
+        ///  Get the name fot he given handle. This is typically the NT path of the object.
         /// </summary>
-        public unsafe static string GetObjectName(SafeHandle handle)
+        public static unsafe string GetObjectName(SafeHandle handle)
         {
             // IoQueryFileDosDeviceName wraps this for file handles, but requires calling ExFreePool to free the allocated memory
             // https://msdn.microsoft.com/en-us/library/windows/hardware/ff548474.aspx
@@ -193,21 +188,21 @@ namespace WInterop.Handles
 
                 status.ThrowIfFailed();
 
-                return ((SafeString.Native.UNICODE_STRING*)(buffer.VoidPointer))->ToString();
+                return ((SafeString.Native.UNICODE_STRING*)buffer.VoidPointer)->ToString();
             });
         }
 
         /// <summary>
-        /// Get the type name of the given object.
+        ///  Get the type name of the given object.
         /// </summary>
-        public unsafe static string GetObjectType(SafeHandle handle)
+        public static unsafe string GetObjectType(SafeHandle handle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 NTStatus status = NTStatus.STATUS_BUFFER_OVERFLOW;
 
                 // We'll initially give room for 50 characters for the type name
-                uint returnLength = (uint)sizeof(OBJECT_TYPE_INFORMATION) + 50 * sizeof(char);
+                uint returnLength = (uint)sizeof(OBJECT_TYPE_INFORMATION) + (50 * sizeof(char));
 
                 while (status == NTStatus.STATUS_BUFFER_OVERFLOW || status == NTStatus.STATUS_BUFFER_TOO_SMALL || status == NTStatus.STATUS_INFO_LENGTH_MISMATCH)
                 {
@@ -223,7 +218,7 @@ namespace WInterop.Handles
 
                 status.ThrowIfFailed();
 
-                return ((OBJECT_TYPE_INFORMATION*)(buffer.VoidPointer))->TypeName.ToString();
+                return ((OBJECT_TYPE_INFORMATION*)buffer.VoidPointer)->TypeName.ToString();
             });
         }
 

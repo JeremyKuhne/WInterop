@@ -13,7 +13,7 @@ using WInterop.Modules;
 namespace WInterop.Windows.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -1307,7 +1307,6 @@ namespace WInterop.Windows.Native
             int y,
             HWND hwnd,
             TPMPARAMS* lptpm);
-
 
         // https://msdn.microsoft.com/library/windows/desktop/ms679277.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]

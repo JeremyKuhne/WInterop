@@ -20,14 +20,14 @@ namespace WInterop.Support
         /// </remarks>
         [SkipLocalsInit]
         [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-        public unsafe static bool AreFlagsSet<T>(this ref T value, T flags) where T : unmanaged, Enum => value.HasFlag(flags);
+        public static unsafe bool AreFlagsSet<T>(this ref T value, T flags) where T : unmanaged, Enum => value.HasFlag(flags);
 
         /// <summary>
         ///  Sets the given flag or flags.
         /// </summary>
         [SkipLocalsInit]
         [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-        public unsafe static void SetFlags<T>(this ref T value, T flags) where T : unmanaged, Enum
+        public static unsafe void SetFlags<T>(this ref T value, T flags) where T : unmanaged, Enum
         {
             fixed (T* v = &value)
             {
@@ -53,7 +53,7 @@ namespace WInterop.Support
 
         [SkipLocalsInit]
         [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-        public unsafe static void ClearFlags<T>(this ref T value, T flags) where T : unmanaged, Enum
+        public static unsafe void ClearFlags<T>(this ref T value, T flags) where T : unmanaged, Enum
         {
             fixed (T* v = &value)
             {

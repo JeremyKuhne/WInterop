@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
@@ -10,12 +6,12 @@ using System.Runtime.InteropServices;
 namespace WInterop.Storage
 {
     /// <summary>
-    /// Use to tie lifetime of a stream to a handle.
+    ///  Use to tie lifetime of a stream to a handle.
     /// </summary>
     public class SafeHandleStreamWrapper : System.IO.Stream
     {
-        private System.IO.Stream _baseStream;
-        private SafeHandle _baseHandle;
+        private readonly System.IO.Stream _baseStream;
+        private readonly SafeHandle _baseHandle;
 
         public SafeHandleStreamWrapper(System.IO.Stream baseStream, SafeHandle baseHandle)
         {
@@ -23,45 +19,29 @@ namespace WInterop.Storage
             _baseHandle = baseHandle;
         }
 
-        public override bool CanRead { get { return _baseStream.CanRead; } }
+        public override bool CanRead => _baseStream.CanRead;
 
-        public override bool CanSeek { get { return _baseStream.CanSeek; } }
+        public override bool CanSeek => _baseStream.CanSeek;
 
-        public override bool CanWrite { get { return _baseStream.CanWrite; }
-        }
+        public override bool CanWrite => _baseStream.CanWrite;
 
-        public override long Length { get { return _baseStream.Length; } }
+        public override long Length => _baseStream.Length;
 
         public override long Position
         {
-            get { return _baseStream.Position; }
-            set { _baseStream.Position = value; }
+            get => _baseStream.Position;
+            set => _baseStream.Position = value;
         }
 
-        public override void Flush()
-        {
-            _baseStream.Flush();
-        }
+        public override void Flush() => _baseStream.Flush();
 
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            return _baseStream.Read(buffer, offset, count);
-        }
+        public override int Read(byte[] buffer, int offset, int count) => _baseStream.Read(buffer, offset, count);
 
-        public override long Seek(long offset, System.IO.SeekOrigin origin)
-        {
-            return _baseStream.Seek(offset, origin);
-        }
+        public override long Seek(long offset, System.IO.SeekOrigin origin) => _baseStream.Seek(offset, origin);
 
-        public override void SetLength(long value)
-        {
-            _baseStream.SetLength(value);
-        }
+        public override void SetLength(long value) => _baseStream.SetLength(value);
 
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            _baseStream.Write(buffer, offset, count);
-        }
+        public override void Write(byte[] buffer, int offset, int count) => _baseStream.Write(buffer, offset, count);
 
         protected override void Dispose(bool disposing)
         {

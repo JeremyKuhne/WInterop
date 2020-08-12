@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,15 +9,15 @@ using System.Text;
 namespace WInterop.Support.Buffers
 {
     /// <summary>
-    /// Avoid using this directly. Create wrappers that can ensure proper length checks.
+    ///  Avoid using this directly. Create wrappers that can ensure proper length checks.
     /// </summary>
     public static class BufferHelper
     {
         /// <summary>
-        /// Splits a null terminated unicode string list. The final string is followed by a second null.
-        /// This is a common pattern Windows uses. Usually you should use StringBuffer and split on null. There
-        /// are some cases (such as GetEnvironmentStrings) where Windows returns a handle to a buffer it allocated
-        /// with no length.
+        ///  Splits a null terminated unicode string list. The final string is followed by a second null.
+        ///  This is a common pattern Windows uses. Usually you should use StringBuffer and split on null. There
+        ///  are some cases (such as GetEnvironmentStrings) where Windows returns a handle to a buffer it allocated
+        ///  with no length.
         /// </summary>
         public static unsafe IEnumerable<string> SplitNullTerminatedStringList(IntPtr handle)
         {
@@ -34,13 +30,13 @@ namespace WInterop.Support.Buffers
 
             for (uint i = 0; ; i++)
             {
-                if ('\0' == *current)
+                if (*current == '\0')
                 {
                     // Split
                     strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
                     start = current + 1;
 
-                    if ('\0' == *start) break;
+                    if (*start == '\0') break;
                 }
 
                 current++;
@@ -63,67 +59,67 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Invoke the given action on a cached buffer that returns the given type.
+        ///  Invoke the given action on a cached buffer that returns the given type.
         /// </summary>
         /// <example>
-        /// return BufferHelper.BufferInvoke((NativeBuffer buffer) => { return string.Empty; });
+        ///  return BufferHelper.BufferInvoke((NativeBuffer buffer) => { return string.Empty; });
         /// </example>
-        public static T BufferInvoke<BufferType, T>(Func<BufferType, T> func) where BufferType : HeapBuffer
+        public static T BufferInvoke<TBuffer, T>(Func<TBuffer, T> func) where TBuffer : HeapBuffer
         {
-            var wrapper = new FuncWrapper<BufferType, T> { Func = func };
-            return BufferInvoke<FuncWrapper<BufferType, T>, BufferType, T>(ref wrapper);
+            var wrapper = new FuncWrapper<TBuffer, T> { Func = func };
+            return BufferInvoke<FuncWrapper<TBuffer, T>, TBuffer, T>(ref wrapper);
         }
 
         /// <summary>
-        /// Invoke the given action on a cached buffer that returns the given type.
+        ///  Invoke the given action on a cached buffer that returns the given type.
         /// </summary>
-        public static T BufferInvoke<TBufferFunc, BufferType, T>(ref TBufferFunc func)
-            where TBufferFunc : IBufferFunc<BufferType, T>
-            where BufferType : HeapBuffer
+        public static T BufferInvoke<TBufferFunc, TBuffer, T>(ref TBufferFunc func)
+            where TBufferFunc : IBufferFunc<TBuffer, T>
+            where TBuffer : HeapBuffer
         {
-            var wrapper = new BufferFuncWrapper<TBufferFunc, BufferType, T> { Func = func };
-            BufferInvoke<BufferFuncWrapper<TBufferFunc, BufferType, T>, BufferType>(ref wrapper);
+            var wrapper = new BufferFuncWrapper<TBufferFunc, TBuffer, T> { Func = func };
+            BufferInvoke<BufferFuncWrapper<TBufferFunc, TBuffer, T>, TBuffer>(ref wrapper);
             return wrapper.Result;
         }
 
         /// <summary>
-        /// Invoke the given action on a set of cached buffers.
+        ///  Invoke the given action on a set of cached buffers.
         /// </summary>
-        public static T TwoBufferInvoke<BufferType, T>(Func<BufferType, BufferType, T> func)
-            where BufferType : HeapBuffer
+        public static T TwoBufferInvoke<TBuffer, T>(Func<TBuffer, TBuffer, T> func)
+            where TBuffer : HeapBuffer
         {
-            var wrapper = new TwoBufferFuncWrapper<BufferType, T> { Func = func };
-            TwoBufferInvoke<TwoBufferFuncWrapper<BufferType, T>, BufferType>(ref wrapper);
+            var wrapper = new TwoBufferFuncWrapper<TBuffer, T> { Func = func };
+            TwoBufferInvoke<TwoBufferFuncWrapper<TBuffer, T>, TBuffer>(ref wrapper);
             return wrapper.Result;
         }
 
         /// <summary>
-        /// Invoke the given action on a set of cached buffers.
+        ///  Invoke the given action on a set of cached buffers.
         /// </summary>
-        public static T TwoBufferInvoke<TBufferFunc, BufferType, T>(ref TBufferFunc func)
-            where TBufferFunc : ITwoBufferFunc<BufferType, T>
-            where BufferType : HeapBuffer
+        public static T TwoBufferInvoke<TBufferFunc, TBuffer, T>(ref TBufferFunc func)
+            where TBufferFunc : ITwoBufferFunc<TBuffer, T>
+            where TBuffer : HeapBuffer
         {
-            var wrapper = new TwoBufferFuncWrapper<TBufferFunc, BufferType, T> { Func = func };
-            TwoBufferInvoke<TwoBufferFuncWrapper<TBufferFunc, BufferType, T>, BufferType>(ref wrapper);
+            var wrapper = new TwoBufferFuncWrapper<TBufferFunc, TBuffer, T> { Func = func };
+            TwoBufferInvoke<TwoBufferFuncWrapper<TBufferFunc, TBuffer, T>, TBuffer>(ref wrapper);
             return wrapper.Result;
         }
 
         /// <summary>
-        /// Invoke the given action on a cached buffer.
+        ///  Invoke the given action on a cached buffer.
         /// </summary>
-        public static void BufferInvoke<BufferType>(Action<BufferType> action) where BufferType : HeapBuffer
+        public static void BufferInvoke<TBuffer>(Action<TBuffer> action) where TBuffer : HeapBuffer
         {
-            var wrapper = new ActionWrapper<BufferType> { Action = action };
-            BufferInvoke<ActionWrapper<BufferType>, BufferType>(ref wrapper);
+            var wrapper = new ActionWrapper<TBuffer> { Action = action };
+            BufferInvoke<ActionWrapper<TBuffer>, TBuffer>(ref wrapper);
         }
 
         /// <summary>
-        /// Invoke the given action on a cached buffer.
+        ///  Invoke the given action on a cached buffer.
         /// </summary>
-        public static void BufferInvoke<TBufferAction, BufferType>(ref TBufferAction action)
-            where TBufferAction : IBufferAction<BufferType>
-            where BufferType : HeapBuffer
+        public static void BufferInvoke<TBufferAction, TBuffer>(ref TBufferAction action)
+            where TBufferAction : IBufferAction<TBuffer>
+            where TBuffer : HeapBuffer
         {
             // For safer use it's better to ensure we always have at least some capacity in the buffer.
             // This allows consumers not to worry about making sure there is some capacity or trying to
@@ -138,7 +134,7 @@ namespace WInterop.Support.Buffers
             var buffer = StringBufferCache.Instance.Acquire(minCharCapacity: MinBufferSize);
             try
             {
-                action.Action((buffer as BufferType)!);
+                action.Action((buffer as TBuffer)!);
             }
             finally
             {
@@ -147,11 +143,11 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Invoke the given action on a set of cached buffers.
+        ///  Invoke the given action on a set of cached buffers.
         /// </summary>
-        public static void TwoBufferInvoke<TBufferAction, BufferType>(ref TBufferAction action)
-            where TBufferAction : ITwoBufferAction<BufferType>
-            where BufferType : HeapBuffer
+        public static void TwoBufferInvoke<TBufferAction, TBuffer>(ref TBufferAction action)
+            where TBufferAction : ITwoBufferAction<TBuffer>
+            where TBuffer : HeapBuffer
         {
             // For safer use it's better to ensure we always have at least some capacity in the buffer.
             // This allows consumers not to worry about making sure there is some capacity or trying to
@@ -167,7 +163,7 @@ namespace WInterop.Support.Buffers
             var buffer2 = StringBufferCache.Instance.Acquire(minCharCapacity: MinBufferSize);
             try
             {
-                action.Action((buffer1 as BufferType)!, (buffer2 as BufferType)!);
+                action.Action((buffer1 as TBuffer)!, (buffer2 as TBuffer)!);
             }
             finally
             {

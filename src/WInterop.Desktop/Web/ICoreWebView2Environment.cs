@@ -29,7 +29,7 @@ namespace WInterop.Web
             ///* [in] */ LPCWSTR reasonPhrase,
             ///* [in] */ LPCWSTR headers,
             ///* [retval][out] */ ICoreWebView2WebResourceResponse** response) = 0;
-        
+
         string BrowserVersionInfo { [return: MarshalAs(UnmanagedType.LPWStr)]  get; }
 
         void add_NewBrowserVersionAvailable_STUB();

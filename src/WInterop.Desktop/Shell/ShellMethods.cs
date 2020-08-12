@@ -98,7 +98,7 @@ namespace WInterop.Shell
         /// <summary>
         /// Get the Guid identifiers for all known folders.
         /// </summary>
-        public unsafe static IEnumerable<Guid> GetKnownFolderIds()
+        public static unsafe IEnumerable<Guid> GetKnownFolderIds()
         {
             List<Guid> ids = new List<Guid>();
 

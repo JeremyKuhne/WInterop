@@ -15,10 +15,10 @@ namespace WInterop
     /// Contains definitions for various fixed size strings for creating blittable
     /// structs. Provides easy string property access. Set strings are always null
     /// terminated and will truncate if too large.
-    /// 
+    ///
     /// Usage: Instead of "fixed char _buffer[12]" use "FixedBuffer.Size12 _buffer"
     /// </summary>
-    public unsafe static class FixedString
+    public static unsafe class FixedString
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct Size12

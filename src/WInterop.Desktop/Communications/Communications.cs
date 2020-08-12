@@ -1,13 +1,9 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Win32.SafeHandles;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Win32.SafeHandles;
 using WInterop.Communications.Native;
 using WInterop.Errors;
 using WInterop.Registry;
@@ -18,7 +14,7 @@ namespace WInterop.Communications
 {
     public static partial class Communications
     {
-        public unsafe static DeviceControlBlock GetCommunicationsState(SafeFileHandle fileHandle)
+        public static unsafe DeviceControlBlock GetCommunicationsState(SafeFileHandle fileHandle)
         {
             DeviceControlBlock dcb = new DeviceControlBlock()
             {
@@ -31,7 +27,7 @@ namespace WInterop.Communications
             return dcb;
         }
 
-        public unsafe static void SetCommunicationsState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
+        public static unsafe void SetCommunicationsState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
         {
             dcb.DCBlength = (uint)sizeof(DeviceControlBlock);
 
@@ -39,7 +35,7 @@ namespace WInterop.Communications
                 Imports.GetCommState(fileHandle, ref dcb));
         }
 
-        public unsafe static DeviceControlBlock BuildDeviceControlBlock(string definition)
+        public static unsafe DeviceControlBlock BuildDeviceControlBlock(string definition)
         {
             Error.ThrowLastErrorIfFalse(
                 Imports.BuildCommDCBW(definition, out DeviceControlBlock dcb));
@@ -55,9 +51,9 @@ namespace WInterop.Communications
             return properties;
         }
 
-        public unsafe static CommunicationsConfig GetCommunicationsConfig(SafeFileHandle fileHandle)
+        public static unsafe CommunicationsConfig GetCommunicationsConfig(SafeFileHandle fileHandle)
         {
-            CommunicationsConfig config = new CommunicationsConfig();
+            CommunicationsConfig config = default;
             uint size = (uint)sizeof(CommunicationsConfig);
 
             Error.ThrowLastErrorIfFalse(
@@ -67,12 +63,12 @@ namespace WInterop.Communications
         }
 
         /// <summary>
-        /// Get the default config values for the given com port.
+        ///  Get the default config values for the given com port.
         /// </summary>
         /// <param name="port">Simple name only (COM1, not \\.\COM1)</param>
-        public unsafe static CommunicationsConfig GetDefaultCommunicationsConfig(string port)
+        public static unsafe CommunicationsConfig GetDefaultCommunicationsConfig(string port)
         {
-            CommunicationsConfig config = new CommunicationsConfig();
+            CommunicationsConfig config = default;
             uint size = (uint)sizeof(CommunicationsConfig);
 
             Error.ThrowLastErrorIfFalse(
@@ -82,10 +78,10 @@ namespace WInterop.Communications
         }
 
         /// <summary>
-        /// Pops the COM port configuration dialog and returns the selected settings.
+        ///  Pops the COM port configuration dialog and returns the selected settings.
         /// </summary>
         /// <exception cref="OperationCanceledException">Thrown if the dialog is cancelled.</exception>
-        public unsafe static CommunicationsConfig CommunicationsConfigDialog(string port, WindowHandle parent)
+        public static unsafe CommunicationsConfig CommunicationsConfigDialog(string port, WindowHandle parent)
         {
             CommunicationsConfig config = GetDefaultCommunicationsConfig(port);
 
@@ -96,7 +92,7 @@ namespace WInterop.Communications
         }
 
         /// <summary>
-        /// Simple helper for CreateFile call that sets the expected values when opening a COM port.
+        ///  Simple helper for CreateFile call that sets the expected values when opening a COM port.
         /// </summary>
         public static SafeFileHandle CreateComPortFileHandle(
             string path,
@@ -114,11 +110,11 @@ namespace WInterop.Communications
 
         public static IEnumerable<string> GetAvailableComPorts()
         {
-            using (var key = Registry.Registry.OpenKey(
-                RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"HARDWARE\DEVICEMAP\SERIALCOMM"))
-            {
-                return Registry.Registry.GetValueDataDirect(key, RegistryValueType.String).OfType<string>().ToArray();
-            }
+            using var key = Registry.Registry.OpenKey(
+                RegistryKeyHandle.HKEY_LOCAL_MACHINE,
+                @"HARDWARE\DEVICEMAP\SERIALCOMM");
+
+            return Registry.Registry.GetValueDataDirect(key, RegistryValueType.String).OfType<string>().ToArray();
         }
     }
 }

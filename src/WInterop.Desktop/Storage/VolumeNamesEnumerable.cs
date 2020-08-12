@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -17,7 +13,7 @@ using WInterop.Support.Buffers;
 namespace WInterop.Storage
 {
     /// <summary>
-    /// Encapsulates a finding volume names.
+    ///  Encapsulates a finding volume names.
     /// </summary>
     public sealed class VolumeNamesEnumerable : IEnumerable<string>
     {
@@ -123,6 +119,7 @@ namespace WInterop.Storage
                 {
                     CloseHandle();
                 }
+
                 StringBuffer? buffer = Interlocked.Exchange(ref _buffer, null);
                 if (buffer != null)
                     StringBuffer.Cache.Release(buffer);

@@ -28,7 +28,7 @@ namespace WInterop.Network.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370434.aspx
         [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern WindowsError NetLocalGroupAdd(
+        public static unsafe extern WindowsError NetLocalGroupAdd(
             string? servername,
             uint level,
             void* buf,

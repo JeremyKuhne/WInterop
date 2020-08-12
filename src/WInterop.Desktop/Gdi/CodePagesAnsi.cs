@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,47 +10,47 @@ namespace WInterop.Gdi
     public enum CodePagesAnsi : uint
     {
         /// <summary>
-        /// Code page 1252.
+        ///  Code page 1252.
         /// </summary>
         Latin1                          = 0b00000000_00000000_00000000_00000001,
 
         /// <summary>
-        /// Code page 1250.
+        ///  Code page 1250.
         /// </summary>
         Latin2_CentralEurope            = 0b00000000_00000000_00000000_00000010,
 
         /// <summary>
-        /// Code page 1251.
+        ///  Code page 1251.
         /// </summary>
         Cyrillic                        = 0b00000000_00000000_00000000_00000100,
 
         /// <summary>
-        /// Code page 1253.
+        ///  Code page 1253.
         /// </summary>
         Greek                           = 0b00000000_00000000_00000000_00001000,
 
         /// <summary>
-        /// Code page 1254.
+        ///  Code page 1254.
         /// </summary>
         Turkish                         = 0b00000000_00000000_00000000_00010000,
 
         /// <summary>
-        /// Code page 1255.
+        ///  Code page 1255.
         /// </summary>
         Hebrew                          = 0b00000000_00000000_00000000_00100000,
 
         /// <summary>
-        /// Code page 1256.
+        ///  Code page 1256.
         /// </summary>
         Arabic                          = 0b00000000_00000000_00000000_01000000,
 
         /// <summary>
-        /// Code page 1257.
+        ///  Code page 1257.
         /// </summary>
         Baltic                          = 0b00000000_00000000_00000000_10000000,
 
         /// <summary>
-        /// Code page 1258.
+        ///  Code page 1258.
         /// </summary>
         Vietnamese                      = 0b00000000_00000000_00000001_00000000,
 
@@ -67,32 +63,32 @@ namespace WInterop.Gdi
         ReservedAnsi15                  = 0b00000000_00000000_10000000_00000000,
 
         /// <summary>
-        /// Code page 874.
+        ///  Code page 874.
         /// </summary>
         Thai                            = 0b00000000_00000001_00000000_00000000,
 
         /// <summary>
-        /// Code page 932. (Shift-JIS)
+        ///  Code page 932. (Shift-JIS)
         /// </summary>
         Japanese                        = 0b00000000_00000010_00000000_00000000,
 
         /// <summary>
-        /// Code page 936.
+        ///  Code page 936.
         /// </summary>
         SimplifiedChinese               = 0b00000000_00000100_00000000_00000000,
 
         /// <summary>
-        /// Code page 949. (Hangul TongHabHyung Code)
+        ///  Code page 949. (Hangul TongHabHyung Code)
         /// </summary>
         KoreanUnifiedHangul             = 0b00000000_00001000_00000000_00000000,
 
         /// <summary>
-        /// Code page 950.
+        ///  Code page 950.
         /// </summary>
         TraditionalChinese              = 0b00000000_00010000_00000000_00000000,
 
         /// <summary>
-        /// Code page 1361.
+        ///  Code page 1361.
         /// </summary>
         KoreanJohab                     = 0b00000000_00100000_00000000_00000000,
 
@@ -108,20 +104,3 @@ namespace WInterop.Gdi
         ReservedSystem31                = 0b10000000_00000000_00000000_00000000
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

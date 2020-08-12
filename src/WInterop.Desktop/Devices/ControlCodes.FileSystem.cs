@@ -184,7 +184,6 @@ namespace WInterop.Devices
             /// </remarks>
             MarkAsSystemHive = 0x0009004f,
 
-            //      
             /// [FSCTL_OPLOCK_BREAK_ACK_NO_2]
             /// </summary>
             /// <remarks>

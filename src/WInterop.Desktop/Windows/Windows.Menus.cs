@@ -21,7 +21,7 @@ namespace WInterop.Windows
             return menu;
         }
 
-        public unsafe static void AppendMenu(MenuHandle menu, string text, int id, bool disabled = false, bool @checked = false)
+        public static unsafe void AppendMenu(MenuHandle menu, string text, int id, bool disabled = false, bool @checked = false)
         {
             MenuFlags flags = MenuFlags.String;
             if (disabled) flags |= MenuFlags.Grayed;

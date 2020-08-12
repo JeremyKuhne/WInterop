@@ -96,7 +96,7 @@ namespace WInterop.Storage
         /// <remarks>
         /// Can be a block or character device, a socket, a fifo, or
         /// a symbolic link.
-        /// 
+        ///
         /// https://msdn.microsoft.com/en-us/library/dn617178.aspx
         /// </remarks>
         NetworkFileSystem = 0x80000014,

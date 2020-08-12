@@ -94,7 +94,7 @@ namespace WInterop.Console.Native
 
         // https://docs.microsoft.com/en-us/windows/console/readconsole
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool ReadConsoleW(
+        public static unsafe extern bool ReadConsoleW(
             SafeHandle hConsoleInput,
             void* lpBuffer,
             uint nNumberOfCharsToRead,
@@ -103,7 +103,7 @@ namespace WInterop.Console.Native
 
         // https://docs.microsoft.com/en-us/windows/console/writeconsole
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool WriteConsoleW(
+        public static unsafe extern bool WriteConsoleW(
             SafeHandle hConsoleOutput,
             void* lpBuffer,
             uint nNumberOfCharsToWrite,

@@ -19,7 +19,7 @@ namespace WInterop.Support
         /// <exception cref="ArgumentNullException">value is null or empty</exception>
         /// <exception cref="ArgumentOutOfRangeException">index is not within the bounds of the string.</exception>
         /// <returns>A copy of the given string with the specified character replaced.</returns>
-        public unsafe static string ReplaceChar(string value, int index, char newChar)
+        public static unsafe string ReplaceChar(string value, int index, char newChar)
         {
             if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(value));
             if (index < 0 || index >= value.Length) throw new ArgumentOutOfRangeException(nameof(index));

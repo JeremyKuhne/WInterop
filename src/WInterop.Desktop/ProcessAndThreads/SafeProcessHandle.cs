@@ -22,7 +22,7 @@ namespace WInterop.ProcessAndThreads
             SetHandle(handle);
         }
 
-        static public implicit operator ProcessHandle(SafeProcessHandle handle)
+        public static implicit operator ProcessHandle(SafeProcessHandle handle)
         {
             return new ProcessHandle(handle.handle);
         }

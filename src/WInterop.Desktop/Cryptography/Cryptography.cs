@@ -22,7 +22,7 @@ namespace WInterop.Cryptography
         public static void CloseStore(IntPtr handle)
             => Error.ThrowLastErrorIfFalse(Imports.CertCloseStore(handle, dwFlags: 0));
 
-        unsafe private static CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)
+        private static unsafe CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)
         {
             uint flags = (uint)StoreOpenFlags.NoCryptRelease;
             if (storeName == StoreName.SPC)
@@ -96,7 +96,7 @@ namespace WInterop.Cryptography
             return true;
         }
 
-        public unsafe static IEnumerable<SystemStoreInformation> EnumerateSystemStores(SystemStoreLocation location, string? name = null)
+        public static unsafe IEnumerable<SystemStoreInformation> EnumerateSystemStores(SystemStoreLocation location, string? name = null)
         {
             var info = new List<SystemStoreInformation>();
             GCHandle infoHandle = GCHandle.Alloc(info);
@@ -146,7 +146,7 @@ namespace WInterop.Cryptography
             return true;
         }
 
-        public unsafe static IEnumerable<PhysicalStoreInformation> EnumeratePhysicalStores(SystemStoreLocation location, string systemStoreName)
+        public static unsafe IEnumerable<PhysicalStoreInformation> EnumeratePhysicalStores(SystemStoreLocation location, string systemStoreName)
         {
             var info = new List<PhysicalStoreInformation>();
             GCHandle infoHandle = GCHandle.Alloc(info);

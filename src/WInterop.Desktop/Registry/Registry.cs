@@ -1,21 +1,17 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using WInterop.Errors;
-using WInterop.Support.Buffers;
 using WInterop.Registry.Native;
+using WInterop.Support.Buffers;
 
 namespace WInterop.Registry
 {
     public static partial class Registry
     {
-        public unsafe static string QueryKeyName(RegistryKeyHandle key)
+        public static unsafe string QueryKeyName(RegistryKeyHandle key)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -33,7 +29,7 @@ namespace WInterop.Registry
         }
 
         /// <summary>
-        /// Open the specified subkey.
+        ///  Open the specified subkey.
         /// </summary>
         public static RegistryKeyHandle OpenKey(
             RegistryKeyHandle key,
@@ -46,9 +42,9 @@ namespace WInterop.Registry
         }
 
         /// <summary>
-        /// Returns true if the given value exists.
+        ///  Returns true if the given value exists.
         /// </summary>
-        public unsafe static bool QueryValueExists(RegistryKeyHandle key, string valueName)
+        public static unsafe bool QueryValueExists(RegistryKeyHandle key, string valueName)
         {
             WindowsError result = Imports.RegQueryValueExW(key, valueName, null, null, null, null);
             return result switch
@@ -60,11 +56,11 @@ namespace WInterop.Registry
         }
 
         /// <summary>
-        /// Returns the type of the given value, or REG_NONE if it doesn't exist.
+        ///  Returns the type of the given value, or REG_NONE if it doesn't exist.
         /// </summary>
-        public unsafe static RegistryValueType QueryValueType(RegistryKeyHandle key, string valueName)
+        public static unsafe RegistryValueType QueryValueType(RegistryKeyHandle key, string valueName)
         {
-            RegistryValueType valueType = new RegistryValueType();
+            RegistryValueType valueType = default;
             WindowsError result = Imports.RegQueryValueExW(key, valueName, null, &valueType, null, null);
             return result switch
             {
@@ -74,11 +70,11 @@ namespace WInterop.Registry
             };
         }
 
-        public unsafe static object? QueryValue(RegistryKeyHandle key, string valueName)
+        public static unsafe object? QueryValue(RegistryKeyHandle key, string valueName)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                RegistryValueType valueType = new RegistryValueType();
+                RegistryValueType valueType = default;
 
                 WindowsError result;
                 uint byteCapacity = (uint)buffer.ByteCapacity;
@@ -110,29 +106,28 @@ namespace WInterop.Registry
         }
 
         /// <summary>
-        /// Gets the key's value names directly from NtEnumerateValueKey. This is slightly faster
-        /// and uses less memory, but only works for keys in the local machine registry and does
-        /// not work with performance keys (such as HKEY_PERFORMANCE_DATA).
-        /// 
-        /// This also doesn't give the same results for "special" (HKCR) keys that are normally
-        /// redirected to user specific settings by RegEnumValue.
+        ///  Gets the key's value names directly from NtEnumerateValueKey. This is slightly faster and uses less
+        ///  memory, but only works for keys in the local machine registry and does not work with performance keys
+        ///  (such as HKEY_PERFORMANCE_DATA).
+        ///
+        ///  This also doesn't give the same results for "special" (HKCR) keys that are normally redirected to user
+        ///  specific settings by RegEnumValue.
         /// </summary>
         /// <param name="filterTo">
-        /// Only return names that have the given type, or REG_NONE for all types.
+        ///  Only return names that have the given type, or REG_NONE for all types.
         /// </param>
         /// <remarks>
-        /// RegEnumValue doesn't map directly to NtEnumerateValueKey and requires allocating a
-        /// temporary buffer for *each* invocation- making the direct call here avoids this extra
-        /// buffer.
+        ///  RegEnumValue doesn't map directly to NtEnumerateValueKey and requires allocating a temporary buffer for
+        ///  *each* invocation- making the direct call here avoids this extra buffer.
         /// </remarks>
-        public unsafe static IEnumerable<string> GetValueNamesDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.None)
+        public static unsafe IEnumerable<string> GetValueNamesDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.None)
         {
             List<string> names = new List<string>();
 
             BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
                 NTStatus status;
-                while((status = Imports.NtEnumerateValueKey(
+                while ((status = Imports.NtEnumerateValueKey(
                     key,
                     (uint)names.Count,
                     KeyValueInformationClass.BasicInformation,
@@ -161,22 +156,19 @@ namespace WInterop.Registry
         }
 
         /// <summary>
-        /// Gets the key's value data directly from NtEnumerateValueKey. This is slightly faster
-        /// and uses less memory, but only works for keys in the local machine registry and does
-        /// not work with performance keys (such as HKEY_PERFORMANCE_DATA).
-        /// 
-        /// This also doesn't give the same results for "special" (HKCR) keys that are normally
-        /// redirected to user specific settings by RegEnumValue.
+        ///  Gets the key's value data directly from NtEnumerateValueKey. This is slightly faster and uses less memory,
+        ///  but only works for keys in the local machine registry and does not work with performance keys
+        ///  (such as HKEY_PERFORMANCE_DATA).
+        ///
+        ///  This also doesn't give the same results for "special" (HKCR) keys that are normally redirected to user
+        ///  specific settings by RegEnumValue.
         /// </summary>
-        /// <param name="filterTo">
-        /// Only return data of the given type, or REG_NONE for all types.
-        /// </param>
+        /// <param name="filterTo">Only return data of the given type, or REG_NONE for all types.</param>
         /// <remarks>
-        /// RegEnumValue doesn't map directly to NtEnumerateValueKey and requires allocating a
-        /// temporary buffer for *each* invocation- making the direct call here avoids this extra
-        /// buffer.
+        ///  RegEnumValue doesn't map directly to NtEnumerateValueKey and requires allocating a temporary buffer for
+        ///  *each* invocation- making the direct call here avoids this extra buffer.
         /// </remarks>
-        public unsafe static IEnumerable<object> GetValueDataDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.None)
+        public static unsafe IEnumerable<object> GetValueDataDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.None)
         {
             List<object> data = new List<object>();
 
@@ -212,9 +204,9 @@ namespace WInterop.Registry
         }
 
         /// <summary>
-        /// Gets all value names for the given registry key.
+        ///  Gets all value names for the given registry key.
         /// </summary>
-        public unsafe static IEnumerable<string> GetValueNames(RegistryKeyHandle key)
+        public static unsafe IEnumerable<string> GetValueNames(RegistryKeyHandle key)
         {
             List<string> names = new List<string>();
 
@@ -250,6 +242,7 @@ namespace WInterop.Registry
                                 buffer.EnsureCharCapacity(bufferSize + 100);
                                 bufferSize = buffer.CharCapacity;
                             }
+
                             break;
                         default:
                             throw result.GetException();
@@ -288,6 +281,7 @@ namespace WInterop.Registry
                     {
                         Buffer.MemoryCopy(buffer, outPointer, byteCount, byteCount);
                     }
+
                     return outBuffer;
                 default:
                     throw new NotSupportedException($"No support for {valueType} value types.");

@@ -85,7 +85,7 @@ namespace WInterop.Gdi
 
         public static PolyFillMode GetPolyFillMode(this in DeviceContext context) => Imports.GetPolyFillMode(context);
 
-        public static PolyFillMode SetPolyFillMode(this in DeviceContext context, PolyFillMode fillMode) 
+        public static PolyFillMode SetPolyFillMode(this in DeviceContext context, PolyFillMode fillMode)
             => Imports.SetPolyFillMode(context, fillMode);
 
         public static bool Polygon(this in DeviceContext context, params Point[] points) => Polygon(context, points.AsSpan());

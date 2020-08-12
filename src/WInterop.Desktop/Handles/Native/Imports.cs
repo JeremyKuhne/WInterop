@@ -41,7 +41,7 @@ namespace WInterop.Handles.Native
         // https://msdn.microsoft.com/en-us/library/bb470236.aspx
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567030.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public unsafe static extern NTStatus NtOpenSymbolicLinkObject(
+        public static unsafe extern NTStatus NtOpenSymbolicLinkObject(
             out SymbolicLinkObjectHandle LinkHandle,
             SymbolicLinkObjectRights DesiredAccess,
             ref OBJECT_ATTRIBUTES ObjectAttributes);

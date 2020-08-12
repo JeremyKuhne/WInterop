@@ -69,7 +69,7 @@ namespace WInterop.Communications.Native
             sbyte cChar);
 
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool WaitCommEvent(
+        public static unsafe extern bool WaitCommEvent(
             SafeFileHandle hFile,
             out EventMask lpEvtMask,
             OVERLAPPED* lpOverlapped);

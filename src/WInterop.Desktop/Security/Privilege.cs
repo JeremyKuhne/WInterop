@@ -13,7 +13,7 @@ namespace WInterop.Security
     /// <remarks>
     /// Very few privileges are granted when not running elevated. ChangeNotify, Shutdown, Undock,
     /// IncreaseWorkingSet, and TimeZone are available.
-    /// 
+    ///
     /// Running elevated adds IncreaseQuota, Security, TakeOwnership, LoadDriver, SystemProfile,
     /// SystemTime, ProfileSingleProcessPrivilege, IncreseBasePriority, CreatePagefile, Backup,
     /// Restore, Debug, SystemEnvironment, RemoteShutdown, ManageVolume, Impersonate, CreateGlobal,
@@ -81,7 +81,7 @@ namespace WInterop.Security
         CreateSymbolicLink,
 
         /// <summary>
-        /// Required to create a primary token. 
+        /// Required to create a primary token.
         /// [SE_CREATE_TOKEN_NAME]["SeCreateTokenPrivilege"]
         /// </summary>
         CreateToken,

@@ -17,7 +17,7 @@ namespace WInterop.Windows
         private MonitorInfo _info;
         private FixedString.Size32 _szDevice;
 
-        public unsafe static ExtendedMonitorInfo Create() => new ExtendedMonitorInfo(sizeof(ExtendedMonitorInfo));
+        public static unsafe ExtendedMonitorInfo Create() => new ExtendedMonitorInfo(sizeof(ExtendedMonitorInfo));
 
         private ExtendedMonitorInfo(int size)
         {

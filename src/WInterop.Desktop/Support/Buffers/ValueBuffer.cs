@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -20,18 +16,17 @@ namespace WInterop.Support.Buffers
         where TBuffer : unmanaged;
 
     /// <summary>
-    /// Growable Span(T) buffer wrapper.
+    ///  Growable Span(T) buffer wrapper.
     /// </summary>
     public ref struct ValueBuffer<T> where T : unmanaged
     {
         private byte[]? _buffer;
 
         /// <summary>
-        /// Create the buffer with an initial span.
+        ///  Create the buffer with an initial span.
         /// </summary>
         /// <remarks>
-        /// This is particularly useful when you have an initial stack allocated
-        /// buffer that you want to use.
+        ///  This is particularly useful when you have an initial stack allocated buffer that you want to use.
         /// </remarks>
         public ValueBuffer(Span<T> span)
         {
@@ -51,8 +46,7 @@ namespace WInterop.Support.Buffers
         public uint Length => (uint)Span.Length;
 
         /// <summary>
-        /// Ensure that the buffer has enough space for <paramref name="capacity"/>
-        /// number of elements.
+        ///  Ensure that the buffer has enough space for <paramref name="capacity"/> number of elements.
         /// </summary>
         /// <param name="copy">True to copy the existing elements when new space is allocated.</param>
         public unsafe void EnsureCapacity(int capacity, bool copy = false)
@@ -70,7 +64,7 @@ namespace WInterop.Support.Buffers
                 : 1;
 
             // Get extra for possible realignment
-            int byteCapacity = capacity * sizeOfT + alignTo;
+            int byteCapacity = (capacity * sizeOfT) + alignTo;
 
             byte[] newBuffer = ArrayPool<byte>.Shared.Rent(byteCapacity);
             fixed (byte* b = newBuffer)
@@ -98,6 +92,7 @@ namespace WInterop.Support.Buffers
                 {
                     ArrayPool<byte>.Shared.Return(_buffer);
                 }
+
                 _buffer = newBuffer;
                 Span = newSpan;
             }

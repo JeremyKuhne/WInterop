@@ -46,7 +46,7 @@ namespace WInterop.Shell
         /// <summary>
         /// If the user types an invalid name into the edit box, the browse dialog box calls the
         /// application's BrowseCallbackProc with the BFFM_VALIDATEFAILED message.
-        /// 
+        ///
         /// Used with <see cref="EditBox"/>. [BIF_VALIDATE]
         /// </summary>
         Validate = 0x00000020,

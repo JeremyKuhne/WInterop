@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace WInterop
 {
-    public unsafe static class FixedInt
+    public static unsafe class FixedInt
     {
         public struct Size16
         {

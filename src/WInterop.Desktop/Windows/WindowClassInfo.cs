@@ -10,7 +10,7 @@ using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577.aspx
+    // https://docs.microsoft.com/windows/win32/api/winuser/ns-winuser-wndclassexw
     public struct WindowClassInfo
     {
         public uint Size;

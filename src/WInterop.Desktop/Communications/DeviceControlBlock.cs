@@ -1,16 +1,12 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Communications
 {
     /// <summary>
-    /// [DCB]
+    ///  [DCB]
     /// </summary>
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363214.aspx
+    /// <docs>https://docs.microsoft.com/windows/win32/api/winbase/ns-winbase-dcb</docs>
     public struct DeviceControlBlock
     {
         private const uint BinaryMask             = 0b0000000000000001;
@@ -43,110 +39,117 @@ namespace WInterop.Communications
         public sbyte EvtChar;
         public ushort Reserved1;
 
-        //DWORD fBinary  :1;
+        // DWORD fBinary  :1;
         public bool Binary
         {
-            get { return this[BinaryMask]; }
-            set { this[BinaryMask] = value; }
+            get => this[BinaryMask];
+            set => this[BinaryMask] = value;
         }
 
-        //DWORD fParity  :1;
+        // DWORD fParity  :1;
         public bool ParityFlag
         {
-            get { return this[ParityMask]; }
-            set { this[ParityMask] = value; }
+            get => this[ParityMask];
+            set => this[ParityMask] = value;
         }
 
-        //DWORD fOutxCtsFlow  :1;
+        // DWORD fOutxCtsFlow  :1;
         public bool OutxCtsFlow
         {
-            get { return this[CtsFlowMask]; }
-            set { this[CtsFlowMask] = value; }
+            get => this[CtsFlowMask];
+            set => this[CtsFlowMask] = value;
         }
 
-        //DWORD fOutxDsrFlow  :1;
+        // DWORD fOutxDsrFlow  :1;
         public bool OutxDsrFlow
         {
-            get { return this[DsrFlowMask]; }
-            set { this[DsrFlowMask] = value; }
+            get => this[DsrFlowMask];
+            set => this[DsrFlowMask] = value;
         }
 
-        //DWORD fDtrControl  :2;
+        // DWORD fDtrControl  :2;
         public DtrControl DtrControl
         {
-            get { return (DtrControl)this[DtrControlMask, 4]; }
-            set { this[DtrControlMask, 4] = (uint)value; }
+            get => (DtrControl)this[DtrControlMask, 4];
+            set => this[DtrControlMask, 4] = (uint)value;
         }
 
-        //DWORD fDsrSensitivity  :1;
+        // DWORD fDsrSensitivity  :1;
         public bool DsrSensitivity
         {
-            get { return this[DsrSensitivityMask]; }
-            set { this[DsrSensitivityMask] = value; }
+            get => this[DsrSensitivityMask];
+            set => this[DsrSensitivityMask] = value;
         }
 
-        //DWORD fTXContinueOnXoff  :1;
+        // DWORD fTXContinueOnXoff  :1;
         public bool TXContinueOnXoff
         {
-            get { return this[TXContinueMask]; }
-            set { this[TXContinueMask] = value; }
+            get => this[TXContinueMask];
+            set => this[TXContinueMask] = value;
         }
 
-        //DWORD fOutX  :1;
+        // DWORD fOutX  :1;
         public bool OutX
         {
-            get { return this[OutMask]; }
-            set { this[OutMask] = value; }
+            get => this[OutMask];
+            set => this[OutMask] = value;
         }
 
-        //DWORD fInX  :1;
+        // DWORD fInX  :1;
         public bool InX
         {
-            get { return this[InMask]; }
-            set { this[InMask] = value; }
+            get => this[InMask];
+            set => this[InMask] = value;
         }
 
-        //DWORD fErrorChar  :1;
+        // DWORD fErrorChar  :1;
         public bool ErrorCharFlag
         {
-            get { return this[ErrorCharMask]; }
-            set { this[ErrorCharMask] = value; }
+            get => this[ErrorCharMask];
+            set => this[ErrorCharMask] = value;
         }
 
-        //DWORD fNull  :1;
+        // DWORD fNull  :1;
         public bool Null
         {
-            get { return this[NullMask]; }
-            set { this[NullMask] = value; }
+            get => this[NullMask];
+            set => this[NullMask] = value;
         }
 
-        //DWORD fRtsControl  :2;
+        // DWORD fRtsControl  :2;
         public RtsControl RtsControl
         {
-            get { return (RtsControl)this[RtsControlMask, 12]; }
-            set { this[DtrControlMask, 12] = (uint)value; }
+            get => (RtsControl)this[RtsControlMask, 12];
+            set => this[DtrControlMask, 12] = (uint)value;
         }
 
-        //DWORD fAbortOnError  :1;
+        // DWORD fAbortOnError  :1;
         public bool AbortOnError
         {
-            get { return this[AbortOnErrorMask]; }
-            set { this[AbortOnErrorMask] = value; }
+            get => this[AbortOnErrorMask];
+            set => this[AbortOnErrorMask] = value;
         }
 
         private bool this[uint bitMask]
         {
-            get { return (_bitFields & bitMask) != 0; }
-            set { if (value) _bitFields |= bitMask; else _bitFields &= ~bitMask; }
+            get => (_bitFields & bitMask) != 0;
+            set
+            {
+                if (value)
+                {
+                    _bitFields |= bitMask;
+                }
+                else
+                {
+                    _bitFields &= ~bitMask;
+                }
+            }
         }
 
         private uint this[uint bitMask, int offset]
         {
-            get { return (_bitFields & bitMask) >> offset; }
-            set
-            {
-                _bitFields = (_bitFields & ~bitMask) | (value << offset & bitMask);
-            }
+            get => (_bitFields & bitMask) >> offset;
+            set => _bitFields = (_bitFields & ~bitMask) | (value << offset & bitMask);
         }
     }
 }

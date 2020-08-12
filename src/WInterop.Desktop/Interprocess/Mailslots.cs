@@ -22,7 +22,7 @@ namespace WInterop.Interprocess
         /// Timeout, in milliseconds, that a read operation will wait for a message to be posted. 0 means do not wait, uint.MaxValue means
         /// wait indefinitely.
         /// </param>
-        public unsafe static SafeMailslotHandle CreateMailslot(string name, uint maxMessageSize = 0, uint readTimeout = 0)
+        public static unsafe SafeMailslotHandle CreateMailslot(string name, uint maxMessageSize = 0, uint readTimeout = 0)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
 
@@ -37,7 +37,7 @@ namespace WInterop.Interprocess
         /// <summary>
         /// Get information for the given mailslot.
         /// </summary>
-        public unsafe static MailslotInfo GetMailslotInfo(SafeMailslotHandle mailslotHandle)
+        public static unsafe MailslotInfo GetMailslotInfo(SafeMailslotHandle mailslotHandle)
         {
             MailslotInfo info = new MailslotInfo();
 

@@ -19,7 +19,7 @@ namespace WInterop.Gdi
         // Should be 840 bytes
         private uint cb;
 
-        public unsafe static DisplayDevice Create()
+        public static unsafe DisplayDevice Create()
         {
             return new DisplayDevice { cb = (uint)sizeof(DisplayDevice) };
         }
