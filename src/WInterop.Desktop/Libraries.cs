@@ -1,16 +1,12 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop
 {
     /// <summary>
-    /// Standard library name defines. Using a central define helps ensure we keep names consistent.
-    /// Using API library definitions over legacy library names is encouraged for future proofing
-    /// and a supposed slight perf benefit in looking up apis.
+    ///  Standard library name defines. Using a central define helps ensure we keep names consistent.
+    ///  Using API library definitions over legacy library names is encouraged for future proofing
+    ///  and a supposed slight perf benefit in looking up apis.
     /// </summary>
     public static class Libraries
     {
@@ -34,6 +30,7 @@ namespace WInterop
         public const string Shlwapi = "shlwapi.dll";
         public const string User32 = "user32.dll";
         public const string Userenv = "userenv.dll";
+        public const string WebView2Loader = "WebView2Loader.dll";
         public const string Winmm = "winmm.dll";
         public const string Winnls = "winnls.dll";
     }

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Win32.SafeHandles;
@@ -17,41 +13,37 @@ using WInterop.Windows.Native;
 namespace Head
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 9-9, Pages 411-415.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 9-9, Pages 411-415.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Head(), "Head");
         }
     }
 
-    class Head : WindowClass
+    internal class Head : WindowClass
     {
         public Head() : base(backgroundBrush: SystemColor.ButtonFace) { }
 
-        static FileTypes DIRATTR = FileTypes.ReadWrite | FileTypes.ReadOnly | FileTypes.Hidden | FileTypes.System
+        private static readonly FileTypes s_dirAttr = FileTypes.ReadWrite | FileTypes.ReadOnly | FileTypes.Hidden | FileTypes.System
             | FileTypes.Directory | FileTypes.Archive | FileTypes.Drives;
-        static TextFormat DTFLAGS = TextFormat.WordBreak | TextFormat.ExpandTabs | TextFormat.NoClip | TextFormat.NoPrefix;
-
-        WindowHandle hwndList, hwndText;
-        WNDPROC _existingListBoxWndProc;
-        WindowProcedure _listBoxProcedure;
-
-        const int ID_LIST = 1;
-        const int ID_TEXT = 2;
-        const int MAXREAD = 8192;
-
-        bool bValidFile;
-        char[] szFile = new char[256];
-        byte[] _buffer = new byte[MAXREAD];
-        char[] _decoded = new char[MAXREAD];
-
-        Rectangle rect;
+        private static readonly TextFormat s_dtFlags = TextFormat.WordBreak | TextFormat.ExpandTabs | TextFormat.NoClip | TextFormat.NoPrefix;
+        private WindowHandle _hwndList, _hwndText;
+        private WNDPROC _existingListBoxWndProc;
+        private WindowProcedure _listBoxProcedure;
+        private const int ID_LIST = 1;
+        private const int ID_TEXT = 2;
+        private const int MAXREAD = 8192;
+        private bool _bValidFile;
+        private readonly char[] _szFile = new char[256];
+        private readonly byte[] _buffer = new byte[MAXREAD];
+        private readonly char[] _decoded = new char[MAXREAD];
+        private Rectangle _rect;
 
         protected unsafe override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -61,10 +53,10 @@ namespace Head
             {
                 case MessageType.Create:
                     Size baseUnits = Windows.GetDialogBaseUnits();
-                    rect = Rectangle.FromLTRB(20 * baseUnits.Width, 3 * baseUnits.Height, rect.Right, rect.Bottom);
+                    _rect = Rectangle.FromLTRB(20 * baseUnits.Width, 3 * baseUnits.Height, _rect.Right, _rect.Bottom);
 
                     // Create listbox and static text windows.
-                    hwndList = Windows.CreateWindow(
+                    _hwndList = Windows.CreateWindow(
                         className: "listbox",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard,
                         bounds: new Rectangle(baseUnits.Width, baseUnits.Height * 3,
@@ -73,7 +65,7 @@ namespace Head
                         menuHandle: (MenuHandle)ID_LIST,
                         instance: ModuleInstance);
 
-                    hwndText = Windows.CreateWindow(
+                    _hwndText = Windows.CreateWindow(
                         className: "static",
                         windowName: Storage.GetCurrentDirectory(),
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left,
@@ -82,39 +74,39 @@ namespace Head
                         menuHandle: (MenuHandle)ID_TEXT,
                         instance: ModuleInstance);
 
-                    _existingListBoxWndProc = hwndList.SetWindowProcedure(_listBoxProcedure = ListBoxProcedure);
+                    _existingListBoxWndProc = _hwndList.SetWindowProcedure(_listBoxProcedure = ListBoxProcedure);
 
                     fixed (char* f = filter)
-                        hwndList.SendMessage(ListBoxMessage.Directory, (uint)DIRATTR, f);
+                        _hwndList.SendMessage(ListBoxMessage.Directory, (uint)s_dirAttr, f);
                     return 0;
                 case MessageType.Size:
-                    rect = Rectangle.FromLTRB(rect.Left, rect.Top, lParam.LowWord, lParam.HighWord);
+                    _rect = Rectangle.FromLTRB(_rect.Left, _rect.Top, lParam.LowWord, lParam.HighWord);
                     return 0;
                 case MessageType.SetFocus:
-                    hwndList.SetFocus();
+                    _hwndList.SetFocus();
                     return 0;
                 case MessageType.Command:
                     if (wParam.LowWord == ID_LIST
                         && (wParam.HighWord == (ushort)ListBoxNotification.DoubleClick))
                     {
-                        uint i = hwndList.SendMessage(ListBoxMessage.GetCurrentSelection, 0, 0);
+                        uint i = _hwndList.SendMessage(ListBoxMessage.GetCurrentSelection, 0, 0);
                         if (i == WindowDefines.LB_ERR)
                             break;
 
-                        int iLength = hwndList.SendMessage(ListBoxMessage.GetTextLength, i, 0) + 1;
-                        fixed (char* textBuffer = szFile)
+                        int iLength = _hwndList.SendMessage(ListBoxMessage.GetTextLength, i, 0) + 1;
+                        fixed (char* textBuffer = _szFile)
                         {
-                            int result = hwndList.SendMessage(ListBoxMessage.GetText, i, textBuffer);
+                            int result = _hwndList.SendMessage(ListBoxMessage.GetText, i, textBuffer);
                             SafeFileHandle hFile = null;
                             try
                             {
-                                using (hFile = Storage.CreateFile(szFile.AsSpan(0, result),
+                                using (hFile = Storage.CreateFile(_szFile.AsSpan(0, result),
                                     CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.Read))
                                 {
                                     if (!hFile.IsInvalid)
                                     {
-                                        bValidFile = true;
-                                        hwndText.SetWindowText(Storage.GetCurrentDirectory());
+                                        _bValidFile = true;
+                                        _hwndText.SetWindowText(Storage.GetCurrentDirectory());
                                     }
                                 }
                                 hFile = null;
@@ -124,19 +116,19 @@ namespace Head
                             }
 
                             Span<char> dir = stackalloc char[2];
-                            if (hFile == null && szFile[0] == ('['))
+                            if (hFile == null && _szFile[0] == ('['))
                             {
-                                bValidFile = false;
+                                _bValidFile = false;
 
                                 // If setting the directory doesn’t work, maybe it’s a drive change, so try that.
                                 try
                                 {
-                                    szFile[result - 1] = '\0';
-                                    Storage.SetCurrentDirectory(szFile.AsSpan(1, result - 2));
+                                    _szFile[result - 1] = '\0';
+                                    Storage.SetCurrentDirectory(_szFile.AsSpan(1, result - 2));
                                 }
                                 catch
                                 {
-                                    dir[0] = szFile[2];
+                                    dir[0] = _szFile[2];
                                     dir[1] = ':';
 
                                     try { Storage.SetCurrentDirectory(dir); }
@@ -144,10 +136,10 @@ namespace Head
                                 }
 
                                 // Get the new directory name and fill the list box.
-                                hwndText.SetWindowText(Storage.GetCurrentDirectory());
-                                hwndList.SendMessage(ListBoxMessage.ResetContent, 0, 0);
+                                _hwndText.SetWindowText(Storage.GetCurrentDirectory());
+                                _hwndList.SendMessage(ListBoxMessage.ResetContent, 0, 0);
                                 fixed (char* f = filter)
-                                    hwndList.SendMessage(ListBoxMessage.Directory, (uint)DIRATTR, f);
+                                    _hwndList.SendMessage(ListBoxMessage.Directory, (uint)s_dirAttr, f);
                             }
                         }
 
@@ -155,16 +147,16 @@ namespace Head
                     }
                     return 0;
                 case MessageType.Paint:
-                    if (!bValidFile)
+                    if (!_bValidFile)
                         break;
 
                     uint bytesRead;
-                    using (var hFile = Storage.CreateFile(szFile, CreationDisposition.OpenExisting,
+                    using (var hFile = Storage.CreateFile(_szFile, CreationDisposition.OpenExisting,
                         DesiredAccess.GenericRead, ShareModes.Read))
                     {
                         if (hFile.IsInvalid)
                         {
-                            bValidFile = false;
+                            _bValidFile = false;
                             break;
                         }
 
@@ -177,7 +169,7 @@ namespace Head
                         dc.SetTextColor(SystemColor.ButtonText);
                         dc.SetBackgroundColor(SystemColor.ButtonFace);
                         Encoding.UTF8.GetDecoder().Convert(_buffer.AsSpan(0, (int)bytesRead), _decoded.AsSpan(), true, out _, out int charCount, out _);
-                        dc.DrawText(_decoded.AsSpan(0, charCount), rect, DTFLAGS);
+                        dc.DrawText(_decoded.AsSpan(0, charCount), _rect, s_dtFlags);
                     }
 
                     return 0;
@@ -186,7 +178,7 @@ namespace Head
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        LResult ListBoxProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        private LResult ListBoxProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             if (message == MessageType.KeyDown && (VirtualKey)wParam == VirtualKey.Return)
             {

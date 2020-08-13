@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -76,7 +72,6 @@ namespace WInterop.Network.Native
                 return new ReadOnlySpan<char>(description, WSASYS_STATUS_LEN).SliceAtNull();
             }
         }
-
 
         [StructLayout(LayoutKind.Explicit)]
         public struct UnionType

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Errors;
@@ -21,7 +17,7 @@ namespace WInterop.Globalization
         public const string LOCALE_NAME_SYSTEM_DEFAULT = "!x-sys-default-locale";
 
         /// <summary>
-        /// Returns whether or not the specified locale uses a 24 hour clock.
+        ///  Returns whether or not the specified locale uses a 24 hour clock.
         /// </summary>
         public unsafe bool GetIs24HourClock(string? localeName = null)
         {
@@ -34,7 +30,7 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Returns whether or not the specified locale has leading zeros for hours.
+        ///  Returns whether or not the specified locale has leading zeros for hours.
         /// </summary>
         public unsafe bool GetHoursHaveLeadingZeros(string? localeName = null)
         {

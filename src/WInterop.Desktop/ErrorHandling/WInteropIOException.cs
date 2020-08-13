@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,7 +11,7 @@ namespace WInterop.Errors
         public WInteropIOException()
             : base() { }
 
-        public WInteropIOException(string? message, HResult hresult, Exception? innerException = null)
+        public WInteropIOException(string? message, HResult hresult = default, Exception? innerException = null)
             : base(message, innerException) { HResult = (int)hresult; }
 
         public WInteropIOException(HResult result)

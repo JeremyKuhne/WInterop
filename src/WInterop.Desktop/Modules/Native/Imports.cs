@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ using WInterop.ProcessAndThreads;
 namespace WInterop.Modules.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -37,7 +33,7 @@ namespace WInterop.Modules.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200.aspx
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool GetModuleHandleExW(
+        public static unsafe extern bool GetModuleHandleExW(
             GetModuleFlags dwFlags,
             IntPtr lpModuleName,
             out IntPtr moduleHandle);
@@ -45,14 +41,14 @@ namespace WInterop.Modules.Native
         // The non-ex version is more performant for the current process.
         // https://docs.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern uint GetModuleFileNameW(
+        public static unsafe extern uint GetModuleFileNameW(
             ModuleInstance hModule,
             char* lpFileName,
             uint nSize);
 
         // https://docs.microsoft.com/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern uint K32GetModuleFileNameExW(
+        public static unsafe extern uint K32GetModuleFileNameExW(
             SafeProcessHandle hProcess,
             ModuleInstance hModule,
             char* lpFileName,

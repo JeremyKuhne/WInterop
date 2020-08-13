@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,14 +8,13 @@ using WInterop.Windows;
 
 namespace Checker
 {
-    class Checker4 : WindowClass
+    internal class Checker4 : WindowClass
     {
-        const int DIVISIONS = 5;
-        WindowHandle[,] hwndChild = new WindowHandle[DIVISIONS, DIVISIONS];
-        int cxBlock, cyBlock;
+        private const int DIVISIONS = 5;
+        private readonly WindowHandle[,] _hwndChild = new WindowHandle[DIVISIONS, DIVISIONS];
+        private int _cxBlock, _cyBlock;
         public static int idFocus = 0;
-
-        Checker4Child _childClass = (Checker4Child)(new Checker4Child().Register());
+        private readonly Checker4Child _childClass = (Checker4Child)(new Checker4Child().Register());
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -29,18 +24,18 @@ namespace Checker
                 case MessageType.Create:
                     for (x = 0; x < DIVISIONS; x++)
                         for (y = 0; y < DIVISIONS; y++)
-                            hwndChild[x, y] = _childClass.CreateWindow(
+                            _hwndChild[x, y] = _childClass.CreateWindow(
                                 style: WindowStyles.ChildWindow | WindowStyles.Visible,
                                 parentWindow: window,
                                 menuHandle: (MenuHandle)(y << 8 | x));
                     return 0;
                 case MessageType.Size:
-                    cxBlock = lParam.LowWord / DIVISIONS;
-                    cyBlock = lParam.HighWord / DIVISIONS;
+                    _cxBlock = lParam.LowWord / DIVISIONS;
+                    _cyBlock = lParam.HighWord / DIVISIONS;
                     for (x = 0; x < DIVISIONS; x++)
                         for (y = 0; y < DIVISIONS; y++)
-                            hwndChild[x, y].MoveWindow(
-                                new Rectangle(x * cxBlock, y * cyBlock, cxBlock, cyBlock),
+                            _hwndChild[x, y].MoveWindow(
+                                new Rectangle(x * _cxBlock, y * _cyBlock, _cxBlock, _cyBlock),
                                 repaint: true);
                     return 0;
                 case MessageType.LeftButtonDown:
@@ -75,7 +70,7 @@ namespace Checker
         }
     }
 
-    class Checker4Child : WindowClass
+    internal class Checker4Child : WindowClass
     {
         public Checker4Child()
             : base(windowExtraBytes: IntPtr.Size)
@@ -132,12 +127,10 @@ namespace Checker
                             rect.Inflate(rect.Width / -10, rect.Height / -10);
 
                             dc.SelectObject(StockBrush.Null);
-                            using (PenHandle pen = Gdi.CreatePen(PenStyle.Dash, 0, default))
-                            {
-                                dc.SelectObject(pen);
-                                dc.Rectangle(rect);
-                                dc.SelectObject(StockPen.Black);
-                            }
+                            using PenHandle pen = Gdi.CreatePen(PenStyle.Dash, 0, default);
+                            dc.SelectObject(pen);
+                            dc.Rectangle(rect);
+                            dc.SelectObject(StockPen.Black);
                         }
                     }
                     return 0;

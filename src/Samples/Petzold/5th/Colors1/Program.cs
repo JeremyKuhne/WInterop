@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,36 +10,36 @@ using WInterop.Windows.Native;
 namespace Colors1
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 9-1, Pages 359-362.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 9-1, Pages 359-362.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Colors1(), "Color Scroll");
         }
     }
 
-    class Colors1 : WindowClass
+    internal class Colors1 : WindowClass
     {
-        Color[] crPrim = { Color.Red, Color.Green, Color.Blue };
-        BrushHandle[] hBrush = new BrushHandle[3];
-        BrushHandle hBrushStatic;
-        WindowHandle[] hwndScroll = new WindowHandle[3];
-        WindowHandle[] hwndLabel = new WindowHandle[3];
-        WindowHandle[] hwndValue = new WindowHandle[3];
-        WindowHandle hwndRect;
-        int[] color = new int[3];
-        int cyChar, idFocus;
-        Rectangle rcColor;
-        string[] szColorLabel = { "Red", "Green", "Blue" };
-        WNDPROC[] OldScroll = new WNDPROC[3];
+        private readonly Color[] crPrim = { Color.Red, Color.Green, Color.Blue };
+        private readonly BrushHolder[] hBrush = new BrushHolder[3];
+        private BrushHolder hBrushStatic;
+        private readonly WindowHandle[] hwndScroll = new WindowHandle[3];
+        private readonly WindowHandle[] hwndLabel = new WindowHandle[3];
+        private readonly WindowHandle[] hwndValue = new WindowHandle[3];
+        private WindowHandle hwndRect;
+        private readonly int[] color = new int[3];
+        private int cyChar, idFocus;
+        private Rectangle rcColor;
+        private readonly string[] szColorLabel = { "Red", "Green", "Blue" };
+        private readonly WNDPROC[] OldScroll = new WNDPROC[3];
 
         // We need to put the delegate in a static to prevent the callback from being collected
-        WindowProcedure _scrollProcedure;
+        private WindowProcedure _scrollProcedure;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -169,7 +165,7 @@ namespace Colors1
                     window.InvalidateRectangle(rcColor, true);
                     return 0;
                 case MessageType.ControlColorScrollBar:
-                    return hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)];
+                    return (BrushHandle)hBrush[(int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id)];
                 case MessageType.ControlColorStatic:
                     id = (int)((WindowHandle)lParam).GetWindowLong(WindowLong.Id);
 
@@ -178,7 +174,7 @@ namespace Colors1
                         DeviceContext dc = (DeviceContext)wParam;
                         dc.SetTextColor(crPrim[id % 3]);
                         dc.SetBackgroundColor(Windows.GetSystemColor(SystemColor.ButtonHighlight));
-                        return hBrushStatic;
+                        return (BrushHandle)hBrushStatic;
                     }
                     break;
                 case MessageType.SystemColorChange:
@@ -196,7 +192,7 @@ namespace Colors1
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        LResult ScrollProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        private LResult ScrollProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             int id = (int)window.GetWindowLong(WindowLong.Id).ToInt64();
 

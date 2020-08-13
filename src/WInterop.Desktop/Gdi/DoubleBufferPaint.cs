@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,8 +9,8 @@ namespace WInterop.Gdi
 {
     public ref struct DoubleBufferPaint
     {
-        private DeviceContext _originalDC;
-        private BitmapHandle _bitmap;
+        private readonly DeviceContext _originalDC;
+        private readonly BitmapHandle _bitmap;
         private Rectangle _client;
 
         public DeviceContext DeviceContext { get; private set; }

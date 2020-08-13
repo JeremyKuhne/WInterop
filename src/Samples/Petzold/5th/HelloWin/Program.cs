@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,14 +10,14 @@ using WInterop.Windows;
 namespace HelloWin
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 3-1, Pages 44-46.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 3-1, Pages 44-46.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             const string szAppName = "HelloWin";
 
@@ -56,7 +52,7 @@ namespace HelloWin
             }
         }
 
-        static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        private static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Compression
@@ -10,42 +6,42 @@ namespace WInterop.Compression
     public enum LzError
     {
         /// <summary>
-        /// Invalid input handle. [LZERROR_BADINHANDLE]
+        ///  Invalid input handle. [LZERROR_BADINHANDLE]
         /// </summary>
         BadInHandle = -1,
 
         /// <summary>
-        /// Invalid output handle. [LZERROR_BADOUTHANDLE]
+        ///  Invalid output handle. [LZERROR_BADOUTHANDLE]
         /// </summary>
         BadOutHandle = -2,
 
         /// <summary>
-        /// Corrupt compressed file format. [LZERROR_READ]
+        ///  Corrupt compressed file format. [LZERROR_READ]
         /// </summary>
         Read = -3,
 
         /// <summary>
-        /// Out of space for output file. [LZERROR_WRITE]
+        ///  Out of space for output file. [LZERROR_WRITE]
         /// </summary>
         Write = -4,
 
         /// <summary>
-        /// Insufficient memory for LZFile struct. [LZERROR_GLOBALLOC]
+        ///  Insufficient memory for LZFile struct. [LZERROR_GLOBALLOC]
         /// </summary>
         GlobalAlloc = -5,
 
         /// <summary>
-        /// Bad global handle. [LZERROR_GLOBLOCK]
+        ///  Bad global handle. [LZERROR_GLOBLOCK]
         /// </summary>
         GlobalLock = -6,
 
         /// <summary>
-        /// Input parameter out of acceptable range. [LZERROR_BADVALUE]
+        ///  Input parameter out of acceptable range. [LZERROR_BADVALUE]
         /// </summary>
         BadValue = -7,
 
         /// <summary>
-        /// Compression algorithm not recognized. [LZERROR_UNKNOWNALG]
+        ///  Compression algorithm not recognized. [LZERROR_UNKNOWNALG]
         /// </summary>
         UnknownAlgorithm = -8
     }

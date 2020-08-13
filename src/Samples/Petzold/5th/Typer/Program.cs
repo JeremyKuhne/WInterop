@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,24 +9,24 @@ using WInterop.Windows;
 namespace Typer
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 6-3, Pages 236-240.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 6-3, Pages 236-240.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Typer(), "Typing Program");
         }
     }
 
-    class Typer : WindowClass
+    internal class Typer : WindowClass
     {
-        int cxChar, cyChar, cxClient, cyClient, cxBuffer, cyBuffer, xCaret, yCaret;
-        CharacterSet dwCharSet = CharacterSet.Default;
-        char[,] pBuffer;
+        private int cxChar, cyChar, cxClient, cyClient, cxBuffer, cyBuffer, xCaret, yCaret;
+        private CharacterSet dwCharSet = CharacterSet.Default;
+        private char[,] pBuffer;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

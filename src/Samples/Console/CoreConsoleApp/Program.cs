@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,20 +8,19 @@ using WInterop.Windows;
 
 namespace CoreConsoleApp
 {
-    class Program
+    internal class Program
     {
         // ␛
-        const char Esc = (char)27;
+        private const char Esc = (char)27;
 
-
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // Performance();
             // ReadInputExample();
             VirtualTerminalColor();
         }
 
-        static void VirtualTerminalColor()
+        private static void VirtualTerminalColor()
         {
             var writer = ConsoleWriter.Create(autoFlush: false);
 
@@ -58,7 +53,7 @@ namespace CoreConsoleApp
             System.Console.WriteLine("After exiting terminal mode.");
         }
 
-        static void Performance()
+        private static void Performance()
         {
             var writer = ConsoleWriter.Create(autoFlush: false);
 
@@ -80,7 +75,7 @@ namespace CoreConsoleApp
             System.Console.WriteLine($"Time: {stopwatch.ElapsedMilliseconds}, Allocated Bytes: {used}");
         }
 
-        static void ReadInputExample()
+        private static void ReadInputExample()
         {
             // https://docs.microsoft.com/en-us/windows/console/reading-input-buffer-events
 

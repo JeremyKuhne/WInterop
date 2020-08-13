@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,14 +11,14 @@ using WInterop.Support;
 namespace KeyView1
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 6-3, Pages 236-240.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 6-3, Pages 236-240.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new KeyView1(), "Keyboard Message Viewer #1");
         }
@@ -118,17 +114,17 @@ namespace KeyView1
                                 ? "{0,-13} {1,3} {2,15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}"
                                 : "{0,-13} {1,3} {2,-15} {3,6} {4,4} {5,3} {6,3} {7,4} {8,4}  VirtualKey: {9}",
                                     pmsg[i].Type,
-                                    pmsg[i].wParam.ToString(),
+                                    pmsg[i].WParam.ToString(),
                                     iType
-                                        ? $"0x{((uint)pmsg[i].wParam):X4} {(char)(uint)pmsg[i].wParam}"
-                                        : Windows.GetKeyNameText(pmsg[i].lParam),
-                                    pmsg[i].lParam.LowWord,
-                                    pmsg[i].lParam.HighWord & 0xFF,
-                                    (0x01000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
-                                    (0x20000000 & pmsg[i].lParam) != 0 ? "Yes" : "No",
-                                    (0x40000000 & pmsg[i].lParam) != 0 ? "Down" : "Up",
-                                    (0x80000000 & pmsg[i].lParam) != 0 ? "Up" : "Down",
-                                    (VirtualKey)pmsg[i].wParam);
+                                        ? $"0x{((uint)pmsg[i].WParam):X4} {(char)(uint)pmsg[i].WParam}"
+                                        : Windows.GetKeyNameText(pmsg[i].LParam),
+                                    pmsg[i].LParam.LowWord,
+                                    pmsg[i].LParam.HighWord & 0xFF,
+                                    (0x01000000 & pmsg[i].LParam) != 0 ? "Yes" : "No",
+                                    (0x20000000 & pmsg[i].LParam) != 0 ? "Yes" : "No",
+                                    (0x40000000 & pmsg[i].LParam) != 0 ? "Down" : "Up",
+                                    (0x80000000 & pmsg[i].LParam) != 0 ? "Up" : "Down",
+                                    (VirtualKey)pmsg[i].WParam);
 
                             dc.TextOut(new Point(0, (cyClient / cyChar - 1 - i) * cyChar), _chunk.Span.Slice(0, _sb.Length));
                         }

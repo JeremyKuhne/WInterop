@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright [c] Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -10,14 +6,14 @@ using System.Drawing;
 namespace WInterop.Windows
 {
     /// <summary>
-    /// [MSG]
+    ///  Windows Message. [MSG]
     /// </summary>
     public readonly struct WindowMessage
     {
         public readonly WindowHandle Window;
         public readonly MessageType Type;
-        public readonly WParam wParam;
-        public readonly LParam lParam;
+        public readonly WParam WParam;
+        public readonly LParam LParam;
         public readonly uint Time;
         public readonly Point Point;
 
@@ -31,8 +27,8 @@ namespace WInterop.Windows
         {
             Window = window;
             Type = type;
-            this.wParam = wParam;
-            this.lParam = lParam;
+            WParam = wParam;
+            LParam = lParam;
             Time = time;
             Point = point;
         }

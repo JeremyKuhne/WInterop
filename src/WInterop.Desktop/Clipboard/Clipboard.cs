@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -20,7 +16,7 @@ namespace WInterop.Clipboard
     public static partial class Clipboard
     {
         /// <summary>
-        /// This only works for types that aren't built in (e.g. defined in ClipboardFormat).
+        ///  This only works for types that aren't built in (e.g. defined in ClipboardFormat).
         /// </summary>
         /// <exception cref="ArgumentException">Thrown if passing in a built-in format type.</exception>
         public static string GetClipboardFormatName(uint format)
@@ -40,9 +36,9 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Gets the formats that are currently available on the clipboard.
+        ///  Gets the formats that are currently available on the clipboard.
         /// </summary>
-        public unsafe static uint[] GetAvailableClipboardFormats()
+        public static unsafe uint[] GetAvailableClipboardFormats()
         {
             uint count;
 
@@ -59,7 +55,7 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Returns true if the requested format is available.
+        ///  Returns true if the requested format is available.
         /// </summary>
         public static bool IsClipboardFormatAvailable(ClipboardFormat format)
         {
@@ -67,7 +63,7 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Returns true if the requested format is available.
+        ///  Returns true if the requested format is available.
         /// </summary>
         public static bool IsClipboardFormatAvailable(uint format)
         {
@@ -75,12 +71,12 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Returns the format of the first matching available format.
+        ///  Returns the format of the first matching available format.
         /// </summary>
         /// <param name="formats">Formats in priority order.</param>
         /// <returns>
-        /// Returns the first matching format. If the clipboard has data, but no matches returns uint.MaxValue.
-        /// If the clipboard is empty returns 0.
+        ///  Returns the first matching format. If the clipboard has data, but no matches returns uint.MaxValue.
+        ///  If the clipboard is empty returns 0.
         /// </returns>
         public static uint GetPriorityClipboardFormat(params uint[] formats)
         {
@@ -122,7 +118,7 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Set Unicode text in the clipboard under the given format.
+        ///  Set Unicode text in the clipboard under the given format.
         /// </summary>
         public static void SetClipboardUnicodeText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.UnicodeText)
         {
@@ -136,7 +132,7 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Set ASCII text in the clipboard under the given format.
+        ///  Set ASCII text in the clipboard under the given format.
         /// </summary>
         public static unsafe void SetClipboardAsciiText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.Text)
         {
@@ -153,7 +149,7 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Set ASCII text in the clipboard under the given format.
+        ///  Set ASCII text in the clipboard under the given format.
         /// </summary>
         public static unsafe void SetClipboardAsciiText(ReadOnlySpan<char> span, string format)
         {
@@ -161,11 +157,11 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Set binary data in the clipboard under the given format.
+        ///  Set binary data in the clipboard under the given format.
         /// </summary>
         public static void SetClipboardBinaryData(ReadOnlySpan<byte> span, ClipboardFormat format)
         {
-            using GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1)), GlobalMemoryFlags.Moveable);
+            using GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)(span.Length + 1), GlobalMemoryFlags.Moveable);
             using GlobalLock globalLock = global.Lock;
             Span<byte> buffer = globalLock.GetSpan<byte>();
             span.CopyTo(buffer);
@@ -175,7 +171,7 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Set binary data in the clipboard under the given format.
+        ///  Set binary data in the clipboard under the given format.
         /// </summary>
         public static void SetClipboardBinaryData(ReadOnlySpan<byte> span, string format)
         {
@@ -183,7 +179,7 @@ namespace WInterop.Clipboard
         }
 
         /// <summary>
-        /// Registers the given format if not already registered. Returns the format id.
+        ///  Registers the given format if not already registered. Returns the format id.
         /// </summary>
         public static uint RegisterClipboardFormat(string format)
         {

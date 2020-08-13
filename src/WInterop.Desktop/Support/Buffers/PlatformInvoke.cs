@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -81,7 +77,7 @@ namespace WInterop.Support.Buffers
                 // Windows strings are limited to what will fit in UNICODE_STRING,
                 // which is short.MaxValue (32K chars).
                 return length < 256
-                    ? 256 
+                    ? 256
                     : length < short.MaxValue / 2
                       ? length * 2
                       : short.MaxValue + 1;

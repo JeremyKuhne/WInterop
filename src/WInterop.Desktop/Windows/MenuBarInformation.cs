@@ -1,14 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Drawing;
-using WInterop.Windows.Native;
 using WInterop.Windows;
+using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
@@ -32,7 +28,7 @@ namespace WInterop.Windows
             };
         }
 
-        public unsafe static explicit operator MENUBARINFO(MenuBarInformation info)
+        public static unsafe explicit operator MENUBARINFO(MenuBarInformation info)
         {
             return new MENUBARINFO
             {

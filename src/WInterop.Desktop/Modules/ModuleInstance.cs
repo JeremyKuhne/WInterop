@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,12 +8,8 @@ using WInterop.Handles;
 namespace WInterop.Modules
 {
     /// <summary>
-    /// Module handle. This is synonymous with HINSTANCE and HMODULE.
+    ///  Module handle. This is synonymous with HINSTANCE and HMODULE.
     /// </summary>
-    /// <remarks>
-    /// Typically we try to avoid using the safe prefix, in this case
-    /// ModuleHandle is a type that lives in System.
-    /// </remarks>
     public class ModuleInstance : HandleZeroIsInvalid
     {
         public static ModuleInstance Null = new ModuleInstance(IntPtr.Zero);
@@ -28,7 +20,7 @@ namespace WInterop.Modules
 
         public ModuleInstance(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
 
-        static public implicit operator ModuleInstance(IntPtr handle) => new ModuleInstance(handle);
+        public static implicit operator ModuleInstance(IntPtr handle) => new ModuleInstance(handle);
 
         public static ModuleInstance GetModuleForType(Type type)
             => Marshal.GetHINSTANCE(type.Module);

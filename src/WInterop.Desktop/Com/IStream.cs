@@ -1,18 +1,15 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.Com.Native;
 using WInterop.Errors;
 
 namespace WInterop.Com
 {
     /// <summary>
-    /// COM IStream.
+    ///  COM IStream.
     /// </summary>
     /// <remarks><see cref="https://docs.microsoft.com/en-us/windows/desktop/api/objidl/nn-objidl-istream"/></remarks>
     [ComImport,
@@ -21,7 +18,7 @@ namespace WInterop.Com
     public interface IStream
     {
         /// <summary>
-        /// Reads a specified number of bytes from the stream object into memory starting at the current seek pointer.
+        ///  Reads a specified number of bytes from the stream object into memory starting at the current seek pointer.
         /// </summary>
         /// <param name="pv">A pointer to the buffer which the stream data is read into.</param>
         /// <param name="cb">The number of bytes of data to read from the stream object.</param>
@@ -31,7 +28,7 @@ namespace WInterop.Com
             uint cb);
 
         /// <summary>
-        /// Writes a specified number of bytes into the stream object starting at the current seek pointer.
+        ///  Writes a specified number of bytes into the stream object starting at the current seek pointer.
         /// </summary>
         /// <param name="pv">A pointer to the buffer that contains the data that is to be written to the stream.</param>
         /// <param name="cb">The number of bytes of data to attempt to write into the stream.</param>
@@ -41,7 +38,7 @@ namespace WInterop.Com
             uint cb);
 
         /// <summary>
-        /// Seeks to the given offset from the given origin. Returns the new position.
+        ///  Seeks to the given offset from the given origin. Returns the new position.
         /// </summary>
         /// <param name="dlibMove">Move the given number of bytes from <paramref name="dwOrigin"/>.</param>
         /// <param name="dwOrigin">The start point for <paramref name="dlibMove"/>.</param>

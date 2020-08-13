@@ -1,16 +1,12 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Windows;
 using WInterop.Globalization.Native;
+using WInterop.Windows;
 
 namespace WInterop.Globalization
 {
@@ -19,12 +15,12 @@ namespace WInterop.Globalization
         public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
 
         /// <summary>
-        /// The sort handle for the invariant culture.
+        ///  The sort handle for the invariant culture.
         /// </summary>
-        public static LParam InvariantSortHandle = GetSortHandle("");
+        public static LParam InvariantSortHandle = GetSortHandle(string.Empty);
 
         /// <summary>
-        /// Compare the given strings. Note that String.CompareOrdinal can be faster than this.
+        ///  Compare the given strings. Note that String.CompareOrdinal can be faster than this.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int CompareStringOrdinal(string first, string second, bool ignoreCase = false)
@@ -40,7 +36,7 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Compare the given strings.
+        ///  Compare the given strings.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe int CompareStringOrdinal(ReadOnlySpan<char> first, ReadOnlySpan<char> second, bool ignoreCase = false)
@@ -63,7 +59,7 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Convert the given string to to upper case.
+        ///  Convert the given string to to upper case.
         /// </summary>
         public static unsafe void ToUpperInvariant(char* input, int inputLength, char* output, int outputLength)
         {
@@ -72,7 +68,7 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Convert the given string to lower case.
+        ///  Convert the given string to lower case.
         /// </summary>
         public static unsafe void ToLowerInvariant(char* input, int inputLength, char* output, int outputLength)
         {
@@ -81,7 +77,7 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Convert the given character to upper case.
+        ///  Convert the given character to upper case.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe char ToUpperInvariant(char value)
@@ -92,7 +88,7 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Convert the given character to lower case.
+        ///  Convert the given character to lower case.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe char ToLowerInvariant(char value)
@@ -103,8 +99,8 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Converts the content of the given string to upper case IN PLACE.
-        /// Use with great care as strings are normally considered immutable.
+        ///  Converts the content of the given string to upper case IN PLACE.
+        ///  Use with great care as strings are normally considered immutable.
         /// </summary>
         public static unsafe void ToUpperInvariantUnsafe(string value)
         {
@@ -116,8 +112,8 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Converts the content of the given string to lower case IN PLACE.
-        /// Use with great care as strings are normally considered immutable.
+        ///  Converts the content of the given string to lower case IN PLACE.
+        ///  Use with great care as strings are normally considered immutable.
         /// </summary>
         public static unsafe void ToLowerInvariantUnsafe(string value)
         {
@@ -129,7 +125,7 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Gets the sort handle for the given locale.
+        ///  Gets the sort handle for the given locale.
         /// </summary>
         public static unsafe LParam GetSortHandle(string locale)
         {
@@ -141,7 +137,7 @@ namespace WInterop.Globalization
         }
 
         /// <summary>
-        /// Gets the current Windows ANSI code page.
+        ///  Gets the current Windows ANSI code page.
         /// </summary>
         public static uint GetAnsiCodePage() => Imports.GetACP();
     }

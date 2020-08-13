@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -27,7 +23,7 @@ namespace WInterop.Handles
             SetHandle(handle);
         }
 
-        public unsafe static implicit operator void*(BaseHandle handle) => handle == null ? null : handle.handle.ToPointer();
+        public static unsafe implicit operator void*(BaseHandle handle) => handle == null ? null : handle.handle.ToPointer();
         public static explicit operator IntPtr(BaseHandle handle) => handle?.DangerousGetHandle() ?? IntPtr.Zero;
     }
 }

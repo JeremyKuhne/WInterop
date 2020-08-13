@@ -1,126 +1,122 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Storage
 {
     /// <summary>
-    /// Classes of information available via NtSetInformationFile and NtQueryInformationFile.
-    /// [FILE_INFORMATION_CLASS]
+    ///  Classes of information available via NtSetInformationFile and NtQueryInformationFile.
+    ///  [FILE_INFORMATION_CLASS]
     /// </summary>
     /// <remarks>
-    /// A number of these are exposed through the GetFileInformationByHandle Win32 API.
+    ///  A number of these are exposed through the GetFileInformationByHandle Win32 API.
     /// </remarks>
     public enum FileInformationClass : uint
     {
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff728840.aspx
 
         /// <summary>
-        /// Uses <see cref="Native.FILE_DIRECTORY_INFORMATION"/>.
+        ///  Uses <see cref="Native.FILE_DIRECTORY_INFORMATION"/>.
         /// </summary>
         FileDirectoryInformation = 1,
 
         /// <summary>
-        /// Uses <see cref="Native.FILE_FULL_DIR_INFORMATION"/>.
+        ///  Uses <see cref="Native.FILE_FULL_DIR_INFORMATION"/>.
         /// </summary>
         FileFullDirectoryInformation = 2,
 
         /// <summary>
-        /// Uses <see cref="Native.FILE_BOTH_DIR_INFORMATION"/>.
+        ///  Uses <see cref="Native.FILE_BOTH_DIR_INFORMATION"/>.
         /// </summary>
         FileBothDirectoryInformation = 3,
 
         /// <summary>
-        /// Uses <see cref="WInterop.Storage.FileBasicInformation"/>.
+        ///  Uses <see cref="WInterop.Storage.FileBasicInformation"/>.
         /// </summary>
         FileBasicInformation = 4,
 
         /// <summary>
-        /// Uses <see cref="WInterop.Storage.FileStandardInformation"/>.
+        ///  Uses <see cref="WInterop.Storage.FileStandardInformation"/>.
         /// </summary>
         FileStandardInformation = 5,
 
         /// <summary>
-        /// Uses <see cref="WInterop.Storage.FileInternalInformation"/>.
+        ///  Uses <see cref="WInterop.Storage.FileInternalInformation"/>.
         /// </summary>
         FileInternalInformation = 6,
 
         /// <summary>
-        /// Uses <see cref="FileExtendedAttributeInformation"/>.
+        ///  Uses <see cref="FileExtendedAttributeInformation"/>.
         /// </summary>
         FileEaInformation = 7,
 
         /// <summary>
-        /// Uses <see cref="WInterop.Storage.FileAccessInformation"/>.
+        ///  Uses <see cref="WInterop.Storage.FileAccessInformation"/>.
         /// </summary>
         FileAccessInformation = 8,
 
         /// <summary>
-        /// Uses <see cref="Native.FILE_NAME_INFORMATION"/>.
+        ///  Uses <see cref="Native.FILE_NAME_INFORMATION"/>.
         /// </summary>
         FileNameInformation = 9,
 
         /// <summary>
-        /// Uses <see cref="Native.FILE_RENAME_INFORMATION"/>.
+        ///  Uses <see cref="Native.FILE_RENAME_INFORMATION"/>.
         /// </summary>
         FileRenameInformation = 10,
 
         /// <summary>
-        /// Uses <see cref="Native.FILE_LINK_INFORMATION"/>.
+        ///  Uses <see cref="Native.FILE_LINK_INFORMATION"/>.
         /// </summary>
         FileLinkInformation = 11,
 
         /// <summary>
-        /// Used to query names of files in a directory.
-        /// Uses <see cref="Native.FILE_NAMES_INFORMATION"/>.
+        ///  Used to query names of files in a directory.
+        ///  Uses <see cref="Native.FILE_NAMES_INFORMATION"/>.
         /// </summary>
         FileNamesInformation = 12,
 
         /// <summary>
-        /// Allows marking a file handle for deletion. Handle must have been opened with DesiredAccess.Delete.
-        /// You cannot change the state of a handle opened with DeleteOnClose. Use with <see cref="WInterop.Storage.FileDispositionInformation"/>.
+        ///  Allows marking a file handle for deletion. Handle must have been opened with DesiredAccess.Delete.
+        ///  You cannot change the state of a handle opened with DeleteOnClose. Use with <see cref="WInterop.Storage.FileDispositionInformation"/>.
         /// </summary>
         FileDispositionInformation = 13,
 
         /// <summary>
-        /// Uses <see cref="WInterop.Storage.FilePositionInformation"/>.
+        ///  Uses <see cref="WInterop.Storage.FilePositionInformation"/>.
         /// </summary>
         FilePositionInformation = 14,
 
         /// <summary>
-        /// Uses <see cref="Native.FILE_FULL_EA_INFORMATION"/>.
+        ///  Uses <see cref="Native.FILE_FULL_EA_INFORMATION"/>.
         /// </summary>
         FileFullEaInformation = 15,
 
         /// <summary>
-        /// Gets the file access mode (cannot set). Used with <see cref="WInterop.Storage.FileModeInformation"/>.
+        ///  Gets the file access mode (cannot set). Used with <see cref="WInterop.Storage.FileModeInformation"/>.
         /// </summary>
         /// <remarks>
-        /// Sadly not available via GetFileInformationByHandle yet.
+        ///  Sadly not available via GetFileInformationByHandle yet.
         /// </remarks>
         FileModeInformation = 16,
 
         /// <summary>
-        /// Uses <see cref="WInterop.Storage.FileAlignmentInformation"/>.
+        ///  Uses <see cref="WInterop.Storage.FileAlignmentInformation"/>.
         /// </summary>
         FileAlignmentInformation = 17,
 
         /// <summary>
-        /// Used with <see cref="Native.FILE_ALL_INFORMATION"/>.
+        ///  Used with <see cref="Native.FILE_ALL_INFORMATION"/>.
         /// </summary>
         /// <remarks>
-        /// Aggregate of FileBasicInformation, FileStandardInformation, FileInternalInformation,
-        /// FileEaInformation, FilePositionInformation, & FileNameInformation.
-        /// 
-        /// https://msdn.microsoft.com/en-us/library/ff469436.aspx
+        ///  Aggregate of FileBasicInformation, FileStandardInformation, FileInternalInformation,
+        ///  FileEaInformation, FilePositionInformation, and FileNameInformation.
+        ///
+        ///  https://msdn.microsoft.com/en-us/library/ff469436.aspx
         /// </remarks>
         FileAllInformation = 18,
 
         /// <summary>
-        /// Used to set the allocation size for a file. Uses <see cref="WInterop.Storage.FileAllocationInformation"/>.
+        ///  Used to set the allocation size for a file. Uses <see cref="WInterop.Storage.FileAllocationInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232076.aspx"/>
@@ -128,7 +124,7 @@ namespace WInterop.Storage
         FileAllocationInformation = 19,
 
         /// <summary>
-        /// Used to set the end of file position. Uses <see cref="WInterop.Storage.FileEndOfFileInformation"/>.
+        ///  Used to set the end of file position. Uses <see cref="WInterop.Storage.FileEndOfFileInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232067.aspx"/>
@@ -136,7 +132,7 @@ namespace WInterop.Storage
         FileEndOfFileInformation = 20,
 
         /// <summary>
-        /// Used to query the 8.3 filename for a file. Uses <see cref="Native.FILE_NAME_INFORMATION"/>.
+        ///  Used to query the 8.3 filename for a file. Uses <see cref="Native.FILE_NAME_INFORMATION"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232089.aspx"/>
@@ -144,13 +140,13 @@ namespace WInterop.Storage
         FileAlternateNameInformation = 21,
 
         /// <summary>
-        /// Used to get information about streams in a file. Uses <see cref="Native.FILE_STREAM_INFORMATION"/>.
+        ///  Used to get information about streams in a file. Uses <see cref="Native.FILE_STREAM_INFORMATION"/>.
         /// </summary>
         FileStreamInformation = 22,
 
         /// <summary>
-        /// Used to query or set information that isn't specific to one end of a pipe.
-        /// Uses <see cref="PipeInformation"/>.
+        ///  Used to query or set information that isn't specific to one end of a pipe.
+        ///  Uses <see cref="PipeInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232082.aspx"/>
@@ -158,8 +154,8 @@ namespace WInterop.Storage
         FilePipeInformation = 23,
 
         /// <summary>
-        /// Used to get information on a named pipe that is associated with the end of the pipe
-        /// that is being queried. Uses <see cref="PipeLocalInformation"/>.
+        ///  Used to get information on a named pipe that is associated with the end of the pipe
+        ///  that is being queried. Uses <see cref="PipeLocalInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232083.aspx"/>
@@ -167,12 +163,12 @@ namespace WInterop.Storage
         FilePipeLocalInformation = 24,
 
         /// <summary>
-        /// Used to query information on a named pipe that is associated with the client end of the
-        /// pipe that is being queried. Remote information is not available for local pipes or for
-        /// the server end of a remote pipe. Therefore, this information class is usable only by the
-        /// client to retrieve information associated with its end of the pipe.
-        /// 
-        /// Uses <see cref="PipeRemoteInformation"/>.
+        ///  Used to query information on a named pipe that is associated with the client end of the
+        ///  pipe that is being queried. Remote information is not available for local pipes or for
+        ///  the server end of a remote pipe. Therefore, this information class is usable only by the
+        ///  client to retrieve information associated with its end of the pipe.
+        ///
+        ///  Uses <see cref="PipeRemoteInformation"/>.
         /// </summary>
         /// <remarks>
         /// <see cref="https://msdn.microsoft.com/en-us/library/cc232120.aspx"/>
@@ -180,223 +176,223 @@ namespace WInterop.Storage
         FilePipeRemoteInformation = 25,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileMailslotQueryInformation = 26,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileMailslotSetInformation = 27,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileCompressionInformation = 28,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileObjectIdInformation = 29,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileCompletionInformation = 30,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileMoveClusterInformation = 31,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileQuotaInformation = 32,
 
         /// <summary>
-        /// Returns the reparse point information in <see cref="WInterop.Storage.FileReparsePointInformation"/>.
+        ///  Returns the reparse point information in <see cref="WInterop.Storage.FileReparsePointInformation"/>.
         /// </summary>
         FileReparsePointInformation = 33,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileNetworkOpenInformation = 34,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileAttributeTagInformation = 35,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileTrackingInformation = 36,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIdBothDirectoryInformation = 37,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIdFullDirectoryInformation = 38,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileValidDataLengthInformation = 39,
 
         /// <summary>
-        /// This is used for setting, not getting the short name.
+        ///  This is used for setting, not getting the short name.
         /// </summary>
         FileShortNameInformation = 40,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIoCompletionNotificationInformation = 41,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIoStatusBlockRangeInformation = 42,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIoPriorityHintInformation = 43,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileSfioReserveInformation = 44,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileSfioVolumeInformation = 45,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileHardLinkInformation = 46,
 
         /// <summary>
-        /// Returns the process ids (other than the current process) that have an active handle
-        /// to the same file. Uses <see cref="Native.FILE_PROCESS_IDS_USING_FILE_INFORMATION"/>.
+        ///  Returns the process ids (other than the current process) that have an active handle
+        ///  to the same file. Uses <see cref="Native.FILE_PROCESS_IDS_USING_FILE_INFORMATION"/>.
         /// </summary>
         /// <remarks>
-        /// Introduced in Windows Vista.
+        ///  Introduced in Windows Vista.
         /// </remarks>
         FileProcessIdsUsingFileInformation = 47,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileNormalizedNameInformation = 48,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileNetworkPhysicalNameInformation = 49,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIdGlobalTxDirectoryInformation = 50,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIsRemoteDeviceInformation = 51,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileUnusedInformation = 52,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileNumaNodeInformation = 53,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileStandardLinkInformation = 54,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileRemoteProtocolInformation = 55,
 
         // The following are available starting with Windows 10
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileRenameInformationBypassAccessCheck = 56,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileLinkInformationBypassAccessCheck = 57,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileVolumeNameInformation = 58,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIdInformation = 59,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIdExtdDirectoryInformation = 60,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileReplaceCompletionInformation = 61, // Windows 8.1
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileHardLinkFullIdInformation = 62,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileIdExtdBothDirectoryInformation = 63,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileDispositionInformationEx = 64,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileRenameInformationEx = 65,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileRenameInformationExBypassAccessCheck = 66,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileDesiredStorageClassInformation = 67,
 
         /// <summary>
-        /// Uses <see cref=""/>.
+        ///  Uses <see cref=""/>.
         /// </summary>
         FileStatInformation = 68
 

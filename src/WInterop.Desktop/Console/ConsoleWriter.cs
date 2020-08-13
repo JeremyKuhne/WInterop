@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,7 +7,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using WInterop.Console;
 
 namespace WInterop.Console
 {
@@ -39,7 +34,7 @@ namespace WInterop.Console
         public override Encoding Encoding => _encoding;
 
         /// <summary>
-        /// Creates a <see cref="TextWriter"/> for the console's standard output or error.
+        ///  Creates a <see cref="TextWriter"/> for the console's standard output or error.
         /// </summary>
         /// <param name="output">True for console stardard output, otherwise standard error.</param>
         public static TextWriter Create(bool output = true, bool autoFlush = true)
@@ -277,8 +272,10 @@ namespace WInterop.Console
                     while (!completed)
                     {
                         _encoder.Convert(
-                            c + charsUsed, count,
-                            b + _position, _buffer!.Length - _position,
+                            c + charsUsed,
+                            count,
+                            b + _position,
+                            _buffer!.Length - _position,
                             flush: true,
                             out charsUsed,
                             out int bytesUsed,
@@ -291,7 +288,7 @@ namespace WInterop.Console
                             FlushInternal();
                             count -= charsUsed;
                         }
-                    };
+                    }
                 }
             }
         }

@@ -1,17 +1,11 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 
 namespace WInterop.Security.Native
 {
-    /// <summary>
-    /// <see cref="https://docs.microsoft.com/en-us/windows/desktop/api/accctrl/ns-accctrl-_trustee_w"/>
-    /// </summary>
+    /// <docs>https://docs.microsoft.com/windows/desktop/api/accctrl/ns-accctrl-_trustee_w</docs>
     public unsafe readonly struct TRUSTEE
     {
         // Not used, must be IntPtr.Zero

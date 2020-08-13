@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -36,10 +32,10 @@ namespace WInterop.Devices.Native
         [StructLayout(LayoutKind.Sequential)]
         public struct SymbolicLinkReparseBuffer
         {
-            private ushort SubstituteNameOffset;
-            private ushort SubstituteNameLength;
-            private ushort PrintNameOffset;
-            private ushort PrintNameLength;
+            private readonly ushort SubstituteNameOffset;
+            private readonly ushort SubstituteNameLength;
+            private readonly ushort PrintNameOffset;
+            private readonly ushort PrintNameLength;
             public uint Flags;
             private char _PathBuffer;
             public ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(ref _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
@@ -49,10 +45,10 @@ namespace WInterop.Devices.Native
         [StructLayout(LayoutKind.Sequential)]
         public struct MountPointReparseBuffer
         {
-            private ushort SubstituteNameOffset;
-            private ushort SubstituteNameLength;
-            private ushort PrintNameOffset;
-            private ushort PrintNameLength;
+            private readonly ushort SubstituteNameOffset;
+            private readonly ushort SubstituteNameLength;
+            private readonly ushort PrintNameOffset;
+            private readonly ushort PrintNameLength;
             private char _PathBuffer;
             public ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(ref _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
             public ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(ref _PathBuffer, PrintNameLength, PrintNameOffset);

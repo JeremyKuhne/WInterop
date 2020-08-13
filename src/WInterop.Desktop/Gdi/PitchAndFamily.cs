@@ -1,10 +1,5 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
 
 namespace WInterop.Gdi
 {
@@ -15,7 +10,7 @@ namespace WInterop.Gdi
         public byte RawValue;
 
         /// <summary>
-        /// Only has meaning when creating a font.
+        ///  Only has meaning when creating a font.
         /// </summary>
         public FontPitch Pitch
         {
@@ -24,12 +19,9 @@ namespace WInterop.Gdi
         }
 
         /// <summary>
-        /// Only has meaning when enumerating a font.
+        ///  Only has meaning when enumerating a font.
         /// </summary>
-        public FontPitchTypes PitchTypes
-        {
-            get => (FontPitchTypes)(RawValue & 0x0F);
-        }
+        public FontPitchTypes PitchTypes => (FontPitchTypes)(RawValue & 0x0F);
 
         public FontFamilyType Family
         {

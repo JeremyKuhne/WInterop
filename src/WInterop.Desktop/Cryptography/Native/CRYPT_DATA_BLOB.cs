@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,7 +10,7 @@ namespace WInterop.Cryptography.Native
     [StructLayout(LayoutKind.Sequential)]
     public struct CRYPT_DATA_BLOB
     {
-        uint cbData;
-        IntPtr pbData;
+        private readonly uint cbData;
+        private readonly IntPtr pbData;
     }
 }

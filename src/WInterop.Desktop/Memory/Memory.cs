@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,12 +10,12 @@ namespace WInterop.Memory
     public static partial class Memory
     {
         /// <summary>
-        /// The handle for the process heap.
+        ///  The handle for the process heap.
         /// </summary>
         public static IntPtr ProcessHeap = Imports.GetProcessHeap();
 
         /// <summary>
-        /// Allocate memory on the process heap.
+        ///  Allocate memory on the process heap.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
         public static IntPtr HeapAllocate(ulong bytes, bool zeroMemory = true)
@@ -28,7 +24,7 @@ namespace WInterop.Memory
         }
 
         /// <summary>
-        /// Allocate memory on the given heap.
+        ///  Allocate memory on the given heap.
         /// </summary>
         /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
         /// <exception cref="OverflowException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
@@ -41,7 +37,7 @@ namespace WInterop.Memory
         }
 
         /// <summary>
-        /// Reallocate memory on the process heap.
+        ///  Reallocate memory on the process heap.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
         public static IntPtr HeapReallocate(IntPtr memory, ulong bytes, bool zeroMemory = true)
@@ -50,7 +46,7 @@ namespace WInterop.Memory
         }
 
         /// <summary>
-        /// Reallocate memory on the given heap.
+        ///  Reallocate memory on the given heap.
         /// </summary>
         /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
         /// <exception cref="OverflowException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
@@ -64,7 +60,7 @@ namespace WInterop.Memory
         }
 
         /// <summary>
-        /// Free the specified memory on the process heap.
+        ///  Free the specified memory on the process heap.
         /// </summary>
         public static bool HeapFree(IntPtr memory)
         {
@@ -72,7 +68,7 @@ namespace WInterop.Memory
         }
 
         /// <summary>
-        /// Free the specified memory on the given heap.
+        ///  Free the specified memory on the given heap.
         /// </summary>
         /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
         public static bool HeapFree(IntPtr memory, IntPtr heap)

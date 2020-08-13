@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Numerics;
@@ -10,9 +6,9 @@ using System.Numerics;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// Allows the drawing state to be atomically created. This also specifies the
-    /// drawing state that is saved into an IDrawingStateBlock object.
-    /// [D2D1_DRAWING_STATE_DESCRIPTION]
+    ///  Allows the drawing state to be atomically created. This also specifies the
+    ///  drawing state that is saved into an IDrawingStateBlock object.
+    ///  [D2D1_DRAWING_STATE_DESCRIPTION]
     /// </summary>
     public readonly struct DrawingStateDescription
     {

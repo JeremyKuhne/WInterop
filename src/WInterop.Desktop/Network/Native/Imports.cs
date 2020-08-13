@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,7 +9,7 @@ using WInterop.Security;
 namespace WInterop.Network.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -28,7 +24,7 @@ namespace WInterop.Network.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370434.aspx
         [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public unsafe static extern WindowsError NetLocalGroupAdd(
+        public static unsafe extern WindowsError NetLocalGroupAdd(
             string? servername,
             uint level,
             void* buf,

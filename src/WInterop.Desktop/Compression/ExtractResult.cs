@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
@@ -10,25 +6,25 @@ using System.Runtime.InteropServices;
 namespace WInterop.Compression
 {
     /// <summary>
-    /// [ERF]
+    ///  [ERF]
     /// </summary>
     // https://msdn.microsoft.com/en-us/library/bb432257.aspx
     public struct ExtractResult
     {
         /// <summary>
-        /// [erfOper]
+        ///  [erfOper]
         /// </summary>
         public Error OperationResult;
 
         /// <summary>
-        /// Optional error value, filled in by FCI/FDI. For FCI, this is usually the CRT errno. [erfType]
+        ///  Optional error value, filled in by FCI/FDI. For FCI, this is usually the CRT errno. [erfType]
         /// </summary>
         public int Type;
 
         /// <summary>
-        /// True if an error is present.
+        ///  True if an error is present.
         /// </summary>
-        public Boolean32 ErrorPresent;
+        public IntBoolean ErrorPresent;
 
         [StructLayout(LayoutKind.Explicit)]
         public struct Error

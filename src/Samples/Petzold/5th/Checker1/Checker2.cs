@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,11 +8,11 @@ using WInterop.Windows;
 
 namespace Checker
 {
-    class Checker2 : WindowClass
+    internal class Checker2 : WindowClass
     {
-        const int DIVISIONS = 5;
-        bool[,] fState = new bool[DIVISIONS, DIVISIONS];
-        int cxBlock, cyBlock;
+        private const int DIVISIONS = 5;
+        private readonly bool[,] fState = new bool[DIVISIONS, DIVISIONS];
+        private int cxBlock, cyBlock;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

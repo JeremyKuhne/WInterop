@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,7 +10,7 @@ using WInterop.SafeString.Native;
 namespace WInterop.Handles.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -41,7 +37,7 @@ namespace WInterop.Handles.Native
         // https://msdn.microsoft.com/en-us/library/bb470236.aspx
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567030.aspx
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public unsafe static extern NTStatus NtOpenSymbolicLinkObject(
+        public static unsafe extern NTStatus NtOpenSymbolicLinkObject(
             out SymbolicLinkObjectHandle LinkHandle,
             SymbolicLinkObjectRights DesiredAccess,
             ref OBJECT_ATTRIBUTES ObjectAttributes);
@@ -60,12 +56,12 @@ namespace WInterop.Handles.Native
             DirectoryObjectHandle DirectoryHandle,
             SafeHandle Buffer,
             uint Length,
-            Boolean8 ReturnSingleEntry,
-            Boolean8 RestartScan,
+            ByteBoolean ReturnSingleEntry,
+            ByteBoolean RestartScan,
             ref uint Context,
             out uint ReturnLength);
 
-        //  typedef struct _OBJECT_TYPES_INFORMATION
+        // typedef struct _OBJECT_TYPES_INFORMATION
         //  {
         //      ULONG NumberOfTypes;
         //      OBJECT_TYPE_INFORMATION TypeInformation;

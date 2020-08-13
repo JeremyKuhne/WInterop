@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -17,10 +13,10 @@ namespace DirectWriteDemo
 {
     public class CustomTextRenderer : ITextRenderer
     {
-        private IRenderTarget _renderTarget;
-        private IBrush _outlineBrush;
-        private IBrush _fillBrush;
-        private WInterop.Direct2d.IFactory _factory;
+        private readonly IRenderTarget _renderTarget;
+        private readonly IBrush _outlineBrush;
+        private readonly IBrush _fillBrush;
+        private readonly WInterop.Direct2d.IFactory _factory;
 
         public CustomTextRenderer(
             WInterop.Direct2d.IFactory factory,
@@ -34,7 +30,7 @@ namespace DirectWriteDemo
             _fillBrush = fillBrush;
         }
 
-        public Boolean32 IsPixelSnappingDisabled(IntPtr clientDrawingContext) => false;
+        public IntBoolean IsPixelSnappingDisabled(IntPtr clientDrawingContext) => false;
 
         public Matrix3x2 GetCurrentTransform(IntPtr clientDrawingContext)
         {
@@ -116,8 +112,8 @@ namespace DirectWriteDemo
             float originX,
             float originY,
             IInlineObject inlineObject,
-            Boolean32 isSideways,
-            Boolean32 isRightToLeft,
+            IntBoolean isSideways,
+            IntBoolean isRightToLeft,
             [MarshalAs(UnmanagedType.IUnknown)] object clientDrawingEffect)
         {
             throw new NotImplementedException();

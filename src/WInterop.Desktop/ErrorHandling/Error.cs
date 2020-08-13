@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -37,12 +33,12 @@ namespace WInterop.Errors
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff565436.aspx
 
         /// <summary>
-        /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+        ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
         /// </summary>
-
-        // .NET's Win32Exception impements the error code lookup on FormatMessage using FORMAT_MESSAGE_FROM_SYSTEM.
-        // It won't handle Network Errors (NERR_BASE..MAX_NERR), which come from NETMSG.DLL.
-
+        /// <remarks>
+        ///  .NET's Win32Exception impements the error code lookup on FormatMessage using FORMAT_MESSAGE_FROM_SYSTEM.
+        ///  It won't handle Network Errors (NERR_BASE..MAX_NERR), which come from NETMSG.DLL.
+        /// </remarks>
         public static string FormatMessage(
             uint messageId,
             IntPtr source,
@@ -110,7 +106,7 @@ namespace WInterop.Errors
             => throw Imports.GetLastError().GetException(path);
 
         /// <summary>
-        /// Try to get the string for an HRESULT
+        ///  Try to get the string for an HRESULT
         /// </summary>
         public static string HResultToString(HResult hr)
         {
@@ -136,7 +132,7 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Try to get the error message for GetLastError result
+        ///  Try to get the error message for GetLastError result
         /// </summary>
         public static string LastErrorToString(WindowsError error)
         {
@@ -193,7 +189,7 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Throw the last error code from windows if <paramref name="result"/> is false.
+        ///  Throw the last error code from windows if <paramref name="result"/> is false.
         /// </summary>
         /// <param name="path">Optional path or other input detail.</param>
         public static void ThrowLastErrorIfFalse(bool result, string? path = null)
@@ -202,7 +198,7 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Throw the last error code from windows if <paramref name="result"/> is zero.
+        ///  Throw the last error code from windows if <paramref name="result"/> is zero.
         /// </summary>
         /// <param name="path">Optional path or other input detail.</param>
         public static uint ThrowLastErrorIfZero(uint result, string? path = null)
@@ -212,17 +208,17 @@ namespace WInterop.Errors
         }
 
         /// <summary>
-        /// Gets the error mode for the current process.
+        ///  Gets the error mode for the current process.
         /// </summary>
         public static ErrorMode GetProcessErrorMode() => Imports.GetErrorMode();
 
         /// <summary>
-        /// Gets the error mode for the current thread.
+        ///  Gets the error mode for the current thread.
         /// </summary>
         public static ErrorMode GetThreadErrorMode() => Imports.GetThreadErrorMode();
 
         /// <summary>
-        /// Set a new error mode for the current thread.
+        ///  Set a new error mode for the current thread.
         /// </summary>
         /// <returns>The old error mode for the thread.</returns>
         public static ErrorMode SetThreadErrorMode(ErrorMode mode)

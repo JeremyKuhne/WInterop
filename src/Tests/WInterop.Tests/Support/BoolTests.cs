@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
@@ -19,13 +15,13 @@ namespace SupportTests
         private struct BOOLTest
         {
             public int Foo;
-            public Boolean32 Bar;
+            public IntBoolean Bar;
         }
 
         private struct BOOLEANTest
         {
             public int Foo;
-            public WInterop.Boolean8 Bar;
+            public WInterop.ByteBoolean Bar;
         }
 
         private struct BoolTest
@@ -39,7 +35,7 @@ namespace SupportTests
         public void BOOLIsBlittable()
         {
             // This will throw if the type is not blittable
-            GCHandle.Alloc(new Boolean32(), GCHandleType.Pinned).Should().NotBeNull();
+            GCHandle.Alloc(new IntBoolean(), GCHandleType.Pinned).Should().NotBeNull();
         }
 
         [Fact]
@@ -60,7 +56,7 @@ namespace SupportTests
         [Fact]
         public void BOOLConversion()
         {
-            Boolean32 B = true;
+            IntBoolean B = true;
             (B == true).Should().BeTrue("Comparison of TRUE with true is true");
             (B == false).Should().BeFalse("Comparison of TRUE with false is false");
             B.IsTrue.Should().BeTrue("IsTrue should be true when true");
@@ -79,7 +75,7 @@ namespace SupportTests
         public void BOOLEANIsBlittable()
         {
             // This will throw if the type is not blittable
-            GCHandle.Alloc(new WInterop.Boolean8(), GCHandleType.Pinned).Should().NotBeNull();
+            GCHandle.Alloc(new WInterop.ByteBoolean(), GCHandleType.Pinned).Should().NotBeNull();
         }
 
         [Fact]
@@ -92,7 +88,7 @@ namespace SupportTests
         [Fact]
         public void BOOLEANConversion()
         {
-            WInterop.Boolean8 B = true;
+            WInterop.ByteBoolean B = true;
             (B == true).Should().BeTrue("Comparison of TRUE with true is true");
             (B == false).Should().BeFalse("Comparison of TRUE with false is false");
             B.IsTrue.Should().BeTrue("IsTrue should be true when true");

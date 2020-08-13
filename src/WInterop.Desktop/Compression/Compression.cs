@@ -1,28 +1,23 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.IO;
+using WInterop.Compression.Native;
 using WInterop.Errors;
 using WInterop.Storage;
-using WInterop.Handles;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Compression.Native;
 
 namespace WInterop.Compression
 {
     public static partial class Compression
     {
         /// <summary>
-        /// Returns the expanded name of the file. Does not work for paths that are over 128
-        /// characters long.
+        ///  Returns the expanded name of the file. Does not work for paths that are over 128
+        ///  characters long.
         /// </summary>
-        public unsafe static string GetExpandedName(string path)
+        public static unsafe string GetExpandedName(string path)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
@@ -33,13 +28,13 @@ namespace WInterop.Compression
         }
 
         /// <summary>
-        /// Equivalent implementation of GetExpandedName that doesn't have a path length limit.
+        ///  Equivalent implementation of GetExpandedName that doesn't have a path length limit.
         /// </summary>
         /// <remarks>
-        /// There are possibly quirks with ASCII handling that this function may not replicate. Files
-        /// that end in a DBCS character get some special handling.
+        ///  There are possibly quirks with ASCII handling that this function may not replicate. Files
+        ///  that end in a DBCS character get some special handling.
         /// </remarks>
-        public unsafe static string GetExpandedNameEx(string path, bool filenameOnly = false)
+        public static unsafe string GetExpandedNameEx(string path, bool filenameOnly = false)
         {
             // Need to end with underscore or be at least as long as the header.
             if (string.IsNullOrEmpty(path))
@@ -53,46 +48,47 @@ namespace WInterop.Compression
             char replacement;
             using (var file = Storage.Storage.CreateFile(path, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.Read))
             {
-                LzxHeader header = new LzxHeader();
+                LzxHeader header = default;
 
                 if (Storage.Storage.ReadFile(file, Structs.AsByteSpan(ref header)) < sizeof(LzxHeader))
                     return path;
 
-                replacement = char.ToUpperInvariant((char)header.extensionChar);
+                replacement = char.ToUpperInvariant((char)header.ExtensionChar);
             }
 
             if (filenameOnly)
                 path = Paths.GetLastSegment(path);
 
             bool noExtension = path.Length == 1 || path[^2] == '.';
-            if (replacement == (char)0x00)
-                return path.Substring(0, path.Length - (noExtension ? 2 : 1));
 
-            return Strings.ReplaceChar(path, path.Length - 1, replacement);
+            return replacement == (char)0x00
+                ? path.Substring(0, path.Length - (noExtension ? 2 : 1))
+                : Strings.ReplaceChar(path, path.Length - 1, replacement);
         }
 
-        public unsafe static LzHandle LzCreateFile(
+        public static unsafe LzHandle LzCreateFile(
             string path,
             out string uncompressedName,
             DesiredAccess access = DesiredAccess.GenericRead,
             ShareModes share = ShareModes.ReadWrite,
             CreationDisposition creation = CreationDisposition.OpenExisting)
         {
-            var (handle, name) = ValueBuffer<char>.Invoke((ref ValueBuffer<char> buffer) =>
-            {
-                fixed (char* b = buffer)
+            var (handle, name) = ValueBuffer<char>.Invoke(
+                (ref ValueBuffer<char> buffer) =>
                 {
-                    int result = ValidateLzResult(Imports.LZCreateFileW(path, access, share, creation, b), path);
-                    return (handle: new LzCreateHandle(result), name: buffer.Span.SliceAtNull().ToString());
-                }
-            },
+                    fixed (char* b = buffer)
+                    {
+                        int result = ValidateLzResult(Imports.LZCreateFileW(path, access, share, creation, b), path);
+                        return (handle: new LzCreateHandle(result), name: buffer.Span.SliceAtNull().ToString());
+                    }
+                },
             stackBufferSize: Paths.MaxPath);
 
             uncompressedName = name;
             return handle;
         }
 
-        public unsafe static LzHandle LzCreateFile(
+        public static unsafe LzHandle LzCreateFile(
             string path,
             DesiredAccess access = DesiredAccess.GenericRead,
             ShareModes share = ShareModes.ReadWrite,
@@ -102,37 +98,30 @@ namespace WInterop.Compression
                 Imports.LZCreateFileW(path, access, share, creation, null), path));
         }
 
-        public unsafe static LzHandle LzOpenFile(
+        public static unsafe LzHandle LzOpenFile(
             string path,
             out string uncompressedName,
             OpenFileStyle openStyle = OpenFileStyle.Read | OpenFileStyle.ShareCompat)
         {
-            OpenFileStruct ofs = new OpenFileStruct();
+            OpenFileStruct ofs = default;
             int result = ValidateLzResult(Imports.LZOpenFileW(path, ref ofs, openStyle), path);
             uncompressedName = ofs.PathName;
             return new LzHandle(result);
         }
 
-        public unsafe static LzHandle LzOpenFile(
+        public static unsafe LzHandle LzOpenFile(
             string path,
             OpenFileStyle openStyle = OpenFileStyle.Read | OpenFileStyle.ShareCompat)
         {
-            OpenFileStruct ofs = new OpenFileStruct();
+            OpenFileStruct ofs = default;
             return new LzHandle(ValidateLzResult(Imports.LZOpenFileW(path, ref ofs, openStyle), path));
         }
 
         private static int ValidateLzResult(int result, string? path = null, bool throwOnError = true)
-        {
-            if (!throwOnError || result >= 0)
-                return result;
-
-            throw new LzException((LzError)result, path);
-        }
+            => !throwOnError || result >= 0 ? result : throw new LzException((LzError)result, path);
 
         public static int LzSeek(LzHandle handle, int offset, MoveMethod origin)
-        {
-            return ValidateLzResult(Imports.LZSeek(handle, offset, origin));
-        }
+            => ValidateLzResult(Imports.LZSeek(handle, offset, origin));
 
         public static unsafe int LzRead(LzHandle handle, byte[] buffer, int offset, int count)
         {
@@ -157,7 +146,7 @@ namespace WInterop.Compression
         }
 
         /// <summary>
-        /// Copies a directory, expanding LZX compressed files if found.
+        ///  Copies a directory, expanding LZX compressed files if found.
         /// </summary>
         /// <param name="sourceDirectory">The source directory.</param>
         /// <param name="destinationDirectory">The destination directory, or null to put in an "Expanded" directory.</param>
@@ -179,12 +168,15 @@ namespace WInterop.Compression
             foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
             {
                 string expandedName = GetExpandedNameEx(file, filenameOnly: true);
-                string targetDirectory = 
+                string targetDirectory =
                     Paths.TrimLastSegment(Path.Join(destinationDirectory, file.Substring(sourceDirectory.Length + 1)));
                 Directory.CreateDirectory(targetDirectory);
 
-                int result = LzCopyFile(file, Path.Join(targetDirectory, expandedName),
-                    overwrite: overwrite, throwOnBadCompression: throwOnBadCompression);
+                int result = LzCopyFile(
+                    file,
+                    Path.Join(targetDirectory, expandedName),
+                    overwrite,
+                    throwOnBadCompression: throwOnBadCompression);
 
                 if (result < 0)
                 {
@@ -216,7 +208,7 @@ namespace WInterop.Compression
         }
 
         /// <summary>
-        /// Copy the source to destination, expanding if LZX compressed.
+        ///  Copy the source to destination, expanding if LZX compressed.
         /// </summary>
         /// <param name="source">Source file.</param>
         /// <param name="destination">Destination file.</param>
@@ -226,7 +218,7 @@ namespace WInterop.Compression
         /// <exception cref="FileExistsException">Thrown if the destination exists and <paramref name="overwrite"/> is false.</exception>
         /// <exception cref="LzException">Error copying file.</exception>
         /// <returns>
-        /// Count of bytes copied or compression error if negative and <paramref name="throwOnBadCompression"/> is false.
+        ///  Count of bytes copied or compression error if negative and <paramref name="throwOnBadCompression"/> is false.
         /// </returns>
         public static int LzCopyFile(
             string source,
@@ -242,17 +234,26 @@ namespace WInterop.Compression
             LzHandle destinationHandle;
             if (useCreateFile)
             {
-                destinationHandle = LzCreateFile(destination, DesiredAccess.GenericReadWrite, ShareModes.Read,
+                destinationHandle = LzCreateFile(
+                    destination,
+                    DesiredAccess.GenericReadWrite,
+                    ShareModes.Read,
                     overwrite ? CreationDisposition.CreateAlways : CreationDisposition.CreateNew);
             }
             else
             {
-                destinationHandle = LzOpenFile(destination, OpenFileStyle.ReadWrite | OpenFileStyle.ShareDenyWrite | OpenFileStyle.Create);
+                destinationHandle = LzOpenFile(
+                    destination,
+                    OpenFileStyle.ReadWrite | OpenFileStyle.ShareDenyWrite | OpenFileStyle.Create);
             }
 
             using (destinationHandle)
             {
-                return ValidateLzCopyResult(Imports.LZCopy(sourceHandle, destinationHandle), source, destination, throwOnBadCompression);
+                return ValidateLzCopyResult(
+                    Imports.LZCopy(sourceHandle, destinationHandle),
+                    source,
+                    destination,
+                    throwOnBadCompression);
             }
         }
     }

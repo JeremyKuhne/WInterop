@@ -1,26 +1,21 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Win32.SafeHandles;
 using System;
-using WInterop.Console;
+using Microsoft.Win32.SafeHandles;
 
 namespace WInterop.Console
 {
     /// <summary>
-    /// Helper to temporarily change the output mode for the console.
+    ///  Helper to temporarily change the output mode for the console.
     /// </summary>
     public readonly struct TemporaryOutputMode : IDisposable
     {
-        readonly ConsoleOuputMode _mode;
-        readonly SafeFileHandle _handle;
+        private readonly ConsoleOuputMode _mode;
+        private readonly SafeFileHandle _handle;
 
         /// <summary>
-        /// The mode to set or add.
+        ///  The mode to set or add.
         /// </summary>
         /// <param name="addFlag">Adds the given flags instead of just replacing the existing flags.</param>
         public TemporaryOutputMode(ConsoleOuputMode mode, bool addFlag = false)

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ namespace WInterop.Support
     public static class Pointers
     {
         /// <summary>
-        /// Offset the given pointer by the specified number of bytes.
+        ///  Offset the given pointer by the specified number of bytes.
         /// </summary>
         public static unsafe void* Offset(void* pointer, int offset)
         {
@@ -20,7 +16,7 @@ namespace WInterop.Support
         }
 
         /// <summary>
-        /// Offset the given pointer by the specified number of bytes.
+        ///  Offset the given pointer by the specified number of bytes.
         /// </summary>
         public static unsafe void* Offset(void* pointer, uint offset)
         {
@@ -28,7 +24,7 @@ namespace WInterop.Support
         }
 
         /// <summary>
-        /// Offset the given pointer by the specified number of bytes.
+        ///  Offset the given pointer by the specified number of bytes.
         /// </summary>
         public static unsafe void* Offset(this IntPtr pointer, uint offset)
         {
@@ -36,7 +32,7 @@ namespace WInterop.Support
         }
 
         /// <summary>
-        /// Offset the given pointer by the specified number of bytes.
+        ///  Offset the given pointer by the specified number of bytes.
         /// </summary>
         public static unsafe void* Offset(this IntPtr pointer, ulong offset)
         {
@@ -44,7 +40,7 @@ namespace WInterop.Support
         }
 
         /// <summary>
-        /// Move the pointer forward by the size of <typeparamref name="T"/>.
+        ///  Move the pointer forward by the size of <typeparamref name="T"/>.
         /// </summary>
         public static unsafe void* Offset<T>(void* pointer) where T : unmanaged
         {

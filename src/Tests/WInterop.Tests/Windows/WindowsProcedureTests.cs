@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
@@ -15,7 +11,7 @@ namespace WindowsTests
 {
     public class WindowsProcedureTests
     {
-        static LResult CallDefaultProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        private static LResult CallDefaultProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }

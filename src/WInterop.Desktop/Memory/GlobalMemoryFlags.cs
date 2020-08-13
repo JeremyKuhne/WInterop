@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
 
 namespace WInterop.Memory
 {
@@ -6,77 +9,77 @@ namespace WInterop.Memory
     public enum GlobalMemoryFlags
     {
         /// <summary>
-        /// [GMEM_FIXED]
+        ///  [GMEM_FIXED]
         /// </summary>
         Fixed = 0x0000,
 
         /// <summary>
-        /// [GMEM_MOVEABLE]
+        ///  [GMEM_MOVEABLE]
         /// </summary>
         Moveable = 0x0002,
 
         /// <summary>
-        /// [GMEM_NOCOMPACT]
+        ///  [GMEM_NOCOMPACT]
         /// </summary>
         NoCompact = 0x0010,
 
         /// <summary>
-        /// [GMEM_NODISCARD]
+        ///  [GMEM_NODISCARD]
         /// </summary>
         NoDiscard = 0x0020,
 
         /// <summary>
-        /// [GMEM_ZEROINIT]
+        ///  [GMEM_ZEROINIT]
         /// </summary>
         ZeroInit = 0x0040,
 
         /// <summary>
-        /// [GMEM_MODIFY]
+        ///  [GMEM_MODIFY]
         /// </summary>
         Modify = 0x0080,
 
         /// <summary>
-        /// [GMEM_DISCARDABLE]
+        ///  [GMEM_DISCARDABLE]
         /// </summary>
         Discardable = 0x0100,
 
         /// <summary>
-        /// [GMEM_NOT_BANKED]
+        ///  [GMEM_NOT_BANKED]
         /// </summary>
         NotBanked = 0x1000,
 
         /// <summary>
-        /// [GMEM_SHARE]
+        ///  [GMEM_SHARE]
         /// </summary>
         Share = 0x2000,
 
         /// <summary>
-        /// [GMEM_DDESHARE]
+        ///  [GMEM_DDESHARE]
         /// </summary>
         DdeShare = 0x2000,
 
         /// <summary>
-        /// [GMEM_NOTIFY]
+        ///  [GMEM_NOTIFY]
         /// </summary>
         Notify = 0x4000,
 
         /// <summary>
-        /// [GMEM_LOWER]
+        ///  [GMEM_LOWER]
         /// </summary>
         Lower = NotBanked,
 
         /// <summary>
-        /// [GMEM_INVALID_HANDLE]
+        ///  [GMEM_INVALID_HANDLE]
         /// </summary>
         InvalidHandle = 0x8000,
 
         /// <summary>
-        /// [GHND]
+        ///  [GHND]
         /// </summary>
         Handle = Moveable | ZeroInit,
 
         /// <summary>
-        /// [GPTR]
+        ///  [GPTR]
         /// </summary>
         Pointer = Fixed | ZeroInit,
     }

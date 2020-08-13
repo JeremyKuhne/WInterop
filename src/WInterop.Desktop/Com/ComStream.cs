@@ -1,18 +1,15 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using WInterop.Com.Native;
 
 namespace WInterop.Com
 {
     /// <summary>
-    /// Stream that wraps a COM <see cref="IStream"/>
+    ///  Stream that wraps a COM <see cref="IStream"/>
     /// </summary>
     public class ComStream : Stream
     {
@@ -20,7 +17,7 @@ namespace WInterop.Com
         private IStream? _stream;
 
         /// <summary>
-        /// Construct a Stream wrapper around an <see cref="IStream"/> object.
+        ///  Construct a Stream wrapper around an <see cref="IStream"/> object.
         /// </summary>
         /// <param name="stream">The COM stream to wrap.</param>
         /// <param name="ownsStream">If true (default), will release the <see cref="IStream"/> object when disposed.</param>

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // This file is based on System.IO.PatternMatcher from CoreFX:
@@ -17,7 +13,7 @@ namespace WInterop.Storage
 {
     public static class DosMatcher
     {
-        public unsafe static bool MatchPattern(string expression, ReadOnlySpan<char> name, bool ignoreCase = true)
+        public static unsafe bool MatchPattern(string expression, ReadOnlySpan<char> name, bool ignoreCase = true)
         {
             // The idea behind the algorithm is pretty simple. We keep track of all possible locations
             // in the regular expression that are matching the name. When the name has been exhausted,
@@ -130,12 +126,16 @@ namespace WInterop.Storage
 
                             bool notLastPeriod = false;
                             if (!nameFinished && nameChar == '.')
+                            {
                                 for (int offset = nameOffset; offset < name.Length; offset++)
+                                {
                                     if (name[offset] == '.')
                                     {
                                         notLastPeriod = true;
                                         break;
                                     }
+                                }
+                            }
 
                             if (nameFinished || nameChar != '.' || notLastPeriod)
                             {
@@ -178,6 +178,7 @@ namespace WInterop.Storage
                                 {
                                     currentMatches[currentMatch++] = currentState;
                                 }
+
                                 goto ExpressionFinished;
                             }
                             else
@@ -230,6 +231,7 @@ namespace WInterop.Storage
                             {
                                 priorMatch++;
                             }
+
                             priorMatchCount++;
                         }
                     }

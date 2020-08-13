@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,77 +10,77 @@ namespace WInterop.Windows
     public enum WindowPosition : uint
     {
         /// <summary>
-        /// [SWP_NOSIZE]
+        ///  [SWP_NOSIZE]
         /// </summary>
         NoSize = 0x0001,
 
         /// <summary>
-        /// [SWP_NOMOVE]
+        ///  [SWP_NOMOVE]
         /// </summary>
         NoMove = 0x0002,
 
         /// <summary>
-        /// [SWP_NOZORDER]
+        ///  [SWP_NOZORDER]
         /// </summary>
         NoZOrder = 0x0004,
 
         /// <summary>
-        /// [SWP_NOREDRAW]
+        ///  [SWP_NOREDRAW]
         /// </summary>
         NoRedraw = 0x0008,
 
         /// <summary>
-        /// [SWP_NOACTIVATE]
+        ///  [SWP_NOACTIVATE]
         /// </summary>
         NoActivate = 0x0010,
 
         /// <summary>
-        /// [SWP_FRAMECHANGED]
+        ///  [SWP_FRAMECHANGED]
         /// </summary>
         FrameChanged = 0x0020,
 
         /// <summary>
-        /// [SWP_SHOWWINDOW]
+        ///  [SWP_SHOWWINDOW]
         /// </summary>
         ShowWindow = 0x0040,
 
         /// <summary>
-        /// [SWP_HIDEWINDOW]
+        ///  [SWP_HIDEWINDOW]
         /// </summary>
         HideWindow = 0x0080,
 
         /// <summary>
-        /// [SWP_NOCOPYBITS]
+        ///  [SWP_NOCOPYBITS]
         /// </summary>
         NoCopyBits = 0x0100,
 
         /// <summary>
-        /// [SWP_NOOWNERZORDER]
+        ///  [SWP_NOOWNERZORDER]
         /// </summary>
         NoOwnerZOrder = 0x0200,
 
         /// <summary>
-        /// [SWP_NOSENDCHANGING]
+        ///  [SWP_NOSENDCHANGING]
         /// </summary>
         NoSendChanging = 0x0400,
 
         /// <summary>
-        /// [SWP_DRAWFRAME]
+        ///  [SWP_DRAWFRAME]
         /// </summary>
         DrawFrame = FrameChanged,
 
         /// <summary>
-        /// [SWP_NOREPOSITION]
+        ///  [SWP_NOREPOSITION]
         /// </summary>
         NoReposition = NoOwnerZOrder,
 
         /// <summary>
-        /// [SWP_DEFERERASE]
+        ///  [SWP_DEFERERASE]
         /// </summary>
         DeferErase = 0x2000,
 
         /// <summary>
-        /// [SWP_ASYNCWINDOWPOS]
+        ///  [SWP_ASYNCWINDOWPOS]
         /// </summary>
         AsyncWindowPosition = 0x4000
     }

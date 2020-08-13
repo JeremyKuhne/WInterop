@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,65 +7,65 @@ using System.Runtime.InteropServices;
 namespace WInterop.SystemInformation
 {
     /// <summary>
-    /// [OSVERSIONINFOEXW]
+    ///  [OSVERSIONINFOEXW]
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct OsVersionInfo
     {
         /// <summary>
-        /// [dwOSVersionInfoSize]
+        ///  [dwOSVersionInfoSize]
         /// </summary>
         public uint OSVersionInfoSize;
 
         /// <summary>
-        /// [dwMajorVersion]
+        ///  [dwMajorVersion]
         /// </summary>
         public uint MajorVersion;
 
         /// <summary>
-        /// [dwMinorVersion]
+        ///  [dwMinorVersion]
         /// </summary>
         public uint MinorVersion;
 
         /// <summary>
-        /// [dwBuildNumber]
+        ///  [dwBuildNumber]
         /// </summary>
         public uint BuildNumber;
 
         /// <summary>
-        /// [dwPlatformId]
+        ///  [dwPlatformId]
         /// </summary>
         public uint PlatformId;
 
         private fixed char _szCSDVersion[128];
 
         /// <summary>
-        /// wServicePackMajor[]
+        ///  wServicePackMajor[]
         /// </summary>
         public ushort ServicePackMajor;
 
         /// <summary>
-        /// [wServicePackMinor]
+        ///  [wServicePackMinor]
         /// </summary>
         public ushort ServicePackMinor;
 
         /// <summary>
-        /// [wSuiteMask]
+        ///  [wSuiteMask]
         /// </summary>
         public ushort SuiteMask;
 
         /// <summary>
-        /// [wProductType]
+        ///  [wProductType]
         /// </summary>
         public byte ProductType;
 
         /// <summary>
-        /// [wReserved]
+        ///  [wReserved]
         /// </summary>
         public byte Reserved;
 
         /// <summary>
-        /// [szCSDVersion]
+        ///  [szCSDVersion]
         /// </summary>
         public unsafe Span<char> CSDVersion
         {

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -21,7 +17,7 @@ namespace WInterop.Devices.Native
             get
             {
                 if (NumberOfMountPoints == 0)
-                    return new ReadOnlySpan<MOUNTMGR_MOUNT_POINT>();
+                    return default;
 
                 fixed (MOUNTMGR_MOUNT_POINT* m = &_MountPoints)
                     return new ReadOnlySpan<MOUNTMGR_MOUNT_POINT>(m, (int)NumberOfMountPoints);

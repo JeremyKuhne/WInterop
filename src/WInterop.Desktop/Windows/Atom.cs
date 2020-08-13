@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -10,7 +6,7 @@ using System;
 namespace WInterop.Windows
 {
     /// <summary>
-    /// Simple wrapper for an ATOM
+    ///  Simple wrapper for an ATOM
     /// </summary>
     public struct Atom
     {
@@ -29,18 +25,18 @@ namespace WInterop.Windows
 
         public bool IsValid => ATOM != 0;
 
-        public static bool IsAtom(IntPtr pointer)
+        public static bool IsAtom(nint pointer)
         {
             // While MAXINTATOM is defined at 0xC000, this is not actually the maximum.
             // Any INTRESOURCE value is possible.
 
             // IS_INTRESOURCE(_r) ((((ULONG_PTR)(_r)) >> 16) == 0)
-            ulong value = (ulong)pointer.ToInt64();
+            ulong value = (ulong)pointer;
             return value != 0 && value >> 16 == 0;
         }
 
-        static public implicit operator uint(Atom atom) => atom.ATOM;
-        static public implicit operator IntPtr(Atom atom) => (IntPtr)atom.ATOM;
-        static public implicit operator Atom(IntPtr atom) => new Atom((ushort)atom);
+        public static implicit operator uint(Atom atom) => atom.ATOM;
+        public static implicit operator nint(Atom atom) => atom.ATOM;
+        public static implicit operator Atom(nint atom) => new Atom((ushort)atom);
     }
 }

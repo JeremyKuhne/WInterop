@@ -1,14 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Com
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms221061.aspx
-    // [MS-OAUT] https://msdn.microsoft.com/en-us/library/cc237603.aspx
+    // [MS-OAUT] https://docs.microsoft.com/openspecs/windows_protocols/ms-oaut/b5493025-e447-4109-93a8-ac29c48d018d
     public struct DECIMAL
     {
         private const byte NegativeSignFlag = 0x80;
@@ -16,9 +12,9 @@ namespace WInterop.Com
         private const int ManagedScaleMask = 0x00FF0000;
         private const int ManagedScaleShift = 16;
 
-        public ushort wReserved;
-        public byte scale;
-        public byte sign;
+        public ushort Reserved;
+        public byte Scale;
+        public byte Sign;
         public uint Hi32;
         public uint Lo32;
         public uint Mid32;
@@ -29,19 +25,19 @@ namespace WInterop.Com
                 lo: (int)Lo32,
                 mid: (int)Mid32,
                 hi: (int)Hi32,
-                isNegative: sign == NegativeSignFlag,
-                scale: scale);
+                isNegative: Sign == NegativeSignFlag,
+                scale: Scale);
         }
 
         public DECIMAL(decimal value)
         {
-            wReserved = 0;
+            Reserved = 0;
             int[] data = decimal.GetBits(value);
             Lo32 = (uint)data[0];
             Mid32 = (uint)data[1];
             Hi32 = (uint)data[2];
-            scale = (byte)((data[3] & ManagedScaleMask) >> 16);
-            sign = (data[3] & ManagedSignMask) == 0 ? (byte)0 : NegativeSignFlag;
+            Scale = (byte)((data[3] & ManagedScaleMask) >> 16);
+            Sign = (data[3] & ManagedSignMask) == 0 ? (byte)0 : NegativeSignFlag;
         }
     }
 }

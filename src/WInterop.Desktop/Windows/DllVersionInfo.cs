@@ -1,39 +1,35 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Windows
 {
     /// <summary>
-    /// [DLLVERSIONINFO]
+    ///  [DLLVERSIONINFO]
     /// </summary>
     public struct DllVersionInfo
     {
         /// <summary>
-        /// Size of the struct. [cbSize]
+        ///  Size of the struct. [cbSize]
         /// </summary>
         public uint Size;
 
         /// <summary>
-        /// [dwMajorVersion]
+        ///  [dwMajorVersion]
         /// </summary>
         public uint MajorVersion;
 
         /// <summary>
-        /// [dwMinorVersion]
+        ///  [dwMinorVersion]
         /// </summary>
         public uint MinorVersion;
 
         /// <summary>
-        /// [dwBuildNumber]
+        ///  [dwBuildNumber]
         /// </summary>
         public uint BuildNumber;
 
         /// <summary>
-        /// [dwPlatformID]
+        ///  [dwPlatformID]
         /// </summary>
         public uint PlatformID;
     }

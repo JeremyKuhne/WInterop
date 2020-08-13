@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,12 +11,12 @@ using WInterop.Support.Buffers;
 namespace WInterop.ProcessAndThreads
 {
     /// <summary>
-    /// These methods are only available from Windows desktop apps. Windows store apps cannot access them.
+    ///  These methods are only available from Windows desktop apps. Windows store apps cannot access them.
     /// </summary>
     public static partial class Processes
     {
         /// <summary>
-        /// Set the given enivronment variable.
+        ///  Set the given enivronment variable.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static void SetEnvironmentVariable(string name, string value)
@@ -33,10 +29,10 @@ namespace WInterop.ProcessAndThreads
         }
 
         /// <summary>
-        /// Get the given enivronment variable. Returns empty string if the variable isn't found.
+        ///  Get the given enivronment variable. Returns empty string if the variable isn't found.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
-        public unsafe static string GetEnvironmentVariable(string name)
+        public static unsafe string GetEnvironmentVariable(string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
@@ -54,7 +50,7 @@ namespace WInterop.ProcessAndThreads
         }
 
         /// <summary>
-        /// GetEnvironmentStrings split into key value pairs.
+        ///  GetEnvironmentStrings split into key value pairs.
         /// </summary>
         public static IDictionary<string, string> GetEnvironmentVariables()
         {
@@ -80,7 +76,7 @@ namespace WInterop.ProcessAndThreads
         }
 
         /// <summary>
-        /// Gets the raw set of environment strings as name/value pairs separated by an equals character.
+        ///  Gets the raw set of environment strings as name/value pairs separated by an equals character.
         /// </summary>
         /// <remarks>Names can have an equals character as the first character. Be cautious when splitting or use GetEnvironmentVariables().</remarks>
         public static IEnumerable<string> GetEnvironmentStrings()
@@ -92,10 +88,10 @@ namespace WInterop.ProcessAndThreads
         }
 
         /// <summary>
-        /// Gets the specified process memory counters.
+        ///  Gets the specified process memory counters.
         /// </summary>
         /// <param name="process">The process to get memory info for for or null for the current process.</param>
-        public unsafe static ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle? process = null)
+        public static unsafe ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle? process = null)
         {
             if (process == null) process = GetCurrentProcess();
 
@@ -106,7 +102,7 @@ namespace WInterop.ProcessAndThreads
         }
 
         /// <summary>
-        /// Get the process id for the given process handle.
+        ///  Get the process id for the given process handle.
         /// </summary>
         public static uint GetProcessId(SafeProcessHandle processHandle)
         {
@@ -114,19 +110,19 @@ namespace WInterop.ProcessAndThreads
         }
 
         /// <summary>
-        /// Get the handle for the current process.
-        /// Note that this handle is only relevant in the current process- it
-        /// can't be passed to other processes.
+        ///  Get the handle for the current process.
+        ///  Note that this handle is only relevant in the current process- it
+        ///  can't be passed to other processes.
         /// </summary>
         public static ProcessHandle GetCurrentProcess() => Imports.GetCurrentProcess();
 
         /// <summary>
-        /// Get the handle for the current process.
+        ///  Get the handle for the current process.
         /// </summary>
         public static uint GetCurrentProcessId() => Imports.GetCurrentProcessId();
 
         /// <summary>
-        /// Open a handle to the specified process by id.
+        ///  Open a handle to the specified process by id.
         /// </summary>
         public static SafeProcessHandle OpenProcess(uint processId, ProcessAccessRights desiredAccess, bool inheritHandle = false)
         {

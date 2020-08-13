@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,12 +11,12 @@ namespace WInterop.Cryptography.Native
     public struct CERT_SYSTEM_STORE_RELOCATE_PARA
     {
         /// <summary>
-        /// Can be HKEY hKeyBase
+        ///  Can be HKEY hKeyBase
         /// </summary>
         public IntPtr pvBase;
 
         /// <summary>
-        /// Can be LPCSTR pszSystemStore or LPCWSTR pwszSystemStore
+        ///  Can be LPCSTR pszSystemStore or LPCWSTR pwszSystemStore
         /// </summary>
         public IntPtr pvSystemStore;
     }

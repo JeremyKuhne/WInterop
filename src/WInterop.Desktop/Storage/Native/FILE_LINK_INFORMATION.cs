@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -10,14 +6,14 @@ using System;
 namespace WInterop.Storage.Native
 {
     /// <summary>
-    /// Used to create an NTFS hard link to an existing file.
+    ///  Used to create an NTFS hard link to an existing file.
     /// </summary>
     /// <msdn>
-    /// https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/ns-ntifs-_file_link_information
+    ///  https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/ntifs/ns-ntifs-_file_link_information
     /// </msdn>
     public struct FILE_LINK_INFORMATION
     {
-        public Boolean8 ReplaceIfExists;
+        public ByteBoolean ReplaceIfExists;
         public IntPtr RootDirectory;
         public uint FileNameLength;
         private char _FileName;

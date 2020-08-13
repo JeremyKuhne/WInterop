@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
@@ -52,11 +48,11 @@ namespace SecurityTests
                 {
                     SID sid = Security.CreateWellKnownSid(type);
                     AccountSidInformation info = sid.LookupAccountSid();
-                    Debug.WriteLine($"/// {info.Name} ({sid.ConvertSidToString()}) [{info.Usage}]");
+                    Debug.WriteLine($"///  {info.Name} ({sid.ConvertSidToString()}) [{info.Usage}]");
                 }
                 catch
                 {
-                    Debug.WriteLine($"/// Unable to retrieve");
+                    Debug.WriteLine($"///  Unable to retrieve");
                 }
                 Debug.WriteLine(@"/// </summary>");
                 Debug.WriteLine($"{type} = {(int)type},");

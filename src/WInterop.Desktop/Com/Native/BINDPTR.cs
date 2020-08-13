@@ -1,14 +1,8 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace WInterop.Com.Native
 {
@@ -16,15 +10,15 @@ namespace WInterop.Com.Native
     public unsafe struct BINDPTR
     {
         [FieldOffset(0)]
-        FUNCDESC* lpfuncdesc;
+        private readonly FUNCDESC* lpfuncdesc;
 
         [FieldOffset(0)]
-        VARDESC* lpvardesc;
+        private readonly VARDESC* lpvardesc;
 
         /// <summary>
         ///  This is <see cref="ITypeComp"/>.
         /// </summary>
         [FieldOffset(0)]
-        IntPtr lptcomp;
+        private readonly IntPtr lptcomp;
     }
 }

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,11 +7,11 @@ using WInterop.Storage.Native;
 namespace WInterop.Storage
 {
     /// <summary>
-    /// Used for processing and filtering find results.
+    ///  Used for processing and filtering find results.
     /// </summary>
     public unsafe ref struct RawFindData
     {
-        private FILE_FULL_DIR_INFORMATION* _info;
+        private readonly FILE_FULL_DIR_INFORMATION* _info;
 
         public RawFindData(FILE_FULL_DIR_INFORMATION* info, string directory)
         {

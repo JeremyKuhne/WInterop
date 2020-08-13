@@ -1,20 +1,16 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using WInterop.Com;
-using WInterop.Registry;
 using WInterop.Errors;
 using WInterop.Handles;
+using WInterop.Registry;
+using WInterop.Security;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Security;
 
 namespace WInterop.Shell
 {
@@ -56,7 +52,7 @@ namespace WInterop.Shell
         }
 
         /// <summary>
-        /// Get the path for the given known folder Guid.
+        ///  Get the path for the given known folder Guid.
         /// </summary>
         public static string GetKnownFolderPath(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
         {
@@ -67,7 +63,7 @@ namespace WInterop.Shell
         }
 
         /// <summary>
-        /// Get the Shell item id for the given known folder Guid.
+        ///  Get the Shell item id for the given known folder Guid.
         /// </summary>
         public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
         {
@@ -78,7 +74,7 @@ namespace WInterop.Shell
         }
 
         /// <summary>
-        /// Get the name for a given Shell item ID.
+        ///  Get the name for a given Shell item ID.
         /// </summary>
         public static string GetNameFromId(ItemIdList id, ShellItemDisplayNames form = ShellItemDisplayNames.NormalDisplay)
         {
@@ -87,7 +83,7 @@ namespace WInterop.Shell
         }
 
         /// <summary>
-        /// Get the IKnownFolderManager.
+        ///  Get the IKnownFolderManager.
         /// </summary>
         public static IKnownFolderManager GetKnownFolderManager()
         {
@@ -96,9 +92,9 @@ namespace WInterop.Shell
         }
 
         /// <summary>
-        /// Get the Guid identifiers for all known folders.
+        ///  Get the Guid identifiers for all known folders.
         /// </summary>
-        public unsafe static IEnumerable<Guid> GetKnownFolderIds()
+        public static unsafe IEnumerable<Guid> GetKnownFolderIds()
         {
             List<Guid> ids = new List<Guid>();
 
@@ -116,8 +112,8 @@ namespace WInterop.Shell
         }
 
         /// <summary>
-        /// Collapses common path segments into the equivalent environment string.
-        /// Returns null if unsuccessful.
+        ///  Collapses common path segments into the equivalent environment string.
+        ///  Returns null if unsuccessful.
         /// </summary>
         public static string? UnexpandEnvironmentStrings(string path)
         {
@@ -133,8 +129,8 @@ namespace WInterop.Shell
         }
 
         /// <summary>
-        /// Expands environment variables for the given user token. If the token is
-        /// null, returns the system variables.
+        ///  Expands environment variables for the given user token. If the token is
+        ///  null, returns the system variables.
         /// </summary>
         public static string ExpandEnvironmentVariablesForUser(AccessToken token, string value)
         {

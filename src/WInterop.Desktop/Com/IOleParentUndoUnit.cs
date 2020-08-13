@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ using WInterop.Errors;
 namespace WInterop.Com
 {
     /// <summary>
-    /// OLE IOleParentUndoUnit interface.
+    ///  OLE IOleParentUndoUnit interface.
     /// </summary>
     /// <see cref="https://docs.microsoft.com/windows/win32/api/ocidl/nn-ocidl-ioleparentundounit"/>
     [ComImport,
@@ -21,7 +17,7 @@ namespace WInterop.Com
     public interface IOleParentUndoUnit
     {
         /// <summary>
-        /// Opens a new parent undo unit, which becomes part of the containing unit's undo stack.
+        ///  Opens a new parent undo unit, which becomes part of the containing unit's undo stack.
         /// </summary>
         /// <param name="pPUU">The parent undo unit to be opened.</param>
         /// <see cref="https://docs.microsoft.com/windows/win32/api/ocidl/nf-ocidl-ioleparentundounit-open"/>
@@ -29,7 +25,7 @@ namespace WInterop.Com
             IOleParentUndoUnit pPUU);
 
         /// <summary>
-        /// Closes the specified parent undo unit.
+        ///  Closes the specified parent undo unit.
         /// </summary>
         /// <param name="pPUU">The parent undo unit to be closed.</param>
         /// <param name="fCommit">Indicates whether to keep or discard the unit.</param>
@@ -37,10 +33,10 @@ namespace WInterop.Com
         [PreserveSig]
         HResult Close(
             IOleParentUndoUnit pPUU,
-            Boolean32 fCommit);
+            IntBoolean fCommit);
 
         /// <summary>
-        /// Adds a simple undo unit to the collection.
+        ///  Adds a simple undo unit to the collection.
         /// </summary>
         /// <param name="pUU">The undo unit to be added.</param>
         /// <see cref="https://docs.microsoft.com/windows/win32/api/ocidl/nf-ocidl-ioleparentundounit-add"/>
@@ -48,7 +44,7 @@ namespace WInterop.Com
             IOleUndoUnit pUU);
 
         /// <summary>
-        /// Indicates whether the specified unit is a child of this undo unit or one of its children.
+        ///  Indicates whether the specified unit is a child of this undo unit or one of its children.
         /// </summary>
         /// <param name="pUU">The undo unit to be found.</param>
         /// <returns><see cref="HResult.S_OK"/> if found, <see cref="HResult.S_FALSE"/> otherwise.</returns>
@@ -58,7 +54,7 @@ namespace WInterop.Com
             IOleUndoUnit pUU);
 
         /// <summary>
-        /// Retrieves state information about the innermost open parent undo unit.
+        ///  Retrieves state information about the innermost open parent undo unit.
         /// </summary>
         /// <see cref="https://docs.microsoft.com/windows/win32/api/ocidl/nf-ocidl-ioleparentundounit-getparentstate"/>
         UndoStateFlags GetParentState();

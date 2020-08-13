@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -17,12 +13,12 @@ namespace WInterop.Cryptography
     public static partial class Cryptography
     {
         /// <summary>
-        /// Attempts to close the given handle.
+        ///  Attempts to close the given handle.
         /// </summary>
         public static void CloseStore(IntPtr handle)
             => Error.ThrowLastErrorIfFalse(Imports.CertCloseStore(handle, dwFlags: 0));
 
-        unsafe private static CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)
+        private static unsafe CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)
         {
             uint flags = (uint)StoreOpenFlags.NoCryptRelease;
             if (storeName == StoreName.SPC)
@@ -96,7 +92,7 @@ namespace WInterop.Cryptography
             return true;
         }
 
-        public unsafe static IEnumerable<SystemStoreInformation> EnumerateSystemStores(SystemStoreLocation location, string? name = null)
+        public static unsafe IEnumerable<SystemStoreInformation> EnumerateSystemStores(SystemStoreLocation location, string? name = null)
         {
             var info = new List<SystemStoreInformation>();
             GCHandle infoHandle = GCHandle.Alloc(info);
@@ -146,7 +142,7 @@ namespace WInterop.Cryptography
             return true;
         }
 
-        public unsafe static IEnumerable<PhysicalStoreInformation> EnumeratePhysicalStores(SystemStoreLocation location, string systemStoreName)
+        public static unsafe IEnumerable<PhysicalStoreInformation> EnumeratePhysicalStores(SystemStoreLocation location, string systemStoreName)
         {
             var info = new List<PhysicalStoreInformation>();
             GCHandle infoHandle = GCHandle.Alloc(info);
@@ -175,22 +171,16 @@ namespace WInterop.Cryptography
 
         private static SystemStoreInformation GetSystemNameAndKey(uint dwFlags, IntPtr pvSystemStore)
         {
-            SystemStoreInformation info = new SystemStoreInformation();
+            SystemStoreInformation info = default;
 
             if ((dwFlags & CryptoDefines.CERT_SYSTEM_STORE_RELOCATE_FLAG) == CryptoDefines.CERT_SYSTEM_STORE_RELOCATE_FLAG)
             {
-#if DESKTOP
-                var relocate = Marshal.PtrToStructure<CERT_SYSTEM_STORE_RELOCATE_PARA>(pvSystemStore);
-                var registryHandle = new SafeRegistryHandle(relocate.pvBase, ownsHandle: false);
-
-                info.Key = RegistryKey.FromHandle(registryHandle).Name;
-
+                // TODO: Rewrite with WInterop registry code
+                // var relocate = Marshal.PtrToStructure<CERT_SYSTEM_STORE_RELOCATE_PARA>(pvSystemStore);
+                // var registryHandle = new SafeRegistryHandle(relocate.pvBase, ownsHandle: false);
+                // info.Key = RegistryKey.FromHandle(registryHandle).Name;
                 // The name is null terminated
-                info.Name = Marshal.PtrToStringUni(relocate.pvSystemStore);
-#else
-                // Can't do registry access on WinRT
-                throw new PlatformNotSupportedException();
-#endif
+                // info.Name = Marshal.PtrToStringUni(relocate.pvSystemStore);
             }
             else
             {

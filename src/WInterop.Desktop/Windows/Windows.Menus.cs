@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -21,7 +17,7 @@ namespace WInterop.Windows
             return menu;
         }
 
-        public unsafe static void AppendMenu(MenuHandle menu, string text, int id, bool disabled = false, bool @checked = false)
+        public static unsafe void AppendMenu(MenuHandle menu, string text, int id, bool disabled = false, bool @checked = false)
         {
             MenuFlags flags = MenuFlags.String;
             if (disabled) flags |= MenuFlags.Grayed;

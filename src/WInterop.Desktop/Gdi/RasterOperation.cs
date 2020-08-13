@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Gdi
@@ -22,87 +18,86 @@ namespace WInterop.Gdi
         public static implicit operator RasterOperation(Common operation) => new RasterOperation(operation);
 
         /// <summary>
-        /// These are the patterns that are given defines in Windows.
+        ///  These are the patterns that are given defines in Windows.
         /// </summary>
         public enum Common : uint
         {
             // Ternary 20 is A0
+
             /// <summary>
-            /// Destination pixels are replaced with the source. [SRCCOPY]
+            ///  Destination pixels are replaced with the source. [SRCCOPY]
             /// </summary>
             SourceCopy = 0x00CC0020,
 
             /// <summary>
-            /// Destination pixels are OR'ed with the source. [SRCPAINT]
+            ///  Destination pixels are OR'ed with the source. [SRCPAINT]
             /// </summary>
             SourcePaint = 0x00EE0086,
 
             /// <summary>
-            /// Destination pixels are AND'ed with the source. [SRCAND]
+            ///  Destination pixels are AND'ed with the source. [SRCAND]
             /// </summary>
             SourceAnd = 0x008800C6,
 
             /// <summary>
-            /// Destination pixels are XOR'ed with the source. [SRCINVERT]
+            ///  Destination pixels are XOR'ed with the source. [SRCINVERT]
             /// </summary>
             SourceInvert = 0x00660046,
 
             /// <summary>
-            /// Destination pixels are inverted and AND'ed with the source.
-            /// [SRCERASE]
+            ///  Destination pixels are inverted and AND'ed with the source.
+            ///  [SRCERASE]
             /// </summary>
             SourceErase = 0x00440328,
 
             /// <summary>
-            /// Destination pixels are replaced with the inverted source. [NOTSRCCOPY]
+            ///  Destination pixels are replaced with the inverted source. [NOTSRCCOPY]
             /// </summary>
             NotSourceCopy = 0x00330008,
 
             /// <summary>
-            /// Destination pixels are replaced with the inverted source
-            /// AND'ed with the inverted selected brush. [NOTSRCERASE]
+            ///  Destination pixels are replaced with the inverted source AND'ed with the inverted selected brush.
+            ///  [NOTSRCERASE]
             /// </summary>
             NotSourceErase = 0x001100A6,
 
             /// <summary>
-            /// Destination pixels are replaced with the source AND'ed
-            /// with the selected brush. [MERGECOPY]
+            ///  Destination pixels are replaced with the source AND'ed with the selected brush. [MERGECOPY]
             /// </summary>
             MergeCopy = 0x00C000CA,
 
             /// <summary>
-            /// Destination pixels are OR'ed with the inverted source. [MERGEPAINT]
+            ///  Destination pixels are OR'ed with the inverted source. [MERGEPAINT]
             /// </summary>
             MergePaint = 0x00BB0226,
 
             /// <summary>
-            /// Destination pixels are replaced with the selected brush. [PATCOPY]
+            ///  Destination pixels are replaced with the selected brush. [PATCOPY]
             /// </summary>
             PatternCopy = 0x00F00021,
 
             /// <summary>
-            /// Destination pixels are OR'ed with the inverted source OR'ed with
-            /// the selected brush. [PATPAINT]
+            ///  Destination pixels are OR'ed with the inverted source OR'ed with the selected brush. [PATPAINT]
             /// </summary>
             PatternPaint = 0x00FB0A09,
 
             /// <summary>
-            /// Destination pixels are XOR'ed with the selected brush. [PATINVERT]
+            ///  Destination pixels are XOR'ed with the selected brush. [PATINVERT]
             /// </summary>
             PatternInvert = 0x005A0049,
 
             /// <summary>
-            /// Destination pixels are inverted. [DSTINVERT]
+            ///  Destination pixels are inverted. [DSTINVERT]
             /// </summary>
             DestinationInvert = 0x00550009,
 
             /// <summary>
-            /// Destination pixels are set to black. [BLACKNESS]
+            ///  Destination pixels are set to black. [BLACKNESS]
             /// </summary>
             Blackness = 0x00000042,
 
             /// <summary>
-            /// Destination pixels are set to white. [WHITENESS]
+            ///  Destination pixels are set to white. [WHITENESS]
             /// </summary>
             Whiteness = 0x00FF0062
         }
@@ -382,9 +377,8 @@ namespace WInterop.Gdi
             public const uint LogOp4    = 0b0011_0000_0000_0000;      // Logical Operation #4
             public const uint LogOp5    = 0b1100_0000_0000_0000;      // Logical Operation #5
 
-            // The parity bit is used to encode an optional sixth logical operation
-            // which will always be a "NOT".  In most cases this is used to get an
-            // even number of "NOT"s so that reduction can take place (two sequential
+            // The parity bit is used to encode an optional sixth logical operation which will always be a "NOT". In
+            // most cases this is used to get an even number of "NOT"s so that reduction can take place (two sequential
             // trailing "NOT"s cancel each other out and thus are eliminated).
 
             // Each LogOp (Logical Operation) is encoded as follows:
@@ -394,11 +388,9 @@ namespace WInterop.Gdi
             public const byte LogOR  = 0b10;         // OR result with next operand
             public const byte LogAND = 0b11;         // AND result with next operand
 
-            // The parse string is a string which contains the operands for
-            // the logical operation sequences(source, destination, pattern).
-            // The logic opcodes are applied to the current result and the next
-            // element of the given string (unless the LogOp is a NOT which only
-            // affects the result).
+            // The parse string is a string which contains the operands for the logical operation sequences (source,
+            // destination, pattern). The logic opcodes are applied to the current result and the next element of the
+            // given string (unless the LogOp is a NOT which only affects the result).
             //
             // The string is encoded as eight two-bit numbers indicating which
             // operand is to be used
@@ -408,32 +400,29 @@ namespace WInterop.Gdi
             public const byte OpDest = 0b10;        // Operand is destination field
             public const byte OpPat  = 0b11;        // Operand is pattern field
 
-            // The special operand is used for a few rops that would not fit into
-            // an RPN format.On the first occurance of an OpSpec, the current result
-            // is "PUSHED", and the next operand is loaded.On the second occurance
-            // of the OpSpec, the given logic operation is performed between the
-            // current result and the "PUSHED" value.
+            // The special operand is used for a few rops that would not fit into an RPN format.On the first occurance
+            // of an OpSpec, the current result is "PUSHED", and the next operand is loaded. On the second occurance
+            // of the OpSpec, the given logic operation is performed between the current result and the "PUSHED" value.
 
             // Define the parse strings to be allocated later.
             //
             // An example parse string for the pattern "SDPSDPSD" would be
             // "0110110110110110b"
 
-            public const ushort parseStr0 = 0x07AAA;      // src,pat,dest,dest,dest,dest,dest,dest
-            public const ushort parseStr1 = 0x079E7;      // src,pat,dest,src,pat,dest,src,pat
-            public const ushort parseStr2 = 0x06DB6;      // src,dest,pat,src,dest,pat,src,dest
-            public const ushort parseStr3 = 0x0AAAA;      // dest,dest,dest,dest,dest,dest,dest,dest
-            public const ushort parseStr4 = 0x0AAAA;      // dest,dest,dest,dest,dest,dest,dest,dest
-            public const ushort parseStr5 = 0x04725;      // src,spec,src,pat,spec,dest,src,src
-            public const ushort parseStr6 = 0x04739;      // src,spec,src,pat,spec,pat,dest,src
-            public const ushort parseStr7 = 0x04639;      // src,spec,src,dest,spec,pat,dest,src
+            public const ushort ParseStr0 = 0x07AAA;      // src,pat,dest,dest,dest,dest,dest,dest
+            public const ushort ParseStr1 = 0x079E7;      // src,pat,dest,src,pat,dest,src,pat
+            public const ushort ParseStr2 = 0x06DB6;      // src,dest,pat,src,dest,pat,src,dest
+            public const ushort ParseStr3 = 0x0AAAA;      // dest,dest,dest,dest,dest,dest,dest,dest
+            public const ushort ParseStr4 = 0x0AAAA;      // dest,dest,dest,dest,dest,dest,dest,dest
+            public const ushort ParseStr5 = 0x04725;      // src,spec,src,pat,spec,dest,src,src
+            public const ushort ParseStr6 = 0x04739;      // src,spec,src,pat,spec,pat,dest,src
+            public const ushort ParseStr7 = 0x04639;      // src,spec,src,dest,spec,pat,dest,src
 
-            // The following equates are for certain special functions that are
-            // derived from the very first string (index of SpecParseStrIndex).
+            // The following equates are for certain special functions that are derived from the very first string
+            // (index of SpecParseStrIndex).
             //
-            // These strings will have their innerloops special cased for
-            // speed enhancements(i.e MOVSx and STOSx for pattern copys and
-            // white/black fill, and MOVSx for source copy if possible)
+            // These strings will have their innerloops special cased for speed enhancements(i.e MOVSx and STOSx for
+            // pattern copys and white/black fill, and MOVSx for source copy if possible)
 
             public const ushort PAT_COPY     = 0x0021;       // P    - dest = Pattern       (0b0010_0001)
             public const ushort NOTPAT_COPY  = 0x0001;       // Pn   - dest = NOT Pattern   (0b0000_0001)

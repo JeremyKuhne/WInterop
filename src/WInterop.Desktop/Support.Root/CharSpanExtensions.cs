@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ namespace WInterop
     public static class CharSpanExtensions
     {
         /// <summary>
-        /// Copy as much into the destination buffer as possible, null terminating if specified.
+        ///  Copy as much into the destination buffer as possible, null terminating if specified.
         /// </summary>
         /// <param name="source">The string to copy from.</param>
         /// <param name="nullTerminate">Add a null to the end of the string.</param>
@@ -26,6 +22,7 @@ namespace WInterop
                         throw new ArgumentException("Not enough space to null terminate.", nameof(nullTerminate));
                     buffer[0] = '\0';
                 }
+
                 return;
             }
 
@@ -41,12 +38,12 @@ namespace WInterop
         }
 
         /// <summary>
-        /// Return the given buffer as a string, terminating at null if found.
+        ///  Return the given buffer as a string, terminating at null if found.
         /// </summary>
         public static unsafe string CreateString(this Span<char> buffer) => CreateString((ReadOnlySpan<char>)buffer);
 
         /// <summary>
-        /// Return the given buffer as a string, terminating at null if found.
+        ///  Return the given buffer as a string, terminating at null if found.
         /// </summary>
         public static unsafe string CreateString(this ReadOnlySpan<char> buffer)
         {
@@ -64,14 +61,14 @@ namespace WInterop
         }
 
         /// <summary>
-        /// Returns true if the buffer equals the given value, presuming the buffer contents either
-        /// terminate at null or has an implicit null at the end of the buffer.
+        ///  Returns true if the buffer equals the given value, presuming the buffer contents either
+        ///  terminate at null or has an implicit null at the end of the buffer.
         /// </summary>
         public static bool BufferEquals(this Span<char> buffer, string value) => BufferEquals((ReadOnlySpan<char>)buffer, value);
 
         /// <summary>
-        /// Returns true if the buffer equals the given value, presuming the buffer contents either
-        /// terminate at null or has an implicit null at the end of the buffer.
+        ///  Returns true if the buffer equals the given value, presuming the buffer contents either
+        ///  terminate at null or has an implicit null at the end of the buffer.
         /// </summary>
         public static bool BufferEquals(this ReadOnlySpan<char> buffer, string value)
         {

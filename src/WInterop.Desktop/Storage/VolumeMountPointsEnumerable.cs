@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -17,12 +13,12 @@ using WInterop.Support.Buffers;
 namespace WInterop.Storage
 {
     /// <summary>
-    /// Encapsulates a finding volume mount points.
+    ///  Encapsulates a finding volume mount points.
     /// </summary>
     /// <remarks>
-    /// Can't fully validate this yet. It only returns mount points for folders-
-    /// on the one drive I have set up this way it always returns FILE_NOT_FOUND.
-    /// Drives without folder mounts return NO_MORE_FILES as expected.
+    ///  Can't fully validate this yet. It only returns mount points for folders-
+    ///  on the one drive I have set up this way it always returns FILE_NOT_FOUND.
+    ///  Drives without folder mounts return NO_MORE_FILES as expected.
     /// </remarks>
     public class VolumeMountPointsEnumerable : IEnumerable<string>
     {

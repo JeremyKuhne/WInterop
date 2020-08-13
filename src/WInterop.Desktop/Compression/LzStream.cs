@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,7 +9,7 @@ namespace WInterop.Compression
 {
     public class LzStream : Stream
     {
-        private LzHandle _handle;
+        private readonly LzHandle _handle;
 
         public LzStream(string path, bool useCreateFile = true)
         {

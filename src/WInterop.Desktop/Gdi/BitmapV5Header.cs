@@ -1,14 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Gdi
 {
     /// <summary>
-    /// [BITMAPV5HEADER]
+    ///  [BITMAPV5HEADER]
     /// </summary>
     /// <msdn>https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-bitmapv5header</msdn>
     public struct BitmapV5Header

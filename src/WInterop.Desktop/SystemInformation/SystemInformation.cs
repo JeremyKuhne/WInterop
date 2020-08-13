@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Errors;
@@ -14,7 +10,7 @@ namespace WInterop.SystemInformation
     public static partial class SystemInformation
     {
         /// <summary>
-        /// Get the current user name.
+        ///  Get the current user name.
         /// </summary>
         public static string GetUserName()
         {
@@ -39,16 +35,12 @@ namespace WInterop.SystemInformation
         }
 
         /// <summary>
-        /// Returns the suite mask for the OS which defines the "edition" of Windows.
+        ///  Returns the suite mask for the OS which defines the "edition" of Windows.
         /// </summary>
-        public static SuiteMask GetSuiteMask()
-        {
-            return Imports.RtlGetSuiteMask();
-        }
+        public static SuiteMask GetSuiteMask() => Imports.RtlGetSuiteMask();
 
         /// <summary>
-        /// Gets the user name in the specified format. Returns null for
-        /// formats that aren't mapped.
+        ///  Gets the user name in the specified format. Returns null for formats that aren't mapped.
         /// </summary>
         public static string? GetUserName(ExtendedNameFormat format)
         {
@@ -76,7 +68,7 @@ namespace WInterop.SystemInformation
         }
 
         /// <summary>
-        /// Get the computer name in the specified format.
+        ///  Get the computer name in the specified format.
         /// </summary>
         public static string GetComputerName(ComputerNameFormat format)
         {
@@ -88,13 +80,14 @@ namespace WInterop.SystemInformation
                     Error.ThrowIfLastErrorNot(WindowsError.ERROR_MORE_DATA);
                     buffer.EnsureCharCapacity(size);
                 }
+
                 buffer.Length = size;
                 return buffer.ToString();
             });
         }
 
         /// <summary>
-        /// Expand environment variables in the given string.
+        ///  Expand environment variables in the given string.
         /// </summary>
         public static string ExpandEnvironmentVariables(string value)
         {
@@ -115,24 +108,18 @@ namespace WInterop.SystemInformation
         }
 
         /// <summary>
-        /// Returns true if the specified processor feature is present.
+        ///  Returns true if the specified processor feature is present.
         /// </summary>
         public static bool IsProcessorFeaturePresent(ProcessorFeature feature)
-        {
-            return Imports.IsProcessorFeaturePresent(feature);
-        }
+            => Imports.IsProcessorFeaturePresent(feature);
 
         /// <summary>
-        /// Returns true if the user is currently opted in for the Customer Experience
-        /// Improvement Program.
+        ///  Returns true if the user is currently opted in for the Customer Experience Improvement Program.
         /// </summary>
-        public static bool CeipIsOptedIn()
-        {
-            return Imports.CeipIsOptedIn();
-        }
+        public static bool CeipIsOptedIn() => Imports.CeipIsOptedIn();
 
         /// <summary>
-        /// Returns the performance counter frequency in counts per second.
+        ///  Returns the performance counter frequency in counts per second.
         /// </summary>
         public static long QueryPerformanceFrequency()
         {
@@ -141,7 +128,7 @@ namespace WInterop.SystemInformation
         }
 
         /// <summary>
-        /// Returns the current performance counter value in counts.
+        ///  Returns the current performance counter value in counts.
         /// </summary>
         public static long QueryPerformanceCounter()
         {
@@ -150,7 +137,7 @@ namespace WInterop.SystemInformation
         }
 
         /// <summary>
-        /// Returns the local system time.
+        ///  Returns the local system time.
         /// </summary>
         public static SystemTime GetLocalTime()
         {
@@ -159,7 +146,7 @@ namespace WInterop.SystemInformation
         }
 
         /// <summary>
-        /// Gets the NetBIOS computer name.
+        ///  Gets the NetBIOS computer name.
         /// </summary>
         public static string GetComputerName()
         {
@@ -171,15 +158,16 @@ namespace WInterop.SystemInformation
                     Error.ThrowIfLastErrorNot(WindowsError.ERROR_BUFFER_OVERFLOW);
                     buffer.EnsureCharCapacity(size);
                 }
+
                 buffer.Length = size;
                 return buffer.ToString();
             });
         }
 
         /// <summary>
-        /// Gets the real version info without lies.
+        ///  Gets the real version info without lies.
         /// </summary>
-        public unsafe static OsVersionInfo GetVersionInfo()
+        public static unsafe OsVersionInfo GetVersionInfo()
         {
             OsVersionInfo info = new OsVersionInfo { OSVersionInfoSize = (uint)sizeof(OsVersionInfo) };
             Imports.RtlGetVersion(ref info).ThrowIfFailed();

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,13 +8,13 @@ using WInterop.Errors;
 namespace WInterop.ProcessAndThreads.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
         // https://docs.microsoft.com/windows/win32/api/processenv/nf-processenv-getenvironmentvariablew
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern uint GetEnvironmentVariableW(
+        public static unsafe extern uint GetEnvironmentVariableW(
             char* lpName,
             char* lpBuffer,
             uint nSize);
@@ -80,7 +76,7 @@ namespace WInterop.ProcessAndThreads.Native
 
         // https://docs.microsoft.com/windows/win32/api/winternl/nf-winternl-ntqueryinformationprocess
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-        public unsafe static extern NTStatus NtQueryInformationProcess(
+        public static unsafe extern NTStatus NtQueryInformationProcess(
             SafeProcessHandle ProcessHandle,
             ProcessInfoClass ProcessInformationClass,
             void* ProcessInformation,

@@ -1,17 +1,13 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using WInterop.Handles;
-using WInterop.Support;
 using WInterop.Com.Native;
 using WInterop.Errors;
+using WInterop.Handles;
+using WInterop.Support;
 
 namespace WInterop.Com
 {
@@ -36,31 +32,14 @@ namespace WInterop.Com
             this.handle = handle;
         }
 
-        public VariantType VariantType
-        {
-            get { return RawVariantType & VariantType.TypeMask; }
-        }
+        public VariantType VariantType => RawVariantType & VariantType.TypeMask;
 
         protected unsafe VariantType RawVariantType
-        {
-            get
-            {
-                if (IsInvalid)
-                    return VariantType.Empty;
+            => IsInvalid ? VariantType.Empty : *((VariantType*)handle.ToPointer());
 
-                return *((VariantType*)handle.ToPointer());
-            }
-        }
+        public bool IsByRef => (RawVariantType & VariantType.ByRef) != 0;
 
-        public bool IsByRef
-        {
-            get { return (RawVariantType & VariantType.ByRef) != 0; }
-        }
-
-        public virtual bool IsArray
-        {
-            get { return (RawVariantType & VariantType.Array) != 0; }
-        }
+        public virtual bool IsArray => (RawVariantType & VariantType.Array) != 0;
 
         public unsafe virtual object? GetData()
         {
@@ -99,7 +78,6 @@ namespace WInterop.Com
             return result;
         }
 
-
         // VARENUMs that are VARIANT only (e.g. not valid for PROPVARIANT)
         //
         //  VT_DISPATCH
@@ -108,50 +86,28 @@ namespace WInterop.Com
         //  VT_UINT
         //  VT_ARRAY
         //  VT_BYREF
-        //
+
         protected virtual unsafe object? GetCoreType(VariantType propertyType, void* data)
         {
-            switch (propertyType)
+            return propertyType switch
             {
-                case VariantType.Int32:
-                case VariantType.Integer:
-                case VariantType.Error: // SCODE
-                    return *((int*)data);
-                case VariantType.UInt32:
-                case VariantType.UnsignedInteger:
-                    return *((uint*)data);
-                case VariantType.Int16:
-                    return *((short*)data);
-                case VariantType.UInt16:
-                    return *((ushort*)data);
-                case VariantType.SignedByte:
-                    return *((sbyte*)data);
-                case VariantType.UnsignedByte:
-                    return *((byte*)data);
-                case VariantType.Currency: // Currency (long long)
-                    return *((long*)data);
-                case VariantType.Single:
-                    return *((float*)data);
-                case VariantType.Double:
-                    return *((double*)data);
-                case VariantType.Decimal:
-                    return (*((DECIMAL*)data)).ToDecimal();
-                case VariantType.Boolean:
-                    // VARIANT_TRUE is -1
-                    return *((short*)data) == -1;
-                case VariantType.BasicString:
-                    return Marshal.PtrToStringBSTR((IntPtr)(*((void**)data)));
-                case VariantType.Variant:
-                    return new Variant(new IntPtr(*((void**)data)), ownsHandle: false);
-                case VariantType.Date:
-                    return Conversion.VariantDateToDateTime(*((double*)data));
-                case VariantType.Record:
-                case VariantType.IDispatch:
-                case VariantType.IUnknown:
-                    throw new NotImplementedException();
-                default:
-                    return s_UnsupportedObject;
-            }
+                VariantType.Int32 or VariantType.Integer or VariantType.Error => *((int*)data),
+                VariantType.UInt32 or VariantType.UnsignedInteger => *((uint*)data),
+                VariantType.Int16 => *((short*)data),
+                VariantType.UInt16 => *((ushort*)data),
+                VariantType.SignedByte => *((sbyte*)data),
+                VariantType.UnsignedByte => *((byte*)data),
+                VariantType.Currency => *((long*)data),                                         // Currency (long long)
+                VariantType.Single => *((float*)data),
+                VariantType.Double => *((double*)data),
+                VariantType.Decimal => (*((DECIMAL*)data)).ToDecimal(),
+                VariantType.Boolean => *((short*)data) == -1,                                   // VARIANT_TRUE is -1
+                VariantType.BasicString => Marshal.PtrToStringBSTR((IntPtr)(*((void**)data))),
+                VariantType.Variant => new Variant(new IntPtr(*((void**)data)), ownsHandle: false),
+                VariantType.Date => Conversion.VariantDateToDateTime(*((double*)data)),
+                VariantType.Record or VariantType.IDispatch or VariantType.IUnknown => throw new NotImplementedException(),
+                _ => s_UnsupportedObject,
+            };
         }
 
         protected override bool ReleaseHandle()

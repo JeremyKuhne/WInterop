@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,16 +11,15 @@ namespace WInterop.Shell
     {
         private IntPtr _pointer;
 
-
         public unsafe override string ToString()
         {
             if (_pointer == IntPtr.Zero)
                 throw new ObjectDisposedException(nameof(ReturnString));
 
             STRRET* s = (STRRET*)_pointer.ToPointer();
-            return (s->uType) switch
+            return s->Type switch
             {
-                STRRET.STRRET_TYPE.STRRET_WSTR => new string(s->Data.pOleStr),
+                STRRET.STRRET_TYPE.STRRET_WSTR => new string(s->Data.OleStr),
                 STRRET.STRRET_TYPE.STRRET_CSTR => throw new NotSupportedException(),
                 STRRET.STRRET_TYPE.STRRET_OFFSET => throw new NotSupportedException(),
                 _ => throw new InvalidOperationException()
@@ -37,11 +32,11 @@ namespace WInterop.Shell
                 throw new ObjectDisposedException(nameof(ReturnString));
 
             STRRET* s = (STRRET*)_pointer.ToPointer();
-            if (s->uType == STRRET.STRRET_TYPE.STRRET_WSTR)
+            if (s->Type == STRRET.STRRET_TYPE.STRRET_WSTR)
             {
-                Marshal.FreeCoTaskMem((IntPtr)s->Data.pOleStr);
-                s->uType = STRRET.STRRET_TYPE.STRRET_CSTR;
-                s->Data.pOleStr = null;
+                Marshal.FreeCoTaskMem((IntPtr)s->Data.OleStr);
+                s->Type = STRRET.STRRET_TYPE.STRRET_CSTR;
+                s->Data.OleStr = null;
             }
 
             _pointer = IntPtr.Zero;
@@ -49,16 +44,16 @@ namespace WInterop.Shell
 
         private struct STRRET
         {
-            public STRRET_TYPE uType;
+            public STRRET_TYPE Type;
             public DataUnion Data;
 
             [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
             public unsafe struct DataUnion
             {
                 [FieldOffset(0)]
-                public char* pOleStr;
+                public char* OleStr;
                 [FieldOffset(0)]
-                public uint uOffset;
+                public uint Offset;
                 [FieldOffset(0)]
                 private fixed byte _cStr[260];
             }

@@ -1,13 +1,8 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.SafeString.Native;
@@ -15,14 +10,14 @@ using WInterop.SafeString.Native;
 namespace WInterop.Support.Buffers
 {
     /// <summary>
-    /// Native buffer that deals in char size increments. Dispose to free memory. Allows buffers larger
-    /// than a maximum size string to enable working with very large string arrays.
-    /// 
-    /// A more performant replacement for StringBuilder when performing native interop.
+    ///  Native buffer that deals in char size increments. Dispose to free memory. Allows buffers larger
+    ///  than a maximum size string to enable working with very large string arrays.
+    ///
+    ///  A more performant replacement for StringBuilder when performing native interop.
     /// </summary>
     /// <remarks>
-    /// Suggested use through P/Invoke: define DllImport arguments that take a character buffer as IntPtr.
-    /// NativeStringBuffer has an implicit conversion to IntPtr.
+    ///  Suggested use through P/Invoke: define DllImport arguments that take a character buffer as IntPtr.
+    ///  NativeStringBuffer has an implicit conversion to IntPtr.
     /// </remarks>
     public class StringBuffer : HeapBuffer
     {
@@ -43,7 +38,7 @@ namespace WInterop.Support.Buffers
         private uint _length;
 
         /// <summary>
-        /// Create and empty StringBuffer.
+        ///  Create and empty StringBuffer.
         /// </summary>
         public StringBuffer()
             : this(initialCharCapacity: 0)
@@ -51,8 +46,8 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Instantiate the buffer with capacity for at least the specified number of characters. Capacity
-        /// includes the trailing null character.
+        ///  Instantiate the buffer with capacity for at least the specified number of characters. Capacity
+        ///  includes the trailing null character.
         /// </summary>
         public StringBuffer(uint initialCharCapacity)
             : base(initialCharCapacity * sizeof(char))
@@ -60,7 +55,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Instantiate the buffer with a copy of the specified string.
+        ///  Instantiate the buffer with a copy of the specified string.
         /// </summary>
         public StringBuffer(string initialContents)
             : base(0)
@@ -74,10 +69,10 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Get/set the character at the given index.
+        ///  Get/set the character at the given index.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if attempting to index outside of the buffer length.</exception>
-        public char this[uint index]
+        public unsafe char this[uint index]
         {
             // We only need a read lock here to avoid accessing old memory after a resize (as the block may move). The actual read/write is atomic.
             get
@@ -85,8 +80,9 @@ namespace WInterop.Support.Buffers
                 _handleLock.EnterReadLock();
                 try
                 {
-                    if (index >= _length) throw new ArgumentOutOfRangeException(nameof(index));
-                    unsafe { return CharPointer[index]; }
+                    return index >= _length
+                        ? throw new ArgumentOutOfRangeException(nameof(index))
+                        : CharPointer[index];
                 }
                 finally
                 {
@@ -98,8 +94,12 @@ namespace WInterop.Support.Buffers
                 _handleLock.EnterReadLock();
                 try
                 {
-                    if (index >= _length) throw new ArgumentOutOfRangeException(nameof(index));
-                    unsafe { CharPointer[index] = value; }
+                    if (index >= _length)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                    }
+
+                    CharPointer[index] = value;
                 }
                 finally
                 {
@@ -109,7 +109,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Character capacity of the buffer. Includes the count for the trailing null character.
+        ///  Character capacity of the buffer. Includes the count for the trailing null character.
         /// </summary>
         public uint CharCapacity
         {
@@ -122,26 +122,21 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Ensure capacity in characters is at least the given minimum.
+        ///  Ensure capacity in characters is at least the given minimum.
         /// </summary>
         /// <exception cref="OverflowException">Thrown if trying to allocate more than a int on 32bit.</exception>
-        public void EnsureCharCapacity(uint minCapacity)
-        {
-            EnsureByteCapacity((ulong)minCapacity * sizeof(char));
-        }
+        public void EnsureCharCapacity(uint minCapacity) => EnsureByteCapacity((ulong)minCapacity * sizeof(char));
 
         protected void UnlockedEnsureCharCapacity(uint minCapacity)
-        {
-            UnlockedEnsureByteCapacity((ulong)minCapacity * sizeof(char));
-        }
+            => UnlockedEnsureByteCapacity((ulong)minCapacity * sizeof(char));
 
         /// <summary>
-        /// The logical length of the buffer in characters. (Does not include the final null.) Will automatically attempt to increase capacity.
-        /// This is where the usable data ends.
+        ///  The logical length of the buffer in characters. (Does not include the final null.) Will automatically
+        ///  attempt to increase capacity. This is where the usable data ends.
         /// </summary>
         public uint Length
         {
-            get { return _length; }
+            get => _length;
             set
             {
                 _handleLock.EnterWriteLock();
@@ -166,8 +161,8 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// For use when the native api null terminates but doesn't return a length.
-        /// If no null is found, the length will not be changed.
+        ///  For use when the native api null terminates but doesn't return a length.
+        ///  If no null is found, the length will not be changed.
         /// </summary>
         public void SetLengthToFirstNull()
         {
@@ -194,21 +189,16 @@ namespace WInterop.Support.Buffers
             }
         }
 
-        public unsafe char* CharPointer
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return (char*)VoidPointer;
-            }
-        }
+        public unsafe char* CharPointer => (char*)VoidPointer;
 
         /// <summary>
-        /// Check for the index of a specified character.
+        ///  Check for the index of a specified character.
         /// </summary>
-        /// <param name="nameof(value)">Character to look for.</param>
-        /// <param name="nameof(index)">Index the character was found at if true is returned. Will be >Length if false.</param>
-        /// <param name="nameof(skip)">Skip the given number of characters before looking.</param>
+        /// <param name="value">Character to look for.</param>
+        /// <param name="index">
+        ///  Index the character was found at if true is returned. Will be >Length if false.
+        /// </param>
+        /// <param name="skip">Skip the given number of characters before looking.</param>
         /// <returns>True if the given character was found.</returns>
         public bool IndexOf(char value, out uint index, uint skip = 0)
         {
@@ -235,24 +225,26 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Returns true if the buffer starts with the given string.
+        ///  Returns true if the buffer starts with the given string.
         /// </summary>
         public bool StartsWithOrdinal(string value)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
-            if (_length < (uint)value.Length) return false;
-            return SubStringEquals(value, startIndex: 0, count: value.Length);
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            return _length >= (uint)value.Length
+                && SubStringEquals(value, startIndex: 0, count: value.Length);
         }
 
         /// <summary>
-        /// Returns true if the specified StringBuffer substring equals the given value.
+        ///  Returns true if the specified StringBuffer substring equals the given value.
         /// </summary>
         /// <param name="value">The value to compare against the specified substring.</param>
         /// <param name="startIndex">Start index of the sub string.</param>
         /// <param name="count">Length of the substring, or -1 to check all remaining.</param>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="nameof(startIndex)"/> or <paramref name="nameof(count)"/> are outside the range
-        /// of the buffer's length.
+        ///  Thrown if <paramref name="startIndex"/> or <paramref name="count"/> are outside the range
+        ///  of the buffer's length.
         /// </exception>
         public bool SubStringEquals(string value, uint startIndex = 0, int count = -1)
         {
@@ -291,9 +283,11 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Append the given character.
+        ///  Append the given character.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if you try to append more characters than the StringBuffer can hold.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///  Thrown if you try to append more characters than the StringBuffer can hold.
+        /// </exception>
         public void Append(char value)
         {
             _handleLock.EnterUpgradeableReadLock();
@@ -321,9 +315,11 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Append a specified count of a given character.
+        ///  Append a specified count of a given character.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if you try to append more characters than the StringBuffer can hold.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///  Thrown if you try to append more characters than the StringBuffer can hold.
+        /// </exception>
         public void Append(char value, uint count)
         {
             _handleLock.EnterUpgradeableReadLock();
@@ -350,7 +346,7 @@ namespace WInterop.Support.Buffers
 
                         if (count > 1)
                         {
-                            uint twoChars = (uint)((value << 16 | value));
+                            uint twoChars = (uint)(value << 16 | value);
 
                             while (count > 1)
                             {
@@ -361,7 +357,9 @@ namespace WInterop.Support.Buffers
                         }
 
                         if (count == 1)
+                        {
                             *current = value;
+                        }
                     }
                 }
                 finally
@@ -376,15 +374,15 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Append the given string.
+        ///  Append the given string.
         /// </summary>
-        /// <param name="nameof(value)">The string to append.</param>
-        /// <param name="nameof(startIndex)">The index in the input string to start appending from.</param>
-        /// <param name="nameof(count)">The count of characters to copy from the input string, or -1 for all remaining.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="nameof(value)"/> is null.</exception>
+        /// <param name="value">The string to append.</param>
+        /// <param name="startIndex">The index in the input string to start appending from.</param>
+        /// <param name="count">The count of characters to copy from the input string, or -1 for all remaining.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="nameof(startIndex)"/> or <paramref name="nameof(count)"/> are outside the range
-        /// of <paramref name="nameof(value)"/> characters.
+        ///  Thrown if <paramref name="startIndex"/> or <paramref name="count"/> are outside the range
+        ///  of <paramref name="value"/> characters.
         /// </exception>
         public void Append(string value, int startIndex = 0, int count = -1)
         {
@@ -405,13 +403,13 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Append the given buffer starting at the given buffer index.
+        ///  Append the given buffer starting at the given buffer index.
         /// </summary>
-        /// <param name="nameof(value)">The buffer to append.</param>
-        /// <param name="nameof(startIndex)">The index in the input buffer to start appending from.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="nameof(value)"/> is null.</exception>
+        /// <param name="value">The buffer to append.</param>
+        /// <param name="startIndex">The index in the input buffer to start appending from.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="startIndex"/> is outside the range of <paramref name="value"/> characters.
+        ///  Thrown if <paramref name="startIndex"/> is outside the range of <paramref name="value"/> characters.
         /// </exception>
         public void Append(StringBuffer value, uint startIndex = 0)
         {
@@ -430,15 +428,15 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Append the specified count of characters from the given buffer at the given start index.
+        ///  Append the specified count of characters from the given buffer at the given start index.
         /// </summary>
-        /// <param name="nameof(value)">The buffer to append.</param>
-        /// <param name="nameof(startIndex)">The index in the input buffer to start appending from.</param>
-        /// <param name="nameof(count)">The count of characters to copy from the buffer.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="nameof(value)"/> is null.</exception>
+        /// <param name="value">The buffer to append.</param>
+        /// <param name="startIndex">The index in the input buffer to start appending from.</param>
+        /// <param name="count">The count of characters to copy from the buffer.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="startIndex"/> or <paramref name="nameof(count)"/> are outside the range
-        /// of <paramref name="value"/> characters.
+        ///  Thrown if <paramref name="startIndex"/> or <paramref name="count"/> are outside the range
+        ///  of <paramref name="value"/> characters.
         /// </exception>
         public void Append(StringBuffer value, uint startIndex, uint count)
         {
@@ -463,9 +461,9 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Copy contents to the specified buffer. Will grow the destination buffer if needed.
+        ///  Copy contents to the specified buffer. Will grow the destination buffer if needed.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="nameof(destination)"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="destination"/> is null</exception>
         public void CopyTo(uint bufferIndex, StringBuffer destination, uint destinationIndex, uint count)
         {
             if (destination == null) throw new ArgumentNullException(nameof(destination));
@@ -488,7 +486,7 @@ namespace WInterop.Support.Buffers
                         Buffer.MemoryCopy(
                             source: CharPointer + bufferIndex,
                             destination: destination.CharPointer + destinationIndex,
-                            destinationSizeInBytes: checked((long)(destination.ByteCapacity + destinationIndex * sizeof(char))),
+                            destinationSizeInBytes: checked((long)(destination.ByteCapacity + (destinationIndex * sizeof(char)))),
                             sourceBytesToCopy: checked((long)count * sizeof(char)));
                     }
                 }
@@ -504,9 +502,9 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Copy contents from the specified string into the buffer at the given index. Will grow the buffer if neeeded.
+        ///  Copy contents from the specified string into the buffer at the given index. Will grow the buffer if neeeded.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="nameof(source)"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is null</exception>
         public void CopyFrom(uint bufferIndex, string source, int sourceIndex = 0, int count = -1)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
@@ -532,7 +530,7 @@ namespace WInterop.Support.Buffers
                         Buffer.MemoryCopy(
                             source: content + sourceIndex,
                             destination: CharPointer + bufferIndex,
-                            destinationSizeInBytes: checked((long)(ByteCapacity + bufferIndex * sizeof(char))),
+                            destinationSizeInBytes: checked((long)(ByteCapacity + (bufferIndex * sizeof(char)))),
                             sourceBytesToCopy: count * sizeof(char));
                     }
                 }
@@ -544,7 +542,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Split the contents into strings via the given split characters.
+        ///  Split the contents into strings via the given split characters.
         /// </summary>
         /// <exception cref="OverflowException">Thrown if the substring is too big to fit in a string.</exception>
         public IEnumerable<string> Split(char splitCharacter, bool removeEmptyStrings = false)
@@ -590,7 +588,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Split the contents into strings via the given split characters.
+        ///  Split the contents into strings via the given split characters.
         /// </summary>
         /// <param name="splitCharacters">Characters to split on, or null/empty to split on whitespace.</param>
         /// <exception cref="OverflowException">Thrown if the substring is too big to fit in a string.</exception>
@@ -635,7 +633,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// True if the buffer contains the given character.
+        ///  True if the buffer contains the given character.
         /// </summary>
         public bool Contains(char value)
         {
@@ -660,7 +658,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// True if the buffer contains any of the specified characters.
+        ///  True if the buffer contains any of the specified characters.
         /// </summary>
         public bool Contains(params char[] values)
         {
@@ -690,7 +688,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Trim the specified values from the end of the buffer.
+        ///  Trim the specified values from the end of the buffer.
         /// </summary>
         public void TrimEnd(params char[] values)
         {
@@ -725,11 +723,12 @@ namespace WInterop.Support.Buffers
             {
                 if (value == source[i]) return true;
             }
+
             return false;
         }
 
         /// <summary>
-        /// String representation of the entire buffer.
+        ///  String representation of the entire buffer.
         /// </summary>
         /// <exception cref="OverflowException">Thrown if the length of the buffer is larger than a string's max capacity (int.MaxValue).</exception>
         public override string ToString()
@@ -748,28 +747,24 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Gets a span representing the current value.
+        ///  Gets a span representing the current value.
         /// </summary>
-        public unsafe ReadOnlySpan<char> AsSpan()
-        {
-            return new ReadOnlySpan<char>(CharPointer, checked((int)_length));
-        }
+        public unsafe ReadOnlySpan<char> AsSpan() => new ReadOnlySpan<char>(CharPointer, checked((int)_length));
 
         /// <summary>
-        /// Gets a reference to the first char.
+        ///  Gets a reference to the first char.
         /// </summary>
-        public ref char GetReference()
-        {
-            return ref MemoryMarshal.GetReference(AsSpan());
-        }
+        public ref char GetReference() => ref MemoryMarshal.GetReference(AsSpan());
 
         /// <summary>
-        /// Get the given substring in the buffer.
+        ///  Get the given substring in the buffer.
         /// </summary>
-        /// <param name="count">Count of characters to take, or remaining characters from <paramref name="nameof(startIndex)"/> if -1.</param>
+        /// <param name="count">
+        ///  Count of characters to take, or remaining characters from <paramref name="startIndex"/> if -1.
+        /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="nameof(startIndex)"/> or <paramref name="nameof(count)"/> are outside the range of the buffer's length
-        /// or count is greater than the maximum string size (int.MaxValue).
+        ///  Thrown if <paramref name="startIndex"/> or <paramref name="count"/> are outside the range
+        ///  of the buffer's length or count is greater than the maximum string size (int.MaxValue).
         /// </exception>
         public string SubString(uint startIndex, int count = -1)
         {
@@ -797,9 +792,7 @@ namespace WInterop.Support.Buffers
             base.Dispose(disposing);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UNICODE_STRING ToUnicodeString() => new UNICODE_STRING(this);
-
 
         public static StringBufferCache Cache => StringBufferCache.Instance;
     }

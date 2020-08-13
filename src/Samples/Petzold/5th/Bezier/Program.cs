@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,22 +9,22 @@ using WInterop.Windows;
 namespace Bezier
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 5-16, Pages 156-159.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 5-16, Pages 156-159.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Bezier(), "Bezier Splines");
         }
     }
 
-    class Bezier : WindowClass
+    internal class Bezier : WindowClass
     {
-        void DrawBezier(DeviceContext dc, Point[] apt)
+        private void DrawBezier(DeviceContext dc, Point[] apt)
         {
             dc.PolyBezier(apt);
             dc.MoveTo(apt[0]);
@@ -37,7 +33,7 @@ namespace Bezier
             dc.LineTo(apt[3]);
         }
 
-        Point[] apt = new Point[4];
+        private readonly Point[] _apt = new Point[4];
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -47,14 +43,14 @@ namespace Bezier
                     int cxClient = lParam.LowWord;
                     int cyClient = lParam.HighWord;
 
-                    apt[0].X = cxClient / 4;
-                    apt[0].Y = cyClient / 2;
-                    apt[1].X = cxClient / 2;
-                    apt[1].Y = cyClient / 4;
-                    apt[2].X = cxClient / 2;
-                    apt[2].Y = 3 * cyClient / 4;
-                    apt[3].X = 3 * cxClient / 4;
-                    apt[3].Y = cyClient / 2;
+                    _apt[0].X = cxClient / 4;
+                    _apt[0].Y = cyClient / 2;
+                    _apt[1].X = cxClient / 2;
+                    _apt[1].Y = cyClient / 4;
+                    _apt[2].X = cxClient / 2;
+                    _apt[2].Y = 3 * cyClient / 4;
+                    _apt[3].X = 3 * cxClient / 4;
+                    _apt[3].Y = cyClient / 2;
 
                     return 0;
 
@@ -67,22 +63,22 @@ namespace Bezier
                         using (DeviceContext dc = window.GetDeviceContext())
                         {
                             dc.SelectObject(StockPen.White);
-                            DrawBezier(dc, apt);
+                            DrawBezier(dc, _apt);
 
                             if ((mk & MouseKey.LeftButton) != 0)
                             {
-                                apt[1].X = lParam.LowWord;
-                                apt[1].Y = lParam.HighWord;
+                                _apt[1].X = lParam.LowWord;
+                                _apt[1].Y = lParam.HighWord;
                             }
 
                             if ((mk & MouseKey.RightButton) != 0)
                             {
-                                apt[2].X = lParam.LowWord;
-                                apt[2].Y = lParam.HighWord;
+                                _apt[2].X = lParam.LowWord;
+                                _apt[2].Y = lParam.HighWord;
                             }
 
                             dc.SelectObject(StockPen.Black);
-                            DrawBezier(dc, apt);
+                            DrawBezier(dc, _apt);
                         }
                     }
                     return 0;
@@ -90,7 +86,7 @@ namespace Bezier
                     window.Invalidate(true);
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        DrawBezier(dc, apt);
+                        DrawBezier(dc, _apt);
                     }
                     return 0;
             }

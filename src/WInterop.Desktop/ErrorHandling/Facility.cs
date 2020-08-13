@@ -1,14 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Errors
 {
     /// <summary>
-    /// Windows error facility codes
+    ///  Windows error facility codes
     /// </summary>
     public enum Facility : int
     {

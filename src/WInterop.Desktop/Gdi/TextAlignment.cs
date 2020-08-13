@@ -1,15 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
 
 namespace WInterop.Gdi
 {
     /// <summary>
-    /// Text alignment
+    ///  Text alignment
     /// </summary>
     public struct TextAlignment
     {
@@ -54,8 +49,8 @@ namespace WInterop.Gdi
 
         public Horizontal HorizontalAlignment
         {
-            get => (Horizontal)(Value & (TA_RIGHT | TA_CENTER)) ;
-            set => Value = (Value & ~(uint)HorizontalAlignment) | (uint)value ;
+            get => (Horizontal)(Value & (TA_RIGHT | TA_CENTER));
+            set => Value = (Value & ~(uint)HorizontalAlignment) | (uint)value;
         }
 
         public Vertical VerticalAlignment
@@ -67,19 +62,17 @@ namespace WInterop.Gdi
         public enum Horizontal : uint
         {
             /// <summary>
-            /// Aligned to the left of the bounding box.
-            /// (Considered "Top" for vertically aligned text.)
+            ///  Aligned to the left of the bounding box. (Considered "Top" for vertically aligned text.)
             /// </summary>
             Left = TA_LEFT,
 
             /// <summary>
-            /// Aligned to the right of the bounding box.
-            /// (Considered "Bottom" for vertically aligned text.)
+            ///  Aligned to the right of the bounding box. (Considered "Bottom" for vertically aligned text.)
             /// </summary>
             Right = TA_RIGHT,
 
             /// <summary>
-            /// Aligned to the center fo the bounding box.
+            ///  Aligned to the center fo the bounding box.
             /// </summary>
             Center = TA_CENTER
         }
@@ -87,19 +80,17 @@ namespace WInterop.Gdi
         public enum Vertical : uint
         {
             /// <summary>
-            /// Aligned to the top of the bounding box.
-            /// (Considered "Right" for vertically aligned text.)
+            ///  Aligned to the top of the bounding box. (Considered "Right" for vertically aligned text.)
             /// </summary>
             Top  = TA_TOP,
 
             /// <summary>
-            /// Aligned to the botton of the bounding box.
-            /// (Considered "Left" for vertically aligned text.)
+            ///  Aligned to the botton of the bounding box. (Considered "Left" for vertically aligned text.)
             /// </summary>
             Bottom = TA_BOTTOM,
 
             /// <summary>
-            /// Aligned to the text baseline.
+            ///  Aligned to the text baseline.
             /// </summary>
             Baseline = TA_BASELINE
         }

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
@@ -10,7 +6,7 @@ using System.Runtime.InteropServices;
 namespace WInterop.Gdi
 {
     /// <summary>
-    /// [TEXTMETRIC]
+    ///  [TEXTMETRIC]
     /// </summary>
     /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/dd145132.aspx"/></remarks>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -31,9 +27,9 @@ namespace WInterop.Gdi
         public char LastChar;
         public char DefaultChar;
         public char BreakChar;
-        public Boolean8 Italic;
-        public Boolean8 Underlined;
-        public Boolean8 StruckOut;
+        public ByteBoolean Italic;
+        public ByteBoolean Underlined;
+        public ByteBoolean StruckOut;
         public PitchAndFamily PitchAndFamily;
         public CharacterSet CharacterSet;
     }

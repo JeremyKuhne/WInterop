@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -10,7 +6,6 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Security
 {
-
     // From winnt.h:
     //
     //         1   1   1   1   1   1
@@ -50,20 +45,20 @@ namespace WInterop.Security
     // private const uint SECURITY_MAX_SID_SIZE = 12 - 4 + (15 * 4);
 
     /// <summary>
-    /// The binary form of a SID. In string format SIDs are in the form:
-    /// S-{revision}-{authority}[-{subauthority}...]
+    ///  The binary form of a SID. In string format SIDs are in the form:
+    ///  S-{revision}-{authority}[-{subauthority}...]
     /// </summary>
     /// <remarks>
-    /// Per the documentation you're not supposed to access the SID fields directly. Given that the struct
-    /// is publicly defined in the headers as above, it is unlikely to change. If you want to play safe
-    /// by MSDN use the Win32 methods for all data access.
-    /// 
-    /// For ease of interaction and lifetime we simply define the struct at it's max size. This allows
-    /// passing the struct around easily. It does eat up more memory than needed for the sub authorities,
-    /// but that seems a decent tradeoff as we don't expect to create a large number of these. This does
-    /// also require using <see cref="CopyFromNative"/> to get SIDs allocated by Windows.
-    /// 
-    /// The size of SID is 68 bytes.
+    ///  Per the documentation you're not supposed to access the SID fields directly. Given that the struct
+    ///  is publicly defined in the headers as above, it is unlikely to change. If you want to play safe
+    ///  by MSDN use the Win32 methods for all data access.
+    ///
+    ///  For ease of interaction and lifetime we simply define the struct at it's max size. This allows
+    ///  passing the struct around easily. It does eat up more memory than needed for the sub authorities,
+    ///  but that seems a decent tradeoff as we don't expect to create a large number of these. This does
+    ///  also require using <see cref="SID(SID*)"/> to get SIDs allocated by Windows.
+    ///
+    ///  The size of SID is 68 bytes.
     /// </remarks>
     public readonly struct SID
     {
@@ -79,8 +74,7 @@ namespace WInterop.Security
         private const int SID_MAX_SUB_AUTHORITIES = 15;
 
         /// <summary>
-        /// Use this to copy from a native buffer, as the defined SID will likely not have
-        /// a full set of SubAuthorities.
+        ///  Use this to copy from a native buffer, as the defined SID will likely not have a full set of SubAuthorities.
         /// </summary>
         public unsafe SID(SID* native)
         {
@@ -131,20 +125,16 @@ namespace WInterop.Security
         }
 
         public bool Equals(in SID other)
-        {
-            return Revision == other.Revision
+            => Revision == other.Revision
                 && IdentifierAuthority.Equals(other.IdentifierAuthority)
                 && SubAuthorityCount == other.SubAuthorityCount
                 && SubAuthorities.SequenceEqual(other.SubAuthorities);
-        }
 
         public unsafe bool Equals(SID* other)
-        {
-            return other != null
+            => other != null
                 && Revision == other->Revision
                 && IdentifierAuthority.Equals(other->IdentifierAuthority)
                 && SubAuthorityCount == other->SubAuthorityCount
                 && SubAuthorities.SequenceEqual(other->SubAuthorities);
-        }
     }
 }

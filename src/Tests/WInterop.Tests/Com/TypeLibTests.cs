@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -100,10 +96,10 @@ namespace WInterop.Tests.Com
             result = typeLib.IsName(
                 nameBuffer,
                 lHashVal: 0,
-                out Boolean32 foundName);
+                out IntBoolean foundName);
 
             result.Should().Be(HResult.S_OK);
-            foundName.Should().Be((Boolean32)true);
+            foundName.Should().Be((IntBoolean)true);
 
             // Find gives back the right casing
             nameSpan.ToString().Should().Be("IFont");

@@ -1,47 +1,43 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591.aspx
+    // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowlongw
     public enum WindowLong : int
     {
         /// <summary>
-        /// (GWL_WNDPROC)
+        ///  Gets/sets the address of the Windows Procedure. [GWL_WNDPROC]
         /// </summary>
         WindowProcedure = -4,
 
         /// <summary>
-        /// (GWL_HINSTANCE)
+        ///  Gets/sets the application instance handle. [GWL_HINSTANCE]
         /// </summary>
         InstanceHandle = -6,
 
         /// <summary>
-        /// (GWL_HWNDPARENT)
+        ///  Gets the parent window handle, if any. [GWL_HWNDPARENT]
         /// </summary>
         ParentHandle = -8,
 
         /// <summary>
-        /// (GWL_STYLE)
+        ///  Gets/sets the <see cref="WindowStyles"/>. [GWL_STYLE]
         /// </summary>
         Style = -16,
 
         /// <summary>
-        /// (GWL_EXSTYLE)
+        ///  Gets/sets the <see cref="ExtendedWindowStyles"/>. [GWL_EXSTYLE]
         /// </summary>
         ExtendedStyle = -20,
 
         /// <summary>
-        /// (GWL_USERDATA)
+        ///  Gets/sets the user data for the Window. [GWL_USERDATA]
         /// </summary>
         UserData = -21,
 
         /// <summary>
-        /// (GWL_ID)
+        ///  Gets/sets the ID of a child window. [GWL_ID]
         /// </summary>
         Id = -12
     }

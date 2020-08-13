@@ -1,17 +1,13 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
+using WInterop.Console.Native;
 using WInterop.Errors;
 using WInterop.Support.Buffers;
-using WInterop.Console.Native;
 using WInterop.Windows;
 
 namespace WInterop.Console
@@ -65,20 +61,21 @@ namespace WInterop.Console
         }
 
         /// <summary>
-        /// Reads input from the console. Will wait for next input, exit the iterator to stop listening.
+        ///  Reads input from the console. Will wait for next input, exit the iterator to stop listening.
         /// </summary>
         public static IEnumerable<InputRecord> ReadConsoleInput(SafeFileHandle inputHandle)
         {
-            InputRecord buffer = new InputRecord();
+            InputRecord buffer = default;
             while (Imports.ReadConsoleInputW(inputHandle, ref buffer, 1, out _))
             {
                 yield return buffer;
             }
+
             Error.ThrowLastError();
         }
 
         /// <summary>
-        /// Peek at the console input records.
+        ///  Peek at the console input records.
         /// </summary>
         /// <param name="count">The maximum number of records to investigate.</param>
         public static IEnumerable<InputRecord> PeekConsoleInput(SafeFileHandle inputHandle, int count)
@@ -94,9 +91,9 @@ namespace WInterop.Console
         }
 
         /// <summary>
-        /// Writes the specified <paramref name="text"/> to the given console output handle.
+        ///  Writes the specified <paramref name="text"/> to the given console output handle.
         /// </summary>
-        public unsafe static uint WriteConsole(SafeFileHandle outputHandle, ReadOnlySpan<char> text)
+        public static unsafe uint WriteConsole(SafeFileHandle outputHandle, ReadOnlySpan<char> text)
         {
             fixed (char* c = &MemoryMarshal.GetReference(text))
             {

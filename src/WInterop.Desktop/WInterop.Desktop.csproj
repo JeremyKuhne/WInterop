@@ -1,13 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\WInterop.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
     <RootNamespace>WInterop</RootNamespace>
     <PackageVersion>0.3.1-alpha-090911715</PackageVersion>
     <PackageLicenseUrl>https://github.com/JeremyKuhne/WInterop/blob/master/LICENSE</PackageLicenseUrl>
@@ -22,17 +20,25 @@
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <ItemGroup>
+    <Compile Remove="Windows\BufferWrappers\**" />
+    <EmbeddedResource Remove="Windows\BufferWrappers\**" />
+    <None Remove="Windows\BufferWrappers\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Gdi\BitBLT History.txt">
       <Pack>false</Pack>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\BufferWrappers\" />
     <Folder Include="ProcessAndThreads\BufferWrappers\" />
     <Folder Include="Storage\BufferWrappers\" />
-    <Folder Include="Windows\BufferWrappers\" />
   </ItemGroup>
 </Project>

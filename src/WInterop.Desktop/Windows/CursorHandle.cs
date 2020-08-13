@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -16,7 +12,7 @@ namespace WInterop.Windows
         private readonly bool _ownsHandle;
 
         /// <summary>
-        /// Used to specifiy that you don't want a default cursor picked in WInterop method calls.
+        ///  Used to specifiy that you don't want a default cursor picked in WInterop method calls.
         /// </summary>
         public static CursorHandle NoCursor = new CursorHandle(new HCURSOR((IntPtr)(-1)));
 

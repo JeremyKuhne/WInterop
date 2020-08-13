@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.IO;
@@ -12,7 +8,7 @@ namespace Tests.Shared.Support.Resources
 {
     public static class TestFiles
     {
-        private static byte[] s_cursorData =
+        private static readonly byte[] s_cursorData =
         {
             0xb5, 0xcb, 0x31, 0x0e, 0x40, 0x40, 0x10, 0x46, 0xe1, 0xb7, 0x22, 0x11, 0x15, 0x95, 0x96, 0x52,
             0xe9, 0x08, 0x6e, 0xc6, 0xd1, 0xf6, 0x28, 0x8e, 0xa0, 0x24, 0x11, 0xbf, 0xd9, 0xd8, 0x84, 0x0a,

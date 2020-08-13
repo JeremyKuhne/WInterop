@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -16,9 +12,8 @@ using WInterop.Security.Native;
 namespace WInterop.Security
 {
     /// <summary>
-    /// Wrapper for ACLs ([SACL]/[DACL]). Discretionary ACLs (DACLs) are
-    /// rights to the given object. System ACLs (SACLs) are for logging
-    /// of object access.
+    ///  Wrapper for ACLs ([SACL]/[DACL]). Discretionary ACLs (DACLs) are rights to the given object. System ACLs
+    ///  (SACLs) are for logging of object access.
     /// </summary>
     public unsafe class SecurityDescriptor : LocalHandle
     {
@@ -126,7 +121,9 @@ namespace WInterop.Security
             object IEnumerator.Current => Current;
 
             public ExplicitAccess Current
-                => (_current >= 0 && _current < _count) ? new ExplicitAccess(_entries + _current) : throw new InvalidOperationException();
+                => (_current >= 0 && _current < _count)
+                    ? new ExplicitAccess(_entries + _current)
+                    : throw new InvalidOperationException();
 
             public bool MoveNext()
             {
@@ -135,6 +132,7 @@ namespace WInterop.Security
                     _current++;
                     return true;
                 }
+
                 return false;
             }
         }

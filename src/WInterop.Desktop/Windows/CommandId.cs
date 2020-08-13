@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Windows
@@ -13,62 +9,62 @@ namespace WInterop.Windows
         Error = 0,
 
         /// <summary>
-        /// [IDOK]
+        ///  [IDOK]
         /// </summary>
         Ok = 1,
 
         /// <summary>
-        /// [IDCANCEL]
+        ///  [IDCANCEL]
         /// </summary>
         Cancel = 2,
 
         /// <summary>
-        /// [IDABORT]
+        ///  [IDABORT]
         /// </summary>
         Abort = 3,
 
         /// <summary>
-        /// [IDRETRY]
+        ///  [IDRETRY]
         /// </summary>
         Retry = 4,
 
         /// <summary>
-        /// [IDIGNORE]
+        ///  [IDIGNORE]
         /// </summary>
         Ignore = 5,
 
         /// <summary>
-        /// [IDYES]
+        ///  [IDYES]
         /// </summary>
         Yes = 6,
 
         /// <summary>
-        /// [IDNO]
+        ///  [IDNO]
         /// </summary>
         No = 7,
 
         /// <summary>
-        /// [IDCLOSE]
+        ///  [IDCLOSE]
         /// </summary>
         Close = 8,
 
         /// <summary>
-        /// [IDHELP]
+        ///  [IDHELP]
         /// </summary>
         Help = 9,
 
         /// <summary>
-        /// [IDTRYAGAIN]
+        ///  [IDTRYAGAIN]
         /// </summary>
         TryAgain = 10,
 
         /// <summary>
-        /// [IDCONTINUE]
+        ///  [IDCONTINUE]
         /// </summary>
         Continue = 11,
 
         /// <summary>
-        /// [IDTIMEOUT]
+        ///  [IDTIMEOUT]
         /// </summary>
         Timeout = 32000
     }

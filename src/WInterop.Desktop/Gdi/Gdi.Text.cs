@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -26,7 +22,6 @@ namespace WInterop.Gdi
         public static Color SetTextColor(this in DeviceContext context, SystemColor color)
             => Imports.SetTextColor(context, Windows.Windows.GetSystemColor(color));
 
-
         public static TextAlignment SetTextAlignment(this in DeviceContext context, TextAlignment alignment) => Imports.SetTextAlign(context, alignment);
 
         public static bool TextOut(this in DeviceContext context, Point position, ReadOnlySpan<char> text)
@@ -34,7 +29,7 @@ namespace WInterop.Gdi
 
         public static unsafe int DrawText(this in DeviceContext context, ReadOnlySpan<char> text, Rectangle bounds, TextFormat format)
         {
-            RECT rect = bounds;
+            Rect rect = bounds;
 
             if ((format & TextFormat.ModifyString) == 0)
             {
@@ -55,10 +50,11 @@ namespace WInterop.Gdi
             }
         }
 
-        public static bool GetTextMetrics(this in DeviceContext context, out TextMetrics metrics) => Imports.GetTextMetricsW(context, out metrics);
+        public static bool GetTextMetrics(this in DeviceContext context, out TextMetrics metrics)
+            => Imports.GetTextMetricsW(context, out metrics);
 
         /// <summary>
-        /// Creates a logical font with the specified characteristics that can be selected into a <see cref="DeviceContext"/>.
+        ///  Creates a logical font with the specified characteristics that can be selected into a <see cref="DeviceContext"/>.
         /// </summary>
         /// <param name="height">"em" height of the font in logical pixels.</param>
         /// <param name="width">Average character width in logical pixels.</param>
@@ -82,9 +78,20 @@ namespace WInterop.Gdi
              string? typeface = null)
         {
             return new FontHandle(Imports.CreateFontW(
-                height, width, escapement, orientation,
-                weight, italic, underline, strikeout,
-                (uint)characterSet, (uint)outputPrecision, (uint)clippingPrecision, (uint)quality, (uint)((byte)pitch | (byte)family), typeface));
+                height,
+                width,
+                escapement,
+                orientation,
+                weight,
+                italic,
+                underline,
+                strikeout,
+                (uint)characterSet,
+                (uint)outputPrecision,
+                (uint)clippingPrecision,
+                (uint)quality,
+                (uint)((byte)pitch | (byte)family),
+                typeface));
         }
 
         private static int EnumerateFontCallback(
@@ -107,7 +114,7 @@ namespace WInterop.Gdi
                 CharacterSet = characterSet,
             };
 
-            logFont.lfFaceName.CopyFrom(faceName);
+            logFont.FaceName.CopyFrom(faceName);
 
             List<FontInformation> info = new List<FontInformation>();
             GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);

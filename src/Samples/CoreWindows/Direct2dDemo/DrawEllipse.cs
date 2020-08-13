@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -17,7 +13,7 @@ namespace Direct2dDemo
     {
         private ISolidColorBrush _blackBrush;
         private ISolidColorBrush _silverBrush;
-        private IStrokeStyle _dashDotDotStyle;
+        private readonly IStrokeStyle _dashDotDotStyle;
 
         public DrawEllipse() : base()
         {

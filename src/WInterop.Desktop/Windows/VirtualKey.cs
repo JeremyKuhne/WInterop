@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Windows
@@ -11,217 +7,217 @@ namespace WInterop.Windows
     public enum VirtualKey : ushort
     {
         /// <summary>
-        /// (VK_LBUTTON)
+        ///  (VK_LBUTTON)
         /// </summary>
         LeftButton = 0x01,
 
         /// <summary>
-        /// (VK_RBUTTON)
+        ///  (VK_RBUTTON)
         /// </summary>
         RightButton = 0x02,
 
         /// <summary>
-        /// (VK_CANCEL)
+        ///  (VK_CANCEL)
         /// </summary>
         Cancel = 0x03,
 
         /// <summary>
-        /// (VK_MBUTTON)
+        ///  (VK_MBUTTON)
         /// </summary>
         MiddleButton = 0x04,
 
         /// <summary>
-        /// (VK_XBUTTON1)
+        ///  (VK_XBUTTON1)
         /// </summary>
         ExtraButton1 = 0x05,
 
         /// <summary>
-        /// (VK_XBUTTON2)
+        ///  (VK_XBUTTON2)
         /// </summary>
         ExtraButton2 = 0x06,
 
         /// <summary>
-        /// Xbox button. (VK_NEXUS)
+        ///  Xbox button. (VK_NEXUS)
         /// </summary>
         Nexus = 0x07,
 
         /// <summary>
-        /// (VK_BACK)
+        ///  (VK_BACK)
         /// </summary>
         Back = 0x08,
 
         /// <summary>
-        /// (VK_TAB)
+        ///  (VK_TAB)
         /// </summary>
         Tab = 0x09,
 
         /// <summary>
-        /// (VK_CLEAR)
+        ///  (VK_CLEAR)
         /// </summary>
         Clear = 0x0C,
 
         /// <summary>
-        /// (VK_RETURN)
+        ///  (VK_RETURN)
         /// </summary>
         Return = 0x0D,
 
         /// <summary>
-        /// (VK_SHIFT)
+        ///  (VK_SHIFT)
         /// </summary>
         Shift = 0x10,
 
         /// <summary>
-        /// (VK_CONTROL)
+        ///  (VK_CONTROL)
         /// </summary>
         Control = 0x11,
 
         /// <summary>
-        /// (VK_MENU)
+        ///  (VK_MENU)
         /// </summary>
         Menu = 0x12,
 
         /// <summary>
-        /// (VK_PAUSE)
+        ///  (VK_PAUSE)
         /// </summary>
         Pause = 0x13,
 
         /// <summary>
-        /// (VK_CAPITAL)
+        ///  (VK_CAPITAL)
         /// </summary>
         Capital = 0x14,
 
         /// <summary>
-        /// (VK_KANA)
+        ///  (VK_KANA)
         /// </summary>
         Kana = 0x15,
 
         /// <summary>
-        /// (VK_HANGUL)
+        ///  (VK_HANGUL)
         /// </summary>
         Hangul = 0x15,
 
         /// <summary>
-        /// (VK_JUNJA)
+        ///  (VK_JUNJA)
         /// </summary>
         Junja = 0x17,
 
         /// <summary>
-        /// (VK_FINAL)
+        ///  (VK_FINAL)
         /// </summary>
         Final = 0x18,
 
         /// <summary>
-        /// (VK_HANJA)
+        ///  (VK_HANJA)
         /// </summary>
         Hanja = 0x19,
 
         /// <summary>
-        /// (VK_KANJI)
+        ///  (VK_KANJI)
         /// </summary>
         Kanji = 0x19,
 
         /// <summary>
-        /// (VK_ESCAPE)
+        ///  (VK_ESCAPE)
         /// </summary>
         Escape = 0x1B,
 
         /// <summary>
-        /// (VK_CONVERT)
+        ///  (VK_CONVERT)
         /// </summary>
         Convert = 0x1C,
 
         /// <summary>
-        /// (VK_NONCONVERT)
+        ///  (VK_NONCONVERT)
         /// </summary>
         NonConvert = 0x1D,
 
         /// <summary>
-        /// (VK_ACCEPT)
+        ///  (VK_ACCEPT)
         /// </summary>
         Accept = 0x1E,
 
         /// <summary>
-        /// (VK_MODECHANGE)
+        ///  (VK_MODECHANGE)
         /// </summary>
         ModeChange = 0x1F,
 
         /// <summary>
-        /// (VK_SPACE)
+        ///  (VK_SPACE)
         /// </summary>
         Space = 0x20,
 
         /// <summary>
-        /// Page up. (VK_PRIOR)
+        ///  Page up. (VK_PRIOR)
         /// </summary>
         Prior = 0x21,
 
         /// <summary>
-        /// Page down. (VK_NEXT)
+        ///  Page down. (VK_NEXT)
         /// </summary>
         Next = 0x22,
 
         /// <summary>
-        /// (VK_END)
+        ///  (VK_END)
         /// </summary>
         End = 0x23,
 
         /// <summary>
-        /// (VK_HOME)
+        ///  (VK_HOME)
         /// </summary>
         Home = 0x24,
 
         /// <summary>
-        /// (VK_LEFT)
+        ///  (VK_LEFT)
         /// </summary>
         Left = 0x25,
 
         /// <summary>
-        /// (VK_UP)
+        ///  (VK_UP)
         /// </summary>
         Up = 0x26,
 
         /// <summary>
-        /// (VK_RIGHT)
+        ///  (VK_RIGHT)
         /// </summary>
         Right = 0x27,
 
         /// <summary>
-        /// (VK_DOWN)
+        ///  (VK_DOWN)
         /// </summary>
         Down = 0x28,
 
         /// <summary>
-        /// (VK_SELECT)
+        ///  (VK_SELECT)
         /// </summary>
         Select = 0x29,
 
         /// <summary>
-        /// (VK_PRINT)
+        ///  (VK_PRINT)
         /// </summary>
         Print = 0x2A,
 
         /// <summary>
-        /// (VK_EXECUTE)
+        ///  (VK_EXECUTE)
         /// </summary>
         Execute = 0x2B,
 
         /// <summary>
-        /// Print screen. (VK_SNAPSHOT)
+        ///  Print screen. (VK_SNAPSHOT)
         /// </summary>
         Snapshot = 0x2C,
 
         /// <summary>
-        /// (VK_INSERT)
+        ///  (VK_INSERT)
         /// </summary>
         Insert = 0x2D,
 
         /// <summary>
-        /// (VK_DELETE)
+        ///  (VK_DELETE)
         /// </summary>
         Delete = 0x2E,
 
         /// <summary>
-        /// (VK_HELP)
+        ///  (VK_HELP)
         /// </summary>
         Help = 0x2F,
 
@@ -264,749 +260,749 @@ namespace WInterop.Windows
         Z = 0x5A,
 
         /// <summary>
-        /// (VK_LWIN)
+        ///  (VK_LWIN)
         /// </summary>
         LeftWindows = 0x5B,
 
         /// <summary>
-        /// (VK_RWIN)
+        ///  (VK_RWIN)
         /// </summary>
         RightWindows = 0x5C,
 
         /// <summary>
-        /// (VK_APPS)
+        ///  (VK_APPS)
         /// </summary>
         Apps = 0x5D,
 
         /// <summary>
-        /// (VK_SLEEP)
+        ///  (VK_SLEEP)
         /// </summary>
         Sleep = 0x5F,
 
         /// <summary>
-        /// (VK_NUMPAD0)
+        ///  (VK_NUMPAD0)
         /// </summary>
         NumPad0 = 0x60,
 
         /// <summary>
-        /// (VK_NUMPAD1)
+        ///  (VK_NUMPAD1)
         /// </summary>
         NumPad1 = 0x61,
 
         /// <summary>
-        /// (VK_NUMPAD2)
+        ///  (VK_NUMPAD2)
         /// </summary>
         NumPad2 = 0x62,
 
         /// <summary>
-        /// (VK_NUMPAD3)
+        ///  (VK_NUMPAD3)
         /// </summary>
         NumPad3 = 0x63,
 
         /// <summary>
-        /// (VK_NUMPAD4)
+        ///  (VK_NUMPAD4)
         /// </summary>
         NumPad4 = 0x64,
 
         /// <summary>
-        /// (VK_NUMPAD5)
+        ///  (VK_NUMPAD5)
         /// </summary>
         NumPad5 = 0x65,
 
         /// <summary>
-        /// (VK_NUMPAD6)
+        ///  (VK_NUMPAD6)
         /// </summary>
         NumPad6 = 0x66,
 
         /// <summary>
-        /// (VK_NUMPAD7)
+        ///  (VK_NUMPAD7)
         /// </summary>
         NumPad7 = 0x67,
 
         /// <summary>
-        /// (VK_NUMPAD8)
+        ///  (VK_NUMPAD8)
         /// </summary>
         NumPad8 = 0x68,
 
         /// <summary>
-        /// (VK_NUMPAD9)
+        ///  (VK_NUMPAD9)
         /// </summary>
         NumPad9 = 0x69,
 
         /// <summary>
-        /// (VK_MULTIPLY)
+        ///  (VK_MULTIPLY)
         /// </summary>
         Multiply = 0x6A,
 
         /// <summary>
-        /// (VK_ADD)
+        ///  (VK_ADD)
         /// </summary>
         Add = 0x6B,
 
         /// <summary>
-        /// (VK_SEPARATOR)
+        ///  (VK_SEPARATOR)
         /// </summary>
         Separator = 0x6C,
 
         /// <summary>
-        /// (VK_SUBTRACT)
+        ///  (VK_SUBTRACT)
         /// </summary>
         Subtract = 0x6D,
 
         /// <summary>
-        /// (VK_DECIMAL)
+        ///  (VK_DECIMAL)
         /// </summary>
         Decimal = 0x6E,
 
         /// <summary>
-        /// (VK_DIVIDE)
+        ///  (VK_DIVIDE)
         /// </summary>
         Divide = 0x6F,
 
         /// <summary>
-        /// (VK_F1)
+        ///  (VK_F1)
         /// </summary>
         F1 = 0x70,
 
         /// <summary>
-        /// (VK_F2)
+        ///  (VK_F2)
         /// </summary>
         F2 = 0x71,
 
         /// <summary>
-        /// (VK_F3)
+        ///  (VK_F3)
         /// </summary>
         F3 = 0x72,
 
         /// <summary>
-        /// (VK_F4)
+        ///  (VK_F4)
         /// </summary>
         F4 = 0x73,
 
         /// <summary>
-        /// (VK_F5)
+        ///  (VK_F5)
         /// </summary>
         F5 = 0x74,
 
         /// <summary>
-        /// (VK_F6)
+        ///  (VK_F6)
         /// </summary>
         F6 = 0x75,
 
         /// <summary>
-        /// (VK_F7)
+        ///  (VK_F7)
         /// </summary>
         F7 = 0x76,
 
         /// <summary>
-        /// (VK_F8)
+        ///  (VK_F8)
         /// </summary>
         F8 = 0x77,
 
         /// <summary>
-        /// (VK_F9)
+        ///  (VK_F9)
         /// </summary>
         F9 = 0x78,
 
         /// <summary>
-        /// (VK_F10)
+        ///  (VK_F10)
         /// </summary>
         F10 = 0x79,
 
         /// <summary>
-        /// (VK_F11)
+        ///  (VK_F11)
         /// </summary>
         F11 = 0x7A,
 
         /// <summary>
-        /// (VK_F12)
+        ///  (VK_F12)
         /// </summary>
         F12 = 0x7B,
 
         /// <summary>
-        /// (VK_F13)
+        ///  (VK_F13)
         /// </summary>
         F13 = 0x7C,
 
         /// <summary>
-        /// (VK_F14)
+        ///  (VK_F14)
         /// </summary>
         F14 = 0x7D,
 
         /// <summary>
-        /// (VK_F15)
+        ///  (VK_F15)
         /// </summary>
         F15 = 0x7E,
 
         /// <summary>
-        /// (VK_F16)
+        ///  (VK_F16)
         /// </summary>
         F16 = 0x7F,
 
         /// <summary>
-        /// (VK_F17)
+        ///  (VK_F17)
         /// </summary>
         F17 = 0x80,
 
         /// <summary>
-        /// (VK_F18)
+        ///  (VK_F18)
         /// </summary>
         F18 = 0x81,
 
         /// <summary>
-        /// (VK_F19)
+        ///  (VK_F19)
         /// </summary>
         F19 = 0x82,
 
         /// <summary>
-        /// (VK_F20)
+        ///  (VK_F20)
         /// </summary>
         F20 = 0x83,
 
         /// <summary>
-        /// (VK_F21)
+        ///  (VK_F21)
         /// </summary>
         F21 = 0x84,
 
         /// <summary>
-        /// (VK_F22)
+        ///  (VK_F22)
         /// </summary>
         F22 = 0x85,
 
         /// <summary>
-        /// (VK_F23)
+        ///  (VK_F23)
         /// </summary>
         F23 = 0x86,
 
         /// <summary>
-        /// (VK_F24)
+        ///  (VK_F24)
         /// </summary>
         F24 = 0x87,
 
         /// <summary>
-        /// Reserved. (VK_NAVIGATION_VIEW)
+        ///  Reserved. (VK_NAVIGATION_VIEW)
         /// </summary>
         NavigationView = 0x88,
 
         /// <summary>
-        /// Reserved. (VK_NAVIGATION_MENU)
+        ///  Reserved. (VK_NAVIGATION_MENU)
         /// </summary>
         NavigationMenu = 0x89,
 
         /// <summary>
-        /// Reserved. (VK_NAVIGATION_UP)
+        ///  Reserved. (VK_NAVIGATION_UP)
         /// </summary>
         NavigationUp = 0x8A,
 
         /// <summary>
-        /// Reserved. (VK_NAVIGATION_DOWN)
+        ///  Reserved. (VK_NAVIGATION_DOWN)
         /// </summary>
         NavigationDown = 0x8B,
 
         /// <summary>
-        /// Reserved. (VK_NAVIGATION_LEFT)
+        ///  Reserved. (VK_NAVIGATION_LEFT)
         /// </summary>
         NavigationLeft = 0x8C,
 
         /// <summary>
-        /// Reserved. (VK_NAVIGATION_RIGHT)
+        ///  Reserved. (VK_NAVIGATION_RIGHT)
         /// </summary>
         NavigationRight = 0x8D,
 
         /// <summary>
-        /// Reserved. (VK_NAVIGATION_ACCEPT)
+        ///  Reserved. (VK_NAVIGATION_ACCEPT)
         /// </summary>
         NavigationAccept = 0x8E,
 
         /// <summary>
-        /// Reserved. (VK_NAVIGATION_CANCEL)
+        ///  Reserved. (VK_NAVIGATION_CANCEL)
         /// </summary>
         NavigationCancel = 0x8F,
 
         /// <summary>
-        /// (VK_NUMLOCK)
+        ///  (VK_NUMLOCK)
         /// </summary>
         NumLock = 0x90,
 
         /// <summary>
-        /// (VK_SCROLL)
+        ///  (VK_SCROLL)
         /// </summary>
         Scroll = 0x91,
 
         /// <summary>
-        /// '=' key on numpad, (VK_OEM_NEC_EQUAL)
+        ///  '=' key on numpad, (VK_OEM_NEC_EQUAL)
         /// </summary>
         OemNecEqual = 0x92,
 
         /// <summary>
-        /// 'Dictionary' key. (VK_OEM_FJ_JISHO)
+        ///  'Dictionary' key. (VK_OEM_FJ_JISHO)
         /// </summary>
         OemFujitsuJisho = 0x92,
 
         /// <summary>
-        /// 'Unregister word' key. (VK_OEM_FJ_MASSHOU)
+        ///  'Unregister word' key. (VK_OEM_FJ_MASSHOU)
         /// </summary>
         OemFujitsuMasshou = 0x93,
 
         /// <summary>
-        /// 'Register word' key. (VK_OEM_FJ_TOUROKU)
+        ///  'Register word' key. (VK_OEM_FJ_TOUROKU)
         /// </summary>
         OemFujitsuTouroku = 0x94,
 
         /// <summary>
-        /// 'Left OYAYUBI' key. (VK_OEM_FJ_LOYA)
+        ///  'Left OYAYUBI' key. (VK_OEM_FJ_LOYA)
         /// </summary>
         OemFujitsuLoya = 0x95,
 
         /// <summary>
-        /// 'Right OYAYUBI' key. (VK_OEM_FJ_ROYA)
+        ///  'Right OYAYUBI' key. (VK_OEM_FJ_ROYA)
         /// </summary>
         OemFujitsuRoya = 0x96,
 
         /// <summary>
-        /// Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_LSHIFT)
+        ///  Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_LSHIFT)
         /// </summary>
         LeftShift = 0xA0,
 
         /// <summary>
-        /// Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_RSHIFT)
+        ///  Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_RSHIFT)
         /// </summary>
         RightShift = 0xA1,
 
         /// <summary>
-        /// Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_LCONTROL)
+        ///  Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_LCONTROL)
         /// </summary>
         LeftControl = 0xA2,
 
         /// <summary>
-        /// Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_RCONTROL)
+        ///  Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_RCONTROL)
         /// </summary>
         RightControl = 0xA3,
 
         /// <summary>
-        /// Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_LMENU)
+        ///  Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_LMENU)
         /// </summary>
         LeftMenu = 0xA4,
 
         /// <summary>
-        /// Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_RMENU)
+        ///  Used only as parameter to GetAsyncKeyState() and GetKeyState(). (VK_RMENU)
         /// </summary>
         RightMenu = 0xA5,
 
         /// <summary>
-        /// (VK_BROWSER_BACK)
+        ///  (VK_BROWSER_BACK)
         /// </summary>
         BrowserBack = 0xA6,
 
         /// <summary>
-        /// (VK_BROWSER_FORWARD)
+        ///  (VK_BROWSER_FORWARD)
         /// </summary>
         BrowserForward = 0xA7,
 
         /// <summary>
-        /// (VK_BROWSER_REFRESH)
+        ///  (VK_BROWSER_REFRESH)
         /// </summary>
         BrowserRefresh = 0xA8,
 
         /// <summary>
-        /// (VK_BROWSER_STOP)
+        ///  (VK_BROWSER_STOP)
         /// </summary>
         BrowserStop = 0xA9,
 
         /// <summary>
-        /// (VK_BROWSER_SEARCH)
+        ///  (VK_BROWSER_SEARCH)
         /// </summary>
         BrowserSearch = 0xAA,
 
         /// <summary>
-        /// (VK_BROWSER_FAVORITES)
+        ///  (VK_BROWSER_FAVORITES)
         /// </summary>
         BrowserFavorites = 0xAB,
 
         /// <summary>
-        /// (VK_BROWSER_HOME)
+        ///  (VK_BROWSER_HOME)
         /// </summary>
         BrowserHome = 0xAC,
 
         /// <summary>
-        /// (VK_VOLUME_MUTE)
+        ///  (VK_VOLUME_MUTE)
         /// </summary>
         VolumeMute = 0xAD,
 
         /// <summary>
-        /// (VK_VOLUME_DOWN)
+        ///  (VK_VOLUME_DOWN)
         /// </summary>
         VolumeDown = 0xAE,
 
         /// <summary>
-        /// (VK_VOLUME_UP)
+        ///  (VK_VOLUME_UP)
         /// </summary>
         VolumeUp = 0xAF,
 
         /// <summary>
-        /// (VK_MEDIA_NEXT_TRACK)
+        ///  (VK_MEDIA_NEXT_TRACK)
         /// </summary>
         MediaNextTrack = 0xB0,
 
         /// <summary>
-        /// (VK_MEDIA_PREV_TRACK)
+        ///  (VK_MEDIA_PREV_TRACK)
         /// </summary>
         MediaPrevTrack = 0xB1,
 
         /// <summary>
-        /// (VK_MEDIA_STOP)
+        ///  (VK_MEDIA_STOP)
         /// </summary>
         MediaStop = 0xB2,
 
         /// <summary>
-        /// (VK_MEDIA_PLAY_PAUSE)
+        ///  (VK_MEDIA_PLAY_PAUSE)
         /// </summary>
         MediaPlayPause = 0xB3,
 
         /// <summary>
-        /// (VK_LAUNCH_MAIL)
+        ///  (VK_LAUNCH_MAIL)
         /// </summary>
         LaunchMail = 0xB4,
 
         /// <summary>
-        /// (VK_LAUNCH_MEDIA_SELECT)
+        ///  (VK_LAUNCH_MEDIA_SELECT)
         /// </summary>
         LaunchMediaSelect = 0xB5,
 
         /// <summary>
-        /// (VK_LAUNCH_APP1)
+        ///  (VK_LAUNCH_APP1)
         /// </summary>
         LaunchApp1 = 0xB6,
 
         /// <summary>
-        /// (VK_LAUNCH_APP2)
+        ///  (VK_LAUNCH_APP2)
         /// </summary>
         LaunchApp2 = 0xB7,
 
         /// <summary>
-        /// ';:' for US. (VK_OEM_1)
+        ///  ';:' for US. (VK_OEM_1)
         /// </summary>
         Oem1 = 0xBA,
 
         /// <summary>
-        /// '+' any country. (VK_OEM_PLUS)
+        ///  '+' any country. (VK_OEM_PLUS)
         /// </summary>
         OemPlus = 0xBB,
 
         /// <summary>
-        /// ',' any country. (VK_OEM_COMMA)
+        ///  ',' any country. (VK_OEM_COMMA)
         /// </summary>
         OemComma = 0xBC,
 
         /// <summary>
-        /// '-' any country. (VK_OEM_MINUS)
+        ///  '-' any country. (VK_OEM_MINUS)
         /// </summary>
         OemMinus = 0xBD,
 
         /// <summary>
-        /// '.' any country. (VK_OEM_PERIOD)
+        ///  '.' any country. (VK_OEM_PERIOD)
         /// </summary>
         OemPeriod = 0xBE,
 
         /// <summary>
-        /// '/?' for US. (VK_OEM_2)
+        ///  '/?' for US. (VK_OEM_2)
         /// </summary>
         Oem2 = 0xBF,
 
         /// <summary>
-        /// '`~' for US. (VK_OEM_3)
+        ///  '`~' for US. (VK_OEM_3)
         /// </summary>
         Oem3 = 0xC0,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_A)
+        ///  Reserved. (VK_GAMEPAD_A)
         /// </summary>
         GamepadA = 0xC3,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_B)
+        ///  Reserved. (VK_GAMEPAD_B)
         /// </summary>
         GamepadB = 0xC4,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_X)
+        ///  Reserved. (VK_GAMEPAD_X)
         /// </summary>
         GamepadX = 0xC5,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_Y)
+        ///  Reserved. (VK_GAMEPAD_Y)
         /// </summary>
         GamepadY = 0xC6,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_RIGHT_SHOULDER)
+        ///  Reserved. (VK_GAMEPAD_RIGHT_SHOULDER)
         /// </summary>
         GamepadRightShoulder = 0xC7,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_LEFT_SHOULDER)
+        ///  Reserved. (VK_GAMEPAD_LEFT_SHOULDER)
         /// </summary>
         GamepadLeftShoulder = 0xC8,
 
         /// <summary>
-        /// Reserved. VK_GAMEPAD_LEFT_TRIGGER()
+        ///  Reserved. VK_GAMEPAD_LEFT_TRIGGER()
         /// </summary>
         GamepadLeftTrigger = 0xC9,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_RIGHT_TRIGGER)
+        ///  Reserved. (VK_GAMEPAD_RIGHT_TRIGGER)
         /// </summary>
         GamepadRightTrigger = 0xCA,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_DPAD_UP)
+        ///  Reserved. (VK_GAMEPAD_DPAD_UP)
         /// </summary>
         GamepadDPadUp = 0xCB,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_DPAD_DOWN)
+        ///  Reserved. (VK_GAMEPAD_DPAD_DOWN)
         /// </summary>
         GamepadDPadDown = 0xCC,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_DPAD_LEFT)
+        ///  Reserved. (VK_GAMEPAD_DPAD_LEFT)
         /// </summary>
         GamepadDPadLeft = 0xCD,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_DPAD_RIGHT)
+        ///  Reserved. (VK_GAMEPAD_DPAD_RIGHT)
         /// </summary>
         GamepadDPadRight = 0xCE,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_MENU)
+        ///  Reserved. (VK_GAMEPAD_MENU)
         /// </summary>
         GamepadMenu = 0xCF,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_VIEW)
+        ///  Reserved. (VK_GAMEPAD_VIEW)
         /// </summary>
         GamepadView = 0xD0,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON)
+        ///  Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON)
         /// </summary>
         GamepadLeftThumbstickButton = 0xD1,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON)
+        ///  Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON)
         /// </summary>
         GamepadRightThumbstickButton = 0xD2,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_UP)
+        ///  Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_UP)
         /// </summary>
         GamepadLeftThumbstickUp = 0xD3,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_DOWN)
+        ///  Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_DOWN)
         /// </summary>
         GamepadLeftThumbstickDown = 0xD4,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_RIGHT)
+        ///  Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_RIGHT)
         /// </summary>
         GamepadLeftThumbstickRight = 0xD5,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_LEFT)
+        ///  Reserved. (VK_GAMEPAD_LEFT_THUMBSTICK_LEFT)
         /// </summary>
         GamepadLeftThumbstickLeft = 0xD6,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_UP)
+        ///  Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_UP)
         /// </summary>
         GamepadRightThumbstickUp = 0xD7,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN)
+        ///  Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN)
         /// </summary>
         GamepadRightThumbstickDown = 0xD8,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT)
+        ///  Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT)
         /// </summary>
         GamepadRightThumbstickRight = 0xD9,
 
         /// <summary>
-        /// Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT)
+        ///  Reserved. (VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT)
         /// </summary>
         GamepadRightThumbstickLeft = 0xDA,
 
         /// <summary>
-        /// '[{' for US. (VK_OEM_4)
+        ///  '[{' for US. (VK_OEM_4)
         /// </summary>
         Oem4 = 0xDB,
 
         /// <summary>
-        /// '\|' for US. (VK_OEM_5)
+        ///  '\|' for US. (VK_OEM_5)
         /// </summary>
         Oem5 = 0xDC,
 
         /// <summary>
-        /// ']}' for US. (VK_OEM_6)
+        ///  ']}' for US. (VK_OEM_6)
         /// </summary>
         Oem6 = 0xDD,
 
         /// <summary>
-        /// ''"' for US. (VK_OEM_7)
+        ///  ''"' for US. (VK_OEM_7)
         /// </summary>
         Oem7 = 0xDE,
 
         /// <summary>
-        /// (VK_OEM_8)
+        ///  (VK_OEM_8)
         /// </summary>
         Oem8 = 0xDF,
 
         /// <summary>
-        /// 'AX' key on Japanese AX keyboard. (VK_OEM_AX)
+        ///  'AX' key on Japanese AX keyboard. (VK_OEM_AX)
         /// </summary>
         OemAX = 0xE1,
 
         /// <summary>
-        /// "<>" or "\|" on RT 102-key keyboard. (VK_OEM_102)
+        ///  "&lt;&gt;" or "\|" on RT 102-key keyboard. (VK_OEM_102)
         /// </summary>
         Oem102 = 0xE2,
 
         /// <summary>
-        /// Help key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_HELP)
+        ///  Help key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_HELP)
         /// </summary>
         IcoHelp = 0xE3,
 
         /// <summary>
-        /// 00 key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_00)
+        ///  00 key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_00)
         /// </summary>
         Ico00 = 0xE4,
 
         /// <summary>
-        /// (VK_PROCESSKEY)
+        ///  (VK_PROCESSKEY)
         /// </summary>
         ProcessKey = 0xE5,
 
         /// <summary>
-        /// Clear key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_CLEAR)
+        ///  Clear key on Olivetti M24 "ICO" (102-key) keyboard. (VK_ICO_CLEAR)
         /// </summary>
         IcoClear = 0xE6,
 
         /// <summary>
-        /// Used to pass Unicode characters as if they were keystrokes. (VK_PACKET)
+        ///  Used to pass Unicode characters as if they were keystrokes. (VK_PACKET)
         /// </summary>
         Packet = 0xE7,
 
         // 0xE9 - 0xF5 are for Ericsson keyboards
 
         /// <summary>
-        /// Ericsson. (VK_OEM_RESET)
+        ///  Ericsson. (VK_OEM_RESET)
         /// </summary>
         OemReset = 0xE9,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_JUMP)
+        ///  Ericsson. (VK_OEM_JUMP)
         /// </summary>
         OemJump = 0xEA,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_PA1)
+        ///  Ericsson. (VK_OEM_PA1)
         /// </summary>
         OemPA1 = 0xEB,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_PA2)
+        ///  Ericsson. (VK_OEM_PA2)
         /// </summary>
         OemPA2 = 0xEC,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_PA3)
+        ///  Ericsson. (VK_OEM_PA3)
         /// </summary>
         OemPA3 = 0xED,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_WSCTRL)
+        ///  Ericsson. (VK_OEM_WSCTRL)
         /// </summary>
         OemWSCtrl = 0xEE,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_CUSEL)
+        ///  Ericsson. (VK_OEM_CUSEL)
         /// </summary>
         OemCuSel = 0xEF,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_ATTN)
+        ///  Ericsson. (VK_OEM_ATTN)
         /// </summary>
         OemAttn = 0xF0,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_FINISH)
+        ///  Ericsson. (VK_OEM_FINISH)
         /// </summary>
         OemFinish = 0xF1,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_COPY)
+        ///  Ericsson. (VK_OEM_COPY)
         /// </summary>
         OemCopy = 0xF2,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_AUTO)
+        ///  Ericsson. (VK_OEM_AUTO)
         /// </summary>
         OemAuto = 0xF3,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_ENLW)
+        ///  Ericsson. (VK_OEM_ENLW)
         /// </summary>
         OemEnlw = 0xF4,
 
         /// <summary>
-        /// Ericsson. (VK_OEM_BACKTAB)
+        ///  Ericsson. (VK_OEM_BACKTAB)
         /// </summary>
         OemBackTab = 0xF5,
 
         /// <summary>
-        /// (VK_ATTN)
+        ///  (VK_ATTN)
         /// </summary>
         Attn = 0xF6,
 
         /// <summary>
-        /// (VK_CRSEL)
+        ///  (VK_CRSEL)
         /// </summary>
         CrSel = 0xF7,
 
         /// <summary>
-        /// (VK_EXSEL)
+        ///  (VK_EXSEL)
         /// </summary>
         ExSel = 0xF8,
 
         /// <summary>
-        /// (VK_EREOF)
+        ///  (VK_EREOF)
         /// </summary>
         EraseEOF = 0xF9,
 
         /// <summary>
-        /// (VK_PLAY)
+        ///  (VK_PLAY)
         /// </summary>
         Play = 0xFA,
 
         /// <summary>
-        /// (VK_ZOOM)
+        ///  (VK_ZOOM)
         /// </summary>
         Zoom = 0xFB,
 
         /// <summary>
-        /// Reserved. (VK_NONAME)
+        ///  Reserved. (VK_NONAME)
         /// </summary>
         NoName = 0xFC,
 
         /// <summary>
-        /// (VK_PA1)
+        ///  (VK_PA1)
         /// </summary>
         PA1 = 0xFD,
 
         /// <summary>
-        /// Clear key. (VK_OEM_CLEAR)
+        ///  Clear key. (VK_OEM_CLEAR)
         /// </summary>
         OemClear = 0xFE
     }

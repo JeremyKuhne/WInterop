@@ -1,13 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
+using WInterop.Com.Native;
+using WInterop.Storage;
 
 namespace WInterop.Com
 {
@@ -72,9 +69,9 @@ namespace WInterop.Com
 
         void SetElementTimes(
             string pwcsName,
-            in FILETIME pctime,
-            in FILETIME patime,
-            in FILETIME pmtime);
+            in FileTime pctime,
+            in FileTime patime,
+            in FileTime pmtime);
 
         void SetClass(
             ref Guid clsid);

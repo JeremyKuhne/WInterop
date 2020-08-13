@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace WInterop.Memory.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -23,7 +19,7 @@ namespace WInterop.Memory.Native
         // unsigned __int3264 which is platform specific (uint on 32bit and ulong on 64bit).
         // UIntPtr can encapsulate this as it wraps void* and has unsigned constructors.
         // (IntPtr also wraps void*, but uses signed constructors.)
-        // 
+        //
         // SIZE_T:
         // https://msdn.microsoft.com/en-us/library/cc441980.aspx
 
@@ -89,7 +85,7 @@ namespace WInterop.Memory.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globalunlock
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public static extern Boolean32 GlobalUnlock(
+        public static extern IntBoolean GlobalUnlock(
             HGLOBAL hMem);
     }
 }

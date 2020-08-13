@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -10,7 +6,7 @@ using System.Drawing;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// [D3DCOLORVALUE], [DXGI_RGBA], [D2D1_COLOR_F], [D2D_COLOR_F], etc.
+    ///  [D3DCOLORVALUE], [DXGI_RGBA], [D2D1_COLOR_F], [D2D_COLOR_F], etc.
     /// </summary>
     public readonly struct ColorF
     {

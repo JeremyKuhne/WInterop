@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ namespace WInterop.Support
     public static class Structs
     {
         /// <summary>
-        /// Returns the address of the given target struct.
+        ///  Returns the address of the given target struct.
         /// </summary>
         public static unsafe T* AddressOf<T>(ref T target) where T : unmanaged
         {
@@ -23,7 +19,7 @@ namespace WInterop.Support
         }
 
         /// <summary>
-        /// Get the size (in bytes) of the given struct type.
+        ///  Get the size (in bytes) of the given struct type.
         /// </summary>
         public static unsafe uint SizeInBytes<T>() where T : unmanaged
         {
@@ -31,7 +27,7 @@ namespace WInterop.Support
         }
 
         /// <summary>
-        /// Get the size (in bytes) of the given struct.
+        ///  Get the size (in bytes) of the given struct.
         /// </summary>
         public static unsafe uint SizeInBytes<T>(ref T target) where T : unmanaged
         {

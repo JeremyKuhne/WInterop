@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,14 +10,14 @@ using WInterop.Windows;
 namespace LineDemo
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 5-14, Pages 153-155.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 5-14, Pages 153-155.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
             WindowClassInfo wndclass = new WindowClassInfo
@@ -53,28 +49,28 @@ namespace LineDemo
             }
         }
 
-        static int cxClient, cyClient;
+        private static int s_cxClient, s_cyClient;
 
-        static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        private static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
                 case MessageType.Size:
-                    cxClient = lParam.LowWord;
-                    cyClient = lParam.HighWord;
+                    s_cxClient = lParam.LowWord;
+                    s_cyClient = lParam.HighWord;
                     return 0;
                 case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        dc.Rectangle(Rectangle.FromLTRB(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8));
+                        dc.Rectangle(Rectangle.FromLTRB(s_cxClient / 8, s_cyClient / 8, 7 * s_cxClient / 8, 7 * s_cyClient / 8));
                         dc.MoveTo(new Point(0, 0));
-                        dc.LineTo(new Point(cxClient, cyClient));
-                        dc.MoveTo(new Point(0, cyClient));
-                        dc.LineTo(new Point(cxClient, 0));
-                        dc.Ellipse(Rectangle.FromLTRB(cxClient / 8, cyClient / 8, 7 * cxClient / 8, 7 * cyClient / 8));
+                        dc.LineTo(new Point(s_cxClient, s_cyClient));
+                        dc.MoveTo(new Point(0, s_cyClient));
+                        dc.LineTo(new Point(s_cxClient, 0));
+                        dc.Ellipse(Rectangle.FromLTRB(s_cxClient / 8, s_cyClient / 8, 7 * s_cxClient / 8, 7 * s_cyClient / 8));
                         dc.RoundRectangle(
-                            Rectangle.FromLTRB(cxClient / 4, cyClient / 4, 3 * cxClient / 4, 3 * cyClient / 4),
-                            new Size(cxClient / 4, cyClient / 4));
+                            Rectangle.FromLTRB(s_cxClient / 4, s_cyClient / 4, 3 * s_cxClient / 4, 3 * s_cyClient / 4),
+                            new Size(s_cxClient / 4, s_cyClient / 4));
                     }
                     return 0;
                 case MessageType.Destroy:

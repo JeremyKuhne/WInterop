@@ -24,8 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{03801197-72C1-4497-9AF8-51798E2F8EA8}"
 	ProjectSection(SolutionItems) = preProject
-		..\dir.props = ..\dir.props
-		..\il.props = ..\il.props
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeTestLibrary", "src\Tests\NativeTestLibrary\NativeTestLibrary.vcxproj", "{9B6766AF-03F6-48B0-89DC-41881B3E00CA}"
@@ -106,11 +105,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.Tests", "src\Tests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tutorial", "Tutorial", "{C6E370BD-0A1E-41CE-B55C-8017FD449013}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows101", "src\Samples\Tutorial\Windows101\Windows101.csproj", "{A54D1DAD-CDC0-4CE1-B341-CD5EE9A78CD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Windows101", "src\Samples\Tutorial\Windows101\Windows101.csproj", "{A54D1DAD-CDC0-4CE1-B341-CD5EE9A78CD5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2", "src\Samples\Tutorial\WebView2\WebView2.csproj", "{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1DD05300-BB40-4279-B368-0DAA3D0077A2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		..\il.props = ..\il.props
+		stylecop.json = stylecop.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\Common\Common.projitems*{ac918478-f510-44dd-92ae-6e0b013546f5}*SharedItemsImports = 4
+		src\Common\Common.projitems*{ac918478-f510-44dd-92ae-6e0b013546f5}*SharedItemsImports = 5
 		src\Common\Common.projitems*{e7caf10f-86b5-486f-9b76-bfc8b9ea41f8}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -714,6 +723,22 @@ Global
 		{A54D1DAD-CDC0-4CE1-B341-CD5EE9A78CD5}.Release|x64.Build.0 = Release|Any CPU
 		{A54D1DAD-CDC0-4CE1-B341-CD5EE9A78CD5}.Release|x86.ActiveCfg = Release|Any CPU
 		{A54D1DAD-CDC0-4CE1-B341-CD5EE9A78CD5}.Release|x86.Build.0 = Release|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Debug|ARM.Build.0 = Debug|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Debug|x64.Build.0 = Debug|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Debug|x86.Build.0 = Debug|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Release|ARM.Build.0 = Release|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Release|x64.ActiveCfg = Release|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Release|x64.Build.0 = Release|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -757,6 +782,7 @@ Global
 		{2EE95BF7-02F6-4D4A-956A-AB4B5C6B9A2E} = {9BFE01D1-0EF4-4CFC-8E20-254A7E39FB14}
 		{C6E370BD-0A1E-41CE-B55C-8017FD449013} = {F5D72A2B-8550-493A-8E91-A88FBB29643D}
 		{A54D1DAD-CDC0-4CE1-B341-CD5EE9A78CD5} = {C6E370BD-0A1E-41CE-B55C-8017FD449013}
+		{E657AE1B-BE80-4ACE-9E7C-742DC3AF70BF} = {C6E370BD-0A1E-41CE-B55C-8017FD449013}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1D0C3A88-8F05-4858-97B6-0E554C1064BD}

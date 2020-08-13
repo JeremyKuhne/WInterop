@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -20,7 +16,12 @@ namespace WInterop.Windows
 {
     public static partial class Windows
     {
-        public static Rectangle DefaultBounds => new Rectangle(WindowDefines.CW_USEDEFAULT, WindowDefines.CW_USEDEFAULT, WindowDefines.CW_USEDEFAULT, WindowDefines.CW_USEDEFAULT);
+        public static Rectangle DefaultBounds
+            => new Rectangle(
+                WindowDefines.CW_USEDEFAULT,
+                WindowDefines.CW_USEDEFAULT,
+                WindowDefines.CW_USEDEFAULT,
+                WindowDefines.CW_USEDEFAULT);
 
         public static void CreateMainWindowAndRun(
             WindowClass windowClass,
@@ -33,8 +34,8 @@ namespace WInterop.Windows
         }
 
         /// <summary>
-        /// Creates a window of the specified class and processes the message loop.
-        /// Does not return until the message loop exits.
+        ///  Creates a window of the specified class and processes the message loop.
+        ///  Does not return until the message loop exits.
         /// </summary>
         public static void CreateMainWindowAndRun(
             WindowClass windowClass,
@@ -77,7 +78,7 @@ namespace WInterop.Windows
             }
         }
 
-        public unsafe static WindowHandle CreateWindow(
+        public static unsafe WindowHandle CreateWindow(
             Atom classAtom,
             string? windowName = null,
             WindowStyles style = WindowStyles.Overlapped,
@@ -108,7 +109,7 @@ namespace WInterop.Windows
             return window;
         }
 
-        public unsafe static WindowHandle CreateWindow(
+        public static unsafe WindowHandle CreateWindow(
             string className,
             string? windowName = null,
             WindowStyles style = WindowStyles.Overlapped,
@@ -144,7 +145,7 @@ namespace WInterop.Windows
         }
 
         /// <summary>
-        /// Emit a beep.
+        ///  Emit a beep.
         /// </summary>
         /// <param name="frequency">Frequency in hertz.</param>
         /// <param name="duration">Duration in milliseconds.</param>
@@ -152,7 +153,7 @@ namespace WInterop.Windows
             => Error.ThrowLastErrorIfFalse(Imports.Beep(frequency, duration));
 
         /// <summary>
-        /// Play the specified sound (as defined in the Sound control panel).
+        ///  Play the specified sound (as defined in the Sound control panel).
         /// </summary>
         public static void MessageBeep(BeepType type = BeepType.SimpleBeep)
             => Error.ThrowLastErrorIfFalse(Imports.MessageBeep(type));
@@ -161,7 +162,7 @@ namespace WInterop.Windows
         public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
 
         /// <summary>
-        /// Returns the average size in pixels of characters for the system font.
+        ///  Returns the average size in pixels of characters for the system font.
         /// </summary>
         public static Size GetDialogBaseUnits()
         {
@@ -173,13 +174,14 @@ namespace WInterop.Windows
             => window.GetWindowLong(WindowLong.InstanceHandle);
 
         /// <summary>
-        /// Wrapper to SetWindowLong for changing the window procedure. Returns the old
-        /// window procedure handle- use CallWindowProcedure to call the old method.
+        ///  Wrapper to SetWindowLong for changing the window procedure. Returns the old
+        ///  window procedure handle- use CallWindowProcedure to call the old method.
         /// </summary>
         public static WNDPROC SetWindowProcedure(this in WindowHandle window, WindowProcedure newCallback)
         {
             // It is possible that the returned window procedure will not be a direct handle.
-            return new WNDPROC(SetWindowLong(window,
+            return new WNDPROC(SetWindowLong(
+                window,
                 WindowLong.WindowProcedure,
                 Marshal.GetFunctionPointerForDelegate(newCallback)));
         }
@@ -193,7 +195,7 @@ namespace WInterop.Windows
         public static LResult SendMessage(this in WindowHandle window, MessageType message, WParam wParam = default, LParam lParam = default)
             => Imports.SendMessageW(window, message, wParam, lParam);
 
-        public unsafe static string GetClassName(this WindowHandle window)
+        public static unsafe string GetClassName(this WindowHandle window)
         {
             return PlatformInvoke.GrowableBufferInvoke(
                 (ref ValueBuffer<char> buffer) =>
@@ -224,8 +226,8 @@ namespace WInterop.Windows
         public static bool IsWindowUnicode(this in WindowHandle window) => Imports.IsWindowUnicode(window);
 
         /// <summary>
-        /// Get the top child window in the specified window. If passed a null window
-        /// finds the window at the top of the Z order.
+        ///  Get the top child window in the specified window. If passed a null window
+        ///  finds the window at the top of the Z order.
         /// </summary>
         public static WindowHandle GetTopWindow(WindowHandle window) => Imports.GetTopWindow(window);
 
@@ -236,8 +238,8 @@ namespace WInterop.Windows
         public static WindowHandle GetActiveWindow() => Imports.GetActiveWindow();
 
         /// <summary>
-        /// Gets the specified related Window to get given Window if it exists. Otherwise
-        /// returns a null WindowHandle.
+        ///  Gets the specified related Window to get given Window if it exists. Otherwise
+        ///  returns a null WindowHandle.
         /// </summary>
         public static WindowHandle GetWindow(this in WindowHandle window, GetWindowOption option)
             => Imports.GetWindow(window, option);
@@ -254,7 +256,7 @@ namespace WInterop.Windows
         }
 
         /// <summary>
-        /// Returns true if the current thread is a GUI thread.
+        ///  Returns true if the current thread is a GUI thread.
         /// </summary>
         /// <param name="convertToGuiIfFalse">Tries to convert the thread to a GUI thread if it isn't already.</param>
         public static bool IsGuiThread(bool convertToGuiIfFalse = false)
@@ -270,7 +272,7 @@ namespace WInterop.Windows
         public static unsafe Atom RegisterClass(ref WindowClassInfo windowClass)
         {
             Atom atom;
-            using (var marshaller = new WindowClassInfo.Marshaller())
+            using (WindowClassInfo.Marshaller marshaller = default)
             {
                 marshaller.FillNative(out WNDCLASSEX native, ref windowClass);
                 atom = Imports.RegisterClassExW(ref native);
@@ -281,9 +283,8 @@ namespace WInterop.Windows
             return atom;
         }
 
-
         /// <summary>
-        /// Unregisters the given class Atom.
+        ///  Unregisters the given class Atom.
         /// </summary>
         public static void UnregisterClass(Atom atom, ModuleInstance? module = null)
         {
@@ -292,9 +293,9 @@ namespace WInterop.Windows
         }
 
         /// <summary>
-        /// Unregisters the given class name.
+        ///  Unregisters the given class name.
         /// </summary>
-        public unsafe static void UnregisterClass(string className, ModuleInstance? module)
+        public static unsafe void UnregisterClass(string className, ModuleInstance? module)
         {
             if (className == null)
                 throw new ArgumentNullException(nameof(className));
@@ -375,11 +376,11 @@ namespace WInterop.Windows
         }
 
         /// <summary>
-        /// Sets the background brush for the window class. Returns the previous background brush.
+        ///  Sets the background brush for the window class. Returns the previous background brush.
         /// </summary>
         /// <param name="ownsHandle">
-        /// Whether or not the returned brush should own the handle. If true the brush handle
-        /// will be deleted when disposed or finalized.
+        ///  Whether or not the returned brush should own the handle. If true the brush handle
+        ///  will be deleted when disposed or finalized.
         /// </param>
         public static BrushHandle SetClassBackgroundBrush(this in WindowHandle window, BrushHandle value, bool ownsHandle = true)
         {
@@ -397,16 +398,16 @@ namespace WInterop.Windows
                 Imports.MoveWindow(window, position.X, position.Y, position.Width, position.Height, repaint));
 
         /// <summary>
-        /// Dispatches sent messages, waiting for the next message in the calling thread's message queue.
+        ///  Dispatches sent messages, waiting for the next message in the calling thread's message queue.
         /// </summary>
         /// <param name="window">
-        /// Get messages for the specified window or all thread windows and thread messages if default.
-        /// If set to -1, will only return thread messages.
+        ///  Get messages for the specified window or all thread windows and thread messages if default.
+        ///  If set to -1, will only return thread messages.
         /// </param>
         /// <returns>False when <see cref="MessageType.Quit"/> is returned.</returns>
         public static bool GetMessage(out WindowMessage message, WindowHandle window = default, MessageType minMessage = MessageType.Null, MessageType maxMessage = MessageType.Null)
         {
-            Boolean32 result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
+            IntBoolean result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
 
             // One special case here is -1 for an error
             if (result.RawValue == -1)
@@ -415,7 +416,12 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static bool PeekMessage(out WindowMessage message, WindowHandle window = default, uint minMessage = 0, uint maxMessage = 0, PeekMessageOptions options = PeekMessageOptions.NoRemove)
+        public static bool PeekMessage(
+            out WindowMessage message,
+            WindowHandle window = default,
+            uint minMessage = 0,
+            uint maxMessage = 0,
+            PeekMessageOptions options = PeekMessageOptions.NoRemove)
         {
             return Imports.PeekMessageW(out message, window, minMessage, maxMessage, options);
         }
@@ -430,33 +436,34 @@ namespace WInterop.Windows
             return Imports.DispatchMessageW(ref message);
         }
 
-        public static LResult DefaultWindowProcedure(this in WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        public static LResult DefaultWindowProcedure(
+            this in WindowHandle window,
+            MessageType message,
+            WParam wParam,
+            LParam lParam)
         {
             return Imports.DefWindowProcW(window, message, wParam, lParam);
         }
 
-        public static void PostQuitMessage(int exitCode)
-        {
-            Imports.PostQuitMessage(exitCode);
-        }
+        public static void PostQuitMessage(int exitCode) => Imports.PostQuitMessage(exitCode);
 
         /// <summary>
-        /// Returns the logical client coordinates of the given <paramref name="window"/>.
+        ///  Returns the logical client coordinates of the given <paramref name="window"/>.
         /// </summary>
         public static Rectangle GetClientRectangle(this in WindowHandle window)
         {
-            Gdi.Native.RECT rect = default;
+            Rect rect = default;
             Error.ThrowLastErrorIfFalse(Imports.GetClientRect(window, ref rect));
             return rect;
         }
 
         /// <summary>
-        /// Dimensions of the bounding rectangle of the specified <paramref name="window"/>
-        /// in screen coordinates relative to the upper-left corner.
+        ///  Dimensions of the bounding rectangle of the specified <paramref name="window"/>
+        ///  in screen coordinates relative to the upper-left corner.
         /// </summary>
         public static Rectangle GetWindowRectangle(this in WindowHandle window)
         {
-            Gdi.Native.RECT rect = default;
+            Rect rect = default;
             Error.ThrowLastErrorIfFalse(Imports.GetWindowRect(window, ref rect));
             return rect;
         }
@@ -479,7 +486,7 @@ namespace WInterop.Windows
             return result;
         }
 
-        public unsafe static int SetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo, bool redraw)
+        public static unsafe int SetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo, bool redraw)
         {
             scrollInfo.Size = (uint)sizeof(ScrollInfo);
             int result = Imports.SetScrollInfo(window, scrollBar, ref scrollInfo, redraw);
@@ -496,14 +503,14 @@ namespace WInterop.Windows
             return result;
         }
 
-        public unsafe static void GetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo)
+        public static unsafe void GetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo)
         {
             scrollInfo.Size = (uint)sizeof(ScrollInfo);
             Error.ThrowLastErrorIfFalse(
                 Imports.GetScrollInfo(window, scrollBar, ref scrollInfo));
         }
 
-        public unsafe static int ScrollWindow(this in WindowHandle window, Point delta)
+        public static unsafe int ScrollWindow(this in WindowHandle window, Point delta)
         {
             int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, null, null, IntPtr.Zero, null, ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
 
@@ -513,10 +520,10 @@ namespace WInterop.Windows
             return result;
         }
 
-        public unsafe static int ScrollWindow(this in WindowHandle window, Point delta, Rectangle scroll, Rectangle clip)
+        public static unsafe int ScrollWindow(this in WindowHandle window, Point delta, Rectangle scroll, Rectangle clip)
         {
-            Gdi.Native.RECT scrollRect = scroll;
-            Gdi.Native.RECT clipRect = clip;
+            Rect scrollRect = scroll;
+            Rect clipRect = clip;
 
             int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, &scrollRect, &clipRect, IntPtr.Zero, null, ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
 
@@ -561,7 +568,7 @@ namespace WInterop.Windows
             return Imports.GetKeyState(key);
         }
 
-        public unsafe static string GetKeyNameText(LParam lParam)
+        public static unsafe string GetKeyNameText(LParam lParam)
         {
             return PlatformInvoke.GrowableBufferInvoke(
                 (ref ValueBuffer<char> buffer) =>
@@ -594,7 +601,12 @@ namespace WInterop.Windows
         public static void ReleaseCapture()
             => Error.ThrowLastErrorIfFalse(Imports.ReleaseCapture());
 
-        public static TimerId SetTimer(this in WindowHandle window, TimerId id, uint interval, TimerProcedure? callback = null, uint delayTolerance = 0)
+        public static TimerId SetTimer(
+            this in WindowHandle window,
+            TimerId id,
+            uint interval,
+            TimerProcedure? callback = null,
+            uint delayTolerance = 0)
         {
             TimerId result = Imports.SetCoalescableTimer(window, id, interval, callback, delayTolerance);
             if (result == TimerId.Null)
@@ -609,7 +621,7 @@ namespace WInterop.Windows
         public static Color GetSystemColor(SystemColor systemColor) => Imports.GetSysColor(systemColor);
 
         /// <summary>
-        /// Gets the value for the given system metric.
+        ///  Gets the value for the given system metric.
         /// </summary>
         public static int GetSystemMetrics(SystemMetric metric) => Imports.GetSystemMetrics(metric);
 
@@ -635,7 +647,7 @@ namespace WInterop.Windows
             return wndClass;
         }
 
-        public unsafe static WindowClassInfo GetClassInfo(this ModuleInstance instance, string className)
+        public static unsafe WindowClassInfo GetClassInfo(this ModuleInstance instance, string className)
         {
             WNDCLASSEX wndClass;
 
@@ -650,19 +662,19 @@ namespace WInterop.Windows
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648029.aspx
 
         /// <summary>
-        /// Makes a resource pointer for the given value. [MAKEINTRESOURCE]
+        ///  Makes a resource pointer for the given value. [MAKEINTRESOURCE]
         /// </summary>
         public static IntPtr MakeIntResource(ushort integer) => (IntPtr)integer;
 
         /// <summary>
-        /// Returns true if the given pointer is an int resource. [IS_INTRESOURCE]
+        ///  Returns true if the given pointer is an int resource. [IS_INTRESOURCE]
         /// </summary>
         public static bool IsIntResource(IntPtr pointer) => ((ulong)pointer) >> 16 == 0;
 
         /// <summary>
-        /// Get the specified string resource from the given library.
+        ///  Get the specified string resource from the given library.
         /// </summary>
-        public unsafe static string LoadString(ModuleInstance library, int identifier)
+        public static unsafe string LoadString(ModuleInstance library, int identifier)
         {
             // A string resource is mapped in with the dll, there is no need to allocate
             // or free a buffer.
@@ -676,7 +688,7 @@ namespace WInterop.Windows
             return new string(buffer, 0, result);
         }
 
-        public unsafe static IconHandle LoadIcon(IconId id)
+        public static unsafe IconHandle LoadIcon(IconId id)
         {
             HICON handle = Imports.LoadIconW(ModuleInstance.Null, (char*)(uint)id);
             if (handle.IsInvalid)
@@ -685,7 +697,7 @@ namespace WInterop.Windows
             return new IconHandle(handle, ownsHandle: false);
         }
 
-        public unsafe static IconHandle LoadIcon(string name, ModuleInstance module)
+        public static unsafe IconHandle LoadIcon(string name, ModuleInstance module)
         {
             fixed (char* n = name)
             {
@@ -706,29 +718,42 @@ namespace WInterop.Windows
 
         public static MonitorHandle MonitorFromRectangle(Rectangle rectangle, MonitorOption option = MonitorOption.DefaultToNull)
         {
-            Gdi.Native.RECT rect = rectangle;
+            Rect rect = rectangle;
             return Imports.MonitorFromRect(in rect, option);
         }
 
-        public unsafe static MonitorInfo GetMonitorInfo(this MonitorHandle monitor)
+        public static unsafe MonitorInfo GetMonitorInfo(this MonitorHandle monitor)
         {
             MonitorInfo info = MonitorInfo.Create();
             Imports.GetMonitorInfoW(monitor, &info);
             return info;
         }
 
-        public unsafe static ExtendedMonitorInfo GetExtendedMonitorInfo(this MonitorHandle monitor)
+        public static unsafe ExtendedMonitorInfo GetExtendedMonitorInfo(this MonitorHandle monitor)
         {
             ExtendedMonitorInfo info = ExtendedMonitorInfo.Create();
             Imports.GetMonitorInfoW(monitor, &info);
             return info;
         }
 
-        public unsafe static DllVersionInfo GetCommonControlsVersion()
+        public static unsafe DllVersionInfo GetCommonControlsVersion()
         {
             DllVersionInfo info = new DllVersionInfo { Size = (uint)sizeof(DllVersionInfo) };
             Imports.ComctlGetVersion(ref info).ThrowIfFailed();
             return info;
         }
+
+        public static DpiAwarenessContext GetThreadDpiAwarenessContext() => Imports.GetThreadDpiAwarenessContext();
+
+        public static DpiAwareness GetThreadDpiAwareness()
+            => GetAwarenessFromDpiAwarenessContext(GetThreadDpiAwarenessContext());
+
+        public static DpiAwareness GetAwarenessFromDpiAwarenessContext(DpiAwarenessContext context)
+            => Imports.GetAwarenessFromDpiAwarenessContext(context);
+
+        public static uint GetDpiForSystem() => Imports.GetDpiForSystem();
+
+        public static uint GetDpiForWindow(this in WindowHandle window)
+            => Imports.GetDpiForWindow(window);
     }
 }

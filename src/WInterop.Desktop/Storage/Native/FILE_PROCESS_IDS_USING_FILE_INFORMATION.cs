@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -10,7 +6,7 @@ using System;
 namespace WInterop.Storage.Native
 {
     /// <summary>
-    /// Gets all of the process IDs using the given file.
+    ///  Gets all of the process IDs using the given file.
     /// </summary>
     public struct FILE_PROCESS_IDS_USING_FILE_INFORMATION
     {
@@ -21,8 +17,8 @@ namespace WInterop.Storage.Native
         private UIntPtr _ProcessIdList;
 
         /// <summary>
-        /// While internal process ids are always the size of an native int they're always returned as
-        /// a uint in Win32 APIs.
+        ///  While internal process ids are always the size of an native int they're always returned as
+        ///  a uint in Win32 APIs.
         /// </summary>
         public ReadOnlySpan<UIntPtr> ProcessIdList => TrailingArray<UIntPtr>.GetBuffer(ref _ProcessIdList, NumberOfProcessIdsInList);
     }

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -16,7 +12,6 @@ namespace WInterop.Windows
 {
     public static partial class Windows
     {
-
         public static unsafe CursorHandle LoadCursor(CursorId id)
         {
             HCURSOR handle = Imports.LoadCursorW(ModuleInstance.Null, (char*)(uint)id);
@@ -41,9 +36,9 @@ namespace WInterop.Windows
         }
 
         /// <summary>
-        /// Replaces the specified system cursor with the given cursor. The cursor will
-        /// be destroyed and as such must not be loaded from a resource. Use CopyCursor
-        /// on cursors loaded from resources before calling this method.
+        ///  Replaces the specified system cursor with the given cursor. The cursor will
+        ///  be destroyed and as such must not be loaded from a resource. Use CopyCursor
+        ///  on cursors loaded from resources before calling this method.
         /// </summary>
         public static void SetSystemCursor(CursorHandle cursor, SystemCursor id)
             => Error.ThrowLastErrorIfFalse(Imports.SetSystemCursor(cursor, id));
@@ -101,7 +96,7 @@ namespace WInterop.Windows
 
         public static Rectangle GetClipCursor()
         {
-            Error.ThrowLastErrorIfFalse(Imports.GetClipCursor(out Gdi.Native.RECT rect));
+            Error.ThrowLastErrorIfFalse(Imports.GetClipCursor(out Rect rect));
             return rect;
         }
     }

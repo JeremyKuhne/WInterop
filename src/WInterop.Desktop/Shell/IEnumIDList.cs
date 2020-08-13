@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -18,7 +14,7 @@ namespace WInterop.Shell
     public interface IEnumIDList
     {
         /// <summary>
-        /// Retrieves the specified number of item identifiers in the enumeration sequence and advances the current position by the number of items retrieved.
+        ///  Retrieves the specified number of item identifiers in the enumeration sequence and advances the current position by the number of items retrieved.
         /// </summary>
         /// <param name="celt">Number of elements to retrieve.</param>
         /// <param name="rgelt">Ids relative to the IShellFolder being enumerated.</param>

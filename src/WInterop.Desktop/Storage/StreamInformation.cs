@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
@@ -11,22 +7,22 @@ using WInterop.Storage.Native;
 namespace WInterop.Storage
 {
     /// <summary>
-    /// Basic information about an alternate stream.
+    ///  Basic information about an alternate stream.
     /// </summary>
     public struct StreamInformation
     {
         /// <summary>
-        /// Name of the stream
+        ///  Name of the stream
         /// </summary>
         public string Name;
 
         /// <summary>
-        /// Size of the stream
+        ///  Size of the stream
         /// </summary>
         public ulong Size;
 
         /// <summary>
-        /// Allocated size of the stream
+        ///  Allocated size of the stream
         /// </summary>
         public ulong AllocationSize;
 
@@ -47,6 +43,7 @@ namespace WInterop.Storage
                 if (info->NextEntryOffset == 0) break;
                 info = (FILE_STREAM_INFORMATION*)(start + info->NextEntryOffset);
             }
+
             return infos;
         }
     }

@@ -1,17 +1,13 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi.Native;
+using WInterop.Gdi;
 
 namespace WInterop.Windows.Native
 {
     public struct TPMPARAMS
     {
         public uint cbSize;
-        public RECT rcExclude;
+        public Rect rcExclude;
     }
 }

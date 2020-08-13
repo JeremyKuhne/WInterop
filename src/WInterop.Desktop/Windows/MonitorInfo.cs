@@ -1,47 +1,33 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Native;
+using WInterop.Gdi;
 
 namespace WInterop.Windows
 {
     /// <summary>
-    /// Monitor information. [MONITORINFO]
+    ///  Monitor information. [MONITORINFO]
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct MonitorInfo
     {
         private const uint MONITORINFOF_PRIMARY = 0x00000001;
 
-        private readonly uint cbSize;
-        private readonly RECT rcMonitor;
-        private readonly RECT rcWork;
-        private readonly uint dwFlags;
+        public readonly uint Size;
+        public readonly Rect Monitor;
+        public readonly Rect Work;
+        public readonly uint Flags;
 
-        public unsafe static MonitorInfo Create() => new MonitorInfo(sizeof(MonitorInfo));
+        public static unsafe MonitorInfo Create() => new MonitorInfo(sizeof(MonitorInfo));
 
         internal MonitorInfo(int size)
         {
             this = default;
-            cbSize = (uint)size;
+            Size = (uint)size;
         }
 
-        /// <summary>
-        /// The monitor rectangle.
-        /// </summary>
-        public Rectangle Monitor => rcMonitor;
-
-        /// <summary>
-        /// The work area rectangle.
-        /// </summary>
-        public Rectangle Work => rcWork;
-
-        public bool IsPrimary => (dwFlags & MONITORINFOF_PRIMARY) != 0;
+        public bool IsPrimary => (Flags & MONITORINFOF_PRIMARY) != 0;
     }
 }

@@ -1,19 +1,15 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using WInterop.Security.Native;
-using WInterop.Errors;
-using WInterop.Support.Buffers;
-using WInterop.SystemInformation;
 using System.Collections.Generic;
 using System.Linq;
-using WInterop.ProcessAndThreads;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
+using WInterop.ProcessAndThreads;
+using WInterop.Security.Native;
+using WInterop.Support.Buffers;
+using WInterop.SystemInformation;
 
 namespace WInterop.Security
 {
@@ -67,7 +63,7 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get the string constant for the given privilege.
+        ///  Get the string constant for the given privilege.
         /// </summary>
         public static string GetPrivilegeConstant(Privilege privilege)
         {
@@ -100,9 +96,9 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get the privilege for the specified LUID.
+        ///  Get the privilege for the specified LUID.
         /// </summary>
-        public unsafe static Privilege LookupPrivilege(LUID luid)
+        public static unsafe Privilege LookupPrivilege(LUID luid)
         {
             char* c = stackalloc char[32];
             Span<char> nameBuffer = new Span<char>(c, 32);
@@ -118,7 +114,7 @@ namespace WInterop.Security
             return ParsePrivilege(nameBuffer.Slice(0, (int)length));
         }
 
-        private unsafe static void TokenInformationInvoke(
+        private static unsafe void TokenInformationInvoke(
             AccessToken token,
             TokenInformation info,
             Action<IntPtr> action)
@@ -141,9 +137,9 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get information about the specified token.
+        ///  Get information about the specified token.
         /// </summary>
-        public unsafe static TokenStatistics GetTokenStatistics(this AccessToken token)
+        public static unsafe TokenStatistics GetTokenStatistics(this AccessToken token)
         {
             TokenStatistics stats = default;
             Error.ThrowLastErrorIfFalse(
@@ -152,40 +148,42 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Returns true if the given token has the specified privilege. The privilege may or may not be enabled.
+        ///  Returns true if the given token has the specified privilege. The privilege may or may not be enabled.
         /// </summary>
         public static bool HasPrivilege(this AccessToken token, Privilege privilege)
-        {
-            return GetTokenPrivileges(token).Any(t => t.Privilege == privilege);
-        }
+            => GetTokenPrivileges(token).Any(t => t.Privilege == privilege);
 
         /// <summary>
-        /// Get all privilege information for the given access token.
+        ///  Get all privilege information for the given access token.
         /// </summary>
-        public unsafe static IEnumerable<PrivilegeSetting> GetTokenPrivileges(this AccessToken token)
+        public static unsafe IEnumerable<PrivilegeSetting> GetTokenPrivileges(this AccessToken token)
         {
             var privileges = new List<PrivilegeSetting>();
 
-            TokenInformationInvoke(token, TokenInformation.Privileges,
-            buffer =>
-            {
-                foreach (LuidAndAttributes privilege in ((TOKEN_PRIVILEGES*)buffer)->Privileges)
+            TokenInformationInvoke(
+                token,
+                TokenInformation.Privileges,
+                buffer =>
                 {
-                    privileges.Add(new PrivilegeSetting(LookupPrivilege(privilege.Luid), privilege.Attributes));
-                }
-            });
+                    foreach (LuidAndAttributes privilege in ((TOKEN_PRIVILEGES*)buffer)->Privileges)
+                    {
+                        privileges.Add(new PrivilegeSetting(LookupPrivilege(privilege.Luid), privilege.Attributes));
+                    }
+                });
 
             return privileges;
         }
 
         /// <summary>
-        /// Gets the group SIDs associated with the current token.
+        ///  Gets the group SIDs associated with the current token.
         /// </summary>
-        public unsafe static IEnumerable<SidAndAttributes> GetTokenGroupSids(this AccessToken token)
+        public static unsafe IEnumerable<SidAndAttributes> GetTokenGroupSids(this AccessToken token)
         {
             SidAndAttributes[]? info = null;
 
-            TokenInformationInvoke(token, TokenInformation.Groups,
+            TokenInformationInvoke(
+                token,
+                TokenInformation.Groups,
                 buffer =>
                 {
                     TOKEN_GROUPS* groups = (TOKEN_GROUPS*)buffer;
@@ -204,9 +202,9 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get the user SID for the given token.
+        ///  Get the user SID for the given token.
         /// </summary>
-        public unsafe static SidAndAttributes GetTokenUserSid(this AccessToken token)
+        public static unsafe SidAndAttributes GetTokenUserSid(this AccessToken token)
         {
             // This size should always be sufficient as SID alignment is uint.
             int size = sizeof(TOKEN_USER) + sizeof(SID);
@@ -220,9 +218,9 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get the SID that will be used as the owner for objects created by the given token.
+        ///  Get the SID that will be used as the owner for objects created by the given token.
         /// </summary>
-        public unsafe static SID GetTokenOwnerSid(this AccessToken token)
+        public static unsafe SID GetTokenOwnerSid(this AccessToken token)
         {
             // This size should always be sufficient as SID alignment is uint.
             int size = sizeof(TOKEN_OWNER) + sizeof(SID);
@@ -236,9 +234,9 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get the SID that will be used as the primary group for objects created by the given token.
+        ///  Get the SID that will be used as the primary group for objects created by the given token.
         /// </summary>
-        public unsafe static SID GetTokenPrimaryGroupSid(this AccessToken token)
+        public static unsafe SID GetTokenPrimaryGroupSid(this AccessToken token)
         {
             // This size should always be sufficient as SID alignment is uint.
             int size = sizeof(TOKEN_PRIMARY_GROUP) + sizeof(SID);
@@ -251,11 +249,11 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get the specified "well known" SID. Note that not all well known SIDs are available on all OSes.
+        ///  Get the specified "well known" SID. Note that not all well known SIDs are available on all OSes.
         /// </summary>
-        public unsafe static SID CreateWellKnownSid(WellKnownSID sidType)
+        public static unsafe SID CreateWellKnownSid(WellKnownSID sidType)
         {
-            SID sid = new SID();
+            SID sid = default;
 
             uint size = (uint)sizeof(SID);
             Error.ThrowLastErrorIfFalse(
@@ -265,20 +263,20 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Returns true if the given SID is the specified "well known" SID type.
+        ///  Returns true if the given SID is the specified "well known" SID type.
         /// </summary>
         public static bool IsWellKnownSid(this in SID sid, WellKnownSID sidType)
             => Imports.IsWellKnownSid(in sid, sidType);
 
         /// <summary>
-        /// Returns true if the given SID is valid.
+        ///  Returns true if the given SID is valid.
         /// </summary>
         public static bool IsValidSid(this in SID sid) => Imports.IsValidSid(in sid);
 
         /// <summary>
-        /// Returns the S-n-n-n... string version of the given SID.
+        ///  Returns the S-n-n-n... string version of the given SID.
         /// </summary>
-        public unsafe static string ConvertSidToString(this in SID sid)
+        public static unsafe string ConvertSidToString(this in SID sid)
         {
             Error.ThrowLastErrorIfFalse(
                 Imports.ConvertSidToStringSidW(sid, out var handle));
@@ -287,9 +285,9 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Returns the count of sub authorities for the given SID.
+        ///  Returns the count of sub authorities for the given SID.
         /// </summary>
-        public unsafe static byte GetSidSubAuthorityCount(this in SID sid)
+        public static unsafe byte GetSidSubAuthorityCount(this in SID sid)
         {
             byte* b = Imports.GetSidSubAuthorityCount(sid);
             if (b == null)
@@ -299,9 +297,9 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get the sub authority at the specified index for the given SID.
+        ///  Get the sub authority at the specified index for the given SID.
         /// </summary>
-        public unsafe static uint GetSidSubAuthority(this in SID sid, uint nSubAuthority)
+        public static unsafe uint GetSidSubAuthority(this in SID sid, uint nSubAuthority)
         {
             uint* u = Imports.GetSidSubAuthority(sid, nSubAuthority);
             if (u == null)
@@ -318,13 +316,13 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get information about the given security identifier.
+        ///  Get information about the given security identifier.
         /// </summary>
         /// <param name="systemName">
-        /// The target computer to look up the SID on. When null will look on the local machine
-        /// then trusted domain controllers.
+        ///  The target computer to look up the SID on. When null will look on the local machine then trusted
+        ///  domain controllers.
         /// </param>
-        public unsafe static AccountSidInformation LookupAccountSid(this in SID sid, string? systemName = null)
+        public static unsafe AccountSidInformation LookupAccountSid(this in SID sid, string? systemName = null)
         {
             var wrapper = new LookupAccountSidWrapper(in sid, systemName);
             return BufferHelper.TwoBufferInvoke<LookupAccountSidWrapper, StringBuffer, AccountSidInformation>(ref wrapper);
@@ -376,7 +374,7 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Opens a process token.
+        ///  Opens a process token.
         /// </summary>
         public static AccessToken OpenProcessToken(AccessTokenRights desiredAccess)
         {
@@ -387,12 +385,12 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Returns true if the current process is elevated.
+        ///  Returns true if the current process is elevated.
         /// </summary>
-        public unsafe static bool IsProcessElevated()
+        public static unsafe bool IsProcessElevated()
         {
             using AccessToken token = OpenProcessToken(AccessTokenRights.Read);
-            TokenElevation elevation = new TokenElevation();
+            TokenElevation elevation = default;
             Error.ThrowLastErrorIfFalse(
                 Imports.GetTokenInformation(
                     token,
@@ -405,10 +403,9 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Opens a thread token. Returns null if the thead has no token (i.e. it isn't impersonating
-        /// and is implicitly inheriting the process token).
+        ///  Opens a thread token. Returns null if the thead has no token (i.e. it isn't impersonating
+        ///  and is implicitly inheriting the process token).
         /// </summary>
-        /// <param name="openAsSelf"></param>
         public static AccessToken? OpenThreadToken(AccessTokenRights desiredAccess, bool openAsSelf)
         {
             if (!Imports.OpenThreadToken(Threads.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
@@ -422,11 +419,11 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Duplicates a token. Token must have been created with <see cref="AccessTokenRights.Duplicate"/>.
+        ///  Duplicates a token. Token must have been created with <see cref="AccessTokenRights.Duplicate"/>.
         /// </summary>
         /// <param name="token">The token to duplicate.</param>
         /// <param name="rights">Rights to apply to the token. default is all of the rights from the source token.</param>
-        public unsafe static AccessToken DuplicateToken(
+        public static unsafe AccessToken DuplicateToken(
             this AccessToken token,
             AccessTokenRights rights = default,
             ImpersonationLevel impersonationLevel = ImpersonationLevel.Anonymous,
@@ -449,9 +446,9 @@ namespace WInterop.Security
             => Error.ThrowLastErrorIfFalse(Imports.SetThreadToken(thread, token));
 
         /// <summary>
-        /// Get the owner SID for the given handle.
+        ///  Get the owner SID for the given handle.
         /// </summary>
-        public unsafe static SID GetOwner(SafeHandle handle, ObjectType type)
+        public static unsafe SID GetOwner(SafeHandle handle, ObjectType type)
         {
             SID* sidp;
             SECURITY_DESCRIPTOR* descriptor;
@@ -465,14 +462,14 @@ namespace WInterop.Security
                 .ThrowIfFailed();
 
             SID sid = new SID(sidp);
-            Memory.Memory.LocalFree((IntPtr)(descriptor));
+            Memory.Memory.LocalFree((IntPtr)descriptor);
             return sid;
         }
 
         /// <summary>
-        /// Get the primary group SID for the given handle.
+        ///  Get the primary group SID for the given handle.
         /// </summary>
-        public unsafe static SID GetPrimaryGroup(SafeHandle handle, ObjectType type)
+        public static unsafe SID GetPrimaryGroup(SafeHandle handle, ObjectType type)
         {
             SID* sidp;
             SECURITY_DESCRIPTOR* descriptor;
@@ -486,14 +483,14 @@ namespace WInterop.Security
                 .ThrowIfFailed();
 
             SID sid = new SID(sidp);
-            Memory.Memory.LocalFree((IntPtr)(descriptor));
+            Memory.Memory.LocalFree((IntPtr)descriptor);
             return sid;
         }
 
         /// <summary>
-        /// Get discretionary access control list for the specified handle.
+        ///  Get discretionary access control list for the specified handle.
         /// </summary>
-        public unsafe static SecurityDescriptor GetAccessControlList(SafeHandle handle, ObjectType type)
+        public static unsafe SecurityDescriptor GetAccessControlList(SafeHandle handle, ObjectType type)
         {
             ACL* acl;
             SECURITY_DESCRIPTOR* descriptor;
@@ -510,10 +507,10 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Checks if the given privilege is enabled. This does not tell you whether or not it
-        /// is possible to get a privilege- most held privileges are not enabled by default.
+        ///  Checks if the given privilege is enabled. This does not tell you whether or not it
+        ///  is possible to get a privilege- most held privileges are not enabled by default.
         /// </summary>
-        public unsafe static bool IsPrivilegeEnabled(this AccessToken token, Privilege privilege)
+        public static unsafe bool IsPrivilegeEnabled(this AccessToken token, Privilege privilege)
         {
             LUID luid = LookupPrivilegeValue(privilege);
 
@@ -525,14 +522,14 @@ namespace WInterop.Security
             };
 
             Error.ThrowLastErrorIfFalse(
-                Imports.PrivilegeCheck(token, &set, out Boolean32 result),
+                Imports.PrivilegeCheck(token, &set, out IntBoolean result),
                 privilege.ToString());
 
             return result;
         }
 
         /// <summary>
-        /// Returns true if all of the given privileges are enabled for the current process.
+        ///  Returns true if all of the given privileges are enabled for the current process.
         /// </summary>
         public static bool AreAllPrivilegesEnabled(this AccessToken token, params Privilege[] privileges)
         {
@@ -540,14 +537,14 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Returns true if any of the given privileges are enabled for the current process.
+        ///  Returns true if any of the given privileges are enabled for the current process.
         /// </summary>
         public static bool AreAnyPrivilegesEnabled(this AccessToken token, params Privilege[] privileges)
         {
             return ArePrivilegesEnabled(token, all: false, privileges: privileges);
         }
 
-        private unsafe static bool ArePrivilegesEnabled(this AccessToken token, bool all, Privilege[] privileges)
+        private static unsafe bool ArePrivilegesEnabled(this AccessToken token, bool all, Privilege[] privileges)
         {
             if (privileges == null || privileges.Length == 0)
                 return true;
@@ -563,17 +560,17 @@ namespace WInterop.Security
             }
 
             Error.ThrowLastErrorIfFalse(
-                Imports.PrivilegeCheck(token, set, out Boolean32 result));
+                Imports.PrivilegeCheck(token, set, out IntBoolean result));
 
             return result;
         }
 
         /// <summary>
-        /// Get the current domain name.
+        ///  Get the current domain name.
         /// </summary>
         public static string GetDomainName()
         {
-            var wrapper = new GetDomainNameWrapper();
+            GetDomainNameWrapper wrapper = default;
             return BufferHelper.TwoBufferInvoke<GetDomainNameWrapper, StringBuffer, string>(ref wrapper);
         }
 
@@ -586,7 +583,7 @@ namespace WInterop.Security
                 if (name is null)
                     throw new InvalidOperationException($"Could not get the {nameof(ExtendedNameFormat.SamCompatible)} user name.");
 
-                SID sid = new SID();
+                SID sid = default;
                 uint sidLength = (uint)sizeof(SID);
                 uint domainNameLength = domainNameBuffer.CharCapacity;
                 while (!Imports.LookupAccountNameW(
@@ -607,7 +604,7 @@ namespace WInterop.Security
             }
         }
 
-        public unsafe static AccessToken CreateRestrictedToken(this AccessToken token, params SID[] sidsToDisable)
+        public static unsafe AccessToken CreateRestrictedToken(this AccessToken token, params SID[] sidsToDisable)
         {
             if (sidsToDisable == null || sidsToDisable.Length == 0)
                 throw new ArgumentNullException();
@@ -637,15 +634,15 @@ namespace WInterop.Security
         public static void RevertToSelf()
             => Error.ThrowLastErrorIfFalse(Imports.RevertToSelf());
 
-        public unsafe static LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
+        public static unsafe LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
         {
-            LSA_OBJECT_ATTRIBUTES attributes = new LSA_OBJECT_ATTRIBUTES();
+            LSA_OBJECT_ATTRIBUTES attributes = default;
             Imports.LsaOpenPolicy(null, &attributes, access, out LsaHandle handle).ThrowIfFailed();
             return handle;
         }
 
         /// <summary>
-        /// Convert an NTSTATUS to a Windows error code (returns ERROR_MR_MID_NOT_FOUND if unable to find an error)
+        ///  Convert an NTSTATUS to a Windows error code (returns ERROR_MR_MID_NOT_FOUND if unable to find an error)
         /// </summary>
         public static WindowsError NtStatusToWinError(NTStatus status)
         {
@@ -657,8 +654,8 @@ namespace WInterop.Security
         public static void LsaFreeMemory(IntPtr handle) => Imports.LsaFreeMemory(handle).ThrowIfFailed();
 
         /// <summary>
-        /// Enumerates rights explicitly given to the specified SID. If the given SID
-        /// doesn't have any directly applied rights, returns an empty collection.
+        ///  Enumerates rights explicitly given to the specified SID. If the given SID doesn't have any directly
+        ///  applied rights, returns an empty collection.
         /// </summary>
         public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, in SID sid)
         {

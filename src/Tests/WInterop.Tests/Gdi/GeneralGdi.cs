@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
@@ -93,10 +89,10 @@ namespace GdiTests
 
             int pixelWidth = context.GetDeviceCapability(DeviceCapability.HorzontalResolution);
             int pixelHeight = context.GetDeviceCapability(DeviceCapability.VerticalResolution);
-            context.GetViewportOrigin(out Point viewportOrigin).Should().BeTrue();
-            viewportOrigin.Should().Be(Size.Empty);
-            context.GetWindowOrigin(out Point windowOrigin).Should().BeTrue();
-            windowOrigin.Should().Be(Size.Empty);
+            context.GetViewportOrigin(out bool success).Should().Be(new Point());
+            success.Should().BeTrue();
+            context.GetWindowOrigin(out success).Should().Be(new Point());
+            success.Should().BeTrue();
             context.GetViewportExtents(out Size viewportExtents).Should().BeTrue();
             context.GetWindowExtents(out Size windowExtents).Should().BeTrue();
             Rectangle clip = Windows.GetClipCursor();

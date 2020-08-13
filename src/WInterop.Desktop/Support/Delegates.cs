@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -16,7 +12,7 @@ namespace WInterop.Support
         public static string DesktopLibrary = "WInterop.Desktop, " + AssemblyInformation.FullyQualifiedVersion;
 
         /// <summary>
-        /// Creates a delegate for the given type and method name.
+        ///  Creates a delegate for the given type and method name.
         /// </summary>
         public static T CreateDelegate<T>(string typeName, string methodName) where T : class
         {
@@ -31,7 +27,7 @@ namespace WInterop.Support
         }
 
         /// <summary>
-        /// Gets the parameter types for the given delegate type.
+        ///  Gets the parameter types for the given delegate type.
         /// </summary>
         public static Type[] GetDelegateParameters<T>() where T : class
         {

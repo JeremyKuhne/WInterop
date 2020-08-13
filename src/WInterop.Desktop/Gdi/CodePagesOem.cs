@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -30,105 +26,88 @@ namespace WInterop.Gdi
         ReservedOem46                   = 0b00000000_00000000_01000000_00000000,
 
         /// <summary>
-        /// Code page 1258.
+        ///  Code page 1258.
         /// </summary>
         Vietnamese                      = 0b00000000_00000000_10000000_00000000,
 
         /// <summary>
-        /// Code page 869.
+        ///  Code page 869.
         /// </summary>
         ModernGreek                     = 0b00000000_00000001_00000000_00000000,
 
         /// <summary>
-        /// Code page 866.
+        ///  Code page 866.
         /// </summary>
         Russian                         = 0b00000000_00000010_00000000_00000000,
 
         /// <summary>
-        /// Code page 865.
+        ///  Code page 865.
         /// </summary>
         Nordic                          = 0b00000000_00000100_00000000_00000000,
 
         /// <summary>
-        /// Code page 864.
+        ///  Code page 864.
         /// </summary>
         Arabic                          = 0b00000000_00001000_00000000_00000000,
 
         /// <summary>
-        /// Code page 863.
+        ///  Code page 863.
         /// </summary>
         CanadianFrench                  = 0b00000000_00010000_00000000_00000000,
 
         /// <summary>
-        /// Code page 862.
+        ///  Code page 862.
         /// </summary>
         Hebrew                          = 0b00000000_00100000_00000000_00000000,
 
         /// <summary>
-        /// Code page 861.
+        ///  Code page 861.
         /// </summary>
         Icelandic                       = 0b00000000_01000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 860.
+        ///  Code page 860.
         /// </summary>
         Portugese                       = 0b00000000_10000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 857.
+        ///  Code page 857.
         /// </summary>
         Turkish                         = 0b00000001_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 855. (Primarily Russian)
+        ///  Code page 855. (Primarily Russian)
         /// </summary>
         Cyrillic                        = 0b00000010_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 852.
+        ///  Code page 852.
         /// </summary>
         Latin2                          = 0b00000100_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 775.
+        ///  Code page 775.
         /// </summary>
         Baltic                          = 0b00001000_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 737. (Formerly 437G)
+        ///  Code page 737. (Formerly 437G)
         /// </summary>
         Greek                           = 0b00010000_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code pages 708 and 720. (ASMO 708)
+        ///  Code pages 708 and 720. (ASMO 708)
         /// </summary>
         ArabicAsmo                      = 0b00100000_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 850.
+        ///  Code page 850.
         /// </summary>
         MuiltilingualLatin              = 0b01000000_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 437.
+        ///  Code page 437.
         /// </summary>
         US                              = 0b10000000_00000000_00000000_00000000
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

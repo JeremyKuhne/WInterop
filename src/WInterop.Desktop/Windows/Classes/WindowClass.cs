@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -63,7 +59,7 @@ namespace WInterop.Windows
             moduleInstance ??= new ModuleInstance(Marshal.GetHINSTANCE(Assembly.GetCallingAssembly().Modules.First()));
 
             if (menuId != 0 && menuName != null)
-                throw new ArgumentException("Can't set both " + nameof(menuName) + " and " + nameof(menuId) + ".");
+                throw new ArgumentException($"Can't set both {nameof(menuName)} and {nameof(menuId)}.");
 
             _windowProcedure = WindowProcedure;
             ModuleInstance = moduleInstance;
@@ -87,11 +83,22 @@ namespace WInterop.Windows
             };
         }
 
-        public bool IsRegistered => Atom.IsValid;
+        public WindowClass(string registeredClassName)
+        {
+            _windowProcedure = WindowProcedure;
+            _className = registeredClassName;
+            _menuName = string.Empty;
+            ModuleInstance = ModuleInstance.Null;
+        }
+
+        public bool IsRegistered => Atom.IsValid || ModuleInstance == ModuleInstance.Null;
 
         public BrushHandle BackgroundBrush
             => new BrushHandle(_wndClass.hbrBackground, ownsHandle: false);
 
+        /// <summary>
+        ///  Registers this <see cref="WindowClass"/> so that instances can be created.
+        /// </summary>
         public unsafe WindowClass Register()
         {
             fixed (char* name = _className)
@@ -109,6 +116,16 @@ namespace WInterop.Windows
             }
         }
 
+        /// <summary>
+        ///  Creates an instance of this <see cref="WindowClass"/>.
+        /// </summary>
+        /// <param name="windowName">
+        ///  The text for the title bar when using <see cref="WindowStyles.Caption"/> or <see cref="WindowStyles.Overlapped"/>.
+        ///  For buttons, checkboxes, and other static controls this is the text of the control or a resource reference.
+        /// </param>
+        /// <param name="isMainWindow">
+        ///  Set this to indicate that this is the main window for the application and closing it should terminate the message loop.
+        /// </param>
         public WindowHandle CreateWindow(
             string? windowName = null,
             WindowStyles style = WindowStyles.Overlapped,
@@ -129,7 +146,17 @@ namespace WInterop.Windows
                 menuHandle);
         }
 
-        public WindowHandle CreateWindow(
+        /// <summary>
+        ///  Creates an instance of this <see cref="WindowClass"/>.
+        /// </summary>
+        /// <param name="windowName">
+        ///  The text for the title bar when using <see cref="WindowStyles.Caption"/> or <see cref="WindowStyles.Overlapped"/>.
+        ///  For buttons, checkboxes, and other static controls this is the text of the control or a resource reference.
+        /// </param>
+        /// <param name="isMainWindow">
+        ///  Set this to indicate that this is the main window for the application and closing it should terminate the message loop.
+        /// </param>
+        public virtual WindowHandle CreateWindow(
             Rectangle bounds,
             string? windowName = null,
             WindowStyles style = WindowStyles.Overlapped,
@@ -142,15 +169,30 @@ namespace WInterop.Windows
             if (!IsRegistered)
                 throw new ArgumentException("Window class must be registered before using.");
 
-            WindowHandle window = Windows.CreateWindow(
-                Atom,
-                windowName,
-                style,
-                extendedStyle,
-                bounds,
-                parentWindow,
-                menuHandle,
-                parameters: parameters);
+            WindowHandle window = Atom.IsValid
+                ? Windows.CreateWindow(
+                    Atom,
+                    windowName,
+                    style,
+                    extendedStyle,
+                    bounds,
+                    parentWindow,
+                    menuHandle,
+                    parameters)
+                : Windows.CreateWindow(
+                    _className,
+                    windowName,
+                    style,
+                    extendedStyle,
+                    bounds,
+                    parentWindow,
+                    menuHandle,
+                    parameters);
+
+            if (!Atom.IsValid)
+            {
+                Atom = window.GetClassLong(ClassLong.Atom);
+            }
 
             if (isMainWindow)
                 MainWindow = window;

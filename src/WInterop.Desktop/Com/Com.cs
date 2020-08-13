@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -16,7 +12,7 @@ namespace WInterop.Com
 {
     public static partial class Com
     {
-        public unsafe static object CreateStorage(
+        public static unsafe object CreateStorage(
             string path,
             Guid riid,
             StorageMode mode = StorageMode.ReadWrite | StorageMode.Create | StorageMode.ShareExclusive,
@@ -43,7 +39,7 @@ namespace WInterop.Com
             return created;
         }
 
-        public unsafe static object OpenStorage(
+        public static unsafe object OpenStorage(
             string path,
             Guid riid,
             StorageMode mode = StorageMode.ReadWrite | StorageMode.ShareExclusive,
@@ -73,7 +69,7 @@ namespace WInterop.Com
             return Imports.StgIsStorageFile(path) == HResult.S_OK;
         }
 
-        public unsafe static ITypeInfo GetTypeInfoByName(this ITypeLib typeLib, string typeName)
+        public static unsafe ITypeInfo GetTypeInfoByName(this ITypeLib typeLib, string typeName)
         {
             // The find method is case insensitive, and will overwrite the input buffer
             // with the actual found casing.
@@ -96,7 +92,7 @@ namespace WInterop.Com
             return (ITypeInfo)Marshal.GetTypedObjectForIUnknown(typeInfos[0], typeof(ITypeInfo));
         }
 
-        public unsafe static ICollection<string?> GetFunctionNames(this ITypeInfo typeInfo, uint functionIndex)
+        public static unsafe ICollection<string?> GetFunctionNames(this ITypeInfo typeInfo, uint functionIndex)
         {
             typeInfo.GetFuncDesc(functionIndex, out FUNCDESC* description)
                 .ThrowIfFailed($"Failed to get description for function index: {functionIndex}");
@@ -107,9 +103,9 @@ namespace WInterop.Com
             return GetMemberNames(typeInfo, id, count);
         }
 
-        public unsafe static ICollection<string?> GetMemberNames(this ITypeInfo typeInfo, MemberId id, uint count)
+        public static unsafe ICollection<string?> GetMemberNames(this ITypeInfo typeInfo, MemberId id, uint count)
         {
-            BasicString* names = stackalloc BasicString[(int)(count)];
+            BasicString* names = stackalloc BasicString[(int)count];
             typeInfo.GetNames(id, names, count, out count)
                 .ThrowIfFailed($"Failed to get names for member id: {id.Value}");
 
@@ -122,7 +118,7 @@ namespace WInterop.Com
             return results;
         }
 
-        public unsafe static string? GetMemberName(this ITypeInfo typeInfo, MemberId id)
+        public static unsafe string? GetMemberName(this ITypeInfo typeInfo, MemberId id)
         {
             BasicString name;
             typeInfo.GetDocumentation(id, &name)
@@ -130,7 +126,7 @@ namespace WInterop.Com
             return name.ToStringAndFree();
         }
 
-        public unsafe static string? GetVariableName(this ITypeInfo typeInfo, uint variableIndex)
+        public static unsafe string? GetVariableName(this ITypeInfo typeInfo, uint variableIndex)
         {
             typeInfo.GetVarDesc(variableIndex, out VARDESC* description)
                 .ThrowIfFailed($"Failed to get description for variable index: {variableIndex}");

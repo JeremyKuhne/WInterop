@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -16,7 +12,7 @@ namespace Inception
         private Rectangle _client;
         private Rectangle _screen;
         private MonitorHandle _initialMonitor;
-        private TimerId _timerId = new TimerId(1);
+        private readonly TimerId _timerId = new TimerId(1);
 
         public Inception() : base(backgroundBrush: BrushHandle.NoBrush) { }
 

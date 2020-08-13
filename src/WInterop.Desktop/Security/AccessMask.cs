@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Storage;
@@ -10,11 +6,9 @@ using WInterop.Storage;
 namespace WInterop.Security
 {
     /// <summary>
-    /// Describes standard, specific, and generic rights. [ACCESS_MASK]
+    ///  Describes standard, specific, and generic rights. [ACCESS_MASK]
     /// </summary>
-    /// <remarks>
-    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374892.aspx"/>
-    /// </remarks>
+    /// <docs>https://docs.microsoft.com/en-us/windows/win32/secauthz/access-mask</docs>
     public struct AccessMask
     {
         public const uint GenericRightsMask = 0xF0000000;
@@ -25,7 +19,7 @@ namespace WInterop.Security
 
         public StandardAccessRights StandardRights
         {
-            get { return (StandardAccessRights)(Value & (uint)StandardAccessRights.All); }
+            get => (StandardAccessRights)(Value & (uint)StandardAccessRights.All);
             set
             {
                 Value &= ~(uint)StandardAccessRights.All;
@@ -35,7 +29,7 @@ namespace WInterop.Security
 
         public GenericAccessRights GenericRights
         {
-            get { return (GenericAccessRights)(Value & GenericRightsMask); }
+            get => (GenericAccessRights)(Value & GenericRightsMask);
             set
             {
                 Value &= ~GenericRightsMask;
@@ -45,7 +39,7 @@ namespace WInterop.Security
 
         public bool AccessSystemSecurity
         {
-            get { return (Value & (uint)StandardAccessRights.AccessSystemSecurity) != 0; }
+            get => (Value & (uint)StandardAccessRights.AccessSystemSecurity) != 0;
             set
             {
                 if (value)

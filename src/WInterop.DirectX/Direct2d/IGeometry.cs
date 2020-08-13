@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,7 +9,7 @@ using System.Runtime.InteropServices;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// [ID2D1Geometry]
+    ///  [ID2D1Geometry]
     /// </summary>
     [ComImport,
         Guid(InterfaceIds.IID_ID2D1Geometry),
@@ -26,14 +22,14 @@ namespace WInterop.Direct2d
             out IFactory factory);
 
         /// <summary>
-        /// Retrieve the bounds of the geometry, with an optional applied transform.
+        ///  Retrieve the bounds of the geometry, with an optional applied transform.
         /// </summary>
         LtrbRectangleF GetBounds(
             Matrix3x2* worldTransform);
 
         /// <summary>
-        /// Get the bounds of the corresponding geometry after it has been widened or have
-        /// an optional pen style applied.
+        ///  Get the bounds of the corresponding geometry after it has been widened or have
+        ///  an optional pen style applied.
         /// </summary>
         LtrbRectangleF GetWidenedBounds(
             float strokeWidth,
@@ -42,10 +38,10 @@ namespace WInterop.Direct2d
             float flatteningTolerance);
 
         /// <summary>
-        /// Checks to see whether the corresponding penned and widened geometry contains the
-        /// given point.
+        ///  Checks to see whether the corresponding penned and widened geometry contains the
+        ///  given point.
         /// </summary>
-        Boolean32 StrokeContainsPoint(
+        IntBoolean StrokeContainsPoint(
             PointF point,
             float strokeWidth,
             IStrokeStyle strokeStyle,
@@ -53,15 +49,15 @@ namespace WInterop.Direct2d
             float flatteningTolerance);
 
         /// <summary>
-        /// Test whether the given fill of this geometry would contain this point.
+        ///  Test whether the given fill of this geometry would contain this point.
         /// </summary>
-        Boolean32 FillContainsPoint(
+        IntBoolean FillContainsPoint(
             PointF point,
             Matrix3x2* worldTransform,
             float flatteningTolerance);
 
         /// <summary>
-        /// Compare how one geometry intersects or contains another geometry.
+        ///  Compare how one geometry intersects or contains another geometry.
         /// </summary>
         GeometryRelation CompareWithGeometry(
             IGeometry inputGeometry,
@@ -69,8 +65,8 @@ namespace WInterop.Direct2d
             float flatteningTolerance);
 
         /// <summary>
-        /// Converts a geometry to a simplified geometry that has arcs and quadratic beziers
-        /// removed.
+        ///  Converts a geometry to a simplified geometry that has arcs and quadratic beziers
+        ///  removed.
         /// </summary>
         void Simplify(
             GeometrySimplificationOption simplificationOption,
@@ -79,7 +75,7 @@ namespace WInterop.Direct2d
             ISimplifiedGeometrySink geometrySink);
 
         /// <summary>
-        /// Tessellates a geometry into triangles.
+        ///  Tessellates a geometry into triangles.
         /// </summary>
         void Tessellate(
             Matrix3x2* worldTransform,
@@ -87,8 +83,8 @@ namespace WInterop.Direct2d
             ITesselationSink tessellationSink);
 
         /// <summary>
-        /// Performs a combine operation between the two geometries to produce a resulting
-        /// geometry.
+        ///  Performs a combine operation between the two geometries to produce a resulting
+        ///  geometry.
         /// </summary>
         void CombineWithGeometry(
             IGeometry inputGeometry,
@@ -98,8 +94,8 @@ namespace WInterop.Direct2d
             ISimplifiedGeometrySink geometrySink);
 
         /// <summary>
-        /// Computes the outline of the geometry. The result is written back into a
-        /// simplified geometry sink.
+        ///  Computes the outline of the geometry. The result is written back into a
+        ///  simplified geometry sink.
         /// </summary>
         void Outline(
             Matrix3x2* worldTransform,
@@ -107,21 +103,21 @@ namespace WInterop.Direct2d
             ISimplifiedGeometrySink geometrySink);
 
         /// <summary>
-        /// Computes the area of the geometry.
+        ///  Computes the area of the geometry.
         /// </summary>
         float ComputeArea(
             Matrix3x2* worldTransform,
             float flatteningTolerance);
 
         /// <summary>
-        /// Computes the length of the geometry.
+        ///  Computes the length of the geometry.
         /// </summary>
         float ComputeLength(
             Matrix3x2* worldTransform,
             float flatteningTolerance);
 
         /// <summary>
-        /// Computes the point and tangent a given distance along the path.
+        ///  Computes the point and tangent a given distance along the path.
         /// </summary>
         void ComputePointAtLength(
             float length,
@@ -131,7 +127,7 @@ namespace WInterop.Direct2d
             PointF* unitTangentVector);
 
         /// <summary>
-        /// Get the geometry and widen it as well as apply an optional pen style.
+        ///  Get the geometry and widen it as well as apply an optional pen style.
         /// </summary>
         void Widen(
             float strokeWidth,
@@ -144,12 +140,12 @@ namespace WInterop.Direct2d
     public static class GeometryExtensions
     {
         /// <summary>
-        /// Retrieve the bounds of the geometry.
+        ///  Retrieve the bounds of the geometry.
         /// </summary>
         public static unsafe RectangleF GetBounds(this IGeometry geometry) => geometry.GetBounds(null);
 
         /// <summary>
-        /// Retrieve the bounds of the geometry with a transform.
+        ///  Retrieve the bounds of the geometry with a transform.
         /// </summary>
         public static unsafe RectangleF GetBounds(this IGeometry geometry, Matrix3x2 worldTransform)
             => geometry.GetBounds(&worldTransform);

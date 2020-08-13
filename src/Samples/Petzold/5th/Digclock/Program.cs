@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,24 +11,24 @@ using WInterop.Windows;
 namespace DigClock
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 8-3, Pages 338-342.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 8-3, Pages 338-342.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new DigClock(), "Digital Clock");
         }
     }
 
-    class DigClock : WindowClass
+    internal class DigClock : WindowClass
     {
         public DigClock() : base(backgroundBrush: StockBrush.Black) { }
 
-        static Boolean32[,] fSevenSegment =
+        private static readonly IntBoolean[,] fSevenSegment =
         {
             { 1, 1, 1, 0, 1, 1, 1 }, // 0
             { 0, 0, 1, 0, 0, 1, 0 }, // 1
@@ -45,8 +41,7 @@ namespace DigClock
             { 1, 1, 1, 1, 1, 1, 1 }, // 8
             { 1, 1, 1, 1, 0, 1, 1 }  // 9
         };
-
-        static Point[][] ptSegment =
+        private static readonly Point[][] ptSegment =
         {
             new Point[] { new Point(7, 6), new Point(11, 2), new Point(31, 2), new Point(35, 6), new Point(31, 10), new Point(11, 10) },
             new Point[] { new Point(6, 7), new Point(10, 11), new Point(10, 31), new Point(6, 35), new Point(2, 31), new Point(2, 11) },
@@ -57,14 +52,14 @@ namespace DigClock
             new Point[] { new Point(7, 66), new Point(11, 62), new Point(31, 62), new Point(35, 66), new Point(31, 70), new Point(11, 70) }
         };
 
-        static void DisplayDigit(DeviceContext hdc, int iNumber)
+        private static void DisplayDigit(DeviceContext hdc, int iNumber)
         {
             for (int iSeg = 0; iSeg < 7; iSeg++)
                 if (fSevenSegment[iNumber, iSeg])
                     hdc.Polygon(ptSegment[iSeg]);
         }
 
-        static void DisplayTwoDigits(DeviceContext hdc, int iNumber, bool fSuppress)
+        private static void DisplayTwoDigits(DeviceContext hdc, int iNumber, bool fSuppress)
         {
             if (!fSuppress || (iNumber / 10 != 0))
                 DisplayDigit(hdc, iNumber / 10);
@@ -73,7 +68,7 @@ namespace DigClock
             hdc.OffsetWindowOrigin(-42, 0);
         }
 
-        static void DisplayColon(DeviceContext hdc)
+        private static void DisplayColon(DeviceContext hdc)
         {
             Point[][] ptColon =
             {
@@ -85,7 +80,7 @@ namespace DigClock
             hdc.OffsetWindowOrigin(-12, 0);
         }
 
-        static void DisplayTime(DeviceContext hdc, Boolean32 f24Hour, Boolean32 fSuppress)
+        private static void DisplayTime(DeviceContext hdc, IntBoolean f24Hour, IntBoolean fSuppress)
         {
             SystemTime st = SystemInformation.GetLocalTime();
             if (f24Hour)
@@ -98,10 +93,10 @@ namespace DigClock
             DisplayTwoDigits(hdc, st.Second, false);
         }
 
-        const int ID_TIMER = 1;
-        BrushHandle hBrushRed;
-        int cxClient, cyClient;
-        bool f24Hour, fSuppress;
+        private const int ID_TIMER = 1;
+        private BrushHolder hBrushRed;
+        private int cxClient, cyClient;
+        private bool f24Hour, fSuppress;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

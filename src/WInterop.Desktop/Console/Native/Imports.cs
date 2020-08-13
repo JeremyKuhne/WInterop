@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ using WInterop.Windows.Native;
 namespace WInterop.Console.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -94,7 +90,7 @@ namespace WInterop.Console.Native
 
         // https://docs.microsoft.com/en-us/windows/console/readconsole
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool ReadConsoleW(
+        public static unsafe extern bool ReadConsoleW(
             SafeHandle hConsoleInput,
             void* lpBuffer,
             uint nNumberOfCharsToRead,
@@ -103,7 +99,7 @@ namespace WInterop.Console.Native
 
         // https://docs.microsoft.com/en-us/windows/console/writeconsole
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public unsafe static extern bool WriteConsoleW(
+        public static unsafe extern bool WriteConsoleW(
             SafeHandle hConsoleOutput,
             void* lpBuffer,
             uint nNumberOfCharsToWrite,

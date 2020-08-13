@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,18 +8,18 @@ using System.Runtime.InteropServices;
 namespace WInterop.Support.Buffers
 {
     /// <summary>
-    /// Checked helpers for reading data from a Buffer. Use StreamBuffer for more complicated read operations.
+    ///  Checked helpers for reading data from a Buffer. Use StreamBuffer for more complicated read operations.
     /// </summary>
     /// <remarks>
-    /// Didn't use extension methods to avoid dirtying the usage of derived classes. We don't want to encourage accidentally
-    /// grabbing strings for StringBuffer using these methods, for example.
+    ///  Didn't use extension methods to avoid dirtying the usage of derived classes. We don't want to encourage accidentally
+    ///  grabbing strings for StringBuffer using these methods, for example.
     /// </remarks>
     public class CheckedReader : Reader
     {
         // Windows Data Alignment on IPF, x86, and x64
         // https://msdn.microsoft.com/en-us/library/aa290049.aspx
 
-        private ulong _byteCapacity;
+        private readonly ulong _byteCapacity;
 
         public CheckedReader(ISizedBuffer buffer)
             : this(buffer, buffer?.ByteCapacity ?? 0)
@@ -37,7 +33,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Get/set the offset in bytes
+        ///  Get/set the offset in bytes
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if setting an offset greater than the capacity.</exception>
         public override ulong ByteOffset
@@ -50,7 +46,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Read a string of the given amount of characters from the buffer. Advances the reader offset.
+        ///  Read a string of the given amount of characters from the buffer. Advances the reader offset.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the count of characters would go past the end of the buffer.</exception>
         public override string ReadString(int charCount)
@@ -60,7 +56,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Read a ushort at the current offset. Advances the reader offset.
+        ///  Read a ushort at the current offset. Advances the reader offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading a ushort would go past the end of the buffer.</exception>
         public override ushort ReadUshort()
@@ -69,7 +65,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Read a short at the current offset. Advances the reader offset.
+        ///  Read a short at the current offset. Advances the reader offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading a short would go past the end of the buffer.</exception>
         public override short ReadShort()
@@ -79,7 +75,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Read a uint at the current offset. Advances the reader offset.
+        ///  Read a uint at the current offset. Advances the reader offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading a uint would go past the end of the buffer.</exception>
         public override uint ReadUint()
@@ -88,7 +84,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Read an int at the current offset. Advances the reader offset.
+        ///  Read an int at the current offset. Advances the reader offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading an int would go past the end of the buffer.</exception>
         public override int ReadInt()
@@ -98,7 +94,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Read a ulong at the current offset. Advances the reader offset.
+        ///  Read a ulong at the current offset. Advances the reader offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading a ulong would go past the end of the buffer.</exception>
         public override ulong ReadUlong()
@@ -107,7 +103,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Read a long at the current offset. Advances the reader offset.
+        ///  Read a long at the current offset. Advances the reader offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading a long would go past the end of the buffer.</exception>
         public override long ReadLong()
@@ -117,7 +113,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Get a pointer at the current offset.
+        ///  Get a pointer at the current offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading a pointer would go past the end of the buffer.</exception>
         public override IntPtr ReadIntPtr()
@@ -133,7 +129,7 @@ namespace WInterop.Support.Buffers
         }
 
         /// <summary>
-        /// Read the given struct type at the current offset.
+        ///  Read the given struct type at the current offset.
         /// </summary>
         /// <exception cref="EndOfStreamException">Thrown if reading the given struct would go past the end of the buffer.</exception>
         public override T ReadStruct<T>()

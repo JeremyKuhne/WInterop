@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -21,7 +17,8 @@ namespace WInterop.Gdi
 
         public PenHandle(HPEN handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Pen || Imports.GetObjectType(handle) == ObjectType.ExtendedPen);
+            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Pen
+                || Imports.GetObjectType(handle) == ObjectType.ExtendedPen);
 
             Handle = handle;
             _ownsHandle = ownsHandle;
@@ -39,7 +36,6 @@ namespace WInterop.Gdi
             }
         }
 
-
         public void Dispose()
         {
             if (_ownsHandle)
@@ -49,7 +45,8 @@ namespace WInterop.Gdi
         public static implicit operator HGDIOBJ(PenHandle handle) => handle.Handle;
         public static implicit operator HPEN(PenHandle handle) => handle.Handle;
         public static implicit operator LResult(PenHandle handle) => handle.Handle.Handle;
-        public static implicit operator GdiObjectHandle(PenHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
+        public static implicit operator GdiObjectHandle(PenHandle handle)
+            => new GdiObjectHandle(handle.Handle, ownsHandle: false);
         public static implicit operator PenHandle(StockPen pen) => Gdi.GetStockPen(pen);
     }
 }

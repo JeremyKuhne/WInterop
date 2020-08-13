@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,7 +11,7 @@ namespace WInterop.Devices.Native
     public struct MOUNTDEV_NAME
     {
         /// <summary>
-        /// Name length, in bytes.
+        ///  Name length, in bytes.
         /// </summary>
         public ushort NameLength;
 

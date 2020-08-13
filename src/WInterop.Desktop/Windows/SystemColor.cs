@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright [c] Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Windows
@@ -10,172 +6,172 @@ namespace WInterop.Windows
     public enum SystemColor : int
     {
         /// <summary>
-        /// Scroll bar gray area. [COLOR_SCROLLBAR]
+        ///  Scroll bar gray area. [COLOR_SCROLLBAR]
         /// </summary>
         ScrollBar = 0,
 
         /// <summary>
-        /// The Desktop. [COLOR_BACKGROUND]
+        ///  The Desktop. [COLOR_BACKGROUND]
         /// </summary>
         Background = 1,
 
         /// <summary>
-        /// [COLOR_ACTIVECAPTION]
+        ///  [COLOR_ACTIVECAPTION]
         /// </summary>
         ActiveCaption = 2,
 
         /// <summary>
-        /// [COLOR_INACTIVECAPTION]
+        ///  [COLOR_INACTIVECAPTION]
         /// </summary>
         InactiveCaption = 3,
 
         /// <summary>
-        /// [COLOR_MENU]
+        ///  [COLOR_MENU]
         /// </summary>
         Menu = 4,
 
         /// <summary>
-        /// Window background. [COLOR_WINDOW]
+        ///  Window background. [COLOR_WINDOW]
         /// </summary>
         Window = 5,
 
         /// <summary>
-        /// [COLOR_WINDOWFRAME]
+        ///  [COLOR_WINDOWFRAME]
         /// </summary>
         WindowFrame = 6,
 
         /// <summary>
-        /// [COLOR_MENUTEXT]
+        ///  [COLOR_MENUTEXT]
         /// </summary>
         MenuText = 7,
 
         /// <summary>
-        /// [COLOR_WINDOWTEXT]
+        ///  [COLOR_WINDOWTEXT]
         /// </summary>
         WindowText = 8,
 
         /// <summary>
-        /// [COLOR_CAPTIONTEXT]
+        ///  [COLOR_CAPTIONTEXT]
         /// </summary>
         CaptionText = 9,
 
         /// <summary>
-        /// [COLOR_ACTIVEBORDER]
+        ///  [COLOR_ACTIVEBORDER]
         /// </summary>
         ActiveBorder = 10,
 
         /// <summary>
-        /// [COLOR_INACTIVEBORDER]
+        ///  [COLOR_INACTIVEBORDER]
         /// </summary>
         InactiveBorder = 11,
 
         /// <summary>
-        /// [COLOR_APPWORKSPACE]
+        ///  [COLOR_APPWORKSPACE]
         /// </summary>
         AppWorkSpace = 12,
 
         /// <summary>
-        /// [COLOR_HIGHLIGHT]
+        ///  [COLOR_HIGHLIGHT]
         /// </summary>
         Highlight = 13,
 
         /// <summary>
-        /// [COLOR_HIGHLIGHTTEXT]
+        ///  [COLOR_HIGHLIGHTTEXT]
         /// </summary>
         HighlightText = 14,
 
         /// <summary>
-        /// For dialog box backgrounds. [COLOR_BTNFACE]
+        ///  For dialog box backgrounds. [COLOR_BTNFACE]
         /// </summary>
         ButtonFace = 15,
 
         /// <summary>
-        /// [COLOR_BTNSHADOW]
+        ///  [COLOR_BTNSHADOW]
         /// </summary>
         ButtonShadow = 16,
 
         /// <summary>
-        /// [COLOR_GRAYTEXT]
+        ///  [COLOR_GRAYTEXT]
         /// </summary>
         GrayText = 17,
 
         /// <summary>
-        /// [COLOR_BTNTEXT]
+        ///  [COLOR_BTNTEXT]
         /// </summary>
         ButtonText = 18,
 
         /// <summary>
-        /// [COLOR_INACTIVECAPTIONTEXT]
+        ///  [COLOR_INACTIVECAPTIONTEXT]
         /// </summary>
         InactiveCaptionText = 19,
 
         /// <summary>
-        /// [COLOR_BTNHIGHLIGHT]
+        ///  [COLOR_BTNHIGHLIGHT]
         /// </summary>
         ButtonHighlight = 20,
 
         /// <summary>
-        /// [COLOR_3DDKSHADOW]
+        ///  [COLOR_3DDKSHADOW]
         /// </summary>
         DarkShadow3d = 21,
 
         /// <summary>
-        /// [COLOR_3DLIGHT]
+        ///  [COLOR_3DLIGHT]
         /// </summary>
         Light3d = 22,
 
         /// <summary>
-        /// [COLOR_INFOTEXT]
+        ///  [COLOR_INFOTEXT]
         /// </summary>
         InfoText = 23,
 
         /// <summary>
-        /// [COLOR_INFOBK]
+        ///  [COLOR_INFOBK]
         /// </summary>
         InfoBackground = 24,
 
         /// <summary>
-        /// [COLOR_HOTLIGHT]
+        ///  [COLOR_HOTLIGHT]
         /// </summary>
         HotLight = 26,
 
         /// <summary>
-        /// [COLOR_GRADIENTACTIVECAPTION]
+        ///  [COLOR_GRADIENTACTIVECAPTION]
         /// </summary>
         GradientActiveCaption = 27,
 
         /// <summary>
-        /// [COLOR_GRADIENTINACTIVECAPTION]
+        ///  [COLOR_GRADIENTINACTIVECAPTION]
         /// </summary>
         GradientInactiveCaption = 28,
 
         /// <summary>
-        /// [COLOR_MENUHILIGHT]
+        ///  [COLOR_MENUHILIGHT]
         /// </summary>
         MenuHighlight = 29,
 
         /// <summary>
-        /// [COLOR_MENUBAR]
+        ///  [COLOR_MENUBAR]
         /// </summary>
         MenuBar = 30,
 
         /// <summary>
-        /// [COLOR_DESKTOP]
+        ///  [COLOR_DESKTOP]
         /// </summary>
         Desktop = Background,
 
         /// <summary>
-        /// [COLOR_3DFACE]
+        ///  [COLOR_3DFACE]
         /// </summary>
         Face3d = ButtonFace,
 
         /// <summary>
-        /// [COLOR_3DSHADOW]
+        ///  [COLOR_3DSHADOW]
         /// </summary>
         Shadow3d = ButtonShadow,
 
         /// <summary>
-        /// [COLOR_3DHIGHLIGHT]
+        ///  [COLOR_3DHIGHLIGHT]
         /// </summary>
         Highlight3d = ButtonHighlight
     }
