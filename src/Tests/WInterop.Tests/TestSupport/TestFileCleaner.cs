@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -19,12 +15,12 @@ namespace Tests.Support
         protected const string WinteropFlagFileName = @"%WinteropFlagFile%";
         protected ConcurrentBag<string> _filesToClean = new ConcurrentBag<string>();
         private Stream _flagFile;
-        private static string s_rootTempFolder;
-        private static object s_CleanLock;
+        private static readonly string s_rootTempFolder;
+        private static readonly object s_cleanLock;
 
         static TestFileCleaner()
         {
-            s_CleanLock = new object();
+            s_cleanLock = new object();
             s_rootTempFolder = Path.Combine(Path.GetTempPath(), "WinteropTests");
             CleanOrphanedTempFolders();
         }
@@ -35,7 +31,7 @@ namespace Tests.Support
             TempFolder = Path.Combine(s_rootTempFolder, Path.GetRandomFileName());
             string flagFile = Path.Combine(TempFolder, WinteropFlagFileName);
 
-            lock (s_CleanLock)
+            lock (s_cleanLock)
             {
                 // Make sure we fully lock the directory before allowing cleaning
                 FileHelper.CreateDirectoryRecursive(TempFolder);
@@ -51,7 +47,7 @@ namespace Tests.Support
         }
 
         /// <summary>
-        /// The isolated root folder for this instance of TestFileCleaner.
+        ///  The isolated root folder for this instance of TestFileCleaner.
         /// </summary>
         public string TempFolder { [DebuggerStepThrough] get; private set; }
 
@@ -154,7 +150,7 @@ namespace Tests.Support
 
         private void CleanOwnFiles()
         {
-            lock (s_CleanLock)
+            lock (s_cleanLock)
             {
                 _flagFile.Dispose();
                 _flagFile = null;

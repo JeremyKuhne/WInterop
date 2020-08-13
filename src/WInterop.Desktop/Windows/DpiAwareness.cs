@@ -7,22 +7,22 @@ namespace WInterop.Windows
     public enum DpiAwareness
     {
         /// <summary>
-        /// [DPI_AWARENESS_INVALID]
+        ///  [DPI_AWARENESS_INVALID]
         /// </summary>
         Invalid = -1,
 
         /// <summary>
-        /// [DPI_AWARENESS_UNAWARE]
+        ///  [DPI_AWARENESS_UNAWARE]
         /// </summary>
         Unaware = 0,
 
         /// <summary>
-        /// [DPI_AWARENESS_SYSTEM_AWARE]
+        ///  [DPI_AWARENESS_SYSTEM_AWARE]
         /// </summary>
         SystemAware = 1,
 
         /// <summary>
-        /// [DPI_AWARENESS_PER_MONITOR_AWARE]
+        ///  [DPI_AWARENESS_PER_MONITOR_AWARE]
         /// </summary>
         PerMonitorAware = 2
     }

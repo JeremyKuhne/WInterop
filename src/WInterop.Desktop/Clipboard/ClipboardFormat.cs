@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using WInterop.Gdi.Native;
+
 namespace WInterop.Clipboard
 {
     /// <summary>
@@ -45,7 +47,7 @@ namespace WInterop.Clipboard
         OemText = 7,
 
         /// <summary>
-        ///  Device independent bitmap. <see cref="Gdi.BitmapInfo"/> [CF_DIB]
+        ///  Device independent bitmap. <see cref="BITMAPINFO"/> [CF_DIB]
         /// </summary>
         DeviceIndependentBitmap = 8,
 

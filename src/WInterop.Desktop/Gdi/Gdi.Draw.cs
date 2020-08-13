@@ -50,7 +50,7 @@ namespace WInterop.Gdi
             switch (Imports.GetObjectType(pen))
             {
                 case ObjectType.Pen:
-                    LOGPEN logPen = new LOGPEN();
+                    LOGPEN logPen = default;
                     int size = sizeof(LOGPEN);
                     if (Imports.GetObjectW(pen, size, &logPen) == size)
                         return logPen.lopnColor;

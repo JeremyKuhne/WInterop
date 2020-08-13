@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,21 +7,13 @@ namespace WInterop.Windows
 {
     public readonly struct TimerId
     {
-        public static TimerId Null => new TimerId();
+        public static TimerId Null => default;
 
         public UIntPtr Value { get; }
 
-        public TimerId(uint id)
-        {
-            Value = (UIntPtr)id;
-        }
+        public TimerId(uint id) => Value = (UIntPtr)id;
 
-        public override bool Equals(object? obj)
-        {
-            return obj is TimerId other
-                ? other.Value == Value
-                : false;
-        }
+        public override bool Equals(object? obj) => obj is TimerId other && other.Value == Value;
 
         public bool Equals(TimerId other) => other.Value == Value;
 

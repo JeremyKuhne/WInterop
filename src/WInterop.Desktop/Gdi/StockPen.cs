@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Gdi
@@ -11,22 +7,22 @@ namespace WInterop.Gdi
     public enum StockPen : int
     {
         /// <summary>
-        /// (WHITE_PEN)
+        ///  (WHITE_PEN)
         /// </summary>
         White = StockObject.WhitePen,
 
         /// <summary>
-        /// (BLACK_PEN)
+        ///  (BLACK_PEN)
         /// </summary>
         Black = StockObject.BlackPen,
 
         /// <summary>
-        /// (NULL_PEN)
+        ///  (NULL_PEN)
         /// </summary>
         Null = StockObject.NullPen,
 
         /// <summary>
-        /// (DC_PEN)
+        ///  (DC_PEN)
         /// </summary>
         DeviceContext = StockObject.DeviceContextPen
     }

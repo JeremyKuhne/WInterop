@@ -8,8 +8,8 @@
 namespace WInterop
 {
     /// <summary>
-    /// Using API library definitions over legacy library names is encouraged for future proofing
-    /// and a supposed slight perf benefit in looking up apis.
+    ///  Using API library definitions over legacy library names is encouraged for future proofing
+    ///  and a supposed slight perf benefit in looking up apis.
     /// </summary>
     public static class ApiSets
     {

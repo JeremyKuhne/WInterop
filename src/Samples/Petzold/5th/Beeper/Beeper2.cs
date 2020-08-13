@@ -1,20 +1,16 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System.Drawing;
+using WInterop.Gdi;
+using WInterop.Windows;
 
 namespace Beeper
 {
-    using System.Drawing;
-    using WInterop.Gdi;
-    using WInterop.Windows;
-
-    class Beeper2 : WindowClass
+    internal class Beeper2 : WindowClass
     {
-        static bool fFlipFlop = false;
-        const int ID_TIMER = 1;
+        private static bool s_fFlipFlop = false;
+        private const int ID_TIMER = 1;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -31,17 +27,13 @@ namespace Beeper
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        static void TimerProcedure(WindowHandle window, MessageType message, TimerId timerId, uint time)
+        private static void TimerProcedure(WindowHandle window, MessageType message, TimerId timerId, uint time)
         {
             Windows.MessageBeep();
-            fFlipFlop = !fFlipFlop;
-            using (DeviceContext dc = window.GetDeviceContext())
-            {
-                using (BrushHandle brush = Gdi.CreateSolidBrush(fFlipFlop ? Color.Red : Color.Blue))
-                {
-                    dc.FillRectangle(window.GetClientRectangle(), brush);
-                }
-            }
+            s_fFlipFlop = !s_fFlipFlop;
+            using DeviceContext dc = window.GetDeviceContext();
+            using BrushHandle brush = Gdi.CreateSolidBrush(s_fFlipFlop ? Color.Red : Color.Blue);
+            dc.FillRectangle(window.GetClientRectangle(), brush);
         }
     }
 }

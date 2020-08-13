@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,14 +9,14 @@ using WInterop.Windows;
 namespace AltWind
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 5-21, Pages 171-173.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 5-21, Pages 171-173.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new AltWind(), "Alternate and Winding Fill Modes");
         }
@@ -28,7 +24,7 @@ namespace AltWind
 
     public class AltWind : WindowClass
     {
-        Point[] aptFigure =
+        private readonly Point[] aptFigure =
         {
             new Point(10, 70),
             new Point(50, 70),
@@ -41,8 +37,7 @@ namespace AltWind
             new Point(70, 30),
             new Point(10, 30)
         };
-
-        int cxClient, cyClient;
+        private int cxClient, cyClient;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

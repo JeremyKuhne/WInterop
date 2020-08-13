@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.SafeString.Native;
@@ -39,18 +35,18 @@ namespace WInterop.Handles.Native
         public uint HighWaterHandleTableUsage;
 
         /// <summary>
-        /// Attributes that can't be used on instances
+        ///  Attributes that can't be used on instances
         /// </summary>
         public ObjectAttributes InvalidAttributes;
 
         /// <summary>
-        /// Mapping of generic access rights (read/write/execute/all) to the type's specific rights
+        ///  Mapping of generic access rights (read/write/execute/all) to the type's specific rights
         /// </summary>
-        public GENERIC_MAPPING GenericMapping;
+        public GenericMapping GenericMapping;
 
         /// <summary>
-        /// Types of access a thread can request when opening a handle to an object of this type
-        /// (read, write, terminate, suspend, etc.)
+        ///  Types of access a thread can request when opening a handle to an object of this type
+        ///  (read, write, terminate, suspend, etc.)
         /// </summary>
         public uint ValidAccessMask;
         public byte SecurityRequired;
@@ -59,7 +55,7 @@ namespace WInterop.Handles.Native
         public byte ReservedByte;
 
         /// <summary>
-        /// Instances are allocated from paged or non-paged (0) memory
+        ///  Instances are allocated from paged or non-paged (0) memory
         /// </summary>
         public uint PoolType;
         public uint DefaultPagedPoolCharge;

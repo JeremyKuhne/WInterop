@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // To simplify pending NetStandard2.0 exluding this for now (as it isn't part of 1.6)
@@ -17,9 +13,9 @@ using System.Runtime.InteropServices;
 namespace WInterop.Support.Buffers
 {
     /// <summary>
-    /// Stream wrapper for access to the native heap that allows for automatic growth when writing.
-    /// Also provides implicit conversion to IntPtr for P/Invoke convenience.
-    /// Dispose to free the memory. Try to use with using statements.
+    ///  Stream wrapper for access to the native heap that allows for automatic growth when writing.
+    ///  Also provides implicit conversion to IntPtr for P/Invoke convenience.
+    ///  Dispose to free the memory. Try to use with using statements.
     /// </summary>
     public class StreamBuffer : Stream
     {

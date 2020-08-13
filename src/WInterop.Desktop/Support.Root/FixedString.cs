@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,11 +8,11 @@ using System.Runtime.InteropServices;
 namespace WInterop
 {
     /// <summary>
-    /// Contains definitions for various fixed size strings for creating blittable
-    /// structs. Provides easy string property access. Set strings are always null
-    /// terminated and will truncate if too large.
+    ///  Contains definitions for various fixed size strings for creating blittable
+    ///  structs. Provides easy string property access. Set strings are always null
+    ///  terminated and will truncate if too large.
     ///
-    /// Usage: Instead of "fixed char _buffer[12]" use "FixedBuffer.Size12 _buffer"
+    ///  Usage: Instead of "fixed char _buffer[12]" use "FixedBuffer.Size12 _buffer"
     /// </summary>
     public static unsafe class FixedString
     {

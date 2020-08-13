@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ using WInterop.Errors;
 namespace WInterop.Com
 {
     /// <summary>
-    /// OLE IOleUndoManager interface.
+    ///  OLE IOleUndoManager interface.
     /// </summary>
     /// <see cref="https://docs.microsoft.com/windows/win32/api/ocidl/nn-ocidl-ioleundomanager"/>
     [ComImport,
@@ -25,7 +21,7 @@ namespace WInterop.Com
         [PreserveSig]
         HResult Close(
             IOleParentUndoUnit pPUU,
-            Boolean32 fCommit);
+            IntBoolean fCommit);
 
         void Add(IOleUndoUnit pUU);
 
@@ -48,6 +44,6 @@ namespace WInterop.Com
         string GetLastRedoDescription();
 
         [PreserveSig]
-        HResult Enable(Boolean32 fEnable);
+        HResult Enable(IntBoolean fEnable);
     }
 }

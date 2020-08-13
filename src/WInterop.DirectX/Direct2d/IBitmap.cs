@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -11,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// Root bitmap resource, linearly scaled on a draw call. [ID2D1Bitmap]
+    ///  Root bitmap resource, linearly scaled on a draw call. [ID2D1Bitmap]
     /// </summary>
     [ComImport,
         Guid(InterfaceIds.IID_ID2D1Bitmap),
@@ -25,25 +21,25 @@ namespace WInterop.Direct2d
         #endregion
 
         /// <summary>
-        /// Returns the size of the bitmap in resolution independent units.
+        ///  Returns the size of the bitmap in resolution independent units.
         /// </summary>
         [PreserveSig]
         SizeF GetSize();
 
         /// <summary>
-        /// Returns the size of the bitmap in resolution dependent units, (pixels).
+        ///  Returns the size of the bitmap in resolution dependent units, (pixels).
         /// </summary>
         [PreserveSig]
         SizeU GetPixelSize();
 
         /// <summary>
-        /// Retrieve the format of the bitmap.
+        ///  Retrieve the format of the bitmap.
         /// </summary>
         [PreserveSig]
         PixelFormat GetPixelFormat();
 
         /// <summary>
-        /// Return the DPI of the bitmap.
+        ///  Return the DPI of the bitmap.
         /// </summary>
         [PreserveSig]
         void GetDpi(

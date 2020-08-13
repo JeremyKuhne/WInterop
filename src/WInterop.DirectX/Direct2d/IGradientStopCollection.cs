@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
@@ -10,8 +6,8 @@ using System.Runtime.InteropServices;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// Represents an collection of gradient stops that can then be the source resource
-    /// for either a linear or radial gradient brush. [ID2D1GradientStopCollection]
+    ///  Represents an collection of gradient stops that can then be the source resource
+    ///  for either a linear or radial gradient brush. [ID2D1GradientStopCollection]
     /// </summary>
     [ComImport,
         Guid(InterfaceIds.IID_ID2D1GradientStopCollection),
@@ -25,14 +21,14 @@ namespace WInterop.Direct2d
         #endregion
 
         /// <summary>
-        /// Returns the number of stops in the gradient.
+        ///  Returns the number of stops in the gradient.
         /// </summary>
         [PreserveSig]
         uint GetGradientStopCount();
 
         /// <summary>
-        /// Copies the gradient stops from the collection into the caller's interface.  The
-        /// returned colors have straight alpha.
+        ///  Copies the gradient stops from the collection into the caller's interface.  The
+        ///  returned colors have straight alpha.
         /// </summary>
         [PreserveSig]
         unsafe void GetGradientStops(
@@ -40,7 +36,7 @@ namespace WInterop.Direct2d
             uint gradientStopsCount);
 
         /// <summary>
-        /// Returns whether the interpolation occurs with 1.0 or 2.2 gamma.
+        ///  Returns whether the interpolation occurs with 1.0 or 2.2 gamma.
         /// </summary>
         [PreserveSig]
         Gamma GetColorInterpolationGamma();

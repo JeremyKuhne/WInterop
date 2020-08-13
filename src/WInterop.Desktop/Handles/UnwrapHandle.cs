@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace WInterop.Handles
 {
     /// <summary>
-    /// Use to scope unwrapping safe handles.
+    ///  Use to scope unwrapping safe handles.
     /// </summary>
     public readonly struct UnwrapHandle : IDisposable
     {

@@ -328,3 +328,12 @@ dotnet_diagnostic.SA1501.severity = silent
 
 # SA1311: Static readonly fields should begin with upper-case letter
 dotnet_diagnostic.SA1311.severity = none
+
+# SA1134: Each attribute should be placed on its own line of code.
+dotnet_diagnostic.SA1134.severity = none
+
+# SA1605: Partial element documentation should have summary.
+dotnet_diagnostic.SA1605.severity = none
+
+# SA1118: The parameter spans multiple lines.
+dotnet_diagnostic.SA1118.severity = silent

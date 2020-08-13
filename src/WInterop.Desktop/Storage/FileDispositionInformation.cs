@@ -4,10 +4,10 @@
 namespace WInterop.Storage
 {
     /// <summary>
-    /// For flagging a file handle for deletion using NtSetInformationFile. Also usable with
-    /// SetFileInformationByHandle and FileInfoClass.FileDispositionInfo.
-    /// [FILE_DISPOSITION_INFORMATION]
+    ///  For flagging a file handle for deletion using NtSetInformationFile. Also usable with
+    ///  SetFileInformationByHandle and FileInfoClass.FileDispositionInfo.
     /// </summary>
+    /// <native>[FILE_DISPOSITION_INFORMATION]</native>
     public struct FileDispositionInformation
     {
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545765.aspx
@@ -17,9 +17,9 @@ namespace WInterop.Storage
         // a BOOL. SetFileInformationByHandle simply thunks to NtSetInformationFile.
 
         /// <summary>
-        /// Whether or not the file should be deleted. This is ignored if the handle
-        /// was opened with the DeleteOnClose flag.
+        ///  Whether or not the file should be deleted. This is ignored if the handle was opened with the
+        ///  DeleteOnClose flag.
         /// </summary>
-        public Boolean8 DeleteFile;
+        public ByteBoolean DeleteFile;
     }
 }

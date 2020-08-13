@@ -6,7 +6,7 @@ using System;
 namespace WInterop.Windows
 {
     /// <summary>
-    /// Simple wrapper for an ATOM
+    ///  Simple wrapper for an ATOM
     /// </summary>
     public struct Atom
     {

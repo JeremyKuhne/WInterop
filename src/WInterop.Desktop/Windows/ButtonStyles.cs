@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,83 +11,83 @@ namespace WInterop.Windows
         // https://msdn.microsoft.com/en-us/library/windows/desktop/bb775951.aspx
 
         /// <summary>
-        /// Push button. (BS_PUSHBUTTON)
+        ///  Push button. (BS_PUSHBUTTON)
         /// </summary>
         PushButton = 0x00000000,
 
         /// <summary>
-        /// Default push button. (BS_DEFPUSHBUTTON)
+        ///  Default push button. (BS_DEFPUSHBUTTON)
         /// </summary>
         DefaultPushButton = 0x00000001,
 
         /// <summary>
-        /// Check box. (BS_CHECKBOX)
+        ///  Check box. (BS_CHECKBOX)
         /// </summary>
         CheckBox = 0x00000002,
 
         /// <summary>
-        /// Check box that automatically toggles state when clicked. (BS_AUTOCHECKBOX)
+        ///  Check box that automatically toggles state when clicked. (BS_AUTOCHECKBOX)
         /// </summary>
         AutoCheckBox = 0x00000003,
 
         /// <summary>
-        /// Radio button. (BS_RADIOBUTTON)
+        ///  Radio button. (BS_RADIOBUTTON)
         /// </summary>
         RadioButton = 0x00000004,
 
         /// <summary>
-        /// Check box that can be disabled. (BS_3STATE)
+        ///  Check box that can be disabled. (BS_3STATE)
         /// </summary>
         ThreeState = 0x00000005,
 
         /// <summary>
-        /// Three state checkbox that automatically changes state when clicked. (BS_AUTO3STATE)
+        ///  Three state checkbox that automatically changes state when clicked. (BS_AUTO3STATE)
         /// </summary>
         AutoThreeState = 0x00000006,
 
         /// <summary>
-        /// Group box. (BS_GROUPBOX)
+        ///  Group box. (BS_GROUPBOX)
         /// </summary>
         GroupBox = 0x00000007,
 
         /// <summary>
-        /// Obsolete. Use OwnerDraw instead. (BS_USERBUTTON)
+        ///  Obsolete. Use OwnerDraw instead. (BS_USERBUTTON)
         /// </summary>
         UserButton = 0x00000008,
 
         /// <summary>
-        /// Radio button that automatically changes state when clicked. (BS_AUTORADIOBUTTON)
+        ///  Radio button that automatically changes state when clicked. (BS_AUTORADIOBUTTON)
         /// </summary>
         AutoRadioButton = 0x00000009,
 
         /// <summary>
-        /// A push button with just text (no frame or face). (BS_PUSHBOX)
+        ///  A push button with just text (no frame or face). (BS_PUSHBOX)
         /// </summary>
         PushBox = 0x0000000A,
 
         /// <summary>
-        /// Sends DrawItem (WM_DRAWITEM) window messages to draw. (BS_OWNERDRAW)
+        ///  Sends DrawItem (WM_DRAWITEM) window messages to draw. (BS_OWNERDRAW)
         /// </summary>
         OwnerDrawn = 0x0000000B,
 
         /// <summary>
-        /// Button with a drop down arrow. (BS_SPLITBUTTON)
+        ///  Button with a drop down arrow. (BS_SPLITBUTTON)
         /// </summary>
         SplitButton = 0x0000000C,
 
         /// <summary>
-        /// Default style split button. (BS_DEFSPLITBUTTON)
+        ///  Default style split button. (BS_DEFSPLITBUTTON)
         /// </summary>
         DefaultSplitButton = 0x0000000D,
 
         /// <summary>
-        /// Button with a default green arrow and additional note text. (BS_COMMANDLINK)
-        /// https://msdn.microsoft.com/en-us/library/windows/desktop/dn742403.aspx
+        ///  Button with a default green arrow and additional note text. (BS_COMMANDLINK)
+        ///  https://msdn.microsoft.com/en-us/library/windows/desktop/dn742403.aspx
         /// </summary>
         CommandLink = 0x0000000E,
 
         /// <summary>
-        /// Default style command link button. (BS_DEFCOMMANDLINK)
+        ///  Default style command link button. (BS_DEFCOMMANDLINK)
         /// </summary>
         DefaultCommandLink = 0x0000000F,
 
@@ -99,14 +95,14 @@ namespace WInterop.Windows
         // BS_TYPEMASK = 0x0000000F,
 
         /// <summary>
-        /// Draw text to the left of radio buttons and checkboxes.
-        /// Same as RightButton. (BS_LEFTTEXT)
+        ///  Draw text to the left of radio buttons and checkboxes.
+        ///  Same as RightButton. (BS_LEFTTEXT)
         /// </summary>
         LeftText = 0x00000020,
 
         /// <summary>
-        /// Draw text to the left of radio buttons and checkboxes. (BS_RIGHTBUTTON)
-        /// Same as LeftText
+        ///  Draw text to the left of radio buttons and checkboxes. (BS_RIGHTBUTTON)
+        ///  Same as LeftText
         /// </summary>
         RightButton = LeftText,
 
@@ -114,62 +110,62 @@ namespace WInterop.Windows
         // BS_TEXT = 0x00000000,
 
         /// <summary>
-        /// Button only displays an icon (no text) if SetImage (BM_SETIMAGE) is sent. (BS_ICON)
+        ///  Button only displays an icon (no text) if SetImage (BM_SETIMAGE) is sent. (BS_ICON)
         /// </summary>
         Icon = 0x00000040,
 
         /// <summary>
-        /// Button only displays a bitmap (no text) if SetImage (BM_SETIMAGE) is sent. (BS_BITMAP)
+        ///  Button only displays a bitmap (no text) if SetImage (BM_SETIMAGE) is sent. (BS_BITMAP)
         /// </summary>
         Bitmap = 0x00000080,
 
         /// <summary>
-        /// Align text on the left. (BS_LEFT)
+        ///  Align text on the left. (BS_LEFT)
         /// </summary>
         Left = 0x00000100,
 
         /// <summary>
-        /// Align text on the right. (BS_RIGHT)
+        ///  Align text on the right. (BS_RIGHT)
         /// </summary>
         Right = 0x00000200,
 
         /// <summary>
-        /// Center text horizontally. (BS_CENTER)
+        ///  Center text horizontally. (BS_CENTER)
         /// </summary>
         Center = 0x00000300,
 
         /// <summary>
-        /// Align text at the top. (BS_TOP)
+        ///  Align text at the top. (BS_TOP)
         /// </summary>
         Top = 0x00000400,
 
         /// <summary>
-        /// Align text at the bottom. (BS_BOTTOM)
+        ///  Align text at the bottom. (BS_BOTTOM)
         /// </summary>
         Bottom = 0x00000800,
 
         /// <summary>
-        /// Center text vertically. (BS_VCENTER)
+        ///  Center text vertically. (BS_VCENTER)
         /// </summary>
         VerticallyCenter = 0x00000C00,
 
         /// <summary>
-        /// Makes a button look and act like a push button (raised when not pushed, sunken when pushed).(BS_PUSHLIKE)
+        ///  Makes a button look and act like a push button (raised when not pushed, sunken when pushed).(BS_PUSHLIKE)
         /// </summary>
         PushLike = 0x00001000,
 
         /// <summary>
-        /// Wraps text to multiple lines if needed. (BS_MULTILINE)
+        ///  Wraps text to multiple lines if needed. (BS_MULTILINE)
         /// </summary>
         Multiline = 0x00002000,
 
         /// <summary>
-        /// Enables a button to send KillFocus (BN_KILLFOCUS) and SetFocus (BN_SETFOCUS) notifications to the parent window. (BS_NOTIFY)
+        ///  Enables a button to send KillFocus (BN_KILLFOCUS) and SetFocus (BN_SETFOCUS) notifications to the parent window. (BS_NOTIFY)
         /// </summary>
         Notify = 0x00004000,
 
         /// <summary>
-        /// Button is two-dimensional (doesn't shade). (BS_FLAT)
+        ///  Button is two-dimensional (doesn't shade). (BS_FLAT)
         /// </summary>
         Flat = 0x00008000
     }

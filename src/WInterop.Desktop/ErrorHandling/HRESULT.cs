@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Errors
@@ -12,7 +8,7 @@ namespace WInterop.Errors
     ///  <see cref="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a"/>
     /// </summary>
     /// <remarks>
-    ///  SCODE (Status Code) values are equivalent to HRESULT values on 32 & 64 bit platforms. On
+    ///  SCODE (Status Code) values are equivalent to HRESULT values on 32 and 64 bit platforms. On
     ///  16 bit platforms they need to be converted by doing a logical AND with 0x800FFFFF.
     /// </remarks>
     public enum HResult : int

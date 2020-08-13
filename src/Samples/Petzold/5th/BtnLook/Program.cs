@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -14,14 +10,14 @@ using WInterop.Windows;
 namespace OwnDraw
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 9-3, Pages 375-380.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 9-3, Pages 375-380.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             const string szAppName = "OwnDraw";
 
@@ -56,57 +52,56 @@ namespace OwnDraw
             }
         }
 
-        static void Triangle(DeviceContext dc, Point[] pt)
+        private static void Triangle(DeviceContext dc, Point[] pt)
         {
             dc.SelectObject(StockBrush.Black);
             dc.Polygon(pt);
             dc.SelectObject(StockBrush.White);
         }
 
-        static WindowHandle hwndSmaller, hwndLarger;
-        static int cxClient, cyClient;
-        static int btnWidth, btnHeight;
-        static Size baseUnits;
+        private static WindowHandle s_hwndSmaller, s_hwndLarger;
+        private static int s_cxClient, s_cyClient;
+        private static int s_btnWidth, s_btnHeight;
+        private static Size s_baseUnits;
+        private const int ID_SMALLER = 1;
+        private const int ID_LARGER = 2;
 
-        const int ID_SMALLER = 1;
-        const int ID_LARGER = 2;
-
-        static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        private static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
                 case MessageType.Create:
-                    baseUnits = Windows.GetDialogBaseUnits();
-                    btnWidth = baseUnits.Width * 8;
-                    btnHeight = baseUnits.Height * 4;
+                    s_baseUnits = Windows.GetDialogBaseUnits();
+                    s_btnWidth = s_baseUnits.Width * 8;
+                    s_btnHeight = s_baseUnits.Height * 4;
 
                     // Create the owner-draw pushbuttons
                     var createMessage = new Message.Create(lParam);
 
-                    hwndSmaller = Windows.CreateWindow("button",
+                    s_hwndSmaller = Windows.CreateWindow("button",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
-                        bounds: new Rectangle(0, 0, btnWidth, btnHeight),
+                        bounds: new Rectangle(0, 0, s_btnWidth, s_btnHeight),
                         parentWindow: window,
                         menuHandle: (MenuHandle)ID_SMALLER,
                         instance: createMessage.Instance);
-                    hwndLarger = Windows.CreateWindow("button",
+                    s_hwndLarger = Windows.CreateWindow("button",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ButtonStyles.OwnerDrawn,
-                        bounds: new Rectangle(0, 0, btnWidth, btnHeight),
+                        bounds: new Rectangle(0, 0, s_btnWidth, s_btnHeight),
                         parentWindow: window,
                         menuHandle: (MenuHandle)ID_LARGER,
                         instance: createMessage.Instance);
 
                     return 0;
                 case MessageType.Size:
-                    cxClient = lParam.LowWord;
-                    cyClient = lParam.HighWord;
+                    s_cxClient = lParam.LowWord;
+                    s_cyClient = lParam.HighWord;
 
                     // Move the buttons to the new center
-                    hwndSmaller.MoveWindow(
-                        new Rectangle(cxClient / 2 - 3 * btnWidth / 2, cyClient / 2 - btnHeight / 2, btnWidth, btnHeight),
+                    s_hwndSmaller.MoveWindow(
+                        new Rectangle(s_cxClient / 2 - 3 * s_btnWidth / 2, s_cyClient / 2 - s_btnHeight / 2, s_btnWidth, s_btnHeight),
                         repaint: true);
-                    hwndLarger.MoveWindow(
-                        new Rectangle(cxClient / 2 + btnWidth / 2, cyClient / 2 - btnHeight / 2, btnWidth, btnHeight),
+                    s_hwndLarger.MoveWindow(
+                        new Rectangle(s_cxClient / 2 + s_btnWidth / 2, s_cyClient / 2 - s_btnHeight / 2, s_btnWidth, s_btnHeight),
                         repaint: true);
                     return 0;
                 case MessageType.Command:

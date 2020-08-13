@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -17,7 +13,7 @@ namespace WInterop.WindowsStore
         private static int s_isWinRT = -1;
 
         /// <summary>
-        /// Returns true if the current process is a Windows Store application (WinRT).
+        ///  Returns true if the current process is a Windows Store application (WinRT).
         /// </summary>
         public static bool IsWindowsStoreApplication()
         {

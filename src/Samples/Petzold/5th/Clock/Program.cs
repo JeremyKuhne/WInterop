@@ -22,16 +22,16 @@ namespace Clock
     ///  Original (c) Charles Petzold, 1998
     ///  Figure 8-5, Pages 346-350.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Clock(), "Analog Clock");
         }
     }
 
-    class Clock : WindowClass
+    internal class Clock : WindowClass
     {
 #if GDIPLUS
         private readonly GdiPlusPen _blackPen = new GdiPlusPen(Color.Black);
@@ -39,7 +39,7 @@ namespace Clock
         private readonly GdiPlusBrush _whiteBrush = new GdiPlusBrush(Color.White);
 #endif
 
-        void SetIsotropic(DeviceContext hdc)
+        private void SetIsotropic(DeviceContext hdc)
         {
             hdc.SetMappingMode(MappingMode.Isotropic);
             hdc.SetWindowExtents(new Size(1000, 1000));
@@ -47,7 +47,7 @@ namespace Clock
             hdc.SetViewportOrigin(new Point(_clientSize.Width / 2, _clientSize.Height / 2));
         }
 
-        void RotatePoint(Point[] pt, int iNum, int iAngle)
+        private void RotatePoint(Point[] pt, int iNum, int iAngle)
         {
             for (int i = 0; i < iNum; i++)
             {
@@ -59,7 +59,7 @@ namespace Clock
             }
         }
 
-        void DrawClock(DeviceContext dc)
+        private void DrawClock(DeviceContext dc)
         {
             int iAngle;
             Point[] pt = new Point[3];
@@ -88,7 +88,7 @@ namespace Clock
             }
         }
 
-        void DrawHands(DeviceContext dc, SystemTime time, bool erase = false, bool drawHourAndMinuteHands = true)
+        private void DrawHands(DeviceContext dc, SystemTime time, bool erase = false, bool drawHourAndMinuteHands = true)
         {
             int[] handAngles =
             {
@@ -129,10 +129,10 @@ namespace Clock
             }
         }
 
-        const int ID_TIMER = 1;
-        const double TWOPI = Math.PI * 2;
-        Size _clientSize;
-        SystemTime _previousTime;
+        private const int ID_TIMER = 1;
+        private const double TWOPI = Math.PI * 2;
+        private Size _clientSize;
+        private SystemTime _previousTime;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

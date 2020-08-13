@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -28,7 +24,7 @@ namespace WInterop.Registry
         public static RegistryKeyHandle HKEY_DYN_DATA = new RegistryKeyHandle(0x80000006);
         public static RegistryKeyHandle HKEY_CURRENT_USER_LOCAL_SETTINGS = new RegistryKeyHandle(0x80000007);
 
-        public RegistryKeyHandle() : this (ownsHandle: true)
+        public RegistryKeyHandle() : this(ownsHandle: true)
         {
         }
 
@@ -47,13 +43,13 @@ namespace WInterop.Registry
         public bool IsPerfKey { get; private set; }
 
         /// <summary>
-        /// Returns true if the key is from the local machine.
+        ///  Returns true if the key is from the local machine.
         /// </summary>
         public bool IsLocalKey => ((uint)handle & REMOTE_HANDLE_TAG) == 0;
 
         /// <summary>
-        /// Returns true if the key is special (notably in HKEY_CLASSES_ROOT, where
-        /// it might be redirected to per user settings).
+        ///  Returns true if the key is special (notably in HKEY_CLASSES_ROOT, where
+        ///  it might be redirected to per user settings).
         /// </summary>
         public bool IsSpecialKey => ((uint)handle & REG_CLASSES_SPECIAL_TAG) != 0;
 

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Threading;
@@ -18,7 +14,7 @@ namespace WInterop.Web
             var handler = new CreateEnvironmentHandler();
             Imports.CreateCoreWebView2Environment(handler).ThrowIfFailed();
 
-            //Imports.CreateCoreWebView2EnvironmentWithDetails(
+            // Imports.CreateCoreWebView2EnvironmentWithDetails(
             //    @"C:\Program Files (x86)\Microsoft\Edge\Application",
             //    null,
             //    null,

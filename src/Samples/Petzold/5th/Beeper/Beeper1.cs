@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -11,11 +7,10 @@ using WInterop.Windows;
 
 namespace Beeper
 {
-
-    class Beeper1 : WindowClass
+    internal class Beeper1 : WindowClass
     {
-        bool fFlipFlop = false;
-        const int ID_TIMER = 1;
+        private bool fFlipFlop = false;
+        private const int ID_TIMER = 1;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

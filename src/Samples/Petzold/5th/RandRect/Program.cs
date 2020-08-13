@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,14 +11,14 @@ using WInterop.Windows;
 namespace RandRect
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 5-26, Pages 200-202.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 5-26, Pages 200-202.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             // Hack for launching as a .NET Core Windows Application
             WInterop.Console.Console.TryFreeConsole();
@@ -70,16 +66,16 @@ namespace RandRect
             }
         }
 
-        static int cxClient, cyClient;
-        static Random rand = new Random();
+        private static int s_cxClient, s_cyClient;
+        private static readonly Random s_rand = new Random();
 
-        static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        private static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
                 case MessageType.Size:
-                    cxClient = lParam.LowWord;
-                    cyClient = lParam.HighWord;
+                    s_cxClient = lParam.LowWord;
+                    s_cyClient = lParam.HighWord;
                     return 0;
                 case MessageType.Destroy:
                     Windows.PostQuitMessage(0);
@@ -89,19 +85,19 @@ namespace RandRect
             return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
         }
 
-        static void DrawRectangle(WindowHandle window)
+        private static void DrawRectangle(WindowHandle window)
         {
-            if (cxClient == 0 || cyClient == 0)
+            if (s_cxClient == 0 || s_cyClient == 0)
                 return;
 
             Rectangle rect = Rectangle.FromLTRB(
-                rand.Next() % cxClient,
-                rand.Next() % cyClient,
-                rand.Next() % cxClient,
-                rand.Next() % cyClient);
+                s_rand.Next() % s_cxClient,
+                s_rand.Next() % s_cyClient,
+                s_rand.Next() % s_cxClient,
+                s_rand.Next() % s_cyClient);
 
             using (BrushHandle brush = Gdi.CreateSolidBrush(
-                Color.FromArgb((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256))))
+                Color.FromArgb((byte)(s_rand.Next() % 256), (byte)(s_rand.Next() % 256), (byte)(s_rand.Next() % 256))))
             {
                 using (DeviceContext dc = window.GetDeviceContext())
                 {

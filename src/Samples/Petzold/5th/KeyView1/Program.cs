@@ -15,10 +15,10 @@ namespace KeyView1
     ///  Original (c) Charles Petzold, 1998
     ///  Figure 6-3, Pages 236-240.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new KeyView1(), "Keyboard Message Viewer #1");
         }

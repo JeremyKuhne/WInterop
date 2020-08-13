@@ -128,7 +128,7 @@ namespace WInterop.Direct2d
         //    ) PURE;
 
         /// <summary>
-        /// Create a D2D mesh.
+        ///  Create a D2D mesh.
         /// </summary>
         new void CreateMeshSTUB();
         //STDMETHOD(CreateMesh)(
@@ -332,7 +332,7 @@ namespace WInterop.Direct2d
         //) PURE;
 
         /// <summary>
-        /// Ends a layer that was defined with particular layer resources.
+        ///  Ends a layer that was defined with particular layer resources.
         /// </summary>
         [PreserveSig]
         new void PopLayer();
@@ -430,7 +430,7 @@ namespace WInterop.Direct2d
         ///  considered to be supported.
         /// </summary>
         [PreserveSig]
-        new Boolean32 IsSupported(
+        new IntBoolean IsSupported(
             in RenderTargetProperties renderTargetProperties);
         #endregion
 

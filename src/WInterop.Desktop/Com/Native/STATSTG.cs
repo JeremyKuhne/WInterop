@@ -1,25 +1,21 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Storage;
 
-namespace WInterop.Com
+namespace WInterop.Com.Native
 {
     /// <summary>
-    /// Statistical data about storage objects.
-    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa380319.aspx"/>
+    ///  Statistical data about storage objects.
+    ///  <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa380319.aspx"/>
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe ref struct STATSTG
     {
         /// <summary>
-        /// Pointer to the name. This needs to be freed via <see cref="Marshal.FreeCoTaskMem(IntPtr)"/>.
+        ///  Pointer to the name. This needs to be freed via <see cref="Marshal.FreeCoTaskMem(IntPtr)"/>.
         /// </summary>
         public char* pwcsName;
         public StorageType type;

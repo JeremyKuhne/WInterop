@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,7 +11,7 @@ using WInterop.SafeString.Native;
 namespace WInterop.Security.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -27,28 +23,28 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379304.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 PrivilegeCheck(
+        public static unsafe extern IntBoolean PrivilegeCheck(
             AccessToken ClientToken,
             PrivilegeSet* RequiredPrivileges,
-            out Boolean32 pfResult);
+            out IntBoolean pfResult);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378612.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 ImpersonateLoggedOnUser(
+        public static unsafe extern IntBoolean ImpersonateLoggedOnUser(
             AccessToken hToken);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378610.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 ImpersonateAnonymousToken(
+        public static unsafe extern IntBoolean ImpersonateAnonymousToken(
             ThreadHandle thread);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern Boolean32 RevertToSelf();
+        public static extern IntBoolean RevertToSelf();
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446583.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 CreateRestrictedToken(
+        public static unsafe extern IntBoolean CreateRestrictedToken(
             AccessToken ExistingTokenHandle,
             uint Flags,
             uint DisableSidCount,
@@ -94,8 +90,8 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/mt779143.aspx
         // The docs claim that it is in Advapi.dll, but it actually lives in sechost.dll
-        //[DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
-        //public static extern BOOL LookupAccountSidLocalW(
+        // [DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
+        // public static extern BOOL LookupAccountSidLocalW(
         //    in SID lpSid,
         //    SafeHandle lpName,
         //    ref uint cchName,
@@ -105,7 +101,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446585.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 CreateWellKnownSid(
+        public static unsafe extern IntBoolean CreateWellKnownSid(
             WellKnownSID WellKnownSidType,
             SID* DomainSid,
             SID* pSid,
@@ -113,18 +109,18 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379154.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public static unsafe extern Boolean32 IsWellKnownSid(
+        public static unsafe extern IntBoolean IsWellKnownSid(
             in SID pSid,
             WellKnownSID WellKnownSidType);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379151.aspx
         [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-        public static unsafe extern Boolean32 IsValidSid(
+        public static unsafe extern IntBoolean IsValidSid(
             in SID pSid);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376399.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern Boolean32 ConvertSidToStringSidW(
+        public static extern IntBoolean ConvertSidToStringSidW(
             in SID Sid,
             out LocalHandle StringSid);
 
@@ -141,7 +137,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376404.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 CopySid(
+        public static unsafe extern IntBoolean CopySid(
             uint nDestinationSidLength,
             out SID pDestinationSid,
             SID* pSourceSid);
@@ -206,7 +202,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446635.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 GetAclInformation(
+        public static unsafe extern IntBoolean GetAclInformation(
             SecurityDescriptor pAcl,
             void* pAclInformation,
             uint nAclInformationLength,
@@ -214,7 +210,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374951.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 AddAccessAllowedAceEx(
+        public static unsafe extern IntBoolean AddAccessAllowedAceEx(
             SecurityDescriptor pAcl,
             uint dwAceRevision,
             // This is AceInheritence
@@ -227,19 +223,19 @@ namespace WInterop.Security.Native
         public static extern bool OpenThreadToken(
             ThreadHandle ThreadHandle,
             AccessTokenRights DesiredAccess,
-            Boolean32 OpenAsSelf,
+            IntBoolean OpenAsSelf,
             out AccessToken TokenHandle);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379295.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern Boolean32 OpenProcessToken(
+        public static extern IntBoolean OpenProcessToken(
             IntPtr ProcessHandle,
             AccessTokenRights DesiredAccesss,
             out AccessToken TokenHandle);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 DuplicateTokenEx(
+        public static unsafe extern IntBoolean DuplicateTokenEx(
             AccessToken hExistingToken,
             AccessTokenRights dwDesiredAccess,
             SECURITY_ATTRIBUTES* lpTokenAttributes,
@@ -249,20 +245,20 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379590.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static extern Boolean32 SetThreadToken(
+        public static extern IntBoolean SetThreadToken(
             ThreadHandle Thread,
             AccessToken Token);
 
         // https://msdn.microsoft.com/en-us/library/aa379180.aspx
         [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static extern Boolean32 LookupPrivilegeValueW(
+        public static extern IntBoolean LookupPrivilegeValueW(
             string? lpSystemName,
             string lpName,
             out LUID lpLuid);
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379176.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern Boolean32 LookupPrivilegeNameW(
+        public static extern IntBoolean LookupPrivilegeNameW(
             IntPtr lpSystemName,
             ref LUID lpLuid,
             ref char lpName,
@@ -270,7 +266,7 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 GetTokenInformation(
+        public static unsafe extern IntBoolean GetTokenInformation(
             AccessToken TokenHandle,
             TokenInformation TokenInformationClass,
             void* TokenInformation,
@@ -279,9 +275,9 @@ namespace WInterop.Security.Native
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern Boolean32 AdjustTokenPrivileges(
+        public static unsafe extern IntBoolean AdjustTokenPrivileges(
             AccessToken TokenHandle,
-            Boolean32 DisableAllPrivileges,
+            IntBoolean DisableAllPrivileges,
             TOKEN_PRIVILEGES* NewState,
             uint BufferLength,
             TOKEN_PRIVILEGES* PreviousState,

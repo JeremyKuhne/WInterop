@@ -1,8 +1,4 @@
-﻿// ----------------------
-//    xTask Framework
-// ----------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Memory;
@@ -11,15 +7,13 @@ using WInterop.Support.Collections;
 namespace WInterop.Handles
 {
     /// <summary>
-    /// Allows limited reuse of heap buffers to improve memory pressure. This cache does not ensure
-    /// that multiple copies of handles are not released back into the cache.
+    ///  Allows limited reuse of heap buffers to improve memory pressure. This cache does not ensure
+    ///  that multiple copies of handles are not released back into the cache.
     /// </summary>
     public sealed class HeapHandleCache : Cache<HeapHandle>
     {
-        private ulong _minSize;
-        private ulong _maxSize;
-
-        private static readonly HeapHandleCache s_Instance = new HeapHandleCache();
+        private readonly ulong _minSize;
+        private readonly ulong _maxSize;
 
         public HeapHandleCache(ulong minSize = 64, ulong maxSize = 1024 * 2, int maxHandles = 0)
             : base(cacheSpace: maxHandles)
@@ -28,13 +22,10 @@ namespace WInterop.Handles
             _maxSize = maxSize;
         }
 
-        public static HeapHandleCache Instance
-        {
-            get { return s_Instance; }
-        }
+        public static HeapHandleCache Instance { get; } = new HeapHandleCache();
 
         /// <summary>
-        /// Get a HeapHandle
+        ///  Get a HeapHandle
         /// </summary>
         public HeapHandle Acquire(ulong minSize)
         {

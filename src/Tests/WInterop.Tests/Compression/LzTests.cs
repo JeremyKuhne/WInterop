@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
@@ -119,8 +115,8 @@ namespace CompressionTests
                 LzxHeader header = *(LzxHeader*)b;
                 header.GetSignature().Should().ContainInOrder(LzxHeader.LzxSignature);
                 header.GetUncompressedSize().Should().Be((uint)CompressedContent1.Length);
-                header.algorithm.Should().Be((byte)'A');
-                header.extensionChar.Should().Be(0x00);
+                header.Algorithm.Should().Be((byte)'A');
+                header.ExtensionChar.Should().Be(0x00);
             }
         }
 
@@ -274,7 +270,7 @@ namespace CompressionTests
 
         private const string CompressedContent1 = "This is a test file that will test file compression. \r\n";
 
-        private static byte[] CompressedFile1 =
+        private static readonly byte[] CompressedFile1 =
         {
             0x53, 0x5A, 0x44, 0x44, 0x88, 0xF0, 0x27, 0x33, 0x41, 0x00, 0x37, 0x00, 0x00, 0x00, 0xDF, 0x54,
             0x68, 0x69, 0x73, 0x20, 0xF2, 0xF0, 0x61, 0x20, 0xFF, 0x74, 0x65, 0x73, 0x74, 0x20, 0x66, 0x69,
@@ -291,7 +287,7 @@ namespace CompressionTests
         + "We have come to dedicate a portion of that field, as a final resting place for those who here gave their lives, that that nation might live. "
         + "It is altogether fitting and proper that we should do this.";
 
-        private static byte[] CompressedFile2 =
+        private static readonly byte[] CompressedFile2 =
         {
             0x53, 0x5A, 0x44, 0x44, 0x88, 0xF0, 0x27, 0x33, 0x41, 0x00, 0x33, 0x02, 0x00, 0x00, 0xFF, 0x46,
             0x6F, 0x75, 0x72, 0x20, 0x73, 0x63, 0x6F, 0xFF, 0x72, 0x65, 0x20, 0x61, 0x6E, 0x64, 0x20, 0x73,

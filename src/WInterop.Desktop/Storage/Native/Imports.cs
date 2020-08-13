@@ -1,13 +1,9 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 using WInterop.Errors;
 using WInterop.Handles;
 using WInterop.Handles.Native;
@@ -18,7 +14,7 @@ using WInterop.Synchronization;
 namespace WInterop.Storage.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -57,7 +53,7 @@ namespace WInterop.Storage.Native
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-createsymboliclinkw
         [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern Boolean8 CreateSymbolicLinkW(
+        public static extern ByteBoolean CreateSymbolicLinkW(
             string lpSymlinkFileName,
             string lpTargetFileName,
             SymbolicLinkFlag dwFlags);
@@ -108,13 +104,11 @@ namespace WInterop.Storage.Native
         //      _In_ LPCWSTR lpFileName,
         //      _In_ PENCRYPTION_CERTIFICATE_LIST pUsers
         //  );
+
+        /// <param name="pUsers">Pointer to ENCRYPTION_CERTIFICATE_LIST array</param>
         [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern uint AddUsersToEncryptedFile(
             string lpFileName,
-
-            /// <summary>
-            /// Pointer to ENCRYPTION_CERTIFICATE_LIST array
-            /// </summary>
             IntPtr pUsers);
 
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findfirstvolumew
@@ -255,9 +249,9 @@ namespace WInterop.Storage.Native
             void* FileInformation,
             uint Length,
             FileInformationClass FileInformationClass,
-            Boolean8 ReturnSingleEntry,
+            ByteBoolean ReturnSingleEntry,
             UNICODE_STRING* FileName,
-            Boolean8 RestartScan);
+            ByteBoolean RestartScan);
 
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static unsafe extern NTStatus NtQueryDirectoryFile(
@@ -269,17 +263,17 @@ namespace WInterop.Storage.Native
             void* FileInformation,
             uint Length,
             FileInformationClass FileInformationClass,
-            Boolean8 ReturnSingleEntry,
+            ByteBoolean ReturnSingleEntry,
             UNICODE_STRING* FileName,
-            Boolean8 RestartScan);
+            ByteBoolean RestartScan);
 
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff546850.aspx
         // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/rtlisnameinexpression
         [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static unsafe extern Boolean8 RtlIsNameInExpression(
+        public static unsafe extern ByteBoolean RtlIsNameInExpression(
             UNICODE_STRING* Expression,
             UNICODE_STRING* Name,
-            Boolean8 IgnoreCase,
+            ByteBoolean IgnoreCase,
             IntPtr UpcaseTable);
 
         // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/ntqueryattributesfile

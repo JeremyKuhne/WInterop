@@ -3,7 +3,7 @@
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644907.aspx
+    /// <docs>https://docs.microsoft.com/windows/win32/api/winuser/nc-winuser-timerproc</docs>
     public delegate void TimerProcedure(
         WindowHandle hwnd,
         MessageType uMsg,

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,7 +7,7 @@ using System.Buffers;
 namespace WInterop.Support.Buffers
 {
     /// <summary>
-    /// Wrapper to slice an <see cref="IMemoryOwner{T}"/>
+    ///  Wrapper to slice an <see cref="IMemoryOwner{T}"/>
     /// </summary>
     public struct SlicedMemoryOwner<T> : IMemoryOwner<T>
     {

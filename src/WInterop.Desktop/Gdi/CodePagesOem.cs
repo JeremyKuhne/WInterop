@@ -41,7 +41,7 @@ namespace WInterop.Gdi
         Russian                         = 0b00000000_00000010_00000000_00000000,
 
         /// <summary>
-        /// Code page 865.
+        ///  Code page 865.
         /// </summary>
         Nordic                          = 0b00000000_00000100_00000000_00000000,
 
@@ -51,7 +51,7 @@ namespace WInterop.Gdi
         Arabic                          = 0b00000000_00001000_00000000_00000000,
 
         /// <summary>
-        /// Code page 863.
+        ///  Code page 863.
         /// </summary>
         CanadianFrench                  = 0b00000000_00010000_00000000_00000000,
 
@@ -66,7 +66,7 @@ namespace WInterop.Gdi
         Icelandic                       = 0b00000000_01000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 860.
+        ///  Code page 860.
         /// </summary>
         Portugese                       = 0b00000000_10000000_00000000_00000000,
 
@@ -76,7 +76,7 @@ namespace WInterop.Gdi
         Turkish                         = 0b00000001_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 855. (Primarily Russian)
+        ///  Code page 855. (Primarily Russian)
         /// </summary>
         Cyrillic                        = 0b00000010_00000000_00000000_00000000,
 
@@ -91,7 +91,7 @@ namespace WInterop.Gdi
         Baltic                          = 0b00001000_00000000_00000000_00000000,
 
         /// <summary>
-        /// Code page 737. (Formerly 437G)
+        ///  Code page 737. (Formerly 437G)
         /// </summary>
         Greek                           = 0b00010000_00000000_00000000_00000000,
 

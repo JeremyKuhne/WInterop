@@ -82,7 +82,7 @@ namespace WInterop.Windows
 
         /// <summary>
         ///  Bitmap is to be displayed. Text is the name of a bitmap resource.
-        ///  Control ignores width & height and sizes to fit the bitmap. [SS_BITMAP]
+        ///  Control ignores width and height and sizes to fit the bitmap. [SS_BITMAP]
         /// </summary>
         Bitmap = 0x0000000E,
 
@@ -114,7 +114,7 @@ namespace WInterop.Windows
         RealSizeControl = 0x00000040,
 
         /// <summary>
-        ///  Prevents interpretation of '&' characters as accelerator prefixes. [SS_NOPREFIX]
+        ///  Prevents interpretation of &amp; characters as accelerator prefixes. [SS_NOPREFIX]
         /// </summary>
         NoPrefix = 0x00000080,
 

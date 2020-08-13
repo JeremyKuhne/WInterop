@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,25 +9,25 @@ using WInterop.Windows;
 namespace Blokout2
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 7-11, Pages 314-317.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 7-11, Pages 314-317.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Blockout2(), "Mouse Button & Capture Demo");
         }
     }
 
-    class Blockout2 : WindowClass
+    internal class Blockout2 : WindowClass
     {
-        bool fBlocking, fValidBox;
-        Point ptBeg, ptEnd, ptBoxBeg, ptBoxEnd;
+        private bool _fBlocking, _fValidBox;
+        private Point _ptBeg, _ptEnd, _ptBoxBeg, _ptBoxEnd;
 
-        void DrawBoxOutline(WindowHandle window, Point ptBeg, Point ptEnd)
+        private void DrawBoxOutline(WindowHandle window, Point ptBeg, Point ptEnd)
         {
             using (DeviceContext dc = window.GetDeviceContext())
             {
@@ -46,50 +42,50 @@ namespace Blokout2
             switch (message)
             {
                 case MessageType.LeftButtonDown:
-                    ptBeg.X = ptEnd.X = lParam.LowWord;
-                    ptBeg.Y = ptEnd.Y = lParam.HighWord;
-                    DrawBoxOutline(window, ptBeg, ptEnd);
+                    _ptBeg.X = _ptEnd.X = lParam.LowWord;
+                    _ptBeg.Y = _ptEnd.Y = lParam.HighWord;
+                    DrawBoxOutline(window, _ptBeg, _ptEnd);
                     window.SetCapture();
                     Windows.SetCursor(CursorId.Cross);
-                    fBlocking = true;
+                    _fBlocking = true;
                     return 0;
                 case MessageType.MouseMove:
-                    if (fBlocking)
+                    if (_fBlocking)
                     {
                         Windows.SetCursor(CursorId.Cross);
-                        DrawBoxOutline(window, ptBeg, ptEnd);
-                        ptEnd.X = lParam.LowWord;
-                        ptEnd.Y = lParam.HighWord;
-                        DrawBoxOutline(window, ptBeg, ptEnd);
+                        DrawBoxOutline(window, _ptBeg, _ptEnd);
+                        _ptEnd.X = lParam.LowWord;
+                        _ptEnd.Y = lParam.HighWord;
+                        DrawBoxOutline(window, _ptBeg, _ptEnd);
                     }
                     return 0;
                 case MessageType.LeftButtonUp:
-                    if (fBlocking)
+                    if (_fBlocking)
                     {
-                        DrawBoxOutline(window, ptBeg, ptEnd);
-                        ptBoxBeg = ptBeg;
-                        ptBoxEnd.X = lParam.LowWord;
-                        ptBoxEnd.Y = lParam.HighWord;
+                        DrawBoxOutline(window, _ptBeg, _ptEnd);
+                        _ptBoxBeg = _ptBeg;
+                        _ptBoxEnd.X = lParam.LowWord;
+                        _ptBoxEnd.Y = lParam.HighWord;
                         Windows.ReleaseCapture();
                         Windows.SetCursor(CursorId.Arrow);
-                        fBlocking = false;
-                        fValidBox = true;
+                        _fBlocking = false;
+                        _fValidBox = true;
                         window.Invalidate(true);
                     }
                     return 0;
                 case MessageType.Paint:
                     using (DeviceContext dc = window.BeginPaint())
                     {
-                        if (fValidBox)
+                        if (_fValidBox)
                         {
                             dc.SelectObject(StockBrush.Black);
-                            dc.Rectangle(Rectangle.FromLTRB(ptBoxBeg.X, ptBoxBeg.Y, ptBoxEnd.X, ptBoxEnd.Y));
+                            dc.Rectangle(Rectangle.FromLTRB(_ptBoxBeg.X, _ptBoxBeg.Y, _ptBoxEnd.X, _ptBoxEnd.Y));
                         }
-                        if (fBlocking)
+                        if (_fBlocking)
                         {
                             dc.SetRasterOperation(PenMixMode.Not);
                             dc.SelectObject(StockBrush.Null);
-                            dc.Rectangle(Rectangle.FromLTRB(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y));
+                            dc.Rectangle(Rectangle.FromLTRB(_ptBeg.X, _ptBeg.Y, _ptEnd.X, _ptEnd.Y));
                         }
                     }
                     return 0;

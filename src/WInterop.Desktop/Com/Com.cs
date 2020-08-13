@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -109,7 +105,7 @@ namespace WInterop.Com
 
         public static unsafe ICollection<string?> GetMemberNames(this ITypeInfo typeInfo, MemberId id, uint count)
         {
-            BasicString* names = stackalloc BasicString[(int)(count)];
+            BasicString* names = stackalloc BasicString[(int)count];
             typeInfo.GetNames(id, names, count, out count)
                 .ThrowIfFailed($"Failed to get names for member id: {id.Value}");
 

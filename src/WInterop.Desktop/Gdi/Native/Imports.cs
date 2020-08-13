@@ -985,14 +985,14 @@ namespace WInterop.Gdi.Native
 
         // https://msdn.microsoft.com/library/dd162890.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public static extern Boolean32 PtVisible(
+        public static extern IntBoolean PtVisible(
             HDC hdc,
             int X,
             int Y);
 
         // https://msdn.microsoft.com/library/dd162908.aspx
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public static extern Boolean32 RectVisible(
+        public static extern IntBoolean RectVisible(
             HDC hdc,
             [In] ref Rect lprc);
 
@@ -1160,6 +1160,6 @@ namespace WInterop.Gdi.Native
         public static extern HPALETTE SelectPalette(
             HDC hdc,
             HPALETTE hPal,
-            Boolean32 bForceBkgd);
+            IntBoolean bForceBkgd);
     }
 }

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics.Tracing;
@@ -10,7 +6,7 @@ using System.Diagnostics.Tracing;
 namespace WInterop.Support.Collections
 {
     /// <summary>
-    /// Event logging for cache operations
+    ///  Event logging for cache operations
     /// </summary>
     [EventSource(Name = "WInterop-Cache")]
     public sealed class CacheEventSource : EventSource

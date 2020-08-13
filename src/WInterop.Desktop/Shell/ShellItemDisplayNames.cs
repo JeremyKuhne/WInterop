@@ -1,15 +1,11 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Shell
 {
     /// <summary>
-    /// Type of display name to get for a shell item.
-    /// https://msdn.microsoft.com/en-us/library/windows/desktop/bb762544.aspx
+    ///  Type of display name to get for a shell item.
+    ///  https://msdn.microsoft.com/en-us/library/windows/desktop/bb762544.aspx
     /// </summary>
     public enum ShellItemDisplayNames : int
     {

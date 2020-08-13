@@ -1,14 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.DirectWrite
 {
     /// <summary>
-    /// Typographic feature of text supplied by the font. [DWRITE_FONT_FEATURE_TAG]
+    ///  Typographic feature of text supplied by the font. [DWRITE_FONT_FEATURE_TAG]
     /// </summary>
     public enum FontFeatureTag : uint
     {

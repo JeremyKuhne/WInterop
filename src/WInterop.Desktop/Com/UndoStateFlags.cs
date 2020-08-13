@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -10,7 +6,7 @@ using System;
 namespace WInterop.Com
 {
     /// <summary>
-    /// Provides information about the parent undo unit. [UASFLAGS]
+    ///  Provides information about the parent undo unit. [UASFLAGS]
     /// </summary>
     /// <see cref="https://docs.microsoft.com/windows/win32/api/ocidl/ne-ocidl-taguasflags"/>
     [Flags]

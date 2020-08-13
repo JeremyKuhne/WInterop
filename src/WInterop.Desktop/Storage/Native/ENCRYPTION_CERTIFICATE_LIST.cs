@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -10,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace WInterop.Storage.Native
 {
-    //  typedef struct _ENCRYPTION_CERTIFICATE_LIST
+    // typedef struct _ENCRYPTION_CERTIFICATE_LIST
     //  {
     //      DWORD nUsers;
     //      PENCRYPTION_CERTIFICATE* pUsers;
@@ -26,7 +22,7 @@ namespace WInterop.Storage.Native
         public uint nUsers;
 
         /// <summary>
-        /// Pointer to ENCRYPTION_CERTIFICATE array
+        ///  Pointer to ENCRYPTION_CERTIFICATE array
         /// </summary>
         public IntPtr pUsers;
     }

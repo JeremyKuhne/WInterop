@@ -9,10 +9,10 @@ namespace WInterop.Gdi.Native
     public readonly struct PAINTSTRUCT
     {
         public readonly HDC hdc;
-        public readonly Boolean32 fErase;
+        public readonly IntBoolean fErase;
         public readonly Rect rcPaint;
-        public readonly Boolean32 fRestore;
-        public readonly Boolean32 fIncUpdate;
+        public readonly IntBoolean fRestore;
+        public readonly IntBoolean fIncUpdate;
         private readonly unsafe FixedByte.Size32 _rgbReserved;
         public Span<byte> rgbReserved => _rgbReserved.Buffer;
 

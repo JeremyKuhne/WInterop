@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,9 +8,7 @@ using WInterop.Errors;
 
 namespace WInterop.Com
 {
-    /// <summary>
-    ///  <see cref="https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo"/>
-    /// </summary>
+    /// <docs>https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo</docs>
     [ComImport,
         Guid("00020401-0000-0000-C000-000000000046"),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

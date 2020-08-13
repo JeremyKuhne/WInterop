@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -13,30 +9,30 @@ namespace Checker
 {
     public class Checker1 : WindowClass
     {
-        const int DIVISIONS = 5;
-        bool[,] fState = new bool[DIVISIONS, DIVISIONS];
-        int cxBlock, cyBlock;
+        private const int DIVISIONS = 5;
+        private readonly bool[,] _fState = new bool[DIVISIONS, DIVISIONS];
+        private int _cxBlock, _cyBlock;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             switch (message)
             {
                 case MessageType.Size:
-                    cxBlock = lParam.LowWord / DIVISIONS;
-                    cyBlock = lParam.HighWord / DIVISIONS;
+                    _cxBlock = lParam.LowWord / DIVISIONS;
+                    _cyBlock = lParam.HighWord / DIVISIONS;
                     return 0;
                 case MessageType.LeftButtonDown:
-                    int x = lParam.LowWord / cxBlock;
-                    int y = lParam.HighWord / cyBlock;
+                    int x = lParam.LowWord / _cxBlock;
+                    int y = lParam.HighWord / _cyBlock;
                     if (x < DIVISIONS && y < DIVISIONS)
                     {
-                        fState[x, y] ^= true;
+                        _fState[x, y] ^= true;
                         Rectangle rect = Rectangle.FromLTRB
                         (
-                            x * cxBlock,
-                            y * cyBlock,
-                            (x + 1) * cxBlock,
-                            (y + 1) * cyBlock
+                            x * _cxBlock,
+                            y * _cyBlock,
+                            (x + 1) * _cxBlock,
+                            (y + 1) * _cyBlock
                         );
                         window.InvalidateRectangle(rect, false);
                     }
@@ -53,14 +49,14 @@ namespace Checker
                             for (y = 0; y < DIVISIONS; y++)
                             {
                                 dc.Rectangle(new Rectangle(
-                                    x * cxBlock, y * cyBlock, (x + 1) * cxBlock, (y + 1) * cyBlock));
+                                    x * _cxBlock, y * _cyBlock, (x + 1) * _cxBlock, (y + 1) * _cyBlock));
 
-                                if (fState[x, y])
+                                if (_fState[x, y])
                                 {
-                                    dc.MoveTo(new Point(x * cxBlock, y * cyBlock));
-                                    dc.LineTo(new Point((x + 1) * cxBlock, (y + 1) * cyBlock));
-                                    dc.MoveTo(new Point(x * cxBlock, (y + 1) * cyBlock));
-                                    dc.LineTo(new Point((x + 1) * cxBlock, y * cyBlock));
+                                    dc.MoveTo(new Point(x * _cxBlock, y * _cyBlock));
+                                    dc.LineTo(new Point((x + 1) * _cxBlock, (y + 1) * _cyBlock));
+                                    dc.MoveTo(new Point(x * _cxBlock, (y + 1) * _cyBlock));
+                                    dc.LineTo(new Point((x + 1) * _cxBlock, y * _cyBlock));
                                 }
                             }
                     }

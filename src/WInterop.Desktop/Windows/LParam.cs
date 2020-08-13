@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -28,7 +24,7 @@ namespace WInterop.Windows
         public static implicit operator LParam(IntPtr value) => new LParam(value);
         public static implicit operator IntPtr(LParam lParam) => lParam.Value;
 
-        public static unsafe implicit operator void* (LParam lParam) => lParam.Value.ToPointer();
+        public static unsafe implicit operator void*(LParam lParam) => lParam.Value.ToPointer();
         public static unsafe implicit operator LParam(void* value) => new LParam((IntPtr)value);
         public static explicit operator WindowHandle(LParam lParam) => new HWND(lParam.Value);
         public static explicit operator LParam(WindowHandle value) => new LParam(value.HWND.Value);

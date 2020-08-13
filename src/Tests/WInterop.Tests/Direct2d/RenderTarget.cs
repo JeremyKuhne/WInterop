@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -18,7 +14,7 @@ namespace Direct2dTests
 {
     public class RenderTarget : IClassFixture<RenderTarget.RenderTargetFixture>
     {
-        private RenderTargetFixture _fixture;
+        private readonly RenderTargetFixture _fixture;
         public RenderTarget(RenderTargetFixture fixture)
         {
             _fixture = fixture;
@@ -26,10 +22,10 @@ namespace Direct2dTests
 
         public class RenderTargetFixture : IDisposable
         {
-            private IFactory _factory;
+            private readonly IFactory _factory;
             // private DeviceContext _dc;
-            private WindowHandle _window;
-            private WindowClass _windowClass;
+            private readonly WindowHandle _window;
+            private readonly WindowClass _windowClass;
 
             public RenderTargetFixture()
             {

@@ -33,7 +33,7 @@ namespace WInterop.Gdi.Native
                                                     // This is 0 if no pixel format is set
         public uint   offPixelFormat;               // Offset to PIXELFORMATDESCRIPTOR
                                                     // This is 0 if no pixel format is set
-        public Boolean32   bOpenGL;                 // TRUE if OpenGL commands are present in
+        public IntBoolean   bOpenGL;                 // TRUE if OpenGL commands are present in
                                                     // the metafile, otherwise FALSE
         public Size   szlMicrometers;               // Size of the reference device in micrometers
     }

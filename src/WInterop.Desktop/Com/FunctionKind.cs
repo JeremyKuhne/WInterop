@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Com
@@ -20,21 +16,21 @@ namespace WInterop.Com
         /// <summary>
         ///  [FUNC_PUREVIRTUAL]
         /// </summary>
-        PureVirtual = (Virtual + 1),
+        PureVirtual = Virtual + 1,
 
         /// <summary>
         ///  [FUNC_NONVIRTUAL]
         /// </summary>
-        NonVirtual = (PureVirtual + 1),
+        NonVirtual = PureVirtual + 1,
 
         /// <summary>
         ///  [FUNC_STATIC]
         /// </summary>
-        Static = (NonVirtual + 1),
+        Static = NonVirtual + 1,
 
         /// <summary>
         ///  [FUNC_DISPATCH]
         /// </summary>
-        Dispatch = (Static + 1)
+        Dispatch = Static + 1
     }
 }

@@ -1,8 +1,4 @@
-﻿// ----------------------
-//    xTask Framework
-// ----------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,7 +7,7 @@ using System.Threading;
 namespace WInterop.Support.Collections
 {
     /// <summary>
-    /// Light weight multithreaded fixed size cache class.
+    ///  Light weight multithreaded fixed size cache class.
     /// </summary>
     public class Cache<T> : IDisposable where T : class, new()
     {
@@ -21,7 +17,7 @@ namespace WInterop.Support.Collections
         protected readonly T?[] _itemsCache;
 
         /// <summary>
-        /// Create a cache with space for the specified number of items.
+        ///  Create a cache with space for the specified number of items.
         /// </summary>
         public Cache(int cacheSpace)
         {
@@ -30,7 +26,7 @@ namespace WInterop.Support.Collections
         }
 
         /// <summary>
-        /// Get an item from the cache or create one if none are available.
+        ///  Get an item from the cache or create one if none are available.
         /// </summary>
         public virtual T Acquire()
         {
@@ -49,7 +45,7 @@ namespace WInterop.Support.Collections
         }
 
         /// <summary>
-        /// Release an item back to the cache, disposing if no room is available.
+        ///  Release an item back to the cache, disposing if no room is available.
         /// </summary>
         public virtual void Release(T item)
         {

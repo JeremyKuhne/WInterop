@@ -63,7 +63,7 @@ namespace WInterop.Security
         }
 
         /// <summary>
-        /// Get the string constant for the given privilege.
+        ///  Get the string constant for the given privilege.
         /// </summary>
         public static string GetPrivilegeConstant(Privilege privilege)
         {
@@ -522,7 +522,7 @@ namespace WInterop.Security
             };
 
             Error.ThrowLastErrorIfFalse(
-                Imports.PrivilegeCheck(token, &set, out Boolean32 result),
+                Imports.PrivilegeCheck(token, &set, out IntBoolean result),
                 privilege.ToString());
 
             return result;
@@ -560,7 +560,7 @@ namespace WInterop.Security
             }
 
             Error.ThrowLastErrorIfFalse(
-                Imports.PrivilegeCheck(token, set, out Boolean32 result));
+                Imports.PrivilegeCheck(token, set, out IntBoolean result));
 
             return result;
         }

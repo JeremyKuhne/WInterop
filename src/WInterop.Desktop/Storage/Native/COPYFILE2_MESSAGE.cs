@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -16,7 +12,7 @@ namespace WInterop.Storage.Native
     public struct COPYFILE2_MESSAGE
     {
         public CopyFile2MessageType Type;
-        private uint dwPadding;
+        private readonly uint dwPadding;
         public MessageUnion Message;
 
         [StructLayout(LayoutKind.Explicit)]
@@ -48,7 +44,7 @@ namespace WInterop.Storage.Native
         public struct ChunkStarted
         {
             public uint dwStreamNumber;
-            private uint dwReserved;
+            private readonly uint dwReserved;
             public IntPtr hSourceFile;
             public IntPtr hDestinationFile;
             public ulong uliChunkNumber;
@@ -64,7 +60,7 @@ namespace WInterop.Storage.Native
         public struct ChunkFinished
         {
             public uint dwStreamNumber;
-            private uint dwReserved;
+            private readonly uint dwReserved;
             public IntPtr hSourceFile;
             public IntPtr hDestinationFile;
             public ulong uliChunkNumber;
@@ -82,7 +78,7 @@ namespace WInterop.Storage.Native
         public struct StreamStarted
         {
             public uint dwStreamNumber;
-            private uint dwReserved;
+            private readonly uint dwReserved;
             public IntPtr hSourceFile;
             public IntPtr hDestinationFile;
             public ulong uliStreamSize;
@@ -97,7 +93,7 @@ namespace WInterop.Storage.Native
         public struct StreamFinished
         {
             public uint dwStreamNumber;
-            private uint dwReserved;
+            private readonly uint dwReserved;
             public IntPtr hSourceFile;
             public IntPtr hDestinationFile;
             public ulong uliStreamSize;
@@ -109,7 +105,7 @@ namespace WInterop.Storage.Native
         [StructLayout(LayoutKind.Sequential)]
         public struct PollContinue
         {
-            private uint dwReserved;
+            private readonly uint dwReserved;
         }
 
         /// <summary>
@@ -121,7 +117,7 @@ namespace WInterop.Storage.Native
             public CopyFile2CopyPhase CopyPhase;
             public uint dwStreamNumber;
             public HResult hrFailure;
-            private uint dwReserved;
+            private readonly uint dwReserved;
             public ulong uliChunkNumber;
             public ulong uliStreamSize;
             public ulong uliStreamBytesTransferred;

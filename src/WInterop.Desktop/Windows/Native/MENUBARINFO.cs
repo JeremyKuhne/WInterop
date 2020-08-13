@@ -11,7 +11,7 @@ namespace WInterop.Windows.Native
         public Rect rcBar;
         public HMENU hMenu;
         public HWND hwndMenu;
-        public Boolean32 fBarFocused;
-        public Boolean32 fFocused;
+        public IntBoolean fBarFocused;
+        public IntBoolean fFocused;
     }
 }

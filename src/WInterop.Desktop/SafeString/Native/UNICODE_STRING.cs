@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -17,20 +13,20 @@ namespace WInterop.SafeString.Native
     public unsafe struct UNICODE_STRING
     {
         /// <summary>
-        /// Length, in bytes, not including the the null, if any.
+        ///  Length, in bytes, not including the the null, if any.
         /// </summary>
         public ushort Length;
 
         /// <summary>
-        /// Max size of the buffer in bytes
+        ///  Max size of the buffer in bytes
         /// </summary>
         public ushort MaximumLength;
 
         public char* Buffer;
 
         /// <summary>
-        /// Set to the current values for the given StringBuffer. Any changes to the buffer will NOT be reflected,
-        /// call the method again for any updates.
+        ///  Set to the current values for the given StringBuffer. Any changes to the buffer will NOT be reflected,
+        ///  call the method again for any updates.
         /// </summary>
         public void UpdateFromStringBuffer(StringBuffer buffer)
         {
@@ -40,8 +36,8 @@ namespace WInterop.SafeString.Native
         }
 
         /// <summary>
-        /// Set to the current values for the given StringBuffer. Any changes to the buffer will NOT be reflected,
-        /// call the UpdateFromStringBuffer method for any updates.
+        ///  Set to the current values for the given StringBuffer. Any changes to the buffer will NOT be reflected,
+        ///  call the UpdateFromStringBuffer method for any updates.
         /// </summary>
         public UNICODE_STRING(StringBuffer buffer)
         {
@@ -51,7 +47,7 @@ namespace WInterop.SafeString.Native
         }
 
         /// <summary>
-        /// Initialize the content of the string based on a fixed char from the given source string.
+        ///  Initialize the content of the string based on a fixed char from the given source string.
         /// </summary>
         public unsafe UNICODE_STRING(char* buffer, int lengthInChars)
         {
@@ -61,7 +57,7 @@ namespace WInterop.SafeString.Native
         }
 
         /// <summary>
-        /// Returns the current buffer as a string.
+        ///  Returns the current buffer as a string.
         /// </summary>
         public override string ToString()
         {

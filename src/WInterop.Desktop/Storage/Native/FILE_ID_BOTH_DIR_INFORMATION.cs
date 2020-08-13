@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,12 +7,12 @@ using System.Runtime.InteropServices;
 namespace WInterop.Storage.Native
 {
     /// <summary>
-    /// Used with GetFileInformationByHandleEx and FileIdBothDirectoryInfo/RestartInfo.
-    /// Also used with NtQueryDirectoryFile and FileIdBothDirectoryInformation.
-    /// Equivalent to FILE_ID_BOTH_DIR_INFO.
+    ///  Used with GetFileInformationByHandleEx and FileIdBothDirectoryInfo/RestartInfo.
+    ///  Also used with NtQueryDirectoryFile and FileIdBothDirectoryInformation.
+    ///  Equivalent to FILE_ID_BOTH_DIR_INFO.
     /// </summary>
     /// <remarks>
-    /// Very close to FILE_BOTH_DIR_INFORMATION, but not exactly the same.
+    ///  Very close to FILE_BOTH_DIR_INFORMATION, but not exactly the same.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct FILE_ID_BOTH_DIR_INFORMATION
@@ -25,12 +21,12 @@ namespace WInterop.Storage.Native
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540303.aspx
 
         /// <summary>
-        /// Byte offset for the next FILE_ID_BOTH_DIR_INFO, or 0 if no entries follow
+        ///  Byte offset for the next FILE_ID_BOTH_DIR_INFO, or 0 if no entries follow
         /// </summary>
         public uint NextEntryOffset;
 
         /// <summary>
-        /// Byte offset within the parent directory, undefined for NTFS.
+        ///  Byte offset within the parent directory, undefined for NTFS.
         /// </summary>
         public uint FileIndex;
         public LongFileTime CreationTime;
@@ -39,14 +35,14 @@ namespace WInterop.Storage.Native
         public LongFileTime ChangeTime;
 
         /// <summary>
-        /// End of file position, zero based in bytes. As it is zero based, it is
-        /// effectively the length of the file in bytes.
+        ///  End of file position, zero based in bytes. As it is zero based, it is
+        ///  effectively the length of the file in bytes.
         /// </summary>
         public long EndOfFile;
 
         /// <summary>
-        /// The actual allocated size on disk in bytes. Typically a multiple of the
-        /// sector or cluster size.
+        ///  The actual allocated size on disk in bytes. Typically a multiple of the
+        ///  sector or cluster size.
         /// </summary>
         public long AllocationSize;
         public AllFileAttributes FileAttributes;
@@ -57,10 +53,10 @@ namespace WInterop.Storage.Native
         public Span<char> ShortName => _ShortName.Buffer;
 
         /// <summary>
-        /// Reference number generated for the file by the file system. Not the same as the
-        /// 16 byte file object ID in NTFS (FILE_ID_128). This number is not guaranteed to
-        /// be unique over time- it can be reused. It is also not guaranteed to be constant-
-        /// FAT can change this ID when defragmenting, for example.
+        ///  Reference number generated for the file by the file system. Not the same as the
+        ///  16 byte file object ID in NTFS (FILE_ID_128). This number is not guaranteed to
+        ///  be unique over time- it can be reused. It is also not guaranteed to be constant-
+        ///  FAT can change this ID when defragmenting, for example.
         /// </summary>
         public long FileId;
         private char _FileName;

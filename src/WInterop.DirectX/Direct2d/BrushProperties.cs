@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Numerics;
@@ -10,7 +6,7 @@ using System.Numerics;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// Describes the opacity and transformation of a brush. [D2D1_BRUSH_PROPERTIES]
+    ///  Describes the opacity and transformation of a brush. [D2D1_BRUSH_PROPERTIES]
     /// </summary>
     public readonly struct BrushProperties
     {

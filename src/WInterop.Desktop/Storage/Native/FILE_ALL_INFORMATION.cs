@@ -1,14 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Storage.Native
 {
     /// <summary>
-    /// Combo struct for all file information.
+    ///  Combo struct for all file information.
     /// </summary>
     /// <remarks>
     /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff545743.aspx"/>

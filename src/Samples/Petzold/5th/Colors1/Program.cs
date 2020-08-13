@@ -14,32 +14,32 @@ namespace Colors1
     ///  Original (c) Charles Petzold, 1998
     ///  Figure 9-1, Pages 359-362.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Colors1(), "Color Scroll");
         }
     }
 
-    class Colors1 : WindowClass
+    internal class Colors1 : WindowClass
     {
-        Color[] crPrim = { Color.Red, Color.Green, Color.Blue };
-        BrushHolder[] hBrush = new BrushHolder[3];
-        BrushHolder hBrushStatic;
-        WindowHandle[] hwndScroll = new WindowHandle[3];
-        WindowHandle[] hwndLabel = new WindowHandle[3];
-        WindowHandle[] hwndValue = new WindowHandle[3];
-        WindowHandle hwndRect;
-        int[] color = new int[3];
-        int cyChar, idFocus;
-        Rectangle rcColor;
-        string[] szColorLabel = { "Red", "Green", "Blue" };
-        WNDPROC[] OldScroll = new WNDPROC[3];
+        private readonly Color[] crPrim = { Color.Red, Color.Green, Color.Blue };
+        private readonly BrushHolder[] hBrush = new BrushHolder[3];
+        private BrushHolder hBrushStatic;
+        private readonly WindowHandle[] hwndScroll = new WindowHandle[3];
+        private readonly WindowHandle[] hwndLabel = new WindowHandle[3];
+        private readonly WindowHandle[] hwndValue = new WindowHandle[3];
+        private WindowHandle hwndRect;
+        private readonly int[] color = new int[3];
+        private int cyChar, idFocus;
+        private Rectangle rcColor;
+        private readonly string[] szColorLabel = { "Red", "Green", "Blue" };
+        private readonly WNDPROC[] OldScroll = new WNDPROC[3];
 
         // We need to put the delegate in a static to prevent the callback from being collected
-        WindowProcedure _scrollProcedure;
+        private WindowProcedure _scrollProcedure;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -192,7 +192,7 @@ namespace Colors1
             return base.WindowProcedure(window, message, wParam, lParam);
         }
 
-        LResult ScrollProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        private LResult ScrollProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
             int id = (int)window.GetWindowLong(WindowLong.Id).ToInt64();
 

@@ -57,7 +57,7 @@ namespace WInterop.Support.Buffers
         public unsafe byte* BytePointer => (byte*)VoidPointer;
 
         /// <summary>
-        /// Get the handle to the buffer. Prefer using SafeHandle instead of IntPtr for interop (there is an implicit converter).
+        ///  Get the handle to the buffer. Prefer using SafeHandle instead of IntPtr for interop (there is an implicit converter).
         /// </summary>
         public IntPtr DangerousGetHandle() => _handle?.DangerousGetHandle() ?? IntPtr.Zero;
 

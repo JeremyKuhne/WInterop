@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -10,14 +6,14 @@ using System;
 namespace WInterop.Storage.Native
 {
     /// <summary>
-    /// Used to rename a file.
+    ///  Used to rename a file.
     /// </summary>
     /// <remarks>
-    /// https://msdn.microsoft.com/en-us/library/windows/hardware/ff540344.aspx
+    ///  https://msdn.microsoft.com/en-us/library/windows/hardware/ff540344.aspx
     /// </remarks>
     public struct FILE_RENAME_INFORMATION
     {
-        public Boolean8 ReplaceIfExists;
+        public ByteBoolean ReplaceIfExists;
         public IntPtr RootDirectory;
         public uint FileNameLength;
         private char _FileName;

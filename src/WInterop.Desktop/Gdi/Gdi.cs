@@ -59,7 +59,7 @@ namespace WInterop.Gdi
         /// <summary>
         ///  Get the device context for the screen.
         /// </summary>
-        public static DeviceContext GetDeviceContext() => GetDeviceContext(new WindowHandle());
+        public static DeviceContext GetDeviceContext() => GetDeviceContext(default);
 
         /// <summary>
         ///  Get the device context for the specified window.
@@ -67,12 +67,10 @@ namespace WInterop.Gdi
         /// <param name="window">The window handle, or null for the primary display monitor.</param>
         /// <returns>Returns a device context for the entire window, not just the client area.</returns>
         public static DeviceContext GetWindowDeviceContext(this in WindowHandle window)
-        {
-            return new DeviceContext(Imports.GetWindowDC(window), window);
-        }
+            => new DeviceContext(Imports.GetWindowDC(window), window);
 
-        public static BitmapHandle CreateCompatibleBitmap(this in DeviceContext context, Size size) =>
-            new BitmapHandle(Imports.CreateCompatibleBitmap(context, size.Width, size.Height));
+        public static BitmapHandle CreateCompatibleBitmap(this in DeviceContext context, Size size)
+            => new BitmapHandle(Imports.CreateCompatibleBitmap(context, size.Width, size.Height));
 
         public static void BitBlit(
             this in DeviceContext source,

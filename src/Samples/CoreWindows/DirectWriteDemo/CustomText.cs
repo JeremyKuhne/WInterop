@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,8 +11,8 @@ namespace DirectWriteDemo
     // https://docs.microsoft.com/en-us/windows/desktop/DirectWrite/how-to-implement-a-custom-text-renderer
     public class CustomText : HelloWorld
     {
-        IRadialGradientBrush _radialGradientBrush;
-        CustomTextRenderer _textRenderer;
+        private IRadialGradientBrush _radialGradientBrush;
+        private CustomTextRenderer _textRenderer;
 
         protected override void CreateResources()
         {

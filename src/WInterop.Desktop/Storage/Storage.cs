@@ -143,10 +143,10 @@ namespace WInterop.Storage
         ///  Create a file handle using an optional base directory handle.
         /// </summary>
         /// <param name="path">
-        /// Full path (or relative path if <paramref name="rootDirectory"/> is specified.
+        ///  Full path (or relative path if <paramref name="rootDirectory"/> is specified.
         /// </param>
         /// <param name="rootDirectory">
-        /// Optional handle to the directory the path is relative to.
+        ///  Optional handle to the directory the path is relative to.
         /// </param>
         public static unsafe SafeFileHandle CreateFileRelative(
             ReadOnlySpan<char> path,
@@ -420,8 +420,8 @@ namespace WInterop.Storage
         }
 
         /// <summary>
-        /// Get the ids for all processes that have a handle to this file system object.
-        /// Does not include the current process.
+        ///  Get the ids for all processes that have a handle to this file system object.
+        ///  Does not include the current process.
         /// </summary>
         public static unsafe IEnumerable<UIntPtr> GetProcessIds(SafeFileHandle fileHandle)
         {
@@ -1013,7 +1013,7 @@ namespace WInterop.Storage
         /// </summary>
         public static unsafe void CopyFile2(string source, string destination, bool overwrite = false)
         {
-            Boolean32 cancel = false;
+            IntBoolean cancel = false;
             COPYFILE2_EXTENDED_PARAMETERS parameters = new COPYFILE2_EXTENDED_PARAMETERS()
             {
                 dwSize = (uint)sizeof(COPYFILE2_EXTENDED_PARAMETERS),
@@ -1153,7 +1153,7 @@ namespace WInterop.Storage
                     }
                 }
 
-                return (((FILE_NAME_INFORMATION*)buffer.VoidPointer)->FileName).CreateString();
+                return ((FILE_NAME_INFORMATION*)buffer.VoidPointer)->FileName.CreateString();
             });
         }
 
@@ -1194,8 +1194,11 @@ namespace WInterop.Storage
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                while (!Imports.GetFileInformationByHandleEx(fileHandle, FileInfoClass.FileStreamInfo,
-                    buffer.VoidPointer, checked((uint)buffer.ByteCapacity)))
+                while (!Imports.GetFileInformationByHandleEx(
+                    fileHandle,
+                    FileInfoClass.FileStreamInfo,
+                    buffer.VoidPointer,
+                    checked((uint)buffer.ByteCapacity)))
                 {
                     WindowsError error = Error.GetLastError();
                     switch (error)

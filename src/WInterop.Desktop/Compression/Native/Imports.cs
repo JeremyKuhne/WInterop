@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ using WInterop.Storage;
 namespace WInterop.Compression.Native
 {
     /// <summary>
-    /// Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
     public static partial class Imports
     {
@@ -70,7 +66,7 @@ namespace WInterop.Compression.Native
             SafeHandle lpszBuffer);
 
         /// <summary>
-        /// Undocumented API that uses CreateFile instead of OpenFile.
+        ///  Undocumented API that uses CreateFile instead of OpenFile.
         /// </summary>
         /// <param name="lpFileName">File to open.</param>
         /// <param name="fdwCreate">If CreationDisposition.OpenExisting (OPEN_EXISTING), will call LZInit implicitly.</param>
@@ -85,7 +81,7 @@ namespace WInterop.Compression.Native
             char* lpCompressedName);
 
         /// <summary>
-        /// Matching close method for LZCreateFileW.
+        ///  Matching close method for LZCreateFileW.
         /// </summary>
         [DllImport(Libraries.Lz32, ExactSpelling = true)]
         public static extern int LZCloseFile(

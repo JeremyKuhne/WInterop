@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,24 +9,24 @@ using WInterop.Windows;
 namespace WhatClr
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 3-1, Pages 44-46.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 3-1, Pages 44-46.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new WhatColor(), "What Color");
         }
     }
 
-    class WhatColor : WindowClass
+    internal class WhatColor : WindowClass
     {
         public WhatColor() : base(backgroundBrush: BrushHandle.NoBrush) { }
 
-        static void FindWindowSize(ref int cxWindow, ref int cyWindow)
+        private static void FindWindowSize(ref int cxWindow, ref int cyWindow)
         {
             TextMetrics tm;
             using (DeviceContext dcScreen = Gdi.CreateInformationContext("DISPLAY", null))
@@ -42,8 +38,8 @@ namespace WhatClr
             cyWindow = 2 * Windows.GetSystemMetrics(SystemMetric.BorderHeight) + Windows.GetSystemMetrics(SystemMetric.CaptionAreaHeight) + 2 * tm.Height;
         }
 
-        const int ID_TIMER = 1;
-        Color cr, crLast;
+        private const int ID_TIMER = 1;
+        private Color cr, crLast;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

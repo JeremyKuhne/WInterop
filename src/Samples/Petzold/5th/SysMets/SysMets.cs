@@ -1,17 +1,13 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Windows;
 
 namespace SysMets
 {
-    class SysMets : SysMets4
+    internal class SysMets : SysMets4
     {
-        int iDeltaPerLine, iAccumDelta; // for mouse wheel logic
+        private int _iDeltaPerLine, _iAccumDelta; // for mouse wheel logic
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {
@@ -28,23 +24,23 @@ namespace SysMets
                     // ulScrollLines usually equals 3 or 0 (for no scrolling)
                     // WHEEL_DELTA equals 120, so iDeltaPerLine will be 40
                     if (ulScrollLines > 0)
-                        iDeltaPerLine = (int)(120 / ulScrollLines);
+                        _iDeltaPerLine = (int)(120 / ulScrollLines);
                     else
-                        iDeltaPerLine = 0;
+                        _iDeltaPerLine = 0;
                     return 0;
                 case MessageType.MouseWheel:
-                    if (iDeltaPerLine == 0)
+                    if (_iDeltaPerLine == 0)
                         break;
-                    iAccumDelta += (short)wParam.HighWord; // 120 or -120
-                    while (iAccumDelta >= iDeltaPerLine)
+                    _iAccumDelta += (short)wParam.HighWord; // 120 or -120
+                    while (_iAccumDelta >= _iDeltaPerLine)
                     {
                         window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.LineUp, 0);
-                        iAccumDelta -= iDeltaPerLine;
+                        _iAccumDelta -= _iDeltaPerLine;
                     }
-                    while (iAccumDelta <= -iDeltaPerLine)
+                    while (_iAccumDelta <= -_iDeltaPerLine)
                     {
                         window.SendMessage(MessageType.VerticalScroll, (uint)ScrollCommand.LineDown, 0);
-                        iAccumDelta += iDeltaPerLine;
+                        _iAccumDelta += _iDeltaPerLine;
                     }
                     return 0;
             }

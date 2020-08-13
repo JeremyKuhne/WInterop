@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -49,7 +45,7 @@ namespace WInterop.Com
         HResult IsName(
             char* szNameBuf,
             uint lHashVal,
-            out Boolean32 pfName);
+            out IntBoolean pfName);
 
         HResult FindName(
             char* szNameBuf,

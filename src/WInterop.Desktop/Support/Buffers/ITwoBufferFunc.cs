@@ -1,14 +1,10 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Support.Buffers
 {
-    public interface ITwoBufferFunc<BufferType, T>
+    public interface ITwoBufferFunc<TBuffer, T>
     {
-        T Func(BufferType buffer1, BufferType buffer2);
+        T Func(TBuffer buffer1, TBuffer buffer2);
     }
 }

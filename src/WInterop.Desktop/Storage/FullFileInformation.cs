@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,12 +7,12 @@ using WInterop.Storage.Native;
 namespace WInterop.Storage
 {
     /// <summary>
-    /// Managed wrapper for FILE_FULL_DIR_INFORMATION.
+    ///  Managed wrapper for FILE_FULL_DIR_INFORMATION.
     /// </summary>
     public struct FullFileInformation
     {
         /// <summary>
-        /// Byte offset within the parent directory, undefined for NTFS.
+        ///  Byte offset within the parent directory, undefined for NTFS.
         /// </summary>
         public uint FileIndex;
 
@@ -30,8 +26,8 @@ namespace WInterop.Storage
         public AllFileAttributes FileAttributes;
 
         /// <summary>
-        /// Size, in bytes, of the extended attributes for a file -or-
-        /// reparse tag if the file is a reparse point.
+        ///  Size, in bytes, of the extended attributes for a file -or-
+        ///  reparse tag if the file is a reparse point.
         /// </summary>
         public uint ExtendedAttributesSize;
 

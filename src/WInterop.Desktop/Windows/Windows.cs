@@ -238,8 +238,8 @@ namespace WInterop.Windows
         public static WindowHandle GetActiveWindow() => Imports.GetActiveWindow();
 
         /// <summary>
-        /// Gets the specified related Window to get given Window if it exists. Otherwise
-        /// returns a null WindowHandle.
+        ///  Gets the specified related Window to get given Window if it exists. Otherwise
+        ///  returns a null WindowHandle.
         /// </summary>
         public static WindowHandle GetWindow(this in WindowHandle window, GetWindowOption option)
             => Imports.GetWindow(window, option);
@@ -398,16 +398,16 @@ namespace WInterop.Windows
                 Imports.MoveWindow(window, position.X, position.Y, position.Width, position.Height, repaint));
 
         /// <summary>
-        /// Dispatches sent messages, waiting for the next message in the calling thread's message queue.
+        ///  Dispatches sent messages, waiting for the next message in the calling thread's message queue.
         /// </summary>
         /// <param name="window">
-        /// Get messages for the specified window or all thread windows and thread messages if default.
-        /// If set to -1, will only return thread messages.
+        ///  Get messages for the specified window or all thread windows and thread messages if default.
+        ///  If set to -1, will only return thread messages.
         /// </param>
         /// <returns>False when <see cref="MessageType.Quit"/> is returned.</returns>
         public static bool GetMessage(out WindowMessage message, WindowHandle window = default, MessageType minMessage = MessageType.Null, MessageType maxMessage = MessageType.Null)
         {
-            Boolean32 result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
+            IntBoolean result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
 
             // One special case here is -1 for an error
             if (result.RawValue == -1)

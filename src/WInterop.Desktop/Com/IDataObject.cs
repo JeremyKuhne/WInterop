@@ -1,18 +1,14 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Runtime.InteropServices;
-using WInterop.Errors;
 using WInterop.Com.Native;
+using WInterop.Errors;
 
 namespace WInterop.Com
 {
-    // https://docs.microsoft.com/en-us/windows/desktop/api/objidl/nn-objidl-idataobject
+    /// <docs>https://docs.microsoft.com/windows/desktop/api/objidl/nn-objidl-idataobject</docs>
     [ComImport,
         Guid("0000010e-0000-0000-C000-000000000046"),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -30,22 +26,20 @@ namespace WInterop.Com
         void SetData(
             in FORMATETC pformatetc,
             in STGMEDIUM pmedium,
-            Boolean32 fRelease);
+            IntBoolean fRelease);
 
         [PreserveSig]
         HResult EnumFormatEtc(
             uint dwDirection,
-            // IEnumFORMATETC
             [MarshalAs(UnmanagedType.IUnknown)]
-            out object ppenumFormatEtc);
+            out object ppenumFormatEtc);            // IEnumFORMATETC
 
         // Return E_NOTIMPL here
         [PreserveSig]
         HResult DAdvise(
             in FORMATETC pformatetc,
             uint advf,
-            // IAdviseSink
-            IntPtr pAdvSink,
+            IntPtr pAdvSink,                        // IAdviseSink
             out uint pdwConnection);
 
         // Return OLE_E_ADVISENOTSUPPORTED
@@ -55,7 +49,6 @@ namespace WInterop.Com
         // Return OLE_E_ADVISENOTSUPPORTED
         [PreserveSig]
         HResult EnumDAdvise(
-            // IEnumSTATDATA
-            out IntPtr ppenumAdvise);
+            out IntPtr ppenumAdvise);               // IEnumSTATDATA
     }
 }

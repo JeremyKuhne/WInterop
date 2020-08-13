@@ -3,11 +3,10 @@
 
 namespace WInterop.Windows
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633573(v=vs.85).aspx
-
     /// <summary>
     ///  Callback that processes messages sent to a window. [WindowProc]
     /// </summary>
+    /// <docs>https://msdn.microsoft.com/en-us/library/windows/desktop/ms633573(v=vs.85).aspx</docs>
     public delegate LResult WindowProcedure(
         WindowHandle hwnd,
         MessageType uMsg,

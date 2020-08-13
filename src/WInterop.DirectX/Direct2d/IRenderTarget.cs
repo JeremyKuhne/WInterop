@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -15,9 +11,9 @@ using WInterop.Errors;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// Represents an object that can receive drawing commands. Interfaces that inherit
-    /// from <see cref="IRenderTarget"/> render the drawing commands they receive in different
-    /// ways. [ID2D1RenderTarget]
+    ///  Represents an object that can receive drawing commands. Interfaces that inherit
+    ///  from <see cref="IRenderTarget"/> render the drawing commands they receive in different
+    ///  ways. [ID2D1RenderTarget]
     /// </summary>
     [ComImport,
         Guid(InterfaceIds.IID_ID2D1RenderTarget),
@@ -31,7 +27,7 @@ namespace WInterop.Direct2d
         #endregion
 
         /// <summary>
-        /// Create a D2D bitmap by copying from memory, or create uninitialized.
+        ///  Create a D2D bitmap by copying from memory, or create uninitialized.
         /// </summary>
         /// <param name="pitch">Byte count of each scanline, ignored if <paramref name="srcData"/> is null.</param>
         unsafe IBitmap CreateBitmap(
@@ -41,17 +37,17 @@ namespace WInterop.Direct2d
             in BitmapProperties bitmapProperties);
 
         /// <summary>
-        /// Create a D2D bitmap by copying a WIC bitmap.
+        ///  Create a D2D bitmap by copying a WIC bitmap.
         /// </summary>
         unsafe IBitmap CreateBitmapFromWicBitmap(
             object wicBitmapSource, // IWICBitmapSource
             BitmapProperties* bitmapProperties);
 
         /// <summary>
-        /// Create a D2D bitmap by sharing bits from another resource. The bitmap must be
-        /// compatible with the render target for the call to succeed. For example, an
-        /// IWICBitmap can be shared with a software target, or a DXGI surface can be shared
-        /// with a DXGI render target.
+        ///  Create a D2D bitmap by sharing bits from another resource. The bitmap must be
+        ///  compatible with the render target for the call to succeed. For example, an
+        ///  IWICBitmap can be shared with a software target, or a DXGI surface can be shared
+        ///  with a DXGI render target.
         /// </summary>
         unsafe IBitmap CreateSharedBitmap(
             in Guid riid,
@@ -59,8 +55,8 @@ namespace WInterop.Direct2d
             BitmapProperties* bitmapProperties);
 
         /// <summary>
-        /// Creates a bitmap brush. The bitmap is scaled, rotated, skewed or tiled to fill
-        /// or pen a geometry.
+        ///  Creates a bitmap brush. The bitmap is scaled, rotated, skewed or tiled to fill
+        ///  or pen a geometry.
         /// </summary>
         unsafe IBitmapBrush CreateBitmapBrush(
             IBitmap bitmap,
@@ -72,13 +68,13 @@ namespace WInterop.Direct2d
             BrushProperties* brushProperties);
 
         /// <summary>
-        /// A gradient stop collection represents a set of stops in an ideal unit length.
-        /// This is the source resource for a linear gradient and radial gradient brush.
+        ///  A gradient stop collection represents a set of stops in an ideal unit length.
+        ///  This is the source resource for a linear gradient and radial gradient brush.
         /// </summary>
         /// <param name="colorInterpolationGamma">Specifies which space the color
-        /// interpolation occurs in.</param>
+        ///  interpolation occurs in.</param>
         /// <param name="extendMode">Specifies how the gradient will be extended outside of
-        /// the unit length.</param>
+        ///  the unit length.</param>
         unsafe IGradientStopCollection CreateGradientStopCollection(
             GradientStop* gradientStops,
             uint gradientStopsCount,
@@ -99,22 +95,22 @@ namespace WInterop.Direct2d
             IGradientStopCollection gradientStopCollection);
 
         /// <summary>
-        /// Creates a bitmap render target whose bitmap can be used as a source for
-        /// rendering in the API.
+        ///  Creates a bitmap render target whose bitmap can be used as a source for
+        ///  rendering in the API.
         /// </summary>
         /// <param name="desiredSize">The requested size of the target in DIPs. If the pixel
-        /// size is not specified, the DPI is inherited from the parent target. However, the
-        /// render target will never contain a fractional number of pixels.</param>
+        ///  size is not specified, the DPI is inherited from the parent target. However, the
+        ///  render target will never contain a fractional number of pixels.</param>
         /// <param name="desiredPixelSize">The requested size of the render target in
-        /// pixels. If the DIP size is also specified, the DPI is calculated from these two
-        /// values. If the desired size is not specified, the DPI is inherited from the
-        /// parent render target. If neither value is specified, the compatible render
-        /// target will be the same size and have the same DPI as the parent target.</param>
+        ///  pixels. If the DIP size is also specified, the DPI is calculated from these two
+        ///  values. If the desired size is not specified, the DPI is inherited from the
+        ///  parent render target. If neither value is specified, the compatible render
+        ///  target will be the same size and have the same DPI as the parent target.</param>
         /// <param name="desiredFormat">The desired pixel format. The format must be
-        /// compatible with the parent render target type. If the format is not specified,
-        /// it will be inherited from the parent render target.</param>
+        ///  compatible with the parent render target type. If the format is not specified,
+        ///  it will be inherited from the parent render target.</param>
         /// <param name="options">Allows the caller to retrieve a GDI compatible render
-        /// target.</param>
+        ///  target.</param>
         /// <param name="bitmapRenderTarget">The returned bitmap render target.</param>
         unsafe IBitmapRenderTarget CreateCompatibleRenderTarget(
             SizeF* desiredSize,
@@ -123,15 +119,15 @@ namespace WInterop.Direct2d
             CompatibleRenderTargetOptions options);
 
         /// <summary>
-        /// Creates a layer resource that can be used on any target and which will resize
-        /// under the covers if necessary.
+        ///  Creates a layer resource that can be used on any target and which will resize
+        ///  under the covers if necessary.
         /// </summary>
         /// <param name="size">The resolution independent minimum size hint for the layer
-        /// resource. Specify this to prevent unwanted reallocation of the layer backing
-        /// store. The size is in DIPs, but, it is unaffected by the current world
-        /// transform. If the size is unspecified, the returned resource is a placeholder
-        /// and the backing store will be allocated to be the minimum size that can hold the
-        /// content when the layer is pushed.</param>
+        ///  resource. Specify this to prevent unwanted reallocation of the layer backing
+        ///  store. The size is in DIPs, but, it is unaffected by the current world
+        ///  transform. If the size is unspecified, the returned resource is a placeholder
+        ///  and the backing store will be allocated to be the minimum size that can hold the
+        ///  content when the layer is pushed.</param>
         void CreateLayerStub();
         //STDMETHOD(CreateLayer)(
         //    _In_opt_ CONST D2D1_SIZE_F *size,
@@ -139,7 +135,7 @@ namespace WInterop.Direct2d
         //    ) PURE;
 
         /// <summary>
-        /// Create a D2D mesh.
+        ///  Create a D2D mesh.
         /// </summary>
         void CreateMeshSTUB();
         //STDMETHOD(CreateMesh)(
@@ -198,9 +194,9 @@ namespace WInterop.Direct2d
             IStrokeStyle strokeStyle = null);
 
         /// <param name="opacityBrush">An optionally specified opacity brush. Only the alpha
-        /// channel of the corresponding brush will be sampled and will be applied to the
-        /// entire fill of the geometry. If this brush is specified, the fill brush must be
-        /// a bitmap brush with an extend mode of D2D1_EXTEND_MODE_CLAMP.</param>
+        ///  channel of the corresponding brush will be sampled and will be applied to the
+        ///  entire fill of the geometry. If this brush is specified, the fill brush must be
+        ///  a bitmap brush with an extend mode of D2D1_EXTEND_MODE_CLAMP.</param>
         [PreserveSig]
         void FillGeometry(
             IGeometry geometry,
@@ -208,8 +204,8 @@ namespace WInterop.Direct2d
             IBrush opacityBrush = null);
 
         /// <summary>
-        /// Fill a mesh. Since meshes can only render aliased content, the render target
-        /// antialiasing mode must be set to aliased.
+        ///  Fill a mesh. Since meshes can only render aliased content, the render target
+        ///  antialiasing mode must be set to aliased.
         /// </summary>
         void FillMeshSTUB();
         //STDMETHOD_(void, FillMesh)(
@@ -218,9 +214,9 @@ namespace WInterop.Direct2d
         //    ) PURE;
 
         /// <summary>
-        /// Fill using the alpha channel of the supplied opacity mask bitmap. The brush
-        /// opacity will be modulated by the mask. The render target antialiasing mode must
-        /// be set to aliased.
+        ///  Fill using the alpha channel of the supplied opacity mask bitmap. The brush
+        ///  opacity will be modulated by the mask. The render target antialiasing mode must
+        ///  be set to aliased.
         /// </summary>
         void FillOpacityMaskSTUB();
         //STDMETHOD_(void, FillOpacityMask)(
@@ -240,8 +236,8 @@ namespace WInterop.Direct2d
             LtrbRectangleF* sourceRectangle = null);
 
         /// <summary>
-        /// Draws the text within the given layout rectangle and by default also performs
-        /// baseline snapping.
+        ///  Draws the text within the given layout rectangle and by default also performs
+        ///  baseline snapping.
         /// </summary>
         [PreserveSig]
         unsafe void DrawText(
@@ -254,13 +250,13 @@ namespace WInterop.Direct2d
             MeasuringMode measuringMode = MeasuringMode.Natural);
 
         /// <summary>
-        /// Draw a text layout object. If the layout is not subsequently changed, this can
-        /// be more efficient than DrawText when drawing the same layout repeatedly.
+        ///  Draw a text layout object. If the layout is not subsequently changed, this can
+        ///  be more efficient than DrawText when drawing the same layout repeatedly.
         /// </summary>
         /// <param name="options">
-        /// The specified text options. If <see cref="DrawTextOptions.Clip"/> is used, the text
-        /// is clipped to the layout bounds. These bounds are derived from the origin and the
-        /// layout bounds of the corresponding <see cref="ITextLayout"/> object.
+        ///  The specified text options. If <see cref="DrawTextOptions.Clip"/> is used, the text
+        ///  is clipped to the layout bounds. These bounds are derived from the origin and the
+        ///  layout bounds of the corresponding <see cref="ITextLayout"/> object.
         /// </param>
         [PreserveSig]
         void DrawTextLayout(
@@ -303,16 +299,16 @@ namespace WInterop.Direct2d
             DirectWrite.IRenderingParams textRenderingParams = null);
 
         /// <summary>
-        /// Retrieve the text render parameters. NOTE: If NULL is specified to
-        /// SetTextRenderingParameters, NULL will be returned.
+        ///  Retrieve the text render parameters. NOTE: If NULL is specified to
+        ///  SetTextRenderingParameters, NULL will be returned.
         /// </summary>
         [PreserveSig]
         void GetTextRenderingParams(
             out DirectWrite.IRenderingParams textRenderingParams);
 
         /// <summary>
-        /// Set a tag to correspond to the succeeding primitives. If an error occurs
-        /// rendering a primitive, the tags can be returned from the Flush or EndDraw call.
+        ///  Set a tag to correspond to the succeeding primitives. If an error occurs
+        ///  rendering a primitive, the tags can be returned from the Flush or EndDraw call.
         /// </summary>
         [PreserveSig]
         void SetTags(
@@ -320,8 +316,8 @@ namespace WInterop.Direct2d
             ulong tag2);
 
         /// <summary>
-        /// Retrieves the currently set tags. This does not retrieve the tags corresponding
-        /// to any primitive that is in error.
+        ///  Retrieves the currently set tags. This does not retrieve the tags corresponding
+        ///  to any primitive that is in error.
         /// </summary>
         [PreserveSig]
         void GetTags(
@@ -329,11 +325,11 @@ namespace WInterop.Direct2d
             out ulong tag2);
 
         /// <summary>
-        /// Start a layer of drawing calls. The way in which the layer must be resolved is
-        /// specified first as well as the logical resource that stores the layer
-        /// parameters. The supplied layer resource might grow if the specified content
-        /// cannot fit inside it. The layer will grow monotonically on each axis.  If a NULL
-        /// ID2D1Layer is provided, then a layer resource will be allocated automatically.
+        ///  Start a layer of drawing calls. The way in which the layer must be resolved is
+        ///  specified first as well as the logical resource that stores the layer
+        ///  parameters. The supplied layer resource might grow if the specified content
+        ///  cannot fit inside it. The layer will grow monotonically on each axis.  If a NULL
+        ///  ID2D1Layer is provided, then a layer resource will be allocated automatically.
         /// </summary>
         void PushLayerSTUB();
         //STDMETHOD_(void, PushLayer)(
@@ -342,7 +338,7 @@ namespace WInterop.Direct2d
         //) PURE;
 
         /// <summary>
-        /// Ends a layer that was defined with particular layer resources.
+        ///  Ends a layer that was defined with particular layer resources.
         /// </summary>
         [PreserveSig]
         void PopLayer();
@@ -352,25 +348,25 @@ namespace WInterop.Direct2d
             out ulong tag2);
 
         /// <summary>
-        /// Gets the current drawing state and saves it into the supplied
-        /// IDrawingStatckBlock.
+        ///  Gets the current drawing state and saves it into the supplied
+        ///  IDrawingStatckBlock.
         /// </summary>
         [PreserveSig]
         void SaveDrawingState(
             IDrawingStateBlock drawingStateBlock);
 
         /// <summary>
-        /// Copies the state stored in the block interface.
+        ///  Copies the state stored in the block interface.
         /// </summary>
         [PreserveSig]
         void RestoreDrawingState(
             IDrawingStateBlock drawingStateBlock);
 
         /// <summary>
-        /// Pushes a clip. The clip can be antialiased. The clip must be axis aligned. If
-        /// the current world transform is not axis preserving, then the bounding box of the
-        /// transformed clip rect will be used. The clip will remain in effect until a
-        /// PopAxisAligned clip call is made.
+        ///  Pushes a clip. The clip can be antialiased. The clip must be axis aligned. If
+        ///  the current world transform is not axis preserving, then the bounding box of the
+        ///  transformed clip rect will be used. The clip will remain in effect until a
+        ///  PopAxisAligned clip call is made.
         /// </summary>
         [PreserveSig]
         void PushAxisAlignedClip(
@@ -385,15 +381,15 @@ namespace WInterop.Direct2d
             ColorF* clearColor = null);
 
         /// <summary>
-        /// Start drawing on this render target. Draw calls can only be issued between a
-        /// BeginDraw and EndDraw call.
+        ///  Start drawing on this render target. Draw calls can only be issued between a
+        ///  BeginDraw and EndDraw call.
         /// </summary>
         [PreserveSig]
         void BeginDraw();
 
         /// <summary>
-        /// Ends drawing on the render target, error results can be retrieved at this time,
-        /// or when calling flush.
+        ///  Ends drawing on the render target, error results can be retrieved at this time,
+        ///  or when calling flush.
         /// </summary>
         [PreserveSig]
         HResult EndDraw(
@@ -404,10 +400,10 @@ namespace WInterop.Direct2d
         void GetPixelFormat(out PixelFormat pixelFormat);
 
         /// <summary>
-        /// Sets the DPI on the render target. This results in the render target being
-        /// interpreted to a different scale. Neither DPI can be negative. If zero is
-        /// specified for both, the system DPI is chosen. If one is zero and the other
-        /// unspecified, the DPI is not changed.
+        ///  Sets the DPI on the render target. This results in the render target being
+        ///  interpreted to a different scale. Neither DPI can be negative. If zero is
+        ///  specified for both, the system DPI is chosen. If one is zero and the other
+        ///  unspecified, the DPI is not changed.
         /// </summary>
         [PreserveSig]
         void SetDpi(
@@ -415,7 +411,7 @@ namespace WInterop.Direct2d
             float dpiY);
 
         /// <summary>
-        /// Return the current DPI from the target.
+        ///  Return the current DPI from the target.
         /// </summary>
         [PreserveSig]
         void GetDpi(
@@ -423,32 +419,32 @@ namespace WInterop.Direct2d
             out float dpiY);
 
         /// <summary>
-        /// Returns the size of the render target in DIPs.
+        ///  Returns the size of the render target in DIPs.
         /// </summary>
         [PreserveSig]
         void GetSize(out SizeF size);
 
         /// <summary>
-        /// Returns the size of the render target in pixels.
+        ///  Returns the size of the render target in pixels.
         /// </summary>
         [PreserveSig]
         void GetPixelSize(out SizeU pixelSize);
 
         /// <summary>
-        /// Returns the maximum bitmap and render target size that is guaranteed to be
-        /// supported by the render target.
+        ///  Returns the maximum bitmap and render target size that is guaranteed to be
+        ///  supported by the render target.
         /// </summary>
         [PreserveSig]
         uint GetMaximumBitmapSize();
 
         /// <summary>
-        /// Returns true if the given properties are supported by this render target. The
-        /// DPI is ignored. NOTE: If the render target type is software, then neither
-        /// D2D1_FEATURE_LEVEL_9 nor D2D1_FEATURE_LEVEL_10 will be considered to be
-        /// supported.
+        ///  Returns true if the given properties are supported by this render target. The
+        ///  DPI is ignored. NOTE: If the render target type is software, then neither
+        ///  D2D1_FEATURE_LEVEL_9 nor D2D1_FEATURE_LEVEL_10 will be considered to be
+        ///  supported.
         /// </summary>
         [PreserveSig]
-        Boolean32 IsSupported(
+        IntBoolean IsSupported(
             in RenderTargetProperties renderTargetProperties);
     }
 
@@ -509,7 +505,7 @@ namespace WInterop.Direct2d
         }
 
         /// <summary>
-        /// Set the transform to identity.
+        ///  Set the transform to identity.
         /// </summary>
         public static void SetTransform(this IRenderTarget renderTarget)
         {

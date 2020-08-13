@@ -54,7 +54,7 @@ namespace WInterop.Gdi
             => Imports.GetTextMetricsW(context, out metrics);
 
         /// <summary>
-        /// Creates a logical font with the specified characteristics that can be selected into a <see cref="DeviceContext"/>.
+        ///  Creates a logical font with the specified characteristics that can be selected into a <see cref="DeviceContext"/>.
         /// </summary>
         /// <param name="height">"em" height of the font in logical pixels.</param>
         /// <param name="width">Average character width in logical pixels.</param>
@@ -114,7 +114,7 @@ namespace WInterop.Gdi
                 CharacterSet = characterSet,
             };
 
-            logFont.lfFaceName.CopyFrom(faceName);
+            logFont.FaceName.CopyFrom(faceName);
 
             List<FontInformation> info = new List<FontInformation>();
             GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);

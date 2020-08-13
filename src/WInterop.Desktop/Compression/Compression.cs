@@ -53,7 +53,7 @@ namespace WInterop.Compression
                 if (Storage.Storage.ReadFile(file, Structs.AsByteSpan(ref header)) < sizeof(LzxHeader))
                     return path;
 
-                replacement = char.ToUpperInvariant((char)header.extensionChar);
+                replacement = char.ToUpperInvariant((char)header.ExtensionChar);
             }
 
             if (filenameOnly)
@@ -118,12 +118,7 @@ namespace WInterop.Compression
         }
 
         private static int ValidateLzResult(int result, string? path = null, bool throwOnError = true)
-        {
-            if (!throwOnError || result >= 0)
-                return result;
-
-            throw new LzException((LzError)result, path);
-        }
+            => !throwOnError || result >= 0 ? result : throw new LzException((LzError)result, path);
 
         public static int LzSeek(LzHandle handle, int offset, MoveMethod origin)
             => ValidateLzResult(Imports.LZSeek(handle, offset, origin));

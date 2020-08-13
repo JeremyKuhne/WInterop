@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
@@ -14,9 +10,9 @@ using Xunit;
 namespace ComTests
 {
     /// <summary>
-    /// Checking that we parse what the runtime puts out. The marshalling code is not available
-    /// in all runtimes and we want to support additional types (including PROPVARIANT) so we
-    /// have our own implementation.
+    ///  Checking that we parse what the runtime puts out. The marshalling code is not available
+    ///  in all runtimes and we want to support additional types (including PROPVARIANT) so we
+    ///  have our own implementation.
     /// </summary>
     public class ComRuntimeCompat
     {

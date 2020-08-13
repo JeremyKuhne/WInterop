@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,27 +9,26 @@ using WInterop.Windows;
 namespace Connect
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 7-1, Pages 278-280.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 7-1, Pages 278-280.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Connect(), "Connect-the-Points Mouse Demo");
         }
     }
 
-    class Connect : WindowClass
+    internal class Connect : WindowClass
     {
-        const int MAXPOINTS = 1000;
-        const int TakeEvery = 10;
-
-        Point[] pt = new Point[MAXPOINTS];
-        int iCount;
-        int sampleCount;
+        private const int MAXPOINTS = 1000;
+        private const int TakeEvery = 10;
+        private readonly Point[] pt = new Point[MAXPOINTS];
+        private int iCount;
+        private int sampleCount;
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
         {

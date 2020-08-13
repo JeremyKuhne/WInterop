@@ -1,25 +1,21 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.DirectWrite
 {
     /// <summary>
-    /// Specifies a range of text positions where format is applied.
-    /// [DWRITE_TEXT_RANGE]
+    ///  Specifies a range of text positions where format is applied.
+    ///  [DWRITE_TEXT_RANGE]
     /// </summary>
     public readonly struct TextRange
     {
         /// <summary>
-        /// The start text position of the range.
+        ///  The start text position of the range.
         /// </summary>
         public readonly uint StartPosition;
 
         /// <summary>
-        /// The number of text positions in the range.
+        ///  The number of text positions in the range.
         /// </summary>
         public readonly uint Length;
 

@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace WInterop.Windows
@@ -11,17 +7,17 @@ namespace WInterop.Windows
     public enum InputType : uint
     {
         /// <summary>
-        /// [INPUT_MOUSE]
+        ///  [INPUT_MOUSE]
         /// </summary>
         Mouse = 0,
 
         /// <summary>
-        /// [INPUT_MOUSE]
+        ///  [INPUT_MOUSE]
         /// </summary>
         Keyboard = 1,
 
         /// <summary>
-        /// [INPUT_MOUSE]
+        ///  [INPUT_MOUSE]
         /// </summary>
         Hardware = 2
     }

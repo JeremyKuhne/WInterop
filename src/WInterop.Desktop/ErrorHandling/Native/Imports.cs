@@ -30,7 +30,7 @@ namespace WInterop.Errors.Native
             ErrorMode dwNewMode,
             out ErrorMode lpOldMode);
 
-        //  https://docs.microsoft.com/windows/win32/api/winternl/nf-winternl-rtlntstatustodoserror
+        // https://docs.microsoft.com/windows/win32/api/winternl/nf-winternl-rtlntstatustodoserror
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
         public static extern uint RtlNtStatusToDosError(NTStatus Status);
 

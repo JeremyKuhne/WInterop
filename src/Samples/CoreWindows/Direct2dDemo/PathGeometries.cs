@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -17,14 +13,13 @@ namespace Direct2dDemo
 {
     public class PathGeometries : DirectXWindowClass
     {
-        IPathGeometry _leftMountainGeometry;
-        IPathGeometry _rightMountainGeometry;
-        IPathGeometry _sunGeometry;
-        IPathGeometry _riverGeometry;
-
-        ISolidColorBrush _sceneBrush;
-        IBitmapBrush _gridPatternBrush;
-        IRadialGradientBrush _radialGradientBrush;
+        private readonly IPathGeometry _leftMountainGeometry;
+        private readonly IPathGeometry _rightMountainGeometry;
+        private readonly IPathGeometry _sunGeometry;
+        private readonly IPathGeometry _riverGeometry;
+        private ISolidColorBrush _sceneBrush;
+        private IBitmapBrush _gridPatternBrush;
+        private IRadialGradientBrush _radialGradientBrush;
 
         public PathGeometries() : base()
         {

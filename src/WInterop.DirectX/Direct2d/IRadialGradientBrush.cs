@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -13,7 +9,7 @@ using System.Runtime.InteropServices;
 namespace WInterop.Direct2d
 {
     /// <summary>
-    /// Paints an area with a radial gradient. [ID2D1RadialGradientBrush]
+    ///  Paints an area with a radial gradient. [ID2D1RadialGradientBrush]
     /// </summary>
     [ComImport,
         Guid(InterfaceIds.IID_ID2D1RadialGradientBrush),
@@ -28,14 +24,14 @@ namespace WInterop.Direct2d
 
         #region ID2D1Brush
         /// <summary>
-        /// Sets the opacity for when the brush is drawn over the entire fill of the brush.
+        ///  Sets the opacity for when the brush is drawn over the entire fill of the brush.
         /// </summary>
         [PreserveSig]
         new void SetOpacity(
             float opacity);
 
         /// <summary>
-        /// Sets the transform that applies to everything drawn by the brush.
+        ///  Sets the transform that applies to everything drawn by the brush.
         /// </summary>
         [PreserveSig]
         new void SetTransform(
@@ -50,14 +46,14 @@ namespace WInterop.Direct2d
         #endregion
 
         /// <summary>
-        /// Sets the center of the radial gradient. This will be in local coordinates and
-        /// will not depend on the geometry being filled.
+        ///  Sets the center of the radial gradient. This will be in local coordinates and
+        ///  will not depend on the geometry being filled.
         /// </summary>
         [PreserveSig]
         void SetCenter(PointF center);
 
         /// <summary>
-        /// Sets offset of the origin relative to the radial gradient center.
+        ///  Sets offset of the origin relative to the radial gradient center.
         /// </summary>
         [PreserveSig]
         void SetGradientOriginOffset(PointF gradientOriginOffset);

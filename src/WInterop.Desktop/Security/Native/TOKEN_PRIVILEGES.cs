@@ -11,7 +11,7 @@ namespace WInterop.Security.Native
         public uint PrivilegeCount;
 
         // This is an ANYSIZE_ARRAY
-        private LuidAndAttributes _Privileges;
+        private readonly LuidAndAttributes _Privileges;
 
         public unsafe ReadOnlySpan<LuidAndAttributes> Privileges
         {

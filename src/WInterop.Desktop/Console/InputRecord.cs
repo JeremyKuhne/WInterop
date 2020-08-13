@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
@@ -11,18 +7,18 @@ using WInterop.Windows;
 namespace WInterop.Console
 {
     /// <summary>
-    /// Console input record structure [INPUT_RECORD]
+    ///  Console input record structure [INPUT_RECORD]
     /// </summary>
     /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/input-record-str"/></msdn>
     public struct InputRecord
     {
         /// <summary>
-        /// The data type in <see cref="Data"/>.
+        ///  The data type in <see cref="Data"/>.
         /// </summary>
         public EventType EventType;
 
         /// <summary>
-        /// The input data, <see cref="EventType"/> specifies the type of data.
+        ///  The input data, <see cref="EventType"/> specifies the type of data.
         /// </summary>
         public DataUnion Data;
 
@@ -45,12 +41,12 @@ namespace WInterop.Console
             public FocusEventRecord FocusEvent;
 
             /// <summary>
-            /// Data for a key event. [KEY_EVENT_RECORD]
+            ///  Data for a key event. [KEY_EVENT_RECORD]
             /// </summary>
             /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/key-event-record-str"/></msdn>
             public struct KeyEventRecord
             {
-                public Boolean32 KeyDown;
+                public IntBoolean KeyDown;
                 public ushort RepeatCount;
                 public VirtualKey VirtualKeyCode;
                 public ushort VirtualScanCode;
@@ -68,7 +64,7 @@ namespace WInterop.Console
             }
 
             /// <summary>
-            /// Data for a mouse event. [MOUSE_EVENT_RECORD]
+            ///  Data for a mouse event. [MOUSE_EVENT_RECORD]
             /// </summary>
             /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/mouse-event-record-str"/></msdn>
             public struct MouseEventRecord
@@ -80,7 +76,7 @@ namespace WInterop.Console
             }
 
             /// <summary>
-            /// Data for a window buffer size change event. [WINDOW_BUFFER_SIZE_RECORD]
+            ///  Data for a window buffer size change event. [WINDOW_BUFFER_SIZE_RECORD]
             /// </summary>
             /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/window-buffer-size-record-str"/></msdn>
             public struct WindowBufferSizeRecord
@@ -89,7 +85,7 @@ namespace WInterop.Console
             }
 
             /// <summary>
-            /// Data for a menu event. [MENU_EVENT_RECORD]
+            ///  Data for a menu event. [MENU_EVENT_RECORD]
             /// </summary>
             /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/menu-event-record-str"/></msdn>
             public struct MenuEventRecord
@@ -98,12 +94,12 @@ namespace WInterop.Console
             }
 
             /// <summary>
-            /// Data for a focus event. [FOCUS_EVENT_RECORD]
+            ///  Data for a focus event. [FOCUS_EVENT_RECORD]
             /// </summary>
             /// <msdn><see cref="https://docs.microsoft.com/en-us/windows/console/focus-event-record-str"/></msdn>
             public struct FocusEventRecord
             {
-                public Boolean32 SetFocus;
+                public IntBoolean SetFocus;
             }
         }
     }

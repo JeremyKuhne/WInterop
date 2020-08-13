@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -16,12 +12,12 @@ namespace WInterop.Storage.Native
     public struct IO_STATUS_BLOCK
     {
         /// <summary>
-        /// Status
+        ///  Status
         /// </summary>
         public IO_STATUS Status;
 
         /// <summary>
-        /// Request dependent value.
+        ///  Request dependent value.
         /// </summary>
         public IntPtr Information;
 
@@ -32,14 +28,14 @@ namespace WInterop.Storage.Native
         public struct IO_STATUS
         {
             /// <summary>
-            /// The completion status, either STATUS_SUCCESS if the operation was completed successfully or
-            /// some other informational, warning, or error status.
+            ///  The completion status, either STATUS_SUCCESS if the operation was completed successfully or
+            ///  some other informational, warning, or error status.
             /// </summary>
             [FieldOffset(0)]
             public NTStatus Status;
 
             /// <summary>
-            /// Reserved for internal use.
+            ///  Reserved for internal use.
             /// </summary>
             [FieldOffset(0)]
             public IntPtr Pointer;

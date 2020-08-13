@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -10,12 +6,12 @@ using System;
 namespace WInterop.Support
 {
     /// <summary>
-    /// Wrapper for a <see cref="string"/> or <see cref="ReadOnlySpan{char}"/>.
+    ///  Wrapper for a <see cref="string"/> or <see cref="ReadOnlySpan{char}"/>.
     /// </summary>
     /// <remarks>
-    /// Use where you would want to take a <see cref="ReadOnlySpan{char}"/> but
-    /// also want to call <see cref="ToString()"/> without allocating a string
-    /// copy when you had a string to begin with.
+    ///  Use where you would want to take a <see cref="ReadOnlySpan{char}"/> but
+    ///  also want to call <see cref="ToString()"/> without allocating a string
+    ///  copy when you had a string to begin with.
     /// </remarks>
     public readonly ref struct StringSpan
     {

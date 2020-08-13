@@ -1,18 +1,14 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 
 namespace WInterop.Globalization
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd319087.aspx
     /// <summary>
-    /// [NLSVERSIONINFOEX]
+    ///  [NLSVERSIONINFOEX]
     /// </summary>
+    /// <docs>https://docs.microsoft.com/windows/win32/api/winnls/ns-winnls-nlsversioninfoex</docs>
     public struct NlsVersionInfoExtended
     {
         public uint NLSVersionInfoSize;

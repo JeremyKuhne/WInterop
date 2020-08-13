@@ -1,8 +1,4 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -12,7 +8,7 @@ using WInterop.Windows;
 
 namespace Windows101
 {
-    class Program
+    internal class Program
     {
         // To create a Windows Application in .NET Core you must do the following things:
         //
@@ -28,26 +24,26 @@ namespace Windows101
         {
             Windows.CreateMainWindowAndRun(new EditWindow(), windowTitle: "Edit control");
 
-            //// You can just show message boxes to interact
+            ////  You can just show message boxes to interact
             //Windows.MessageBox("Hello World.", caption: "Hello");
 
-            //// Or create actual Window classes and run them. A Window Class in Windows
-            //// includes a few basic things:
+            ////  Or create actual Window classes and run them. A Window Class in Windows
+            ////  includes a few basic things:
             ////
             ////   1. Appearance settings (border, icon, background, etc.)
             ////   2. A callback pointer for messages (mouse, keyboard, etc.)
             ////   3. An optional menu
             ////
-            //// The Window Class is a template that actual Window instances are created
-            //// from. WInterop wraps the registration and callbacks in "WindowClass"
-            //// that you can derive from. "CreateMainWindowAndRun" will create an
-            //// instance of the Window for the given WindowClass and loop processing
-            //// messages until the Window is closed.
+            ////  The Window Class is a template that actual Window instances are created
+            ////  from. WInterop wraps the registration and callbacks in "WindowClass"
+            ////  that you can derive from. "CreateMainWindowAndRun" will create an
+            ////  instance of the Window for the given WindowClass and loop processing
+            ////  messages until the Window is closed.
 
             //Windows.CreateMainWindowAndRun(new WindowClass(), windowTitle: "So Simple");
 
-            //// To display a message in a Window you have to draw it yourself in response
-            //// to a message to draw the window contents.
+            ////  To display a message in a Window you have to draw it yourself in response
+            ////  to a message to draw the window contents.
             //Windows.CreateMainWindowAndRun(new HelloWindow(), windowTitle: "Hello!");
         }
 

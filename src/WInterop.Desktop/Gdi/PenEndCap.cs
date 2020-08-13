@@ -6,17 +6,17 @@ namespace WInterop.Gdi
     public enum PenEndCap : uint
     {
         /// <summary>
-        /// [PS_ENDCAP_ROUND]
+        ///  [PS_ENDCAP_ROUND]
         /// </summary>
         Round = 0x00000000,
 
         /// <summary>
-        /// [PS_ENDCAP_SQUARE]
+        ///  [PS_ENDCAP_SQUARE]
         /// </summary>
         Square = 0x00000100,
 
         /// <summary>
-        /// [PS_ENDCAP_FLAT]
+        ///  [PS_ENDCAP_FLAT]
         /// </summary>
         Flat = 0x00000200
     }

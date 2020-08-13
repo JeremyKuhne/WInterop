@@ -1,40 +1,34 @@
-﻿// ------------------------
-//    WInterop Framework
-// ------------------------
-
-// Copyright (c) Jeremy W. Kuhne. All rights reserved.
+﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Drawing;
 using WInterop.ProcessAndThreads;
 using WInterop.Windows;
-using WInterop.Gdi;
 
 namespace Environ
 {
     /// <summary>
-    /// Sample from Programming Windows, 5th Edition.
-    /// Original (c) Charles Petzold, 1998
-    /// Figure 9-8, Pages 405-409.
+    ///  Sample from Programming Windows, 5th Edition.
+    ///  Original (c) Charles Petzold, 1998
+    ///  Figure 9-8, Pages 405-409.
     /// </summary>
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Windows.CreateMainWindowAndRun(new Environ(), "Environment List Box");
         }
     }
 
-    class Environ : WindowClass
+    internal class Environ : WindowClass
     {
-        const int ID_LIST = 1;
-        const int ID_TEXT = 2;
+        private const int ID_LIST = 1;
+        private const int ID_TEXT = 2;
+        private WindowHandle _hwndList, _hwndText;
 
-        WindowHandle hwndList, hwndText;
-
-        unsafe static void FillListBox(WindowHandle hwndList)
+        private static unsafe void FillListBox(WindowHandle hwndList)
         {
             foreach (var name in Processes.GetEnvironmentVariables().Keys)
             {
@@ -55,7 +49,7 @@ namespace Environ
                     Rectangle bounds = window.GetClientRectangle();
 
                     // Create listbox and static text windows.
-                    hwndList = Windows.CreateWindow(
+                    _hwndList = Windows.CreateWindow(
                         className: "listbox",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)ListBoxStyles.Standard,
                         bounds: new Rectangle(
@@ -67,7 +61,7 @@ namespace Environ
                         menuHandle: (MenuHandle)ID_LIST,
                         instance: ModuleInstance);
 
-                    hwndText = Windows.CreateWindow(
+                    _hwndText = Windows.CreateWindow(
                         className: "static",
                         style: WindowStyles.Child | WindowStyles.Visible | (WindowStyles)StaticStyles.Left,
                         bounds: new Rectangle(
@@ -79,26 +73,26 @@ namespace Environ
                         menuHandle: (MenuHandle)ID_TEXT,
                         instance: ModuleInstance);
 
-                    FillListBox(hwndList);
+                    FillListBox(_hwndList);
                     return 0;
                 case MessageType.SetFocus:
-                    hwndList.SetFocus();
+                    _hwndList.SetFocus();
                     return 0;
                 case MessageType.Command:
                     if (wParam.LowWord == ID_LIST
                         && (wParam.HighWord == (ushort)ListBoxNotification.SelectionChange))
                     {
                         // Get current selection.
-                        uint iIndex = hwndList.SendMessage(ListBoxMessage.GetCurrentSelection, 0, 0);
-                        int iLength = hwndList.SendMessage(ListBoxMessage.GetTextLength, iIndex, 0) + 1;
+                        uint iIndex = _hwndList.SendMessage(ListBoxMessage.GetCurrentSelection, 0, 0);
+                        int iLength = _hwndList.SendMessage(ListBoxMessage.GetTextLength, iIndex, 0) + 1;
                         char* nameBuffer = stackalloc char[iLength];
-                        int result = hwndList.SendMessage(ListBoxMessage.GetText, iIndex, nameBuffer);
+                        int result = _hwndList.SendMessage(ListBoxMessage.GetText, iIndex, nameBuffer);
 
                         // Get environment string.
                         string value = Processes.GetEnvironmentVariable(new string(nameBuffer, 0, result));
 
                         // Show it in window.
-                        hwndText.SetWindowText(value);
+                        _hwndText.SetWindowText(value);
                     }
                     return 0;
             }
