@@ -651,7 +651,8 @@ namespace WInterop.Gdi.Native
             int Ydenom,
             out Size lpSize);
 
-        // https://msdn.microsoft.com/library/dd162952.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-screentoclient
+        [SuppressGCTransition]
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool ScreenToClient(
             WindowHandle hWnd,

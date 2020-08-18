@@ -25,6 +25,7 @@ namespace Checker
                     for (x = 0; x < DIVISIONS; x++)
                         for (y = 0; y < DIVISIONS; y++)
                             _hwndChild[x, y] = _childClass.CreateWindow(
+                                Windows.DefaultBounds,
                                 style: WindowStyles.ChildWindow | WindowStyles.Visible,
                                 parentWindow: window,
                                 menuHandle: (MenuHandle)(y << 8 | x));

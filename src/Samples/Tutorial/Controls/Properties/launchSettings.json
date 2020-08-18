@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Windows101": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

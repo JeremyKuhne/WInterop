@@ -22,29 +22,27 @@ namespace Windows101
         [STAThread]
         private static void Main()
         {
-            Windows.CreateMainWindowAndRun(new EditWindow(), windowTitle: "Edit control");
+            //  You can just show message boxes to interact
+            Windows.MessageBox("Hello World.", caption: "Hello");
 
-            ////  You can just show message boxes to interact
-            //Windows.MessageBox("Hello World.", caption: "Hello");
+            //  Or create actual Window classes and run them. A Window Class in Windows
+            //  includes a few basic things:
+            //
+            //   1. Appearance settings (border, icon, background, etc.)
+            //   2. A callback pointer for messages (mouse, keyboard, etc.)
+            //   3. An optional menu
+            //
+            //  The Window Class is a template that actual Window instances are created
+            //  from. WInterop wraps the registration and callbacks in "WindowClass"
+            //  that you can derive from. "CreateMainWindowAndRun" will create an
+            //  instance of the Window for the given WindowClass and loop processing
+            //  messages until the Window is closed.
 
-            ////  Or create actual Window classes and run them. A Window Class in Windows
-            ////  includes a few basic things:
-            ////
-            ////   1. Appearance settings (border, icon, background, etc.)
-            ////   2. A callback pointer for messages (mouse, keyboard, etc.)
-            ////   3. An optional menu
-            ////
-            ////  The Window Class is a template that actual Window instances are created
-            ////  from. WInterop wraps the registration and callbacks in "WindowClass"
-            ////  that you can derive from. "CreateMainWindowAndRun" will create an
-            ////  instance of the Window for the given WindowClass and loop processing
-            ////  messages until the Window is closed.
+            Windows.CreateMainWindowAndRun(new WindowClass(), windowTitle: "So Simple");
 
-            //Windows.CreateMainWindowAndRun(new WindowClass(), windowTitle: "So Simple");
-
-            ////  To display a message in a Window you have to draw it yourself in response
-            ////  to a message to draw the window contents.
-            //Windows.CreateMainWindowAndRun(new HelloWindow(), windowTitle: "Hello!");
+            //  To display a message in a Window you have to draw it yourself in response
+            //  to a message to draw the window contents.
+            Windows.CreateMainWindowAndRun(new HelloWindow(), windowTitle: "Hello!");
         }
 
         private class HelloWindow : WindowClass
@@ -73,7 +71,7 @@ namespace Windows101
                             // Draw the given text in the middle of the client area of the Window.
                             dc.DrawText(
                                 "Hello, .NET Core!",
-                                client,
+                                bounds: client,
                                 TextFormat.SingleLine | TextFormat.Center | TextFormat.VerticallyCenter);
 
                             // Put the system font back as we're going to dispose our font
@@ -85,37 +83,6 @@ namespace Windows101
                 }
 
                 // Let the base class handle any other messages
-                return base.WindowProcedure(window, message, wParam, lParam);
-            }
-        }
-
-
-        private class EditWindow : WindowClass
-        {
-            private EditClass _editClass;
-            private WindowHandle _editHandle;
-
-            protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
-            {
-                switch (message)
-                {
-                    case MessageType.Create:
-                        _editClass = new EditClass(EditStyles.Multiline | EditStyles.Left
-                            | EditStyles.AutoHorizontalScroll | EditStyles.AutoVerticalScroll);
-                        _editHandle = _editClass.CreateWindow(
-                            style: WindowStyles.Child | WindowStyles.Visible | WindowStyles.HorizontalScroll
-                                | WindowStyles.VerticalScroll | WindowStyles.Border,
-                            parentWindow: window);
-                        return 0;
-                    case MessageType.SetFocus:
-                        _editHandle.SetFocus();
-                        return 0;
-                    case MessageType.Size:
-                        var size = new Message.Size(wParam, lParam);
-                        _editHandle.MoveWindow(new Rectangle(new Point(), size.NewSize), repaint: true);
-                        return 0;
-                }
-
                 return base.WindowProcedure(window, message, wParam, lParam);
             }
         }

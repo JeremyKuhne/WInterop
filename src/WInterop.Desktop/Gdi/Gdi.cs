@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Gdi.Native;
+using WInterop.Support;
 using WInterop.Windows;
 
 namespace WInterop.Gdi
@@ -175,7 +176,8 @@ namespace WInterop.Gdi
             return new GdiObjectHandle(handle, ownsHandle: false);
         }
 
-        public static bool UpdateWindow(this in WindowHandle window) => Imports.UpdateWindow(window);
+        public static bool UpdateWindow<T>(this T window) where T : IHandle<WindowHandle>
+            => Imports.UpdateWindow(window.Handle);
 
         public static unsafe bool ValidateRectangle(this in WindowHandle window, ref Rectangle rectangle)
         {
@@ -309,8 +311,16 @@ namespace WInterop.Gdi
         public static PenMixMode GetRasterOperation(this in DeviceContext context)
             => Imports.GetROP2(context);
 
-        public static bool ScreenToClient(this in WindowHandle window, ref Point point)
-            => Imports.ScreenToClient(window, ref point);
+        public static bool ScreenToClient<T>(this T window, ref Point point) where T : IHandle<WindowHandle>
+            => Imports.ScreenToClient(window.Handle, ref point);
+
+        public static bool ScreenToClient<T>(this T window, ref Rectangle rectangle) where T : IHandle<WindowHandle>
+        {
+            Point location = rectangle.Location;
+            bool result = Imports.ScreenToClient(window.Handle, ref location);
+            rectangle.Location = location;
+            return result;
+        }
 
         public static bool ClientToScreen(this in WindowHandle window, ref Point point)
             => Imports.ClientToScreen(window, ref point);

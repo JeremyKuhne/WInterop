@@ -2,7 +2,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Gdi;
@@ -74,6 +77,30 @@ namespace WInterop.Windows
             {
                 // Hit the P/Invoke directly as we want to throw the original error.
                 Imports.DestroyWindow(mainWindow);
+                throw;
+            }
+        }
+
+        public static void Run(Window window)
+        {
+            try
+            {
+                window.ShowWindow(ShowWindowCommand.Normal);
+                window.UpdateWindow();
+
+                while (GetMessage(out WindowMessage message))
+                {
+                    TranslateMessage(ref message);
+                    DispatchMessage(ref message);
+                }
+
+                // Make sure our window class doesn't get collected while we're pumping messages
+                GC.KeepAlive(window);
+            }
+            catch
+            {
+                // Hit the P/Invoke directly as we want to throw the original error.
+                Imports.DestroyWindow(window);
                 throw;
             }
         }
@@ -210,9 +237,9 @@ namespace WInterop.Windows
 
         public static WindowHandle GetFocus() => Imports.GetFocus();
 
-        public static WindowHandle SetFocus(this in WindowHandle window)
+        public static WindowHandle SetFocus<T>(this T window) where T : IHandle<WindowHandle>
         {
-            WindowHandle prior = Imports.SetFocus(window);
+            WindowHandle prior = Imports.SetFocus(window.Handle);
             if (prior.IsInvalid)
                 Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
@@ -388,14 +415,20 @@ namespace WInterop.Windows
             return new BrushHandle(new Gdi.Native.HBRUSH(result), ownsHandle);
         }
 
-        public static bool ShowWindow(this in WindowHandle window, ShowWindowCommand command)
+        public static bool ShowWindow<T>(this T window, ShowWindowCommand command)
+            where T : IHandle<WindowHandle>
         {
-            return Imports.ShowWindow(window, command);
+            return Imports.ShowWindow(window.Handle, command);
         }
 
-        public static void MoveWindow(this in WindowHandle window, Rectangle position, bool repaint)
+        /// <summary>
+        ///  Moves the window to the requested location. For main windows this is in screen coordinates. For child
+        ///  windows this is relative to the client area of the parent window.
+        /// </summary>
+        public static void MoveWindow<T>(this T window, Rectangle position, bool repaint)
+            where T : IHandle<WindowHandle>
             => Error.ThrowLastErrorIfFalse(
-                Imports.MoveWindow(window, position.X, position.Y, position.Width, position.Height, repaint));
+                Imports.MoveWindow(window.Handle, position.X, position.Y, position.Width, position.Height, repaint));
 
         /// <summary>
         ///  Dispatches sent messages, waiting for the next message in the calling thread's message queue.
@@ -450,10 +483,11 @@ namespace WInterop.Windows
         /// <summary>
         ///  Returns the logical client coordinates of the given <paramref name="window"/>.
         /// </summary>
-        public static Rectangle GetClientRectangle(this in WindowHandle window)
+        public static unsafe Rectangle GetClientRectangle<T>(this T window)
+            where T : IHandle<WindowHandle>
         {
-            Rect rect = default;
-            Error.ThrowLastErrorIfFalse(Imports.GetClientRect(window, ref rect));
+            Unsafe.SkipInit(out Rect rect);
+            Error.ThrowLastErrorIfFalse(Imports.GetClientRect(window.Handle, &rect));
             return rect;
         }
 
@@ -755,5 +789,34 @@ namespace WInterop.Windows
 
         public static uint GetDpiForWindow(this in WindowHandle window)
             => Imports.GetDpiForWindow(window);
+
+        /// <summary>
+        ///  Enumerates child windows for the given <paramref name="handle"/>.
+        /// </summary>
+        /// <param name="callback">
+        ///  The provided function will be passed child window handles. Return true to continue enumeration.
+        /// </param>
+        /// <param name="parameter">Parameter to pass through to the <paramref name="callback"/>.</param>
+        public static void EnumerateChildWindows(WindowHandle handle, Func<WindowHandle, LParam, bool> callback, LParam parameter)
+        {
+            Imports.EnumChildWindows(
+                handle,
+                (WindowHandle handle, LParam parameter) => callback(handle, parameter),
+                parameter);
+        }
+
+        /// <summary>
+        ///  Enumerates child windows for the given <paramref name="handle"/>.
+        /// </summary>
+        /// <param name="callback">
+        ///  The provided function will be passed child window handles. Return true to continue enumeration.
+        /// </param>
+        public static void EnumerateChildWindows(WindowHandle handle, Func<WindowHandle, bool> callback, LParam parameter)
+        {
+            Imports.EnumChildWindows(
+                handle,
+                (WindowHandle handle, LParam parameter) => callback(handle),
+                parameter);
+        }
     }
 }

@@ -119,36 +119,9 @@ namespace WInterop.Windows
         /// <summary>
         ///  Creates an instance of this <see cref="WindowClass"/>.
         /// </summary>
-        /// <param name="windowName">
-        ///  The text for the title bar when using <see cref="WindowStyles.Caption"/> or <see cref="WindowStyles.Overlapped"/>.
-        ///  For buttons, checkboxes, and other static controls this is the text of the control or a resource reference.
+        /// <param name="bounds">
+        ///  Pass <see cref="Windows.DefaultBounds"/> for the default size.
         /// </param>
-        /// <param name="isMainWindow">
-        ///  Set this to indicate that this is the main window for the application and closing it should terminate the message loop.
-        /// </param>
-        public WindowHandle CreateWindow(
-            string? windowName = null,
-            WindowStyles style = WindowStyles.Overlapped,
-            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
-            bool isMainWindow = false,
-            WindowHandle parentWindow = default,
-            IntPtr parameters = default,
-            MenuHandle menuHandle = default)
-        {
-            return CreateWindow(
-                Windows.DefaultBounds,
-                windowName,
-                style,
-                extendedStyle,
-                isMainWindow,
-                parentWindow,
-                parameters,
-                menuHandle);
-        }
-
-        /// <summary>
-        ///  Creates an instance of this <see cref="WindowClass"/>.
-        /// </summary>
         /// <param name="windowName">
         ///  The text for the title bar when using <see cref="WindowStyles.Caption"/> or <see cref="WindowStyles.Overlapped"/>.
         ///  For buttons, checkboxes, and other static controls this is the text of the control or a resource reference.

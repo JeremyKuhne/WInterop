@@ -137,7 +137,7 @@ namespace WInterop.Windows.Native
             int Y,
             int cx,
             int cy,
-            WindowPosition uFlags);
+            WindowPositionFlags uFlags);
 
         // https://msdn.microsoft.com/library/windows/desktop/ms632672.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -154,7 +154,7 @@ namespace WInterop.Windows.Native
             int Y,
             int cx,
             int cy,
-            WindowPosition uFlags);
+            WindowPositionFlags uFlags);
 
         // https://msdn.microsoft.com/library/windows/desktop/ms633440.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
@@ -179,7 +179,7 @@ namespace WInterop.Windows.Native
             HWND hWnd,
             ref Rect lpRect);
 
-        // https://msdn.microsoft.com/library/windows/desktop/ms633534.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-movewindow
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool MoveWindow(
             HWND hWnd,
@@ -386,10 +386,11 @@ namespace WInterop.Windows.Native
             SystemParameterOptions fWinIni);
 
         // https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-getclientrect
+        [SuppressGCTransition]
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-        public static extern bool GetClientRect(
+        public static unsafe extern bool GetClientRect(
             HWND hWnd,
-            ref Rect lpRect);
+            Rect* lpRect);
 
         // Note that AdjustWindowRect simply calls this method with an extended style of 0.
         // https://msdn.microsoft.com/library/windows/desktop/ms632667.aspx
@@ -904,7 +905,7 @@ namespace WInterop.Windows.Native
         public static extern bool MakeDragList(
             HWND hLB);
 
-        // https://msdn.microsoft.com/library/windows/desktop/ms633494.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-enumchildwindows
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool EnumChildWindows(
             HWND hWndParent,

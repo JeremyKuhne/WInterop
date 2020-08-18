@@ -3,10 +3,10 @@
 
 namespace WInterop.Windows
 {
-    public class EditClass : WindowClass
+    public enum HorizontalAlignment
     {
-        public EditClass() : base("Edit")
-        {
-        }
+        Left,
+        Right,
+        Center
     }
 }

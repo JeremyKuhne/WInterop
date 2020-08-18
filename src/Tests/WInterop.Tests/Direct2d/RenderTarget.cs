@@ -36,7 +36,7 @@ namespace Direct2dTests
 
                 _windowClass = new WindowClass(backgroundBrush: BrushHandle.NoBrush);
                 _windowClass.Register();
-                _window = _windowClass.CreateWindow("RenderTargetTest");
+                _window = _windowClass.CreateWindow(Windows.DefaultBounds, "RenderTargetTest");
                 RenderTarget = _factory.CreateWindowRenderTarget(default,
                     new WindowRenderTargetProperties(_window, _window.GetClientRectangle().Size));
             }

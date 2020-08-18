@@ -9,12 +9,12 @@ namespace WInterop.Windows
 
     /// <summary>
     ///  Callback used to enumerate windows.
-    ///  [EnumWindowsProc, EnumThreadWndProc, EnumChildProc
+    ///  [EnumWindowsProc, EnumThreadWndProc, EnumChildProc]
     /// </summary>
     /// <param name="window">The found window.</param>
-    /// <param name="lParam">Application defined value.</param>
+    /// <param name="parameter">Application defined value.</param>
     /// <returns>Return true to continue enumeratoring.</returns>
     public delegate bool EnumerateWindowProcedure(
         WindowHandle window,
-        LParam lParam);
+        LParam parameter);
 }

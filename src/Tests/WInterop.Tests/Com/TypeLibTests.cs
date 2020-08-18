@@ -16,7 +16,7 @@ namespace WInterop.Tests.Com
     public class TypeLibTests
     {
         // "00020430-0000-0000-C000-000000000046"
-        internal static Guid IID_StdOle = new Guid(0x00020430, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46);
+        public static Guid IID_StdOle = new Guid(0x00020430, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46);
 
 
         internal static HResult LoadStdOle2(out ITypeLib typeLib)

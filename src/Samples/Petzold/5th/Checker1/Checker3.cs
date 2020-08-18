@@ -23,6 +23,7 @@ namespace Checker
                     for (int x = 0; x < DIVISIONS; x++)
                         for (int y = 0; y < DIVISIONS; y++)
                             _hwndChild[x, y] = _childClass.CreateWindow(
+                                Windows.DefaultBounds,
                                 style: WindowStyles.ChildWindow | WindowStyles.Visible,
                                 parentWindow: window);
                     return 0;

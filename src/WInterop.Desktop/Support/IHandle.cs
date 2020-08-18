@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Windows
+namespace WInterop.Support
 {
-    public class EditClass : WindowClass
+    public interface IHandle<T> where T : unmanaged
     {
-        public EditClass() : base("Edit")
-        {
-        }
+        T Handle { get; }
     }
 }

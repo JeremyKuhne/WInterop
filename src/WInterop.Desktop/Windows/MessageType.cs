@@ -11,13 +11,22 @@ namespace WInterop.Windows
         Null = 0x0000,
 
         /// <summary>
-        ///  [WM_CREATE]
+        ///  Sent when an application requests that a window be created by calling the CreateWindowEx or CreateWindow
+        ///  function. (The message is sent before the function returns.) The window procedure of the new window
+        ///  receives this message after the window is created, but before the window becomes visible. [WM_CREATE]
         /// </summary>
         Create = 0x0001,
 
         /// <summary>
-        ///  [WM_DESTROY]
+        ///  Sent after a window has been moved. [WM_DESTROY]
         /// </summary>
+        /// <remarks>
+        ///  LParam contains the x and y coordinates of the upper-left client area of the window. LOWORD is x, HIWORD
+        ///  is y.
+        ///
+        ///  This message is not sent if <see cref="WindowPositionChanged"/> is handled without calling the default
+        ///  window procedure.
+        /// </remarks>
         Destroy = 0x0002,
 
         /// <summary>
@@ -26,7 +35,7 @@ namespace WInterop.Windows
         Move = 0x0003,
 
         /// <summary>
-        ///  [WM_SIZE]
+        ///  Change in the size of the client area of the window. [WM_SIZE]
         /// </summary>
         Size = 0x0005,
 
@@ -256,8 +265,11 @@ namespace WInterop.Windows
         WindowPositionChanging = 0x0046,
 
         /// <summary>
-        ///  [WM_WINDOWPOSCHANGED]
+        ///  Sent to a window whose size, position, or place in the Z order has changed. [WM_WINDOWPOSCHANGED]
         /// </summary>
+        /// <remarks>
+        ///  LParam contains a pointer to <see cref="WindowPosition"/>.
+        /// </remarks>
         WindowPositionChanged = 0x0047,
 
         /// <summary>

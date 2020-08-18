@@ -2,6 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
+using WInterop.Support;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows
@@ -9,7 +11,8 @@ namespace WInterop.Windows
     /// <summary>
     ///  Simple struct to encapsulate a Window handle (HWND).
     /// </summary>
-    public readonly struct WindowHandle
+    [DebuggerDisplay("{HWND}")]
+    public readonly struct WindowHandle : IHandle<WindowHandle>
     {
         public HWND HWND { get; }
 
@@ -64,5 +67,7 @@ namespace WInterop.Windows
         public bool IsInvalid => HWND.IsInvalid;
 
         public bool IsNull => HWND.Value == IntPtr.Zero;
+
+        public WindowHandle Handle => this;
     }
 }
