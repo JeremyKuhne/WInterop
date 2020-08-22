@@ -94,9 +94,8 @@ namespace WInterop.Modules
         /// <remarks>External process handles must be opened with PROCESS_QUERY_INFORMATION|PROCESS_VM_READ</remarks>
         public static unsafe string GetModuleFileName(ModuleInstance module, SafeProcessHandle? process = null)
         {
-            if (process == null)
-            {
-                return PlatformInvoke.GrowableBufferInvoke(
+            return process is null
+                ? PlatformInvoke.GrowableBufferInvoke(
                     (ref ValueBuffer<char> buffer) =>
                     {
                         fixed (char* b = buffer)
@@ -106,11 +105,8 @@ namespace WInterop.Modules
                     },
                     ReturnSizeSemantics.BufferTruncates
                         | ReturnSizeSemantics.LastErrorInsufficientBuffer
-                        | ReturnSizeSemantics.SizeIncludesNullWhenTruncated);
-            }
-            else
-            {
-                return PlatformInvoke.GrowableBufferInvoke(
+                        | ReturnSizeSemantics.SizeIncludesNullWhenTruncated)
+                : PlatformInvoke.GrowableBufferInvoke(
                     (ref ValueBuffer<char> buffer) =>
                     {
                         fixed (char* b = buffer)
@@ -119,7 +115,6 @@ namespace WInterop.Modules
                         }
                     },
                     ReturnSizeSemantics.BufferTruncates);
-            }
         }
 
         /// <summary>

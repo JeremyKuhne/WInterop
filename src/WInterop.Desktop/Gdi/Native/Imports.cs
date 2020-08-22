@@ -144,7 +144,8 @@ namespace WInterop.Gdi.Native
             int cx,
             int cy);
 
-        // https://msdn.microsoft.com/library/dd144905.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getobjecttype
+        [SuppressGCTransition]
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern ObjectType GetObjectType(
             HGDIOBJ h);
@@ -260,7 +261,7 @@ namespace WInterop.Gdi.Native
         public static extern COLORREF GetTextColor(
             HDC hdc);
 
-        // https://docs.microsoft.com/windows/desktop/api/wingdi/nf-wingdi-createfontw
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-createfontw
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern HFONT CreateFontW(
             int nHeight,
@@ -663,9 +664,9 @@ namespace WInterop.Gdi.Native
         public static extern bool SetDisplayAutoRotationPreferences(
             OrientationPreference orientation);
 
-        // https://msdn.microsoft.com/library/dd162977.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public static extern bool SetGraphicsMode(
+        public static extern GraphicsMode SetGraphicsMode(
             HDC hdc,
             GraphicsMode iMode);
 
@@ -707,7 +708,7 @@ namespace WInterop.Gdi.Native
             int nYExtent,
             Point* lpPoint);
 
-        // https://msdn.microsoft.com/library/dd145104.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-setworldtransform
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool SetWorldTransform(
             HDC hdc,

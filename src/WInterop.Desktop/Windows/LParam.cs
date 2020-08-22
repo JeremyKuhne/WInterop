@@ -9,23 +9,26 @@ namespace WInterop.Windows
 {
     public struct LParam
     {
-        public IntPtr Value;
+        public nint Value;
 
         public ushort LowWord => Conversion.LowWord(Value);
         public ushort HighWord => Conversion.HighWord(Value);
 
-        public LParam(IntPtr value) => Value = value;
-        public LParam(short high, short low) => Value = (IntPtr)Conversion.HighLowToInt(high, low);
-        public LParam(int high, int low) => Value = (IntPtr)Conversion.HighLowToInt(checked((short)high), checked((short)low));
+        public LParam(nint value) => Value = value;
+        public LParam(short high, short low) => Value = Conversion.HighLowToInt(high, low);
+        public LParam(int high, int low) => Value = Conversion.HighLowToInt(checked((short)high), checked((short)low));
 
-        public static implicit operator int(LParam lParam) => (int)lParam.Value.ToInt64();
-        public static explicit operator uint(LParam lParam) => (uint)lParam.Value.ToInt64();
-        public static implicit operator LParam(int value) => new LParam((IntPtr)value);
-        public static implicit operator LParam(IntPtr value) => new LParam(value);
-        public static implicit operator IntPtr(LParam lParam) => lParam.Value;
+        public bool IsNull => Value == 0;
 
-        public static unsafe implicit operator void*(LParam lParam) => lParam.Value.ToPointer();
-        public static unsafe implicit operator LParam(void* value) => new LParam((IntPtr)value);
+        public static implicit operator int(LParam lParam) => (int)lParam.Value;
+        public static explicit operator uint(LParam lParam) => (uint)lParam.Value;
+        public static implicit operator LParam(int value) => new LParam(value);
+        public static implicit operator LParam(nint value) => new LParam(value);
+        public static implicit operator nint(LParam lParam) => lParam.Value;
+        public static implicit operator LParam((int high, int low) value) => new LParam(value.high, value.low);
+
+        public static unsafe implicit operator void*(LParam lParam) => (void*)lParam.Value;
+        public static unsafe implicit operator LParam(void* value) => new LParam((nint)value);
         public static explicit operator WindowHandle(LParam lParam) => new HWND(lParam.Value);
         public static explicit operator LParam(WindowHandle value) => new LParam(value.HWND.Value);
 

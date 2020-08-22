@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Gdi.Native;
@@ -27,26 +28,26 @@ namespace WInterop.Gdi
         /// <summary>
         ///  Returns an in memory device context that is compatible with the specified device.
         /// </summary>
-        /// <param name="context">An existing device context or default for the application's current screen.</param>
+        /// <param name="deviceContext">An existing device context or default for the application's current screen.</param>
         /// <returns>A 1 by 1 monochrome memory device context.</returns>
-        public static DeviceContext CreateCompatibleDeviceContext(this in DeviceContext context)
-            => new DeviceContext(Imports.CreateCompatibleDC(context), ownsHandle: true);
+        public static DeviceContext CreateCompatibleDeviceContext(this in DeviceContext deviceContext)
+            => new DeviceContext(Imports.CreateCompatibleDC(deviceContext), ownsHandle: true);
 
         /// <summary>
-        ///  Gets a <paramref name="capability"/> for the given <paramref name="context"/>.
+        ///  Gets a <paramref name="capability"/> for the given <paramref name="deviceContext"/>.
         /// </summary>
-        public static int GetDeviceCapability(this in DeviceContext context, DeviceCapability capability)
-            => Imports.GetDeviceCaps(context, capability);
+        public static int GetDeviceCapability(this in DeviceContext deviceContext, DeviceCapability capability)
+            => Imports.GetDeviceCaps(deviceContext, capability);
 
-        public static Size GetDeviceResolution(this in DeviceContext context)
+        public static Size GetDeviceResolution(this in DeviceContext deviceContext)
             => new Size(
-                context.GetDeviceCapability(DeviceCapability.HorzontalResolution),
-                context.GetDeviceCapability(DeviceCapability.VerticalResolution));
+                deviceContext.GetDeviceCapability(DeviceCapability.HorzontalResolution),
+                deviceContext.GetDeviceCapability(DeviceCapability.VerticalResolution));
 
-        public static Size GetDesktopResolution(this in DeviceContext context)
+        public static Size GetDesktopResolution(this in DeviceContext deviceContext)
             => new Size(
-                context.GetDeviceCapability(DeviceCapability.DesktopHorizontalResolution),
-                context.GetDeviceCapability(DeviceCapability.DesktopVerticalResolution));
+                deviceContext.GetDeviceCapability(DeviceCapability.DesktopHorizontalResolution),
+                deviceContext.GetDeviceCapability(DeviceCapability.DesktopVerticalResolution));
 
         public static unsafe DeviceContext CreateInformationContext(string driver, string device)
             => new DeviceContext(Imports.CreateICW(driver, device, null, null), ownsHandle: true);
@@ -170,10 +171,7 @@ namespace WInterop.Gdi
                 return default;
 
             ObjectType type = Imports.GetObjectType(@object);
-            if (type == ObjectType.Region)
-                return default;
-
-            return new GdiObjectHandle(handle, ownsHandle: false);
+            return type == ObjectType.Region ? default : new GdiObjectHandle(handle, ownsHandle: false);
         }
 
         public static bool UpdateWindow<T>(this T window) where T : IHandle<WindowHandle>
@@ -388,9 +386,9 @@ namespace WInterop.Gdi
             return new Span<PaletteEntry>(entries, 0, (int)count);
         }
 
-        public static unsafe Span<PaletteEntry> GetSystemPaletteEntries(this in DeviceContext context)
+        public static unsafe Span<PaletteEntry> GetSystemPaletteEntries(this in DeviceContext deviceContext)
         {
-            uint count = Imports.GetSystemPaletteEntries(context, 0, 0, null);
+            uint count = Imports.GetSystemPaletteEntries(deviceContext, 0, 0, null);
 
             if (count == 0)
                 return Span<PaletteEntry>.Empty;
@@ -399,11 +397,38 @@ namespace WInterop.Gdi
 
             fixed (PaletteEntry* pe = entries)
             {
-                count = Imports.GetSystemPaletteEntries(context, 0, count, pe);
+                count = Imports.GetSystemPaletteEntries(deviceContext, 0, count, pe);
             }
 
             Debug.Assert(count == entries.Length);
             return new Span<PaletteEntry>(entries, 0, (int)count);
         }
+
+        /// <summary>
+        ///  Sets the graphics mode for the given device context.
+        /// </summary>
+        /// <remarks>
+        ///  You cannot set the mode to <see cref="GraphicsMode.Compatible"/> if the device context currently
+        ///  has a non-identity transform.
+        /// </remarks>
+        public static GraphicsMode SetGraphicsMode(this in DeviceContext deviceContext, GraphicsMode graphicsMode)
+            => Imports.SetGraphicsMode(deviceContext, graphicsMode);
+
+        public static GraphicsMode GetGraphicsMode(this in DeviceContext deviceContext)
+            => Imports.GetGraphicsMode(deviceContext);
+
+        /// <summary>
+        ///  Set the transform for the given device context.
+        /// </summary>
+        /// <returns>
+        ///  True if successful. SetWorldTransform doesn't set last error unless you try to pass a handle
+        ///  that isn't a device context. The other failure case is that the graphics mode isn't set to
+        ///  advanced.
+        /// </returns>
+        public static bool SetWorldTransform(this in DeviceContext deviceContext, ref Matrix3x2 transform)
+            => Imports.SetWorldTransform(deviceContext, ref transform);
+
+        public static bool GetWorldTransform(this in DeviceContext deviceContext, out Matrix3x2 transform)
+            => Imports.GetWorldTransform(deviceContext, out transform);
     }
 }

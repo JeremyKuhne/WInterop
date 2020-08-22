@@ -5,11 +5,11 @@ using System.Drawing;
 
 namespace WInterop.Windows
 {
-    public class LayoutProvider
+    public class LayoutBinder
     {
         private readonly ILayoutHandler _handler;
 
-        public LayoutProvider(Window window, ILayoutHandler handler)
+        public LayoutBinder(Window window, ILayoutHandler handler)
         {
             _handler = handler;
             window.MessageHandler += Window_MessageHandler;

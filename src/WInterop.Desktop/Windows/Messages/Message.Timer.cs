@@ -23,7 +23,7 @@ namespace WInterop.Windows
 
             public uint Id => _wParam;
             public TimerProcedure? Procedure
-                => _lParam.Value == IntPtr.Zero ? null : Marshal.GetDelegateForFunctionPointer<TimerProcedure>(_lParam);
+                => _lParam.IsNull ? null : Marshal.GetDelegateForFunctionPointer<TimerProcedure>(_lParam);
         }
     }
 }

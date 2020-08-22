@@ -23,7 +23,7 @@ namespace WInterop.Compression
             {
                 buffer.EnsureByteCapacity(Paths.MaxPath);
                 ValidateLzResult(Imports.GetExpandedNameA(Paths.TrimTrailingSeparators(path), buffer), path);
-                return BufferHelper.GetNullTerminatedAsciiString(buffer);
+                return Strings.GetNullTerminatedAsciiString(buffer);
             });
         }
 

@@ -7,28 +7,23 @@ namespace WInterop.Windows
 {
     public static class Layout
     {
-        public static void SetLayout(this Window window, ILayoutHandler handler)
-        {
-            new LayoutProvider(window, handler);
-        }
-
         public static ILayoutHandler FixedPercent(
-            ILayoutHandler handler,
             SizeF percent,
+            ILayoutHandler handler,
             VerticalAlignment verticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
             => new FixedPercentLayout(handler, percent, verticalAlignment, horizontalAlignment);
 
         public static ILayoutHandler FixedPercent(
-            ILayoutHandler handler,
             float percent,
+            ILayoutHandler handler,
             VerticalAlignment verticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
             => new FixedPercentLayout(handler, new SizeF(percent, percent), verticalAlignment, horizontalAlignment);
 
         public static ILayoutHandler FixedSize(
-            ILayoutHandler handler,
             Size size,
+            ILayoutHandler handler,
             VerticalAlignment verticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
             => new FixedSizeLayout(handler, size, verticalAlignment, horizontalAlignment);

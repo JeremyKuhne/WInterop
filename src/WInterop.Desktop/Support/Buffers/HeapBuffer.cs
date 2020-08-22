@@ -91,15 +91,8 @@ namespace WInterop.Support.Buffers
             // Don't bother trying to get the lock if we're already big enough
             if (ByteCapacity < minCapacity)
             {
-                _handleLock.EnterWriteLock();
-                try
-                {
-                    UnlockedEnsureByteCapacity(minCapacity);
-                }
-                finally
-                {
-                    _handleLock.ExitWriteLock();
-                }
+                using var writeLock = _handleLock.Lock(Locks.Type.Write);
+                UnlockedEnsureByteCapacity(minCapacity);
             }
         }
 
@@ -123,55 +116,37 @@ namespace WInterop.Support.Buffers
         /// </exception>
         public unsafe byte this[ulong index]
         {
-            // We only need a read lock here to avoid accessing old memory after a resize (as the block may move). The actual read/write is atomic.
+            // We only need a read lock here to avoid accessing old memory after a resize (as the block may move).
+            // The actual read/write is atomic.
             get
             {
                 if (index >= ByteCapacity)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                _handleLock.EnterReadLock();
-                try
-                {
-                    return BytePointer[index];
-                }
-                finally
-                {
-                    _handleLock.ExitReadLock();
-                }
+                using var readLock = _handleLock.Lock(Locks.Type.Read);
+                return BytePointer[index];
             }
             set
             {
                 if (index >= ByteCapacity)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                _handleLock.EnterReadLock();
-                try
-                {
-                    BytePointer[index] = value;
-                }
-                finally
-                {
-                    _handleLock.ExitReadLock();
-                }
+                using var readLock = _handleLock.Lock(Locks.Type.Read);
+                BytePointer[index] = value;
             }
         }
 
         private unsafe void ReleaseHandle()
         {
             HeapHandle? handle;
-            _handleLock.EnterWriteLock();
-            try
+            using (_handleLock.Lock(Locks.Type.Write))
             {
                 handle = _handle;
                 _byteCapacity = null;
                 _handle = null;
             }
-            finally
-            {
-                _handleLock.ExitWriteLock();
-            }
 
-            if (handle != null)
+            if (handle is not null)
             {
                 HeapHandleCache.Instance.Release(handle);
             }

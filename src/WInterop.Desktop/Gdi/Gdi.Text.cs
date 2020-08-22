@@ -5,6 +5,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Gdi.Native;
 using WInterop.Windows;
@@ -13,7 +14,8 @@ namespace WInterop.Gdi
 {
     public static partial class Gdi
     {
-        public static FontHandle GetStockFont(StockFont font) => new FontHandle((HFONT)Imports.GetStockObject((int)font), ownsHandle: false);
+        public static FontHandle GetStockFont(StockFont font)
+            => new FontHandle((HFONT)Imports.GetStockObject((int)font), ownsHandle: false);
 
         public static Color GetTextColor(this in DeviceContext context) => Imports.GetTextColor(context);
 
@@ -22,7 +24,8 @@ namespace WInterop.Gdi
         public static Color SetTextColor(this in DeviceContext context, SystemColor color)
             => Imports.SetTextColor(context, Windows.Windows.GetSystemColor(color));
 
-        public static TextAlignment SetTextAlignment(this in DeviceContext context, TextAlignment alignment) => Imports.SetTextAlign(context, alignment);
+        public static TextAlignment SetTextAlignment(this in DeviceContext context, TextAlignment alignment)
+            => Imports.SetTextAlign(context, alignment);
 
         public static bool TextOut(this in DeviceContext context, Point position, ReadOnlySpan<char> text)
             => Imports.TextOutW(context, position.X, position.Y, ref MemoryMarshal.GetReference(text), text.Length);
@@ -52,6 +55,17 @@ namespace WInterop.Gdi
 
         public static bool GetTextMetrics(this in DeviceContext context, out TextMetrics metrics)
             => Imports.GetTextMetricsW(context, out metrics);
+
+        /// <summary>
+        ///  Converts the requested point size to height based on the DPI of the given device context.
+        /// </summary>
+        public static int FontPointSizeToHeight(this in DeviceContext context, int pointSize)
+        {
+            return Windows.Native.Imports.MulDiv(
+                pointSize,
+                GetDeviceCapability(context, DeviceCapability.LogicalPixelsY),
+                72);
+        }
 
         /// <summary>
         ///  Creates a logical font with the specified characteristics that can be selected into a <see cref="DeviceContext"/>.
@@ -128,6 +142,13 @@ namespace WInterop.Gdi
             }
 
             return info;
+        }
+
+        public static unsafe LogicalFont GetLogicalFont(this FontHandle font)
+        {
+            Unsafe.SkipInit(out LogicalFont logFont);
+            Imports.GetObjectW(font, sizeof(LogicalFont), &logFont);
+            return logFont;
         }
     }
 }

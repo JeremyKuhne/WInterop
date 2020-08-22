@@ -23,14 +23,14 @@ namespace WInterop.Windows.Native
             HWND hWnd,
             GetWindowOption uCmd);
 
-        // https://msdn.microsoft.com/library/windows/desktop/ms633520.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowtextw
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-        public static extern int GetWindowTextW(
+        public static unsafe extern int GetWindowTextW(
             HWND hWnd,
-            SafeHandle lpString,
+            char* lpString,
             int nMaxCount);
 
-        // https://msdn.microsoft.com/library/windows/desktop/ms633546.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowtextw
         [DllImport(Libraries.User32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool SetWindowTextW(
             HWND hWnd,
@@ -1366,5 +1366,13 @@ namespace WInterop.Windows.Native
         // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getdpifromdpiawarenesscontext
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern uint GetDpiFromDpiAwarenessContext(DpiAwarenessContext value);
+
+        // https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-muldiv
+        [SuppressGCTransition]
+        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
+        public static extern int MulDiv(
+            int nNumber,
+            int nNumerator,
+            int nDenominator);
     }
 }

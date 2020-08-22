@@ -2,9 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace WInterop.Support.Buffers
 {
@@ -13,51 +10,6 @@ namespace WInterop.Support.Buffers
     /// </summary>
     public static class BufferHelper
     {
-        /// <summary>
-        ///  Splits a null terminated unicode string list. The final string is followed by a second null.
-        ///  This is a common pattern Windows uses. Usually you should use StringBuffer and split on null. There
-        ///  are some cases (such as GetEnvironmentStrings) where Windows returns a handle to a buffer it allocated
-        ///  with no length.
-        /// </summary>
-        public static unsafe IEnumerable<string> SplitNullTerminatedStringList(IntPtr handle)
-        {
-            if (handle == IntPtr.Zero) throw new ArgumentNullException(nameof(handle));
-
-            var strings = new List<string>();
-
-            char* start = (char*)handle;
-            char* current = start;
-
-            for (uint i = 0; ; i++)
-            {
-                if (*current == '\0')
-                {
-                    // Split
-                    strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
-                    start = current + 1;
-
-                    if (*start == '\0') break;
-                }
-
-                current++;
-            }
-
-            return strings;
-        }
-
-        public static unsafe string GetNullTerminatedAsciiString(ReadOnlySpan<byte> source)
-        {
-            if (source.Length == 0)
-                return string.Empty;
-
-            int length = source.IndexOf((byte)0x00);
-            if (length == 0)
-                return string.Empty;
-
-            fixed (byte* start = &MemoryMarshal.GetReference(source))
-                return Encoding.ASCII.GetString(start, length == -1 ? source.Length : length);
-        }
-
         /// <summary>
         ///  Invoke the given action on a cached buffer that returns the given type.
         /// </summary>

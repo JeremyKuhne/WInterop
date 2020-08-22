@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using WInterop.Errors;
 using WInterop.Registry.Native;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Registry
@@ -263,7 +264,7 @@ namespace WInterop.Registry
                     // Size includes the null
                     return new string((char*)buffer, 0, (int)(byteCount / sizeof(char)) - 1);
                 case RegistryValueType.MultiString:
-                    return BufferHelper.SplitNullTerminatedStringList((IntPtr)buffer);
+                    return Strings.SplitNullTerminatedStringList((IntPtr)buffer);
                 case RegistryValueType.Unsigned32BitInteger:
                     return *(uint*)buffer;
                 case RegistryValueType.Unsigned32BitIntegerBigEndian:

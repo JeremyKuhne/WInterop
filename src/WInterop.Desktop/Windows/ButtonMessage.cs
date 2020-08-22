@@ -5,7 +5,7 @@ namespace WInterop.Windows
 {
     public enum ButtonMessage : uint
     {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ff485886.aspx
+        // https://docs.microsoft.com/windows/win32/controls/bumper-button-control-reference-messages
 
         /// <summary>
         ///  (BM_GETCHECK)

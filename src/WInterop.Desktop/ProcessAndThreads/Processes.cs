@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WInterop.Errors;
 using WInterop.ProcessAndThreads.Native;
+using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.ProcessAndThreads
@@ -21,7 +22,7 @@ namespace WInterop.ProcessAndThreads
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static void SetEnvironmentVariable(string name, string value)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name is null) throw new ArgumentNullException(nameof(name));
 
             Error.ThrowLastErrorIfFalse(
                 Imports.SetEnvironmentVariableW(name, value),
@@ -34,7 +35,7 @@ namespace WInterop.ProcessAndThreads
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static unsafe string GetEnvironmentVariable(string name)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name is null) throw new ArgumentNullException(nameof(name));
 
             return PlatformInvoke.GrowableBufferInvoke(
                 (ref ValueBuffer<char> buffer) =>
@@ -59,7 +60,7 @@ namespace WInterop.ProcessAndThreads
             {
                 if (buffer.IsInvalid) return variables;
 
-                foreach (var entry in BufferHelper.SplitNullTerminatedStringList(buffer.DangerousGetHandle()))
+                foreach (var entry in Strings.SplitNullTerminatedStringList(buffer.DangerousGetHandle()))
                 {
                     // Hidden environment variables start with an equals, and can't be empty anyways, so
                     // we always look for the key/value equals separator from index 1.
@@ -82,9 +83,9 @@ namespace WInterop.ProcessAndThreads
         public static IEnumerable<string> GetEnvironmentStrings()
         {
             using var buffer = Imports.GetEnvironmentStringsW();
-            if (buffer.IsInvalid) return Enumerable.Empty<string>();
-
-            return BufferHelper.SplitNullTerminatedStringList(buffer.DangerousGetHandle());
+            return buffer.IsInvalid
+                ? Enumerable.Empty<string>()
+                : Strings.SplitNullTerminatedStringList(buffer.DangerousGetHandle());
         }
 
         /// <summary>
@@ -93,10 +94,11 @@ namespace WInterop.ProcessAndThreads
         /// <param name="process">The process to get memory info for for or null for the current process.</param>
         public static unsafe ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle? process = null)
         {
-            if (process == null) process = GetCurrentProcess();
-
             Error.ThrowLastErrorIfFalse(
-                Imports.K32GetProcessMemoryInfo(process, out var info, (uint)sizeof(ProcessMemoryCountersExtended)));
+                Imports.K32GetProcessMemoryInfo(
+                    process ?? GetCurrentProcess(),
+                    out ProcessMemoryCountersExtended info,
+                    (uint)sizeof(ProcessMemoryCountersExtended)));
 
             return info;
         }

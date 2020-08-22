@@ -14,9 +14,11 @@ namespace WInterop.Gdi.Native
             Value = handle;
         }
 
-        public bool IsInvalid => Value == IntPtr.Zero;
+        public bool IsInvalid => IsNull;
+        public bool IsNull => Value == IntPtr.Zero;
 
         public static implicit operator HGDIOBJ(HFONT handle) => new HGDIOBJ(handle.Value);
         public static explicit operator HFONT(HGDIOBJ handle) => new HFONT(handle.Handle);
+        public static explicit operator HFONT(IntPtr handle) => new HFONT(handle);
     }
 }

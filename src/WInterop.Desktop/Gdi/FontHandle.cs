@@ -21,12 +21,16 @@ namespace WInterop.Gdi
             _ownsHandle = ownsHandle;
         }
 
+        public bool IsNull => Handle.IsNull;
+
         public bool IsInvalid => Handle.IsInvalid || Imports.GetObjectType(Handle) != ObjectType.Font;
 
         public void Dispose()
         {
-            if (_ownsHandle)
+            if (_ownsHandle && !Handle.IsInvalid)
+            {
                 Imports.DeleteObject(Handle);
+            }
         }
 
         public static implicit operator HGDIOBJ(FontHandle handle) => handle.Handle;

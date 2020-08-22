@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Text;
 
 namespace WInterop.Support
@@ -34,6 +34,69 @@ namespace WInterop.Support
             var enumerator = builder.GetChunks();
             enumerator.MoveNext();
             return enumerator.Current;
+        }
+
+        public static unsafe string GetNullTerminatedAsciiString(ReadOnlySpan<byte> source)
+        {
+            if (source.Length == 0)
+                return string.Empty;
+
+            int length = source.IndexOf((byte)0x00);
+            if (length == 0)
+                return string.Empty;
+
+            fixed (byte* start = source)
+                return Encoding.ASCII.GetString(start, length == -1 ? source.Length : length);
+        }
+
+        /// <summary>
+        ///  Splits a null terminated unicode string list. The final string is followed by a second null.
+        ///  This is a common pattern Windows uses. Usually you should use StringBuffer and split on null. There
+        ///  are some cases (such as GetEnvironmentStrings) where Windows returns a handle to a buffer it allocated
+        ///  with no length.
+        /// </summary>
+        public static unsafe IEnumerable<string> SplitNullTerminatedStringList(IntPtr handle)
+        {
+            if (handle == IntPtr.Zero) throw new ArgumentNullException(nameof(handle));
+
+            var strings = new List<string>();
+
+            char* start = (char*)handle;
+            char* current = start;
+
+            for (uint i = 0; ; i++)
+            {
+                if (*current == '\0')
+                {
+                    // Split
+                    strings.Add(new string(value: start, startIndex: 0, length: checked((int)(current - start))));
+                    start = current + 1;
+
+                    if (*start == '\0') break;
+                }
+
+                current++;
+            }
+
+            return strings;
+        }
+
+        /// <summary>
+        ///  Gets the span of chars for the given <paramref name="buffer"/>.
+        /// </summary>
+        /// <param name="includeNull">
+        ///  True to include the terminating null in the returned span.
+        /// </param>
+        public static unsafe Span<char> GetSpanFromNullTerminatedBuffer(char* buffer, bool includeNull = false)
+        {
+            if (buffer is null)
+            {
+                return Span<char>.Empty;
+            }
+
+            Span<char> span = new Span<char>(buffer, int.MaxValue);
+            int terminator = span.IndexOf('\0');
+            return span.Slice(0, includeNull ? terminator + 1 : terminator);
         }
     }
 }

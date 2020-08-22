@@ -5,8 +5,7 @@ namespace WInterop.Gdi
 {
     public enum StockFont : int
     {
-        // https://msdn.microsoft.com/en-us/library/cc231191.aspx
-        // https://msdn.microsoft.com/en-us/library/dd183533.aspx
+        // https://docs.microsoft.com/openspecs/windows_protocols/ms-emf/
 
         /// <summary>
         ///  (OEM_FIXED_FONT)

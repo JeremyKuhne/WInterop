@@ -34,30 +34,18 @@ namespace WInterop.Support
             => _span.IsEmpty && string.IsNullOrEmpty(_string);
 
         public bool IsNullTerminated
-            => _string != null || (!_span.IsEmpty && _span[_span.Length - 1] == '\0');
+            => _string != null || (!_span.IsEmpty && _span[^1] == '\0');
 
         public ReadOnlySpan<char> GetSpanWithoutTerminator()
-        {
-            if (_string != null)
-                return _string.AsSpan();
-
-            if (IsNullTerminated)
-                return _span.Slice(0, _span.Length - 1);
-
-            return _span;
-        }
+            => _string is not null
+                ? _string.AsSpan()
+                : IsNullTerminated ? _span[0..^1] : _span;
 
         public static implicit operator StringSpan(string value) => new StringSpan(value);
         public static implicit operator StringSpan(ReadOnlySpan<char> span) => new StringSpan(span);
         public static implicit operator StringSpan(Span<char> span) => new StringSpan(span);
         public static implicit operator StringSpan(char[] buffer) => new StringSpan(buffer);
 
-        public override string ToString()
-        {
-            if (_string != null)
-                return _string;
-
-            return GetSpanWithoutTerminator().ToString();
-        }
+        public override string ToString() => _string ?? GetSpanWithoutTerminator().ToString();
     }
 }

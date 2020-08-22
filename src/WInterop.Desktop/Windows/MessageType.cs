@@ -66,6 +66,7 @@ namespace WInterop.Windows
 
         /// <summary>
         ///  [WM_SETTEXT]
+        ///  https://docs.microsoft.com/windows/win32/winmsg/wm-settext
         /// </summary>
         SetText = 0x000C,
 
@@ -216,11 +217,13 @@ namespace WInterop.Windows
 
         /// <summary>
         ///  [WM_SETFONT]
+        ///  https://docs.microsoft.com/windows/win32/winmsg/wm-setfont
         /// </summary>
         SetFont = 0x0030,
 
         /// <summary>
         ///  [WM_GETFONT]
+        ///  https://docs.microsoft.com/windows/win32/winmsg/wm-getfont
         /// </summary>
         GetFont = 0x0031,
 

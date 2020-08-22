@@ -13,14 +13,14 @@ namespace WindowsTests
         [Fact]
         public void GetDefaultMonitor()
         {
-            MonitorHandle handle = Windows.MonitorFromWindow(default, MonitorOption.DefaultToPrimary);
+            MonitorHandle handle = Windows.MonitorFromWindow((WindowHandle)default, MonitorOption.DefaultToPrimary);
             handle.IsInvalid.Should().BeFalse();
         }
 
         [Fact]
         public void GetInfoForDefaultMonitor()
         {
-            MonitorHandle handle = Windows.MonitorFromWindow(default, MonitorOption.DefaultToPrimary);
+            MonitorHandle handle = Windows.MonitorFromWindow((WindowHandle)default, MonitorOption.DefaultToPrimary);
             MonitorInfo info = handle.GetMonitorInfo();
             info.IsPrimary.Should().BeTrue();
         }
@@ -28,7 +28,7 @@ namespace WindowsTests
         [Fact]
         public void GetExtendedInfoForDefaultMonitor()
         {
-            MonitorHandle handle = Windows.MonitorFromWindow(default, MonitorOption.DefaultToPrimary);
+            MonitorHandle handle = Windows.MonitorFromWindow((WindowHandle)default, MonitorOption.DefaultToPrimary);
             ExtendedMonitorInfo info = handle.GetExtendedMonitorInfo();
             info.IsPrimary.Should().BeTrue();
             info.DeviceName.Length.Should().BeGreaterThan(0);
@@ -37,7 +37,7 @@ namespace WindowsTests
         [Fact]
         public void GetDeviceContextForDefaultMonitor()
         {
-            MonitorHandle handle = Windows.MonitorFromWindow(default, MonitorOption.DefaultToPrimary);
+            MonitorHandle handle = Windows.MonitorFromWindow((WindowHandle)default, MonitorOption.DefaultToPrimary);
             ExtendedMonitorInfo info = handle.GetExtendedMonitorInfo();
             using DeviceContext dc = Gdi.CreateDeviceContext(info.DeviceName.ToString(), null);
             dc.IsInvalid.Should().BeFalse();

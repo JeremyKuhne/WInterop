@@ -19,14 +19,14 @@ namespace WInterop.Support
 
         // Note that we always cast IntPtr to ulong to avoid checked blocks
 
-        public static ushort HighWord(IntPtr value) => (ushort)(((ulong)value >> 16) & 0xFFFF);
-        public static ushort HighWord(UIntPtr value) => (ushort)(((ulong)value >> 16) & 0xFFFF);
+        public static ushort HighWord(nint value) => (ushort)(((ulong)value >> 16) & 0xFFFF);
+        public static ushort HighWord(nuint value) => (ushort)(((ulong)value >> 16) & 0xFFFF);
         public static uint HighWord(ulong value) => (uint)(value >> 32);
         public static ushort HighWord(uint value) => (ushort)(value >> 16);
         public static short HighWord(int value) => (short)HighWord((uint)value);
 
-        public static ushort LowWord(IntPtr value) => (ushort)((ulong)value);
-        public static ushort LowWord(UIntPtr value) => (ushort)((ulong)value);
+        public static ushort LowWord(nint value) => (ushort)((ulong)value);
+        public static ushort LowWord(nuint value) => (ushort)((ulong)value);
         public static uint LowWord(ulong value) => (uint)value;
         public static ushort LowWord(uint value) => (ushort)value;
         public static short LowWord(int value) => (short)LowWord((uint)value);

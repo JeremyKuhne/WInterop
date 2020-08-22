@@ -47,8 +47,7 @@ namespace GdiTests
             using DeviceContext dc = Gdi.CreateCompatibleDeviceContext(default);
             int bpp = dc.GetDeviceCapability(DeviceCapability.BitsPerPixel);
 
-            // Docs say 1 for > 8bpp, but we get -1
-            bpp.Should().Be(-1);
+            bpp.Should().Be(32);
         }
     }
 }

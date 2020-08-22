@@ -49,6 +49,8 @@ namespace WInterop.Windows
         /// </summary>
         public static WindowHandle Broadcast = new WindowHandle(new HWND(new IntPtr(0xffff)));
 
+        public static WindowHandle Null = new WindowHandle(default);
+
         public WindowHandle(HWND hwnd) => HWND = hwnd;
 
         public static implicit operator HWND(WindowHandle handle) => handle.HWND;

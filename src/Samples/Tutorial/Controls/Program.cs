@@ -2,6 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Drawing;
+using WInterop;
+using WInterop.Gdi;
 using WInterop.Windows;
 
 namespace Controls
@@ -16,13 +19,16 @@ namespace Controls
 
         private class EditWindow : Window
         {
+            private readonly ReplaceableLayout _replaceableLayout;
+
             private readonly EditControl _editControl;
             private readonly ButtonControl _buttonControl;
+            private readonly StaticControl _staticControl;
 
             public EditWindow(string title) : base(
                 new WindowClass(),
                 Windows.DefaultBounds,
-                windowName: title,
+                text: title,
                 style: WindowStyles.OverlappedWindow,
                 isMainWindow: true)
             {
@@ -40,18 +46,49 @@ namespace Controls
                     style: WindowStyles.Child | WindowStyles.Visible,
                     parentWindow: this);
 
-                // this.SetLayout(Layout.FixedSize(_editControl, new Size(200, 400)));
-                // this.SetLayout(Layout.Margin(10, Layout.FixedPercent(_editControl, new SizeF(.6f, .4f), VerticalAlignment.Top, HorizontalAlignment.Left)));
+                _staticControl = new StaticControl(
+                    Windows.DefaultBounds,
+                    text: "You pushed it!",
+                    style: WindowStyles.Child | WindowStyles.Visible,
+                    parentWindow: this);
+
+                var font = _staticControl.GetFont().GetLogicalFont();
+                _staticControl.SetWindowText($"{font.FaceName.CreateString()} {font.Quality}");
+
+                //this.SetLayout(Layout.FixedSize(new (200, 400), _editControl));
+
+                //this.SetLayout(
+                //    Layout.Margin(10, Layout.FixedPercent
+                //        (new (.6f, .4f), _editControl, VerticalAlignment.Top, HorizontalAlignment.Left)));
 
                 //this.SetLayout(Layout.Horizontal(
                 //    (.5f, Layout.Margin(5, Layout.Fill(_editControl))),
                 //    (.5f, Layout.Empty)));
 
-                this.SetLayout(Layout.Vertical(
+                _replaceableLayout = new ReplaceableLayout(Layout.Empty);
+
+                this.AddLayoutHandler(Layout.Vertical(
                     (.5f, Layout.Margin((5, 5, 0, 0), Layout.Fill(_editControl))),
                     (.5f, Layout.Horizontal(
-                        (.7f, Layout.Empty),
-                        (.3f, Layout.FixedPercent(_buttonControl, .5f))))));
+                        (.7f, Layout.FixedPercent(.4f, _replaceableLayout)),
+                        (.3f, Layout.FixedPercent(.5f, _buttonControl))))));
+
+                MouseHandler handler = new MouseHandler(_buttonControl);
+                handler.MouseUp += Handler_MouseUp;
+            }
+
+            private void Handler_MouseUp(object sender, WindowHandle window, Point position, Button button, MouseKey mouseState)
+            {
+                if (_replaceableLayout.Handler == _staticControl)
+                {
+                    _staticControl.ShowWindow(ShowWindowCommand.Hide);
+                    _replaceableLayout.Handler = Layout.Empty;
+                }
+                else
+                {
+                    _replaceableLayout.Handler = _staticControl;
+                    _staticControl.ShowWindow(ShowWindowCommand.Show);
+                }
             }
         }
     }

@@ -2,8 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Buffers;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -197,14 +196,15 @@ namespace WInterop.Windows
             return new Size(Conversion.LowWord(result), Conversion.HighWord(result));
         }
 
-        public static ModuleInstance GetModule(this in WindowHandle window)
+        public static ModuleInstance GetModule<T>(this T window) where T : IHandle<WindowHandle>
             => window.GetWindowLong(WindowLong.InstanceHandle);
 
         /// <summary>
         ///  Wrapper to SetWindowLong for changing the window procedure. Returns the old
         ///  window procedure handle- use CallWindowProcedure to call the old method.
         /// </summary>
-        public static WNDPROC SetWindowProcedure(this in WindowHandle window, WindowProcedure newCallback)
+        public static WNDPROC SetWindowProcedure<T>(this T window, WindowProcedure newCallback)
+            where T : IHandle<WindowHandle>
         {
             // It is possible that the returned window procedure will not be a direct handle.
             return new WNDPROC(SetWindowLong(
@@ -213,23 +213,22 @@ namespace WInterop.Windows
                 Marshal.GetFunctionPointerForDelegate(newCallback)));
         }
 
-        public static LResult CallWindowProcedure(WNDPROC previous, WindowHandle window, MessageType message, WParam wParam = default, LParam lParam = default)
+        public static LResult CallWindowProcedure(
+            WNDPROC previous,
+            WindowHandle window,
+            MessageType message,
+            WParam wParam = default,
+            LParam lParam = default)
             => Imports.CallWindowProcW(previous, window, message, wParam, lParam);
 
-        public static LResult SendMessage(this in WindowHandle window, ListBoxMessage message, WParam wParam = default, LParam lParam = default)
-            => SendMessage(window, (MessageType)message, wParam, lParam);
-
-        public static LResult SendMessage(this in WindowHandle window, MessageType message, WParam wParam = default, LParam lParam = default)
-            => Imports.SendMessageW(window, message, wParam, lParam);
-
-        public static unsafe string GetClassName(this WindowHandle window)
+        public static unsafe string GetClassName<T>(this T window) where T : IHandle<WindowHandle>
         {
             return PlatformInvoke.GrowableBufferInvoke(
                 (ref ValueBuffer<char> buffer) =>
                 {
                     fixed (char* b = buffer)
                     {
-                        return (uint)Imports.GetClassNameW(window, b, (int)buffer.Length);
+                        return (uint)Imports.GetClassNameW(window.Handle, b, (int)buffer.Length);
                     }
                 },
                 ReturnSizeSemantics.BufferTruncates);
@@ -246,17 +245,21 @@ namespace WInterop.Windows
             return prior;
         }
 
-        public static bool IsWindow(this in WindowHandle window) => Imports.IsWindow(window);
+        public static bool IsWindow<T>(this T window) where T : IHandle<WindowHandle>
+            => Imports.IsWindow(window.Handle);
 
-        public static bool IsWindowVisible(this in WindowHandle window) => Imports.IsWindowVisible(window);
+        public static bool IsWindowVisible<T>(this T window) where T : IHandle<WindowHandle>
+            => Imports.IsWindowVisible(window.Handle);
 
-        public static bool IsWindowUnicode(this in WindowHandle window) => Imports.IsWindowUnicode(window);
+        public static bool IsWindowUnicode<T>(this T window) where T : IHandle<WindowHandle>
+            => Imports.IsWindowUnicode(window.Handle);
 
         /// <summary>
         ///  Get the top child window in the specified window. If passed a null window
         ///  finds the window at the top of the Z order.
         /// </summary>
-        public static WindowHandle GetTopWindow(WindowHandle window) => Imports.GetTopWindow(window);
+        public static WindowHandle GetTopWindow<T>(this T window) where T : IHandle<WindowHandle>
+            => Imports.GetTopWindow(window.Handle);
 
         public static WindowHandle GetForegroundWindow() => Imports.GetForegroundWindow();
 
@@ -265,17 +268,19 @@ namespace WInterop.Windows
         public static WindowHandle GetActiveWindow() => Imports.GetActiveWindow();
 
         /// <summary>
-        ///  Gets the specified related Window to get given Window if it exists. Otherwise
-        ///  returns a null WindowHandle.
+        ///  Gets the specified related Window to get given Window if it exists. Otherwise returns a null WindowHandle.
         /// </summary>
-        public static WindowHandle GetWindow(this in WindowHandle window, GetWindowOption option)
-            => Imports.GetWindow(window, option);
+        public static WindowHandle GetWindow<T>(this T window, GetWindowOption option) where T : IHandle<WindowHandle>
+            => Imports.GetWindow(window.Handle, option);
 
         public static WindowHandle GetDesktopWindow() => Imports.GetDesktopWindow();
 
-        public static WindowHandle GetParent(this in WindowHandle window)
+        /// <summary>
+        ///  Gets the parent window for the given window.
+        /// </summary>
+        public static WindowHandle GetParent<T>(this T window) where T : IHandle<WindowHandle>
         {
-            WindowHandle parent = Imports.GetParent(window);
+            WindowHandle parent = Imports.GetParent(window.Handle);
             if (parent.IsInvalid)
                 Error.ThrowLastError();
 
@@ -289,13 +294,13 @@ namespace WInterop.Windows
         public static bool IsGuiThread(bool convertToGuiIfFalse = false)
         {
             int result = Imports.IsGUIThread(convertToGuiIfFalse);
-            if (result == 0
-                || (convertToGuiIfFalse & result == (int)WindowsError.ERROR_NOT_ENOUGH_MEMORY))
-                return false;
-            else
-                return true;
+            return result != 0
+                && !convertToGuiIfFalse | result != (int)WindowsError.ERROR_NOT_ENOUGH_MEMORY;
         }
 
+        /// <summary>
+        ///  Registers the given window class.
+        /// </summary>
         public static unsafe Atom RegisterClass(ref WindowClassInfo windowClass)
         {
             Atom atom;
@@ -335,17 +340,17 @@ namespace WInterop.Windows
             }
         }
 
-        public static void DestroyWindow(this in WindowHandle window)
-            => Error.ThrowLastErrorIfFalse(Imports.DestroyWindow(window));
+        public static void DestroyWindow<T>(this T window) where T : IHandle<WindowHandle>
+            => Error.ThrowLastErrorIfFalse(Imports.DestroyWindow(window.Handle));
 
-        public static IntPtr GetWindowLong(this in WindowHandle window, WindowLong index)
+        public static IntPtr GetWindowLong<T>(this T window, WindowLong index) where T : IHandle<WindowHandle>
         {
             // Unfortunate, but this is necessary to tell if there is really an error
             Error.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Environment.Is64BitProcess
-                ? (IntPtr)Imports.GetWindowLongPtrW(window, index)
-                : (IntPtr)Imports.GetWindowLongW(window, index);
+                ? (IntPtr)Imports.GetWindowLongPtrW(window.Handle, index)
+                : (IntPtr)Imports.GetWindowLongW(window.Handle, index);
 
             if (result == IntPtr.Zero)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -353,14 +358,15 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static IntPtr SetWindowLong(this in WindowHandle window, WindowLong index, IntPtr value)
+        public static IntPtr SetWindowLong<T>(this T window, WindowLong index, IntPtr value)
+            where T : IHandle<WindowHandle>
         {
             // Unfortunate, but this is necessary to tell if there is really an error
             Error.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Environment.Is64BitProcess
-                ? (IntPtr)Imports.SetWindowLongPtrW(window, index, value.ToInt64())
-                : (IntPtr)Imports.SetWindowLongW(window, index, value.ToInt32());
+                ? (IntPtr)Imports.SetWindowLongPtrW(window.Handle, index, value.ToInt64())
+                : (IntPtr)Imports.SetWindowLongW(window.Handle, index, value.ToInt32());
 
             if (result == IntPtr.Zero)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -368,17 +374,48 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static void SetWindowText(this in WindowHandle window, string text)
-            => Error.ThrowLastErrorIfFalse(Imports.SetWindowTextW(window, text));
+        public static unsafe string GetWindowText<T>(this T window, int initialBuffer = 64)
+            where T : IHandle<WindowHandle>
+        {
+            int result = initialBuffer;
+            char[]? buffer = null;
 
-        public static IntPtr GetClassLong(this in WindowHandle window, ClassLong index)
+            do
+            {
+                if (buffer is not null)
+                {
+                    ArrayPool<char>.Shared.Return(buffer);
+                }
+
+                buffer = ArrayPool<char>.Shared.Rent(result * 2);
+
+                fixed (char* c = buffer)
+                {
+                    result = Imports.GetWindowTextW(window.Handle, c, buffer.Length);
+                }
+
+                if (result == 0)
+                {
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+                }
+            } while (result == buffer.Length - 1);
+
+            string text = new string(buffer, 0, result);
+            ArrayPool<char>.Shared.Return(buffer);
+            return text;
+        }
+
+        public static void SetWindowText<T>(this T window, string text) where T : IHandle<WindowHandle>
+            => Error.ThrowLastErrorIfFalse(Imports.SetWindowTextW(window.Handle, text));
+
+        public static IntPtr GetClassLong<T>(this T window, ClassLong index) where T : IHandle<WindowHandle>
         {
             // Unfortunate, but this is necessary to tell if there is really an error
             Error.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Environment.Is64BitProcess
-                ? (IntPtr)Imports.GetClassLongPtrW(window, index)
-                : (IntPtr)Imports.GetClassLongW(window, index);
+                ? (IntPtr)Imports.GetClassLongPtrW(window.Handle, index)
+                : (IntPtr)Imports.GetClassLongW(window.Handle, index);
 
             if (result == IntPtr.Zero)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -386,15 +423,16 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static IntPtr SetClassLong(this in WindowHandle window, ClassLong index, IntPtr value)
+        public static IntPtr SetClassLong<T>(this T window, ClassLong index, IntPtr value)
+            where T : IHandle<WindowHandle>
         {
             // Unfortunate, but this is necessary to tell if there is really an error
             // (Even though this is only documented on SetWindowLong, happens here too)
             Error.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Environment.Is64BitProcess
-                ? (IntPtr)Imports.SetClassLongPtrW(window, index, value.ToInt64())
-                : (IntPtr)Imports.SetClassLongW(window, index, value.ToInt32());
+                ? (IntPtr)Imports.SetClassLongPtrW(window.Handle, index, value.ToInt64())
+                : (IntPtr)Imports.SetClassLongW(window.Handle, index, value.ToInt32());
 
             if (result == IntPtr.Zero)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -407,9 +445,12 @@ namespace WInterop.Windows
         /// </summary>
         /// <param name="ownsHandle">
         ///  Whether or not the returned brush should own the handle. If true the brush handle
-        ///  will be deleted when disposed or finalized.
+        ///  will be deleted when disposed.
         /// </param>
-        public static BrushHandle SetClassBackgroundBrush(this in WindowHandle window, BrushHandle value, bool ownsHandle = true)
+        public static BrushHandle SetClassBackgroundBrush<T>(
+            this T window,
+            BrushHandle value,
+            bool ownsHandle = true) where T : IHandle<WindowHandle>
         {
             IntPtr result = SetClassLong(window, ClassLong.BackgroundBrush, value.HBRUSH.Value);
             return new BrushHandle(new Gdi.Native.HBRUSH(result), ownsHandle);
@@ -438,7 +479,11 @@ namespace WInterop.Windows
         ///  If set to -1, will only return thread messages.
         /// </param>
         /// <returns>False when <see cref="MessageType.Quit"/> is returned.</returns>
-        public static bool GetMessage(out WindowMessage message, WindowHandle window = default, MessageType minMessage = MessageType.Null, MessageType maxMessage = MessageType.Null)
+        public static bool GetMessage(
+            out WindowMessage message,
+            WindowHandle window = default,
+            MessageType minMessage = MessageType.Null,
+            MessageType maxMessage = MessageType.Null)
         {
             IntBoolean result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
 
@@ -459,24 +504,16 @@ namespace WInterop.Windows
             return Imports.PeekMessageW(out message, window, minMessage, maxMessage, options);
         }
 
-        public static bool TranslateMessage(ref WindowMessage message)
-        {
-            return Imports.TranslateMessage(ref message);
-        }
+        public static bool TranslateMessage(ref WindowMessage message) => Imports.TranslateMessage(ref message);
 
-        public static bool DispatchMessage(ref WindowMessage message)
-        {
-            return Imports.DispatchMessageW(ref message);
-        }
+        public static bool DispatchMessage(ref WindowMessage message) => Imports.DispatchMessageW(ref message);
 
-        public static LResult DefaultWindowProcedure(
-            this in WindowHandle window,
+        public static LResult DefaultWindowProcedure<T>(
+            this T window,
             MessageType message,
             WParam wParam,
-            LParam lParam)
-        {
-            return Imports.DefWindowProcW(window, message, wParam, lParam);
-        }
+            LParam lParam) where T : IHandle<WindowHandle>
+            => Imports.DefWindowProcW(window.Handle, message, wParam, lParam);
 
         public static void PostQuitMessage(int exitCode) => Imports.PostQuitMessage(exitCode);
 
@@ -495,22 +532,24 @@ namespace WInterop.Windows
         ///  Dimensions of the bounding rectangle of the specified <paramref name="window"/>
         ///  in screen coordinates relative to the upper-left corner.
         /// </summary>
-        public static Rectangle GetWindowRectangle(this in WindowHandle window)
+        public static Rectangle GetWindowRectangle<T>(this T window) where T : IHandle<WindowHandle>
         {
             Rect rect = default;
-            Error.ThrowLastErrorIfFalse(Imports.GetWindowRect(window, ref rect));
+            Error.ThrowLastErrorIfFalse(Imports.GetWindowRect(window.Handle, ref rect));
             return rect;
         }
 
-        public static void SetScrollRange(this in WindowHandle window, ScrollBar scrollBar, int min, int max, bool redraw)
+        public static void SetScrollRange<T>(this T window, ScrollBar scrollBar, int min, int max, bool redraw)
+            where T : IHandle<WindowHandle>
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.SetScrollRange(window, scrollBar, min, max, redraw));
+                Imports.SetScrollRange(window.Handle, scrollBar, min, max, redraw));
         }
 
-        public static int SetScrollPosition(this in WindowHandle window, ScrollBar scrollBar, int position, bool redraw)
+        public static int SetScrollPosition<T>(this T window, ScrollBar scrollBar, int position, bool redraw)
+            where T : IHandle<WindowHandle>
         {
-            int result = Imports.SetScrollPos(window, scrollBar, position, redraw);
+            int result = Imports.SetScrollPos(window.Handle, scrollBar, position, redraw);
 
             // There appears to be a bug in the V6 common controls where they set ERROR_ACCESSDENIED. Clearing
             // LastError doesn't help. Skip error checking if we've set position 0.
@@ -520,33 +559,46 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static unsafe int SetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo, bool redraw)
+        public static unsafe int SetScrollInfo<T>(
+            this T window,
+            ScrollBar scrollBar,
+            ref ScrollInfo scrollInfo,
+            bool redraw) where T : IHandle<WindowHandle>
         {
             scrollInfo.Size = (uint)sizeof(ScrollInfo);
-            int result = Imports.SetScrollInfo(window, scrollBar, ref scrollInfo, redraw);
+            int result = Imports.SetScrollInfo(window.Handle, scrollBar, ref scrollInfo, redraw);
 
             return result;
         }
 
-        public static int GetScrollPosition(this in WindowHandle window, ScrollBar scrollBar)
+        public static int GetScrollPosition<T>(this T window, ScrollBar scrollBar) where T : IHandle<WindowHandle>
         {
-            int result = Imports.GetScrollPos(window, scrollBar);
+            int result = Imports.GetScrollPos(window.Handle, scrollBar);
             if (result == 0)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
             return result;
         }
 
-        public static unsafe void GetScrollInfo(this in WindowHandle window, ScrollBar scrollBar, ref ScrollInfo scrollInfo)
+        public static unsafe void GetScrollInfo<T>(this T window, ScrollBar scrollBar, ref ScrollInfo scrollInfo)
+            where T : IHandle<WindowHandle>
         {
             scrollInfo.Size = (uint)sizeof(ScrollInfo);
-            Error.ThrowLastErrorIfFalse(
-                Imports.GetScrollInfo(window, scrollBar, ref scrollInfo));
+            Error.ThrowLastErrorIfFalse(Imports.GetScrollInfo(window.Handle, scrollBar, ref scrollInfo));
         }
 
-        public static unsafe int ScrollWindow(this in WindowHandle window, Point delta)
+        public static unsafe int ScrollWindow<T>(this T window, Point delta)
+            where T : IHandle<WindowHandle>
         {
-            int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, null, null, IntPtr.Zero, null, ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
+            int result = Imports.ScrollWindowEx(
+                window.Handle,
+                delta.X,
+                delta.Y,
+                null,
+                null,
+                IntPtr.Zero,
+                null,
+                ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
 
             if (result == 0)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -554,12 +606,21 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static unsafe int ScrollWindow(this in WindowHandle window, Point delta, Rectangle scroll, Rectangle clip)
+        public static unsafe int ScrollWindow<T>(this T window, Point delta, Rectangle scroll, Rectangle clip)
+            where T : IHandle<WindowHandle>
         {
             Rect scrollRect = scroll;
             Rect clipRect = clip;
 
-            int result = Imports.ScrollWindowEx(window, delta.X, delta.Y, &scrollRect, &clipRect, IntPtr.Zero, null, ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
+            int result = Imports.ScrollWindowEx(
+                window.Handle,
+                delta.X,
+                delta.Y,
+                &scrollRect,
+                &clipRect,
+                IntPtr.Zero,
+                null,
+                ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
 
             if (result == 0)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -597,10 +658,7 @@ namespace WInterop.Windows
             return result;
         }
 
-        public static KeyState GetKeyState(VirtualKey key)
-        {
-            return Imports.GetKeyState(key);
-        }
+        public static KeyState GetKeyState(VirtualKey key) => Imports.GetKeyState(key);
 
         public static unsafe string GetKeyNameText(LParam lParam)
         {
@@ -619,38 +677,36 @@ namespace WInterop.Windows
                 shouldThrow: ErrorExtensions.Failed);
         }
 
-        public static WindowHandle GetDialogItem(this in WindowHandle window, int id)
+        public static WindowHandle GetDialogItem<T>(this T window, int id) where T : IHandle<WindowHandle>
         {
-            WindowHandle control = Imports.GetDlgItem(window, id);
+            WindowHandle control = Imports.GetDlgItem(window.Handle, id);
             if (control.IsInvalid)
                 Error.ThrowLastError();
             return control;
         }
 
-        public static WindowHandle SetCapture(this in WindowHandle window)
-        {
-            return Imports.SetCapture(window);
-        }
+        public static WindowHandle SetCapture<T>(this T window) where T : IHandle<WindowHandle>
+            => Imports.SetCapture(window.Handle);
 
         public static void ReleaseCapture()
             => Error.ThrowLastErrorIfFalse(Imports.ReleaseCapture());
 
-        public static TimerId SetTimer(
-            this in WindowHandle window,
+        public static TimerId SetTimer<T>(
+            this T window,
             TimerId id,
             uint interval,
             TimerProcedure? callback = null,
-            uint delayTolerance = 0)
+            uint delayTolerance = 0) where T : IHandle<WindowHandle>
         {
-            TimerId result = Imports.SetCoalescableTimer(window, id, interval, callback, delayTolerance);
+            TimerId result = Imports.SetCoalescableTimer(window.Handle, id, interval, callback, delayTolerance);
             if (result == TimerId.Null)
                 Error.ThrowLastError();
 
             return result;
         }
 
-        public static void KillTimer(this in WindowHandle window, TimerId id)
-            => Error.ThrowLastErrorIfFalse(Imports.KillTimer(window, id));
+        public static void KillTimer<T>(this T window, TimerId id) where T : IHandle<WindowHandle>
+            => Error.ThrowLastErrorIfFalse(Imports.KillTimer(window.Handle, id));
 
         public static Color GetSystemColor(SystemColor systemColor) => Imports.GetSysColor(systemColor);
 
@@ -661,12 +717,17 @@ namespace WInterop.Windows
 
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.Ok)
         {
-            return MessageBox(default, text, caption, type);
+            return MessageBox((WindowHandle)default, text, caption, type);
         }
 
-        public static CommandId MessageBox(this in WindowHandle owner, string text, string caption, MessageBoxType type = MessageBoxType.Ok)
+        public static CommandId MessageBox<T>(
+            this T owner,
+            string text,
+            string caption,
+            MessageBoxType type = MessageBoxType.Ok)
+            where T : IHandle<WindowHandle>
         {
-            CommandId result = Imports.MessageBoxExW(owner, text, caption, type, 0);
+            CommandId result = Imports.MessageBoxExW(owner.Handle, text, caption, type, 0);
             if (result == CommandId.Error)
                 Error.ThrowLastError();
 
@@ -744,13 +805,17 @@ namespace WInterop.Windows
             }
         }
 
-        public static MonitorHandle MonitorFromWindow(this in WindowHandle window, MonitorOption option = MonitorOption.DefaultToNull)
-            => Imports.MonitorFromWindow(window, option);
+        public static MonitorHandle MonitorFromWindow<T>(
+            this T window,
+            MonitorOption option = MonitorOption.DefaultToNull) where T : IHandle<WindowHandle>
+            => Imports.MonitorFromWindow(window.Handle, option);
 
         public static MonitorHandle MonitorFromPoint(Point point, MonitorOption option = MonitorOption.DefaultToNull)
             => Imports.MonitorFromPoint(point, option);
 
-        public static MonitorHandle MonitorFromRectangle(Rectangle rectangle, MonitorOption option = MonitorOption.DefaultToNull)
+        public static MonitorHandle MonitorFromRectangle(
+            Rectangle rectangle,
+            MonitorOption option = MonitorOption.DefaultToNull)
         {
             Rect rect = rectangle;
             return Imports.MonitorFromRect(in rect, option);
@@ -787,23 +852,33 @@ namespace WInterop.Windows
 
         public static uint GetDpiForSystem() => Imports.GetDpiForSystem();
 
-        public static uint GetDpiForWindow(this in WindowHandle window)
-            => Imports.GetDpiForWindow(window);
+        public static uint GetDpiForWindow<T>(this T window) where T : IHandle<WindowHandle>
+            => Imports.GetDpiForWindow(window.Handle);
 
         /// <summary>
-        ///  Enumerates child windows for the given <paramref name="handle"/>.
+        ///  Converts the requested point size to height based on the DPI of the given window.
+        /// </summary>
+        public static int FontPointSizeToHeight<T>(this T window, int pointSize) where T : IHandle<WindowHandle>
+            => Imports.MulDiv(
+                pointSize,
+                (int)window.GetDpiForWindow(),
+                72);
+
+        /// <summary>
+        ///  Enumerates child windows for the given <paramref name="window"/>.
         /// </summary>
         /// <param name="callback">
         ///  The provided function will be passed child window handles. Return true to continue enumeration.
         /// </param>
         /// <param name="parameter">Parameter to pass through to the <paramref name="callback"/>.</param>
-        public static void EnumerateChildWindows(WindowHandle handle, Func<WindowHandle, LParam, bool> callback, LParam parameter)
-        {
-            Imports.EnumChildWindows(
-                handle,
+        public static void EnumerateChildWindows<T>(
+            this T window,
+            Func<WindowHandle, LParam, bool> callback,
+            LParam parameter) where T : IHandle<WindowHandle>
+            => Imports.EnumChildWindows(
+                window.Handle,
                 (WindowHandle handle, LParam parameter) => callback(handle, parameter),
                 parameter);
-        }
 
         /// <summary>
         ///  Enumerates child windows for the given <paramref name="handle"/>.
@@ -811,12 +886,24 @@ namespace WInterop.Windows
         /// <param name="callback">
         ///  The provided function will be passed child window handles. Return true to continue enumeration.
         /// </param>
-        public static void EnumerateChildWindows(WindowHandle handle, Func<WindowHandle, bool> callback, LParam parameter)
-        {
-            Imports.EnumChildWindows(
+        public static void EnumerateChildWindows(
+            WindowHandle handle,
+            Func<WindowHandle, bool> callback,
+            LParam parameter)
+            => Imports.EnumChildWindows(
                 handle,
                 (WindowHandle handle, LParam parameter) => callback(handle),
                 parameter);
+
+        /// <summary>
+        ///  Sets the graphics mode for the window's device context.
+        /// </summary>
+        public static void SetGraphicsMode<T>(
+            this T window,
+            GraphicsMode graphicsMode) where T : IHandle<WindowHandle>
+        {
+            using var hdc = window.Handle.GetDeviceContext();
+            hdc.SetGraphicsMode(graphicsMode);
         }
     }
 }

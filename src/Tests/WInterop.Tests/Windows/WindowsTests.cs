@@ -54,7 +54,7 @@ namespace WindowsTests
         [Fact]
         public void GetTopWindow()
         {
-            Windows.GetTopWindow(default).Should().NotBe(default);
+            Windows.GetTopWindow(WindowHandle.Null).Should().NotBe(default);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace WindowsTests
         [Fact]
         public void GetClassName_NullWindow()
         {
-            Action action = () => Windows.GetClassName(default);
+            Action action = () => Windows.GetClassName((WindowHandle)default);
 
             // Invalid window handle. (1400)
             action.Should().Throw<IOException>().And.HResult.Should().Be(unchecked((int)0x80070578));
