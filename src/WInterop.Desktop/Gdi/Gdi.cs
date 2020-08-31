@@ -202,6 +202,17 @@ namespace WInterop.Gdi
         /// <summary>
         ///  Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
         /// </summary>
+        public static DeviceContext BeginPaint(this in WindowHandle window, out Rectangle paintRectangle)
+        {
+            PAINTSTRUCT ps = default;
+            Imports.BeginPaint(window, ref ps);
+            paintRectangle = ps.rcPaint;
+            return new DeviceContext(ps, window);
+        }
+
+        /// <summary>
+        ///  Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
+        /// </summary>
         public static DeviceContext BeginPaint(this in WindowHandle window, out PaintStruct paintStruct)
         {
             PAINTSTRUCT ps = default;

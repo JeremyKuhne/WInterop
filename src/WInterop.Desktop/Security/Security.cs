@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.ProcessAndThreads;
@@ -107,7 +108,10 @@ namespace WInterop.Security
             while (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, ref MemoryMarshal.GetReference(nameBuffer), ref length))
             {
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+#pragma warning disable CA2014 // Do not use stackalloc in loops
+                // Should only loop once
                 char* n = stackalloc char[(int)length];
+#pragma warning restore CA2014 // Do not use stackalloc in loops
                 nameBuffer = new Span<char>(n, (int)length);
             }
 

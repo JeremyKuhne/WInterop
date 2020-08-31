@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using WInterop.Windows;
+
 namespace WInterop.Gdi
 {
     /// <summary>
@@ -37,6 +39,24 @@ namespace WInterop.Gdi
             Value = 0;
             HorizontalAlignment = horizontal;
             VerticalAlignment = vertical;
+        }
+
+        public TextAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical)
+        {
+            Value = 0;
+            HorizontalAlignment = horizontal switch
+            {
+                Windows.HorizontalAlignment.Left => Horizontal.Left,
+                Windows.HorizontalAlignment.Right => Horizontal.Right,
+                _ => Horizontal.Center,
+            };
+
+            VerticalAlignment = vertical switch
+            {
+                Windows.VerticalAlignment.Top => Vertical.Top,
+                Windows.VerticalAlignment.Bottom => Vertical.Bottom,
+                _ => Vertical.Baseline,
+            };
         }
 
         public bool UpdatePosition

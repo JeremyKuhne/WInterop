@@ -179,22 +179,22 @@ namespace WInterop.Gdi.Native
             Rect* lpRect,
             bool bErase);
 
-        // https://msdn.microsoft.com/library/dd162598.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-endpaint
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern bool EndPaint(
             WindowHandle hwnd,
             in PAINTSTRUCT lpPaint);
 
-        // https://msdn.microsoft.com/library/dd162498.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-drawtextw
         [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern int DrawTextW(
+        public static unsafe extern int DrawTextW(
             HDC hDC,
-            ref char lpchText,
+            char* lpchText,
             int nCount,
             ref Rect lpRect,
             TextFormat uFormat);
 
-        // https://msdn.microsoft.com/library/dd145133.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-textoutw
         [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool TextOutW(
             HDC hdc,
@@ -221,18 +221,18 @@ namespace WInterop.Gdi.Native
             HDC hdc,
             out TextMetrics lptm);
 
-        // https://msdn.microsoft.com/library/dd145091.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-settextalign
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern TextAlignment SetTextAlign(
             HDC hdc,
             TextAlignment fMode);
 
-        // https://msdn.microsoft.com/library/dd144932.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-gettextalign
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern TextAlignment GetTextAlign(
             HDC hdc);
 
-        // https://msdn.microsoft.com/library/dd145094.aspx
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-settextjustification
         [DllImport(Libraries.Gdi32, ExactSpelling = true)]
         public static extern bool SetTextJustification(
             HDC hdc,
@@ -1163,5 +1163,143 @@ namespace WInterop.Gdi.Native
             HDC hdc,
             HPALETTE hPal,
             IntBoolean bForceBkgd);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-playmetafilerecord
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe IntBoolean PlayMetaFileRecord(
+            HDC hdc,
+            HGDIOBJ* lpHandleTable,
+            METARECORD* lpMR,
+            uint noObjs);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-enummetafile
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern IntBoolean EnumMetaFile(
+            HDC hdc,
+            HMETAFILE hmf,
+            MFENUMPROC proc,
+            LParam param);
+
+        // typedef int (CALLBACK* ENHMFENUMPROC) (_In_ HDC hdc, _In_reads_(nHandles) HANDLETABLE FAR* lpht, _In_ CONST ENHMETARECORD* lpmr, _In_ int nHandles, _In_opt_ LPARAM data);
+
+        // Enhanced Metafile Function Declarations
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-closeenhmetafile
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern HENHMETAFILE CloseEnhMetaFile(
+            HDC hdc);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-copyenhmetafilew
+        [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern HENHMETAFILE CopyEnhMetaFileW(
+            HENHMETAFILE hEnh,
+            string lpFileName);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-createenhmetafilew
+        [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern unsafe HDC CreateEnhMetaFileW(
+            HDC hdc,
+            string lpFilename,
+            Rect* lprc,
+            string lpDesc);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-deleteenhmetafile
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern IntBoolean DeleteEnhMetaFile(
+            HENHMETAFILE hmf);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-enumenhmetafile
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe IntBoolean EnumEnhMetaFile(
+            HDC hdc,
+            HENHMETAFILE hmf,
+            ENHMFENUMPROC proc,
+            LParam param,
+            Rect* lpRect);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getenhmetafilew
+        [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern HENHMETAFILE GetEnhMetaFileW(
+            string lpName);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getenhmetafilebits
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe uint GetEnhMetaFileBits(
+            HENHMETAFILE hEMF,
+            uint nSize,
+            byte* lpData);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getenhmetafiledescriptionw
+        [DllImport(Libraries.Gdi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern unsafe uint GetEnhMetaFileDescriptionW(
+            HENHMETAFILE hemf,
+            uint cchBuffer,
+            char* lpDescription);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getenhmetafileheader
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe uint GetEnhMetaFileHeader(
+            HENHMETAFILE hemf,
+            uint nSize,
+            ENHMETAHEADER* lpEnhMetaHeader);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getenhmetafilepaletteentries
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe uint GetEnhMetaFilePaletteEntries(
+            HENHMETAFILE hemf,
+            uint nNumEntries,
+            PaletteEntry* lpPaletteEntries);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getenhmetafilepixelformat
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe uint GetEnhMetaFilePixelFormat(
+            HENHMETAFILE hemf,
+            uint cbBuffer,
+            PixelFormatDescriptor* ppfd);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getwinmetafilebits
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe uint GetWinMetaFileBits(
+            HENHMETAFILE hemf,
+            uint cbData16,
+            byte* pData16,
+            int iMapMode,
+            HDC hdcRef);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-playenhmetafile
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe IntBoolean PlayEnhMetaFile(
+            HDC hdc,
+            HENHMETAFILE hmf,
+            ref Rect lprect);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-playenhmetafilerecord
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe IntBoolean PlayEnhMetaFileRecord(
+            HDC hdc,
+            HGDIOBJ* pht,
+            ENHMETARECORD* pmr,
+            uint cht);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-setenhmetafilebits
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe HENHMETAFILE SetEnhMetaFileBits(
+            uint nSize,
+            byte* pb);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-setwinmetafilebits
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe HENHMETAFILE SetWinMetaFileBits(
+            uint nSize,
+            byte* lpMeta16Data,
+            HDC hdcRef,
+            METAFILEPICT* lpMFP);
+
+        // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-gdicomment
+        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
+        public static extern unsafe IntBoolean GdiComment(
+            HDC hdc,
+            uint nSize,
+            byte* lpData);
     }
 }

@@ -3,7 +3,7 @@
 
 namespace WInterop.Gdi
 {
-    // https://msdn.microsoft.com/en-us/library/dd183533.aspx
+    // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getstockobject
     public enum StockObject : int
     {
         WhiteBrush = 0,

@@ -24,32 +24,43 @@ namespace WInterop.Gdi
         public static Color SetTextColor(this in DeviceContext context, SystemColor color)
             => Imports.SetTextColor(context, Windows.Windows.GetSystemColor(color));
 
+        public static TextAlignment GetTextAlignment(this in DeviceContext context)
+            => Imports.GetTextAlign(context);
+
         public static TextAlignment SetTextAlignment(this in DeviceContext context, TextAlignment alignment)
             => Imports.SetTextAlign(context, alignment);
 
+        /// <summary>
+        ///  Draws text utilizing the current selected font, background color, and text color. Uses the
+        ///  current text alignment <see cref="SetTextAlignment(in DeviceContext, TextAlignment)"/>.
+        /// </summary>
         public static bool TextOut(this in DeviceContext context, Point position, ReadOnlySpan<char> text)
             => Imports.TextOutW(context, position.X, position.Y, ref MemoryMarshal.GetReference(text), text.Length);
 
-        public static unsafe int DrawText(this in DeviceContext context, ReadOnlySpan<char> text, Rectangle bounds, TextFormat format)
+        public static unsafe int DrawText(
+            this in DeviceContext context,
+            ReadOnlySpan<char> text,
+            Rectangle bounds,
+            TextFormat format)
         {
             Rect rect = bounds;
 
             if ((format & TextFormat.ModifyString) == 0)
             {
                 // The string won't be changed, we can just pin
-                return Imports.DrawTextW(context, ref MemoryMarshal.GetReference(text), text.Length, ref rect, format);
+                fixed (char* c = text)
+                {
+                    return Imports.DrawTextW(context, c, text.Length, ref rect, format);
+                }
             }
 
-            char[] buffer = ArrayPool<char>.Shared.Rent(text.Length + 5);
-            try
+            char[] buffer = ArrayPool<char>.Shared.Rent(text.Length);
+            text.CopyTo(buffer.AsSpan());
+            fixed (char* c = buffer)
             {
-                Span<char> span = buffer.AsSpan();
-                text.CopyTo(span);
-                return Imports.DrawTextW(context, ref MemoryMarshal.GetReference(span), buffer.Length, ref rect, format);
-            }
-            finally
-            {
+                int result = Imports.DrawTextW(context, c, text.Length, ref rect, format);
                 ArrayPool<char>.Shared.Return(buffer);
+                return result;
             }
         }
 

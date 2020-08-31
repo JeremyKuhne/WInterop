@@ -5,7 +5,7 @@ using System;
 
 namespace WInterop.Gdi.Native
 {
-    // https://docs.microsoft.com/windows/desktop/api/winuser/ns-winuser-tagpaintstruct
+    // https://docs.microsoft.com/windows/win32/api/winuser/ns-winuser-paintstruct
     public readonly struct PAINTSTRUCT
     {
         public readonly HDC hdc;
