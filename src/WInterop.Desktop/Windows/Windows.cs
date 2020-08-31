@@ -4,6 +4,7 @@
 using System;
 using System.Buffers;
 using System.Drawing;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
@@ -278,11 +279,16 @@ namespace WInterop.Windows
         /// <summary>
         ///  Gets the parent window for the given window.
         /// </summary>
+        /// <returns>
+        ///  The parent window or a null handle if the window is the topmost window.
+        /// </returns>
         public static WindowHandle GetParent<T>(this T window) where T : IHandle<WindowHandle>
         {
             WindowHandle parent = Imports.GetParent(window.Handle);
-            if (parent.IsInvalid)
-                Error.ThrowLastError();
+            if (parent.IsNull)
+            {
+                Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+            }
 
             return parent;
         }
@@ -844,6 +850,9 @@ namespace WInterop.Windows
 
         public static DpiAwarenessContext GetThreadDpiAwarenessContext() => Imports.GetThreadDpiAwarenessContext();
 
+        public static DpiAwarenessContext SetThreadDpiAwarenessContext(DpiAwarenessContext dpiContext)
+            => Imports.SetThreadDpiAwarenessContext(dpiContext);
+
         public static DpiAwareness GetThreadDpiAwareness()
             => GetAwarenessFromDpiAwarenessContext(GetThreadDpiAwarenessContext());
 
@@ -904,6 +913,17 @@ namespace WInterop.Windows
         {
             using var hdc = window.Handle.GetDeviceContext();
             hdc.SetGraphicsMode(graphicsMode);
+        }
+
+        /// <summary>
+        ///  Sets the world transorm for the window's device context.
+        /// </summary>
+        public static void SetWorldTransform<T>(
+            this T window,
+            ref Matrix3x2 transform) where T : IHandle<WindowHandle>
+        {
+            using var hdc = window.Handle.GetDeviceContext();
+            hdc.SetWorldTransform(ref transform);
         }
     }
 }
