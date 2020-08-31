@@ -1059,6 +1059,7 @@ namespace WInterop.Windows
 
         /// <summary>
         ///  [WM_DPICHANGED_BEFOREPARENT]
+        ///  https://docs.microsoft.com/windows/win32/hidpi/wm-dpichanged
         /// </summary>
         DpiChangedBeforeParent = 0x02E2,
 

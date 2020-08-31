@@ -12,11 +12,17 @@ namespace WInterop.Windows
 
         public DpiAwarenessContext(nint value) => _value = value;
 
+        public bool IsNull => _value == 0;
+
         // These only have meaning for setting the value
         public static DpiAwarenessContext Unaware = new DpiAwarenessContext(-1);
         public static DpiAwarenessContext SystemAware = new DpiAwarenessContext(-2);
         public static DpiAwarenessContext PerMonitor = new DpiAwarenessContext(-3);
+
+        // Added in 1803
         public static DpiAwarenessContext PerMonitorV2 = new DpiAwarenessContext(-4);
+
+        // Added in 1809
         public static DpiAwarenessContext UnawareGdiScaled = new DpiAwarenessContext(-5);
     }
 }

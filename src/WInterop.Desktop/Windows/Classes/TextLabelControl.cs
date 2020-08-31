@@ -2,11 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WInterop.Gdi;
 
 namespace WInterop.Windows.Classes
@@ -16,13 +12,11 @@ namespace WInterop.Windows.Classes
         private static readonly WindowClass s_textLabelClass = new WindowClass(
             className: "TextLabelClass");
 
-        private HorizontalAlignment _horizontalAlignment;
-        private VerticalAlignment _verticalAlignment;
+        private TextFormat _textFormat;
 
         public TextLabelControl(
             Rectangle bounds,
-            HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment verticalAlignment = VerticalAlignment.Center,
+            TextFormat textFormat = TextFormat.Center | TextFormat.VerticallyCenter,
             string? text = default,
             WindowStyles style = default,
             ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
@@ -40,8 +34,7 @@ namespace WInterop.Windows.Classes
                 parameters,
                 menuHandle)
         {
-            _horizontalAlignment = horizontalAlignment;
-            _verticalAlignment = verticalAlignment;
+            _textFormat = textFormat;
         }
 
         protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
@@ -50,12 +43,28 @@ namespace WInterop.Windows.Classes
             {
                 case MessageType.Paint:
                     {
-                        using var deviceContext = window.BeginPaint();
+                        using var deviceContext = window.BeginPaint(out Rectangle paintBounds);
+                        deviceContext.DrawText(Text, paintBounds, _textFormat);
                         break;
                     }
             }
 
             return base.WindowProcedure(window, message, wParam, lParam);
+        }
+
+        public TextFormat TextFormat
+        {
+            get => _textFormat;
+            set
+            {
+                if (value == _textFormat)
+                {
+                    return;
+                }
+
+                _textFormat = value;
+                Handle.Invalidate();
+            }
         }
     }
 }

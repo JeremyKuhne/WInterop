@@ -107,7 +107,7 @@ namespace WInterop.Windows.Native
             HWND hWnd,
             GetWindowOption uCmd);
 
-        // https://msdn.microsoft.com/library/windows/desktop/ms633510.aspx
+        // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getparent
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern HWND GetParent(
             HWND hWnd);
@@ -1351,12 +1351,15 @@ namespace WInterop.Windows.Native
 
         // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getawarenessfromdpiawarenesscontext
         [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern DpiAwareness GetAwarenessFromDpiAwarenessContext(
-            DpiAwarenessContext value);
+        public static extern DpiAwareness GetAwarenessFromDpiAwarenessContext(DpiAwarenessContext value);
 
         // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getthreaddpiawarenesscontext
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern DpiAwarenessContext GetThreadDpiAwarenessContext();
+
+        // https://docs.microsoft.com//windows/win32/api/winuser/nf-winuser-setthreaddpiawarenesscontext
+        [DllImport(Libraries.User32, ExactSpelling = true)]
+        public static extern DpiAwarenessContext SetThreadDpiAwarenessContext(DpiAwarenessContext dpiContext);
 
         // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getdpiforwindow
         [DllImport(Libraries.User32, ExactSpelling = true)]

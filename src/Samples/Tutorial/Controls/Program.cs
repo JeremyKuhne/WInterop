@@ -6,6 +6,7 @@ using System.Drawing;
 using WInterop;
 using WInterop.Gdi;
 using WInterop.Windows;
+using WInterop.Windows.Classes;
 
 namespace Controls
 {
@@ -24,6 +25,7 @@ namespace Controls
             private readonly EditControl _editControl;
             private readonly ButtonControl _buttonControl;
             private readonly StaticControl _staticControl;
+            private readonly TextLabelControl _textLabel;
 
             public EditWindow(string title) : base(
                 new WindowClass(),
@@ -52,6 +54,12 @@ namespace Controls
                     style: WindowStyles.Child | WindowStyles.Visible,
                     parentWindow: this);
 
+                _textLabel = new TextLabelControl(
+                    Windows.DefaultBounds,
+                    text: "Text Label Control",
+                    style: WindowStyles.Child | WindowStyles.Visible,
+                    parentWindow: this);
+
                 var font = _staticControl.GetFont().GetLogicalFont();
                 _staticControl.SetWindowText($"{font.FaceName.CreateString()} {font.Quality}");
 
@@ -65,7 +73,7 @@ namespace Controls
                 //    (.5f, Layout.Margin(5, Layout.Fill(_editControl))),
                 //    (.5f, Layout.Empty)));
 
-                _replaceableLayout = new ReplaceableLayout(Layout.Empty);
+                _replaceableLayout = new ReplaceableLayout(_textLabel);
 
                 this.AddLayoutHandler(Layout.Vertical(
                     (.5f, Layout.Margin((5, 5, 0, 0), Layout.Fill(_editControl))),
@@ -82,11 +90,13 @@ namespace Controls
                 if (_replaceableLayout.Handler == _staticControl)
                 {
                     _staticControl.ShowWindow(ShowWindowCommand.Hide);
-                    _replaceableLayout.Handler = Layout.Empty;
+                    _textLabel.ShowWindow(ShowWindowCommand.Show);
+                    _replaceableLayout.Handler = _textLabel;
                 }
                 else
                 {
                     _replaceableLayout.Handler = _staticControl;
+                    _textLabel.ShowWindow(ShowWindowCommand.Hide);
                     _staticControl.ShowWindow(ShowWindowCommand.Show);
                 }
             }
