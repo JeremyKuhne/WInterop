@@ -3,6 +3,7 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.GdiPlus.Native;
@@ -62,6 +63,24 @@ namespace WInterop.GdiPlus
                 Imports.GdipDrawLinesI(graphics, pen, p, points.Length).ThrowIfFailed();
             }
         }
+
+        public static void DrawRectangle(this Graphics graphics, Pen pen, Rectangle rectangle)
+            => Imports.GdipDrawRectangleI(
+                graphics,
+                pen,
+                rectangle.X,
+                rectangle.Y,
+                rectangle.Width,
+                rectangle.Height).ThrowIfFailed();
+
+        public static void FillRectangle(this Graphics graphics, Brush brush, Rectangle rectangle)
+            => Imports.GdipFillRectangleI(
+                graphics,
+                brush,
+                rectangle.X,
+                rectangle.Y,
+                rectangle.Width,
+                rectangle.Height).ThrowIfFailed();
 
         public static void FillEllipse(this Graphics graphics, GpBrush brush, Rectangle bounds)
             => FillEllipse(graphics, brush, bounds.X, bounds.Y, bounds.Width, bounds.Height);

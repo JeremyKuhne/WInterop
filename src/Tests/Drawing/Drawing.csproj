@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <ApplicationManifest>app1.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\WInterop.Desktop\WInterop.Desktop.csproj" />
+    <ProjectReference Include="..\..\WInterop.GdiPlus\WInterop.GdiPlus.csproj" />
+  </ItemGroup>
+
+</Project>

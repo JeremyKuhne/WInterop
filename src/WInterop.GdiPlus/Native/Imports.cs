@@ -102,6 +102,42 @@ namespace WInterop.GdiPlus.Native
             int height);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern GpStatus GdipDrawRectangle(
+            GpGraphics graphics,
+            GpPen pen,
+            float x,
+            float y,
+            float width,
+            float height);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern GpStatus GdipDrawRectangleI(
+            GpGraphics graphics,
+            GpPen pen,
+            int x,
+            int y,
+            int width,
+            int height);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern GpStatus GdipFillRectangle(
+            GpGraphics graphics,
+            GpBrush brush,
+            float x,
+            float y,
+            float width,
+            float height);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern GpStatus GdipFillRectangleI(
+            GpGraphics graphics,
+            GpBrush brush,
+            int x,
+            int y,
+            int width,
+            int height);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern GpStatus GdipGraphicsClear(
             GpGraphics graphics,
             ARGB color);
