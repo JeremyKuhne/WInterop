@@ -3,17 +3,16 @@
 
 using FluentAssertions;
 using System;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Tests.Support;
-using WInterop.Storage;
 using WInterop.Modules;
+using WInterop.Storage;
 using WInterop.Windows;
-using WInterop.Support;
 using Xunit;
 using ModuleTypes = WInterop.Modules;
-using System.Drawing;
-using System.IO;
 
 namespace ModuleTests
 {
@@ -23,7 +22,7 @@ namespace ModuleTests
 
         private string GetNativeTestLibraryLocation()
         {
-            string path = Path.Join(Path.GetDirectoryName((new Uri(typeof(Basic).Assembly.CodeBase)).LocalPath), NativeTestLibrary);
+            string path = Path.Join(Path.GetDirectoryName(typeof(Basic).Assembly.Location), NativeTestLibrary);
             if (!Storage.FileExists(path))
             {
                 throw new FileNotFoundException(path);
@@ -34,86 +33,88 @@ namespace ModuleTests
         [Fact]
         public void LoadAsResource()
         {
-            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(),
-                LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
-            {
-                handle.IsInvalid.Should().BeFalse();
-            }
+            using var handle = Modules.LoadLibrary(
+                GetNativeTestLibraryLocation(),
+                LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile);
+
+            handle.IsInvalid.Should().BeFalse();
         }
 
         [Fact]
         public void LoadAsResourceFromLongPath()
         {
-            using (var cleaner = new TestFileCleaner())
-            {
-                string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+            using var cleaner = new TestFileCleaner();
 
-                FileHelper.CreateDirectoryRecursive(longPath);
-                string longPathLibrary = Path.Join(longPath, "LoadAsResourceFromLongPath.dll");
-                Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
+            string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
 
-                using (var handle = Modules.LoadLibrary(longPathLibrary,
-                    LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
-                {
-                    handle.IsInvalid.Should().BeFalse();
-                }
-            }
+            FileHelper.CreateDirectoryRecursive(longPath);
+            string longPathLibrary = Path.Join(longPath, "LoadAsResourceFromLongPath.dll");
+            Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
+
+            using var handle = Modules.LoadLibrary(
+                longPathLibrary,
+                LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile);
+
+            handle.IsInvalid.Should().BeFalse();
         }
 
         [Fact]
         public void LoadString()
         {
-            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(),
-                LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
-            {
-                string resource = Windows.LoadString(handle, 101);
-                resource.Should().Be("Test");
-            }
+            using var handle = Modules.LoadLibrary(
+                GetNativeTestLibraryLocation(),
+                LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile);
+
+            string resource = Windows.LoadString(handle, 101);
+            resource.Should().Be("Test");
         }
 
         [Fact]
         public void LoadStringFromLongPath()
         {
-            using (var cleaner = new TestFileCleaner())
-            {
-                string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
-                FileHelper.CreateDirectoryRecursive(longPath);
-                string longPathLibrary = Path.Join(longPath, "LoadStringFromLongPath.dll");
-                Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
+            using var cleaner = new TestFileCleaner();
 
-                using (var handle = Modules.LoadLibrary(longPathLibrary,
-                    LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile))
-                {
-                    string resource = Windows.LoadString(handle, 101);
-                    resource.Should().Be("Test");
-                }
-            }
+            string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+            FileHelper.CreateDirectoryRecursive(longPath);
+            string longPathLibrary = Path.Join(longPath, "LoadStringFromLongPath.dll");
+            Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
+
+            using var handle = Modules.LoadLibrary(
+                longPathLibrary,
+                LoadLibraryFlags.LoadLibraryAsImageResource | LoadLibraryFlags.LoadLibraryAsDatafile);
+
+            string resource = Windows.LoadString(handle, 101);
+            resource.Should().Be("Test");
         }
 
         [Fact]
         public void LoadAsBinary()
         {
-            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(), 0))
-            {
-                handle.IsInvalid.Should().BeFalse();
-            }
+            using var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(), 0);
+
+            handle.IsInvalid.Should().BeFalse();
         }
 
         [Fact]
         public void LoadAsBinaryFromLongPath()
         {
-            using (var cleaner = new TestFileCleaner())
-            {
-                string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
-                FileHelper.CreateDirectoryRecursive(longPath);
-                string longPathLibrary = Path.Join(longPath, "LoadAsBinaryFromLongPath.dll");
-                Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
+            using var cleaner = new TestFileCleaner();
 
-                using (var handle = Modules.LoadLibrary(longPathLibrary, LoadLibraryFlags.LoadWithAlteredSearchPath))
-                {
-                    handle.IsInvalid.Should().BeFalse();
-                }
-            }
+            string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+            FileHelper.CreateDirectoryRecursive(longPath);
+            string longPathLibrary = Path.Join(longPath, "LoadAsBinaryFromLongPath.dll");
+            Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
+
+            using var handle = Modules.LoadLibrary(longPathLibrary, LoadLibraryFlags.LoadWithAlteredSearchPath);
+            handle.IsInvalid.Should().BeFalse();
+        }
+
+        [Fact(Skip = "For exploring richedit handles, not needed for normal run.")]
+        public void LoadRichEdit()
+        {
+            using var firstHandle = Modules.LoadLibrary("riched32.dll", default);
+            using var secondHandle = Modules.LoadLibrary("riched20.dll", default);
+            using var thirdHandle = Modules.LoadLibrary("MsftEdit.dll", default);
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -122,31 +123,30 @@ namespace ModuleTests
         [Fact]
         public void LoadFunction()
         {
-            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LoadWithAlteredSearchPath))
-            {
-                handle.IsInvalid.Should().BeFalse();
-                var doubler = Modules.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
-                doubler(2).Should().Be(4);
-            }
+            using var handle = Modules.LoadLibrary(
+                GetNativeTestLibraryLocation(),
+                LoadLibraryFlags.LoadWithAlteredSearchPath);
+
+            handle.IsInvalid.Should().BeFalse();
+            var doubler = Modules.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
+            doubler(2).Should().Be(4);
         }
 
         [Fact]
         public void LoadFunctionFromLongPath()
         {
-            using (var cleaner = new TestFileCleaner())
-            {
-                string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
-                FileHelper.CreateDirectoryRecursive(longPath);
-                string longPathLibrary = Path.Join(longPath, "LoadFunctionFromLongPath.dll");
-                Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
+            using var cleaner = new TestFileCleaner();
 
-                using (var handle = Modules.LoadLibrary(longPathLibrary, 0))
-                {
-                    handle.IsInvalid.Should().BeFalse();
-                    var doubler = Modules.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
-                    doubler(2).Should().Be(4);
-                }
-            }
+            string longPath = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 500);
+            FileHelper.CreateDirectoryRecursive(longPath);
+            string longPathLibrary = Path.Join(longPath, "LoadFunctionFromLongPath.dll");
+            Storage.CopyFile(GetNativeTestLibraryLocation(), longPathLibrary);
+
+            using var handle = Modules.LoadLibrary(longPathLibrary, 0);
+
+            handle.IsInvalid.Should().BeFalse();
+            var doubler = Modules.GetFunctionDelegate<DoubleDelegate>(handle, "Double");
+            doubler(2).Should().Be(4);
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -155,12 +155,13 @@ namespace ModuleTests
         [Fact]
         public void LoadFunctionStandard()
         {
-            using (var handle = Modules.LoadLibrary(GetNativeTestLibraryLocation(), LoadLibraryFlags.LoadWithAlteredSearchPath))
-            {
-                handle.IsInvalid.Should().BeFalse();
-                var doubler = Modules.GetFunctionDelegate<DoubleDelegateStandard>(handle, "DoubleStdCall");
-                doubler(2).Should().Be(4);
-            }
+            using var handle = Modules.LoadLibrary(
+                GetNativeTestLibraryLocation(),
+                LoadLibraryFlags.LoadWithAlteredSearchPath);
+
+            handle.IsInvalid.Should().BeFalse();
+            var doubler = Modules.GetFunctionDelegate<DoubleDelegateStandard>(handle, "DoubleStdCall");
+            doubler(2).Should().Be(4);
         }
 
         [DllImport(NativeTestLibrary, ExactSpelling = true)]
@@ -328,7 +329,9 @@ namespace ModuleTests
             string pathByHandle = Modules.GetModuleFileName(module);
             pathByHandle.Should().NotBeNullOrWhiteSpace();
             string pathByDefault = Modules.GetModuleFileName(ModuleTypes.ModuleInstance.Null);
-            // Strangely the path is cased differently when getting the module file name through GetModuleFileNameEx, but not GetModuleFileName.
+
+            // Strangely the path is cased differently when getting the module file name through
+            // GetModuleFileNameEx, but not GetModuleFileName.
             pathByHandle.Should().BeEquivalentTo(pathByDefault);
         }
 
