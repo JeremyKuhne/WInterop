@@ -209,6 +209,10 @@ dotnet_naming_symbols.private_internal_fields.applicable_accessibilities = priva
 dotnet_naming_style.camel_case_underscore_style.required_prefix = _
 dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
 
+# Analyzer doesn't seem to respect the TFM coming from our Directory.Build.props
+# and complains about using "windows" specific APIs
+dotnet_diagnostic.CA1416.severity = none
+
 # SA1503: Braces should not be omitted
 dotnet_diagnostic.SA1503.severity = none
 

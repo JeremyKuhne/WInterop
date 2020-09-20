@@ -15,7 +15,7 @@
     <RepositoryBranch>master</RepositoryBranch>
     <PackageReleaseNotes>Alpha release.</PackageReleaseNotes>
     <Description>Managed interop library for Windows.</Description>
-    <Copyright>Copyright 2019</Copyright>
+    <Copyright>Copyright 2020</Copyright>
     <PackageTags>PInvoke Win32</PackageTags>
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
