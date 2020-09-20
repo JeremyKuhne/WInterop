@@ -1349,6 +1349,10 @@ namespace WInterop.Windows.Native
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern uint GetDpiForSystem();
 
+        [DllImport(Libraries.User32, ExactSpelling = true)]
+        public static extern IntBoolean SetProcessDpiAwarenessContext(
+            DpiAwarenessContext value);
+
         // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getawarenessfromdpiawarenesscontext
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern DpiAwareness GetAwarenessFromDpiAwarenessContext(DpiAwarenessContext value);

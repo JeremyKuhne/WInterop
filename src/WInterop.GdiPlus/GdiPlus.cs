@@ -56,6 +56,17 @@ namespace WInterop.GdiPlus
             Imports.GdiplusShutdown(&token);
         }
 
+        public static unsafe void DrawLine(this Graphics graphics, Pen pen, Point from, Point to)
+        {
+            Span<Point> points = stackalloc Point[]
+            {
+                from,
+                to
+            };
+
+            DrawLines(graphics, pen, points);
+        }
+
         public static unsafe void DrawLines(this Graphics graphics, Pen pen, ReadOnlySpan<Point> points)
         {
             fixed (Point* p = points)

@@ -87,8 +87,11 @@ namespace WInterop.Shell
         /// </summary>
         public static IKnownFolderManager GetKnownFolderManager()
         {
-            return (IKnownFolderManager)(Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid(ClassIds.CLSID_KnownFolderManager)))
-                ?? throw new InvalidOperationException());
+            Type? type = Marshal.GetTypeFromCLSID(new Guid(ClassIds.CLSID_KnownFolderManager));
+
+            return type is null
+                ? throw new InvalidOperationException()
+                : (IKnownFolderManager?)Activator.CreateInstance(type) ?? throw new InvalidOperationException();
         }
 
         /// <summary>

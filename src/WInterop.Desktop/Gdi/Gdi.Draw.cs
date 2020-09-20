@@ -73,7 +73,8 @@ namespace WInterop.Gdi
             throw new InvalidOperationException();
         }
 
-        public static Color GetPixel(this in DeviceContext context, Point point) => Imports.GetPixel(context, point.X, point.Y);
+        public static Color GetPixel(this in DeviceContext context, Point point)
+            => Imports.GetPixel(context, point.X, point.Y);
 
         public static bool SetPixel(this in DeviceContext context, Point point, Color color)
             => Imports.SetPixelV(context, point.X, point.Y, color);
@@ -81,7 +82,14 @@ namespace WInterop.Gdi
         public static unsafe bool MoveTo(this in DeviceContext context, Point point)
             => Imports.MoveToEx(context, point.X, point.Y, null);
 
-        public static bool LineTo(this in DeviceContext context, Point point) => Imports.LineTo(context, point.X, point.Y);
+        public static unsafe bool MoveTo(this in DeviceContext context, int x, int y)
+            => Imports.MoveToEx(context, x, y, null);
+
+        public static bool LineTo(this in DeviceContext context, Point point)
+            => Imports.LineTo(context, point.X, point.Y);
+
+        public static bool LineTo(this in DeviceContext context, int x, int y)
+            => Imports.LineTo(context, x, y);
 
         public static PolyFillMode GetPolyFillMode(this in DeviceContext context) => Imports.GetPolyFillMode(context);
 

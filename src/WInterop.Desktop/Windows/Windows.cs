@@ -861,6 +861,9 @@ namespace WInterop.Windows
 
         public static uint GetDpiForSystem() => Imports.GetDpiForSystem();
 
+        public static bool SetProcessDpiAwarenessContext(DpiAwarenessContext context)
+            => Imports.SetProcessDpiAwarenessContext(context);
+
         public static uint GetDpiForWindow<T>(this T window) where T : IHandle<WindowHandle>
             => Imports.GetDpiForWindow(window.Handle);
 

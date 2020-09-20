@@ -17,9 +17,9 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  The physical font face to draw with. (IFontFace)
         /// </summary>
-        private readonly IntPtr fontFace;
+        private readonly IntPtr _fontFace;
 
-        public IFontFace FontFace => (IFontFace)Marshal.GetObjectForIUnknown(fontFace);
+        public IFontFace FontFace => (IFontFace)Marshal.GetObjectForIUnknown(_fontFace);
 
         /// <summary>
         ///  Logical size of the font in DIPs, not points (equals 1/96 inch).
