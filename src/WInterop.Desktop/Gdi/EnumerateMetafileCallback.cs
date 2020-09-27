@@ -1,12 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
-namespace WInterop.GdiPlus.Native
+namespace WInterop.Gdi
 {
-    public readonly struct GpGraphics
-    {
-        public nuint Handle { get; }
-    }
+    public delegate bool EnumerateMetafileCallback(ref MetafileRecord record, nint callbackParameter);
 }

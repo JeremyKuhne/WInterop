@@ -23,7 +23,7 @@ namespace WInterop.GdiPlus
         {
             GdiPlus.Init();
             Unsafe.SkipInit(out GpPen gpPen);
-            Imports.GdipCreatePen1(color, width, unit, &gpPen).ThrowIfFailed();
+            GdiPlusImports.GdipCreatePen1(color, width, unit, &gpPen).ThrowIfFailed();
             _gpPen = gpPen;
         }
 
@@ -32,17 +32,17 @@ namespace WInterop.GdiPlus
             get
             {
                 Unsafe.SkipInit(out ARGB color);
-                Imports.GdipGetPenColor(_gpPen, &color).ThrowIfFailed();
+                GdiPlusImports.GdipGetPenColor(_gpPen, &color).ThrowIfFailed();
                 return color;
             }
-            set => Imports.GdipSetPenColor(_gpPen, value).ThrowIfFailed();
+            set => GdiPlusImports.GdipSetPenColor(_gpPen, value).ThrowIfFailed();
         }
 
         public static implicit operator GpPen(Pen pen) => pen._gpPen;
 
         private void Dispose(bool disposing)
         {
-            GpStatus status = Imports.GdipDeletePen(_gpPen);
+            GpStatus status = GdiPlusImports.GdipDeletePen(_gpPen);
             if (disposing)
             {
                 status.ThrowIfFailed();

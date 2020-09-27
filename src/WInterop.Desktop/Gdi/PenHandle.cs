@@ -17,8 +17,8 @@ namespace WInterop.Gdi
 
         public PenHandle(HPEN handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Pen
-                || Imports.GetObjectType(handle) == ObjectType.ExtendedPen);
+            Debug.Assert(handle.IsInvalid || GdiImports.GetObjectType(handle) == ObjectType.Pen
+                || GdiImports.GetObjectType(handle) == ObjectType.ExtendedPen);
 
             Handle = handle;
             _ownsHandle = ownsHandle;
@@ -31,7 +31,7 @@ namespace WInterop.Gdi
                 if (Handle.IsInvalid)
                     return true;
 
-                ObjectType type = Imports.GetObjectType(Handle);
+                ObjectType type = GdiImports.GetObjectType(Handle);
                 return !(type == ObjectType.Pen || type == ObjectType.ExtendedPen);
             }
         }
@@ -39,7 +39,7 @@ namespace WInterop.Gdi
         public void Dispose()
         {
             if (_ownsHandle)
-                Imports.DeleteObject(Handle);
+                GdiImports.DeleteObject(Handle);
         }
 
         public static implicit operator HGDIOBJ(PenHandle handle) => handle.Handle;

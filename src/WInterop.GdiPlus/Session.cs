@@ -5,16 +5,16 @@ using System;
 
 namespace WInterop.GdiPlus
 {
-    public class GdiPlusSession : IDisposable
+    public class Session : IDisposable
     {
         private UIntPtr _token;
 
-        public GdiPlusSession(uint version = 2)
+        public Session(uint version = 2)
         {
             _token = GdiPlus.Startup(version);
         }
 
-        ~GdiPlusSession() => Dispose();
+        ~Session() => Dispose();
 
         public void Dispose()
         {

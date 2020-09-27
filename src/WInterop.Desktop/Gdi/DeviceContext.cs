@@ -42,16 +42,16 @@ namespace WInterop.Gdi
             switch (_type)
             {
                 case CollectionType.Delete:
-                    if (!Imports.DeleteDC(Handle))
+                    if (!GdiImports.DeleteDC(Handle))
                     { } // Debug.Fail("Failed to delete DC");
                     break;
                 case CollectionType.Release:
-                    if (!Imports.ReleaseDC(_window, Handle))
+                    if (!GdiImports.ReleaseDC(_window, Handle))
                     { } // Debug.Fail("Failed to release DC");
                     break;
                 case CollectionType.EndPaint:
                     PAINTSTRUCT ps = new PAINTSTRUCT(Handle);
-                    if (!Imports.EndPaint(_window, in ps))
+                    if (!GdiImports.EndPaint(_window, in ps))
                     { } // Debug.Fail("Failed to end paint");
                     break;
                 case CollectionType.None:

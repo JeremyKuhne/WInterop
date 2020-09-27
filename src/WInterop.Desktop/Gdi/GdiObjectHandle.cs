@@ -25,7 +25,7 @@ namespace WInterop.Gdi
 
         public ObjectType GetObjectType()
         {
-            return Imports.GetObjectType(Handle);
+            return GdiImports.GetObjectType(Handle);
         }
 
         public static implicit operator GdiObjectHandle(StockFont font) => new GdiObjectHandle(Gdi.GetStockFont(font).Handle, false);
@@ -40,7 +40,7 @@ namespace WInterop.Gdi
         public void Dispose()
         {
             if (_ownsHandle)
-                Imports.DeleteObject(Handle);
+                GdiImports.DeleteObject(Handle);
         }
     }
 }

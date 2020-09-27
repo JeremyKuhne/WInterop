@@ -28,7 +28,7 @@ namespace WInterop.Com
             stream.Stat(out STATSTG stat, StatFlag.NoName);
             StorageType = stat.type;
             StorageMode = stat.grfMode;
-            ClassId = ClassId;
+            ClassId = new Guid("0000000C-0000-0000-C000-000000000046");
         }
 
         public StorageType StorageType { get; }
@@ -58,15 +58,17 @@ namespace WInterop.Com
             }
         }
 
-        public override long Position
+        public unsafe override long Position
         {
             get
             {
-                return Stream.Seek(0, StreamSeek.Current);
+                ulong position;
+                Stream.Seek(0, StreamSeek.Current, &position);
+                return checked((long)position);
             }
             set
             {
-                Stream.Seek(value, StreamSeek.Set);
+                Stream.Seek(value, StreamSeek.Set, null);
             }
         }
 
@@ -82,7 +84,9 @@ namespace WInterop.Com
 
             fixed (byte* b = buffer)
             {
-                return (int)Stream.Read(b, (uint)count);
+                uint read;
+                Stream.Read(b, (uint)count, &read);
+                return checked((int)read);
             }
         }
 
@@ -90,20 +94,23 @@ namespace WInterop.Com
         {
             fixed (byte* b = buffer)
             {
-                Stream.Write(b, (uint)count);
+                Stream.Write(b, (uint)count, null);
             }
         }
 
-        public override long Seek(long offset, SeekOrigin origin)
+        public override unsafe long Seek(long offset, SeekOrigin origin)
         {
             // Not surprisingly SeekOrigin is the same as STREAM_SEEK
             // (given the history of .NET and COM)
-            return Stream.Seek(offset, (StreamSeek)origin);
+
+            ulong position;
+            Stream.Seek(offset, (StreamSeek)origin, &position);
+            return checked((long)position);
         }
 
         public override void SetLength(long value)
         {
-            Stream.SetSize(value);
+            Stream.SetSize((ulong)value);
         }
 
         public unsafe override string ToString()

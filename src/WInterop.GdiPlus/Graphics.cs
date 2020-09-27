@@ -12,19 +12,27 @@ namespace WInterop.GdiPlus
     {
         private readonly GpGraphics _gpGraphics;
 
+
         public unsafe Graphics(DeviceContext deviceContext)
         {
             GdiPlus.Init();
             Unsafe.SkipInit(out GpGraphics gpGraphics);
-            Imports.GdipCreateFromHDC(deviceContext, &gpGraphics).ThrowIfFailed();
+            GdiPlusImports.GdipCreateFromHDC(deviceContext, &gpGraphics).ThrowIfFailed();
             _gpGraphics = gpGraphics;
+        }
+
+        public unsafe Graphics(Image image)
+        {
+            GpGraphics graphics;
+            GdiPlusImports.GdipGetImageGraphicsContext(image, &graphics).ThrowIfFailed();
+            _gpGraphics = graphics;
         }
 
         public static implicit operator GpGraphics(Graphics graphics) => graphics._gpGraphics;
 
         private void Dispose(bool disposing)
         {
-            Imports.GdipDeleteGraphics(_gpGraphics).ThrowIfFailed();
+            GdiPlusImports.GdipDeleteGraphics(_gpGraphics).ThrowIfFailed();
         }
 
         ~Graphics() => Dispose(disposing: false);

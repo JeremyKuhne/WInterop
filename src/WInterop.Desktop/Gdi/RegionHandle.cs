@@ -17,18 +17,18 @@ namespace WInterop.Gdi
 
         public RegionHandle(HRGN handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Region);
+            Debug.Assert(handle.IsInvalid || GdiImports.GetObjectType(handle) == ObjectType.Region);
 
             Handle = handle;
             _ownsHandle = ownsHandle;
         }
 
-        public bool IsInvalid => Handle.IsInvalid || Imports.GetObjectType(Handle) != ObjectType.Region;
+        public bool IsInvalid => Handle.IsInvalid || GdiImports.GetObjectType(Handle) != ObjectType.Region;
 
         public void Dispose()
         {
             if (_ownsHandle)
-                Imports.DeleteObject(Handle);
+                GdiImports.DeleteObject(Handle);
         }
 
         public static implicit operator HGDIOBJ(RegionHandle handle) => handle.Handle;

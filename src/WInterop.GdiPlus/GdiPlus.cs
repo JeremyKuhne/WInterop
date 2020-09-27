@@ -12,8 +12,11 @@ namespace WInterop.GdiPlus
 {
     public static class GdiPlus
     {
-        internal static GdiPlusSession Init() => s_session;
-        private static readonly GdiPlusSession s_session = new GdiPlusSession();
+        internal static Session Init() => s_session;
+        private static readonly Session s_session = new Session();
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void Initialize() => Init();
 
         public static Exception GetExceptionForStatus(GpStatus status)
         {
@@ -36,14 +39,14 @@ namespace WInterop.GdiPlus
         }
 
         public static void SetSmoothingMode(this Graphics graphics, SmoothingMode smoothingMode)
-            => ThrowIfFailed(Imports.GdipSetSmoothingMode(graphics, smoothingMode));
+            => ThrowIfFailed(GdiPlusImports.GdipSetSmoothingMode(graphics, smoothingMode));
 
         public static unsafe UIntPtr Startup(uint version = 2)
         {
-            var input = new GdiPlusStartupInput { GdiplusVersion = version };
-            GdiPlusStartupOutput* output;
+            var input = new StartupInput { GdiplusVersion = version };
+            StartupOutput* output;
             nuint* token;
-            ThrowIfFailed(Imports.GdiplusStartup(
+            ThrowIfFailed(GdiPlusImports.GdiplusStartup(
                 &token,
                 &input,
                 &output));
@@ -53,7 +56,7 @@ namespace WInterop.GdiPlus
 
         public static unsafe void Shutdown(UIntPtr token)
         {
-            Imports.GdiplusShutdown(&token);
+            GdiPlusImports.GdiplusShutdown(&token);
         }
 
         public static unsafe void DrawLine(this Graphics graphics, Pen pen, Point from, Point to)
@@ -71,12 +74,12 @@ namespace WInterop.GdiPlus
         {
             fixed (Point* p = points)
             {
-                Imports.GdipDrawLinesI(graphics, pen, p, points.Length).ThrowIfFailed();
+                GdiPlusImports.GdipDrawLinesI(graphics, pen, p, points.Length).ThrowIfFailed();
             }
         }
 
         public static void DrawRectangle(this Graphics graphics, Pen pen, Rectangle rectangle)
-            => Imports.GdipDrawRectangleI(
+            => GdiPlusImports.GdipDrawRectangleI(
                 graphics,
                 pen,
                 rectangle.X,
@@ -85,7 +88,7 @@ namespace WInterop.GdiPlus
                 rectangle.Height).ThrowIfFailed();
 
         public static void FillRectangle(this Graphics graphics, Brush brush, Rectangle rectangle)
-            => Imports.GdipFillRectangleI(
+            => GdiPlusImports.GdipFillRectangleI(
                 graphics,
                 brush,
                 rectangle.X,
@@ -97,15 +100,15 @@ namespace WInterop.GdiPlus
             => FillEllipse(graphics, brush, bounds.X, bounds.Y, bounds.Width, bounds.Height);
 
         public static void FillEllipse(this Graphics graphics, GpBrush brush, int x, int y, int width, int height)
-            => ThrowIfFailed(Imports.GdipFillEllipseI(graphics, brush, x, y, width, height));
+            => ThrowIfFailed(GdiPlusImports.GdipFillEllipseI(graphics, brush, x, y, width, height));
 
         public static void Clear(this Graphics graphics, ARGB argb)
-            => ThrowIfFailed(Imports.GdipGraphicsClear(graphics, argb));
+            => ThrowIfFailed(GdiPlusImports.GdipGraphicsClear(graphics, argb));
 
         public static void Clear(this Graphics graphics, Color color)
             => Clear(graphics, (ARGB)color);
 
         public static PaletteHandle GetHalftonePalette()
-            => new PaletteHandle(Imports.GdipCreateHalftonePalette());
+            => new PaletteHandle(GdiPlusImports.GdipCreateHalftonePalette());
     }
 }

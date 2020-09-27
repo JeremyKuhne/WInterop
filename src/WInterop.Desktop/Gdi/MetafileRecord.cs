@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using WInterop.Gdi.Native;
+
 namespace WInterop.Gdi
 {
-    public struct MetafileRecord
+    public unsafe readonly ref struct MetafileRecord
     {
-        public MetafileRecordType Type;
+        private readonly ENHMETARECORD* _record;
 
-        /// <summary>
-        ///  Record length in bytes. Must be a multiple of 4.
-        /// </summary>
-        public uint Size;
+        public MetafileRecord(ENHMETARECORD* record) => _record = record;
+
+        public MetafileRecordType RecordType => (MetafileRecordType)_record->iType;
     }
 }

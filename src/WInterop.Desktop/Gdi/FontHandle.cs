@@ -15,7 +15,7 @@ namespace WInterop.Gdi
 
         public FontHandle(HFONT handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Font);
+            Debug.Assert(handle.IsInvalid || GdiImports.GetObjectType(handle) == ObjectType.Font);
 
             Handle = handle;
             _ownsHandle = ownsHandle;
@@ -23,13 +23,13 @@ namespace WInterop.Gdi
 
         public bool IsNull => Handle.IsNull;
 
-        public bool IsInvalid => Handle.IsInvalid || Imports.GetObjectType(Handle) != ObjectType.Font;
+        public bool IsInvalid => Handle.IsInvalid || GdiImports.GetObjectType(Handle) != ObjectType.Font;
 
         public void Dispose()
         {
             if (_ownsHandle && !Handle.IsInvalid)
             {
-                Imports.DeleteObject(Handle);
+                GdiImports.DeleteObject(Handle);
             }
         }
 

@@ -20,19 +20,19 @@ namespace WInterop.Gdi
 
         public BrushHandle(HBRUSH handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || handle.Value == ((IntPtr)(-1)) || Imports.GetObjectType(handle) == ObjectType.Brush
-                || Imports.GetObjectType(handle) == 0);
+            Debug.Assert(handle.IsInvalid || handle.Value == ((IntPtr)(-1)) || GdiImports.GetObjectType(handle) == ObjectType.Brush
+                || GdiImports.GetObjectType(handle) == 0);
 
             HBRUSH = handle;
             OwnsHandle = ownsHandle;
         }
 
-        public bool IsInvalid => HBRUSH.IsInvalid || Imports.GetObjectType(HBRUSH) != ObjectType.Brush;
+        public bool IsInvalid => HBRUSH.IsInvalid || GdiImports.GetObjectType(HBRUSH) != ObjectType.Brush;
 
         public void Dispose()
         {
             if (OwnsHandle)
-                Imports.DeleteObject(HBRUSH);
+                GdiImports.DeleteObject(HBRUSH);
         }
 
         public static implicit operator HGDIOBJ(in BrushHandle handle) => handle.HBRUSH;

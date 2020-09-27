@@ -25,17 +25,17 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const int CurrentDayOfMonth = 20;
+            public const int CurrentDayOfMonth = 24;
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const int CurrentHour = 14;
+            public const int CurrentHour = 19;
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const int CurrentMinute = 48;
+            public const int CurrentMinute = 42;
         }
 
         public static class Strings
@@ -58,32 +58,32 @@ namespace WInterop
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const string CurrentDayOfMonth = "20";
+            public const string CurrentDayOfMonth = "24";
 
             /// <summary>
             /// Current two digit day of the month 01..31
             /// </summary>
-            public const string CurrentTwoDigitDayOfMonth = "20";
+            public const string CurrentTwoDigitDayOfMonth = "24";
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const string CurrentHour = "14";
+            public const string CurrentHour = "19";
 
             /// <summary>
             /// Current two digit hour from 00..23
             /// </summary>
-            public const string CurrentTwoDigitHour = "14";
+            public const string CurrentTwoDigitHour = "19";
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const string CurrentMinute = "48";
+            public const string CurrentMinute = "42";
 
             /// <summary>
             /// Current two digit hour from 00..59
             /// </summary>
-            public const string CurrentTwoDigitMinute = "48";
+            public const string CurrentTwoDigitMinute = "42";
         }
     }
 }

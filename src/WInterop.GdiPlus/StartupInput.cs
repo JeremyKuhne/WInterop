@@ -6,7 +6,7 @@ using System;
 namespace WInterop.GdiPlus
 {
     // https://msdn.microsoft.com/en-us/library/ms534067.aspx
-    public struct GdiPlusStartupInput
+    public struct StartupInput
     {
         public uint GdiplusVersion;
         public IntPtr DebugEventCallback;

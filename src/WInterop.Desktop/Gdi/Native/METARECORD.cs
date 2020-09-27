@@ -15,10 +15,13 @@ namespace WInterop.Gdi.Native
         /// </summary>
         public uint rdSize;
 
+        /// <summary>
+        ///  The function number.
+        /// </summary>
         public ushort rdFunction;
 
         /// <summary>
-        ///  Parameters.
+        ///  Parameters, in reverse order.
         /// </summary>
         private ushort _rdParm;
 

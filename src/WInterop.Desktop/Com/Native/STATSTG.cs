@@ -35,5 +35,13 @@ namespace WInterop.Com.Native
             Marshal.FreeCoTaskMem((IntPtr)pwcsName);
             return value;
         }
+
+        /// <summary>
+        ///  Callee is repsonsible for allocating the name memory.
+        /// </summary>
+        public void AllocName(string? name)
+        {
+            pwcsName = (char*)Marshal.StringToCoTaskMemUni(name);
+        }
     }
 }

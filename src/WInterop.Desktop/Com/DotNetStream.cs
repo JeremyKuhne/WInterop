@@ -1,129 +1,153 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
+// Modified from .NET source code which is licensed under the MIT license to the .NET Foundation.
+
 using System.Buffers;
 using System.IO;
+using WInterop.Com;
 using WInterop.Com.Native;
 using WInterop.Errors;
 
-namespace WInterop.Com
+namespace System.Drawing.Internal
 {
-    public class DotNetStream : IStream
+    public sealed class DotNetStream : IStream
     {
-        public DotNetStream(Stream stream)
+        private readonly Stream _wrappedStream;
+
+        public DotNetStream(Stream stream) => _wrappedStream = stream;
+
+        public IStream Clone() => new DotNetStream(_wrappedStream);
+
+        public void Commit(StorageCommit grfCommitFlags) => _wrappedStream.Flush();
+
+        public unsafe void CopyTo(IStream pstm, ulong cb, ulong* pcbRead, ulong* pcbWritten)
         {
-            InnerStream = stream;
-        }
+            byte[] buffer = ArrayPool<byte>.Shared.Rent(4096);
 
-        public Stream InnerStream { get; private set; }
+            ulong remaining = cb;
+            ulong totalWritten = 0;
+            ulong totalRead = 0;
 
-        unsafe uint IStream.Read(byte* pv, uint cb)
-        {
-            if (!InnerStream.CanRead)
-                throw new InvalidOperationException();
-
-            // This should be moved to Read(Span<byte>) when/where available
-            byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(checked((int)cb));
-            try
+            fixed (byte* b = buffer)
             {
-                fixed (byte* ps = sharedBuffer)
+                while (remaining > 0)
                 {
-                    int read = InnerStream.Read(sharedBuffer, 0, (int)cb);
-                    Buffer.MemoryCopy(ps, pv, cb, read);
-                    return (uint)read;
+                    uint read = remaining < (ulong)buffer.Length ? (uint)remaining : (uint)buffer.Length;
+                    Read(b, read, &read);
+                    remaining -= read;
+                    totalRead += read;
+
+                    if (read == 0)
+                    {
+                        break;
+                    }
+
+                    uint written;
+                    pstm.Write(b, read, &written);
+                    totalWritten += written;
                 }
             }
-            finally
+
+            ArrayPool<byte>.Shared.Return(buffer);
+
+            if (pcbRead != null)
             {
-                ArrayPool<byte>.Shared.Return(sharedBuffer);
+                *pcbRead = totalRead;
+            }
+
+            if (pcbWritten != null)
+            {
+                *pcbWritten = totalWritten;
             }
         }
 
-        unsafe uint IStream.Write(byte* pv, uint cb)
+        public unsafe void Read(byte* pv, uint cb, uint* pcbRead)
         {
-            if (!InnerStream.CanWrite)
-                throw new InvalidOperationException();
+            Span<byte> buffer = new Span<byte>(pv, checked((int)cb));
+            int read = _wrappedStream.Read(buffer);
 
-            // This should be moved to Write(ReadOnlySpan<byte>) when/where available
-            byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(checked((int)cb));
-            try
+            if (pcbRead != null)
             {
-                fixed (byte* ps = sharedBuffer)
-                {
-                    Buffer.MemoryCopy(pv, ps, sharedBuffer.LongLength, cb);
-                    InnerStream.Write(sharedBuffer, 0, (int)cb);
-                }
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(sharedBuffer);
-            }
-
-            return cb;
-        }
-
-        long IStream.Seek(long dlibMove, StreamSeek dwOrigin)
-        {
-            if (!InnerStream.CanSeek)
-                throw new InvalidOperationException();
-
-            return InnerStream.Seek(dlibMove, (SeekOrigin)dwOrigin);
-        }
-
-        void IStream.SetSize(long libNewSize)
-        {
-            InnerStream.SetLength(libNewSize);
-        }
-
-        void IStream.CopyTo(IStream pstm, long cb, out long pcbRead, out long pcbWritten)
-        {
-            pcbRead = 0;
-            pcbWritten = 0;
-            long remaining = cb;
-
-            byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(4096);
-            try
-            {
-                // TODO:
-                throw new NotImplementedException();
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(sharedBuffer);
+                *pcbRead = (uint)read;
             }
         }
 
-        void IStream.Commit(StorageCommit grfCommitFlags)
+        public void Revert()
         {
-            InnerStream.Flush();
+            // We never report ourselves as Transacted, so we can just ignore this.
         }
 
-        void IStream.Revert()
+        public unsafe void Seek(long dlibMove, StreamSeek dwOrigin, ulong* plibNewPosition)
         {
-            // Ignore. (Should this return STG_E_INVALIDFUNCTION? It isn't clear from the docs.)
+            long length = _wrappedStream.Length;
+            switch (dwOrigin)
+            {
+                case StreamSeek.Set:
+                    _wrappedStream.Position = dlibMove;
+                    break;
+                case StreamSeek.End:
+                    _wrappedStream.Position = length + dlibMove;
+                    break;
+                case StreamSeek.Current:
+                    _wrappedStream.Position += dlibMove;
+                    break;
+            }
+
+            if (plibNewPosition == null)
+                return;
+
+            *plibNewPosition = (ulong)_wrappedStream.Position;
         }
 
-        HResult IStream.LockRegion(long libOffset, long cb, uint dwLockType)
+        public void SetSize(ulong value)
         {
-            // Not supported
+            _wrappedStream.SetLength(checked((long)value));
+        }
+
+        public void Stat(out STATSTG pstatstg, StatFlag grfStatFlag)
+        {
+            pstatstg = new STATSTG
+            {
+                cbSize = (ulong)_wrappedStream.Length,
+                type = StorageType.Stream,
+
+                // Default read/write access is STGM_READ, which == 0
+                grfMode = _wrappedStream.CanWrite
+                    ? _wrappedStream.CanRead
+                        ? StorageMode.ReadWrite
+                        : StorageMode.Write
+                    : default
+            };
+
+            if (grfStatFlag == StatFlag.Default)
+            {
+                // Caller wants a name
+                pstatstg.AllocName(_wrappedStream is FileStream fs ? fs.Name : _wrappedStream.ToString());
+            }
+        }
+
+        public unsafe void Write(byte* pv, uint cb, uint* pcbWritten)
+        {
+            var buffer = new ReadOnlySpan<byte>(pv, checked((int)cb));
+            _wrappedStream.Write(buffer);
+
+            if (pcbWritten != null)
+            {
+                *pcbWritten = cb;
+            }
+        }
+
+        public HResult LockRegion(ulong libOffset, ulong cb, uint dwLockType)
+        {
+            // Documented way to say we don't support locking
             return HResult.STG_E_INVALIDFUNCTION;
         }
 
-        HResult IStream.UnlockRegion(long libOffset, long cb, uint dwLockType)
+        public HResult UnlockRegion(ulong libOffset, ulong cb, uint dwLockType)
         {
-            // Not supported
+            // Documented way to say we don't support locking
             return HResult.STG_E_INVALIDFUNCTION;
-        }
-
-        void IStream.Stat(out STATSTG pstatstg, StatFlag grfStatFlag)
-        {
-            throw new NotImplementedException();
-        }
-
-        IStream IStream.Clone()
-        {
-            return new DotNetStream(InnerStream);
         }
     }
 }

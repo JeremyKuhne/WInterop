@@ -5,6 +5,7 @@
     <AssemblyOriginatorKeyFile>..\WInterop.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable> 
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\WInterop.Desktop\WInterop.Desktop.csproj" />

@@ -16,18 +16,18 @@ namespace WInterop.Gdi
         public PaletteHandle(HPALETTE handle, bool ownsHandle = true)
         {
             Debug.Assert(handle.IsInvalid || handle.Value == ((IntPtr)(-1))
-                || Imports.GetObjectType(handle) == ObjectType.Palette || Imports.GetObjectType(handle) == 0);
+                || GdiImports.GetObjectType(handle) == ObjectType.Palette || GdiImports.GetObjectType(handle) == 0);
 
             HPALETTE = handle;
             _ownsHandle = ownsHandle;
         }
 
-        public bool IsInvalid => HPALETTE.IsInvalid || Imports.GetObjectType(HPALETTE) != ObjectType.Brush;
+        public bool IsInvalid => HPALETTE.IsInvalid || GdiImports.GetObjectType(HPALETTE) != ObjectType.Brush;
 
         public void Dispose()
         {
             if (_ownsHandle)
-                Imports.DeleteObject(HPALETTE);
+                GdiImports.DeleteObject(HPALETTE);
         }
 
         public static implicit operator HGDIOBJ(in PaletteHandle handle) => handle.HPALETTE;

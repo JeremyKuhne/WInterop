@@ -6,7 +6,7 @@ using System;
 namespace WInterop.GdiPlus
 {
     // https://msdn.microsoft.com/en-us/library/ms534068.aspx
-    public struct GdiPlusStartupOutput
+    public struct StartupOutput
     {
         public IntPtr NotificationHook;
         public IntPtr NotificationUnhook;

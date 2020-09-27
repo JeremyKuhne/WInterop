@@ -6,7 +6,7 @@ using WInterop.Windows;
 namespace WInterop.Gdi.Native
 {
     /// <docs>https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-enumenhmetafile</docs>
-    public unsafe delegate int ENHMFENUMPROC(
+    public unsafe delegate IntBoolean ENHMFENUMPROC(
         HDC hdc,
         HGDIOBJ* lpht,
         ENHMETARECORD* lpmr,

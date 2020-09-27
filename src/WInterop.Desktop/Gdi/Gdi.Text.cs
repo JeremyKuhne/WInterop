@@ -15,27 +15,27 @@ namespace WInterop.Gdi
     public static partial class Gdi
     {
         public static FontHandle GetStockFont(StockFont font)
-            => new FontHandle((HFONT)Imports.GetStockObject((int)font), ownsHandle: false);
+            => new FontHandle((HFONT)GdiImports.GetStockObject((int)font), ownsHandle: false);
 
-        public static Color GetTextColor(this in DeviceContext context) => Imports.GetTextColor(context);
+        public static Color GetTextColor(this in DeviceContext context) => GdiImports.GetTextColor(context);
 
-        public static Color SetTextColor(this in DeviceContext context, Color color) => Imports.SetTextColor(context, color);
+        public static Color SetTextColor(this in DeviceContext context, Color color) => GdiImports.SetTextColor(context, color);
 
         public static Color SetTextColor(this in DeviceContext context, SystemColor color)
-            => Imports.SetTextColor(context, Windows.Windows.GetSystemColor(color));
+            => GdiImports.SetTextColor(context, Windows.Windows.GetSystemColor(color));
 
         public static TextAlignment GetTextAlignment(this in DeviceContext context)
-            => Imports.GetTextAlign(context);
+            => GdiImports.GetTextAlign(context);
 
         public static TextAlignment SetTextAlignment(this in DeviceContext context, TextAlignment alignment)
-            => Imports.SetTextAlign(context, alignment);
+            => GdiImports.SetTextAlign(context, alignment);
 
         /// <summary>
         ///  Draws text utilizing the current selected font, background color, and text color. Uses the
         ///  current text alignment <see cref="SetTextAlignment(in DeviceContext, TextAlignment)"/>.
         /// </summary>
         public static bool TextOut(this in DeviceContext context, Point position, ReadOnlySpan<char> text)
-            => Imports.TextOutW(context, position.X, position.Y, ref MemoryMarshal.GetReference(text), text.Length);
+            => GdiImports.TextOutW(context, position.X, position.Y, ref MemoryMarshal.GetReference(text), text.Length);
 
         public static unsafe int DrawText(
             this in DeviceContext context,
@@ -50,7 +50,7 @@ namespace WInterop.Gdi
                 // The string won't be changed, we can just pin
                 fixed (char* c = text)
                 {
-                    return Imports.DrawTextW(context, c, text.Length, ref rect, format);
+                    return GdiImports.DrawTextW(context, c, text.Length, ref rect, format);
                 }
             }
 
@@ -58,14 +58,14 @@ namespace WInterop.Gdi
             text.CopyTo(buffer.AsSpan());
             fixed (char* c = buffer)
             {
-                int result = Imports.DrawTextW(context, c, text.Length, ref rect, format);
+                int result = GdiImports.DrawTextW(context, c, text.Length, ref rect, format);
                 ArrayPool<char>.Shared.Return(buffer);
                 return result;
             }
         }
 
         public static bool GetTextMetrics(this in DeviceContext context, out TextMetrics metrics)
-            => Imports.GetTextMetricsW(context, out metrics);
+            => GdiImports.GetTextMetricsW(context, out metrics);
 
         /// <summary>
         ///  Converts the requested point size to height based on the DPI of the given device context.
@@ -102,7 +102,7 @@ namespace WInterop.Gdi
              FontFamilyType family = FontFamilyType.DoNotCare,
              string? typeface = null)
         {
-            return new FontHandle(Imports.CreateFontW(
+            return new FontHandle(GdiImports.CreateFontW(
                 height,
                 width,
                 escapement,
@@ -145,7 +145,7 @@ namespace WInterop.Gdi
             GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);
             try
             {
-                int result = Imports.EnumFontFamiliesExW(context, ref logFont, EnumerateFontCallback, GCHandle.ToIntPtr(gch), 0);
+                int result = GdiImports.EnumFontFamiliesExW(context, ref logFont, EnumerateFontCallback, GCHandle.ToIntPtr(gch), 0);
             }
             finally
             {
@@ -158,7 +158,7 @@ namespace WInterop.Gdi
         public static unsafe LogicalFont GetLogicalFont(this FontHandle font)
         {
             Unsafe.SkipInit(out LogicalFont logFont);
-            Imports.GetObjectW(font, sizeof(LogicalFont), &logFont);
+            GdiImports.GetObjectW(font, sizeof(LogicalFont), &logFont);
             return logFont;
         }
     }

@@ -23,7 +23,7 @@ namespace WInterop.GdiPlus
         {
             GdiPlus.Init();
             Unsafe.SkipInit(out GpBrush gpBrush);
-            Imports.GdipCreateSolidFill(color, &gpBrush).ThrowIfFailed();
+            GdiPlusImports.GdipCreateSolidFill(color, &gpBrush).ThrowIfFailed();
             _gpBrush = gpBrush;
         }
 
@@ -31,7 +31,7 @@ namespace WInterop.GdiPlus
 
         private void Dispose(bool disposing)
         {
-            GpStatus status = Imports.GdipDeleteBrush(_gpBrush);
+            GpStatus status = GdiPlusImports.GdipDeleteBrush(_gpBrush);
             if (disposing)
             {
                 status.ThrowIfFailed();

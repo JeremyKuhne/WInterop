@@ -33,7 +33,7 @@ namespace WInterop.Gdi
         {
             if (_shouldDispose)
             {
-                Imports.DeleteObject(_brush);
+                GdiImports.DeleteObject(_brush);
             }
 
             GC.SuppressFinalize(this);

@@ -4,14 +4,16 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using WInterop.Com;
 using WInterop.Gdi.Native;
+using WInterop.GdiPlus.EmfPlus;
 
 namespace WInterop.GdiPlus.Native
 {
     /// <summary>
     ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
-    public static partial class Imports
+    public static partial class GdiPlusImports
     {
         // IMPORTANT: GDI+ may or may not set last error either implicitly or explicitly.
         // When the result is GpStatus.Win32Error it *may* have set the last error value
@@ -31,8 +33,8 @@ namespace WInterop.GdiPlus.Native
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern unsafe GpStatus GdiplusStartup(
             nuint** token,
-            GdiPlusStartupInput* input,
-            GdiPlusStartupOutput** output);
+            StartupInput* input,
+            StartupOutput** output);
 
         // https://docs.microsoft.com/windows/win32/api/gdiplusinit/nf-gdiplusinit-gdiplusshutdown
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
@@ -46,8 +48,17 @@ namespace WInterop.GdiPlus.Native
             GpGraphics* graphics);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipGetImageGraphicsContext(
+            GpImage image,
+            GpGraphics* graphics);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern GpStatus GdipDeleteGraphics(
             GpGraphics graphics);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern GpStatus GdipDisposeImage(
+            GpImage image);
 
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern GpStatus GdipSetSmoothingMode(
@@ -145,5 +156,53 @@ namespace WInterop.GdiPlus.Native
         // https://docs.microsoft.com/windows/win32/api/Gdiplusgraphics/nf-gdiplusgraphics-graphics-gethalftonepalette
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern HPALETTE GdipCreateHalftonePalette();
+
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipGetMetafileHeaderFromMetafile(
+            GpMetafile metafile,
+            MetafileHeader* header);
+
+        /// <remarks>
+        ///  Getting the metafile handle puts the GpMetafile in an invalid state.
+        /// </remarks>
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipGetHemfFromMetafile(
+            GpMetafile metafile,
+            out HENHMETAFILE hEmf);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern GpStatus GdipCreateMetafileFromStream(
+            IStream stream,
+            out GpMetafile metafile);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipRecordMetafileStream(
+            IStream stream,
+            HDC referenceHdc,
+            EmfType type,
+            RectangleF* frameRect,
+            MetafileFrameUnit frameUnit,
+            char* description,
+            out GpMetafile metafile);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipRecordMetafileStreamI(
+            IStream stream,
+            HDC referenceHdc,
+            EmfType type,
+            Rectangle* frameRect,
+            MetafileFrameUnit frameUnit,
+            char* description,
+            out GpMetafile metafile);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipEnumerateMetafileDestPoint(
+            GpGraphics graphics,
+            GpMetafile metafile,
+            ref PointF destPoint,
+            EnumerateMetafilePlusCallback callback,
+            IntPtr callbackData,
+            GpImageAttributes imageAttributes);
     }
 }

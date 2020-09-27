@@ -17,18 +17,18 @@ namespace WInterop.Gdi
 
         public BitmapHandle(HBITMAP handle, bool ownsHandle = true)
         {
-            Debug.Assert(handle.IsInvalid || Imports.GetObjectType(handle) == ObjectType.Bitmap);
+            Debug.Assert(handle.IsInvalid || GdiImports.GetObjectType(handle) == ObjectType.Bitmap);
 
             Handle = handle;
             _ownsHandle = ownsHandle;
         }
 
-        public bool IsInvalid => Handle.IsInvalid || Imports.GetObjectType(Handle) != ObjectType.Bitmap;
+        public bool IsInvalid => Handle.IsInvalid || GdiImports.GetObjectType(Handle) != ObjectType.Bitmap;
 
         public void Dispose()
         {
             if (_ownsHandle)
-                Imports.DeleteObject(Handle);
+                GdiImports.DeleteObject(Handle);
         }
 
         public static implicit operator HGDIOBJ(BitmapHandle handle) => handle.Handle;
