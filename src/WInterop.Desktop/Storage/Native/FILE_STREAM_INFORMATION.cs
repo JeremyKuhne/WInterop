@@ -19,6 +19,6 @@ namespace WInterop.Storage.Native
         public ulong StreamSize;
         public ulong StreamAllocationSize;
         private char _StreamName;
-        public ReadOnlySpan<char> StreamName => TrailingArray<char>.GetBufferInBytes(ref _StreamName, StreamNameLength);
+        public ReadOnlySpan<char> StreamName => TrailingArray<char>.GetBufferInBytes(in _StreamName, StreamNameLength);
     }
 }

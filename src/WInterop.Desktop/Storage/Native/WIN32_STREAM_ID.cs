@@ -27,6 +27,6 @@ namespace WInterop.Storage.Native
         public uint dwStreamNameSize;
 
         private char _cStreamName;
-        public ReadOnlySpan<char> cStreamName => TrailingArray<char>.GetBufferInBytes(ref _cStreamName, dwStreamNameSize);
+        public ReadOnlySpan<char> cStreamName => TrailingArray<char>.GetBufferInBytes(in _cStreamName, dwStreamNameSize);
     }
 }

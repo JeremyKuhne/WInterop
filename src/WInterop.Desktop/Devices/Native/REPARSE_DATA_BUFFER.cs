@@ -38,8 +38,8 @@ namespace WInterop.Devices.Native
             private readonly ushort PrintNameLength;
             public uint Flags;
             private char _PathBuffer;
-            public ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(ref _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
-            public ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(ref _PathBuffer, PrintNameLength, PrintNameOffset);
+            public ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
+            public ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, PrintNameLength, PrintNameOffset);
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -50,8 +50,8 @@ namespace WInterop.Devices.Native
             private readonly ushort PrintNameOffset;
             private readonly ushort PrintNameLength;
             private char _PathBuffer;
-            public ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(ref _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
-            public ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(ref _PathBuffer, PrintNameLength, PrintNameOffset);
+            public ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
+            public ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, PrintNameLength, PrintNameOffset);
         }
 
         public struct GenericReparseBuffer

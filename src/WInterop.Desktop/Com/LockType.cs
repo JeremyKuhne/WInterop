@@ -6,8 +6,8 @@ using System;
 namespace WInterop.Com
 {
     /// <summary>
-    ///  Locking type for <see cref="IStream.LockRegion(long, long, uint)"/> and
-    ///  ILockBytes.LockRegion. <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa380048.aspx"/>
+    ///  Locking type for <see cref="IStream.LockRegion(ulong, ulong, uint)"/> and
+    ///  ILockBytes.LockRegion. <see cref="https://docs.microsoft.com/windows/win32/api/objidl/ne-objidl-locktype"/>
     /// </summary>
     [Flags]
     public enum LockType : uint

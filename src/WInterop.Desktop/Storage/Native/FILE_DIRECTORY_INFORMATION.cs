@@ -21,6 +21,6 @@ namespace WInterop.Storage.Native
         public AllFileAttributes FileAttributes;
         public uint FileNameLength;
         private char _FileName;
-        public ReadOnlySpan<char> FileName => TrailingArray<char>.GetBufferInBytes(ref _FileName, FileNameLength);
+        public ReadOnlySpan<char> FileName => TrailingArray<char>.GetBufferInBytes(in _FileName, FileNameLength);
     }
 }

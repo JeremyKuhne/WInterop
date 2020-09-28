@@ -4,6 +4,8 @@
 using System;
 using System.Runtime.CompilerServices;
 
+#pragma warning disable SA1015 // Closing generic brackets should be spaced correctly
+
 namespace WInterop
 {
     /// <summary>
@@ -20,12 +22,22 @@ namespace WInterop
         private readonly T _firstItem;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ReadOnlySpan<T> GetBuffer(ref T first, uint count, uint offset = 0)
-            => Unsafe.As<T, TrailingArray<T>>(ref first).GetBuffer(count, offset);
+        public static unsafe ReadOnlySpan<T> GetBuffer(in T first, uint count, uint offset = 0)
+        {
+            fixed (void* p = &first)
+            {
+                return ((TrailingArray<T>*)p)->GetBuffer(count, offset);
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ReadOnlySpan<T> GetBufferInBytes(ref T first, uint countInBytes, uint offsetInBytes = 0)
-            => Unsafe.As<T, TrailingArray<T>>(ref first).GetBuffer(countInBytes / (uint)sizeof(T), offsetInBytes / (uint)sizeof(T));
+        public static unsafe ReadOnlySpan<T> GetBufferInBytes(in T first, uint countInBytes, uint offsetInBytes = 0)
+        {
+            fixed (void* p = &first)
+            {
+                return ((TrailingArray<T>*)p)->GetBuffer(countInBytes / (uint)sizeof(T), offsetInBytes / (uint)sizeof(T));
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe ReadOnlySpan<T> GetBuffer(uint count, uint offset = 0)
@@ -38,3 +50,5 @@ namespace WInterop
         }
     }
 }
+
+#pragma warning restore SA1015 // Closing generic brackets should be spaced correctly

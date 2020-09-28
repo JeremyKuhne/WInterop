@@ -10,6 +10,6 @@ namespace WInterop.Com.Native
         public TYPEDESC tdescElem;
         public ushort cDims;
         private SafeArrayBound _rgbounds;
-        public ReadOnlySpan<SafeArrayBound> rgbounds => TrailingArray<SafeArrayBound>.GetBuffer(ref _rgbounds, cDims);
+        public ReadOnlySpan<SafeArrayBound> rgbounds => TrailingArray<SafeArrayBound>.GetBuffer(in _rgbounds, cDims);
     }
 }

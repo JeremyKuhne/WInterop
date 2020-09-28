@@ -26,6 +26,6 @@ namespace WInterop.Gdi.Native
         private ushort _rdParm;
 
         public ReadOnlySpan<ushort> rdParam
-            => TrailingArray<ushort>.GetBuffer(ref _rdParm, rdSize - sizeof(uint) - sizeof(ushort));
+            => TrailingArray<ushort>.GetBuffer(in _rdParm, rdSize - sizeof(uint) - sizeof(ushort));
     }
 }

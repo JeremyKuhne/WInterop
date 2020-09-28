@@ -15,6 +15,6 @@ namespace WInterop.Storage.Native
         public byte EaNameLength;
         public ushort EaValueLength;
         private char _EaName;
-        public ReadOnlySpan<char> EaName => TrailingArray<char>.GetBufferInBytes(ref _EaName, EaNameLength);
+        public ReadOnlySpan<char> EaName => TrailingArray<char>.GetBufferInBytes(in _EaName, EaNameLength);
     }
 }

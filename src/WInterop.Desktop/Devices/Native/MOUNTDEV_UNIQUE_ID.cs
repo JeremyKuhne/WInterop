@@ -12,6 +12,6 @@ namespace WInterop.Devices
     {
         public ushort UniqueIdLength;
         private byte _UniqueId;
-        public ReadOnlySpan<byte> UniqueId => TrailingArray<byte>.GetBuffer(ref _UniqueId, UniqueIdLength);
+        public ReadOnlySpan<byte> UniqueId => TrailingArray<byte>.GetBuffer(in _UniqueId, UniqueIdLength);
     }
 }

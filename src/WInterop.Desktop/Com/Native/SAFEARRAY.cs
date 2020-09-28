@@ -15,6 +15,6 @@ namespace WInterop.Com.Native
 
         public SafeArrayBound _rgsabound;
 
-        public ReadOnlySpan<SafeArrayBound> rgsabound => TrailingArray<SafeArrayBound>.GetBuffer(ref _rgsabound, cDims);
+        public ReadOnlySpan<SafeArrayBound> rgsabound => TrailingArray<SafeArrayBound>.GetBuffer(in _rgsabound, cDims);
     }
 }

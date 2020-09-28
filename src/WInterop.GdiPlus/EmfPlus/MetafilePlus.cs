@@ -7,6 +7,7 @@ using System.Drawing.Internal;
 using System.IO;
 using WInterop.Com;
 using WInterop.Gdi;
+using WInterop.Gdi.Native;
 using WInterop.GdiPlus.Native;
 
 namespace WInterop.GdiPlus.EmfPlus
@@ -78,6 +79,16 @@ namespace WInterop.GdiPlus.EmfPlus
                 callback,
                 callbackData,
                 default).ThrowIfFailed();
+        }
+
+        /// <summary>
+        ///  Gets the Enhanced Metafile (EMF) for this EMF+. The <see cref="MetafilePlus"/> can not be used after
+        ///  calling this method.
+        /// </summary>
+        public Metafile GetMetafile()
+        {
+            GdiPlusImports.GdipGetHemfFromMetafile(this, out HENHMETAFILE hemf).ThrowIfFailed();
+            return new Metafile(hemf);
         }
 
         public static implicit operator GpMetafile(MetafilePlus metafile) => (GpMetafile)metafile._gpImage;

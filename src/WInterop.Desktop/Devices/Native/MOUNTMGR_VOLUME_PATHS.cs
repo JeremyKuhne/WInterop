@@ -12,6 +12,6 @@ namespace WInterop.Devices.Native
     {
         public uint MultiSzLength;
         private char _MultiSz;
-        public ReadOnlySpan<char> MultiSz => TrailingArray<char>.GetBufferInBytes(ref _MultiSz, MultiSzLength);
+        public ReadOnlySpan<char> MultiSz => TrailingArray<char>.GetBufferInBytes(in _MultiSz, MultiSzLength);
     }
 }

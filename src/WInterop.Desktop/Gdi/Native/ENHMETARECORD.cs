@@ -8,23 +8,31 @@ namespace WInterop.Gdi.Native
 {
     /// <docs>https://docs.microsoft.com/windows/win32/api/wingdi/ns-wingdi-enhmetarecord</docs>
     [StructLayout(LayoutKind.Sequential)]
-    public struct ENHMETARECORD
+    public readonly struct ENHMETARECORD
     {
-        public uint iType;
+        public readonly MetafileRecordType iType;
 
         /// <summary>
         ///  Record size, in bytes.
         /// </summary>
-        public uint nSize;
+        public readonly uint nSize;
 
         /// <summary>
         ///  Parameters.
         /// </summary>
-        private uint _dParm;
+        private readonly uint _dParm;
 
         public ReadOnlySpan<uint> dParam
             => TrailingArray<uint>.GetBuffer(
-                ref _dParm,
+                in _dParm,
                 (nSize - sizeof(uint) - sizeof(uint)) / sizeof(uint));
+
+        public unsafe ENHMETARECORD* GetNextRecord()
+        {
+            fixed (void* p = &iType)
+            {
+                return (ENHMETARECORD*)((byte*)p + nSize);
+            }
+        }
     }
 }

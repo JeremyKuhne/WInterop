@@ -25,11 +25,11 @@ namespace WInteropTests.GdiPlusTests
             using DeviceContext deviceContext = Gdi.GetDeviceContext();
             using Stream stream = new MemoryStream();
 
-            using (MetafilePlus record = new MetafilePlus(stream, deviceContext))
+            using (MetafilePlus record = new (stream, deviceContext))
             {
-                using Graphics graphics = new Graphics(record);
-                using Pen pen = new Pen(Color.Blue);
-                graphics.DrawRectangle(pen, new Rectangle(10, 10, 10, 10));
+                using Graphics graphics = new (record);
+                using Pen pen = new (Color.Blue);
+                graphics.DrawRectangle(pen, new (10, 10, 10, 10));
             }
 
             stream.Length.Should().Be(676);
@@ -43,16 +43,16 @@ namespace WInteropTests.GdiPlusTests
             using DeviceContext deviceContext = Gdi.GetDeviceContext();
             using Stream stream = new MemoryStream();
 
-            using (MetafilePlus record = new MetafilePlus(stream, deviceContext))
+            using (MetafilePlus record = new (stream, deviceContext))
             {
-                using Graphics graphics = new Graphics(record);
-                using Pen pen = new Pen(Color.Blue);
-                graphics.DrawRectangle(pen, new Rectangle(10, 10, 10, 10));
+                using Graphics graphics = new (record);
+                using Pen pen = new (Color.Blue);
+                graphics.DrawRectangle(pen, new (10, 10, 10, 10));
             }
 
-            using (MetafilePlus playback = new MetafilePlus(stream))
+            using (MetafilePlus playback = new (stream))
             {
-                using Graphics graphics = new Graphics(deviceContext);
+                using Graphics graphics = new (deviceContext);
                 MetafileHeader header;
                 GpStatus status = GdiPlusImports.GdipGetMetafileHeaderFromMetafile(playback, &header);
                 status.Should().Be(GpStatus.Ok);
@@ -63,7 +63,7 @@ namespace WInteropTests.GdiPlusTests
 
         [Theory]
         [MemberData(nameof(RecordTypesForEmfTypes))]
-        public void Enumerate_EmfType_RecordType(
+        public unsafe void Enumerate_EmfType_RecordType(
             EmfType emfType,
             RecordType[] recordTypes,
             MetafileRecordType[] emfRecordTypes)
@@ -71,21 +71,21 @@ namespace WInteropTests.GdiPlusTests
             GdiPlus.Initialize();
 
             using DeviceContext deviceContext = Gdi.GetDeviceContext();
-            using Stream stream = new MemoryStream();
+            using MemoryStream stream = new ();
 
-            using (MetafilePlus record = new MetafilePlus(stream, deviceContext, emfType))
+            using (MetafilePlus record = new (stream, deviceContext, emfType))
             {
-                using Graphics graphics = new Graphics(record);
-                using Pen pen = new Pen(Color.Blue);
-                graphics.DrawRectangle(pen, new Rectangle(10, 10, 10, 10));
+                using Graphics graphics = new (record);
+                using Pen pen = new (Color.Blue);
+                graphics.DrawRectangle(pen, new (10, 10, 10, 10));
             }
 
             List<RecordType> types = new ();
             List<MetafileRecordType> emfTypes = new ();
 
-            using (MetafilePlus playback = new MetafilePlus(stream))
+            using (MetafilePlus playback = new (stream))
             {
-                using Graphics graphics = new Graphics(deviceContext);
+                using Graphics graphics = new (deviceContext);
 
                 playback.Enumerate(
                     graphics,
@@ -101,7 +101,7 @@ namespace WInteropTests.GdiPlusTests
 
                 var status = GdiPlusImports.GdipGetHemfFromMetafile(playback, out HENHMETAFILE hemf);
 
-                using Metafile metafile = new Metafile(hemf);
+                using Metafile metafile = new (hemf);
                 metafile.Enumerate((ref MetafileRecord record, nint callbackParameter) =>
                 {
                     emfTypes.Add(record.RecordType);
@@ -110,6 +110,25 @@ namespace WInteropTests.GdiPlusTests
             }
 
             types.Should().BeEquivalentTo(recordTypes);
+            emfTypes.Should().BeEquivalentTo(emfRecordTypes);
+
+            // Now enumerate the raw data
+            emfTypes.Clear();
+
+            fixed (byte* b = stream.GetBuffer())
+            {
+                ENHMETAHEADER* emh = (ENHMETAHEADER*)b;
+                emh->iType.Should().Be(MetafileRecordType.Header);
+                int count = (int)emh->nRecords;
+
+                ENHMETARECORD* emr = (ENHMETARECORD*)b;
+                while (count-- > 0)
+                {
+                    emfTypes.Add(emr->iType);
+                    emr = (ENHMETARECORD*)((byte*)emr + emr->nSize);
+                }
+            }
+
             emfTypes.Should().BeEquivalentTo(emfRecordTypes);
         }
 
@@ -217,5 +236,107 @@ namespace WInteropTests.GdiPlusTests
                     }
                 },
             };
+
+        [Fact]
+        public unsafe void RawFileHeader()
+        {
+            GdiPlus.Initialize();
+
+            using DeviceContext deviceContext = Gdi.GetDeviceContext();
+            using MemoryStream stream = new ();
+
+            using (MetafilePlus record = new (stream, deviceContext))
+            {
+                using Graphics graphics = new (record);
+                using Pen pen = new (Color.Yellow);
+                graphics.DrawLine(pen, new (1, 1), new (3, 5));
+            }
+
+            fixed (byte* b = stream.GetBuffer())
+            {
+                ENHMETAHEADER* emh = (ENHMETAHEADER*)b;
+                emh->iType.Should().Be(MetafileRecordType.Header);
+                emh->nSize.Should().BeGreaterOrEqualTo((uint)sizeof(ENHMETAHEADER));
+                emh->nRecords.Should().Be(20);
+                emh->nVersion.Should().Be(65536);
+            }
+        }
+
+        [Fact]
+        public unsafe void GetMetafile()
+        {
+            GdiPlus.Initialize();
+
+            using DeviceContext deviceContext = Gdi.GetDeviceContext();
+            using MemoryStream stream = new();
+
+            using (MetafilePlus record = new(stream, deviceContext))
+            {
+                using Graphics graphics = new(record);
+                using Pen pen = new(Color.Yellow);
+                graphics.DrawLine(pen, new(1, 1), new(3, 5));
+            }
+
+            using (MetafilePlus playback = new(stream))
+            {
+                using Metafile metafile = playback.GetMetafile();
+
+                ENHMETAHEADER emh = default;
+
+                // Note that this API never copies back more data than the size of a header
+                GdiImports.GetEnhMetaFileHeader(metafile, (uint)sizeof(ENHMETAHEADER), &emh);
+
+                emh.iType.Should().Be(MetafileRecordType.Header);
+                emh.nSize.Should().BeGreaterOrEqualTo((uint)sizeof(ENHMETAHEADER));
+                emh.nRecords.Should().Be(20);
+                emh.nVersion.Should().Be(65536);
+            }
+        }
+
+        [Fact]
+        public unsafe void ParseGdiCommentRecords()
+        {
+            GdiPlus.Initialize();
+
+            using DeviceContext deviceContext = Gdi.GetDeviceContext();
+            using MemoryStream stream = new();
+
+            using (MetafilePlus record = new(stream, deviceContext, EmfType.EmfPlusDual))
+            {
+                using Graphics graphics = new(record);
+                using Pen pen = new(Color.Purple);
+                graphics.DrawLine(pen, new(1, 1), new(3, 5));
+            }
+
+            fixed (byte* b = stream.GetBuffer())
+            {
+                ENHMETAHEADER* emh = (ENHMETAHEADER*)b;
+                emh->iType.Should().Be(MetafileRecordType.Header);
+                int count = (int)emh->nRecords;
+
+                ENHMETARECORD* emr = (ENHMETARECORD*)b;
+                emr = emr->GetNextRecord();
+
+                emr->iType.Should().Be(MetafileRecordType.GdiComment);
+
+                emr->dParam[0].Should().Be(32);
+                emr->dParam[1].Should().Be(EMRGDICOMMENT.EMFPlusSignature);
+
+                MetafilePlusRecord* record = MetafilePlusRecord.GetFromMetafileComment((EMRGDICOMMENT*)emr);
+                record->Type.Should().Be(RecordType.EmfPlusHeader);
+                record->Size.Should().Be((uint)sizeof(MetafilePlusHeader)); // 28 bytes
+
+                emr = emr->GetNextRecord();
+                emr->iType.Should().Be(MetafileRecordType.GdiComment);
+
+                emr->dParam[0].Should().Be(76);
+
+                record = MetafilePlusRecord.GetFromMetafileComment((EMRGDICOMMENT*)emr);
+                record->Type.Should().Be(RecordType.EmfPlusObject);
+
+                MetafilePlusObject* @object = (MetafilePlusObject*)record;
+                @object->ObjectType.Should().Be(MetafilePlusObjectType.Pen);
+            }
+        }
     }
 }

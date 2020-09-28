@@ -25,6 +25,6 @@ namespace WInterop.Storage.Native
         private FixedString.Size12 _ShortName;
         public Span<char> ShortName => _ShortName.Buffer;
         private char _FileName;
-        public ReadOnlySpan<char> FileName => TrailingArray<char>.GetBufferInBytes(ref _FileName, FileNameLength);
+        public ReadOnlySpan<char> FileName => TrailingArray<char>.GetBufferInBytes(in _FileName, FileNameLength);
     }
 }

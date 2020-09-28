@@ -12,6 +12,6 @@ namespace WInterop.Devices.Native
     {
         public ushort DeviceNameLength;
         private char _DeviceName;
-        public ReadOnlySpan<char> DeviceName => TrailingArray<char>.GetBufferInBytes(ref _DeviceName, DeviceNameLength);
+        public ReadOnlySpan<char> DeviceName => TrailingArray<char>.GetBufferInBytes(in _DeviceName, DeviceNameLength);
     }
 }
