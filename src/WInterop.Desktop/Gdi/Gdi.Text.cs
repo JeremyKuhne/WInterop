@@ -72,7 +72,7 @@ namespace WInterop.Gdi
         /// </summary>
         public static int FontPointSizeToHeight(this in DeviceContext context, int pointSize)
         {
-            return Windows.Native.Imports.MulDiv(
+            return Windows.Native.WindowsImports.MulDiv(
                 pointSize,
                 GetDeviceCapability(context, DeviceCapability.LogicalPixelsY),
                 72);

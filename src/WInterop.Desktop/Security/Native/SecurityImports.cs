@@ -13,7 +13,7 @@ namespace WInterop.Security.Native
     /// <summary>
     ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
-    public static partial class Imports
+    public static partial class SecurityImports
     {
         // Advapi (Advanced API) provides Win32 security and registry calls and as such hosts most
         // of the Authorization APIs.

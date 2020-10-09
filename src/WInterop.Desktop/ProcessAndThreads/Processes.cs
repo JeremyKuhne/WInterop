@@ -25,7 +25,7 @@ namespace WInterop.ProcessAndThreads
             if (name is null) throw new ArgumentNullException(nameof(name));
 
             Error.ThrowLastErrorIfFalse(
-                Imports.SetEnvironmentVariableW(name, value),
+                ProcessAndThreadImports.SetEnvironmentVariableW(name, value),
                 name);
         }
 
@@ -43,7 +43,7 @@ namespace WInterop.ProcessAndThreads
                     fixed (char* n = name)
                     fixed (char* b = buffer)
                     {
-                        return Imports.GetEnvironmentVariableW(n, b, buffer.Length);
+                        return ProcessAndThreadImports.GetEnvironmentVariableW(n, b, buffer.Length);
                     }
                 },
                 detail: name,
@@ -56,7 +56,7 @@ namespace WInterop.ProcessAndThreads
         public static IDictionary<string, string> GetEnvironmentVariables()
         {
             var variables = new Dictionary<string, string>();
-            using (var buffer = Imports.GetEnvironmentStringsW())
+            using (var buffer = ProcessAndThreadImports.GetEnvironmentStringsW())
             {
                 if (buffer.IsInvalid) return variables;
 
@@ -82,7 +82,7 @@ namespace WInterop.ProcessAndThreads
         /// <remarks>Names can have an equals character as the first character. Be cautious when splitting or use GetEnvironmentVariables().</remarks>
         public static IEnumerable<string> GetEnvironmentStrings()
         {
-            using var buffer = Imports.GetEnvironmentStringsW();
+            using var buffer = ProcessAndThreadImports.GetEnvironmentStringsW();
             return buffer.IsInvalid
                 ? Enumerable.Empty<string>()
                 : Strings.SplitNullTerminatedStringList(buffer.DangerousGetHandle());
@@ -95,7 +95,7 @@ namespace WInterop.ProcessAndThreads
         public static unsafe ProcessMemoryCountersExtended GetProcessMemoryInfo(SafeProcessHandle? process = null)
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.K32GetProcessMemoryInfo(
+                ProcessAndThreadImports.K32GetProcessMemoryInfo(
                     process ?? GetCurrentProcess(),
                     out ProcessMemoryCountersExtended info,
                     (uint)sizeof(ProcessMemoryCountersExtended)));
@@ -108,7 +108,7 @@ namespace WInterop.ProcessAndThreads
         /// </summary>
         public static uint GetProcessId(SafeProcessHandle processHandle)
         {
-            return Imports.GetProcessId(processHandle);
+            return ProcessAndThreadImports.GetProcessId(processHandle);
         }
 
         /// <summary>
@@ -116,19 +116,19 @@ namespace WInterop.ProcessAndThreads
         ///  Note that this handle is only relevant in the current process- it
         ///  can't be passed to other processes.
         /// </summary>
-        public static ProcessHandle GetCurrentProcess() => Imports.GetCurrentProcess();
+        public static ProcessHandle GetCurrentProcess() => ProcessAndThreadImports.GetCurrentProcess();
 
         /// <summary>
         ///  Get the handle for the current process.
         /// </summary>
-        public static uint GetCurrentProcessId() => Imports.GetCurrentProcessId();
+        public static uint GetCurrentProcessId() => ProcessAndThreadImports.GetCurrentProcessId();
 
         /// <summary>
         ///  Open a handle to the specified process by id.
         /// </summary>
         public static SafeProcessHandle OpenProcess(uint processId, ProcessAccessRights desiredAccess, bool inheritHandle = false)
         {
-            SafeProcessHandle handle = Imports.OpenProcess(desiredAccess, inheritHandle, processId);
+            SafeProcessHandle handle = ProcessAndThreadImports.OpenProcess(desiredAccess, inheritHandle, processId);
             if (handle.IsInvalid)
                 Error.ThrowLastError();
             return handle;

@@ -12,7 +12,7 @@ namespace WInterop.Web
         public static ICoreWebView2Environment CreateWebView2Environment()
         {
             var handler = new CreateEnvironmentHandler();
-            Imports.CreateCoreWebView2Environment(handler).ThrowIfFailed();
+            WebImports.CreateCoreWebView2Environment(handler).ThrowIfFailed();
 
             // Imports.CreateCoreWebView2EnvironmentWithDetails(
             //    @"C:\Program Files (x86)\Microsoft\Edge\Application",

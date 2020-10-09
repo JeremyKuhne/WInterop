@@ -26,7 +26,7 @@ namespace WInterop.Windows
             MessageType message,
             WParam wParam = default,
             LParam lParam = default) where T : IHandle<WindowHandle>
-            => Imports.SendMessageW(window.Handle, message, wParam, lParam);
+            => WindowsImports.SendMessageW(window.Handle, message, wParam, lParam);
 
         public static FontHandle GetFont<T>(this T window, bool getSystemFontHandle = true)
             where T : IHandle<WindowHandle>

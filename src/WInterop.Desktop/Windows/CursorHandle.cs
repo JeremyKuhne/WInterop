@@ -27,7 +27,7 @@ namespace WInterop.Windows
         public void Dispose()
         {
             if (_ownsHandle)
-                Imports.DestroyCursor(HCURSOR);
+                WindowsImports.DestroyCursor(HCURSOR);
         }
 
         public static implicit operator HCURSOR(CursorHandle handle) => handle.HCURSOR;

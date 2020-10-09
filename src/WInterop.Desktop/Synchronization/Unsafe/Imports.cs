@@ -12,6 +12,7 @@ namespace WInterop.Synchronization.Native
     /// </summary>
     public static partial class Imports
     {
+        // https://docs.microsoft.com/windows/win32/api/synchapi/nf-synchapi-createeventw
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static unsafe extern EventHandle CreateEventW(
             SECURITY_ATTRIBUTES* lpEventAttributes,

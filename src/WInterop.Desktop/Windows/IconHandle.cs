@@ -28,7 +28,7 @@ namespace WInterop.Windows
         public void Dispose()
         {
             if (_ownsHandle)
-                Imports.DestroyIcon(HICON);
+                WindowsImports.DestroyIcon(HICON);
         }
 
         public static implicit operator HICON(IconHandle handle) => handle.HICON;

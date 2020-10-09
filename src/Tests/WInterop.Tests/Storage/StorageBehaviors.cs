@@ -177,7 +177,7 @@ namespace StorageTests
         {
             using (var cleaner = new TestFileCleaner())
             {
-                IntPtr result = Imports.FindFirstFileW(cleaner.TempFolder, out Win32FindData findData);
+                IntPtr result = StorageImports.FindFirstFileW(cleaner.TempFolder, out Win32FindData findData);
                 try
                 {
                     IsValid(result).Should().BeTrue("root location exists");
@@ -185,10 +185,10 @@ namespace StorageTests
                 finally
                 {
                     if (IsValid(result))
-                        Imports.FindClose(result);
+                        StorageImports.FindClose(result);
                 }
 
-                result = Imports.FindFirstFileW(cleaner.GetTestPath(), out findData);
+                result = StorageImports.FindFirstFileW(cleaner.GetTestPath(), out findData);
                 WindowsError error = Error.GetLastError();
 
                 try
@@ -199,10 +199,10 @@ namespace StorageTests
                 finally
                 {
                     if (IsValid(result))
-                        Imports.FindClose(result);
+                        StorageImports.FindClose(result);
                 }
 
-                result = Imports.FindFirstFileW(Path.Join(cleaner.GetTestPath(), "NotHere"), out findData);
+                result = StorageImports.FindFirstFileW(Path.Join(cleaner.GetTestPath(), "NotHere"), out findData);
                 error = Error.GetLastError();
 
                 try
@@ -213,7 +213,7 @@ namespace StorageTests
                 finally
                 {
                     if (IsValid(result))
-                        Imports.FindClose(result);
+                        StorageImports.FindClose(result);
                 }
             }
 
@@ -229,13 +229,13 @@ namespace StorageTests
             using var cleaner = new TestFileCleaner();
             Win32FileAttributeData attributeData = default;
 
-            bool success = Imports.GetFileAttributesExW(
+            bool success = StorageImports.GetFileAttributesExW(
                 cleaner.TempFolder,
                 GetFileExtendedInformationLevels.Standard,
                 ref attributeData);
             success.Should().BeTrue("root location exists");
 
-            success = Imports.GetFileAttributesExW(
+            success = StorageImports.GetFileAttributesExW(
                 cleaner.GetTestPath(),
                 GetFileExtendedInformationLevels.Standard,
                 ref attributeData);
@@ -243,7 +243,7 @@ namespace StorageTests
             success.Should().BeFalse("non-existant file");
             error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
 
-            success = Imports.GetFileAttributesExW(
+            success = StorageImports.GetFileAttributesExW(
                 Path.Join(cleaner.GetTestPath(), "NotHere"),
                 GetFileExtendedInformationLevels.Standard,
                 ref attributeData);
@@ -257,14 +257,14 @@ namespace StorageTests
         {
             string tempPath = Path.GetTempPath();
             Win32FileAttributeData attributeData = default;
-            bool success = Imports.GetFileAttributesExW(
+            bool success = StorageImports.GetFileAttributesExW(
                 tempPath,
                 GetFileExtendedInformationLevels.Standard,
                 ref attributeData);
             success.Should().BeTrue("can get temp folder attributes");
 
             // Try with a bad, non-existent subdir name
-            success = Imports.GetFileAttributesExW(
+            success = StorageImports.GetFileAttributesExW(
                 Path.Join(tempPath, @"""*"""),
                 GetFileExtendedInformationLevels.Standard,
                 ref attributeData);
@@ -273,7 +273,7 @@ namespace StorageTests
             error.Should().Be(WindowsError.ERROR_INVALID_NAME);
 
             // Try with a nested nonexistant subdir, with a bad subdir name
-            success = Imports.GetFileAttributesExW(
+            success = StorageImports.GetFileAttributesExW(
                 Path.Join(tempPath, Path.GetRandomFileName(), @"""*"""),
                 GetFileExtendedInformationLevels.Standard,
                 ref attributeData);
@@ -303,7 +303,7 @@ namespace StorageTests
             action.Should().Throw<UnauthorizedAccessException>();
 
             // Find file will work at this point.
-            IntPtr findHandle = Imports.FindFirstFileW(path, out Win32FindData findData);
+            IntPtr findHandle = StorageImports.FindFirstFileW(path, out Win32FindData findData);
             findHandle.Should().NotBe(IntPtr.Zero);
             try
             {
@@ -312,7 +312,7 @@ namespace StorageTests
             }
             finally
             {
-                Imports.FindClose(findHandle);
+                StorageImports.FindClose(findHandle);
             }
         }
 

@@ -24,7 +24,7 @@ namespace WInterop.SystemInformation
         public static void GetUserName(StringBuffer buffer)
         {
             uint sizeInChars = buffer.CharCapacity;
-            while (!Imports.GetUserNameW(buffer, ref sizeInChars))
+            while (!SystemInformationImports.GetUserNameW(buffer, ref sizeInChars))
             {
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                 buffer.EnsureCharCapacity(sizeInChars);
@@ -37,7 +37,7 @@ namespace WInterop.SystemInformation
         /// <summary>
         ///  Returns the suite mask for the OS which defines the "edition" of Windows.
         /// </summary>
-        public static SuiteMask GetSuiteMask() => Imports.RtlGetSuiteMask();
+        public static SuiteMask GetSuiteMask() => SystemInformationImports.RtlGetSuiteMask();
 
         /// <summary>
         ///  Gets the user name in the specified format. Returns null for formats that aren't mapped.
@@ -47,7 +47,7 @@ namespace WInterop.SystemInformation
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
-                while (!Imports.GetUserNameExW(format, buffer, ref size))
+                while (!SystemInformationImports.GetUserNameExW(format, buffer, ref size))
                 {
                     WindowsError error = Error.GetLastError();
                     switch (error)
@@ -75,7 +75,7 @@ namespace WInterop.SystemInformation
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
-                while (!Imports.GetComputerNameExW(format, buffer, ref size))
+                while (!SystemInformationImports.GetComputerNameExW(format, buffer, ref size))
                 {
                     Error.ThrowIfLastErrorNot(WindowsError.ERROR_MORE_DATA);
                     buffer.EnsureCharCapacity(size);
@@ -94,7 +94,8 @@ namespace WInterop.SystemInformation
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint size;
-                while ((size = Imports.ExpandEnvironmentStringsW(value, buffer, buffer.CharCapacity)) > buffer.CharCapacity)
+                while ((size = SystemInformationImports.ExpandEnvironmentStringsW(value, buffer, buffer.CharCapacity))
+                    > buffer.CharCapacity)
                 {
                     buffer.EnsureCharCapacity(size);
                 }
@@ -111,19 +112,19 @@ namespace WInterop.SystemInformation
         ///  Returns true if the specified processor feature is present.
         /// </summary>
         public static bool IsProcessorFeaturePresent(ProcessorFeature feature)
-            => Imports.IsProcessorFeaturePresent(feature);
+            => SystemInformationImports.IsProcessorFeaturePresent(feature);
 
         /// <summary>
         ///  Returns true if the user is currently opted in for the Customer Experience Improvement Program.
         /// </summary>
-        public static bool CeipIsOptedIn() => Imports.CeipIsOptedIn();
+        public static bool CeipIsOptedIn() => SystemInformationImports.CeipIsOptedIn();
 
         /// <summary>
         ///  Returns the performance counter frequency in counts per second.
         /// </summary>
         public static long QueryPerformanceFrequency()
         {
-            Imports.QueryPerformanceFrequency(out long frequency);
+            SystemInformationImports.QueryPerformanceFrequency(out long frequency);
             return frequency;
         }
 
@@ -132,7 +133,7 @@ namespace WInterop.SystemInformation
         /// </summary>
         public static long QueryPerformanceCounter()
         {
-            Imports.QueryPerformanceCounter(out long counts);
+            SystemInformationImports.QueryPerformanceCounter(out long counts);
             return counts;
         }
 
@@ -141,7 +142,7 @@ namespace WInterop.SystemInformation
         /// </summary>
         public static SystemTime GetLocalTime()
         {
-            Imports.GetLocalTime(out SystemTime time);
+            SystemInformationImports.GetLocalTime(out SystemTime time);
             return time;
         }
 
@@ -153,7 +154,7 @@ namespace WInterop.SystemInformation
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 uint size = buffer.CharCapacity;
-                while (!Imports.GetComputerNameW(buffer, ref size))
+                while (!SystemInformationImports.GetComputerNameW(buffer, ref size))
                 {
                     Error.ThrowIfLastErrorNot(WindowsError.ERROR_BUFFER_OVERFLOW);
                     buffer.EnsureCharCapacity(size);
@@ -170,7 +171,7 @@ namespace WInterop.SystemInformation
         public static unsafe OsVersionInfo GetVersionInfo()
         {
             OsVersionInfo info = new OsVersionInfo { OSVersionInfoSize = (uint)sizeof(OsVersionInfo) };
-            Imports.RtlGetVersion(ref info).ThrowIfFailed();
+            SystemInformationImports.RtlGetVersion(ref info).ThrowIfFailed();
             return info;
         }
     }

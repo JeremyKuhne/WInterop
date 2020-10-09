@@ -14,7 +14,7 @@ namespace WInterop.Windows
     {
         public static unsafe CursorHandle LoadCursor(CursorId id)
         {
-            HCURSOR handle = Imports.LoadCursorW(ModuleInstance.Null, (char*)(uint)id);
+            HCURSOR handle = WindowsImports.LoadCursorW(ModuleInstance.Null, (char*)(uint)id);
             if (handle.IsInvalid)
                 Error.ThrowLastError(id.ToString());
 
@@ -23,7 +23,7 @@ namespace WInterop.Windows
 
         public static CursorHandle LoadCursorFromFile(string path)
         {
-            HCURSOR handle = Imports.LoadCursorFromFileW(path);
+            HCURSOR handle = WindowsImports.LoadCursorFromFileW(path);
             if (handle.IsInvalid)
                 Error.ThrowLastError(path);
 
@@ -32,7 +32,7 @@ namespace WInterop.Windows
 
         public static CursorHandle SetCursor(CursorHandle cursor)
         {
-            return new CursorHandle(Imports.SetCursor(cursor), ownsHandle: false);
+            return new CursorHandle(WindowsImports.SetCursor(cursor), ownsHandle: false);
         }
 
         /// <summary>
@@ -41,16 +41,16 @@ namespace WInterop.Windows
         ///  on cursors loaded from resources before calling this method.
         /// </summary>
         public static void SetSystemCursor(CursorHandle cursor, SystemCursor id)
-            => Error.ThrowLastErrorIfFalse(Imports.SetSystemCursor(cursor, id));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.SetSystemCursor(cursor, id));
 
         public static int ShowCursor(bool show)
         {
-            return Imports.ShowCursor(show);
+            return WindowsImports.ShowCursor(show);
         }
 
         public static CursorHandle CopyCursor(CursorHandle cursor)
         {
-            CursorHandle copy = Imports.CopyCursor(cursor);
+            CursorHandle copy = WindowsImports.CopyCursor(cursor);
             if (copy.IsInvalid)
                 Error.ThrowLastError();
 
@@ -60,7 +60,7 @@ namespace WInterop.Windows
         public static Point GetCursorPosition()
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.GetCursorPos(out Point point));
+                WindowsImports.GetCursorPos(out Point point));
 
             return point;
         }
@@ -68,35 +68,35 @@ namespace WInterop.Windows
         public static Point GetPhysicalCursorPosition()
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.GetPhysicalCursorPos(out Point point));
+                WindowsImports.GetPhysicalCursorPos(out Point point));
 
             return point;
         }
 
         public static void SetCursorPosition(Point point)
-            => Error.ThrowLastErrorIfFalse(Imports.SetCursorPos(point.X, point.Y));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.SetCursorPos(point.X, point.Y));
 
         public static void SetPhysicalCursorPosition(Point point)
-            => Error.ThrowLastErrorIfFalse(Imports.SetPhysicalCursorPos(point.X, point.Y));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.SetPhysicalCursorPos(point.X, point.Y));
 
         public static void CreateCaret(this in WindowHandle window, BitmapHandle bitmap, Size size)
-            => Error.ThrowLastErrorIfFalse(Imports.CreateCaret(window, bitmap, size.Width, size.Height));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.CreateCaret(window, bitmap, size.Width, size.Height));
 
         public static void DestroyCaret()
-            => Error.ThrowLastErrorIfFalse(Imports.DestroyCaret());
+            => Error.ThrowLastErrorIfFalse(WindowsImports.DestroyCaret());
 
         public static void SetCaretPosition(Point point)
-            => Error.ThrowLastErrorIfFalse(Imports.SetCaretPos(point.X, point.Y));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.SetCaretPos(point.X, point.Y));
 
         public static void ShowCaret(this in WindowHandle window)
-            => Error.ThrowLastErrorIfFalse(Imports.ShowCaret(window));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.ShowCaret(window));
 
         public static void HideCaret(this in WindowHandle window)
-            => Error.ThrowLastErrorIfFalse(Imports.HideCaret(window));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.HideCaret(window));
 
         public static Rectangle GetClipCursor()
         {
-            Error.ThrowLastErrorIfFalse(Imports.GetClipCursor(out Rect rect));
+            Error.ThrowLastErrorIfFalse(WindowsImports.GetClipCursor(out Rect rect));
             return rect;
         }
     }

@@ -11,6 +11,7 @@ using WInterop.Registry;
 using WInterop.Security;
 using WInterop.Support;
 using WInterop.Support.Buffers;
+using WInterop.Shell.Native;
 
 namespace WInterop.Shell
 {
@@ -18,19 +19,30 @@ namespace WInterop.Shell
     {
         public static IPropertyDescriptionList GetPropertyDescriptionListFromString(string value)
         {
-            Imports.PSGetPropertyDescriptionListFromString(value, new Guid(InterfaceIds.IID_IPropertyDescriptionList), out IPropertyDescriptionList list)
-                .ThrowIfFailed();
+            ShellImports.PSGetPropertyDescriptionListFromString(
+                value,
+                new Guid(InterfaceIds.IID_IPropertyDescriptionList),
+                out IPropertyDescriptionList list).ThrowIfFailed();
+
             return list;
         }
 
-        public static RegistryKeyHandle AssocQueryKey(AssociationFlags flags, AssociationKey key, string association, string extraInfo)
+        public static RegistryKeyHandle AssocQueryKey(
+            AssociationFlags flags,
+            AssociationKey key,
+            string association,
+            string extraInfo)
         {
-            Imports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle)
+            ShellImports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle)
                 .ThrowIfFailed();
             return handle;
         }
 
-        public static string AssocQueryString(AssociationFlags flags, AssociationString @string, string association, string extraInfo)
+        public static string AssocQueryString(
+            AssociationFlags flags,
+            AssociationString @string,
+            string association,
+            string extraInfo)
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
@@ -38,7 +50,8 @@ namespace WInterop.Shell
 
                 HResult result;
                 uint count = buffer.CharCapacity;
-                while ((result = Imports.AssocQueryStringW(flags, @string, association, extraInfo, buffer, ref count)) == HResult.E_POINTER)
+                while ((result = ShellImports.AssocQueryStringW(flags, @string, association, extraInfo, buffer, ref count))
+                    == HResult.E_POINTER)
                 {
                     buffer.EnsureCharCapacity(count);
                 }
@@ -56,7 +69,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetKnownFolderPath(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
         {
-            Imports.SHGetKnownFolderPath(ref folderIdentifier, flags, EmptySafeHandle.Instance, out string path)
+            ShellImports.SHGetKnownFolderPath(ref folderIdentifier, flags, EmptySafeHandle.Instance, out string path)
                 .ThrowIfFailed();
 
             return path;
@@ -67,7 +80,7 @@ namespace WInterop.Shell
         /// </summary>
         public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
         {
-            Imports.SHGetKnownFolderIDList(ref folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id)
+            ShellImports.SHGetKnownFolderIDList(ref folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id)
                 .ThrowIfFailed();
 
             return id;
@@ -78,7 +91,7 @@ namespace WInterop.Shell
         /// </summary>
         public static string GetNameFromId(ItemIdList id, ShellItemDisplayNames form = ShellItemDisplayNames.NormalDisplay)
         {
-            Imports.SHGetNameFromIDList(id, form, out string name).ThrowIfFailed();
+            ShellImports.SHGetNameFromIDList(id, form, out string name).ThrowIfFailed();
             return name;
         }
 
@@ -123,8 +136,10 @@ namespace WInterop.Shell
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(Paths.MaxPath);
-                if (!Imports.PathUnExpandEnvStringsW(path, buffer, buffer.CharCapacity))
+                if (!ShellImports.PathUnExpandEnvStringsW(path, buffer, buffer.CharCapacity))
+                {
                     return null;
+                }
 
                 buffer.SetLengthToFirstNull();
                 return buffer.ToString();
@@ -139,7 +154,7 @@ namespace WInterop.Shell
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
-                while (!Imports.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
+                while (!ShellImports.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
                 {
                     Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                     buffer.EnsureCharCapacity(buffer.CharCapacity * 2);

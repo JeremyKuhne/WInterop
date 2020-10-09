@@ -29,7 +29,7 @@ namespace WInterop.Storage
         {
             void* buffer = _buffer.VoidPointer;
             Error.ThrowLastErrorIfFalse(
-                Imports.BackupRead(
+                StorageImports.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: buffer,
                     nNumberOfBytesToRead: s_headerSize,
@@ -46,7 +46,7 @@ namespace WInterop.Storage
             {
                 _buffer.EnsureByteCapacity(s_headerSize + streamId->dwStreamNameSize);
                 Error.ThrowLastErrorIfFalse(
-                    Imports.BackupRead(
+                    StorageImports.BackupRead(
                         hFile: _fileHandle,
                         lpBuffer: Pointers.Offset(buffer, s_headerSize),
                         nNumberOfBytesToRead: streamId->dwStreamNameSize,
@@ -59,7 +59,7 @@ namespace WInterop.Storage
             if (streamId->Size > 0)
             {
                 // Move to the next header, if any
-                if (!Imports.BackupSeek(
+                if (!StorageImports.BackupSeek(
                     hFile: _fileHandle,
                     dwLowBytesToSeek: uint.MaxValue,
                     dwHighBytesToSeek: int.MaxValue,
@@ -95,7 +95,7 @@ namespace WInterop.Storage
             if (_context != IntPtr.Zero)
             {
                 // Free the context memory
-                if (!Imports.BackupRead(
+                if (!StorageImports.BackupRead(
                     hFile: _fileHandle,
                     lpBuffer: null,
                     nNumberOfBytesToRead: 0,

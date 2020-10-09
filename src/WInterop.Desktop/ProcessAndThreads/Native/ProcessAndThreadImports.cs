@@ -10,7 +10,7 @@ namespace WInterop.ProcessAndThreads.Native
     /// <summary>
     ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
-    public static partial class Imports
+    public static partial class ProcessAndThreadImports
     {
         // https://docs.microsoft.com/windows/win32/api/processenv/nf-processenv-getenvironmentvariablew
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]

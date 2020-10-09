@@ -29,7 +29,7 @@ namespace WInterop.Storage
                 fixed (char* p = path)
                 fixed (char* c = buffer)
                 {
-                    return Imports.GetShortPathNameW(p, c, (uint)buffer.Length);
+                    return StorageImports.GetShortPathNameW(p, c, (uint)buffer.Length);
                 }
             }
 
@@ -48,7 +48,7 @@ namespace WInterop.Storage
         public static ByHandleFileInformation GetFileInformationByHandle(SafeFileHandle fileHandle)
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.GetFileInformationByHandle(fileHandle, out ByHandleFileInformation fileInformation));
+                StorageImports.GetFileInformationByHandle(fileHandle, out ByHandleFileInformation fileInformation));
 
             return fileInformation;
         }
@@ -58,7 +58,7 @@ namespace WInterop.Storage
         /// </summary>
         public static void CreateSymbolicLink(string symbolicLinkPath, string targetPath, bool targetIsDirectory = false)
         {
-            Error.ThrowLastErrorIfFalse(Imports.CreateSymbolicLinkW(
+            Error.ThrowLastErrorIfFalse(StorageImports.CreateSymbolicLinkW(
                 symbolicLinkPath,
                 targetPath,
                 targetIsDirectory ? SymbolicLinkFlag.Directory : SymbolicLinkFlag.File));
@@ -79,7 +79,7 @@ namespace WInterop.Storage
         {
             uint flags = (uint)fileAttributes | (uint)fileFlags | (uint)securityQosFlags;
 
-            SafeFileHandle handle = Imports.CreateFileW(
+            SafeFileHandle handle = StorageImports.CreateFileW(
                 path,
                 desiredAccess,
                 shareMode,
@@ -200,7 +200,7 @@ namespace WInterop.Storage
                     rootDirectory,
                     securityDescriptor: null,
                     securityQualityOfService: null);
-                Imports.NtCreateFile(
+                StorageImports.NtCreateFile(
                     out IntPtr handle,
                     desiredAccess,
                     ref attributes,
@@ -272,7 +272,7 @@ namespace WInterop.Storage
             bool cancel = false;
 
             Error.ThrowLastErrorIfFalse(
-                Imports.CopyFileExW(
+                StorageImports.CopyFileExW(
                     lpExistingFileName: source,
                     lpNewFileName: destination,
                     lpProgressRoutine: null,
@@ -328,7 +328,7 @@ namespace WInterop.Storage
                     // Add space for the FileNameLength
                     buffer.EnsureByteCapacity(byteLength + sizeof(uint));
 
-                    status = Imports.NtQueryInformationFile(
+                    status = StorageImports.NtQueryInformationFile(
                         fileHandle,
                         IoStatusBlock: out _,
                         FileInformation: buffer.VoidPointer,
@@ -350,7 +350,7 @@ namespace WInterop.Storage
 
         private static unsafe void GetFileInformation(SafeFileHandle fileHandle, FileInformationClass fileInformationClass, void* value, uint size)
         {
-            Imports.NtQueryInformationFile(
+            StorageImports.NtQueryInformationFile(
                 FileHandle: fileHandle,
                 IoStatusBlock: out _,
                 FileInformation: value,
@@ -400,7 +400,7 @@ namespace WInterop.Storage
                     nus = &temp;
                 }
 
-                return Imports.RtlIsNameInExpression(eus, nus, ignoreCase, IntPtr.Zero);
+                return StorageImports.RtlIsNameInExpression(eus, nus, ignoreCase, IntPtr.Zero);
             }
         }
 
@@ -410,7 +410,7 @@ namespace WInterop.Storage
         public static unsafe FileAccessRights GetRights(SafeFileHandle fileHandle)
         {
             FileAccessInformation access = default;
-            Imports.NtQueryInformationFile(
+            StorageImports.NtQueryInformationFile(
                 fileHandle,
                 IoStatusBlock: out _,
                 &access,
@@ -431,7 +431,7 @@ namespace WInterop.Storage
 
                 while (status == NTStatus.STATUS_INFO_LENGTH_MISMATCH)
                 {
-                    status = Imports.NtQueryInformationFile(
+                    status = StorageImports.NtQueryInformationFile(
                         fileHandle,
                         out IO_STATUS_BLOCK statusBlock,
                         buffer.VoidPointer,
@@ -475,7 +475,7 @@ namespace WInterop.Storage
                 uint result = 0;
 
                 // QueryDosDevicePrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-                while ((result = Imports.QueryDosDeviceW(deviceName, buffer, buffer.CharCapacity)) == 0)
+                while ((result = StorageImports.QueryDosDeviceW(deviceName, buffer, buffer.CharCapacity)) == 0)
                 {
                     WindowsError error = Error.GetLastError();
                     switch (error)
@@ -508,7 +508,7 @@ namespace WInterop.Storage
                 uint result = 0;
 
                 // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-                while ((result = Imports.GetLogicalDriveStringsW(buffer.CharCapacity, buffer)) > buffer.CharCapacity)
+                while ((result = StorageImports.GetLogicalDriveStringsW(buffer.CharCapacity, buffer)) > buffer.CharCapacity)
                 {
                     buffer.EnsureCharCapacity(result);
                 }
@@ -528,7 +528,7 @@ namespace WInterop.Storage
         {
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
-                while (!Imports.GetVolumePathNameW(path, buffer, buffer.CharCapacity))
+                while (!StorageImports.GetVolumePathNameW(path, buffer, buffer.CharCapacity))
                 {
                     WindowsError error = Error.GetLastError();
                     switch (error)
@@ -559,7 +559,7 @@ namespace WInterop.Storage
                 uint returnLength = 0;
 
                 // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-                while (!Imports.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
+                while (!StorageImports.GetVolumePathNamesForVolumeNameW(volumeName, buffer, buffer.CharCapacity, ref returnLength))
                 {
                     WindowsError error = Error.GetLastError();
                     switch (error)
@@ -597,7 +597,7 @@ namespace WInterop.Storage
             fixed (char* b = buffer)
             {
                 Error.ThrowLastErrorIfFalse(
-                    Imports.GetVolumeNameForVolumeMountPointW(
+                    StorageImports.GetVolumeNameForVolumeMountPointW(
                         Paths.AddTrailingSeparator(volumeMountPoint)!,
                         b,
                         (uint)buffer.Length));
@@ -649,18 +649,18 @@ namespace WInterop.Storage
         }
 
         public static void EncryptFile(string path)
-            => Error.ThrowLastErrorIfFalse(Imports.EncryptFileW(path), path);
+            => Error.ThrowLastErrorIfFalse(StorageImports.EncryptFileW(path), path);
 
         public static void DecryptFile(string path)
-            => Error.ThrowLastErrorIfFalse(Imports.DecryptFileW(path, 0), path);
+            => Error.ThrowLastErrorIfFalse(StorageImports.DecryptFileW(path, 0), path);
 
         public static unsafe IEnumerable<SID> QueryUsersOnEncryptedFile(string path)
         {
             ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
-            Imports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
+            StorageImports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
             if (hashList->nCert_Hash == 0)
             {
-                Imports.FreeEncryptionCertificateHashList(hashList);
+                StorageImports.FreeEncryptionCertificateHashList(hashList);
                 return Enumerable.Empty<SID>();
             }
 
@@ -672,14 +672,14 @@ namespace WInterop.Storage
                 users++;
             }
 
-            Imports.FreeEncryptionCertificateHashList(hashList);
+            StorageImports.FreeEncryptionCertificateHashList(hashList);
             return sids;
         }
 
         public static unsafe bool RemoveUser(in SID sid, string path)
         {
             ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
-            Imports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
+            StorageImports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
 
             try
             {
@@ -694,7 +694,7 @@ namespace WInterop.Storage
                             pUsers = &users
                         };
 
-                        Imports.RemoveUsersFromEncryptedFile(path, &removeList).ThrowIfFailed(path);
+                        StorageImports.RemoveUsersFromEncryptedFile(path, &removeList).ThrowIfFailed(path);
                         return true;
                     }
 
@@ -705,7 +705,7 @@ namespace WInterop.Storage
             }
             finally
             {
-                Imports.FreeEncryptionCertificateHashList(hashList);
+                StorageImports.FreeEncryptionCertificateHashList(hashList);
             }
         }
 
@@ -725,7 +725,7 @@ namespace WInterop.Storage
                 {
                     fixed (char* b = buffer)
                     {
-                        return Imports.GetTempPathW(buffer.Length, b);
+                        return StorageImports.GetTempPathW(buffer.Length, b);
                     }
                 });
         }
@@ -741,7 +741,7 @@ namespace WInterop.Storage
                     fixed (char* p = path)
                     fixed (char* b = buffer)
                     {
-                        return Imports.GetFullPathNameW(p, buffer.Length, b, null);
+                        return StorageImports.GetFullPathNameW(p, buffer.Length, b, null);
                     }
                 },
                 detail: path);
@@ -759,7 +759,7 @@ namespace WInterop.Storage
                 {
                     fixed (char* b = buffer)
                     {
-                        return Imports.GetFinalPathNameByHandleW(fileHandle, b, buffer.Length, flags);
+                        return StorageImports.GetFinalPathNameByHandleW(fileHandle, b, buffer.Length, flags);
                     }
                 });
         }
@@ -799,7 +799,7 @@ namespace WInterop.Storage
                     fixed (char* p = path)
                     fixed (char* b = buffer)
                     {
-                        return Imports.GetLongPathNameW(p, b, buffer.Length);
+                        return StorageImports.GetLongPathNameW(p, b, buffer.Length);
                     }
                 },
                 detail: path);
@@ -815,7 +815,7 @@ namespace WInterop.Storage
             return BufferHelper.BufferInvoke((StringBuffer buffer) =>
             {
                 buffer.EnsureCharCapacity(Paths.MaxPath);
-                uint result = Imports.GetTempFileNameW(
+                uint result = StorageImports.GetTempFileNameW(
                     lpPathName: path,
                     lpPrefixString: prefix,
                     uUnique: 0,
@@ -833,7 +833,7 @@ namespace WInterop.Storage
         ///  Delete the given file.
         /// </summary>
         public static void DeleteFile(string path)
-            => Error.ThrowLastErrorIfFalse(Imports.DeleteFileW(path), path);
+            => Error.ThrowLastErrorIfFalse(StorageImports.DeleteFileW(path), path);
 
         /// <summary>
         ///  Wrapper that allows getting a file stream using System.IO defines.
@@ -963,7 +963,7 @@ namespace WInterop.Storage
                 dwSecurityQosFlags = securityQosFlags
             };
 
-            SafeFileHandle handle = Imports.CreateFile2(
+            SafeFileHandle handle = StorageImports.CreateFile2(
                 lpFileName: ref MemoryMarshal.GetReference(path.GetSpanWithoutTerminator()),
                 dwDesiredAccess: desiredAccess,
                 dwShareMode: shareMode,
@@ -1021,7 +1021,7 @@ namespace WInterop.Storage
                 dwCopyFlags = overwrite ? 0 : CopyFileFlags.FailIfExists
             };
 
-            Imports.CopyFile2(source, destination, ref parameters).ThrowIfFailed();
+            StorageImports.CopyFile2(source, destination, ref parameters).ThrowIfFailed();
         }
 
         /// <summary>
@@ -1029,7 +1029,7 @@ namespace WInterop.Storage
         /// </summary>
         public static AllFileAttributes GetFileAttributes(string path)
         {
-            AllFileAttributes attributes = Imports.GetFileAttributesW(path);
+            AllFileAttributes attributes = StorageImports.GetFileAttributesW(path);
             if (attributes == AllFileAttributes.Invalid)
                 Error.ThrowLastError(path);
 
@@ -1043,7 +1043,7 @@ namespace WInterop.Storage
         {
             Win32FileAttributeData data = default;
             Error.ThrowLastErrorIfFalse(
-                Imports.GetFileAttributesExW(
+                StorageImports.GetFileAttributesExW(
                     path,
                     GetFileExtendedInformationLevels.Standard,
                     ref data),
@@ -1094,7 +1094,7 @@ namespace WInterop.Storage
         public static Win32FileAttributeData? TryGetFileInfo(string path)
         {
             Win32FileAttributeData data = default;
-            if (Imports.GetFileAttributesExW(
+            if (StorageImports.GetFileAttributesExW(
                 path,
                 GetFileExtendedInformationLevels.Standard,
                 ref data))
@@ -1119,14 +1119,14 @@ namespace WInterop.Storage
         /// </summary>
         public static void SetFileAttributes(string path, AllFileAttributes attributes)
             => Error.ThrowLastErrorIfFalse(
-                Imports.SetFileAttributesW(path, attributes),
+                StorageImports.SetFileAttributesW(path, attributes),
                 path);
 
         /// <summary>
         ///  Flush file buffers.
         /// </summary>
         public static void FlushFileBuffers(SafeFileHandle fileHandle)
-            => Error.ThrowLastErrorIfFalse(Imports.FlushFileBuffers(fileHandle));
+            => Error.ThrowLastErrorIfFalse(StorageImports.FlushFileBuffers(fileHandle));
 
         /// <summary>
         ///  Gets the file name from the given handle. This uses GetFileInformationByHandleEx, which does not give back
@@ -1142,7 +1142,7 @@ namespace WInterop.Storage
             {
                 unsafe
                 {
-                    while (!Imports.GetFileInformationByHandleEx(
+                    while (!StorageImports.GetFileInformationByHandleEx(
                         fileHandle,
                         FileInfoClass.FileNameInfo,
                         buffer.VoidPointer,
@@ -1164,7 +1164,7 @@ namespace WInterop.Storage
         {
             FileStandardInformation info;
             Error.ThrowLastErrorIfFalse(
-                Imports.GetFileInformationByHandleEx(
+                StorageImports.GetFileInformationByHandleEx(
                     fileHandle,
                     FileInfoClass.FileStandardInfo,
                     &info,
@@ -1179,7 +1179,7 @@ namespace WInterop.Storage
         {
             FileBasicInformation info;
             Error.ThrowLastErrorIfFalse(
-                Imports.GetFileInformationByHandleEx(
+                StorageImports.GetFileInformationByHandleEx(
                     fileHandle,
                     FileInfoClass.FileBasicInfo,
                     &info,
@@ -1194,7 +1194,7 @@ namespace WInterop.Storage
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {
-                while (!Imports.GetFileInformationByHandleEx(
+                while (!StorageImports.GetFileInformationByHandleEx(
                     fileHandle,
                     FileInfoClass.FileStreamInfo,
                     buffer.VoidPointer,
@@ -1237,12 +1237,12 @@ namespace WInterop.Storage
             {
                 OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
                 Error.ThrowLastErrorIfFalse(
-                    Imports.ReadFile(fileHandle, ref MemoryMarshal.GetReference(buffer), (uint)buffer.Length, out numberOfBytesRead, &overlapped));
+                    StorageImports.ReadFile(fileHandle, ref MemoryMarshal.GetReference(buffer), (uint)buffer.Length, out numberOfBytesRead, &overlapped));
             }
             else
             {
                 Error.ThrowLastErrorIfFalse(
-                    Imports.ReadFile(fileHandle, ref MemoryMarshal.GetReference(buffer), (uint)buffer.Length, out numberOfBytesRead, null));
+                    StorageImports.ReadFile(fileHandle, ref MemoryMarshal.GetReference(buffer), (uint)buffer.Length, out numberOfBytesRead, null));
             }
 
             return numberOfBytesRead;
@@ -1267,12 +1267,12 @@ namespace WInterop.Storage
             {
                 OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
                 Error.ThrowLastErrorIfFalse(
-                    Imports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, &overlapped));
+                    StorageImports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, &overlapped));
             }
             else
             {
                 Error.ThrowLastErrorIfFalse(
-                    Imports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, null));
+                    StorageImports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, null));
             }
 
             return numberOfBytesWritten;
@@ -1287,7 +1287,7 @@ namespace WInterop.Storage
         public static long SetFilePointer(SafeFileHandle fileHandle, long distance, MoveMethod moveMethod)
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.SetFilePointerEx(fileHandle, distance, out long position, moveMethod));
+                StorageImports.SetFilePointerEx(fileHandle, distance, out long position, moveMethod));
 
             return position;
         }
@@ -1306,7 +1306,7 @@ namespace WInterop.Storage
         public static long GetFileSize(SafeFileHandle fileHandle)
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.GetFileSizeEx(fileHandle, out long size));
+                StorageImports.GetFileSizeEx(fileHandle, out long size));
 
             return size;
         }
@@ -1316,7 +1316,7 @@ namespace WInterop.Storage
         /// </summary>
         public static FileType GetFileType(SafeFileHandle fileHandle)
         {
-            FileType fileType = Imports.GetFileType(fileHandle);
+            FileType fileType = StorageImports.GetFileType(fileHandle);
             if (fileType == FileType.Unknown)
                 Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
@@ -1368,7 +1368,7 @@ namespace WInterop.Storage
 
                 do
                 {
-                    while (!Imports.GetFileInformationByHandleEx(
+                    while (!StorageImports.GetFileInformationByHandleEx(
                         directoryHandle,
                         FileInfoClass.FileFullDirectoryInfo,
                         buffer.VoidPointer,
@@ -1449,7 +1449,7 @@ namespace WInterop.Storage
         /// </summary>
         public static void RemoveDirectory(string path)
             => Error.ThrowLastErrorIfFalse(
-                Imports.RemoveDirectoryW(path),
+                StorageImports.RemoveDirectoryW(path),
                 path);
 
         /// <summary>
@@ -1457,7 +1457,7 @@ namespace WInterop.Storage
         /// </summary>
         public static void CreateDirectory(string path)
             => Error.ThrowLastErrorIfFalse(
-                Imports.CreateDirectoryW(path, IntPtr.Zero),
+                StorageImports.CreateDirectoryW(path, IntPtr.Zero),
                 path);
 
         /// <summary>
@@ -1483,7 +1483,7 @@ namespace WInterop.Storage
             {
                 fixed (char* c = buffer)
                 {
-                    return Imports.GetCurrentDirectoryW((uint)buffer.Length, c);
+                    return StorageImports.GetCurrentDirectoryW((uint)buffer.Length, c);
                 }
             }
 
@@ -1501,14 +1501,14 @@ namespace WInterop.Storage
         /// </summary>
         public static void SetCurrentDirectory(StringSpan path)
             => Error.ThrowLastErrorIfFalse(
-                Imports.SetCurrentDirectoryW(ref MemoryMarshal.GetReference(path.GetSpanWithoutTerminator())),
+                StorageImports.SetCurrentDirectoryW(ref MemoryMarshal.GetReference(path.GetSpanWithoutTerminator())),
                 path.ToString());
 
         /// <summary>
         ///  Get the drive type for the given root path.
         /// </summary>
         public static DriveType GetDriveType(string? rootPath)
-            => Imports.GetDriveTypeW(Paths.AddTrailingSeparator(rootPath));
+            => StorageImports.GetDriveTypeW(Paths.AddTrailingSeparator(rootPath));
 
         /// <summary>
         ///  Gets volume information for the given volume root path.
@@ -1525,7 +1525,7 @@ namespace WInterop.Storage
             fixed (char* f = fileSystemName)
             {
                 Error.ThrowLastErrorIfFalse(
-                    Imports.GetVolumeInformationW(
+                    StorageImports.GetVolumeInformationW(
                         Paths.AddTrailingSeparator(rootPath),
                         v,
                         (uint)volumeName.Length,
@@ -1557,7 +1557,7 @@ namespace WInterop.Storage
             DiskFreeSpace freeSpace;
 
             Error.ThrowLastErrorIfFalse(
-                Imports.GetDiskFreeSpaceW(
+                StorageImports.GetDiskFreeSpaceW(
                     lpRootPathName: Paths.AddTrailingSeparator(rootPath),
                     lpSectorsPerCluster: &freeSpace.SectorsPerCluster,
                     lpBytesPerSector: &freeSpace.BytesPerSector,
@@ -1573,7 +1573,7 @@ namespace WInterop.Storage
             ExtendedDiskFreeSpace freeSpace;
 
             Error.ThrowLastErrorIfFalse(
-                Imports.GetDiskFreeSpaceExW(
+                StorageImports.GetDiskFreeSpaceExW(
                     lpDirectoryName: directory,
                     lpFreeBytesAvailable: &freeSpace.FreeBytesAvailable,
                     lpTotalNumberOfBytes: &freeSpace.TotalNumberOfBytes,
@@ -1593,7 +1593,7 @@ namespace WInterop.Storage
         /// </summary>
         public static LogicalDrives GetLogicalDrives()
         {
-            LogicalDrives drives = Imports.GetLogicalDrives();
+            LogicalDrives drives = StorageImports.GetLogicalDrives();
             if (drives == 0)
                 Error.GetLastError().Throw();
             return drives;

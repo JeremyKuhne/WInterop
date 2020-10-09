@@ -20,8 +20,14 @@
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <ItemGroup>
+    <Compile Remove="ProcessAndThreads\BufferWrappers\**" />
+    <Compile Remove="Storage\BufferWrappers\**" />
     <Compile Remove="Windows\BufferWrappers\**" />
+    <EmbeddedResource Remove="ProcessAndThreads\BufferWrappers\**" />
+    <EmbeddedResource Remove="Storage\BufferWrappers\**" />
     <EmbeddedResource Remove="Windows\BufferWrappers\**" />
+    <None Remove="ProcessAndThreads\BufferWrappers\**" />
+    <None Remove="Storage\BufferWrappers\**" />
     <None Remove="Windows\BufferWrappers\**" />
   </ItemGroup>
   <ItemGroup>
@@ -38,7 +44,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\BufferWrappers\" />
-    <Folder Include="ProcessAndThreads\BufferWrappers\" />
-    <Folder Include="Storage\BufferWrappers\" />
   </ItemGroup>
 </Project>

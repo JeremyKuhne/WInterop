@@ -15,7 +15,7 @@ namespace WInterop.Windows.Native
     /// <summary>
     ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
-    public static partial class Imports
+    public static partial class WindowsImports
     {
         // https://msdn.microsoft.com/library/windows/desktop/ms633515.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]

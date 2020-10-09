@@ -58,7 +58,7 @@ namespace WInterop.Security
                 throw new InvalidOperationException("The specified ACL isn't present on the Security Descriptor");
 
             EXPLICIT_ACCESS* entries;
-            Imports.GetExplicitEntriesFromAclW(systemAcl ? SACL : DACL, out uint count, &entries).ThrowIfFailed();
+            SecurityImports.GetExplicitEntriesFromAclW(systemAcl ? SACL : DACL, out uint count, &entries).ThrowIfFailed();
             return new ExplicitAccessEnumerable(entries, count);
         }
 
@@ -78,11 +78,11 @@ namespace WInterop.Security
             }
 
             ACL* newAcl;
-            Imports.SetEntriesInAclW(1, &ea, systemAcl ? SACL : DACL, &newAcl).ThrowIfFailed();
+            SecurityImports.SetEntriesInAclW(1, &ea, systemAcl ? SACL : DACL, &newAcl).ThrowIfFailed();
 
             try
             {
-                Imports.SetSecurityInfo(
+                SecurityImports.SetSecurityInfo(
                     _objectHandle,
                     _objectType,
                     systemAcl ? SecurityInformation.Sacl : SecurityInformation.Dacl,

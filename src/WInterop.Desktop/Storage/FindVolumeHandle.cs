@@ -17,7 +17,7 @@ namespace WInterop.Storage
 
         protected override bool ReleaseHandle()
         {
-            return Imports.FindVolumeClose(handle);
+            return StorageImports.FindVolumeClose(handle);
         }
     }
 }

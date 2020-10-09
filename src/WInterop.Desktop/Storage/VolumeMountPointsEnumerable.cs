@@ -74,7 +74,7 @@ namespace WInterop.Storage
                 // Need at least some length on initial call or we'll get ERROR_INVALID_PARAMETER
                 _buffer.EnsureCharCapacity(400);
 
-                _findHandle = Imports.FindFirstVolumeMountPointW(
+                _findHandle = StorageImports.FindFirstVolumeMountPointW(
                     _volumeName,
                     _buffer,
                     _buffer.CharCapacity);
@@ -108,7 +108,7 @@ namespace WInterop.Storage
                 if (_buffer == null)
                     throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
 
-                if (!Imports.FindNextVolumeMountPointW(_findHandle, _buffer, _buffer.CharCapacity))
+                if (!StorageImports.FindNextVolumeMountPointW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
                     WindowsError error = Error.GetLastError();
                     switch (error)

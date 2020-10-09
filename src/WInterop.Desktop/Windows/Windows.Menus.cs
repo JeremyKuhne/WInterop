@@ -11,7 +11,7 @@ namespace WInterop.Windows
     {
         public static MenuHandle CreateMenu()
         {
-            MenuHandle menu = new MenuHandle(Imports.CreateMenu(), ownsHandle: true);
+            MenuHandle menu = new MenuHandle(WindowsImports.CreateMenu(), ownsHandle: true);
             if (menu.IsInvalid)
                 Error.ThrowLastError();
             return menu;
@@ -26,7 +26,7 @@ namespace WInterop.Windows
             fixed (char* c = text)
             {
                 Error.ThrowLastErrorIfFalse(
-                    Imports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c));
+                    WindowsImports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c));
             }
         }
     }

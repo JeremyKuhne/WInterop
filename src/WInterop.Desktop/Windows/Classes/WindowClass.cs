@@ -108,7 +108,7 @@ namespace WInterop.Windows
                 if (!string.IsNullOrEmpty(_menuName))
                     _wndClass.lpszMenuName = menuName;
 
-                Atom atom = Imports.RegisterClassExW(ref _wndClass);
+                Atom atom = WindowsImports.RegisterClassExW(ref _wndClass);
                 if (!atom.IsValid)
                     Error.ThrowLastError();
                 Atom = atom;

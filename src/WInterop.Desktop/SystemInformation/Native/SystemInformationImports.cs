@@ -10,7 +10,7 @@ namespace WInterop.SystemInformation.Native
     /// <summary>
     ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
-    public static partial class Imports
+    public static partial class SystemInformationImports
     {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724432.aspx
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]

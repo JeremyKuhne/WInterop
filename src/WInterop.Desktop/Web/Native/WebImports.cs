@@ -10,7 +10,7 @@ namespace WInterop.Web.Native
     /// <summary>
     ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
-    public static partial class Imports
+    public static partial class WebImports
     {
         [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
         public static extern HResult CreateCoreWebView2EnvironmentWithDetails(

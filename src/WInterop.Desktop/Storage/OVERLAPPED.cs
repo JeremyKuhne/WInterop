@@ -6,19 +6,19 @@ using System;
 namespace WInterop.Synchronization
 {
     /// <summary>
-    ///  <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms684342.aspx">OVERLAPPED</a> structure.
+    ///  <a href="https://docs.microsoft.com/windows/win32/api/minwinbase/ns-minwinbase-overlapped">OVERLAPPED</a> structure.
     /// </summary>
     public struct OVERLAPPED
     {
         /// <summary>
         ///  Status code for the request. STATUS_PENDING until completed.
         /// </summary>
-        public UIntPtr Internal;
+        public nuint Internal;
 
         /// <summary>
         ///  Number of bytes written when completed without errors.
         /// </summary>
-        public UIntPtr InternalHigh;
+        public nuint InternalHigh;
 
         /// <summary>
         ///  The offset to read from if the file supports seeking. Must be zero otherwise.

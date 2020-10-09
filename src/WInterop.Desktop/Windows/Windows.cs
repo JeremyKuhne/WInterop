@@ -76,7 +76,7 @@ namespace WInterop.Windows
             catch
             {
                 // Hit the P/Invoke directly as we want to throw the original error.
-                Imports.DestroyWindow(mainWindow);
+                WindowsImports.DestroyWindow(mainWindow);
                 throw;
             }
         }
@@ -100,7 +100,7 @@ namespace WInterop.Windows
             catch
             {
                 // Hit the P/Invoke directly as we want to throw the original error.
-                Imports.DestroyWindow(window);
+                WindowsImports.DestroyWindow(window);
                 throw;
             }
         }
@@ -116,7 +116,7 @@ namespace WInterop.Windows
             ModuleInstance? instance = null,
             IntPtr parameters = default)
         {
-            WindowHandle window = Imports.CreateWindowExW(
+            WindowHandle window = WindowsImports.CreateWindowExW(
                 extendedStyle,
                 (char*)classAtom.ATOM,
                 windowName,
@@ -150,7 +150,7 @@ namespace WInterop.Windows
             WindowHandle window;
             fixed (char* name = className)
             {
-                window = Imports.CreateWindowExW(
+                window = WindowsImports.CreateWindowExW(
                     extendedStyle,
                     name,
                     windowName,
@@ -177,13 +177,13 @@ namespace WInterop.Windows
         /// <param name="frequency">Frequency in hertz.</param>
         /// <param name="duration">Duration in milliseconds.</param>
         public static void Beep(uint frequency, uint duration)
-            => Error.ThrowLastErrorIfFalse(Imports.Beep(frequency, duration));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.Beep(frequency, duration));
 
         /// <summary>
         ///  Play the specified sound (as defined in the Sound control panel).
         /// </summary>
         public static void MessageBeep(BeepType type = BeepType.SimpleBeep)
-            => Error.ThrowLastErrorIfFalse(Imports.MessageBeep(type));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.MessageBeep(type));
 
         public static SystemParameters SystemParameters => SystemParameters.Instance;
         public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
@@ -193,7 +193,7 @@ namespace WInterop.Windows
         /// </summary>
         public static Size GetDialogBaseUnits()
         {
-            int result = Imports.GetDialogBaseUnits();
+            int result = WindowsImports.GetDialogBaseUnits();
             return new Size(Conversion.LowWord(result), Conversion.HighWord(result));
         }
 
@@ -220,7 +220,7 @@ namespace WInterop.Windows
             MessageType message,
             WParam wParam = default,
             LParam lParam = default)
-            => Imports.CallWindowProcW(previous, window, message, wParam, lParam);
+            => WindowsImports.CallWindowProcW(previous, window, message, wParam, lParam);
 
         public static unsafe string GetClassName<T>(this T window) where T : IHandle<WindowHandle>
         {
@@ -229,17 +229,17 @@ namespace WInterop.Windows
                 {
                     fixed (char* b = buffer)
                     {
-                        return (uint)Imports.GetClassNameW(window.Handle, b, (int)buffer.Length);
+                        return (uint)WindowsImports.GetClassNameW(window.Handle, b, (int)buffer.Length);
                     }
                 },
                 ReturnSizeSemantics.BufferTruncates);
         }
 
-        public static WindowHandle GetFocus() => Imports.GetFocus();
+        public static WindowHandle GetFocus() => WindowsImports.GetFocus();
 
         public static WindowHandle SetFocus<T>(this T window) where T : IHandle<WindowHandle>
         {
-            WindowHandle prior = Imports.SetFocus(window.Handle);
+            WindowHandle prior = WindowsImports.SetFocus(window.Handle);
             if (prior.IsInvalid)
                 Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
@@ -247,34 +247,34 @@ namespace WInterop.Windows
         }
 
         public static bool IsWindow<T>(this T window) where T : IHandle<WindowHandle>
-            => Imports.IsWindow(window.Handle);
+            => WindowsImports.IsWindow(window.Handle);
 
         public static bool IsWindowVisible<T>(this T window) where T : IHandle<WindowHandle>
-            => Imports.IsWindowVisible(window.Handle);
+            => WindowsImports.IsWindowVisible(window.Handle);
 
         public static bool IsWindowUnicode<T>(this T window) where T : IHandle<WindowHandle>
-            => Imports.IsWindowUnicode(window.Handle);
+            => WindowsImports.IsWindowUnicode(window.Handle);
 
         /// <summary>
         ///  Get the top child window in the specified window. If passed a null window
         ///  finds the window at the top of the Z order.
         /// </summary>
         public static WindowHandle GetTopWindow<T>(this T window) where T : IHandle<WindowHandle>
-            => Imports.GetTopWindow(window.Handle);
+            => WindowsImports.GetTopWindow(window.Handle);
 
-        public static WindowHandle GetForegroundWindow() => Imports.GetForegroundWindow();
+        public static WindowHandle GetForegroundWindow() => WindowsImports.GetForegroundWindow();
 
-        public static WindowHandle GetShellWindow() => Imports.GetShellWindow();
+        public static WindowHandle GetShellWindow() => WindowsImports.GetShellWindow();
 
-        public static WindowHandle GetActiveWindow() => Imports.GetActiveWindow();
+        public static WindowHandle GetActiveWindow() => WindowsImports.GetActiveWindow();
 
         /// <summary>
         ///  Gets the specified related Window to get given Window if it exists. Otherwise returns a null WindowHandle.
         /// </summary>
         public static WindowHandle GetWindow<T>(this T window, GetWindowOption option) where T : IHandle<WindowHandle>
-            => Imports.GetWindow(window.Handle, option);
+            => WindowsImports.GetWindow(window.Handle, option);
 
-        public static WindowHandle GetDesktopWindow() => Imports.GetDesktopWindow();
+        public static WindowHandle GetDesktopWindow() => WindowsImports.GetDesktopWindow();
 
         /// <summary>
         ///  Gets the parent window for the given window.
@@ -284,7 +284,7 @@ namespace WInterop.Windows
         /// </returns>
         public static WindowHandle GetParent<T>(this T window) where T : IHandle<WindowHandle>
         {
-            WindowHandle parent = Imports.GetParent(window.Handle);
+            WindowHandle parent = WindowsImports.GetParent(window.Handle);
             if (parent.IsNull)
             {
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -299,7 +299,7 @@ namespace WInterop.Windows
         /// <param name="convertToGuiIfFalse">Tries to convert the thread to a GUI thread if it isn't already.</param>
         public static bool IsGuiThread(bool convertToGuiIfFalse = false)
         {
-            int result = Imports.IsGUIThread(convertToGuiIfFalse);
+            int result = WindowsImports.IsGUIThread(convertToGuiIfFalse);
             return result != 0
                 && !convertToGuiIfFalse | result != (int)WindowsError.ERROR_NOT_ENOUGH_MEMORY;
         }
@@ -313,7 +313,7 @@ namespace WInterop.Windows
             using (WindowClassInfo.Marshaller marshaller = default)
             {
                 marshaller.FillNative(out WNDCLASSEX native, ref windowClass);
-                atom = Imports.RegisterClassExW(ref native);
+                atom = WindowsImports.RegisterClassExW(ref native);
                 if (!atom.IsValid)
                     Error.ThrowLastError();
             }
@@ -326,7 +326,7 @@ namespace WInterop.Windows
         /// </summary>
         public static void UnregisterClass(Atom atom, ModuleInstance? module = null)
         {
-            if (!Imports.UnregisterClassW(atom, module ?? ModuleInstance.Null))
+            if (!WindowsImports.UnregisterClassW(atom, module ?? ModuleInstance.Null))
                 Error.ThrowLastError();
         }
 
@@ -341,13 +341,13 @@ namespace WInterop.Windows
             fixed (char* name = className)
             {
                 Error.ThrowLastErrorIfFalse(
-                    Imports.UnregisterClassW((IntPtr)name, module ?? ModuleInstance.Null),
+                    WindowsImports.UnregisterClassW((IntPtr)name, module ?? ModuleInstance.Null),
                     className);
             }
         }
 
         public static void DestroyWindow<T>(this T window) where T : IHandle<WindowHandle>
-            => Error.ThrowLastErrorIfFalse(Imports.DestroyWindow(window.Handle));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.DestroyWindow(window.Handle));
 
         public static IntPtr GetWindowLong<T>(this T window, WindowLong index) where T : IHandle<WindowHandle>
         {
@@ -355,8 +355,8 @@ namespace WInterop.Windows
             Error.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Environment.Is64BitProcess
-                ? (IntPtr)Imports.GetWindowLongPtrW(window.Handle, index)
-                : (IntPtr)Imports.GetWindowLongW(window.Handle, index);
+                ? (IntPtr)WindowsImports.GetWindowLongPtrW(window.Handle, index)
+                : (IntPtr)WindowsImports.GetWindowLongW(window.Handle, index);
 
             if (result == IntPtr.Zero)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -371,8 +371,8 @@ namespace WInterop.Windows
             Error.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Environment.Is64BitProcess
-                ? (IntPtr)Imports.SetWindowLongPtrW(window.Handle, index, value.ToInt64())
-                : (IntPtr)Imports.SetWindowLongW(window.Handle, index, value.ToInt32());
+                ? (IntPtr)WindowsImports.SetWindowLongPtrW(window.Handle, index, value.ToInt64())
+                : (IntPtr)WindowsImports.SetWindowLongW(window.Handle, index, value.ToInt32());
 
             if (result == IntPtr.Zero)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -397,7 +397,7 @@ namespace WInterop.Windows
 
                 fixed (char* c = buffer)
                 {
-                    result = Imports.GetWindowTextW(window.Handle, c, buffer.Length);
+                    result = WindowsImports.GetWindowTextW(window.Handle, c, buffer.Length);
                 }
 
                 if (result == 0)
@@ -412,7 +412,7 @@ namespace WInterop.Windows
         }
 
         public static void SetWindowText<T>(this T window, string text) where T : IHandle<WindowHandle>
-            => Error.ThrowLastErrorIfFalse(Imports.SetWindowTextW(window.Handle, text));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.SetWindowTextW(window.Handle, text));
 
         public static IntPtr GetClassLong<T>(this T window, ClassLong index) where T : IHandle<WindowHandle>
         {
@@ -420,8 +420,8 @@ namespace WInterop.Windows
             Error.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Environment.Is64BitProcess
-                ? (IntPtr)Imports.GetClassLongPtrW(window.Handle, index)
-                : (IntPtr)Imports.GetClassLongW(window.Handle, index);
+                ? (IntPtr)WindowsImports.GetClassLongPtrW(window.Handle, index)
+                : (IntPtr)WindowsImports.GetClassLongW(window.Handle, index);
 
             if (result == IntPtr.Zero)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -437,8 +437,8 @@ namespace WInterop.Windows
             Error.SetLastError(WindowsError.NO_ERROR);
 
             IntPtr result = Environment.Is64BitProcess
-                ? (IntPtr)Imports.SetClassLongPtrW(window.Handle, index, value.ToInt64())
-                : (IntPtr)Imports.SetClassLongW(window.Handle, index, value.ToInt32());
+                ? (IntPtr)WindowsImports.SetClassLongPtrW(window.Handle, index, value.ToInt64())
+                : (IntPtr)WindowsImports.SetClassLongW(window.Handle, index, value.ToInt32());
 
             if (result == IntPtr.Zero)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -465,7 +465,7 @@ namespace WInterop.Windows
         public static bool ShowWindow<T>(this T window, ShowWindowCommand command)
             where T : IHandle<WindowHandle>
         {
-            return Imports.ShowWindow(window.Handle, command);
+            return WindowsImports.ShowWindow(window.Handle, command);
         }
 
         /// <summary>
@@ -475,7 +475,7 @@ namespace WInterop.Windows
         public static void MoveWindow<T>(this T window, Rectangle position, bool repaint)
             where T : IHandle<WindowHandle>
             => Error.ThrowLastErrorIfFalse(
-                Imports.MoveWindow(window.Handle, position.X, position.Y, position.Width, position.Height, repaint));
+                WindowsImports.MoveWindow(window.Handle, position.X, position.Y, position.Width, position.Height, repaint));
 
         /// <summary>
         ///  Dispatches sent messages, waiting for the next message in the calling thread's message queue.
@@ -491,7 +491,7 @@ namespace WInterop.Windows
             MessageType minMessage = MessageType.Null,
             MessageType maxMessage = MessageType.Null)
         {
-            IntBoolean result = Imports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
+            IntBoolean result = WindowsImports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
 
             // One special case here is -1 for an error
             if (result.RawValue == -1)
@@ -507,21 +507,21 @@ namespace WInterop.Windows
             uint maxMessage = 0,
             PeekMessageOptions options = PeekMessageOptions.NoRemove)
         {
-            return Imports.PeekMessageW(out message, window, minMessage, maxMessage, options);
+            return WindowsImports.PeekMessageW(out message, window, minMessage, maxMessage, options);
         }
 
-        public static bool TranslateMessage(ref WindowMessage message) => Imports.TranslateMessage(ref message);
+        public static bool TranslateMessage(ref WindowMessage message) => WindowsImports.TranslateMessage(ref message);
 
-        public static bool DispatchMessage(ref WindowMessage message) => Imports.DispatchMessageW(ref message);
+        public static bool DispatchMessage(ref WindowMessage message) => WindowsImports.DispatchMessageW(ref message);
 
         public static LResult DefaultWindowProcedure<T>(
             this T window,
             MessageType message,
             WParam wParam,
             LParam lParam) where T : IHandle<WindowHandle>
-            => Imports.DefWindowProcW(window.Handle, message, wParam, lParam);
+            => WindowsImports.DefWindowProcW(window.Handle, message, wParam, lParam);
 
-        public static void PostQuitMessage(int exitCode) => Imports.PostQuitMessage(exitCode);
+        public static void PostQuitMessage(int exitCode) => WindowsImports.PostQuitMessage(exitCode);
 
         /// <summary>
         ///  Returns the logical client coordinates of the given <paramref name="window"/>.
@@ -530,7 +530,7 @@ namespace WInterop.Windows
             where T : IHandle<WindowHandle>
         {
             Unsafe.SkipInit(out Rect rect);
-            Error.ThrowLastErrorIfFalse(Imports.GetClientRect(window.Handle, &rect));
+            Error.ThrowLastErrorIfFalse(WindowsImports.GetClientRect(window.Handle, &rect));
             return rect;
         }
 
@@ -541,7 +541,7 @@ namespace WInterop.Windows
         public static Rectangle GetWindowRectangle<T>(this T window) where T : IHandle<WindowHandle>
         {
             Rect rect = default;
-            Error.ThrowLastErrorIfFalse(Imports.GetWindowRect(window.Handle, ref rect));
+            Error.ThrowLastErrorIfFalse(WindowsImports.GetWindowRect(window.Handle, ref rect));
             return rect;
         }
 
@@ -549,13 +549,13 @@ namespace WInterop.Windows
             where T : IHandle<WindowHandle>
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.SetScrollRange(window.Handle, scrollBar, min, max, redraw));
+                WindowsImports.SetScrollRange(window.Handle, scrollBar, min, max, redraw));
         }
 
         public static int SetScrollPosition<T>(this T window, ScrollBar scrollBar, int position, bool redraw)
             where T : IHandle<WindowHandle>
         {
-            int result = Imports.SetScrollPos(window.Handle, scrollBar, position, redraw);
+            int result = WindowsImports.SetScrollPos(window.Handle, scrollBar, position, redraw);
 
             // There appears to be a bug in the V6 common controls where they set ERROR_ACCESSDENIED. Clearing
             // LastError doesn't help. Skip error checking if we've set position 0.
@@ -572,14 +572,14 @@ namespace WInterop.Windows
             bool redraw) where T : IHandle<WindowHandle>
         {
             scrollInfo.Size = (uint)sizeof(ScrollInfo);
-            int result = Imports.SetScrollInfo(window.Handle, scrollBar, ref scrollInfo, redraw);
+            int result = WindowsImports.SetScrollInfo(window.Handle, scrollBar, ref scrollInfo, redraw);
 
             return result;
         }
 
         public static int GetScrollPosition<T>(this T window, ScrollBar scrollBar) where T : IHandle<WindowHandle>
         {
-            int result = Imports.GetScrollPos(window.Handle, scrollBar);
+            int result = WindowsImports.GetScrollPos(window.Handle, scrollBar);
             if (result == 0)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
@@ -590,13 +590,13 @@ namespace WInterop.Windows
             where T : IHandle<WindowHandle>
         {
             scrollInfo.Size = (uint)sizeof(ScrollInfo);
-            Error.ThrowLastErrorIfFalse(Imports.GetScrollInfo(window.Handle, scrollBar, ref scrollInfo));
+            Error.ThrowLastErrorIfFalse(WindowsImports.GetScrollInfo(window.Handle, scrollBar, ref scrollInfo));
         }
 
         public static unsafe int ScrollWindow<T>(this T window, Point delta)
             where T : IHandle<WindowHandle>
         {
-            int result = Imports.ScrollWindowEx(
+            int result = WindowsImports.ScrollWindowEx(
                 window.Handle,
                 delta.X,
                 delta.Y,
@@ -618,7 +618,7 @@ namespace WInterop.Windows
             Rect scrollRect = scroll;
             Rect clipRect = clip;
 
-            int result = Imports.ScrollWindowEx(
+            int result = WindowsImports.ScrollWindowEx(
                 window.Handle,
                 delta.X,
                 delta.Y,
@@ -636,7 +636,7 @@ namespace WInterop.Windows
 
         public static KeyboardType GetKeyboardType()
         {
-            int result = Imports.GetKeyboardType(0);
+            int result = WindowsImports.GetKeyboardType(0);
             if (result == 0)
                 Error.ThrowLastError();
 
@@ -648,7 +648,7 @@ namespace WInterop.Windows
             // Although not documented this API does not appear to clear last error
             Errors.Native.Imports.SetLastError(WindowsError.ERROR_SUCCESS);
 
-            int result = Imports.GetKeyboardType(1);
+            int result = WindowsImports.GetKeyboardType(1);
             if (result == 0)
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
 
@@ -657,14 +657,14 @@ namespace WInterop.Windows
 
         public static int GetKeyboardFunctionKeyCount()
         {
-            int result = Imports.GetKeyboardType(2);
+            int result = WindowsImports.GetKeyboardType(2);
             if (result == 0)
                 Error.ThrowLastError();
 
             return result;
         }
 
-        public static KeyState GetKeyState(VirtualKey key) => Imports.GetKeyState(key);
+        public static KeyState GetKeyState(VirtualKey key) => WindowsImports.GetKeyState(key);
 
         public static unsafe string GetKeyNameText(LParam lParam)
         {
@@ -673,7 +673,7 @@ namespace WInterop.Windows
                 {
                     fixed (char* b = buffer)
                     {
-                        return checked((uint)Imports.GetKeyNameTextW(lParam, b, (int)buffer.Length));
+                        return checked((uint)WindowsImports.GetKeyNameTextW(lParam, b, (int)buffer.Length));
                     }
                 },
                 ReturnSizeSemantics.BufferTruncates,
@@ -685,17 +685,17 @@ namespace WInterop.Windows
 
         public static WindowHandle GetDialogItem<T>(this T window, int id) where T : IHandle<WindowHandle>
         {
-            WindowHandle control = Imports.GetDlgItem(window.Handle, id);
+            WindowHandle control = WindowsImports.GetDlgItem(window.Handle, id);
             if (control.IsInvalid)
                 Error.ThrowLastError();
             return control;
         }
 
         public static WindowHandle SetCapture<T>(this T window) where T : IHandle<WindowHandle>
-            => Imports.SetCapture(window.Handle);
+            => WindowsImports.SetCapture(window.Handle);
 
         public static void ReleaseCapture()
-            => Error.ThrowLastErrorIfFalse(Imports.ReleaseCapture());
+            => Error.ThrowLastErrorIfFalse(WindowsImports.ReleaseCapture());
 
         public static TimerId SetTimer<T>(
             this T window,
@@ -704,7 +704,7 @@ namespace WInterop.Windows
             TimerProcedure? callback = null,
             uint delayTolerance = 0) where T : IHandle<WindowHandle>
         {
-            TimerId result = Imports.SetCoalescableTimer(window.Handle, id, interval, callback, delayTolerance);
+            TimerId result = WindowsImports.SetCoalescableTimer(window.Handle, id, interval, callback, delayTolerance);
             if (result == TimerId.Null)
                 Error.ThrowLastError();
 
@@ -712,14 +712,14 @@ namespace WInterop.Windows
         }
 
         public static void KillTimer<T>(this T window, TimerId id) where T : IHandle<WindowHandle>
-            => Error.ThrowLastErrorIfFalse(Imports.KillTimer(window.Handle, id));
+            => Error.ThrowLastErrorIfFalse(WindowsImports.KillTimer(window.Handle, id));
 
-        public static Color GetSystemColor(SystemColor systemColor) => Imports.GetSysColor(systemColor);
+        public static Color GetSystemColor(SystemColor systemColor) => WindowsImports.GetSysColor(systemColor);
 
         /// <summary>
         ///  Gets the value for the given system metric.
         /// </summary>
-        public static int GetSystemMetrics(SystemMetric metric) => Imports.GetSystemMetrics(metric);
+        public static int GetSystemMetrics(SystemMetric metric) => WindowsImports.GetSystemMetrics(metric);
 
         public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.Ok)
         {
@@ -733,7 +733,7 @@ namespace WInterop.Windows
             MessageBoxType type = MessageBoxType.Ok)
             where T : IHandle<WindowHandle>
         {
-            CommandId result = Imports.MessageBoxExW(owner.Handle, text, caption, type, 0);
+            CommandId result = WindowsImports.MessageBoxExW(owner.Handle, text, caption, type, 0);
             if (result == CommandId.Error)
                 Error.ThrowLastError();
 
@@ -743,7 +743,7 @@ namespace WInterop.Windows
         public static WindowClassInfo GetClassInfo(this ModuleInstance instance, Atom atom)
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, atom, out WNDCLASSEX wndClass));
+                WindowsImports.GetClassInfoExW(instance ?? ModuleInstance.Null, atom, out WNDCLASSEX wndClass));
 
             return wndClass;
         }
@@ -753,7 +753,7 @@ namespace WInterop.Windows
             WNDCLASSEX wndClass;
 
             fixed (char* c = className)
-                Error.ThrowLastErrorIfFalse(Imports.GetClassInfoExW(instance ?? ModuleInstance.Null, (IntPtr)c, out wndClass));
+                Error.ThrowLastErrorIfFalse(WindowsImports.GetClassInfoExW(instance ?? ModuleInstance.Null, (IntPtr)c, out wndClass));
 
             return wndClass;
         }
@@ -781,7 +781,7 @@ namespace WInterop.Windows
             // or free a buffer.
 
             // Passing 0 will give us a read only handle to the string resource
-            int result = Imports.LoadStringW(library, identifier, out char* buffer, 0);
+            int result = WindowsImports.LoadStringW(library, identifier, out char* buffer, 0);
             if (result <= 0)
                 Error.ThrowLastError(identifier.ToString());
 
@@ -791,7 +791,7 @@ namespace WInterop.Windows
 
         public static unsafe IconHandle LoadIcon(IconId id)
         {
-            HICON handle = Imports.LoadIconW(ModuleInstance.Null, (char*)(uint)id);
+            HICON handle = WindowsImports.LoadIconW(ModuleInstance.Null, (char*)(uint)id);
             if (handle.IsInvalid)
                 Error.ThrowLastError();
 
@@ -802,7 +802,7 @@ namespace WInterop.Windows
         {
             fixed (char* n = name)
             {
-                HICON handle = Imports.LoadIconW(module, n);
+                HICON handle = WindowsImports.LoadIconW(module, n);
 
                 if (handle.IsInvalid)
                     Error.ThrowLastError();
@@ -814,64 +814,64 @@ namespace WInterop.Windows
         public static MonitorHandle MonitorFromWindow<T>(
             this T window,
             MonitorOption option = MonitorOption.DefaultToNull) where T : IHandle<WindowHandle>
-            => Imports.MonitorFromWindow(window.Handle, option);
+            => WindowsImports.MonitorFromWindow(window.Handle, option);
 
         public static MonitorHandle MonitorFromPoint(Point point, MonitorOption option = MonitorOption.DefaultToNull)
-            => Imports.MonitorFromPoint(point, option);
+            => WindowsImports.MonitorFromPoint(point, option);
 
         public static MonitorHandle MonitorFromRectangle(
             Rectangle rectangle,
             MonitorOption option = MonitorOption.DefaultToNull)
         {
             Rect rect = rectangle;
-            return Imports.MonitorFromRect(in rect, option);
+            return WindowsImports.MonitorFromRect(in rect, option);
         }
 
         public static unsafe MonitorInfo GetMonitorInfo(this MonitorHandle monitor)
         {
             MonitorInfo info = MonitorInfo.Create();
-            Imports.GetMonitorInfoW(monitor, &info);
+            WindowsImports.GetMonitorInfoW(monitor, &info);
             return info;
         }
 
         public static unsafe ExtendedMonitorInfo GetExtendedMonitorInfo(this MonitorHandle monitor)
         {
             ExtendedMonitorInfo info = ExtendedMonitorInfo.Create();
-            Imports.GetMonitorInfoW(monitor, &info);
+            WindowsImports.GetMonitorInfoW(monitor, &info);
             return info;
         }
 
         public static unsafe DllVersionInfo GetCommonControlsVersion()
         {
             DllVersionInfo info = new DllVersionInfo { Size = (uint)sizeof(DllVersionInfo) };
-            Imports.ComctlGetVersion(ref info).ThrowIfFailed();
+            WindowsImports.ComctlGetVersion(ref info).ThrowIfFailed();
             return info;
         }
 
-        public static DpiAwarenessContext GetThreadDpiAwarenessContext() => Imports.GetThreadDpiAwarenessContext();
+        public static DpiAwarenessContext GetThreadDpiAwarenessContext() => WindowsImports.GetThreadDpiAwarenessContext();
 
         public static DpiAwarenessContext SetThreadDpiAwarenessContext(DpiAwarenessContext dpiContext)
-            => Imports.SetThreadDpiAwarenessContext(dpiContext);
+            => WindowsImports.SetThreadDpiAwarenessContext(dpiContext);
 
         public static DpiAwareness GetThreadDpiAwareness()
             => GetAwarenessFromDpiAwarenessContext(GetThreadDpiAwarenessContext());
 
         public static DpiAwareness GetAwarenessFromDpiAwarenessContext(DpiAwarenessContext context)
-            => Imports.GetAwarenessFromDpiAwarenessContext(context);
+            => WindowsImports.GetAwarenessFromDpiAwarenessContext(context);
 
-        public static uint GetDpiForSystem() => Imports.GetDpiForSystem();
+        public static uint GetDpiForSystem() => WindowsImports.GetDpiForSystem();
 
         public static bool SetProcessDpiAwarenessContext(DpiAwarenessContext context)
-            => Imports.SetProcessDpiAwarenessContext(context);
+            => WindowsImports.SetProcessDpiAwarenessContext(context);
 
         public static uint GetDpiForWindow<T>(this T window) where T : IHandle<WindowHandle>
-            => Imports.GetDpiForWindow(window.Handle);
+            => WindowsImports.GetDpiForWindow(window.Handle);
 
         /// <summary>
         ///  Converts the requested point size to height based on the DPI of the given window.
         /// </summary>
         public static int FontPointSizeToHeight<T>(this T window, int pointSize) where T : IHandle<WindowHandle>
-            => Imports.MulDiv(
+            => WindowsImports.MulDiv(
                 pointSize,
                 (int)window.GetDpiForWindow(),
                 72);
@@ -887,7 +887,7 @@ namespace WInterop.Windows
             this T window,
             Func<WindowHandle, LParam, bool> callback,
             LParam parameter) where T : IHandle<WindowHandle>
-            => Imports.EnumChildWindows(
+            => WindowsImports.EnumChildWindows(
                 window.Handle,
                 (WindowHandle handle, LParam parameter) => callback(handle, parameter),
                 parameter);
@@ -902,7 +902,7 @@ namespace WInterop.Windows
             WindowHandle handle,
             Func<WindowHandle, bool> callback,
             LParam parameter)
-            => Imports.EnumChildWindows(
+            => WindowsImports.EnumChildWindows(
                 handle,
                 (WindowHandle handle, LParam parameter) => callback(handle),
                 parameter);

@@ -90,7 +90,7 @@ namespace WInterop.Security
         private static LUID LookupPrivilegeValue(Privilege privilege)
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.LookupPrivilegeValueW(null, GetPrivilegeConstant(privilege), out LUID luid),
+                SecurityImports.LookupPrivilegeValueW(null, GetPrivilegeConstant(privilege), out LUID luid),
                 privilege.ToString());
 
             return luid;
@@ -105,7 +105,7 @@ namespace WInterop.Security
             Span<char> nameBuffer = new Span<char>(c, 32);
 
             uint length = (uint)nameBuffer.Length;
-            while (!Imports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, ref MemoryMarshal.GetReference(nameBuffer), ref length))
+            while (!SecurityImports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, ref MemoryMarshal.GetReference(nameBuffer), ref length))
             {
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
 #pragma warning disable CA2014 // Do not use stackalloc in loops
@@ -125,7 +125,7 @@ namespace WInterop.Security
         {
             BufferHelper.BufferInvoke<HeapBuffer>(buffer =>
             {
-                while (!Imports.GetTokenInformation(
+                while (!SecurityImports.GetTokenInformation(
                     token,
                     info,
                     buffer.VoidPointer,
@@ -147,7 +147,7 @@ namespace WInterop.Security
         {
             TokenStatistics stats = default;
             Error.ThrowLastErrorIfFalse(
-                Imports.GetTokenInformation(token, TokenInformation.Statistics, &stats, (uint)sizeof(TokenStatistics), out uint _));
+                SecurityImports.GetTokenInformation(token, TokenInformation.Statistics, &stats, (uint)sizeof(TokenStatistics), out uint _));
             return stats;
         }
 
@@ -215,7 +215,7 @@ namespace WInterop.Security
             byte* buffer = stackalloc byte[size];
 
             Error.ThrowLastErrorIfFalse(
-                Imports.GetTokenInformation(token, TokenInformation.User, buffer, (uint)size, out uint _));
+                SecurityImports.GetTokenInformation(token, TokenInformation.User, buffer, (uint)size, out uint _));
 
             TOKEN_USER* user = (TOKEN_USER*)buffer;
             return new SidAndAttributes(CopySid(user->User.Sid), user->User.Attributes);
@@ -231,7 +231,7 @@ namespace WInterop.Security
             byte* buffer = stackalloc byte[size];
 
             Error.ThrowLastErrorIfFalse(
-                Imports.GetTokenInformation(token, TokenInformation.Owner, buffer, (uint)size, out uint _));
+                SecurityImports.GetTokenInformation(token, TokenInformation.Owner, buffer, (uint)size, out uint _));
 
             TOKEN_OWNER* owner = (TOKEN_OWNER*)buffer;
             return CopySid(owner->Owner);
@@ -247,7 +247,7 @@ namespace WInterop.Security
             byte* buffer = stackalloc byte[size];
 
             Error.ThrowLastErrorIfFalse(
-                Imports.GetTokenInformation(token, TokenInformation.PrimaryGroup, buffer, (uint)size, out uint _));
+                SecurityImports.GetTokenInformation(token, TokenInformation.PrimaryGroup, buffer, (uint)size, out uint _));
 
             return CopySid(((TOKEN_PRIMARY_GROUP*)buffer)->PrimaryGroup);
         }
@@ -261,7 +261,7 @@ namespace WInterop.Security
 
             uint size = (uint)sizeof(SID);
             Error.ThrowLastErrorIfFalse(
-                Imports.CreateWellKnownSid(sidType, null, &sid, ref size));
+                SecurityImports.CreateWellKnownSid(sidType, null, &sid, ref size));
 
             return sid;
         }
@@ -270,12 +270,12 @@ namespace WInterop.Security
         ///  Returns true if the given SID is the specified "well known" SID type.
         /// </summary>
         public static bool IsWellKnownSid(this in SID sid, WellKnownSID sidType)
-            => Imports.IsWellKnownSid(in sid, sidType);
+            => SecurityImports.IsWellKnownSid(in sid, sidType);
 
         /// <summary>
         ///  Returns true if the given SID is valid.
         /// </summary>
-        public static bool IsValidSid(this in SID sid) => Imports.IsValidSid(in sid);
+        public static bool IsValidSid(this in SID sid) => SecurityImports.IsValidSid(in sid);
 
         /// <summary>
         ///  Returns the S-n-n-n... string version of the given SID.
@@ -283,7 +283,7 @@ namespace WInterop.Security
         public static unsafe string ConvertSidToString(this in SID sid)
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.ConvertSidToStringSidW(sid, out var handle));
+                SecurityImports.ConvertSidToStringSidW(sid, out var handle));
 
             return new string((char*)handle);
         }
@@ -293,7 +293,7 @@ namespace WInterop.Security
         /// </summary>
         public static unsafe byte GetSidSubAuthorityCount(this in SID sid)
         {
-            byte* b = Imports.GetSidSubAuthorityCount(sid);
+            byte* b = SecurityImports.GetSidSubAuthorityCount(sid);
             if (b == null)
                 Error.ThrowLastError();
 
@@ -305,7 +305,7 @@ namespace WInterop.Security
         /// </summary>
         public static unsafe uint GetSidSubAuthority(this in SID sid, uint nSubAuthority)
         {
-            uint* u = Imports.GetSidSubAuthority(sid, nSubAuthority);
+            uint* u = SecurityImports.GetSidSubAuthority(sid, nSubAuthority);
             if (u == null)
                 Error.ThrowLastError();
 
@@ -315,7 +315,7 @@ namespace WInterop.Security
         private static unsafe SID CopySid(SID* source)
         {
             Error.ThrowLastErrorIfFalse(
-                Imports.CopySid((uint)sizeof(SID), out SID destination, source));
+                SecurityImports.CopySid((uint)sizeof(SID), out SID destination, source));
             return destination;
         }
 
@@ -349,7 +349,7 @@ namespace WInterop.Security
                 uint nameCharCapacity = nameBuffer.CharCapacity;
                 uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
 
-                while (!Imports.LookupAccountSidW(
+                while (!SecurityImports.LookupAccountSidW(
                     _systemName,
                     _sid,
                     nameBuffer,
@@ -382,7 +382,7 @@ namespace WInterop.Security
         /// </summary>
         public static AccessToken OpenProcessToken(AccessTokenRights desiredAccess)
         {
-            if (!Imports.OpenProcessToken(Processes.GetCurrentProcess(), desiredAccess, out var processToken))
+            if (!SecurityImports.OpenProcessToken(Processes.GetCurrentProcess(), desiredAccess, out var processToken))
                 Error.ThrowLastError(desiredAccess.ToString());
 
             return processToken;
@@ -396,7 +396,7 @@ namespace WInterop.Security
             using AccessToken token = OpenProcessToken(AccessTokenRights.Read);
             TokenElevation elevation = default;
             Error.ThrowLastErrorIfFalse(
-                Imports.GetTokenInformation(
+                SecurityImports.GetTokenInformation(
                     token,
                     TokenInformation.Elevation,
                     &elevation,
@@ -412,7 +412,7 @@ namespace WInterop.Security
         /// </summary>
         public static AccessToken? OpenThreadToken(AccessTokenRights desiredAccess, bool openAsSelf)
         {
-            if (!Imports.OpenThreadToken(Threads.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
+            if (!SecurityImports.OpenThreadToken(Threads.GetCurrentThread(), desiredAccess, openAsSelf, out var threadToken))
             {
                 // Threads only have their own token if the are impersonating, otherwise they inherit process
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_NO_TOKEN);
@@ -435,7 +435,7 @@ namespace WInterop.Security
         {
             // Note that DuplicateToken calls DuplicateTokenEx with TOKEN_IMPERSONATE | TOKEN_QUERY and null.
             Error.ThrowLastErrorIfFalse(
-                Imports.DuplicateTokenEx(
+                SecurityImports.DuplicateTokenEx(
                     token,
                     rights,
                     null,
@@ -447,7 +447,7 @@ namespace WInterop.Security
         }
 
         public static void SetThreadToken(this ThreadHandle thread, AccessToken token)
-            => Error.ThrowLastErrorIfFalse(Imports.SetThreadToken(thread, token));
+            => Error.ThrowLastErrorIfFalse(SecurityImports.SetThreadToken(thread, token));
 
         /// <summary>
         ///  Get the owner SID for the given handle.
@@ -457,7 +457,7 @@ namespace WInterop.Security
             SID* sidp;
             SECURITY_DESCRIPTOR* descriptor;
 
-            Imports.GetSecurityInfo(
+            SecurityImports.GetSecurityInfo(
                 handle,
                 type,
                 SecurityInformation.Owner,
@@ -478,7 +478,7 @@ namespace WInterop.Security
             SID* sidp;
             SECURITY_DESCRIPTOR* descriptor;
 
-            Imports.GetSecurityInfo(
+            SecurityImports.GetSecurityInfo(
                 handle,
                 type,
                 SecurityInformation.Group,
@@ -499,7 +499,7 @@ namespace WInterop.Security
             ACL* acl;
             SECURITY_DESCRIPTOR* descriptor;
 
-            Imports.GetSecurityInfo(
+            SecurityImports.GetSecurityInfo(
                 handle,
                 type,
                 SecurityInformation.Dacl,
@@ -526,7 +526,7 @@ namespace WInterop.Security
             };
 
             Error.ThrowLastErrorIfFalse(
-                Imports.PrivilegeCheck(token, &set, out IntBoolean result),
+                SecurityImports.PrivilegeCheck(token, &set, out IntBoolean result),
                 privilege.ToString());
 
             return result;
@@ -564,7 +564,7 @@ namespace WInterop.Security
             }
 
             Error.ThrowLastErrorIfFalse(
-                Imports.PrivilegeCheck(token, set, out IntBoolean result));
+                SecurityImports.PrivilegeCheck(token, set, out IntBoolean result));
 
             return result;
         }
@@ -590,7 +590,7 @@ namespace WInterop.Security
                 SID sid = default;
                 uint sidLength = (uint)sizeof(SID);
                 uint domainNameLength = domainNameBuffer.CharCapacity;
-                while (!Imports.LookupAccountNameW(
+                while (!SecurityImports.LookupAccountNameW(
                     lpSystemName: null,
                     lpAccountName: name,
                     Sid: &sid,
@@ -620,28 +620,28 @@ namespace WInterop.Security
                     sids[i].Sid = &sid[i];
 
                 Error.ThrowLastErrorIfFalse(
-                    Imports.CreateRestrictedToken(token, 0, (uint)sidsToDisable.Length, sids, 0, null, 0, null, out AccessToken restricted));
+                    SecurityImports.CreateRestrictedToken(token, 0, (uint)sidsToDisable.Length, sids, 0, null, 0, null, out AccessToken restricted));
 
                 return restricted;
             }
         }
 
         public static void ImpersonateLoggedOnUser(this AccessToken token)
-            => Error.ThrowLastErrorIfFalse(Imports.ImpersonateLoggedOnUser(token));
+            => Error.ThrowLastErrorIfFalse(SecurityImports.ImpersonateLoggedOnUser(token));
 
         public static void ImpersonateAnonymousToken()
         {
             using ThreadHandle thread = Threads.GetCurrentThread();
-            Error.ThrowLastErrorIfFalse(Imports.ImpersonateAnonymousToken(thread));
+            Error.ThrowLastErrorIfFalse(SecurityImports.ImpersonateAnonymousToken(thread));
         }
 
         public static void RevertToSelf()
-            => Error.ThrowLastErrorIfFalse(Imports.RevertToSelf());
+            => Error.ThrowLastErrorIfFalse(SecurityImports.RevertToSelf());
 
         public static unsafe LsaHandle LsaOpenLocalPolicy(PolicyAccessRights access)
         {
             LSA_OBJECT_ATTRIBUTES attributes = default;
-            Imports.LsaOpenPolicy(null, &attributes, access, out LsaHandle handle).ThrowIfFailed();
+            SecurityImports.LsaOpenPolicy(null, &attributes, access, out LsaHandle handle).ThrowIfFailed();
             return handle;
         }
 
@@ -650,12 +650,12 @@ namespace WInterop.Security
         /// </summary>
         public static WindowsError NtStatusToWinError(NTStatus status)
         {
-            return Imports.LsaNtStatusToWinError(status);
+            return SecurityImports.LsaNtStatusToWinError(status);
         }
 
-        public static void LsaClose(IntPtr handle) => Imports.LsaClose(handle).ThrowIfFailed();
+        public static void LsaClose(IntPtr handle) => SecurityImports.LsaClose(handle).ThrowIfFailed();
 
-        public static void LsaFreeMemory(IntPtr handle) => Imports.LsaFreeMemory(handle).ThrowIfFailed();
+        public static void LsaFreeMemory(IntPtr handle) => SecurityImports.LsaFreeMemory(handle).ThrowIfFailed();
 
         /// <summary>
         ///  Enumerates rights explicitly given to the specified SID. If the given SID doesn't have any directly
@@ -663,7 +663,7 @@ namespace WInterop.Security
         /// </summary>
         public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, in SID sid)
         {
-            NTStatus status = Imports.LsaEnumerateAccountRights(policyHandle, in sid, out var rightsBuffer, out uint rightsCount);
+            NTStatus status = SecurityImports.LsaEnumerateAccountRights(policyHandle, in sid, out var rightsBuffer, out uint rightsCount);
             using (rightsBuffer)
             {
                 switch (status)

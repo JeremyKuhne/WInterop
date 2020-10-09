@@ -16,19 +16,19 @@ namespace WInterop.Windows
         {
             IntBoolean beeperOn = default;
             Error.ThrowLastErrorIfFalse(
-                Imports.SystemParametersInfoW(SystemParameterType.SPI_GETBEEP, 0, &beeperOn, 0));
+                WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_GETBEEP, 0, &beeperOn, 0));
             return beeperOn;
         }
 
         public unsafe void SetBeep(bool beeperOn, SystemParameterOptions options = 0)
             => Error.ThrowLastErrorIfFalse(
-                Imports.SystemParametersInfoW(SystemParameterType.SPI_SETBEEP, (IntBoolean)beeperOn, null, options));
+                WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_SETBEEP, (IntBoolean)beeperOn, null, options));
 
         public unsafe bool GetBlockSendInputResets()
         {
             IntBoolean simulatedInputBlocked = default;
             Error.ThrowLastErrorIfFalse(
-                Imports.SystemParametersInfoW(
+                WindowsImports.SystemParametersInfoW(
                     SystemParameterType.SPI_GETBLOCKSENDINPUTRESETS,
                     0,
                     &simulatedInputBlocked,
@@ -38,7 +38,7 @@ namespace WInterop.Windows
 
         public unsafe void SetBlockSendInputResets(bool simulatedInputBlocked, SystemParameterOptions options = 0)
             => Error.ThrowLastErrorIfFalse(
-                Imports.SystemParametersInfoW(
+                WindowsImports.SystemParametersInfoW(
                     SystemParameterType.SPI_SETBLOCKSENDINPUTRESETS,
                     (IntBoolean)simulatedInputBlocked,
                     null,
@@ -48,7 +48,7 @@ namespace WInterop.Windows
         {
             uint linesToScroll;
             Error.ThrowLastErrorIfFalse(
-                Imports.SystemParametersInfoW(SystemParameterType.SPI_GETWHEELSCROLLLINES, 0, &linesToScroll, 0));
+                WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_GETWHEELSCROLLLINES, 0, &linesToScroll, 0));
             return linesToScroll;
         }
     }

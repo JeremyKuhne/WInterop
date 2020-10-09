@@ -25,7 +25,7 @@ namespace Performance
             // Ensure enough room for the output string
             fixed (char* c = "USERNAME")
             {
-                while ((returnValue = Imports.GetEnvironmentVariableW(c, buffer.CharPointer, buffer.CharCapacity)) > buffer.CharCapacity)
+                while ((returnValue = ProcessAndThreadImports.GetEnvironmentVariableW(c, buffer.CharPointer, buffer.CharCapacity)) > buffer.CharCapacity)
                     buffer.EnsureCharCapacity(returnValue);
             }
 
@@ -45,7 +45,7 @@ namespace Performance
             fixed (char* c = &buffer[0])
             {
                 uint returnValue;
-                while ((returnValue = Imports.GetEnvironmentVariableW(n, c, (uint)buffer.Length)) > buffer.Length)
+                while ((returnValue = ProcessAndThreadImports.GetEnvironmentVariableW(n, c, (uint)buffer.Length)) > buffer.Length)
                 {
                     buffer.EnsureCapacity((int)returnValue);
                 }
@@ -67,7 +67,7 @@ namespace Performance
             fixed (char* n = "USERNAME")
             fixed (char* c = buffer)
             {
-                uint returnValue = Imports.GetEnvironmentVariableW(n, c, (uint)buffer.Length);
+                uint returnValue = ProcessAndThreadImports.GetEnvironmentVariableW(n, c, (uint)buffer.Length);
                 if (returnValue == 0)
                     Error.ThrowIfLastErrorNot(WindowsError.ERROR_ENVVAR_NOT_FOUND);
                 return new string(buffer.Slice(0, (int)returnValue));

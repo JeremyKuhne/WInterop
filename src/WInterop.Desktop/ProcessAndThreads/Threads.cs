@@ -7,8 +7,8 @@ namespace WInterop.ProcessAndThreads
 {
     public static class Threads
     {
-        public static ThreadHandle GetCurrentThread() => Imports.GetCurrentThread();
+        public static ThreadHandle GetCurrentThread() => ProcessAndThreadImports.GetCurrentThread();
 
-        public static uint GetCurrentThreadId() => Imports.GetCurrentThreadId();
+        public static uint GetCurrentThreadId() => ProcessAndThreadImports.GetCurrentThreadId();
     }
 }

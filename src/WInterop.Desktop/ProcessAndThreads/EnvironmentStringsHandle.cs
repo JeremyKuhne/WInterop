@@ -18,7 +18,7 @@ namespace WInterop.ProcessAndThreads
 
         protected override bool ReleaseHandle()
         {
-            Imports.FreeEnvironmentStringsW(handle);
+            ProcessAndThreadImports.FreeEnvironmentStringsW(handle);
             handle = IntPtr.Zero;
             return true;
         }

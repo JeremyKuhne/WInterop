@@ -22,7 +22,7 @@ namespace WInterop.Windows
         public void Dispose()
         {
             if (_ownsHandle)
-                Imports.DestroyMenu(HMENU);
+                WindowsImports.DestroyMenu(HMENU);
         }
 
         public static implicit operator HMENU(MenuHandle handle) => handle.HMENU;

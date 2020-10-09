@@ -54,7 +54,7 @@ namespace WInterop.Storage
                 if (_buffer is null)
                     throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
 
-                _findHandle = Imports.FindFirstVolumeW(
+                _findHandle = StorageImports.FindFirstVolumeW(
                     _buffer,
                     _buffer.CharCapacity);
 
@@ -81,7 +81,7 @@ namespace WInterop.Storage
                 if (_buffer is null)
                     throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
 
-                if (!Imports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
+                if (!StorageImports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
                 {
                     WindowsError error = Error.GetLastError();
                     switch (error)

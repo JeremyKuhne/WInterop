@@ -16,7 +16,7 @@ namespace WInterop.Storage.Native
     /// <summary>
     ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
-    public static partial class Imports
+    public static partial class StorageImports
     {
         // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createfilew
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
