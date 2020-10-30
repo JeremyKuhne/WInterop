@@ -150,6 +150,11 @@ namespace WInterop.Errors
         STATUS_OBJECT_PATH_SYNTAX_BAD = unchecked((int)0xC000003B),
 
         /// <summary>
+        ///  A file cannot be opened because the share access flags are incompatible.
+        /// </summary>
+        STATUS_SHARING_VIOLATION = unchecked((int)0xC0000043),
+
+        /// <summary>
         ///  {Device Timeout} The specified I/O operation on %hs was not completed before the time-out period expired.
         /// </summary>
         STATUS_IO_TIMEOUT = unchecked((int)0xC00000B5),

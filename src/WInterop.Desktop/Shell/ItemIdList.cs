@@ -12,6 +12,8 @@ namespace WInterop.Shell
     ///  Includes [LPITEMIDLIST], [LPCITEMIDLIST], [PIDLIST_ABSOLUTE], [PCIDLIST_ABSOLUTE], [PCUIDLIST_ABSOLUTE],
     ///  [PIDLIST_RELATIVE], [PCIDLIST_RELATIVE], [PUIDLIST_RELATIVE], [PCUIDLIST_RELATIVE], [PITEMID_CHILD],
     ///  [PCITEMID_CHILD], [PUITEMID_CHILD], [PCUITEMID_CHILD]
+    ///
+    ///  https://docs.microsoft.com/previous-versions/windows/desktop/legacy/cc144089(v=vs.85)#pidls
     /// </remarks>
     public class ItemIdList : SafeComHandle
     {

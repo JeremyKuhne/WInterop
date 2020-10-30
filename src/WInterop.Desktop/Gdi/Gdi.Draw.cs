@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 using WInterop.Gdi.Native;
 using WInterop.Support.Buffers;
 
@@ -140,13 +141,13 @@ namespace WInterop.Gdi
         }
 
         public static unsafe bool PolyBezier(this in DeviceContext context, params Point[] points)
-        {
-            return PolyBezier(context, points.AsSpan());
-        }
+            => PolyBezier(context, points.AsSpan());
 
         public static unsafe bool PolyBezier(this in DeviceContext context, ReadOnlySpan<Point> points)
-        {
-            return GdiImports.PolyBezier(context, ref MemoryMarshal.GetReference(points), (uint)points.Length);
-        }
+            => GdiImports.PolyBezier(context, ref MemoryMarshal.GetReference(points), (uint)points.Length);
+
+        public static void BufferedPaintInitialize() => GdiImports.BufferedPaintInit().ThrowIfFailed();
+
+        public static void BufferedPaintUninitialize() => GdiImports.BufferedPaintUnInit();
     }
 }

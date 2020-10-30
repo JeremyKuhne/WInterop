@@ -4,7 +4,6 @@
 using System;
 using System.Runtime.InteropServices;
 using WInterop.Support;
-using WInterop.Windows.Native;
 
 namespace WInterop.Windows.Native
 {

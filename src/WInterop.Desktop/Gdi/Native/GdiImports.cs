@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 using WInterop.Windows;
 
 namespace WInterop.Gdi.Native
@@ -1301,5 +1302,29 @@ namespace WInterop.Gdi.Native
             HDC hdc,
             uint nSize,
             byte* lpData);
+
+        // https://channel9.msdn.com/blogs/pdc2008/pc43
+        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-beginbufferedpaint
+        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
+        public static extern unsafe HPAINTBUFFER BeginBufferedPaint(
+            HDC hdcTarget,
+            in Rect prcTarget,
+            BufferFormat dwFormat,
+            BP_PAINTPARAMS* pPaintParams,
+            out HDC phdc);
+
+        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-endbufferedpaint
+        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
+        public static extern HResult EndBufferedPaint(
+            HPAINTBUFFER hBufferedPaint,
+            IntBoolean fUpdateTarget);
+
+        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-bufferedpaintinit
+        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
+        public static extern HResult BufferedPaintInit();
+
+        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-bufferedpaintuninit
+        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
+        public static extern HResult BufferedPaintUnInit();
     }
 }

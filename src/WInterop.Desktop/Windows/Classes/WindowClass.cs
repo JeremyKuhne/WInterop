@@ -140,7 +140,10 @@ namespace WInterop.Windows
             MenuHandle menuHandle = default)
         {
             if (!IsRegistered)
-                throw new ArgumentException("Window class must be registered before using.");
+                throw new InvalidOperationException("Window class must be registered before using.");
+
+            if (isMainWindow && !MainWindow.IsNull)
+                throw new ArgumentException("Main window has already been set.", nameof(isMainWindow));
 
             WindowHandle window = Atom.IsValid
                 ? Windows.CreateWindow(
@@ -168,7 +171,9 @@ namespace WInterop.Windows
             }
 
             if (isMainWindow)
+            {
                 MainWindow = window;
+            }
 
             return window;
         }
