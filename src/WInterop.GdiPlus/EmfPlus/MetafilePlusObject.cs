@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace WInterop.GdiPlus.EmfPlus
@@ -29,6 +30,17 @@ namespace WInterop.GdiPlus.EmfPlus
                 fixed (byte* b = &_data)
                 {
                     return *(uint*)b;
+                }
+            }
+        }
+
+        public unsafe byte* ObjectData
+        {
+            get
+            {
+                fixed (byte* b = &_data)
+                {
+                    return b;
                 }
             }
         }

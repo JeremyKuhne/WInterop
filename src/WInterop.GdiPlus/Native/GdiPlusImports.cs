@@ -83,6 +83,18 @@ namespace WInterop.GdiPlus.Native
             GpPen pen,
             ARGB* argb);
 
+        [SuppressGCTransition]
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipSetPenStartCap(
+            GpPen pen,
+            GpLineCapType startCap);
+
+        [SuppressGCTransition]
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipSetPenEndCap(
+            GpPen pen,
+            GpLineCapType endCap);
+
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern GpStatus GdipDeletePen(
             GpPen pen);

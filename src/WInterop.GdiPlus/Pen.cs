@@ -27,6 +27,16 @@ namespace WInterop.GdiPlus
             _gpPen = gpPen;
         }
 
+        public void SetStartCap(GpLineCapType lineCap)
+        {
+            GdiPlusImports.GdipSetPenStartCap(_gpPen, lineCap).ThrowIfFailed();
+        }
+
+        public void SetEndCap(GpLineCapType lineCap)
+        {
+            GdiPlusImports.GdipSetPenEndCap(_gpPen, lineCap).ThrowIfFailed();
+        }
+
         public unsafe ARGB Color
         {
             get

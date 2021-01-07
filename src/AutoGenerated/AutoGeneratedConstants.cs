@@ -20,22 +20,22 @@ namespace WInterop
             /// <summary>
             /// Current month 1..12
             /// </summary>
-            public const int CurrentMonth = 10;
+            public const int CurrentMonth = 12;
 
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const int CurrentDayOfMonth = 30;
+            public const int CurrentDayOfMonth = 23;
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const int CurrentHour = 16;
+            public const int CurrentHour = 20;
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const int CurrentMinute = 7;
+            public const int CurrentMinute = 22;
         }
 
         public static class Strings
@@ -48,42 +48,42 @@ namespace WInterop
             /// <summary>
             /// Current month 1..12
             /// </summary>
-            public const string CurrentMonth = "10";
+            public const string CurrentMonth = "12";
 
             /// <summary>
             /// Current month 01..12
             /// </summary>
-            public const string CurrentTwoDigitMonth = "10";
+            public const string CurrentTwoDigitMonth = "12";
 
             /// <summary>
             /// Current day of the month 1..31
             /// </summary>
-            public const string CurrentDayOfMonth = "30";
+            public const string CurrentDayOfMonth = "23";
 
             /// <summary>
             /// Current two digit day of the month 01..31
             /// </summary>
-            public const string CurrentTwoDigitDayOfMonth = "30";
+            public const string CurrentTwoDigitDayOfMonth = "23";
 
             /// <summary>
             /// Current hour from 0..23
             /// </summary>
-            public const string CurrentHour = "16";
+            public const string CurrentHour = "20";
 
             /// <summary>
             /// Current two digit hour from 00..23
             /// </summary>
-            public const string CurrentTwoDigitHour = "16";
+            public const string CurrentTwoDigitHour = "20";
 
             /// <summary>
             /// Current hour from 0..59
             /// </summary>
-            public const string CurrentMinute = "7";
+            public const string CurrentMinute = "22";
 
             /// <summary>
             /// Current two digit hour from 00..59
             /// </summary>
-            public const string CurrentTwoDigitMinute = "07";
+            public const string CurrentTwoDigitMinute = "22";
         }
     }
 }

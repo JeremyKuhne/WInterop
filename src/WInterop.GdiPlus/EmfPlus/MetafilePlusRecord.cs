@@ -54,5 +54,10 @@ namespace WInterop.GdiPlus.EmfPlus
 
             return (MetafilePlusRecord*)(&comment->Data + sizeof(uint));
         }
+
+        public static unsafe MetafilePlusRecord* GetNextMetafilePlusRecord(MetafilePlusRecord* record)
+        {
+            return (MetafilePlusRecord*)((byte*)record + record->Size);
+        }
     }
 }
