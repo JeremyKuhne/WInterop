@@ -304,8 +304,10 @@ namespace WInteropTests.GdiPlusTests
             using (MetafilePlus record = new(stream, deviceContext, EmfType.EmfPlusDual))
             {
                 using Graphics graphics = new(record);
-                using Pen pen = new(Color.Purple);
-                graphics.DrawLine(pen, new(1, 1), new(3, 5));
+                using Pen pen = new(Color.Purple, 10, GpUnit.UnitInch);
+                pen.SetStartCap(GpLineCapType.LineCapArrowAnchor);
+                pen.SetEndCap(GpLineCapType.LineCapRoundAnchor);
+                graphics.DrawLine(pen, new(20, 175), new(300, 175));
             }
 
             fixed (byte* b = stream.GetBuffer())
@@ -329,13 +331,50 @@ namespace WInteropTests.GdiPlusTests
                 emr = emr->GetNextRecord();
                 emr->iType.Should().Be(MetafileRecordType.GdiComment);
 
-                emr->dParam[0].Should().Be(76);
+                emr->dParam[0].Should().Be(84);
 
                 record = MetafilePlusRecord.GetFromMetafileComment((EMRGDICOMMENT*)emr);
                 record->Type.Should().Be(RecordType.EmfPlusObject);
 
                 MetafilePlusObject* @object = (MetafilePlusObject*)record;
                 @object->ObjectType.Should().Be(MetafilePlusObjectType.Pen);
+
+                // TODO: Complete MetafilePlusPen
+                MetafilePlusPen* pen = (MetafilePlusPen*)@object->ObjectData;
+                pen->Version->MetafileSignature.ToString("X").Should().Be("DBC01");
+                pen->Version->GraphicsVersion.Should().Be(GraphicsVersionEnum.GraphicsVersion1_1);
+                pen->Type.Should().Be(0);
+                pen->PenData->PenUnit.Should().Be(UnitType.UnitTypeInch);
+                pen->PenData->PenWidth.Should().Be(10);
+                (pen->PenData->PenDataFlags & PenDataFlags.PenDataStartCap).Should().NotBe(0);
+                (pen->PenData->PenDataFlags & PenDataFlags.PenDataEndCap).Should().NotBe(0);
+                pen->PenData->OptionalData->StartCap.Should().Be(LineCapType.LineCapTypeArrowAnchor);
+                pen->PenData->OptionalData->EndCap.Should().Be(LineCapType.LineCapTypeRoundAnchor);
+                pen->BrushObject->Version->MetafileSignature.ToString("X").Should().Be("DBC01");
+                pen->BrushObject->Version->GraphicsVersion.Should().Be(GraphicsVersionEnum.GraphicsVersion1_1);
+                pen->BrushObject->Type.Should().Be(BrushType.BrushTypeSolidColor);
+                pen->BrushObject->BrushData->SolidColor.Alpha.Should().Be(Color.Purple.A);
+                pen->BrushObject->BrushData->SolidColor.Red.Should().Be(Color.Purple.R);
+                pen->BrushObject->BrushData->SolidColor.Green.Should().Be(Color.Purple.G);
+                pen->BrushObject->BrushData->SolidColor.Blue.Should().Be(Color.Purple.B);
+
+                // Get the next EMF+ record
+                record = MetafilePlusRecord.GetNextMetafilePlusRecord(record);
+                record->Type.Should().Be(RecordType.EmfPlusDrawLines);
+
+                // TODO: Complete MetafileDrawLines
+                MetafilePlusDrawLines* @drawLines = (MetafilePlusDrawLines*)record;
+                @drawLines->CompressedData.Should().Be(true);
+                @drawLines->ExtraLine.Should().Be(false);
+                @drawLines->RelativeLocation.Should().Be(false);
+                @drawLines->ObjectId.Should().Be(0);
+                @drawLines->Count.Should().Be(2); // Number of points
+                MetafilePlusPoint point1 = @drawLines->GetPoint(0);
+                MetafilePlusPoint point2 = @drawLines->GetPoint(1);
+                point1.X.Should().Be(20);
+                point1.Y.Should().Be(175);
+                point2.X.Should().Be(300);
+                point2.Y.Should().Be(175);
             }
         }
     }
