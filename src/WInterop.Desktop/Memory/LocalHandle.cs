@@ -21,7 +21,7 @@ namespace WInterop.Memory
 
         protected override bool ReleaseHandle()
         {
-            Imports.LocalFree(handle);
+            MemoryImports.LocalFree(handle);
             return true;
         }
     }

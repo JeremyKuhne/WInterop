@@ -341,3 +341,6 @@ dotnet_diagnostic.SA1605.severity = none
 
 # SA1118: The parameter spans multiple lines.
 dotnet_diagnostic.SA1118.severity = silent
+
+# SA1023: Dereference symbol '*' should be followed by a space.
+dotnet_diagnostic.SA1023.severity = silent

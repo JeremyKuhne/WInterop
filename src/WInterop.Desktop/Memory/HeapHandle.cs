@@ -63,7 +63,7 @@ namespace WInterop.Memory
 
             if (handle == IntPtr.Zero)
             {
-                handle = Imports.HeapAlloc(
+                handle = MemoryImports.HeapAlloc(
                     hHeap: Memory.ProcessHeap,
                     dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
                     dwBytes: (UIntPtr)byteLength);
@@ -73,7 +73,7 @@ namespace WInterop.Memory
                 // This may or may not be the same handle, Windows may realloc in place. If the
                 // handle changes Windows will deal with the old handle, trying to free it will
                 // cause an error.
-                handle = Imports.HeapReAlloc(
+                handle = MemoryImports.HeapReAlloc(
                     hHeap: Memory.ProcessHeap,
                     dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
                     lpMem: handle,
@@ -91,7 +91,7 @@ namespace WInterop.Memory
 
         protected override bool ReleaseHandle()
         {
-            return Imports.HeapFree(Memory.ProcessHeap, dwFlags: 0, lpMem: handle);
+            return MemoryImports.HeapFree(Memory.ProcessHeap, dwFlags: 0, lpMem: handle);
         }
 
         public unsafe void* VoidPointer => (void*)handle;

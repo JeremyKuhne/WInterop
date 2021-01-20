@@ -8,7 +8,7 @@ using WInterop.Errors;
 
 namespace WInterop.Com
 {
-    /// <docs>https://docs.microsoft.com/windows/desktop/api/objidl/nn-objidl-idataobject</docs>
+    /// <docs>https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-idataobject</docs>
     [ComImport,
         Guid("0000010e-0000-0000-C000-000000000046"),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

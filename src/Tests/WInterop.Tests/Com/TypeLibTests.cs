@@ -1,17 +1,18 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using Xunit;
-using WInterop.Com;
-using WInterop.Com.Native;
 using FluentAssertions;
-using WInterop.Errors;
-using WInterop.Globalization;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using WInterop;
+using WInterop.Com;
+using WInterop.Com.Native;
+using WInterop.Errors;
+using WInterop.Globalization;
+using Xunit;
 
-namespace WInterop.Tests.Com
+namespace ComTests
 {
     public class TypeLibTests
     {

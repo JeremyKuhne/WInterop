@@ -3,17 +3,18 @@
 
 using System;
 using System.Runtime.InteropServices;
+using WInterop.ProcessAndThreads;
 
 namespace WInterop.Memory.Native
 {
     /// <summary>
     ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
     /// </summary>
-    public static partial class Imports
+    public static partial class MemoryImports
     {
         // Heap Functions
         // --------------
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366711.aspx
+        // https://docs.microsoft.com/windows/win32/memory/heap-functions
 
         // HeapAlloc/Realloc take a SIZE_T for their count of bytes. This is ultimately an
         // unsigned __int3264 which is platform specific (uint on 32bit and ulong on 64bit).
@@ -21,16 +22,16 @@ namespace WInterop.Memory.Native
         // (IntPtr also wraps void*, but uses signed constructors.)
         //
         // SIZE_T:
-        // https://msdn.microsoft.com/en-us/library/cc441980.aspx
+        // https://docs.microsoft.com/openspecs/windows_protocols/ms-dtyp/1dc2ff19-6fef-4c5f-b4fd-afbc2557fd81
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366597.aspx
+        // https://docs.microsoft.com/windows/win32/api/heapapi/nf-heapapi-heapalloc
         [DllImport(Libraries.Kernel32, SetLastError = false, ExactSpelling = true)]
         public static extern IntPtr HeapAlloc(
             IntPtr hHeap,
             uint dwFlags,
             UIntPtr dwBytes);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366704.aspx
+        // https://docs.microsoft.com/windows/win32/api/heapapi/nf-heapapi-heaprealloc
         [DllImport(Libraries.Kernel32, SetLastError = false, ExactSpelling = true)]
         public static extern IntPtr HeapReAlloc(
             IntPtr hHeap,
@@ -38,54 +39,61 @@ namespace WInterop.Memory.Native
             IntPtr lpMem,
             UIntPtr dwBytes);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366701.aspx
+        // https://docs.microsoft.com/windows/win32/api/heapapi/nf-heapapi-heapfree
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern bool HeapFree(
             IntPtr hHeap,
             uint dwFlags,
             IntPtr lpMem);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366730.aspx
+        // https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-localfree
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern IntPtr LocalFree(
             IntPtr hMem);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366706.aspx
+        // https://docs.microsoft.com/windows/win32/api/heapapi/nf-heapapi-heapsize
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern UIntPtr HeapSize(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366700.aspx
+        // https://docs.microsoft.com/windows/win32/api/heapapi/nf-heapapi-heapdestroy
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern bool HeapDestroy(IntPtr hHeap);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366598.aspx
+        // https://docs.microsoft.com/windows/win32/api/heapapi/nf-heapapi-heapcompact
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern UIntPtr HeapCompact(IntPtr hHeap, uint dwFlags);
 
         // This is safe to cache as it will never change for a process once started
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569.aspx
+        // https://docs.microsoft.com/windows/win32/api/heapapi/nf-heapapi-getprocessheap
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern IntPtr GetProcessHeap();
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globalalloc
+        // https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-globalalloc
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern HGLOBAL GlobalAlloc(
             GlobalMemoryFlags uFlags,
             UIntPtr dwBytes);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globalfree
+        // https://docs.microsoft.com/windows/desktop/api/winbase/nf-winbase-globalfree
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern HGLOBAL GlobalFree(
             HGLOBAL hMem);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globallock
+        // https://docs.microsoft.com/windows/desktop/api/winbase/nf-winbase-globallock
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern IntPtr GlobalLock(
             HGLOBAL hMem);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/winbase/nf-winbase-globalunlock
+        // https://docs.microsoft.com/windows/desktop/api/winbase/nf-winbase-globalunlock
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern IntBoolean GlobalUnlock(
             HGLOBAL hMem);
+
+        // https://docs.microsoft.com/windows/win32/api/psapi/nf-psapi-getprocessmemoryinfo
+        [DllImport(Libraries.Psapi, SetLastError = true, ExactSpelling = true)]
+        public static extern IntBoolean GetProcessMemoryInfo(
+            ProcessHandle Process,
+            ref ProcessMemoryCounters ppsmemCounters,
+            uint cb);
     }
 }

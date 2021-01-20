@@ -255,6 +255,11 @@ namespace WInterop.Windows
         public static bool IsWindowUnicode<T>(this T window) where T : IHandle<WindowHandle>
             => WindowsImports.IsWindowUnicode(window.Handle);
 
+        public static bool IsChild<TParent, TChild>(this TParent parent, TChild child)
+            where TParent : IHandle<WindowHandle>
+            where TChild : IHandle<WindowHandle>
+            => WindowsImports.IsChild(parent.Handle, child.Handle);
+
         /// <summary>
         ///  Get the top child window in the specified window. If passed a null window
         ///  finds the window at the top of the Z order.

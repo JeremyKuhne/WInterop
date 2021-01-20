@@ -16,7 +16,7 @@ namespace WindowsTests
         [Fact]
         public void Window_GetDefaultText()
         {
-            using Window window = new (s_windowClass, Windows.DefaultBounds);
+            using Window window = new(s_windowClass, Windows.DefaultBounds);
             window.Text.Should().BeNull();
             string text = window.GetWindowText();
             text.Should().BeEmpty();
@@ -25,7 +25,7 @@ namespace WindowsTests
         [Fact]
         public void Window_GetSetText()
         {
-            using Window window = new (s_windowClass, Windows.DefaultBounds, "Clear Windows");
+            using Window window = new(s_windowClass, Windows.DefaultBounds, "Clear Windows");
             string text = window.GetWindowText();
             text.Should().Be("Clear Windows");
             window.Text.Should().Be("Clear Windows");
@@ -34,6 +34,13 @@ namespace WindowsTests
 
             window.Text = null;
             window.Text.Should().BeNull();
+        }
+
+        [Fact]
+        public void Window_SelfIsNotChild()
+        {
+            using Window window = new(s_windowClass, Windows.DefaultBounds);
+            window.IsChild(window).Should().BeFalse();
         }
     }
 }

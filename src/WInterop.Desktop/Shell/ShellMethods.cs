@@ -9,9 +9,9 @@ using WInterop.Errors;
 using WInterop.Handles;
 using WInterop.Registry;
 using WInterop.Security;
+using WInterop.Shell.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
-using WInterop.Shell.Native;
 
 namespace WInterop.Shell
 {

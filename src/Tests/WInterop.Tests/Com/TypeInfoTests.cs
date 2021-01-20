@@ -10,7 +10,7 @@ using WInterop.Errors;
 using WInterop.Globalization;
 using Xunit;
 
-namespace WInterop.Tests.Com
+namespace ComTests
 {
     public class TypeInfoTests
     {

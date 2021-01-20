@@ -9,7 +9,7 @@ namespace WInterop.Com.Native
 {
     public struct STGMEDIUM
     {
-        public uint tymed;
+        public MediumType tymed;
         public Union Data;
         public IntPtr pUnkForRelease;
 
@@ -19,9 +19,9 @@ namespace WInterop.Com.Native
             [FieldOffset(0)]
             public HBITMAP hBitmap;
             [FieldOffset(0)]
-            public IntPtr hMetaFilePict; // HMETAFILEPICT
+            public HMETAFILE hMetaFilePict;
             [FieldOffset(0)]
-            public IntPtr hEnhMetaFile; // HENHMETAFILE
+            public HENHMETAFILE hEnhMetaFile;
             [FieldOffset(0)]
             public IntPtr hGlobal; // HGLOBAL
             [FieldOffset(0)]

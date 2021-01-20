@@ -12,31 +12,31 @@ namespace WInterop.SystemInformation.Native
     /// </summary>
     public static partial class SystemInformationImports
     {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724432.aspx
+        // https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-getusernamew
         [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
         public static extern bool GetUserNameW(
             SafeHandle lpBuffer,
             ref uint lpnSize);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724435.aspx
+        // https://docs.microsoft.com/windows/win32/api/secext/nf-secext-getusernameexw
         [DllImport(Libraries.Secur32, SetLastError = true, ExactSpelling = true)]
         public static extern ByteBoolean GetUserNameExW(
             ExtendedNameFormat NameFormat,
             SafeHandle lpNameBuffer,
             ref uint lpnSize);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724301.aspx
+        // https://docs.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-getcomputernameexw
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern bool GetComputerNameExW(
             ComputerNameFormat NameType,
             SafeHandle lpBuffer,
             ref uint lpnSize);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/mt668928.aspx
+        // https://docs.microsoft.com/windows/win32/sysinfo/rtlgetsuitemask
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
         public static extern SuiteMask RtlGetSuiteMask();
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724509.aspx
+        // https://docs.microsoft.com/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
         public static extern int NtQuerySystemInformation(
             SystemInformationClass SystemInformationClass,
@@ -44,39 +44,39 @@ namespace WInterop.SystemInformation.Native
             uint SystemInformationLength,
             out uint ReturnLength);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724482.aspx
+        // https://docs.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocessorfeaturepresent
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static extern bool IsProcessorFeaturePresent(
             ProcessorFeature ProcessorFeature);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/dn482415.aspx
+        // https://docs.microsoft.com/windows/win32/api/windowsceip/nf-windowsceip-ceipisoptedin
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static extern bool CeipIsOptedIn();
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644905.aspx
+        // https://docs.microsoft.com/windows/win32/api/profileapi/nf-profileapi-queryperformancefrequency
         // This never returns false on XP or later
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static extern bool QueryPerformanceFrequency(
             out long lpFrequency);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644904.aspx
+        // https://docs.microsoft.com/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter
         // This never returns false on XP or later
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static extern bool QueryPerformanceCounter(
             out long lpPerformanceCount);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724338.aspx
+        // https://docs.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime
         [DllImport(Libraries.Kernel32, ExactSpelling = true)]
         public static extern void GetLocalTime(
             out SystemTime lpSystemTime);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724295.aspx
+        // https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-getcomputernamew
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static extern bool GetComputerNameW(
             SafeHandle lpBuffer,
             ref uint lpnSize);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724265.aspx
+        // https://docs.microsoft.com/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw
         [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         public static extern uint ExpandEnvironmentStringsW(
             string lpSrc,
@@ -94,5 +94,76 @@ namespace WInterop.SystemInformation.Native
         [DllImport(Libraries.Ntdll, ExactSpelling = true)]
         public static extern NTStatus RtlGetVersion(
             ref OsVersionInfo VersionInfo);
+
+        // https://docs.microsoft.com/windows/win32/perfctrs/performance-counters-portal
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfopenqueryhandle
+        [DllImport(Libraries.Advapi32, ExactSpelling = true, CharSet = CharSet.Unicode)]
+        public static extern WindowsError PerfOpenQueryHandle(
+            string szMachine,
+            out IntPtr phQuery);
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfclosequeryhandle
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern WindowsError PerfCloseQueryHandle(
+            IntPtr hQuery);
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfaddcounters
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern unsafe WindowsError PerfAddCounters(
+            IntPtr hQuery,
+            PERF_COUNTER_IDENTIFIER* pCounters,
+            uint cbCounters);
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfdeletecounters
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern unsafe WindowsError PerfDeleteCounters(
+            IntPtr hQuery,
+            PERF_COUNTER_IDENTIFIER* pCounters,
+            uint cbCounters);
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfquerycounterinfo
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern unsafe WindowsError PerfQueryCounterInfo(
+            IntPtr hQuery,
+            PERF_COUNTER_IDENTIFIER* pCounters,
+            uint cbCounters,
+            out uint pcbCountersActual);
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfquerycounterdata
+        [DllImport(Libraries.Advapi32, ExactSpelling = true)]
+        public static extern unsafe WindowsError PerfQueryCounterData(
+            IntPtr hQuery,
+            PERF_DATA_HEADER* pCounterBlock,
+            uint cbCounterBlock,
+            out uint pcbCounterBlockActual);
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfenumeratecounterset
+        [DllImport(Libraries.Advapi32, ExactSpelling = true, CharSet = CharSet.Unicode)]
+        public static extern unsafe WindowsError PerfEnumerateCounterSet(
+            string szMachine,
+            Guid* pCounterSetIds,
+            uint cCounterSetIds,
+            out uint pcCounterSetIdsActual);
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfenumeratecountersetinstances
+        [DllImport(Libraries.Advapi32, ExactSpelling = true, CharSet = CharSet.Unicode)]
+        public static extern unsafe WindowsError PerfEnumerateCounterSetInstances(
+            string szMachine,
+            ref Guid pCounterSetId,
+            PERF_INSTANCE_HEADER* pInstances,
+            uint cbInstances,
+            out uint pcbInstancesActual);
+
+        // https://docs.microsoft.com/windows/win32/api/perflib/nf-perflib-perfenumeratecountersetinstances
+        [DllImport(Libraries.Advapi32, ExactSpelling = true, CharSet = CharSet.Unicode)]
+        public static extern unsafe WindowsError PerfQueryCounterSetRegistrationInfo(
+            string szMachine,
+            ref Guid pCounterSetId,
+            PerfRegInfoType requestCode,
+            uint requestLangId,
+            byte* pbRegInfo,
+            uint cbRegInfo,
+            out uint pcbRegInfoActual);
     }
 }

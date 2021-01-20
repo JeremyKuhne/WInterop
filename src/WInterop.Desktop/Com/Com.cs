@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop.Com.Native;
 using WInterop.Errors;
@@ -135,6 +134,14 @@ namespace WInterop.Com
             typeInfo.ReleaseVarDesc(description);
 
             return typeInfo.GetMemberName(id);
+        }
+
+        public static unsafe uint Release(IntPtr pUnk)
+        {
+            if (pUnk == IntPtr.Zero)
+                throw new ArgumentNullException(nameof(pUnk));
+
+            return ((IUnknown*)pUnk)->Release();
         }
     }
 }

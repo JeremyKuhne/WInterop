@@ -12,7 +12,7 @@ namespace WInterop.Memory
         /// <summary>
         ///  The handle for the process heap.
         /// </summary>
-        public static IntPtr ProcessHeap = Imports.GetProcessHeap();
+        public static IntPtr ProcessHeap = MemoryImports.GetProcessHeap();
 
         /// <summary>
         ///  Allocate memory on the process heap.
@@ -30,7 +30,7 @@ namespace WInterop.Memory
         /// <exception cref="OverflowException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
         public static IntPtr HeapAllocate(ulong bytes, bool zeroMemory, IntPtr heap)
         {
-            return Imports.HeapAlloc(
+            return MemoryImports.HeapAlloc(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
                 dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
                 dwBytes: (UIntPtr)bytes);
@@ -52,7 +52,7 @@ namespace WInterop.Memory
         /// <exception cref="OverflowException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
         public static IntPtr HeapReallocate(IntPtr memory, ulong bytes, bool zeroMemory, IntPtr heap)
         {
-            return Imports.HeapReAlloc(
+            return MemoryImports.HeapReAlloc(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
                 dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
                 lpMem: memory,
@@ -73,7 +73,7 @@ namespace WInterop.Memory
         /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
         public static bool HeapFree(IntPtr memory, IntPtr heap)
         {
-            return Imports.HeapFree(
+            return MemoryImports.HeapFree(
                 hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
                 dwFlags: 0,
                 lpMem: memory);
@@ -81,13 +81,13 @@ namespace WInterop.Memory
 
         public static void LocalFree(IntPtr memory)
         {
-            if (Imports.LocalFree(memory) != IntPtr.Zero)
+            if (MemoryImports.LocalFree(memory) != IntPtr.Zero)
                 Error.ThrowLastError();
         }
 
         public static GlobalHandle GlobalAlloc(ulong bytes, GlobalMemoryFlags flags)
         {
-            HGLOBAL handle = Imports.GlobalAlloc(flags, (UIntPtr)bytes);
+            HGLOBAL handle = MemoryImports.GlobalAlloc(flags, (UIntPtr)bytes);
             if (handle.Value == IntPtr.Zero)
                 Error.ThrowLastError();
             return new GlobalHandle(handle, bytes);
@@ -95,7 +95,7 @@ namespace WInterop.Memory
 
         public static IntPtr GlobalLock(GlobalHandle handle)
         {
-            IntPtr memory = Imports.GlobalLock(handle.HGLOBAL);
+            IntPtr memory = MemoryImports.GlobalLock(handle.HGLOBAL);
             if (memory == IntPtr.Zero)
                 Error.ThrowLastError();
             return memory;
@@ -103,13 +103,13 @@ namespace WInterop.Memory
 
         public static void GlobalUnlock(GlobalHandle handle)
         {
-            if (!Imports.GlobalUnlock(handle.HGLOBAL))
+            if (!MemoryImports.GlobalUnlock(handle.HGLOBAL))
                 Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
         }
 
         public static void GlobalFree(HGLOBAL handle)
         {
-            if (Imports.GlobalFree(handle).Value != IntPtr.Zero)
+            if (MemoryImports.GlobalFree(handle).Value != IntPtr.Zero)
                 Error.ThrowLastError();
         }
     }

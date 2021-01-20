@@ -5,7 +5,7 @@ using System;
 using WInterop.Com.Native;
 using Xunit;
 
-namespace WInterop.Tests.Com
+namespace ComTests
 {
     public class VariantTests
     {
