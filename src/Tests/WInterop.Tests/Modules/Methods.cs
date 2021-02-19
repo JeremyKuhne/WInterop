@@ -133,6 +133,18 @@ namespace ModuleTests
         }
 
         [Fact]
+        public unsafe void LoadFunctionPointer()
+        {
+            using var handle = Modules.LoadLibrary(
+                GetNativeTestLibraryLocation(),
+                LoadLibraryFlags.LoadWithAlteredSearchPath);
+
+            handle.IsInvalid.Should().BeFalse();
+            var doubler = (delegate* unmanaged[Cdecl]<int, int>)Modules.GetFunctionAddress(handle, "Double");
+            doubler(3).Should().Be(6);
+        }
+
+        [Fact]
         public void LoadFunctionFromLongPath()
         {
             using var cleaner = new TestFileCleaner();

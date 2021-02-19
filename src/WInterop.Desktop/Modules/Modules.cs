@@ -136,7 +136,7 @@ namespace WInterop.Modules
         }
 
         /// <summary>
-        ///  Get a delegate for the given native method
+        ///  Get a delegate for the given native method.
         /// </summary>
         /// <remarks>
         ///  Here is a sample delegate definition:
@@ -155,6 +155,18 @@ namespace WInterop.Modules
                 Error.GetLastError().Throw(methodName);
 
             return Marshal.GetDelegateForFunctionPointer<TDelegate>(method);
+        }
+
+        /// <summary>
+        ///  Get a function pointer for the given native method.
+        /// </summary>
+        public static IntPtr GetFunctionAddress(ModuleInstance library, string methodName)
+        {
+            IntPtr method = Imports.GetProcAddress(library, methodName);
+            if (method == IntPtr.Zero)
+                Error.GetLastError().Throw(methodName);
+
+            return method;
         }
 
         /// <summary>
