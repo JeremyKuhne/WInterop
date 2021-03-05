@@ -1310,12 +1310,6 @@ namespace WInterop.Windows.Native
             TPMPARAMS* lptpm);
 
         // https://msdn.microsoft.com/library/windows/desktop/ms679277.aspx
-        [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-        public static extern bool Beep(
-            uint dwFreq,
-            uint dwDurations);
-
-        // https://msdn.microsoft.com/library/windows/desktop/ms679277.aspx
         [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
         public static extern bool MessageBeep(
             BeepType uType);
@@ -1373,47 +1367,5 @@ namespace WInterop.Windows.Native
         // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getdpifromdpiawarenesscontext
         [DllImport(Libraries.User32, ExactSpelling = true)]
         public static extern uint GetDpiFromDpiAwarenessContext(DpiAwarenessContext value);
-
-        // https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-muldiv
-        [SuppressGCTransition]
-        [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-        public static extern int MulDiv(
-            int nNumber,
-            int nNumerator,
-            int nDenominator);
-
-        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-isappthemed
-        [SuppressGCTransition]
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern IntBoolean IsAppThemed();
-
-        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-iscompositionactive
-        [SuppressGCTransition]
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern IntBoolean IsCompositionActive();
-
-        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-isthemeactive
-        [SuppressGCTransition]
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern IntBoolean IsThemeActive();
-
-        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern IntBoolean IsThemePartDefined(
-            HTHEME hTheme,
-            int iPartId,
-            int iStateId);
-
-        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-openthemedataex
-        [DllImport(Libraries.UxTheme, ExactSpelling = true, CharSet = CharSet.Unicode)]
-        public static unsafe extern HTHEME OpenThemeDataEx(
-            HWND hwnd,
-            char* pszClassList,
-            uint dwFlags);
-
-        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-closethemedata
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern HResult CloseThemeData(
-            HTHEME hTheme);
     }
 }
