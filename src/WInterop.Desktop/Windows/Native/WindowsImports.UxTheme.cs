@@ -10,6 +10,21 @@ namespace WInterop.Windows.Native
 {
     public static partial class WindowsImports
     {
+        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-closethemedata
+        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
+        public static extern HResult CloseThemeData(
+            HTHEME hTheme);
+
+        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-getcurrentthemename
+        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
+        public static unsafe extern HResult GetCurrentThemeName(
+            char* pszThemeFileName,
+            int cchMaxNameChars,
+            char* pszColorBuff,
+            int cchMaxColorChars,
+            char* pszSizeBuff,
+            int cchMaxSizeChars);
+
         // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-isappthemed
         [SuppressGCTransition]
         [DllImport(Libraries.UxTheme, ExactSpelling = true)]
@@ -38,10 +53,5 @@ namespace WInterop.Windows.Native
             HWND hwnd,
             char* pszClassList,
             uint dwFlags);
-
-        // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-closethemedata
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern HResult CloseThemeData(
-            HTHEME hTheme);
     }
 }

@@ -2,23 +2,25 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Buffers;
-using System.Drawing;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Gdi;
-using WInterop.Globalization;
-using WInterop.Modules;
 using WInterop.Support;
-using WInterop.Support.Buffers;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
     public static partial class Windows
     {
+        public static unsafe string GetCurrentThemeName()
+        {
+            Span<char> themeName = stackalloc char[Paths.MaxPath];
+            fixed (char* theme = themeName)
+            {
+                WindowsImports.GetCurrentThemeName(theme, Paths.MaxPath, null, 0, null, 0).ThrowIfFailed();
+            }
+
+            return themeName.SliceAtNull().ToString();
+        }
+
         public static bool IsAppThemed() => WindowsImports.IsAppThemed();
 
         public static bool IsCompositionActive() => WindowsImports.IsCompositionActive();
