@@ -12,7 +12,7 @@ namespace WindowsTests
         [Fact]
         public unsafe void GetCurrentThemeName()
         {
-            string themeName = Themes.GetCurrentThemeName();
+            string themeName = Windows.GetCurrentThemeName();
 
             // Name would be something like: C:\WINDOWS\resources\themes\Aero\Aero.msstyles
 
