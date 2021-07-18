@@ -95,5 +95,21 @@ namespace WInterop.Memory.Native
             ProcessHandle Process,
             ref ProcessMemoryCounters ppsmemCounters,
             uint cb);
+
+        // https://docs.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemalloc
+        [DllImport(Libraries.Ole32, ExactSpelling = true)]
+        public static extern IntPtr CoTaskMemAlloc(
+            nuint cb);
+
+        // https://docs.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemrealloc
+        [DllImport(Libraries.Ole32, ExactSpelling = true)]
+        public static extern IntPtr CoTaskMemRealloc(
+            IntPtr pv,
+            nuint cb);
+
+        // https://docs.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree
+        [DllImport(Libraries.Ole32, ExactSpelling = true)]
+        public static extern void CoTaskMemFree(
+            IntPtr pv);
     }
 }

@@ -112,5 +112,11 @@ namespace WInterop.Memory
             if (MemoryImports.GlobalFree(handle).Value != IntPtr.Zero)
                 Error.ThrowLastError();
         }
+
+        public static IntPtr CoTaskAllocate(nuint bytes)
+            => MemoryImports.CoTaskMemAlloc(bytes);
+
+        public static void CoTaskFree(IntPtr handle)
+            => MemoryImports.CoTaskMemFree(handle);
     }
 }
