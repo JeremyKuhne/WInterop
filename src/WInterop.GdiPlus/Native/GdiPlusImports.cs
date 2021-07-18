@@ -204,5 +204,9 @@ namespace WInterop.GdiPlus.Native
             EnumerateMetafilePlusCallback callback,
             IntPtr callbackData,
             GpImageAttributes imageAttributes);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipDeleteMatrix(
+            GpMatrix matrix);
     }
 }
