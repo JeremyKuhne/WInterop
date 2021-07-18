@@ -52,6 +52,10 @@ namespace StorageTests
                 catch (DriveLockedException)
                 {
                 }
+                catch (WInteropIOException e) when ((HResult)e.HResult == WindowsError.ERROR_FT_READ_FAILURE.ToHResult())
+                {
+                    // Had this happen with Storage Spaces not being online
+                }
             }
         }
 
