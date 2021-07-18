@@ -22,15 +22,15 @@ namespace WInterop.Windows
 
         public static implicit operator int(LParam lParam) => (int)lParam.Value;
         public static explicit operator uint(LParam lParam) => (uint)lParam.Value;
-        public static implicit operator LParam(int value) => new LParam(value);
-        public static implicit operator LParam(nint value) => new LParam(value);
+        public static implicit operator LParam(int value) => new(value);
+        public static implicit operator LParam(nint value) => new(value);
         public static implicit operator nint(LParam lParam) => lParam.Value;
-        public static implicit operator LParam((int high, int low) value) => new LParam(value.high, value.low);
+        public static implicit operator LParam((int High, int Low) value) => new(value.High, value.Low);
 
         public static unsafe implicit operator void*(LParam lParam) => (void*)lParam.Value;
-        public static unsafe implicit operator LParam(void* value) => new LParam((nint)value);
+        public static unsafe implicit operator LParam(void* value) => new((nint)value);
         public static explicit operator WindowHandle(LParam lParam) => new HWND(lParam.Value);
-        public static explicit operator LParam(WindowHandle value) => new LParam(value.HWND.Value);
+        public static explicit operator LParam(WindowHandle value) => new(value.HWND.Value);
 
         public override string ToString() => Value.ToString();
     }

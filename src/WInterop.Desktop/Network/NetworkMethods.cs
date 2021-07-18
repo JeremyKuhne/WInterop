@@ -18,17 +18,19 @@ namespace WInterop.Network
             uint level = string.IsNullOrEmpty(comment) ? 0u : 1;
 
             fixed (char* fixedName = groupName)
-            fixed (char* fixedComment = level == 0 ? null : comment)
             {
-                char*[] data = new char*[] { fixedName, fixedComment };
-                fixed (void* buffer = data)
+                fixed (char* fixedComment = level == 0 ? null : comment)
                 {
-                    Imports.NetLocalGroupAdd(
-                        servername: server,
-                        level: level,
-                        buf: buffer,
-                        parm_err: out uint parameter)
-                        .ThrowIfFailed();
+                    char*[] data = new char*[] { fixedName, fixedComment };
+                    fixed (void* buffer = data)
+                    {
+                        Imports.NetLocalGroupAdd(
+                            servername: server,
+                            level: level,
+                            buf: buffer,
+                            parm_err: out uint parameter)
+                            .ThrowIfFailed();
+                    }
                 }
             }
         }

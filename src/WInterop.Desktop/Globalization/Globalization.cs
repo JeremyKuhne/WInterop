@@ -17,7 +17,7 @@ namespace WInterop.Globalization
         /// <summary>
         ///  The sort handle for the invariant culture.
         /// </summary>
-        public static LParam InvariantSortHandle = GetSortHandle(string.Empty);
+        public static readonly LParam InvariantSortHandle = GetSortHandle(string.Empty);
 
         /// <summary>
         ///  Compare the given strings. Note that String.CompareOrdinal can be faster than this.
@@ -131,8 +131,11 @@ namespace WInterop.Globalization
         {
             LParam sortHandle;
             fixed (char* l = locale)
+            {
                 if (Imports.LCMapStringEx(l, LocaleMapFlags.SortHandle, null, 0, (char*)&sortHandle, sizeof(LParam), null, null, 0) == 0)
                     Error.ThrowLastError();
+            }
+
             return sortHandle;
         }
 

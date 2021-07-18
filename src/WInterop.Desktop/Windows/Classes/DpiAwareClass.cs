@@ -12,7 +12,7 @@ namespace WInterop.Windows
                 case MessageType.DpiChanged:
                     {
                         // Resize and reposition for the new DPI
-                        Message.DpiChanged dpiChanged = new (wParam, lParam);
+                        Message.DpiChanged dpiChanged = new(wParam, lParam);
                         window.MoveWindow(dpiChanged.SuggestedBounds, repaint: true);
 
                         break;

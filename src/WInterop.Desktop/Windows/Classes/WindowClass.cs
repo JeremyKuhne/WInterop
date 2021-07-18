@@ -94,7 +94,7 @@ namespace WInterop.Windows
         public bool IsRegistered => Atom.IsValid || ModuleInstance == ModuleInstance.Null;
 
         public BrushHandle BackgroundBrush
-            => new BrushHandle(_wndClass.hbrBackground, ownsHandle: false);
+            => new(_wndClass.hbrBackground, ownsHandle: false);
 
         /// <summary>
         ///  Registers this <see cref="WindowClass"/> so that instances can be created.
@@ -102,17 +102,19 @@ namespace WInterop.Windows
         public unsafe WindowClass Register()
         {
             fixed (char* name = _className)
-            fixed (char* menuName = _menuName)
             {
-                _wndClass.lpszClassName = name;
-                if (!string.IsNullOrEmpty(_menuName))
-                    _wndClass.lpszMenuName = menuName;
+                fixed (char* menuName = _menuName)
+                {
+                    _wndClass.lpszClassName = name;
+                    if (!string.IsNullOrEmpty(_menuName))
+                        _wndClass.lpszMenuName = menuName;
 
-                Atom atom = WindowsImports.RegisterClassExW(ref _wndClass);
-                if (!atom.IsValid)
-                    Error.ThrowLastError();
-                Atom = atom;
-                return this;
+                    Atom atom = WindowsImports.RegisterClassExW(ref _wndClass);
+                    if (!atom.IsValid)
+                        Error.ThrowLastError();
+                    Atom = atom;
+                    return this;
+                }
             }
         }
 

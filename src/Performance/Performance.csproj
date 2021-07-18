@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1.1453" />
-    <PackageReference Include="Microsoft.Win32.SystemEvents" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Win32.SystemEvents" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

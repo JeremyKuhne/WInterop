@@ -7,7 +7,7 @@ namespace WInterop.Security
     ///  Type of information being retrieved from an access control list. [ACL_INFORMATION_CLASS]
     /// </summary>
     /// <remarks>
-    /// <see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374935.aspx"/>
+    /// <see cref="https://docs.microsoft.com/windows/win32/api/winnt/ne-winnt-acl_information_class"/>
     /// </remarks>
     public enum AclInformationClass : uint
     {

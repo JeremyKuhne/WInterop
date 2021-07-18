@@ -35,19 +35,21 @@ namespace WInterop.ProcessAndThreads
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static unsafe string GetEnvironmentVariable(string name)
         {
-            if (name is null) throw new ArgumentNullException(nameof(name));
-
-            return PlatformInvoke.GrowableBufferInvoke(
-                (ref ValueBuffer<char> buffer) =>
-                {
-                    fixed (char* n = name)
-                    fixed (char* b = buffer)
+            return name is null
+                ? throw new ArgumentNullException(nameof(name))
+                : PlatformInvoke.GrowableBufferInvoke(
+                    (ref ValueBuffer<char> buffer) =>
                     {
-                        return ProcessAndThreadImports.GetEnvironmentVariableW(n, b, buffer.Length);
-                    }
-                },
-                detail: name,
-                shouldThrow: (WindowsError error) => error != WindowsError.ERROR_ENVVAR_NOT_FOUND);
+                        fixed (char* n = name)
+                        {
+                            fixed (char* b = buffer)
+                            {
+                                return ProcessAndThreadImports.GetEnvironmentVariableW(n, b, buffer.Length);
+                            }
+                        }
+                    },
+                    detail: name,
+                    shouldThrow: (WindowsError error) => error != WindowsError.ERROR_ENVVAR_NOT_FOUND);
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace WInterop.ProcessAndThreads
                     if (separator == -1) throw new InvalidOperationException("There should never be a string given back from Windows without an equals sign");
 
                     string key = entry.Substring(startIndex: 0, length: separator);
-                    string value = entry.Substring(startIndex: separator + 1);
+                    string value = entry[(separator + 1)..];
                     variables.Add(key, value);
                 }
             }

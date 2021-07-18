@@ -27,7 +27,7 @@ namespace WInterop.Windows
 
         public void Layout(Rectangle bounds)
         {
-            Size size = new ((int)(bounds.Width * _percent.Width), (int)(bounds.Height * _percent.Height));
+            Size size = new((int)(bounds.Width * _percent.Width), (int)(bounds.Height * _percent.Height));
 
             int x = _horizontalAlignment switch
             {

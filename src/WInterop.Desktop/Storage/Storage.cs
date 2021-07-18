@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
 using WInterop.Errors;
 using WInterop.Handles;
 using WInterop.Security;
@@ -27,9 +27,11 @@ namespace WInterop.Storage
             static uint Fix(string path, in ValueBuffer<char> buffer)
             {
                 fixed (char* p = path)
-                fixed (char* c = buffer)
                 {
-                    return StorageImports.GetShortPathNameW(p, c, (uint)buffer.Length);
+                    fixed (char* c = buffer)
+                    {
+                        return StorageImports.GetShortPathNameW(p, c, (uint)buffer.Length);
+                    }
                 }
             }
 
@@ -383,24 +385,26 @@ namespace WInterop.Storage
             // has to be uppercase to match as expected.
 
             fixed (char* e = ignoreCase ? expression.ToUpperInvariant() : expression)
-            fixed (char* n = name)
             {
-                SafeString.Native.UNICODE_STRING* eus = null;
-                SafeString.Native.UNICODE_STRING* nus = null;
-
-                if (e != null)
+                fixed (char* n = name)
                 {
-                    var temp = new SafeString.Native.UNICODE_STRING(e, expression.Length);
-                    eus = &temp;
-                }
+                    SafeString.Native.UNICODE_STRING* eus = null;
+                    SafeString.Native.UNICODE_STRING* nus = null;
 
-                if (n != null)
-                {
-                    var temp = new SafeString.Native.UNICODE_STRING(n, name.Length);
-                    nus = &temp;
-                }
+                    if (e != null)
+                    {
+                        var temp = new SafeString.Native.UNICODE_STRING(e, expression.Length);
+                        eus = &temp;
+                    }
 
-                return StorageImports.RtlIsNameInExpression(eus, nus, ignoreCase, IntPtr.Zero);
+                    if (n != null)
+                    {
+                        var temp = new SafeString.Native.UNICODE_STRING(n, name.Length);
+                        nus = &temp;
+                    }
+
+                    return StorageImports.RtlIsNameInExpression(eus, nus, ignoreCase, IntPtr.Zero);
+                }
             }
         }
 
@@ -624,7 +628,7 @@ namespace WInterop.Storage
 
         public static IEnumerable<BackupStreamInformation> GetAlternateStreamInformation(string path)
         {
-            List<BackupStreamInformation> streams = new List<BackupStreamInformation>();
+            List<BackupStreamInformation> streams = new();
             using (var fileHandle = CreateFile(
                 path: path.AsSpan(),
                 // To look at metadata we don't need read or write access
@@ -634,7 +638,7 @@ namespace WInterop.Storage
                 fileAttributes: AllFileAttributes.None,
                 fileFlags: FileFlags.BackupSemantics))
             {
-                using BackupReader reader = new BackupReader(fileHandle);
+                using BackupReader reader = new(fileHandle);
                 BackupStreamInformation? info;
                 while ((info = reader.GetNextInfo()).HasValue)
                 {
@@ -739,9 +743,11 @@ namespace WInterop.Storage
                 (ref ValueBuffer<char> buffer) =>
                 {
                     fixed (char* p = path)
-                    fixed (char* b = buffer)
                     {
-                        return StorageImports.GetFullPathNameW(p, buffer.Length, b, null);
+                        fixed (char* b = buffer)
+                        {
+                            return StorageImports.GetFullPathNameW(p, buffer.Length, b, null);
+                        }
                     }
                 },
                 detail: path);
@@ -797,9 +803,11 @@ namespace WInterop.Storage
                 (ref ValueBuffer<char> buffer) =>
                 {
                     fixed (char* p = path)
-                    fixed (char* b = buffer)
                     {
-                        return StorageImports.GetLongPathNameW(p, b, buffer.Length);
+                        fixed (char* b = buffer)
+                        {
+                            return StorageImports.GetLongPathNameW(p, b, buffer.Length);
+                        }
                     }
                 },
                 detail: path);
@@ -955,7 +963,7 @@ namespace WInterop.Storage
             FileFlags fileFlags = FileFlags.None,
             SecurityQosFlags securityQosFlags = SecurityQosFlags.None)
         {
-            CREATEFILE2_EXTENDED_PARAMETERS extended = new CREATEFILE2_EXTENDED_PARAMETERS()
+            CREATEFILE2_EXTENDED_PARAMETERS extended = new()
             {
                 dwSize = (uint)sizeof(CREATEFILE2_EXTENDED_PARAMETERS),
                 dwFileAttributes = fileAttributes,
@@ -1014,7 +1022,7 @@ namespace WInterop.Storage
         public static unsafe void CopyFile2(string source, string destination, bool overwrite = false)
         {
             IntBoolean cancel = false;
-            COPYFILE2_EXTENDED_PARAMETERS parameters = new COPYFILE2_EXTENDED_PARAMETERS()
+            COPYFILE2_EXTENDED_PARAMETERS parameters = new()
             {
                 dwSize = (uint)sizeof(COPYFILE2_EXTENDED_PARAMETERS),
                 pfCancel = &cancel,
@@ -1103,15 +1111,11 @@ namespace WInterop.Storage
             }
 
             WindowsError error = Error.GetLastError();
-            switch (error)
+            return error switch
             {
-                case WindowsError.ERROR_ACCESS_DENIED:
-                case WindowsError.ERROR_NETWORK_ACCESS_DENIED:
-                    throw error.GetException(path);
-                case WindowsError.ERROR_PATH_NOT_FOUND:
-                default:
-                    return null;
-            }
+                WindowsError.ERROR_ACCESS_DENIED or WindowsError.ERROR_NETWORK_ACCESS_DENIED => throw error.GetException(path),
+                _ => null,
+            };
         }
 
         /// <summary>
@@ -1228,14 +1232,14 @@ namespace WInterop.Storage
         /// <returns>The number of bytes read.</returns>
         public static unsafe uint ReadFile(SafeFileHandle fileHandle, Span<byte> buffer, ulong? fileOffset = null)
         {
-            if (fileHandle == null) throw new ArgumentNullException("fileHandle");
-            if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException("fileHandle");
+            if (fileHandle == null) throw new ArgumentNullException(nameof(fileHandle));
+            if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException(message: null, nameof(fileHandle));
 
             uint numberOfBytesRead;
 
             if (fileOffset.HasValue)
             {
-                OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
+                OVERLAPPED overlapped = new() { Offset = fileOffset.Value };
                 Error.ThrowLastErrorIfFalse(
                     StorageImports.ReadFile(fileHandle, ref MemoryMarshal.GetReference(buffer), (uint)buffer.Length, out numberOfBytesRead, &overlapped));
             }
@@ -1258,14 +1262,14 @@ namespace WInterop.Storage
         /// <returns>The number of bytes written.</returns>
         public static unsafe uint WriteFile(SafeFileHandle fileHandle, Span<byte> data, ulong? fileOffset = null)
         {
-            if (fileHandle == null) throw new ArgumentNullException("fileHandle");
-            if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException("fileHandle");
+            if (fileHandle == null) throw new ArgumentNullException(nameof(fileHandle));
+            if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException(null, nameof(fileHandle));
 
             uint numberOfBytesWritten;
 
             if (fileOffset.HasValue)
             {
-                OVERLAPPED overlapped = new OVERLAPPED { Offset = fileOffset.Value };
+                OVERLAPPED overlapped = new() { Offset = fileOffset.Value };
                 Error.ThrowLastErrorIfFalse(
                     StorageImports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, &overlapped));
             }
@@ -1328,7 +1332,7 @@ namespace WInterop.Storage
         /// </summary>
         public static unsafe IEnumerable<string> GetDirectoryFilenames(SafeFileHandle directoryHandle)
         {
-            List<string> filenames = new List<string>();
+            List<string> filenames = new();
             GetFullDirectoryInfoHelper(directoryHandle, buffer =>
             {
                 FILE_FULL_DIR_INFORMATION* info = (FILE_FULL_DIR_INFORMATION*)buffer.BytePointer;
@@ -1346,7 +1350,7 @@ namespace WInterop.Storage
         /// </summary>
         public static unsafe IEnumerable<FullFileInformation> GetDirectoryInformation(SafeFileHandle directoryHandle)
         {
-            List<FullFileInformation> infos = new List<FullFileInformation>();
+            List<FullFileInformation> infos = new();
             GetFullDirectoryInfoHelper(directoryHandle, buffer =>
             {
                 FILE_FULL_DIR_INFORMATION* info = (FILE_FULL_DIR_INFORMATION*)buffer.BytePointer;
@@ -1522,29 +1526,31 @@ namespace WInterop.Storage
             Span<char> fileSystemName = stackalloc char[Paths.MaxPath + 1];
 
             fixed (char* v = volumeName)
-            fixed (char* f = fileSystemName)
             {
-                Error.ThrowLastErrorIfFalse(
-                    StorageImports.GetVolumeInformationW(
-                        Paths.AddTrailingSeparator(rootPath),
-                        v,
-                        (uint)volumeName.Length,
-                        out uint serialNumber,
-                        out uint maxComponentLength,
-                        out FileSystemFeature flags,
-                        f,
-                        (uint)fileSystemName.Length),
-                    rootPath);
-
-                return new VolumeInformation
+                fixed (char* f = fileSystemName)
                 {
-                    RootPathName = rootPath,
-                    VolumeName = volumeName.SliceAtNull().ToString(),
-                    VolumeSerialNumber = serialNumber,
-                    MaximumComponentLength = maxComponentLength,
-                    FileSystemFlags = flags,
-                    FileSystemName = fileSystemName.ToString()
-                };
+                    Error.ThrowLastErrorIfFalse(
+                        StorageImports.GetVolumeInformationW(
+                            Paths.AddTrailingSeparator(rootPath),
+                            v,
+                            (uint)volumeName.Length,
+                            out uint serialNumber,
+                            out uint maxComponentLength,
+                            out FileSystemFeature flags,
+                            f,
+                            (uint)fileSystemName.Length),
+                        rootPath);
+
+                    return new VolumeInformation
+                    {
+                        RootPathName = rootPath,
+                        VolumeName = volumeName.SliceAtNull().ToString(),
+                        VolumeSerialNumber = serialNumber,
+                        MaximumComponentLength = maxComponentLength,
+                        FileSystemFlags = flags,
+                        FileSystemName = fileSystemName.ToString()
+                    };
+                }
             }
         }
 

@@ -32,9 +32,6 @@ namespace WInterop.Errors
         // Using NTSTATUS Values
         // https://msdn.microsoft.com/en-us/library/windows/hardware/ff565436.aspx
 
-        /// <summary>
-        ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-        /// </summary>
         /// <remarks>
         ///  .NET's Win32Exception impements the error code lookup on FormatMessage using FORMAT_MESSAGE_FROM_SYSTEM.
         ///  It won't handle Network Errors (NERR_BASE..MAX_NERR), which come from NETMSG.DLL.
@@ -45,7 +42,7 @@ namespace WInterop.Errors
             FormatMessageFlags flags,
             params string[] args)
         {
-            using StringBuffer buffer = new StringBuffer();
+            using StringBuffer buffer = new();
 
             // Don't use line breaks
             flags |= FormatMessageFlags.MaxWidthMask;

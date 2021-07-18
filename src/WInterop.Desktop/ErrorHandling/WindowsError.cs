@@ -13,9 +13,11 @@ namespace WInterop.Errors
         // From winerror.h
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx
 
+#pragma warning disable CA1069 // Enums values should not be duplicated
         NO_ERROR = 0,
         ERROR_SUCCESS = 0,
         NERR_Success = 0,
+#pragma warning restore CA1069 // Enums values should not be duplicated
         ERROR_INVALID_FUNCTION = 1,
         ERROR_FILE_NOT_FOUND = 2,
         ERROR_PATH_NOT_FOUND = 3,

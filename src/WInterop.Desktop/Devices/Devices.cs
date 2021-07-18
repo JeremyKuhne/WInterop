@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
 using WInterop.Devices.Native;
 using WInterop.Errors;
 using WInterop.Storage;
@@ -215,7 +215,7 @@ namespace WInterop.Devices
         /// <param name="fileHandle">
         ///  Handle for the reparse point, must be opened with <see cref="FileAccessRights.ReadExtendedAttributes"/>.
         /// </param>
-        public static unsafe (string? printName, string? substituteName, ReparseTag tag) GetReparsePointNames(SafeFileHandle fileHandle)
+        public static unsafe (string? PrintName, string? SubstituteName, ReparseTag Tag) GetReparsePointNames(SafeFileHandle fileHandle)
         {
             return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
             {

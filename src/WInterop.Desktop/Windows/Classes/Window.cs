@@ -22,7 +22,7 @@ namespace WInterop.Windows
         private readonly GCHandle _gcHandle;
         private string? _text;
 
-        private static FontHandle s_defaultFont = CreateDefaultFont((WindowHandle)default);
+        private static readonly FontHandle s_defaultFont = CreateDefaultFont(default);
 
         public WindowHandle Handle { get; }
 
@@ -124,7 +124,7 @@ namespace WInterop.Windows
                     }
                     else
                     {
-                        Message.SetText setText = new (lParam);
+                        Message.SetText setText = new(lParam);
                         if (!setText.Text.Equals(_text, StringComparison.Ordinal))
                         {
                             _text = setText.Text.ToString();
@@ -137,7 +137,7 @@ namespace WInterop.Windows
                 case MessageType.DpiChanged:
                     {
                         // Resize and reposition for the new DPI
-                        Message.DpiChanged dpiChanged = new (wParam, lParam);
+                        Message.DpiChanged dpiChanged = new(wParam, lParam);
 
                         using var oldFont = s_defaultFont;
                         var newFont = Gdi.Gdi.CreateFont(

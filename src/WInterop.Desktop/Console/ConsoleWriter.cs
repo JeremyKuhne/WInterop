@@ -12,11 +12,11 @@ namespace WInterop.Console
 {
     public class ConsoleWriter : TextWriter
     {
-        private readonly Lazy<StringBuilder> _builder = new Lazy<StringBuilder>(() => new StringBuilder(1024));
+        private readonly Lazy<StringBuilder> _builder = new(() => new StringBuilder(1024));
         private readonly Encoder _encoder;
         private readonly Encoding _encoding;
         private readonly ConsoleStream _stream;
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private readonly bool _autoFlush;
 
         private byte[]? _buffer;
@@ -84,7 +84,7 @@ namespace WInterop.Console
 
         private unsafe void InternalWrite(char value, bool newLine = false)
         {
-            ReadOnlySpan<char> span = new ReadOnlySpan<char>(&value, 1);
+            ReadOnlySpan<char> span = new(&value, 1);
             lock (_lock)
             {
                 Encode(span, newLine);
@@ -267,26 +267,28 @@ namespace WInterop.Console
                 int charsUsed = 0;
 
                 fixed (char* c = &MemoryMarshal.GetReference(internalSpan))
-                fixed (byte* b = _buffer)
                 {
-                    while (!completed)
+                    fixed (byte* b = _buffer)
                     {
-                        _encoder.Convert(
-                            c + charsUsed,
-                            count,
-                            b + _position,
-                            _buffer!.Length - _position,
-                            flush: true,
-                            out charsUsed,
-                            out int bytesUsed,
-                            out completed);
-
-                        _position += bytesUsed;
-                        if (!completed)
+                        while (!completed)
                         {
-                            // Out of space, need to flush the buffer
-                            FlushInternal();
-                            count -= charsUsed;
+                            _encoder.Convert(
+                                c + charsUsed,
+                                count,
+                                b + _position,
+                                _buffer!.Length - _position,
+                                flush: true,
+                                out charsUsed,
+                                out int bytesUsed,
+                                out completed);
+
+                            _position += bytesUsed;
+                            if (!completed)
+                            {
+                                // Out of space, need to flush the buffer
+                                FlushInternal();
+                                count -= charsUsed;
+                            }
                         }
                     }
                 }

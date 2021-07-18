@@ -3,12 +3,12 @@
 
 namespace WInterop.Windows
 {
-    public struct PaddingF
+    public readonly struct PaddingF
     {
-        public float Left;
-        public float Top;
-        public float Right;
-        public float Bottom;
+        public readonly float Left;
+        public readonly float Top;
+        public readonly float Right;
+        public readonly float Bottom;
 
         public PaddingF(float left, float top, float right, float bottom)
         {
@@ -18,8 +18,8 @@ namespace WInterop.Windows
             Bottom = bottom;
         }
 
-        public static implicit operator PaddingF(float padding) => new PaddingF(padding, padding, padding, padding);
-        public static implicit operator PaddingF((float left, float top, float right, float bottom) padding)
-            => new PaddingF(padding.left, padding.top, padding.right, padding.bottom);
+        public static implicit operator PaddingF(float padding) => new(padding, padding, padding, padding);
+        public static implicit operator PaddingF((float Left, float Top, float Right, float Bottom) padding)
+            => new(padding.Left, padding.Top, padding.Right, padding.Bottom);
     }
 }

@@ -35,10 +35,12 @@ namespace WInterop.Compression
             if (Algorithm != 0x41) return false;
 
             fixed (byte* b = Signature)
-            fixed (byte* c = LzxSignature)
             {
-                for (int i = 0; i < LzxSignature.Length; i++)
-                    if (b[i] != c[i]) return false;
+                fixed (byte* c = LzxSignature)
+                {
+                    for (int i = 0; i < LzxSignature.Length; i++)
+                        if (b[i] != c[i]) return false;
+                }
             }
 
             return true;

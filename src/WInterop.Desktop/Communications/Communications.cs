@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Win32.SafeHandles;
 using WInterop.Communications.Native;
 using WInterop.Errors;
 using WInterop.Registry;
@@ -17,7 +17,7 @@ namespace WInterop.Communications
     {
         public static unsafe DeviceControlBlock GetCommunicationsState(SafeFileHandle fileHandle)
         {
-            DeviceControlBlock dcb = new DeviceControlBlock()
+            DeviceControlBlock dcb = new()
             {
                 DCBlength = (uint)sizeof(DeviceControlBlock)
             };
