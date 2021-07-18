@@ -91,5 +91,9 @@ namespace WInterop.Com.Native
         [DllImport(Libraries.OleAut32)]
         public static extern HResult SafeArrayUnlock(
             ref SAFEARRAY psa);
+
+        // https://docs.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-releasestgmedium
+        [DllImport(Libraries.Ole32)]
+        public static extern unsafe void ReleaseStgMedium(STGMEDIUM* Arg1);
     }
 }

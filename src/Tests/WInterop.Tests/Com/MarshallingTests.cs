@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Tests.Support;
 using WInterop;
 using WInterop.Com;
+using WInterop.Com.Native;
 using WInterop.Errors;
 using WInterop.Security.Native;
 using WInterop.Storage;
@@ -34,12 +35,27 @@ namespace ComTests
 
             refCount = queried->AddRef();
 
-            // 1 + QueryInteface + AddRef
+            // 1 + QueryInterface + AddRef
             refCount.Should().Be(3);
 
             unknown->Release().Should().Be(2);
             queried->Release().Should().Be(1);
             unknown->Release().Should().Be(0);
+        }
+
+        [Fact]
+        public unsafe void Unknown_RoundTrip()
+        {
+            object managed = new();
+            var ccw = IUnknown.CCW.CreateInstance(managed);
+            IUnknown* unknown = (IUnknown*)ccw;
+
+            uint refCount = unknown->AddRef();
+            refCount.Should().Be(2);
+            refCount = unknown->Release();
+            refCount.Should().Be(1);
+            refCount = unknown->Release();
+            refCount.Should().Be(0);
         }
 
         public static unsafe void* CreateStorage(

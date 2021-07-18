@@ -166,5 +166,15 @@ namespace WInterop.Support
 
             return new ReadOnlySpan<char>(buffer, (int)(end - buffer));
         }
+
+        /// <summary>
+        ///  Converts bool to native BOOL.
+        /// </summary>
+        public static int ToBOOL(this bool value) => value ? 1 : 0;
+
+        /// <summary>
+        ///  Converts native BOOL to bool.
+        /// </summary>
+        public static bool FromBOOL(this int value) => value != 0;
     }
 }

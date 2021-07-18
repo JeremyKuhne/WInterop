@@ -3,7 +3,7 @@
 
 namespace WInterop.Com.Native
 {
-    // https://docs.microsoft.com/en-us/windows/desktop/api/objidl/ns-objidl-tagdvtargetdevice
+    // https://docs.microsoft.com/windows/desktop/api/objidl/ns-objidl-tagdvtargetdevice
     public struct DVTARGETDEVICE
     {
         public uint tdSize;

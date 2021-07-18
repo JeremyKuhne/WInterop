@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using WInterop;
 using WInterop.Com;
+using WInterop.Com.Native;
 using WInterop.Errors;
 using WInterop.Security.Native;
 using WInterop.Storage;

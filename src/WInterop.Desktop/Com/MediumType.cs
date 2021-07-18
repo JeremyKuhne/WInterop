@@ -11,7 +11,8 @@ namespace WInterop.Com
     ///  Storage medium type. [TYMED]
     /// </summary>
     /// <docs>https://docs.microsoft.com/windows/win32/api/objidl/ne-objidl-tymed</docs>
-    public enum MediumType
+    [Flags]
+    public enum MediumType : uint
     {
         /// <summary>
         ///  Data is a <see cref="HGLOBAL"/> memory handle. [TYMED_HGLOBAL]
@@ -19,12 +20,12 @@ namespace WInterop.Com
         /// <remarks>
         ///  If theIUnknown handle is null, the handle should be freed via <see cref="Memory.Memory.GlobalFree"/>.
         /// </remarks>
-        Memory,
+        Memory = 1,
 
         /// <summary>
         ///  Data is a disk file path. [TYMED_FILE]
         /// </summary>
-        File,
+        File = 2,
 
         /// <summary>
         ///  Data is an <see cref="WInterop.Com.IStream"/>. [TYMED_ISTREAM]
@@ -32,7 +33,7 @@ namespace WInterop.Com
         /// <remarks>
         ///  If the IUnknown handle is not null, the handle should be freed via <see cref="Com.Release(IntPtr)"/>.
         /// </remarks>
-        IStream,
+        IStream = 4,
 
         /// <summary>
         ///  Data is an <see cref="WInterop.Com.IStorage"/>. [TYMED_ISTORAGE]
@@ -40,7 +41,7 @@ namespace WInterop.Com
         /// <remarks>
         ///  If the IUnknown handle is not null, the handle should be freed via <see cref="Com.Release(IntPtr)"/>.
         /// </remarks>
-        IStorage,
+        IStorage = 8,
 
         /// <summary>
         ///  Data is an <see cref="HBITMAP"/> [TYMED_GDI]
@@ -48,21 +49,21 @@ namespace WInterop.Com
         /// <remarks>
         ///  If theIUnknown handle is null, the handle should be freed via <see cref="GdiImports.DeleteObject(HGDIOBJ)"/>.
         /// </remarks>
-        Gdi,
+        Gdi = 16,
 
         /// <summary>
         ///  [TYMED_MFPICT]
         /// </summary>
-        Metafile,
+        Metafile = 32,
 
         /// <summary>
         ///  [TYMED_ENHMF]
         /// </summary>
-        EnhancedMetafile,
+        EnhancedMetafile = 64,
 
         /// <summary>
         ///  No data. [TYMED_NULL]
         /// </summary>
-        Null
+        Null = 0
     }
 }

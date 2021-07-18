@@ -7,6 +7,7 @@ using WInterop.Gdi.Native;
 
 namespace WInterop.Com.Native
 {
+    /// <docs>https://docs.microsoft.com/windows/win32/api/objidl/ns-objidl-ustgmedium-r1</docs>
     public struct STGMEDIUM
     {
         public MediumType tymed;
@@ -31,5 +32,7 @@ namespace WInterop.Com.Native
             [FieldOffset(0)]
             public IntPtr pstg; // IStorage
         }
+
+        public static unsafe void ReleaseStgMedium(STGMEDIUM* medium) => Imports.ReleaseStgMedium(medium);
     }
 }

@@ -29,4 +29,20 @@ namespace WInterop
 
         public override string ToString() => IsTrue.ToString();
     }
+
+    /// <remarks>
+    ///  NEVER compare BOOL to TRUE. Always use result != BOOL.FALSE or result == BOOL.FALSE.
+    /// </remarks>
+    public enum BOOL : int
+    {
+        FALSE = 0,
+        TRUE = 1,
+    }
+
+    public static class BoolExtensions
+    {
+        public static bool IsTrue(this BOOL b) => b != BOOL.FALSE;
+        public static bool IsFalse(this BOOL b) => b == BOOL.FALSE;
+        public static BOOL ToBOOL(this bool b) => b ? BOOL.TRUE : BOOL.FALSE;
+    }
 }

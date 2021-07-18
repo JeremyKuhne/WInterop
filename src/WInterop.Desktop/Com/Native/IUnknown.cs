@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 
-namespace WInterop.Com
+namespace WInterop.Com.Native
 {
     /// <summary>
     ///  Fast COM IUnknown method access.
@@ -19,20 +19,19 @@ namespace WInterop.Com
     ///  uint refCount = unknown->AddRef();
     /// </example>
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct IUnknown
+    public unsafe partial struct IUnknown
     {
-        private readonly void** _vtbl;
+        public static readonly Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
+
+        private readonly VTable* _vtable;
 
         public HResult QueryInterface(Guid* riid, void** ppvObject)
-            => ((delegate* unmanaged<void*, Guid*, void**, HResult>)_vtbl[0])(
-                Unsafe.AsPointer(ref this), riid, ppvObject);
+            => _vtable->QueryInterface(Unsafe.AsPointer(ref this), riid, ppvObject);
 
         public uint AddRef()
-            => ((delegate* unmanaged<void*, uint>)_vtbl[1])(
-                Unsafe.AsPointer(ref this));
+            => _vtable->AddRef(Unsafe.AsPointer(ref this));
 
         public uint Release()
-            => ((delegate* unmanaged<void*, uint>)_vtbl[2])(
-                Unsafe.AsPointer(ref this));
+            => _vtable->Release(Unsafe.AsPointer(ref this));
     }
 }
