@@ -204,10 +204,10 @@ namespace WInterop.Gdi
         /// </summary>
         public static DeviceContext BeginPaint(this in WindowHandle window, out Rectangle paintRectangle)
         {
-            PAINTSTRUCT ps = default;
-            GdiImports.BeginPaint(window, ref ps);
-            paintRectangle = ps.rcPaint;
-            return new DeviceContext(ps, window);
+            PAINTSTRUCT paintStruct = default;
+            GdiImports.BeginPaint(window, ref paintStruct);
+            paintRectangle = paintStruct.rcPaint;
+            return new DeviceContext(paintStruct, window);
         }
 
         /// <summary>

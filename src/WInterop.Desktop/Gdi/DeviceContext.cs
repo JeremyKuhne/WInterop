@@ -50,7 +50,7 @@ namespace WInterop.Gdi
                     { } // Debug.Fail("Failed to release DC");
                     break;
                 case CollectionType.EndPaint:
-                    PAINTSTRUCT ps = new PAINTSTRUCT(Handle);
+                    PAINTSTRUCT ps = new(Handle);
                     if (!GdiImports.EndPaint(_window, in ps))
                     { } // Debug.Fail("Failed to end paint");
                     break;
@@ -64,7 +64,7 @@ namespace WInterop.Gdi
         public bool IsInvalid => Handle.IsInvalid;
 
         public static implicit operator HDC(DeviceContext context) => context.Handle;
-        public static explicit operator DeviceContext(WParam wparam) => new DeviceContext(new HDC((IntPtr)wparam));
+        public static explicit operator DeviceContext(WParam wparam) => new(new(wparam));
 
         private enum CollectionType
         {

@@ -7,13 +7,13 @@ namespace WInterop.Gdi.Native
 {
     public readonly struct HDC
     {
-        public IntPtr Handle { get; }
+        public nuint Handle { get; }
 
-        public HDC(IntPtr handle)
+        public HDC(nuint handle)
         {
             Handle = handle;
         }
 
-        public bool IsInvalid => Handle == IntPtr.Zero || Handle == (IntPtr)(-1);
+        public bool IsInvalid => Handle == 0 || Handle == unchecked((nuint)(-1));
     }
 }
