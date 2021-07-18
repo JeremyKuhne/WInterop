@@ -64,7 +64,7 @@ namespace ComTests
             StorageMode mode = StorageMode.ReadWrite | StorageMode.Create | StorageMode.ShareExclusive,
             StorageFormat format = StorageFormat.DocFile)
         {
-            STGOPTIONS options = new STGOPTIONS
+            STGOPTIONS options = new()
             {
                 usVersion = 1,
 

@@ -31,20 +31,22 @@ namespace WInterop.Modules
         }
 
         /// <summary>
+        ///  Gets the module handle for the launching executable.
+        /// </summary>
+        public static ModuleInstance GetExeModuleHandle()
+            => new(GetModuleHandleHelper(moduleName: null, GetModuleFlags.UnchangedRefCount));
+
+        /// <summary>
         ///  Gets the specified module handle without increasing the ref count.
         /// </summary>
         public static ModuleInstance GetModuleHandle(string moduleName)
-        {
-            return new ModuleInstance(GetModuleHandleHelper(moduleName, GetModuleFlags.UnchangedRefCount));
-        }
+            => new(GetModuleHandleHelper(moduleName, GetModuleFlags.UnchangedRefCount));
 
         /// <summary>
         ///  Gets a module handle and pins the module so it can't be unloaded until the process exits.
         /// </summary>
         public static ModuleInstance GetModuleHandleAndPin(string moduleName)
-        {
-            return new ModuleInstance(GetModuleHandleHelper(moduleName, GetModuleFlags.Pin));
-        }
+            => new(GetModuleHandleHelper(moduleName, GetModuleFlags.Pin));
 
         /// <summary>
         ///  Gets a ref counted module handle for the specified module.
@@ -55,7 +57,7 @@ namespace WInterop.Modules
             return new RefCountedModuleInstance(GetModuleHandleHelper(moduleName, 0));
         }
 
-        private static unsafe IntPtr GetModuleHandleHelper(string moduleName, GetModuleFlags flags)
+        private static unsafe IntPtr GetModuleHandleHelper(string? moduleName, GetModuleFlags flags)
         {
             IntPtr GetHandle(IntPtr n, GetModuleFlags f)
             {
@@ -65,7 +67,7 @@ namespace WInterop.Modules
                 return handle;
             }
 
-            if (moduleName == null)
+            if (moduleName is null)
                 return GetHandle(IntPtr.Zero, flags);
 
             fixed (void* name = moduleName)

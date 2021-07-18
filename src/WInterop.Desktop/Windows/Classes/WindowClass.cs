@@ -3,8 +3,6 @@
 
 using System;
 using System.Drawing;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Gdi;
@@ -56,7 +54,7 @@ namespace WInterop.Windows
             else if (cursor == CursorHandle.NoCursor)
                 cursor = default;
 
-            moduleInstance ??= new ModuleInstance(Marshal.GetHINSTANCE(Assembly.GetCallingAssembly().Modules.First()));
+            moduleInstance ??= Modules.Modules.GetExeModuleHandle();
 
             if (menuId != 0 && menuName != null)
                 throw new ArgumentException($"Can't set both {nameof(menuName)} and {nameof(menuId)}.");

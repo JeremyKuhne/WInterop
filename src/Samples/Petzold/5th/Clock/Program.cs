@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
- #define GDIPLUS
+// #define GDIPLUS
 
 #if GDIPLUS
 using WInterop.GdiPlus;
@@ -34,9 +34,9 @@ namespace Clock
     internal class Clock : WindowClass
     {
 #if GDIPLUS
-        private readonly GdiPlusPen _blackPen = new GdiPlusPen(Color.Black);
-        private readonly GdiPlusBrush _blackBrush = new GdiPlusBrush(Color.Black);
-        private readonly GdiPlusBrush _whiteBrush = new GdiPlusBrush(Color.White);
+        private readonly GdiPlusPen _blackPen = new(Color.Black);
+        private readonly GdiPlusBrush _blackBrush = new(Color.Black);
+        private readonly GdiPlusBrush _whiteBrush = new(Color.White);
 #endif
 
         private void SetIsotropic(DeviceContext hdc)
@@ -47,7 +47,7 @@ namespace Clock
             hdc.SetViewportOrigin(new Point(_clientSize.Width / 2, _clientSize.Height / 2));
         }
 
-        private void RotatePoint(Point[] pt, int iNum, int iAngle)
+        private static void RotatePoint(Point[] pt, int iNum, int iAngle)
         {
             for (int i = 0; i < iNum; i++)
             {

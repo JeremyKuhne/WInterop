@@ -20,12 +20,15 @@
   </PropertyGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <ItemGroup>
+    <Compile Remove="Modules\BufferWrappers\**" />
     <Compile Remove="ProcessAndThreads\BufferWrappers\**" />
     <Compile Remove="Storage\BufferWrappers\**" />
     <Compile Remove="Windows\BufferWrappers\**" />
+    <EmbeddedResource Remove="Modules\BufferWrappers\**" />
     <EmbeddedResource Remove="ProcessAndThreads\BufferWrappers\**" />
     <EmbeddedResource Remove="Storage\BufferWrappers\**" />
     <EmbeddedResource Remove="Windows\BufferWrappers\**" />
+    <None Remove="Modules\BufferWrappers\**" />
     <None Remove="ProcessAndThreads\BufferWrappers\**" />
     <None Remove="Storage\BufferWrappers\**" />
     <None Remove="Windows\BufferWrappers\**" />
@@ -41,8 +44,5 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Modules\BufferWrappers\" />
   </ItemGroup>
 </Project>

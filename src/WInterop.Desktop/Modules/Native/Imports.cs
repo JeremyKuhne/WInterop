@@ -31,7 +31,7 @@ namespace WInterop.Modules.Native
             ModuleInstance hModule,
             [MarshalAs(UnmanagedType.LPStr)] string methodName);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683200.aspx
+        // https://docs.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexw
         [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
         public static unsafe extern bool GetModuleHandleExW(
             GetModuleFlags dwFlags,

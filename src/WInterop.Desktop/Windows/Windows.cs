@@ -20,7 +20,7 @@ namespace WInterop.Windows
     public static partial class Windows
     {
         public static Rectangle DefaultBounds
-            => new Rectangle(
+            => new(
                 WindowDefines.CW_USEDEFAULT,
                 WindowDefines.CW_USEDEFAULT,
                 WindowDefines.CW_USEDEFAULT,
@@ -411,7 +411,7 @@ namespace WInterop.Windows
                 }
             } while (result == buffer.Length - 1);
 
-            string text = new string(buffer, 0, result);
+            string text = new(buffer, 0, result);
             ArrayPool<char>.Shared.Return(buffer);
             return text;
         }
@@ -848,7 +848,7 @@ namespace WInterop.Windows
 
         public static unsafe DllVersionInfo GetCommonControlsVersion()
         {
-            DllVersionInfo info = new DllVersionInfo { Size = (uint)sizeof(DllVersionInfo) };
+            DllVersionInfo info = new() { Size = (uint)sizeof(DllVersionInfo) };
             WindowsImports.ComctlGetVersion(ref info).ThrowIfFailed();
             return info;
         }
