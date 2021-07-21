@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\WInterop.Desktop\WInterop.Desktop.csproj" />
     <ProjectReference Include="..\..\WInterop.DirectX\WInterop.Direct2d.csproj" />
     <ProjectReference Include="..\..\WInterop.GdiPlus\WInterop.GdiPlus.csproj" />
+    <ProjectReference Include="..\..\WInterop.SourceGenerators\WInterop.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <!--
       Adding a project ref like this gets build order correct and copies the native dll to the output
       directory. The reference still gets a warning in the solution explorer, haven't dug in to find

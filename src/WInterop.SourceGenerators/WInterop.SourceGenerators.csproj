@@ -1,36 +1,27 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\WInterop.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
-    <RootNamespace>WInterop</RootNamespace>
+    <RootNamespace>WInterop.SourceGenerators</RootNamespace>
     <PackageVersion>0.3.1-alpha-090911715</PackageVersion>
     <PackageLicenseUrl>https://github.com/JeremyKuhne/WInterop/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/JeremyKuhne/WInterop</PackageProjectUrl>
     <RepositoryUrl>https://github.com/JeremyKuhne/WInterop/WInterop.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryBranch>main</RepositoryBranch>
+    <RepositoryBranch>master</RepositoryBranch>
     <PackageReleaseNotes>Alpha release.</PackageReleaseNotes>
-    <Description>Managed interop library for Windows.</Description>
-    <Copyright>Copyright 2020</Copyright>
+    <Description>WInterop Source Generators.</Description>
+    <Copyright>Copyright 2021</Copyright>
     <PackageTags>PInvoke Win32</PackageTags>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <Import Project="..\Common\Common.projitems" Label="Shared" />
   <ItemGroup>
-    <Content Include="Gdi\BitBLT History.txt">
-      <Pack>false</Pack>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WInterop.SourceGenerators\WInterop.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />  
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
   </ItemGroup>
 </Project>

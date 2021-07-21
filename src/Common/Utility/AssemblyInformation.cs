@@ -3,8 +3,9 @@
 
 using System.Reflection;
 using System.Resources;
-using WInterop;
 using WInterop.Support;
+
+[assembly: DateTimeConstants("WInterop.Support")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
