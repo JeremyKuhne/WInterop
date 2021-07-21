@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-// #define GDIPLUS
+#define GDIPLUS
 
 #if GDIPLUS
 using WInterop.GdiPlus;
@@ -99,9 +99,9 @@ namespace Clock
 
             Point[][] handPoints =
             {
-                new Point[] { new Point(0, -150), new Point(100, 0), new Point(0, 600), new Point(-100, 0), new Point(0, -150) },
-                new Point[] { new Point(0, -200), new Point(50, 0), new Point(0, 800), new Point(-50, 0), new Point(0, -200), },
-                new Point[] { new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 800) }
+                new Point[] { new(0, -150), new(100, 0), new(0, 600), new(-100, 0), new(0, -150) },
+                new Point[] { new(0, -200), new(50, 0), new(0, 800), new(-50, 0), new(0, -200), },
+                new Point[] { new(0, 0), new(0, 0), new(0, 0), new(0, 0), new(0, 800) }
             };
 
 #if GDIPLUS

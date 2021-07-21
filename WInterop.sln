@@ -123,6 +123,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OldNewThing", "OldNewThing"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scratch", "src\Samples\OldNewThing\Scratch\Scratch.csproj", "{78444ABC-5425-457C-882C-4C928704971C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WInterop.SourceGenerators", "src\WInterop.SourceGenerators\WInterop.SourceGenerators.csproj", "{89E7FD50-13F6-45DA-8823-C3F6D38170C8}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\Common\Common.projitems*{ac918478-f510-44dd-92ae-6e0b013546f5}*SharedItemsImports = 5
@@ -777,6 +779,22 @@ Global
 		{78444ABC-5425-457C-882C-4C928704971C}.Release|x64.Build.0 = Release|Any CPU
 		{78444ABC-5425-457C-882C-4C928704971C}.Release|x86.ActiveCfg = Release|Any CPU
 		{78444ABC-5425-457C-882C-4C928704971C}.Release|x86.Build.0 = Release|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Debug|ARM.Build.0 = Debug|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Debug|x64.Build.0 = Debug|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Debug|x86.Build.0 = Debug|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Release|ARM.Build.0 = Release|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Release|x64.ActiveCfg = Release|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Release|x64.Build.0 = Release|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Release|x86.ActiveCfg = Release|Any CPU
+		{89E7FD50-13F6-45DA-8823-C3F6D38170C8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

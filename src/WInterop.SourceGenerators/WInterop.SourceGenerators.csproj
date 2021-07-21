@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\WInterop.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <RootNamespace>WInterop.SourceGenerators</RootNamespace>
+    <PackageVersion>0.3.1-alpha-090911715</PackageVersion>
+    <PackageLicenseUrl>https://github.com/JeremyKuhne/WInterop/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/JeremyKuhne/WInterop</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JeremyKuhne/WInterop/WInterop.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>master</RepositoryBranch>
+    <PackageReleaseNotes>Alpha release.</PackageReleaseNotes>
+    <Description>WInterop Source Generators.</Description>
+    <Copyright>Copyright 2021</Copyright>
+    <PackageTags>PInvoke Win32</PackageTags>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />  
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+  </ItemGroup>
+</Project>

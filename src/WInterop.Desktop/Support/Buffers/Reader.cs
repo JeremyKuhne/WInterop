@@ -178,5 +178,7 @@ namespace WInterop.Support.Buffers
             _byteOffset += sizeOfStruct;
             return value;
         }
+
+        public object Test;
     }
 }
