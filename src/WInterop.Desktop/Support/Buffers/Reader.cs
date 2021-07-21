@@ -8,7 +8,7 @@ using WInterop.SafeString.Native;
 namespace WInterop.Support.Buffers
 {
     /// <summary>
-    ///  Unchecked helpers for reading data from a Buffer. Use CheckedReader whereever possible.
+    ///  Unchecked helpers for reading data from a Buffer. Use CheckedReader whenever possible.
     /// </summary>
     public class Reader
     {
@@ -26,18 +26,12 @@ namespace WInterop.Support.Buffers
         public unsafe byte* BytePointer => (byte*)_buffer.DangerousGetHandle() + _byteOffset;
 
         /// <summary>
-        ///  Get/set the offset in bytes
+        ///  Get/set the offset in bytes.
         /// </summary>
         public virtual ulong ByteOffset
         {
-            get
-            {
-                return _byteOffset;
-            }
-            set
-            {
-                _byteOffset = value;
-            }
+            get => _byteOffset;
+            set => _byteOffset = value;
         }
 
         /// <summary>
@@ -47,7 +41,7 @@ namespace WInterop.Support.Buffers
         {
             if (charCount == 0) return string.Empty;
 
-            string value = new string((char*)BytePointer, startIndex: 0, length: charCount);
+            string value = new((char*)BytePointer, startIndex: 0, length: charCount);
             _byteOffset += (ulong)(charCount * sizeof(char));
             return value;
         }
@@ -61,7 +55,7 @@ namespace WInterop.Support.Buffers
         public unsafe string ReadUNICODE_STRING()
         {
             UNICODE_STRING us = *(UNICODE_STRING*)BytePointer;
-            string value = new string(us.Buffer, 0, us.Length / sizeof(char));
+            string value = new(us.Buffer, 0, us.Length / sizeof(char));
             ByteOffset += (ulong)sizeof(UNICODE_STRING);
             return value;
         }
@@ -69,10 +63,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         ///  Read a ushort at the current offset. Advances the reader offset.
         /// </summary>
-        public virtual ushort ReadUshort()
-        {
-            return (ushort)ReadShort();
-        }
+        public virtual ushort ReadUshort() => (ushort)ReadShort();
 
         /// <summary>
         ///  Read a short at the current offset. Advances the reader offset.
@@ -97,10 +88,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         ///  Read a uint at the current offset. Advances the reader offset.
         /// </summary>
-        public virtual uint ReadUint()
-        {
-            return (uint)ReadInt();
-        }
+        public virtual uint ReadUint() => (uint)ReadInt();
 
         /// <summary>
         ///  Read an int at the current offset. Advances the reader offset.
@@ -125,10 +113,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         ///  Read a ulong at the current offset. Advances the reader offset.
         /// </summary>
-        public virtual ulong ReadUlong()
-        {
-            return (ulong)ReadLong();
-        }
+        public virtual ulong ReadUlong() => (ulong)ReadLong();
 
         /// <summary>
         ///  Read a long at the current offset. Advances the reader offset.
@@ -155,17 +140,7 @@ namespace WInterop.Support.Buffers
         /// <summary>
         ///  Get a pointer at the current offset.
         /// </summary>
-        public virtual IntPtr ReadIntPtr()
-        {
-            if (Environment.Is64BitProcess)
-            {
-                return (IntPtr)ReadUlong();
-            }
-            else
-            {
-                return (IntPtr)ReadUint();
-            }
-        }
+        public virtual IntPtr ReadIntPtr() => Environment.Is64BitProcess ? (IntPtr)ReadUlong() : (IntPtr)ReadUint();
 
         /// <summary>
         ///  Read the given struct type at the current offset.
@@ -178,7 +153,5 @@ namespace WInterop.Support.Buffers
             _byteOffset += sizeOfStruct;
             return value;
         }
-
-        public object Test;
     }
 }
