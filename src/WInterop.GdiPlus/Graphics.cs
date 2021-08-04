@@ -12,7 +12,6 @@ namespace WInterop.GdiPlus
     {
         private readonly GpGraphics _gpGraphics;
 
-
         public unsafe Graphics(DeviceContext deviceContext)
         {
             GdiPlus.Init();
@@ -32,7 +31,12 @@ namespace WInterop.GdiPlus
 
         private void Dispose(bool disposing)
         {
-            GdiPlusImports.GdipDeleteGraphics(_gpGraphics).ThrowIfFailed();
+            GpStatus status = GdiPlusImports.GdipDeleteGraphics(_gpGraphics);
+
+            if (disposing)
+            {
+                status.ThrowIfFailed();
+            }
         }
 
         ~Graphics() => Dispose(disposing: false);

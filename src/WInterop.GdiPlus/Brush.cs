@@ -13,7 +13,7 @@ namespace WInterop.GdiPlus
 
         public Brush(GpBrush gpBrush)
         {
-            if (gpBrush.Handle == IntPtr.Zero)
+            if (gpBrush.Handle == 0)
                 throw new ArgumentNullException(nameof(gpBrush));
 
             _gpBrush = gpBrush;

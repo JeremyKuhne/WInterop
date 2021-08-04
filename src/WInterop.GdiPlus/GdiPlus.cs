@@ -13,7 +13,7 @@ namespace WInterop.GdiPlus
     public static class GdiPlus
     {
         internal static Session Init() => s_session;
-        private static readonly Session s_session = new Session();
+        private static readonly Session s_session = new();
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void Initialize() => Init();
@@ -54,10 +54,7 @@ namespace WInterop.GdiPlus
             return (UIntPtr)token;
         }
 
-        public static unsafe void Shutdown(UIntPtr token)
-        {
-            GdiPlusImports.GdiplusShutdown(&token);
-        }
+        public static unsafe void Shutdown(UIntPtr token) => GdiPlusImports.GdiplusShutdown(&token);
 
         public static unsafe void DrawLine(this Graphics graphics, Pen pen, Point from, Point to)
         {
@@ -109,6 +106,31 @@ namespace WInterop.GdiPlus
             => Clear(graphics, (ARGB)color);
 
         public static PaletteHandle GetHalftonePalette()
-            => new PaletteHandle(GdiPlusImports.GdipCreateHalftonePalette());
+            => new(GdiPlusImports.GdipCreateHalftonePalette());
+
+        public static Region GetClip(this Graphics graphics)
+        {
+            GdiPlusImports.GdipCreateRegion(out GpRegion gpRegion).ThrowIfFailed();
+            GdiPlusImports.GdipGetClip(graphics, gpRegion).ThrowIfFailed();
+            return new(gpRegion);
+        }
+
+        public static bool IsVisibleClipEmpty(this Graphics graphics)
+        {
+            GdiPlusImports.GdipIsVisibleClipEmpty(graphics, out BOOL result).ThrowIfFailed();
+            return result.IsTrue();
+        }
+
+        public static bool IsEmpty(this Region region, Graphics graphics)
+        {
+            GdiPlusImports.GdipIsEmptyRegion(region, graphics, out BOOL result).ThrowIfFailed();
+            return result.IsTrue();
+        }
+
+        public static bool IsInfinite(this Region region, Graphics graphics)
+        {
+            GdiPlusImports.GdipIsInfiniteRegion(region, graphics, out BOOL result).ThrowIfFailed();
+            return result.IsTrue();
+        }
     }
 }

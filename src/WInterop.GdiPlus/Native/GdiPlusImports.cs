@@ -208,5 +208,35 @@ namespace WInterop.GdiPlus.Native
         [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
         public static extern unsafe GpStatus GdipDeleteMatrix(
             GpMatrix matrix);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipCreateRegion(
+            out GpRegion region);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipIsVisibleClipEmpty(
+            GpGraphics graphics,
+            out BOOL result);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipIsEmptyRegion(
+            GpRegion region,
+            GpGraphics graphics,
+            out BOOL result);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipIsInfiniteRegion(
+            GpRegion region,
+            GpGraphics graphics,
+            out BOOL result);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipGetClip(
+            GpGraphics graphics,
+            GpRegion region);
+
+        [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
+        public static extern unsafe GpStatus GdipDeleteRegion(
+            GpRegion region);
     }
 }

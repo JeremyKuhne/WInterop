@@ -5,7 +5,7 @@ using System;
 
 namespace WInterop.GdiPlus.Native
 {
-    public struct GpMatrix
+    public struct GpRegion
     {
         public nuint Handle { get; }
     }

@@ -7,6 +7,6 @@ namespace WInterop.GdiPlus.Native
 {
     public readonly struct GpPen
     {
-        public IntPtr Handle { get; }
+        public nuint Handle { get; }
     }
 }

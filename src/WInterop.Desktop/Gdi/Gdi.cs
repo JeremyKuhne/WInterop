@@ -373,6 +373,12 @@ namespace WInterop.Gdi
         public static MappingMode SetMappingMode(this in DeviceContext context, MappingMode mapMode)
             => GdiImports.SetMapMode(context, mapMode);
 
+        public static Rectangle GetBoundsRect(this in DeviceContext context, bool reset = false)
+        {
+            GdiImports.GetBoundsRect(context, out Rect rect, reset ? BoundsState.Reset : default);
+            return rect;
+        }
+
         public static Rectangle GetBoundsRect(this in DeviceContext context, out BoundsState state, bool reset = false)
         {
             state = GdiImports.GetBoundsRect(context, out Rect rect, reset ? BoundsState.Reset : default);

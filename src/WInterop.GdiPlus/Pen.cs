@@ -13,7 +13,7 @@ namespace WInterop.GdiPlus
 
         public Pen(GpPen gpPen)
         {
-            if (gpPen.Handle == IntPtr.Zero)
+            if (gpPen.Handle == 0)
                 throw new ArgumentNullException(nameof(gpPen));
 
             _gpPen = gpPen;

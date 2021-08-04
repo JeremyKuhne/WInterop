@@ -6,28 +6,30 @@ using WInterop.GdiPlus.Native;
 
 namespace WInterop.GdiPlus
 {
-    public class Matrix : IDisposable
+    public class Region : IDisposable
     {
-        private readonly GpMatrix _gpMatrix;
+        private readonly GpRegion _gpRegion;
 
-        public Matrix(GpMatrix gpMatrix)
+        public Region(GpRegion gpRegion)
         {
-            if (gpMatrix.Handle == 0)
-                throw new ArgumentNullException(nameof(gpMatrix));
+            if (gpRegion.Handle == 0)
+                throw new ArgumentNullException(nameof(gpRegion));
 
-            _gpMatrix = gpMatrix;
+            _gpRegion = gpRegion;
         }
+
+        public static implicit operator GpRegion(Region region) => region._gpRegion;
 
         private void Dispose(bool disposing)
         {
-            GpStatus status = GdiPlusImports.GdipDeleteMatrix(_gpMatrix);
+            GpStatus status = GdiPlusImports.GdipDeleteRegion(_gpRegion);
             if (disposing)
             {
                 status.ThrowIfFailed();
             }
         }
 
-        ~Matrix() => Dispose(disposing: false);
+        ~Region() => Dispose(disposing: false);
 
         public void Dispose()
         {
