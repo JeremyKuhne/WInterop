@@ -1,70 +1,58 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-using WInterop.Direct2d;
+﻿using System.Windows.Forms;
+using WInterop.Winforms;
 
 namespace WinFormsDirect2D
 {
     public partial class MainForm : Form
     {
-        private ISolidColorBrush? _lightSlateGrayBrush;
-        private ISolidColorBrush? _cornflowerBlueBrush;
         private bool _resourcesCreated;
+        private DemoRenderer _demoRenderer;
+        private IRenderItem? _currentRenderItem;
 
         public MainForm()
         {
             InitializeComponent();
+            _demoRenderer = new DemoRenderer(d2DPanel);
+
+            foreach (var item in _demoRenderer.Demos)
+            {
+                ToolStripMenuItem menuItem = new()
+                {
+                    Text = item.Key,
+                    Tag = item.Value
+                };
+
+                menuItem.Click += MenuItem_Click;
+                viewToolStripMenuItem.DropDownItems.Add(menuItem);
+            }
+        }
+
+        private void MenuItem_Click(object? sender, System.EventArgs e)
+        {
+            _currentRenderItem = (IRenderItem)((ToolStripMenuItem)sender!).Tag;
+            _resourcesCreated = false;
+            d2DPanel.Reset();
         }
 
         private void D2DPanel_D2DPaint(object sender, WInterop.Winforms.D2DPaintEventArgs e)
         {
-            if (!_resourcesCreated)
+            if (!_resourcesCreated || _currentRenderItem is null)
             {
                 return;
             }
 
-            var RenderTarget = e.RenderTarget;
-
-            RenderTarget.SetTransform();
-            RenderTarget.Clear(Color.White);
-            Size size = RenderTarget.GetSize().ToSize();
-
-            _lightSlateGrayBrush!.GetColor(out ColorF color);
-
-            for (int x = 0; x < size.Width; x += 10)
-            {
-                RenderTarget.DrawLine(
-                    new Point(x, 0), new Point(x, size.Height),
-                    _lightSlateGrayBrush, 0.5f);
-            }
-
-            for (int y = 0; y < size.Height; y += 10)
-            {
-                RenderTarget.DrawLine(
-                    new Point(0, y), new Point(size.Width, y),
-                    _lightSlateGrayBrush, 0.5f);
-            }
-
-            Rectangle rectangle1 = Rectangle.FromLTRB(
-                size.Width / 2 - 50,
-                size.Height / 2 - 50,
-                size.Width / 2 + 50,
-                size.Height / 2 + 50);
-
-            Rectangle rectangle2 = Rectangle.FromLTRB(
-                size.Width / 2 - 100,
-                size.Height / 2 - 100,
-                size.Width / 2 + 100,
-                size.Height / 2 + 100);
-
-            RenderTarget.FillRectangle(rectangle1, _lightSlateGrayBrush);
-            RenderTarget.DrawRectangle(rectangle2, _cornflowerBlueBrush);
+            _currentRenderItem.D2DPaint(e.RenderTarget);
         }
 
         private void D2DPanel_CreateD2DResources(object sender, WInterop.Winforms.D2DPaintEventArgs e)
         {
-            _lightSlateGrayBrush = e.RenderTarget.CreateSolidColorBrush(Color.LightSlateGray);
-            _cornflowerBlueBrush = e.RenderTarget.CreateSolidColorBrush(Color.CornflowerBlue);
             _resourcesCreated = true;
+            if (_currentRenderItem is null)
+            {
+                return;
+            }
+
+            _currentRenderItem.CreateD2DResources(e.RenderTarget);
         }
     }
 }

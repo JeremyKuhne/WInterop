@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
 using WInterop.Direct2d;
+using WInterop.DirectWrite;
 using WInterop.Errors;
 using WInterop.Windows;
 
 namespace WInterop.Winforms
 {
-    public class D2DPanel : Control
+    public class D2DPanel : Control, ID2DFactoryProvider
     {
         private bool _baseResourcesValid;
         private IWindowRenderTarget? _renderTarget;
@@ -21,9 +22,25 @@ namespace WInterop.Winforms
         }
 
         protected IRenderTarget? RenderTarget => _renderTarget;
-
         protected static Direct2d.IFactory Direct2dFactory { get; } = Direct2d.Direct2d.CreateFactory();
         protected static DirectWrite.IFactory DirectWriteFactory { get; } = DirectWrite.DirectWrite.CreateFactory();
+
+        public ITextFormat CreateTextFormat(
+            string fontFamilyname,
+            FontWeight fontWeight = FontWeight.Normal,
+            FontStyle fontStyle = FontStyle.Normal,
+            FontStretch fontStretch = FontStretch.Normal,
+            float fontSize = 12,
+            string? localName = null)
+        {
+            return DirectWriteFactory.CreateTextFormat(
+                fontFamilyname, 
+                fontWeight,
+                fontStyle,
+                fontStretch,
+                fontSize,
+                localName);
+        }
 
         private void CreateResourcesInternal(WindowHandle window)
         {
@@ -85,7 +102,20 @@ namespace WInterop.Winforms
             _createD2DResources?.Invoke(this, new D2DPaintEventArgs(RenderTarget!));
         }
 
-        public event EventHandler<D2DPaintEventArgs> D2DPaint
+        Direct2d.IFactory ID2DFactoryProvider.GetDirect2dFactory()
+            => Direct2dFactory;
+
+        DirectWrite.IFactory ID2DFactoryProvider.GetDirectWriteFactory()
+            => DirectWriteFactory;
+
+        public void Reset()
+        {
+            _renderTarget = null;
+            _baseResourcesValid = false;
+            Invalidate();
+        }
+
+    public event EventHandler<D2DPaintEventArgs> D2DPaint
         {
             add
             {
