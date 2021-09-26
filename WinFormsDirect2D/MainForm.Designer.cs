@@ -40,7 +40,7 @@ namespace WinFormsDirect2D
             | System.Windows.Forms.AnchorStyles.Right)));
             this.d2DPanel.Location = new System.Drawing.Point(21, 26);
             this.d2DPanel.Name = "d2DPanel";
-            this.d2DPanel.Size = new System.Drawing.Size(757, 386);
+            this.d2DPanel.Size = new System.Drawing.Size(936, 565);
             this.d2DPanel.TabIndex = 0;
             this.d2DPanel.D2DPaint += new System.EventHandler<WInterop.Winforms.D2DPaintEventArgs>(this.D2DPanel_D2DPaint);
             this.d2DPanel.CreateD2DResources += new System.EventHandler<WInterop.Winforms.D2DPaintEventArgs>(this.D2DPanel_CreateD2DResources);
@@ -49,7 +49,7 @@ namespace WinFormsDirect2D
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(979, 629);
             this.Controls.Add(this.d2DPanel);
             this.Name = "MainForm";
             this.Text = "D2D/DWrite Demo";

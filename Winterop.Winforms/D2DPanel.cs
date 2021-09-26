@@ -17,6 +17,7 @@ namespace WInterop.Winforms
 
         public D2DPanel() : base()
         {
+            ResizeRedraw = true;
         }
 
         protected IRenderTarget? RenderTarget => _renderTarget;
@@ -65,10 +66,10 @@ namespace WInterop.Winforms
 
         protected override void OnResize(EventArgs e)
         {
+            base.OnResize(e);
             var sizeMessage = Windows.Message.Size.FromDrawingSize(ClientSize);
             var windowHandle = new WindowHandle(new Windows.Native.HWND(Handle));
             CreateResourcesInternal(windowHandle, in sizeMessage);
-            base.OnResize(e);
         }
 
         protected virtual void OnD2DPaint()
