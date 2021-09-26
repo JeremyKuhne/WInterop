@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
 using WInterop.Direct2d;
 
@@ -15,6 +8,7 @@ namespace WinFormsDirect2D
     {
         private ISolidColorBrush? _lightSlateGrayBrush;
         private ISolidColorBrush? _cornflowerBlueBrush;
+        private bool _resourcesCreated;
 
         public Form1()
         {
@@ -23,6 +17,11 @@ namespace WinFormsDirect2D
 
         private void dxControl_DirectXEvent(object sender, WInterop.Winforms.DirectXPaintEventArgs e)
         {
+            if (!_resourcesCreated)
+            {
+                return;
+            }
+
             var RenderTarget = e.RenderTarget;
 
             RenderTarget.SetTransform();
@@ -65,6 +64,7 @@ namespace WinFormsDirect2D
         {
             _lightSlateGrayBrush = e.RenderTarget.CreateSolidColorBrush(Color.LightSlateGray);
             _cornflowerBlueBrush = e.RenderTarget.CreateSolidColorBrush(Color.CornflowerBlue);
+            _resourcesCreated = true;
         }
     }
 }

@@ -35,12 +35,15 @@ namespace WinFormsDirect2D
             // 
             // dxControl
             // 
-            this.dxControl.CreateDirectXResources += new System.EventHandler<WInterop.Winforms.DirectXPaintEventArgs>(this.dxControl_CreateDirectXResources);
-            this.dxControl.DirectXPaint += new System.EventHandler<WInterop.Winforms.DirectXPaintEventArgs>(this.dxControl_DirectXEvent);
-            this.dxControl.Location = new System.Drawing.Point(100, 101);
+            this.dxControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dxControl.Location = new System.Drawing.Point(21, 26);
             this.dxControl.Name = "dxControl";
-            this.dxControl.Size = new System.Drawing.Size(524, 257);
+            this.dxControl.Size = new System.Drawing.Size(757, 386);
             this.dxControl.TabIndex = 0;
+            this.dxControl.DirectXPaint += new System.EventHandler<WInterop.Winforms.DirectXPaintEventArgs>(this.dxControl_DirectXEvent);
+            this.dxControl.CreateDirectXResources += new System.EventHandler<WInterop.Winforms.DirectXPaintEventArgs>(this.dxControl_CreateDirectXResources);
             // 
             // Form1
             // 
