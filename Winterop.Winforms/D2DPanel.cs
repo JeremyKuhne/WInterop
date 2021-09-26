@@ -6,16 +6,16 @@ using WInterop.Windows;
 
 namespace WInterop.Winforms
 {
-    public class Direct2DControl : Control
+    public class D2DPanel : Control
     {
         private bool _baseResourcesValid;
         private IWindowRenderTarget? _renderTarget;
         private object _objectLock=new object();
 
-        private event EventHandler<DirectXPaintEventArgs>? _directXPaint;
-        private event EventHandler<DirectXPaintEventArgs>? _createDirectXResources;
+        private event EventHandler<D2DPaintEventArgs>? _d2DPaint;
+        private event EventHandler<D2DPaintEventArgs>? _createD2DResources;
 
-        public Direct2DControl() : base()
+        public D2DPanel() : base()
         {
         }
 
@@ -30,7 +30,7 @@ namespace WInterop.Winforms
             {
                 _renderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, window.GetClientRectangle().Size));
-                OnCreateResources();
+                OnCreateD2DResources();
                 _baseResourcesValid = true;
             }
         }
@@ -41,7 +41,7 @@ namespace WInterop.Winforms
             {
                 _renderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, size.NewSize));
-                OnCreateResources();
+                OnCreateD2DResources();
                 _baseResourcesValid = true;
             }
             else
@@ -58,7 +58,7 @@ namespace WInterop.Winforms
             if (_baseResourcesValid)
             {
                 _renderTarget!.BeginDraw();
-                OnDirectXPaint();
+                OnD2DPaint();
                 HResult result = _renderTarget.EndDraw();
             }
         }
@@ -71,49 +71,49 @@ namespace WInterop.Winforms
             base.OnResize(e);
         }
 
-        protected virtual void OnDirectXPaint()
+        protected virtual void OnD2DPaint()
         {
             if (_baseResourcesValid)
             {
-                _directXPaint?.Invoke(this, new DirectXPaintEventArgs(RenderTarget!));
+                _d2DPaint?.Invoke(this, new D2DPaintEventArgs(RenderTarget!));
             }
         }
 
-        protected virtual void OnCreateResources()
+        protected virtual void OnCreateD2DResources()
         {
-            _createDirectXResources?.Invoke(this, new DirectXPaintEventArgs(RenderTarget!));
+            _createD2DResources?.Invoke(this, new D2DPaintEventArgs(RenderTarget!));
         }
 
-        public event EventHandler<DirectXPaintEventArgs> DirectXPaint
+        public event EventHandler<D2DPaintEventArgs> D2DPaint
         {
             add
             {
                 lock (_objectLock)
                 {
-                    _directXPaint += value;
+                    _d2DPaint += value;
                 }
             }
             remove
             {
                 lock (_objectLock)
                 {
-                    _directXPaint -= value;
+                    _d2DPaint -= value;
                 }
             }
         }
 
-        public event EventHandler<DirectXPaintEventArgs> CreateDirectXResources
+        public event EventHandler<D2DPaintEventArgs> CreateD2DResources
         {
             add
             {
                 lock (_objectLock)
                 {
-                    _createDirectXResources += value;
+                    _createD2DResources += value;
                     if (_baseResourcesValid)
                     {
                         // If the event was wired _after_ we already have created the resources
                         // we need to fire it immediately.
-                        OnCreateResources();
+                        OnCreateD2DResources();
                     }
                 }
             }
@@ -121,7 +121,7 @@ namespace WInterop.Winforms
             {
                 lock (_objectLock)
                 {
-                    _createDirectXResources -= value;
+                    _createD2DResources -= value;
                 }
             }
         }

@@ -3,9 +3,9 @@ using WInterop.Direct2d;
 
 namespace WInterop.Winforms
 {
-    public class DirectXPaintEventArgs : EventArgs
+    public class D2DPaintEventArgs : EventArgs
     {
-        public DirectXPaintEventArgs(IRenderTarget renderTarget)
+        public D2DPaintEventArgs(IRenderTarget renderTarget)
         {
             RenderTarget = renderTarget;
         }

@@ -2,7 +2,7 @@
 
 namespace WinFormsDirect2D
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,36 +30,36 @@ namespace WinFormsDirect2D
         /// </summary>
         private void InitializeComponent()
         {
-            this.dxControl = new WInterop.Winforms.Direct2DControl();
+            this.d2DPanel = new WInterop.Winforms.D2DPanel();
             this.SuspendLayout();
             // 
-            // dxControl
+            // d2DPanel
             // 
-            this.dxControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.d2DPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dxControl.Location = new System.Drawing.Point(21, 26);
-            this.dxControl.Name = "dxControl";
-            this.dxControl.Size = new System.Drawing.Size(757, 386);
-            this.dxControl.TabIndex = 0;
-            this.dxControl.DirectXPaint += new System.EventHandler<WInterop.Winforms.DirectXPaintEventArgs>(this.dxControl_DirectXEvent);
-            this.dxControl.CreateDirectXResources += new System.EventHandler<WInterop.Winforms.DirectXPaintEventArgs>(this.dxControl_CreateDirectXResources);
+            this.d2DPanel.Location = new System.Drawing.Point(21, 26);
+            this.d2DPanel.Name = "d2DPanel";
+            this.d2DPanel.Size = new System.Drawing.Size(757, 386);
+            this.d2DPanel.TabIndex = 0;
+            this.d2DPanel.D2DPaint += new System.EventHandler<WInterop.Winforms.D2DPaintEventArgs>(this.D2DPanel_D2DPaint);
+            this.d2DPanel.CreateD2DResources += new System.EventHandler<WInterop.Winforms.D2DPaintEventArgs>(this.D2DPanel_CreateD2DResources);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.dxControl);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Controls.Add(this.d2DPanel);
+            this.Name = "MainForm";
+            this.Text = "D2D/DWrite Demo";
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Direct2DControl dxControl;
+        private D2DPanel d2DPanel;
     }
 }
 

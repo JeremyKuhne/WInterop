@@ -4,18 +4,18 @@ using WInterop.Direct2d;
 
 namespace WinFormsDirect2D
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private ISolidColorBrush? _lightSlateGrayBrush;
         private ISolidColorBrush? _cornflowerBlueBrush;
         private bool _resourcesCreated;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
 
-        private void dxControl_DirectXEvent(object sender, WInterop.Winforms.DirectXPaintEventArgs e)
+        private void D2DPanel_D2DPaint(object sender, WInterop.Winforms.D2DPaintEventArgs e)
         {
             if (!_resourcesCreated)
             {
@@ -60,7 +60,7 @@ namespace WinFormsDirect2D
             RenderTarget.DrawRectangle(rectangle2, _cornflowerBlueBrush);
         }
 
-        private void dxControl_CreateDirectXResources(object sender, WInterop.Winforms.DirectXPaintEventArgs e)
+        private void D2DPanel_CreateD2DResources(object sender, WInterop.Winforms.D2DPaintEventArgs e)
         {
             _lightSlateGrayBrush = e.RenderTarget.CreateSolidColorBrush(Color.LightSlateGray);
             _cornflowerBlueBrush = e.RenderTarget.CreateSolidColorBrush(Color.CornflowerBlue);
