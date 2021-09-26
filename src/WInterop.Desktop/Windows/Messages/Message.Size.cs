@@ -15,6 +15,17 @@ namespace WInterop.Windows
                 NewSize = new System.Drawing.Size(lParam.LowWord, lParam.HighWord);
                 SizeType = (SizeType)(int)wParam;
             }
+
+            private Size(System.Drawing.Size size)
+            {
+                NewSize = size;
+                SizeType = SizeType.MaxShow;
+            }
+
+            public static Size FromDrawingSize(System.Drawing.Size size)
+            {
+                return new Size(size);
+            }
         }
     }
 }
