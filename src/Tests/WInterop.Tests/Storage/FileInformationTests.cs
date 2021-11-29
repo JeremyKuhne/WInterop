@@ -3,7 +3,6 @@
 
 using FluentAssertions;
 using System.Diagnostics;
-using System.Linq;
 using Tests.Support;
 using WInterop.Storage;
 using Xunit;

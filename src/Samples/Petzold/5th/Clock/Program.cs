@@ -9,7 +9,6 @@ using GdiPlusPen = WInterop.GdiPlus.Pen;
 using GdiPlusBrush = WInterop.GdiPlus.Brush;
 #endif
 
-using System;
 using WInterop.Gdi;
 using WInterop.SystemInformation;
 using WInterop.Windows;

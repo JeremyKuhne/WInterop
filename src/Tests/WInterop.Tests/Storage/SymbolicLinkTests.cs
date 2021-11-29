@@ -2,14 +2,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System;
 using Tests.Support;
 using WInterop.Security;
 using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.Support;
 using Xunit;
-using System.IO;
 
 namespace StorageTests;
 

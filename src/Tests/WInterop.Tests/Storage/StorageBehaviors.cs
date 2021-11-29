@@ -3,7 +3,6 @@
 
 using FluentAssertions;
 using Microsoft.Win32.SafeHandles;
-using System;
 using Tests.Support;
 using WInterop.Errors;
 using WInterop.Storage;
@@ -11,7 +10,6 @@ using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop;
 using Xunit;
-using System.IO;
 
 namespace StorageTests;
 

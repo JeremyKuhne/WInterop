@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System.Linq;
 using WInterop.Errors;
 using WInterop.Storage;
 using Xunit;
@@ -64,7 +63,7 @@ public class Volumes
     {
         // Null is the current directory's drive (likely Fixed)
         var type = Storage.GetDriveType(null);
-        type.Should().NotBe(DriveType.Unknown);
+        type.Should().NotBe(WInterop.Storage.DriveType.Unknown);
 
         foreach (string drive in Storage.GetLogicalDriveStrings())
         {

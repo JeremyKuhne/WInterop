@@ -1,6 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using WInterop;
 using WInterop.Com;

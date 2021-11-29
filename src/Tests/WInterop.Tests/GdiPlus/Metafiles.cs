@@ -2,10 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using WInterop.Gdi;
 using WInterop.Gdi.Native;
 using WInterop.GdiPlus;

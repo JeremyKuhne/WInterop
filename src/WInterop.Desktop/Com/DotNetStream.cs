@@ -4,7 +4,6 @@
 // Modified from .NET source code which is licensed under the MIT license to the .NET Foundation.
 
 using System.Buffers;
-using System.IO;
 using WInterop.Com;
 using WInterop.Com.Native;
 using WInterop.Errors;

@@ -2,9 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System;
 using Xunit;
-using System.Linq;
 using WInterop.Cryptography;
 
 namespace CryptographyTests;

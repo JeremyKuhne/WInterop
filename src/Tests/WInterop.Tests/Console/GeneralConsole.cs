@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using WInterop.Console;
 using WInterop.Windows;
 using Xunit;
 
@@ -14,7 +13,7 @@ public class GeneralConsole
     public void GetConsoleWindow()
     {
         // Xunit tests in core don't have an attached console window
-        WindowHandle window = Console.GetConsoleWindow();
+        WindowHandle window = WInterop.Console.Console.GetConsoleWindow();
         window.IsInvalid.Should().BeTrue();
         window = Windows.GetActiveWindow();
     }

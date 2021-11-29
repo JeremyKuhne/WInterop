@@ -2,8 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System;
-using System.Threading.Tasks;
 using WInterop.Support.Collections;
 using Xunit;
 

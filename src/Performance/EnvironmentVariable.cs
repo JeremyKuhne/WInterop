@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using System;
 using WInterop.Errors;
 using WInterop.ProcessAndThreads;
 using WInterop.ProcessAndThreads.Native;

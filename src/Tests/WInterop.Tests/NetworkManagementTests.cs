@@ -3,7 +3,6 @@
 
 using Xunit;
 using FluentAssertions;
-using System.Linq;
 using WInterop.Network;
 
 namespace NetworkTests;

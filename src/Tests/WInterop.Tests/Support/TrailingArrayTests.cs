@@ -5,7 +5,6 @@ using Xunit;
 using FluentAssertions;
 using System.Runtime.InteropServices;
 using WInterop;
-using System;
 
 namespace SupportTests;
 

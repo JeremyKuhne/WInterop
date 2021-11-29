@@ -2,10 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using FluentAssertions;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading;
 using Tests.Shared.Support.Resources;
 using Tests.Support;
 using WInterop.Storage;

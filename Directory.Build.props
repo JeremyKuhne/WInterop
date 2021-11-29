@@ -18,6 +18,7 @@
     <PackagesDir Condition="'$(PackagesDir)'==''">$(RepoDir)packages\</PackagesDir>
 
     <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- TODO: Need to unwrap these XML warnings and fix or include in .editorconfig  -->

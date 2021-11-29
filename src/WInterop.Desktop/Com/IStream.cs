@@ -3,7 +3,6 @@
 
 // Modified from .NET source code which is licensed under the MIT license to the .NET Foundation.
 
-using System.IO;
 using System.Runtime.InteropServices;
 using WInterop.Com.Native;
 using WInterop.Errors;

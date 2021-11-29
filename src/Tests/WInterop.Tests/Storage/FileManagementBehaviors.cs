@@ -3,15 +3,12 @@
 
 using FluentAssertions;
 using Microsoft.Win32.SafeHandles;
-using System;
-using System.Linq;
 using Tests.Support;
 using WInterop.Errors;
 using WInterop.Storage;
 using WInterop.ProcessAndThreads;
 using WInterop.Support;
 using Xunit;
-using System.IO;
 
 namespace StorageTests;
 

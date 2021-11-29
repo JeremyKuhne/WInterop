@@ -3,7 +3,6 @@
 
 using FluentAssertions;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using WInterop;
 using WInterop.Gdi;
