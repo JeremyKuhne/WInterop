@@ -11,13 +11,14 @@ using WInterop.Windows.Native;
 
 namespace WInterop.Windows
 {
-    public class WindowClass
+    public class WindowClass : IDisposable
     {
         // Stash the delegate to keep it from being collected
         private readonly WindowProcedure _windowProcedure;
         private WNDCLASSEX _wndClass;
         private readonly string _className;
         private readonly string _menuName;
+        private bool _disposedValue;
 
         public Atom Atom { get; private set; }
         public WindowHandle MainWindow { get; private set; }
@@ -189,6 +190,29 @@ namespace WInterop.Windows
             }
 
             return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+        }
+
+        ~WindowClass()
+        {
+            if (!_disposedValue)
+            {
+                _disposedValue = true;
+                Dispose(disposing: false);
+            }
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            if (!_disposedValue)
+            {
+                _disposedValue = true;
+                Dispose(disposing: true);
+            }
         }
     }
 }

@@ -11,11 +11,11 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  The edges of each primitive are antialiased sequentially. [D2D1_ANTIALIAS_MODE_PER_PRIMITIVE]
         /// </summary>
-        PerPrimitive = 0,
+        PerPrimitive = D2D1_ANTIALIAS_MODE.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 
         /// <summary>
         ///  Each pixel is rendered if its pixel center is contained by the geometry. [D2D1_ANTIALIAS_MODE_ALIASED]
         /// </summary>
-        Aliased = 1
+        Aliased = D2D1_ANTIALIAS_MODE.D2D1_ANTIALIAS_MODE_ALIASED
     }
 }

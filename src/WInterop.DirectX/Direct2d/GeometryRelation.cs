@@ -4,8 +4,7 @@
 namespace WInterop.Direct2d
 {
     /// <summary>
-    ///  Describes how one geometry object is spatially related to another geometry
-    ///  object.
+    ///  Describes how one geometry object is spatially related to another geometry object.
     /// </summary>
     public enum GeometryRelation : uint
     {

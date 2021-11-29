@@ -12,21 +12,21 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_DEBUG_LEVEL_NONE]
         /// </summary>
-        None,
+        None = D2D1_DEBUG_LEVEL.D2D1_DEBUG_LEVEL_NONE,
 
         /// <summary>
         ///  [D2D1_DEBUG_LEVEL_ERROR]
         /// </summary>
-        Error,
+        Error = D2D1_DEBUG_LEVEL.D2D1_DEBUG_LEVEL_ERROR,
 
         /// <summary>
         ///  [D2D1_DEBUG_LEVEL_WARNING]
         /// </summary>
-        Warning,
+        Warning = D2D1_DEBUG_LEVEL.D2D1_DEBUG_LEVEL_WARNING,
 
         /// <summary>
         ///  [D2D1_DEBUG_LEVEL_INFORMATION]
         /// </summary>
-        Information
+        Information = D2D1_DEBUG_LEVEL.D2D1_DEBUG_LEVEL_INFORMATION
     }
 }

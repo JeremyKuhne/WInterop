@@ -17,9 +17,7 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  The physical font face to draw with. (IFontFace)
         /// </summary>
-        private readonly IntPtr _fontFace;
-
-        public IFontFace FontFace => (IFontFace)Marshal.GetObjectForIUnknown(_fontFace);
+        public readonly FontFace FontFace;
 
         /// <summary>
         ///  Logical size of the font in DIPs, not points (equals 1/96 inch).
@@ -31,20 +29,26 @@ namespace WInterop.DirectWrite
         /// </summary>
         public readonly uint GlyphCount;
 
+        private readonly ushort* _glyphIndices;
+
         /// <summary>
         ///  The indices to render.
         /// </summary>
-        public readonly ushort* GlyphIndices;
+        public ReadOnlySpan<ushort> GlyphIndices => new(_glyphIndices, (int)GlyphCount);
+
+        private readonly float* _glyphAdvances;
 
         /// <summary>
         ///  Glyph advance widths.
         /// </summary>
-        public readonly float* GlyphAdvances;
+        public ReadOnlySpan<float> GlyphAdvances => new(_glyphAdvances, (int)GlyphCount);
+
+        private readonly GlyphOffset* _glyphOffsets;
 
         /// <summary>
         ///  Glyph offsets.
         /// </summary>
-        public readonly GlyphOffset* GlyphOffsets;
+        public ReadOnlySpan<GlyphOffset> GlyphOffsets => new(_glyphOffsets, (int)GlyphCount);
 
         /// <summary>
         ///  If true, specifies that glyphs are rotated 90 degrees to the left and

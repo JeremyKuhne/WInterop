@@ -7,7 +7,7 @@ namespace WInterop.Direct2d
 {
     /// <summary>
     ///  Contains the gradient origin offset and the size and position of the gradient
-    ///  ellipse for an <see cref="IRadialGradientBrush"/>. [D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES]
+    ///  ellipse for an <see cref="RadialGradientBrush"/>. [D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES]
     /// </summary>
     public readonly struct RadialGradientBrushProperties
     {
@@ -20,6 +20,14 @@ namespace WInterop.Direct2d
         {
             Center = center;
             GradientOriginOffset = gradientOriginOffset;
+            RadiusX = radiusX;
+            RadiusY = radiusY;
+        }
+
+        public unsafe RadialGradientBrushProperties((float X, float Y) center, (float X, float Y) gradientOriginOffset, float radiusX, float radiusY)
+        {
+            Center = *(PointF*)&center;
+            GradientOriginOffset = *(PointF*)&gradientOriginOffset;
             RadiusX = radiusX;
             RadiusY = radiusY;
         }

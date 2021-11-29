@@ -16,16 +16,16 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  No simulations are performed.
         /// </summary>
-        None = 0x0000,
+        None = DWRITE_FONT_SIMULATIONS.DWRITE_FONT_SIMULATIONS_NONE,
 
         /// <summary>
         ///  Algorithmic emboldening is performed.
         /// </summary>
-        Bold = 0x0001,
+        Bold = DWRITE_FONT_SIMULATIONS.DWRITE_FONT_SIMULATIONS_BOLD,
 
         /// <summary>
         ///  Algorithmic italicization is performed.
         /// </summary>
-        Oblique = 0x0002
+        Oblique = DWRITE_FONT_SIMULATIONS.DWRITE_FONT_SIMULATIONS_OBLIQUE
     }
 }

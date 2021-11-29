@@ -15,16 +15,16 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_PATH_SEGMENT_NONE]
         /// </summary>
-        None = 0x00000000,
+        None = D2D1_PATH_SEGMENT.D2D1_PATH_SEGMENT_NONE,
 
         /// <summary>
         ///  [D2D1_PATH_SEGMENT_FORCE_UNSTROKED]
         /// </summary>
-        ForceUnstroked = 0x00000001,
+        ForceUnstroked = D2D1_PATH_SEGMENT.D2D1_PATH_SEGMENT_FORCE_UNSTROKED,
 
         /// <summary>
         ///  [D2D1_PATH_SEGMENT_FORCE_ROUND_LINE_JOIN]
         /// </summary>
-        ForceRoundLineJoin = 0x00000002
+        ForceRoundLineJoin = D2D1_PATH_SEGMENT.D2D1_PATH_SEGMENT_FORCE_ROUND_LINE_JOIN
     }
 }

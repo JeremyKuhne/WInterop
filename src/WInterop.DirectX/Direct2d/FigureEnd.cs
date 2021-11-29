@@ -11,11 +11,11 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_FIGURE_END_OPEN]
         /// </summary>
-        Open = 0,
+        Open = D2D1_FIGURE_END.D2D1_FIGURE_END_OPEN,
 
         /// <summary>
         ///  [D2D1_FIGURE_END_CLOSED]
         /// </summary>
-        Closed = 1
+        Closed = D2D1_FIGURE_END.D2D1_FIGURE_END_CLOSED
     }
 }

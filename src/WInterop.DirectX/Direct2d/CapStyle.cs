@@ -12,21 +12,21 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  Flat line cap. [D2D1_CAP_STYLE_FLAT]
         /// </summary>
-        Flat = 0,
+        Flat = D2D1_CAP_STYLE.D2D1_CAP_STYLE_FLAT,
 
         /// <summary>
         ///  Square line cap. [D2D1_CAP_STYLE_SQUARE]
         /// </summary>
-        Square = 1,
+        Square = D2D1_CAP_STYLE.D2D1_CAP_STYLE_SQUARE,
 
         /// <summary>
         ///  Round line cap. [D2D1_CAP_STYLE_ROUND]
         /// </summary>
-        Round = 2,
+        Round = D2D1_CAP_STYLE.D2D1_CAP_STYLE_ROUND,
 
         /// <summary>
         ///  Triangle line cap. [D2D1_CAP_STYLE_TRIANGLE]
         /// </summary>
-        Triangle = 3
+        Triangle = D2D1_CAP_STYLE.D2D1_CAP_STYLE_TRIANGLE
     }
 }

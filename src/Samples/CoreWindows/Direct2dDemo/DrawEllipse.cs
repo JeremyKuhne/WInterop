@@ -8,16 +8,19 @@ using WInterop.Windows;
 
 namespace Direct2dDemo
 {
-    // https://docs.microsoft.com/en-us/windows/desktop/Direct2D/how-to-draw-an-ellipse
+    // https://docs.microsoft.com/windows/desktop/Direct2D/how-to-draw-an-ellipse
     public class DrawEllipse : DirectXWindowClass
     {
-        private ISolidColorBrush _blackBrush;
-        private ISolidColorBrush _silverBrush;
-        private readonly IStrokeStyle _dashDotDotStyle;
+        private SolidColorBrush _blackBrush;
+        private SolidColorBrush _silverBrush;
+        private readonly StrokeStyle _dashDotDotStyle;
 
         public DrawEllipse() : base()
         {
-            StrokeStyleProperties style = new StrokeStyleProperties(dashCap: CapStyle.Triangle, miterLimit: 10.0f, dashStyle: DashStyle.DashDotDot);
+            StrokeStyleProperties style = new(
+                dashCap: CapStyle.Triangle,
+                miterLimit: 10.0f,
+                dashStyle: DashStyle.DashDotDot);
             _dashDotDotStyle = Direct2dFactory.CreateStrokeStyle(style);
         }
 
@@ -31,19 +34,26 @@ namespace Direct2dDemo
         {
             RenderTarget.Clear(Color.White);
 
-            Ellipse ellipse = new Ellipse(new PointF(100.0f, 100.0f), 75.0f, 50.0f);
+            Ellipse ellipse = new((100.0f, 100.0f), 75.0f, 50.0f);
             RenderTarget.DrawEllipse(ellipse, _blackBrush, 10.0f);
 
-            Ellipse ellipse2 = new Ellipse(new PointF(300.0f, 100.0f), 75.0f, 50.0f);
+            Ellipse ellipse2 = new((300.0f, 100.0f), 75.0f, 50.0f);
             RenderTarget.DrawEllipse(ellipse2, _blackBrush, 10.0f, _dashDotDotStyle);
 
-            Ellipse ellipse3 = new Ellipse(new PointF(500.0f, 100.0f), 75.0f, 50.0f);
+            Ellipse ellipse3 = new((500.0f, 100.0f), 75.0f, 50.0f);
             RenderTarget.DrawEllipse(ellipse3, _blackBrush, 10.0f, _dashDotDotStyle);
             RenderTarget.FillEllipse(ellipse3, _silverBrush);
 
-            Ellipse ellipse4 = new Ellipse(new PointF(700.0f, 100.0f), 75.0f, 50.0f);
+            Ellipse ellipse4 = new((700.0f, 100.0f), 75.0f, 50.0f);
             RenderTarget.FillEllipse(ellipse4, _silverBrush);
             RenderTarget.DrawEllipse(ellipse4, _blackBrush, 10.0f, _dashDotDotStyle);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _blackBrush.Dispose();
+            _silverBrush.Dispose();
+            _dashDotDotStyle.Dispose();
         }
     }
 }

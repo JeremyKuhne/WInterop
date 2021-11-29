@@ -12,31 +12,31 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_DASH_STYLE_SOLID]
         /// </summary>
-        Solid = 0,
+        Solid = D2D1_DASH_STYLE.D2D1_DASH_STYLE_SOLID,
 
         /// <summary>
         ///  [D2D1_DASH_STYLE_DASH]
         /// </summary>
-        Dash = 1,
+        Dash = D2D1_DASH_STYLE.D2D1_DASH_STYLE_DASH,
 
         /// <summary>
         ///  [D2D1_DASH_STYLE_DOT]
         /// </summary>
-        Dot = 2,
+        Dot = D2D1_DASH_STYLE.D2D1_DASH_STYLE_DOT,
 
         /// <summary>
         ///  [D2D1_DASH_STYLE_DASH_DOT]
         /// </summary>
-        DashDot = 3,
+        DashDot = D2D1_DASH_STYLE.D2D1_DASH_STYLE_DASH_DOT,
 
         /// <summary>
         ///  [D2D1_DASH_STYLE_DASH_DOT_DOT]
         /// </summary>
-        DashDotDot = 4,
+        DashDotDot = D2D1_DASH_STYLE.D2D1_DASH_STYLE_DASH_DOT_DOT,
 
         /// <summary>
         ///  [D2D1_DASH_STYLE_CUSTOM]
         /// </summary>
-        Custom = 5
+        Custom = D2D1_DASH_STYLE.D2D1_DASH_STYLE_CUSTOM
     }
 }

@@ -12,16 +12,16 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  The first line of paragraph is aligned to the flow's beginning edge of the layout box.
         /// </summary>
-        Near,
+        Near = DWRITE_PARAGRAPH_ALIGNMENT.DWRITE_PARAGRAPH_ALIGNMENT_NEAR,
 
         /// <summary>
         ///  The last line of paragraph is aligned to the flow's ending edge of the layout box.
         /// </summary>
-        Far,
+        Far = DWRITE_PARAGRAPH_ALIGNMENT.DWRITE_PARAGRAPH_ALIGNMENT_FAR,
 
         /// <summary>
         ///  The center of the paragraph is aligned to the center of the flow of the layout box.
         /// </summary>
-        Center
+        Center = DWRITE_PARAGRAPH_ALIGNMENT.DWRITE_PARAGRAPH_ALIGNMENT_CENTER
     }
 }

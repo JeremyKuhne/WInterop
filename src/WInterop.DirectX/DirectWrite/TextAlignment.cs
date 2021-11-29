@@ -12,21 +12,21 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  The leading edge of the paragraph text is aligned to the layout box's leading edge.
         /// </summary>
-        Leading,
+        Leading = DWRITE_TEXT_ALIGNMENT.DWRITE_TEXT_ALIGNMENT_LEADING,
 
         /// <summary>
         ///  The trailing edge of the paragraph text is aligned to the layout box's trailing edge.
         /// </summary>
-        Trailing,
+        Trailing = DWRITE_TEXT_ALIGNMENT.DWRITE_TEXT_ALIGNMENT_TRAILING,
 
         /// <summary>
         ///  The center of the paragraph text is aligned to the center of the layout box.
         /// </summary>
-        Center,
+        Center = DWRITE_TEXT_ALIGNMENT.DWRITE_TEXT_ALIGNMENT_CENTER,
 
         /// <summary>
         ///  Align text to the leading side, and also justify text to fill the lines.
         /// </summary>
-        Justified
+        Justified = DWRITE_TEXT_ALIGNMENT.DWRITE_TEXT_ALIGNMENT_JUSTIFIED
     }
 }

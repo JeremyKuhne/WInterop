@@ -12,13 +12,13 @@ namespace WInterop.DirectWrite
         ///  Specifies that the rendering mode is determined automatically based on the font and size.
         ///  [DWRITE_RENDERING_MODE_DEFAULT]
         /// </summary>
-        Default,
+        Default = DWRITE_RENDERING_MODE.DWRITE_RENDERING_MODE_DEFAULT,
 
         /// <summary>
         ///  Specifies that no antialiasing is performed. Each pixel is either set to the foreground 
         ///  color of the text or retains the color of the background. [DWRITE_RENDERING_MODE_ALIASED]
         /// </summary>
-        Aliased,
+        Aliased = DWRITE_RENDERING_MODE.DWRITE_RENDERING_MODE_ALIASED,
 
         /// <summary>
         ///  Specifies that antialiasing is performed in the horizontal direction and the appearance
@@ -26,7 +26,7 @@ namespace WInterop.DirectWrite
         ///  to get glyph advances. The antialiasing may be either ClearType or grayscale depending on
         ///  the text antialiasing mode. [DWRITE_RENDERING_MODE_GDI_CLASSIC]
         /// </summary>
-        GdiClassic,
+        GdiClassic = DWRITE_RENDERING_MODE.DWRITE_RENDERING_MODE_CLEARTYPE_GDI_CLASSIC,
 
         /// <summary>
         ///  Specifies that antialiasing is performed in the horizontal direction and the appearance
@@ -35,7 +35,7 @@ namespace WInterop.DirectWrite
         ///  DWRITE_MEASURING_MODE_GDI_NATURAL to get glyph advances. The antialiasing may be either
         ///  ClearType or grayscale depending on the text antialiasing mode. [DWRITE_RENDERING_MODE_GDI_NATURAL]
         /// </summary>
-        GdiNatural,
+        GdiNatural = DWRITE_RENDERING_MODE.DWRITE_RENDERING_MODE_CLEARTYPE_GDI_NATURAL,
 
         /// <summary>
         ///  Specifies that antialiasing is performed in the horizontal direction. This rendering
@@ -43,7 +43,7 @@ namespace WInterop.DirectWrite
         ///  for natural (i.e., resolution-independent) layout. The antialiasing may be either
         ///  ClearType or grayscale depending on the text antialiasing mode. [DWRITE_RENDERING_MODE_NATURAL]
         /// </summary>
-        Natural,
+        Natural = DWRITE_RENDERING_MODE.DWRITE_RENDERING_MODE_NATURAL,
 
         /// <summary>
         ///  Similar to natural mode except that antialiasing is performed in both the horizontal
@@ -51,12 +51,12 @@ namespace WInterop.DirectWrite
         ///  diagonal lines look smoother. The antialiasing may be either ClearType or grayscale
         ///  depending on the text antialiasing mode. [DWRITE_RENDERING_MODE_NATURAL_SYMMETRIC]
         /// </summary>
-        NaturalSymmetric,
+        NaturalSymmetric = DWRITE_RENDERING_MODE.DWRITE_RENDERING_MODE_CLEARTYPE_NATURAL_SYMMETRIC,
 
         /// <summary>
         ///  Specifies that rendering should bypass the rasterizer and use the outlines directly. 
         ///  This is typically used at very large sizes. [DWRITE_RENDERING_MODE_OUTLINE]
         /// </summary>
-        Outline,
+        Outline = DWRITE_RENDERING_MODE.DWRITE_RENDERING_MODE_OUTLINE,
     };
 }

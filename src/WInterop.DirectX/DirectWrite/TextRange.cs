@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Runtime.CompilerServices;
+
 namespace WInterop.DirectWrite
 {
     /// <summary>
@@ -26,6 +28,12 @@ namespace WInterop.DirectWrite
         }
 
         public static implicit operator TextRange((int StartPosition, int Length) tuple)
-            => new TextRange((uint)tuple.StartPosition, (uint)tuple.Length);
+            => new((uint)tuple.StartPosition, (uint)tuple.Length);
+
+        internal unsafe DWRITE_TEXT_RANGE ToD2D()
+        {
+            fixed(void* p = &this)
+                return *(DWRITE_TEXT_RANGE*)p;
+        }
     }
 }

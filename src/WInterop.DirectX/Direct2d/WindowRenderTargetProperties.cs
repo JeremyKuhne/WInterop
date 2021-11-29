@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
+using System.Runtime.InteropServices;
 using WInterop.Windows;
 using WInterop.Windows.Native;
 
@@ -11,6 +12,7 @@ namespace WInterop.Direct2d
     ///  Contains the HWND, pixel size, and presentation options for an ID2D1HwndRenderTarget.
     ///  [D2D1_HWND_RENDER_TARGET_PROPERTIES]
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct WindowRenderTargetProperties
     {
         private readonly HWND _hwnd;

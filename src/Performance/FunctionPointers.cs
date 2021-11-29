@@ -15,14 +15,14 @@ namespace Performance
     [MemoryDiagnoser]
     public unsafe class FunctionPointers
     {
-        private IUnknown* _punk;
+        private Unknown* _punk;
         private string _path;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
             _path = Path.Join(Path.GetTempPath(), Path.GetRandomFileName());
-            _punk = (IUnknown*)CreateStorage(_path, InterfaceIds.IID_IStorage);
+            _punk = (Unknown*)CreateStorage(_path, InterfaceIds.IID_IStorage);
         }
 
         [GlobalCleanup]

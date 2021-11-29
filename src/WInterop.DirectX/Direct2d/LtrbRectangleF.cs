@@ -9,10 +9,10 @@ namespace WInterop.Direct2d
     // https://docs.microsoft.com/en-us/windows/desktop/api/dcommon/ns-dcommon-d2d_rect_f
     public readonly struct LtrbRectangleF
     {
-        public readonly float Left;
-        public readonly float Top;
-        public readonly float Right;
-        public readonly float Bottom;
+        public float Left { get; }
+        public float Top { get; }
+        public float Right { get; }
+        public float Bottom { get; }
 
         public LtrbRectangleF(RectangleF rectangle)
         {
@@ -33,13 +33,13 @@ namespace WInterop.Direct2d
         public static implicit operator RectangleF(LtrbRectangleF rect)
             => RectangleF.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
-        public static implicit operator LtrbRectangleF(RectangleF rectangle)
-            => new LtrbRectangleF(rectangle);
+        public unsafe static implicit operator LtrbRectangleF((float Left, float Top, float Right, float Bottom) rectangle)
+            => *(LtrbRectangleF*)&rectangle;
 
-        public static implicit operator LtrbRectangleF(Rectangle rectangle)
-            => new LtrbRectangleF(rectangle);
+        public static implicit operator LtrbRectangleF(RectangleF rectangle) => new(rectangle);
 
-        public static implicit operator LtrbRectangleF(SizeF size)
-            => new LtrbRectangleF(size);
+        public static implicit operator LtrbRectangleF(Rectangle rectangle) => new(rectangle);
+
+        public static implicit operator LtrbRectangleF(SizeF size) => new(size);
     }
 }

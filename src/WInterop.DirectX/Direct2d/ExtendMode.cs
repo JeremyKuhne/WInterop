@@ -12,18 +12,18 @@ namespace WInterop.Direct2d
         ///  Extend the edges of the source out by clamping sample points outside the source
         ///  to the edges. [D2D1_EXTEND_MODE_CLAMP]
         /// </summary>
-        Clamp = 0,
+        Clamp = D2D1_EXTEND_MODE.D2D1_EXTEND_MODE_CLAMP,
 
         /// <summary>
         ///  The base tile is drawn untransformed and the remainder are filled by repeating
         ///  the base tile. [D2D1_EXTEND_MODE_WRAP]
         /// </summary>
-        Wrap = 1,
+        Wrap = D2D1_EXTEND_MODE.D2D1_EXTEND_MODE_WRAP,
 
         /// <summary>
         ///  The same as wrap, but alternate tiles are flipped  The base tile is drawn
         ///  untransformed. [D2D1_EXTEND_MODE_MIRROR]
         /// </summary>
-        Mirror = 2
+        Mirror = D2D1_EXTEND_MODE.D2D1_EXTEND_MODE_MIRROR
     }
 }

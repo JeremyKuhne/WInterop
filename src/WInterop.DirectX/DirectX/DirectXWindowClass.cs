@@ -2,8 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Direct2d;
-using WInterop.DirectWrite;
-using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Windows;
@@ -13,7 +11,6 @@ namespace WInterop.DirectX
     public class DirectXWindowClass : WindowClass
     {
         private bool _resourcesValid;
-        private IWindowRenderTarget _renderTarget;
 
         public unsafe DirectXWindowClass(
             string className = default,
@@ -30,16 +27,16 @@ namespace WInterop.DirectX
         {
         }
 
-        protected IRenderTarget RenderTarget => _renderTarget;
+        protected IWindowRenderTarget RenderTarget { get; private set; }
 
-        protected static Direct2d.IFactory Direct2dFactory { get; } = Direct2d.Direct2d.CreateFactory();
-        protected static DirectWrite.IFactory DirectWriteFactory { get; } = DirectWrite.DirectWrite.CreateFactory();
+        protected static Factory Direct2dFactory { get; } = Direct2d.Direct2d.CreateFactory();
+        protected static DirectWrite.WriteFactory DirectWriteFactory { get; } = DirectWrite.DirectWrite.CreateFactory();
 
         private void CreateResourcesInternal(WindowHandle window)
         {
             if (!_resourcesValid)
             {
-                _renderTarget = Direct2dFactory.CreateWindowRenderTarget(
+                RenderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, window.GetClientRectangle().Size));
                 CreateResources();
                 _resourcesValid = true;
@@ -50,14 +47,14 @@ namespace WInterop.DirectX
         {
             if (!_resourcesValid)
             {
-                _renderTarget = Direct2dFactory.CreateWindowRenderTarget(
+                RenderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, size.NewSize));
                 CreateResources();
                 _resourcesValid = true;
             }
             else
             {
-                _renderTarget.Resize(size.NewSize);
+                RenderTarget.Resize(size.NewSize);
             }
         }
 
@@ -87,19 +84,16 @@ namespace WInterop.DirectX
                     break;
                 case MessageType.Paint:
                     CreateResourcesInternal(window);
-                    _renderTarget.BeginDraw();
+                    RenderTarget.BeginDraw();
                     OnPaint(window);
-                    HResult result = _renderTarget.EndDraw();
+                    RenderTarget.EndDraw(out bool recreateTarget);
                     window.Validate();
 
-                    if (result == HResult.D2DERR_RECREATE_TARGET)
+                    if (recreateTarget)
                     {
                         _resourcesValid = false;
                     }
-                    else
-                    {
-                        result.ThrowIfFailed();
-                    }
+
                     break;
             }
 
@@ -114,9 +108,7 @@ namespace WInterop.DirectX
             switch (message)
             {
                 case MessageType.Size:
-                    return 0;
                 case MessageType.DisplayChange:
-                    return 0;
                 case MessageType.Paint:
                     return 0;
             }

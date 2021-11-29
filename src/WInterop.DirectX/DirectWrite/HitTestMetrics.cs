@@ -43,14 +43,18 @@ namespace WInterop.DirectWrite
         /// </summary>
         public readonly uint BidiLevel;
 
+        private readonly TerraFX.Interop.Windows.BOOL _isText;
+
         /// <summary>
         ///  Geometry encloses text?
         /// </summary>
-        public readonly IntBoolean IsText;
+        public bool IsText => _isText;
+
+        private readonly TerraFX.Interop.Windows.BOOL _isTrimmed;
 
         /// <summary>
         ///  Range is trimmed.
         /// </summary>
-        public readonly IntBoolean IsTrimmed;
+        public bool IsTrimmed => _isTrimmed;
     }
 }

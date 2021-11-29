@@ -1,23 +1,24 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using WInterop.Errors;
-using WInterop.Direct2d.Native;
 
 namespace WInterop.Direct2d
 {
     public static class Direct2d
     {
-        public static IFactory CreateFactory(
+        public unsafe static Factory CreateFactory(
             FactoryType factoryType = FactoryType.SingleThreaded,
             DebugLevel debugLevel = DebugLevel.None)
         {
-            Imports.D2D1CreateFactory(
-                factoryType, new Guid(InterfaceIds.IID_ID2D1Factory), debugLevel, out IFactory factory)
-                .ThrowIfFailed();
+            ID2D1Factory* factory;
+            HResult result = TerraFX.Interop.DirectX.DirectX.D2D1CreateFactory<ID2D1Factory>(
+                (D2D1_FACTORY_TYPE)factoryType,
+                (D2D1_FACTORY_OPTIONS*)&debugLevel,
+                (void**)&factory).ToHResult();
 
-            return factory;
+            result.ThrowIfFailed();
+            return new(factory);
         }
     }
 }

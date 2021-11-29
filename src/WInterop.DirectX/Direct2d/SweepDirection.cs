@@ -11,11 +11,11 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE]
         /// </summary>
-        CounterClockwise = 0,
+        CounterClockwise = D2D1_SWEEP_DIRECTION.D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
 
         /// <summary>
         ///  [D2D1_SWEEP_DIRECTION_CLOCKWISE]
         /// </summary>
-        Clockwise = 1
+        Clockwise = D2D1_SWEEP_DIRECTION.D2D1_SWEEP_DIRECTION_CLOCKWISE
     }
 }

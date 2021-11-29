@@ -15,37 +15,37 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  OpenType font face with CFF outlines.
         /// </summary>
-        Cff,
+        Cff = DWRITE_FONT_FACE_TYPE.DWRITE_FONT_FACE_TYPE_CFF,
 
         /// <summary>
         ///  OpenType font face with TrueType outlines.
         /// </summary>
-        TrueType,
+        TrueType = DWRITE_FONT_FACE_TYPE.DWRITE_FONT_FACE_TYPE_TRUETYPE,
 
         /// <summary>
         ///  OpenType font face that is a part of a TrueType or CFF collection.
         /// </summary>
-        OpenTypeCollection,
+        OpenTypeCollection = DWRITE_FONT_FACE_TYPE.DWRITE_FONT_FACE_TYPE_OPENTYPE_COLLECTION,
 
         /// <summary>
         ///  A Type 1 font face.
         /// </summary>
-        Type1,
+        Type1 = DWRITE_FONT_FACE_TYPE.DWRITE_FONT_FACE_TYPE_TYPE1,
 
         /// <summary>
         ///  A vector .FON format font face.
         /// </summary>
-        Vector,
+        Vector = DWRITE_FONT_FACE_TYPE.DWRITE_FONT_FACE_TYPE_VECTOR,
 
         /// <summary>
         ///  A bitmap .FON format font face.
         /// </summary>
-        Bitmap,
+        Bitmap = DWRITE_FONT_FACE_TYPE.DWRITE_FONT_FACE_TYPE_BITMAP,
 
         /// <summary>
         ///  Font face type is not recognized by the DirectWrite font system.
         /// </summary>
-        Unknown,
+        Unknown = DWRITE_FONT_FACE_TYPE.DWRITE_FONT_FACE_TYPE_UNKNOWN,
 
         /// <summary>
         ///  The font data includes only the CFF table from an OpenType CFF font.
@@ -53,6 +53,6 @@ namespace WInterop.DirectWrite
         ///  font file loaders) and the resulting font face object supports only the
         ///  minimum functionality necessary to render glyphs.
         /// </summary>
-        RawCff
+        RawCff = DWRITE_FONT_FACE_TYPE.DWRITE_FONT_FACE_TYPE_RAW_CFF
     }
 }

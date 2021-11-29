@@ -11,45 +11,50 @@ namespace WInterop.Direct2d
     ///  Represents the drawing state of a render target: the antialiasing mode,
     ///  transform, tags, and text-rendering options. [ID2D1DrawingStateBlock]
     /// </summary>
-    [ComImport,
-        Guid(InterfaceIds.IID_ID2D1DrawingStateBlock),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IDrawingStateBlock : IResource
+    [Guid(InterfaceIds.IID_ID2D1DrawingStateBlock)]
+    public readonly unsafe struct DrawingStateBlock : DrawingStateBlock.Interface, IDisposable
     {
-        #region ID2D1Resource
-        [PreserveSig]
-        new void GetFactory(
-            out IFactory factory);
-        #endregion
+        private readonly ID2D1DrawingStateBlock* _handle;
 
-        /// <summary>
-        ///  Retrieves the state currently contained within this state block resource.
-        /// </summary>
-        [PreserveSig]
-        void GetDescription(
-            out DrawingStateDescription stateDescription);
+        internal DrawingStateBlock(ID2D1DrawingStateBlock* handle) => _handle = handle;
 
-        /// <summary>
-        ///  Sets the state description of this state block resource.
-        /// </summary>
-        [PreserveSig]
-        void SetDescription(
-            in DrawingStateDescription stateDescription);
+        public DrawingStateDescription Description
+        {
+            get
+            {
+                DrawingStateDescription description;
+                _handle->GetDescription((D2D1_DRAWING_STATE_DESCRIPTION*)&description);
+                return description;
+            }
+            set => _handle->SetDescription((D2D1_DRAWING_STATE_DESCRIPTION*)&value);
+        }
 
-        /// <summary>
-        ///  Sets the text rendering parameters of this state block resource.
-        /// </summary>
-        [PreserveSig]
-        void SetTextRenderingParams(
-            IRenderingParams textRenderingParams);
+        public RenderingParams TextRenderingParams
+        {
+            get
+            {
+                IDWriteRenderingParams* rendering;
+                _handle->GetTextRenderingParams(&rendering);
+                return new(rendering);
+            }
+            set => _handle->SetTextRenderingParams(value.Handle);
+        }
 
-        /// <summary>
-        ///  Retrieves the text rendering parameters contained within this state block
-        ///  resource. If a NULL text rendering parameter was specified, NULL will be
-        ///  returned.
-        /// </summary>
-        [PreserveSig]
-        void GetTextRenderingParams(
-            out IRenderingParams textRenderingParams);
+        public void Dispose() => _handle->Release();
+
+        public Factory GetFactory() => Resource.From(this).GetFactory();
+
+        internal interface Interface : Resource.Interface
+        {
+            /// <summary>
+            ///  Gets/sets the state description of this state block resource.
+            /// </summary>
+            DrawingStateDescription Description { get; set; }
+
+            /// <summary>
+            ///  Gets/Sets the text rendering parameters of this state block resource.
+            /// </summary>
+            RenderingParams TextRenderingParams { get; set; }
+        }
     }
 }

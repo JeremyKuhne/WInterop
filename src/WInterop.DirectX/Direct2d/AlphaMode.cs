@@ -14,21 +14,21 @@ namespace WInterop.Direct2d
         ///  or imply this information in which case alpha must be specified.
         ///  [D2D1_ALPHA_MODE_UNKNOWN]
         /// </summary>
-        Unknown = 0,
+        Unknown = D2D1_ALPHA_MODE.D2D1_ALPHA_MODE_UNKNOWN,
 
         /// <summary>
         ///  Treat the alpha as premultipled. [D2D1_ALPHA_MODE_PREMULTIPLIED]
         /// </summary>
-        Premultiplied = 1,
+        Premultiplied = D2D1_ALPHA_MODE.D2D1_ALPHA_MODE_PREMULTIPLIED,
 
         /// <summary>
         ///  Opacity is in the 'A' component only. [D2D1_ALPHA_MODE_STRAIGHT]
         /// </summary>
-        Straight = 2,
+        Straight = D2D1_ALPHA_MODE.D2D1_ALPHA_MODE_STRAIGHT,
 
         /// <summary>
         ///  Ignore any alpha channel information. [D2D1_ALPHA_MODE_IGNORE]
         /// </summary>
-        Ignore = 3,
+        Ignore = D2D1_ALPHA_MODE.D2D1_ALPHA_MODE_IGNORE,
     }
 }

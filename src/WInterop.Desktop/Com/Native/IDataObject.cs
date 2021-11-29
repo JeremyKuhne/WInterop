@@ -96,15 +96,15 @@ namespace WInterop.Com.Native
                     return HResult.E_NOINTERFACE;
                 }
 
-                Lifetime<VTable>.AddRef(@this);
+                Lifetime<VTable, object>.AddRef(@this);
                 return HResult.S_OK;
             }
 
             [UnmanagedCallersOnly]
-            private static unsafe uint AddRef(void* @this) => Lifetime<VTable>.AddRef(@this);
+            private static unsafe uint AddRef(void* @this) => Lifetime<VTable, object>.AddRef(@this);
 
             [UnmanagedCallersOnly]
-            private static unsafe uint Release(void* @this) => Lifetime<VTable>.Release(@this);
+            private static unsafe uint Release(void* @this) => Lifetime<VTable, object>.Release(@this);
 
             [UnmanagedCallersOnly]
 #pragma warning disable IDE0060 // Remove unused parameter

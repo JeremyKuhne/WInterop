@@ -6,7 +6,11 @@
     <DelaySign>False</DelaySign>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <RootNamespace>WInterop</RootNamespace>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.20348-rc2" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WInterop.Desktop\WInterop.Desktop.csproj" />
   </ItemGroup>

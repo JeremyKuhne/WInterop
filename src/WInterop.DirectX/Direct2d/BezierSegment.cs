@@ -10,9 +10,9 @@ namespace WInterop.Direct2d
     /// </summary>
     public readonly struct BezierSegment
     {
-        public readonly PointF Point1;
-        public readonly PointF Point2;
-        public readonly PointF Point3;
+        public PointF Point1 { get; }
+        public PointF Point2 { get; }
+        public PointF Point3 { get; }
 
         public BezierSegment(PointF point1, PointF point2, PointF point3)
         {
@@ -23,9 +23,9 @@ namespace WInterop.Direct2d
 
         public BezierSegment((float X, float Y) point1, (float X, float Y) point2, (float X, float Y) point3)
         {
-            Point1 = new PointF(point1.X, point1.Y);
-            Point2 = new PointF(point2.X, point2.Y);
-            Point3 = new PointF(point3.X, point3.Y);
+            Point1 = new(point1.X, point1.Y);
+            Point2 = new(point2.X, point2.Y);
+            Point3 = new(point3.X, point3.Y);
         }
     }
 }

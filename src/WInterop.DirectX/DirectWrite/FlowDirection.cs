@@ -11,21 +11,21 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  Text lines are placed from top to bottom.
         /// </summary>
-        TopToBottom = 0,
+        TopToBottom = DWRITE_FLOW_DIRECTION.DWRITE_FLOW_DIRECTION_TOP_TO_BOTTOM,
 
         /// <summary>
         ///  Text lines are placed from bottom to top.
         /// </summary>
-        BottomToTop = 1,
+        BottomToTop = DWRITE_FLOW_DIRECTION.DWRITE_FLOW_DIRECTION_BOTTOM_TO_TOP,
 
         /// <summary>
         ///  Text lines are placed from left to right.
         /// </summary>
-        LeftToRight = 2,
+        LeftToRight = DWRITE_FLOW_DIRECTION.DWRITE_FLOW_DIRECTION_LEFT_TO_RIGHT,
 
         /// <summary>
         ///  Text lines are placed from right to left.
         /// </summary>
-        RightToLeft = 3,
+        RightToLeft = DWRITE_FLOW_DIRECTION.DWRITE_FLOW_DIRECTION_RIGHT_TO_LEFT,
     }
 }

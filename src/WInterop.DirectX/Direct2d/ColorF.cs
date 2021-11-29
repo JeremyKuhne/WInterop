@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace WInterop.Direct2d
 {
@@ -31,10 +32,16 @@ namespace WInterop.Direct2d
             A = a;
         }
 
+        public static implicit operator ColorF(in DXGI_RGBA color)
+            => Unsafe.As<DXGI_RGBA, ColorF>(ref Unsafe.AsRef(color));
+
+        public static implicit operator DXGI_RGBA(in ColorF color)
+            => Unsafe.As<ColorF, DXGI_RGBA>(ref Unsafe.AsRef(color));
+
         public static implicit operator Color(ColorF color)
             => Color.FromArgb((int)(color.A * 255), (int)(color.R * 255), (int)(color.G * 255), (int)(color.B * 255));
 
         public static implicit operator ColorF(Color color)
-            => new ColorF(color, color.A / 255.0f);
+            => new(color, color.A / 255.0f);
     }
 }

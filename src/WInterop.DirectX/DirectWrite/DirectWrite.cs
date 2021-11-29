@@ -9,10 +9,10 @@ namespace WInterop.DirectWrite
 {
     public static class DirectWrite
     {
-        public static IFactory CreateFactory(FactoryType factoryType = FactoryType.Shared)
+        public static WriteFactory CreateFactory(FactoryType factoryType = FactoryType.Shared)
         {
             Imports.DWriteCreateFactory(
-                factoryType, new Guid(InterfaceIds.IID_IDWriteFactory), out IFactory factory)
+                factoryType, new Guid(InterfaceIds.IID_IDWriteFactory), out WriteFactory factory)
                 .ThrowIfFailed();
 
             return factory;

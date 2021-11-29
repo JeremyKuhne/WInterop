@@ -17,6 +17,6 @@ namespace WInterop.DirectWrite.Native
         public static extern HResult DWriteCreateFactory(
             FactoryType factoryType,
             in Guid riid,
-            out IFactory ppIFactory);
+            out WriteFactory ppIFactory);
     }
 }

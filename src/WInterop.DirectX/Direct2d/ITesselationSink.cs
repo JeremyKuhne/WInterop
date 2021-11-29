@@ -9,17 +9,34 @@ namespace WInterop.Direct2d
     /// <summary>
     ///  [ID2D1TessellationSink]
     /// </summary>
-    [ComImport,
-        Guid(InterfaceIds.IID_ID2D1TessellationSink),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface ITesselationSink
+    [Guid(InterfaceIds.IID_ID2D1TessellationSink)]
+    public readonly unsafe struct TesselationSink : TesselationSink.Interface, IDisposable
     {
-        [PreserveSig]
-        void AddTriangles(
-            ref Triangle triangles,
-            uint trianglesCount);
+        private readonly ID2D1TessellationSink* _handle;
 
-        [PreserveSig]
-        void Close();
+        internal TesselationSink(ID2D1TessellationSink* handle) => _handle = handle;
+
+        public void AddTriangles(ReadOnlySpan<Triangle> triangles)
+        {
+            fixed(void* t = triangles)
+            {
+                _handle->AddTriangles((D2D1_TRIANGLE*)t, (uint)triangles.Length);
+            }
+        }
+
+        public void Close() => _handle->Close();
+
+        public void Dispose()
+        {
+            Close();
+            _handle->Release();
+        }
+
+        internal interface Interface
+        {
+            void AddTriangles(ReadOnlySpan<Triangle> triangles);
+
+            void Close();
+        }
     }
 }

@@ -12,11 +12,11 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_ARC_SIZE_SMALL]
         /// </summary>
-        Small = 0,
+        Small = D2D1_ARC_SIZE.D2D1_ARC_SIZE_SMALL,
 
         /// <summary>
         ///  [D2D1_ARC_SIZE_LARGE]
         /// </summary>
-        Large = 1,
+        Large = D2D1_ARC_SIZE.D2D1_ARC_SIZE_LARGE,
     }
 }

@@ -11,16 +11,16 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  No trimming occurs. Text flows beyond the layout width.
         /// </summary>
-        None,
+        None = DWRITE_TRIMMING_GRANULARITY.DWRITE_TRIMMING_GRANULARITY_NONE,
 
         /// <summary>
         ///  Trimming occurs at character cluster boundary.
         /// </summary>
-        Character,
+        Character = DWRITE_TRIMMING_GRANULARITY.DWRITE_TRIMMING_GRANULARITY_CHARACTER,
 
         /// <summary>
         ///  Trimming occurs at word boundary.
         /// </summary>
-        Word
+        Word = DWRITE_TRIMMING_GRANULARITY.DWRITE_TRIMMING_GRANULARITY_WORD
     }
 }

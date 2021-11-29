@@ -11,8 +11,8 @@ namespace DirectWriteDemo
     // https://docs.microsoft.com/en-us/windows/desktop/DirectWrite/how-to-implement-a-custom-text-renderer
     public class CustomText : HelloWorld
     {
-        private IRadialGradientBrush _radialGradientBrush;
-        private CustomTextRenderer _textRenderer;
+        private RadialGradientBrush _radialGradientBrush;
+        private SampleTextRenderer _textRenderer;
 
         protected override void CreateResources()
         {
@@ -28,15 +28,15 @@ namespace DirectWriteDemo
 
             _radialGradientBrush = RenderTarget.CreateRadialGradientBrush(
                 new RadialGradientBrushProperties(new PointF(330, 330), new PointF(140, 140), 140, 140),
-                RenderTarget.CreateGradienStopCollection(stops));
+                RenderTarget.CreateGradientStopCollection(stops));
 
-            _textRenderer = new CustomTextRenderer(Direct2dFactory, RenderTarget, _blackBrush, _radialGradientBrush);
+            _textRenderer = new SampleTextRenderer(Direct2dFactory, RenderTarget, _blackBrush, _radialGradientBrush);
         }
 
         protected override void OnPaint(WindowHandle window)
         {
             RenderTarget.Clear(Color.AntiqueWhite);
-            _textLayout.Draw(IntPtr.Zero, _textRenderer, 0, 0);
+            _textLayout.Draw(IntPtr.Zero, _textRenderer, default);
         }
     }
 }

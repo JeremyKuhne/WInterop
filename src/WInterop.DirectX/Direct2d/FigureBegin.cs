@@ -11,11 +11,11 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_FIGURE_BEGIN_FILLED]
         /// </summary>
-        Filled = 0,
+        Filled = D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_FILLED,
 
         /// <summary>
         ///  [D2D1_FIGURE_BEGIN_HOLLOW]
         /// </summary>
-        Hollow = 1
+        Hollow = D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_HOLLOW
     }
 }

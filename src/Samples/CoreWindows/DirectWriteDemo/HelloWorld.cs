@@ -12,24 +12,24 @@ namespace DirectWriteDemo
     // https://docs.microsoft.com/en-us/windows/desktop/DirectWrite/getting-started-with-directwrite
     public class HelloWorld : DirectXWindowClass
     {
-        protected ITextFormat _textFormat;
-        protected ITextLayout _textLayout;
-        protected ITypography _typography;
+        protected TextFormat _textFormat;
+        protected TextLayout _textLayout;
+        protected Typography _typography;
 
-        protected ISolidColorBrush _blackBrush;
+        protected SolidColorBrush _blackBrush;
 
         public HelloWorld() : base()
         {
             _textFormat = DirectWriteFactory.CreateTextFormat("Gabriola", fontSize: 64);
-            _textFormat.SetTextAlignment(TextAlignment.Center);
-            _textFormat.SetParagraphAlignment(ParagraphAlignment.Center);
+            _textFormat.TextAlignment = TextAlignment.Center;
+            _textFormat.ParagraphAlignment = ParagraphAlignment.Center;
         }
 
         protected override void CreateResources()
         {
             string text = "Hello World From ... DirectWrite!";
             _blackBrush = RenderTarget.CreateSolidColorBrush(Color.Black);
-            _textLayout = DirectWriteFactory.CreateTextLayout(text, _textFormat, RenderTarget.GetSize());
+            _textLayout = DirectWriteFactory.CreateTextLayout(text, _textFormat, RenderTarget.Size);
 
             // (21, 12) is the range around "DirectWrite!"
             _textLayout.SetFontSize(100, (21, 12));

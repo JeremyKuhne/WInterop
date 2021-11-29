@@ -12,13 +12,20 @@ namespace WInterop.Direct2d
     /// </summary>
     public readonly struct Ellipse
     {
-        public readonly PointF Point;
-        public readonly float RadiusX;
-        public readonly float RadiusY;
+        public PointF Point { get; }
+        public float RadiusX { get; }
+        public float RadiusY { get; }
 
         public Ellipse(PointF point, float radiusX, float radiusY)
         {
             Point = point;
+            RadiusX = radiusX;
+            RadiusY = radiusY;
+        }
+
+        public unsafe Ellipse((float X, float Y) point, float radiusX, float radiusY)
+        {
+            Point = *(PointF*)&point;
             RadiusX = radiusX;
             RadiusY = radiusY;
         }

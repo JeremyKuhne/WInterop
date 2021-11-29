@@ -29,7 +29,7 @@ namespace WInterop.Com.Native
             }
 
             public static unsafe IntPtr CreateInstance(Managed.IDropSource @object)
-                => (IntPtr)Lifetime<VTable>.Allocate(@object, CCWVTable);
+                => (IntPtr)Lifetime<VTable, object>.Allocate(@object, CCWVTable);
 
             [UnmanagedCallersOnly]
             private static unsafe HResult QueryInterface(void* @this, Guid* iid, void* ppObject)
@@ -44,20 +44,20 @@ namespace WInterop.Com.Native
                     return HResult.E_NOINTERFACE;
                 }
 
-                Lifetime<VTable>.AddRef(@this);
+                Lifetime<VTable, object>.AddRef(@this);
                 return HResult.S_OK;
             }
 
             [UnmanagedCallersOnly]
-            private static unsafe uint AddRef(void* @this) => Lifetime<VTable>.AddRef(@this);
+            private static unsafe uint AddRef(void* @this) => Lifetime<VTable, object>.AddRef(@this);
 
             [UnmanagedCallersOnly]
-            private static unsafe uint Release(void* @this) => Lifetime<VTable>.Release(@this);
+            private static unsafe uint Release(void* @this) => Lifetime<VTable, object>.Release(@this);
 
             [UnmanagedCallersOnly]
             private static unsafe HResult QueryContinueDrag(void* @this, int fEscapePressed, KeyState grfKeyState)
             {
-                var lifetime = (Lifetime<VTable>*)@this;
+                var lifetime = (Lifetime<VTable, object>*)@this;
                 var dropSource = GCHandle.FromIntPtr((IntPtr)lifetime->Handle).Target as Managed.IDropSource;
                 return dropSource?.QueryContinueDrag(fEscapePressed.FromBOOL(), grfKeyState) ?? HResult.E_FAIL;
             }
@@ -65,7 +65,7 @@ namespace WInterop.Com.Native
             [UnmanagedCallersOnly]
             private static unsafe HResult GiveFeedback(void* @this, DropEffect dwEffect)
             {
-                var lifetime = (Lifetime<VTable>*)@this;
+                var lifetime = (Lifetime<VTable, object>*)@this;
                 var dropSource = GCHandle.FromIntPtr((IntPtr)lifetime->Handle).Target as Managed.IDropSource;
                 return dropSource?.GiveFeedback(dwEffect) ?? HResult.E_FAIL;
             }

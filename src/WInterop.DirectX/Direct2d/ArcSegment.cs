@@ -10,11 +10,11 @@ namespace WInterop.Direct2d
     /// </summary>
     public readonly struct ArcSegment
     {
-        public readonly PointF Point;
-        public readonly SizeF Size;
-        public readonly float RotationAngle;
-        public readonly SweepDirection SweepDirection;
-        public readonly ArcSize ArcSize;
+        public PointF Point { get; }
+        public SizeF Size { get; }
+        public float RotationAngle { get; }
+        public SweepDirection SweepDirection { get; }
+        public ArcSize ArcSize { get; }
 
         public ArcSegment(
             PointF point,
@@ -25,6 +25,20 @@ namespace WInterop.Direct2d
         {
             Point = point;
             Size = size;
+            RotationAngle = rotationAngle;
+            SweepDirection = sweepDirection;
+            ArcSize = arcSize;
+        }
+
+        public ArcSegment(
+            (float X, float Y) point,
+            (float X, float Y) size,
+            float rotationAngle = 0.0f,
+            SweepDirection sweepDirection = SweepDirection.Clockwise,
+            ArcSize arcSize = ArcSize.Small)
+        {
+            Point = new(point.X, point.Y);
+            Size = new(size.X, size.Y);
             RotationAngle = rotationAngle;
             SweepDirection = sweepDirection;
             ArcSize = arcSize;

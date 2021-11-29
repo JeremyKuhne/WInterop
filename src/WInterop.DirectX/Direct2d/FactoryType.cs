@@ -14,11 +14,11 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_FACTORY_TYPE_SINGLE_THREADED]
         /// </summary>
-        SingleThreaded,
+        SingleThreaded = D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_SINGLE_THREADED,
 
         /// <summary>
         ///  [D2D1_FACTORY_TYPE_MULTI_THREADED]
         /// </summary>
-        MultiThreaded
+        MultiThreaded = D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED
     }
 }

@@ -11,29 +11,29 @@ namespace WInterop.DirectWrite
         /// <summary>
         ///  Words are broken across lines to avoid text overflowing the layout box.
         /// </summary>
-        Wrap = 0,
+        Wrap = DWRITE_WORD_WRAPPING.DWRITE_WORD_WRAPPING_WRAP,
 
         /// <summary>
         ///  Words are kept within the same line even when it overflows the layout box.
         ///  This option is often used with scrolling to reveal overflow text. 
         /// </summary>
-        NoWrap = 1,
+        NoWrap = DWRITE_WORD_WRAPPING.DWRITE_WORD_WRAPPING_NO_WRAP,
 
         /// <summary>
         ///  Words are broken across lines to avoid text overflowing the layout box.
         ///  Emergency wrapping occurs if the word is larger than the maximum width.
         /// </summary>
-        EmergencyBreak = 2,
+        EmergencyBreak = DWRITE_WORD_WRAPPING.DWRITE_WORD_WRAPPING_EMERGENCY_BREAK,
 
         /// <summary>
         ///  Only wrap whole words, never breaking words (emergency wrapping) when the
         ///  layout width is too small for even a single word.
         /// </summary>
-        WholeWord = 3,
+        WholeWord = DWRITE_WORD_WRAPPING.DWRITE_WORD_WRAPPING_WHOLE_WORD,
 
         /// <summary>
         ///  Wrap between any valid characters clusters.
         /// </summary>
-        Character = 4,
+        Character = DWRITE_WORD_WRAPPING.DWRITE_WORD_WRAPPING_CHARACTER,
     }
 }

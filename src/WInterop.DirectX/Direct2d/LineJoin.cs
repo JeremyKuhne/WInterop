@@ -11,21 +11,21 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  Miter join. [D2D1_LINE_JOIN_MITER]
         /// </summary>
-        Miter = 0,
+        Miter = D2D1_LINE_JOIN.D2D1_LINE_JOIN_MITER,
 
         /// <summary>
         ///  Bevel join. [D2D1_LINE_JOIN_BEVEL]
         /// </summary>
-        Bevel = 1,
+        Bevel = D2D1_LINE_JOIN.D2D1_LINE_JOIN_BEVEL,
 
         /// <summary>
         ///  Round join. [D2D1_LINE_JOIN_ROUND]
         /// </summary>
-        Round = 2,
+        Round = D2D1_LINE_JOIN.D2D1_LINE_JOIN_ROUND,
 
         /// <summary>
         ///  Miter/Bevel join. [D2D1_LINE_JOIN_MITER_OR_BEVEL]
         /// </summary>
-        MiterOrBevel = 3
+        MiterOrBevel = D2D1_LINE_JOIN.D2D1_LINE_JOIN_MITER_OR_BEVEL
     }
 }

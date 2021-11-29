@@ -11,11 +11,11 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  Colors are manipulated in 2.2 gamma color space. [D2D1_GAMMA_2_2]
         /// </summary>
-        ColorSpace_2_2 = 0,
+        ColorSpace_2_2 = D2D1_GAMMA.D2D1_GAMMA_2_2,
 
         /// <summary>
         ///  Colors are manipulated in 1.0 gamma color space. [D2D1_GAMMA_1_0]
         /// </summary>
-        ColorSpace_1_0 = 1,
+        ColorSpace_1_0 = D2D1_GAMMA.D2D1_GAMMA_1_0,
     }
 }

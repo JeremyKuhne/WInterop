@@ -2,17 +2,21 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
+using System.Numerics;
 using WInterop.Direct2d;
 using WInterop.DirectX;
 using WInterop.Windows;
 
 namespace Direct2dDemo
 {
-    // https://docs.microsoft.com/en-us/windows/desktop/Direct2D/direct2d-quickstart
+    /// <summary>
+    ///  Implementation of the <see href="https://docs.microsoft.com/en-us/windows/win32/direct2d/direct2d-quickstart">
+    ///  Simple Direct2D Application</see>.
+    /// </summary>
     public class Direct2dDemo : DirectXWindowClass
     {
-        private ISolidColorBrush _lightSlateGrayBrush;
-        private ISolidColorBrush _cornflowerBlueBrush;
+        private SolidColorBrush _lightSlateGrayBrush;
+        private SolidColorBrush _cornflowerBlueBrush;
 
         protected override void CreateResources()
         {
@@ -22,16 +26,14 @@ namespace Direct2dDemo
 
         protected override void OnPaint(WindowHandle window)
         {
-            RenderTarget.SetTransform();
+            RenderTarget.Transform = Matrix3x2.Identity;
             RenderTarget.Clear(Color.White);
-            Size size = RenderTarget.GetSize().ToSize();
-
-            _lightSlateGrayBrush.GetColor(out ColorF color);
+            Size size = RenderTarget.Size.ToSize();
 
             for (int x = 0; x < size.Width; x += 10)
             {
                 RenderTarget.DrawLine(
-                    new Point(x, 0), new Point(x, size.Height),
+                    (x, 0), (x, size.Height),
                     _lightSlateGrayBrush, 0.5f);
             }
 

@@ -12,11 +12,11 @@ namespace WInterop.Direct2d
         /// <summary>
         ///  [D2D1_FILL_MODE_ALTERNATE]
         /// </summary>
-        Alternate = 0,
+        Alternate = D2D1_FILL_MODE.D2D1_FILL_MODE_ALTERNATE,
 
         /// <summary>
         ///  [D2D1_FILL_MODE_WINDING]
         /// </summary>
-        Winding = 1
+        Winding = D2D1_FILL_MODE.D2D1_FILL_MODE_WINDING
     }
 }
