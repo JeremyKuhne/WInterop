@@ -121,7 +121,7 @@ namespace WInterop.DirectWrite
             private static int IsPixelSnappingDisabled(void* @this, void* clientDrawingContext, TerraFX.Interop.Windows.BOOL* isDisabled)
             {
                 *isDisabled = Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)
-                    .IsPixelSnappingDisabled((IntPtr)clientDrawingContext);
+                    ?.IsPixelSnappingDisabled((IntPtr)clientDrawingContext) ?? false;
                 return (int)Errors.HResult.S_OK;
             }
 
@@ -129,7 +129,7 @@ namespace WInterop.DirectWrite
             private static int GetCurrentTransform(void* @this, void* clientDrawingContext, DWRITE_MATRIX* transform)
             {
                 Matrix3x2 matrix = Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)
-                    .GetCurrentTransform((IntPtr)clientDrawingContext);
+                    ?.GetCurrentTransform((IntPtr)clientDrawingContext) ?? Matrix3x2.Identity;
                 *transform = *(DWRITE_MATRIX*)&matrix;
                 return (int)Errors.HResult.S_OK;
             }
@@ -138,7 +138,7 @@ namespace WInterop.DirectWrite
             private static unsafe int GetPixelsPerDip(void* @this, void* clientDrawingContext, float* pixelsPerDip)
             {
                 *pixelsPerDip = Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)
-                    .GetPixelsPerDip((IntPtr)clientDrawingContext);
+                    ?.GetPixelsPerDip((IntPtr)clientDrawingContext) ?? 1;
                 return (int)Errors.HResult.S_OK;
             }
 
@@ -153,7 +153,7 @@ namespace WInterop.DirectWrite
                 DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,
                 TerraFX.Interop.Windows.IUnknown* clientDrawingEffect)
             {
-                Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this).DrawGlyphRun(
+                Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)?.DrawGlyphRun(
                     (IntPtr)clientDrawingContext,
                     new(baselineOriginX, baselineOriginY),
                     (MeasuringMode)measuringMode,
@@ -173,7 +173,7 @@ namespace WInterop.DirectWrite
                 DWRITE_UNDERLINE* underline,
                 TerraFX.Interop.Windows.IUnknown* clientDrawingEffect)
             {
-                Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this).DrawUnderline(
+                Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)?.DrawUnderline(
                     (IntPtr)clientDrawingContext,
                     new(baselineOriginX, baselineOriginY),
                     *(Underline*)underline,
@@ -191,7 +191,7 @@ namespace WInterop.DirectWrite
                 DWRITE_STRIKETHROUGH* strikethrough,
                 TerraFX.Interop.Windows.IUnknown* clientDrawingEffect)
             {
-                Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this).DrawStrikethrough(
+                Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)?.DrawStrikethrough(
                     (IntPtr)clientDrawingContext,
                     new(baselineOriginX, baselineOriginY),
                     *(Strikethrough*)strikethrough,
@@ -211,7 +211,7 @@ namespace WInterop.DirectWrite
                 TerraFX.Interop.Windows.BOOL isRightToLeft,
                 TerraFX.Interop.Windows.IUnknown* clientDrawingEffect)
             {
-                Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this).DrawInlineObject(
+                Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)?.DrawInlineObject(
                     (IntPtr)clientDrawingContext,
                     new(originX, originY),
                     new(inlineObject),

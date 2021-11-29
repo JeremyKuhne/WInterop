@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using WInterop.Direct2d;
 using WInterop.Gdi;
 using WInterop.Modules;
@@ -13,28 +14,41 @@ namespace WInterop.DirectX
         private bool _resourcesValid;
 
         public unsafe DirectXWindowClass(
-            string className = default,
-            ModuleInstance moduleInstance = default,
+            string? className = default,
+            ModuleInstance? moduleInstance = default,
             ClassStyle classStyle = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
             IconHandle icon = default,
             IconHandle smallIcon = default,
             CursorHandle cursor = default,
-            string menuName = null,
+            string? menuName = null,
             int menuId = 0,
             int classExtraBytes = 0,
             int windowExtraBytes = 0)
-            : base(className, moduleInstance, classStyle, BrushHandle.NoBrush, icon, smallIcon, cursor, menuName, menuId, classExtraBytes, windowExtraBytes)
+            : base(
+                  className,
+                  moduleInstance,
+                  classStyle,
+                  BrushHandle.NoBrush,
+                  icon,
+                  smallIcon,
+                  cursor,
+                  menuName,
+                  menuId,
+                  classExtraBytes,
+                  windowExtraBytes)
         {
         }
 
+        [AllowNull]
         protected IWindowRenderTarget RenderTarget { get; private set; }
 
         protected static Factory Direct2dFactory { get; } = Direct2d.Direct2d.CreateFactory();
         protected static DirectWrite.WriteFactory DirectWriteFactory { get; } = DirectWrite.DirectWrite.CreateFactory();
 
+        [MemberNotNull(nameof(RenderTarget))]
         private void CreateResourcesInternal(WindowHandle window)
         {
-            if (!_resourcesValid)
+            if (!_resourcesValid || RenderTarget is null)
             {
                 RenderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, window.GetClientRectangle().Size));
@@ -43,9 +57,10 @@ namespace WInterop.DirectX
             }
         }
 
+        [MemberNotNull(nameof(RenderTarget))]
         private void CreateResourcesInternal(WindowHandle window, in Message.Size size)
         {
-            if (!_resourcesValid)
+            if (!_resourcesValid || RenderTarget is null)
             {
                 RenderTarget = Direct2dFactory.CreateWindowRenderTarget(
                     default, new WindowRenderTargetProperties(window, size.NewSize));
@@ -97,6 +112,8 @@ namespace WInterop.DirectX
                     break;
             }
 
+            // Ensure that the RenderTarget is always valid.
+            CreateResourcesInternal(window);
             return Direct2dWindowProcedure(window, message, wParam, lParam);
         }
 
@@ -114,6 +131,13 @@ namespace WInterop.DirectX
             }
 
             return base.WindowProcedure(window, message, wParam, lParam);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            RenderTarget.Dispose();
+            _resourcesValid = false;
+            base.Dispose(disposing);
         }
     }
 }

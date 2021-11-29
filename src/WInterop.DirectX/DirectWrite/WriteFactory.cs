@@ -96,7 +96,7 @@ namespace WInterop.DirectWrite
             FontStyle fontStyle = FontStyle.Normal,
             FontStretch fontStretch = FontStretch.Normal,
             float fontSize = 12,
-            string localeName = null)
+            string? localeName = null)
         {
             IDWriteTextFormat* format;
             localeName ??= CultureInfo.CurrentCulture.Name;
@@ -353,7 +353,7 @@ namespace WInterop.DirectWrite
                 FontStyle fontStyle = FontStyle.Normal,
                 FontStretch fontStretch = FontStretch.Normal,
                 float fontSize = 12.0f,
-                string localeName = null);
+                string? localeName = null);
 
             /// <summary>
             ///  Create a typography object used in conjunction with text format for text layout.
