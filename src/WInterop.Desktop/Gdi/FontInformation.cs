@@ -3,22 +3,21 @@
 
 using WInterop.Support;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+public class FontInformation
 {
-    public class FontInformation
+    public EnumerateLogicalFontExtendedDesignVector FontAttributes;
+    public NewTextMetricsExtended TextMetrics;
+    public FontTypes FontType;
+
+    public override string ToString()
     {
-        public EnumerateLogicalFontExtendedDesignVector FontAttributes;
-        public NewTextMetricsExtended TextMetrics;
-        public FontTypes FontType;
+        string fullName = FontAttributes.EnumLogicalFontEx.FullName.CreateString();
+        string style = FontAttributes.EnumLogicalFontEx.Style.CreateString();
 
-        public override string ToString()
-        {
-            string fullName = FontAttributes.EnumLogicalFontEx.FullName.CreateString();
-            string style = FontAttributes.EnumLogicalFontEx.Style.CreateString();
-
-            return fullName.EndsWith(style)
-                ? $"{fullName} {FontAttributes.EnumLogicalFontEx.Script.CreateString()} ({FontType})"
-                : $"{fullName} {style} {FontAttributes.EnumLogicalFontEx.Script.CreateString()} ({FontType})";
-        }
+        return fullName.EndsWith(style)
+            ? $"{fullName} {FontAttributes.EnumLogicalFontEx.Script.CreateString()} ({FontType})"
+            : $"{fullName} {style} {FontAttributes.EnumLogicalFontEx.Script.CreateString()} ({FontType})";
     }
 }

@@ -5,61 +5,60 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Handles;
 
-namespace WInterop.Cryptography.Native
+namespace WInterop.Cryptography.Native;
+
+/// <summary>
+///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+/// </summary>
+public static partial class Imports
 {
-    /// <summary>
-    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-    /// </summary>
-    public static partial class Imports
-    {
-        // System Store Locations
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa388136.aspx
+    // System Store Locations
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa388136.aspx
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376560.aspx
-        [DllImport(Libraries.Crypt32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-        public static extern CertificateStoreHandle CertOpenSystemStoreW(
-            IntPtr hprov,
-            string szSubsystemProtocol);
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376560.aspx
+    [DllImport(Libraries.Crypt32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
+    public static extern CertificateStoreHandle CertOpenSystemStoreW(
+        IntPtr hprov,
+        string szSubsystemProtocol);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559.aspx
-        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-        public static extern CertificateStoreHandle CertOpenStore(
-            IntPtr lpszStoreProvider,
-            uint dwMsgAndCertEncodingType,
-            IntPtr hCryptProv,
-            uint dwFlags,
-            IntPtr pvPara);
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559.aspx
+    [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+    public static extern CertificateStoreHandle CertOpenStore(
+        IntPtr lpszStoreProvider,
+        uint dwMsgAndCertEncodingType,
+        IntPtr hCryptProv,
+        uint dwFlags,
+        IntPtr pvPara);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376026.aspx
-        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-        public static extern bool CertCloseStore(
-            IntPtr hCertStore,
-            uint dwFlags);
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376026.aspx
+    [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+    public static extern bool CertCloseStore(
+        IntPtr hCertStore,
+        uint dwFlags);
 
-        // Example C Program: Listing System and Physical Stores
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa382362.aspx
+    // Example C Program: Listing System and Physical Stores
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa382362.aspx
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376060.aspx
-        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-        public static extern bool CertEnumSystemStoreLocation(
-            uint dwFlags,
-            IntPtr pvArg,
-            CertEnumSystemStoreLocationCallback pfnEnum);
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376060.aspx
+    [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+    public static extern bool CertEnumSystemStoreLocation(
+        uint dwFlags,
+        IntPtr pvArg,
+        CertEnumSystemStoreLocationCallback pfnEnum);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376058.aspx
-        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-        public static extern bool CertEnumSystemStore(
-            uint dwFlags,
-            IntPtr pvSystemStoreLocationPara,
-            IntPtr pvArg,
-            CertEnumSystemStoreCallback pfnEnum);
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376058.aspx
+    [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+    public static extern bool CertEnumSystemStore(
+        uint dwFlags,
+        IntPtr pvSystemStoreLocationPara,
+        IntPtr pvArg,
+        CertEnumSystemStoreCallback pfnEnum);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376055.aspx
-        [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
-        public static extern bool CertEnumPhysicalStore(
-            IntPtr pvSystemStore,
-            uint dwFlags,
-            IntPtr pvArg,
-            CertEnumPhysicalStoreCallback pfnEnum);
-    }
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376055.aspx
+    [DllImport(Libraries.Crypt32, SetLastError = true, ExactSpelling = true)]
+    public static extern bool CertEnumPhysicalStore(
+        IntPtr pvSystemStore,
+        uint dwFlags,
+        IntPtr pvArg,
+        CertEnumPhysicalStoreCallback pfnEnum);
 }

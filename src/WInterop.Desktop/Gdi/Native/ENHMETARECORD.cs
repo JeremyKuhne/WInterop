@@ -4,35 +4,34 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+/// <docs>https://docs.microsoft.com/windows/win32/api/wingdi/ns-wingdi-enhmetarecord</docs>
+[StructLayout(LayoutKind.Sequential)]
+public readonly struct ENHMETARECORD
 {
-    /// <docs>https://docs.microsoft.com/windows/win32/api/wingdi/ns-wingdi-enhmetarecord</docs>
-    [StructLayout(LayoutKind.Sequential)]
-    public readonly struct ENHMETARECORD
+    public readonly MetafileRecordType iType;
+
+    /// <summary>
+    ///  Record size, in bytes.
+    /// </summary>
+    public readonly uint nSize;
+
+    /// <summary>
+    ///  Parameters.
+    /// </summary>
+    private readonly uint _dParm;
+
+    public ReadOnlySpan<uint> dParam
+        => TrailingArray<uint>.GetBuffer(
+            in _dParm,
+            (nSize - sizeof(uint) - sizeof(uint)) / sizeof(uint));
+
+    public unsafe ENHMETARECORD* GetNextRecord()
     {
-        public readonly MetafileRecordType iType;
-
-        /// <summary>
-        ///  Record size, in bytes.
-        /// </summary>
-        public readonly uint nSize;
-
-        /// <summary>
-        ///  Parameters.
-        /// </summary>
-        private readonly uint _dParm;
-
-        public ReadOnlySpan<uint> dParam
-            => TrailingArray<uint>.GetBuffer(
-                in _dParm,
-                (nSize - sizeof(uint) - sizeof(uint)) / sizeof(uint));
-
-        public unsafe ENHMETARECORD* GetNextRecord()
+        fixed (void* p = &iType)
         {
-            fixed (void* p = &iType)
-            {
-                return (ENHMETARECORD*)((byte*)p + nSize);
-            }
+            return (ENHMETARECORD*)((byte*)p + nSize);
         }
     }
 }

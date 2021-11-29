@@ -3,17 +3,16 @@
 
 using System;
 
-namespace WInterop.Modules.Native
+namespace WInterop.Modules.Native;
+
+public readonly struct HMODULE
 {
-    public readonly struct HMODULE
+    public IntPtr Value { get; }
+
+    public HMODULE(IntPtr handle)
     {
-        public IntPtr Value { get; }
-
-        public HMODULE(IntPtr handle)
-        {
-            Value = handle;
-        }
-
-        public bool IsInvalid => Value == IntPtr.Zero;
+        Value = handle;
     }
+
+    public bool IsInvalid => Value == IntPtr.Zero;
 }

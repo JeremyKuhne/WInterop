@@ -3,10 +3,9 @@
 
 using System;
 
-namespace WInterop.Support.Buffers
+namespace WInterop.Support.Buffers;
+
+public interface IBuffer
 {
-    public interface IBuffer
-    {
-        IntPtr DangerousGetHandle();
-    }
+    IntPtr DangerousGetHandle();
 }

@@ -3,36 +3,35 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Compression
+namespace WInterop.Compression;
+
+/// <summary>
+///  [ERF]
+/// </summary>
+// https://msdn.microsoft.com/en-us/library/bb432257.aspx
+public struct ExtractResult
 {
     /// <summary>
-    ///  [ERF]
+    ///  [erfOper]
     /// </summary>
-    // https://msdn.microsoft.com/en-us/library/bb432257.aspx
-    public struct ExtractResult
+    public Error OperationResult;
+
+    /// <summary>
+    ///  Optional error value, filled in by FCI/FDI. For FCI, this is usually the CRT errno. [erfType]
+    /// </summary>
+    public int Type;
+
+    /// <summary>
+    ///  True if an error is present.
+    /// </summary>
+    public IntBoolean ErrorPresent;
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Error
     {
-        /// <summary>
-        ///  [erfOper]
-        /// </summary>
-        public Error OperationResult;
-
-        /// <summary>
-        ///  Optional error value, filled in by FCI/FDI. For FCI, this is usually the CRT errno. [erfType]
-        /// </summary>
-        public int Type;
-
-        /// <summary>
-        ///  True if an error is present.
-        /// </summary>
-        public IntBoolean ErrorPresent;
-
-        [StructLayout(LayoutKind.Explicit)]
-        public struct Error
-        {
-            [FieldOffset(0)]
-            public FdiError FdiError;
-            [FieldOffset(0)]
-            public FciError FciError;
-        }
+        [FieldOffset(0)]
+        public FdiError FdiError;
+        [FieldOffset(0)]
+        public FciError FciError;
     }
 }

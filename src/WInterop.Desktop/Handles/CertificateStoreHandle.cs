@@ -3,24 +3,23 @@
 
 using WInterop.Cryptography.Native;
 
-namespace WInterop.Handles
+namespace WInterop.Handles;
+
+/// <summary>
+///  Wrapper for a native certificate store handle.
+/// </summary>
+public class CertificateStoreHandle : HandleZeroIsInvalid
 {
-    /// <summary>
-    ///  Wrapper for a native certificate store handle.
-    /// </summary>
-    public class CertificateStoreHandle : HandleZeroIsInvalid
+    public CertificateStoreHandle() : base(ownsHandle: true)
     {
-        public CertificateStoreHandle() : base(ownsHandle: true)
-        {
-        }
+    }
 
-        public CertificateStoreHandle(bool ownsHandle) : base(ownsHandle)
-        {
-        }
+    public CertificateStoreHandle(bool ownsHandle) : base(ownsHandle)
+    {
+    }
 
-        protected override bool ReleaseHandle()
-        {
-            return Imports.CertCloseStore(handle, dwFlags: 0);
-        }
+    protected override bool ReleaseHandle()
+    {
+        return Imports.CertCloseStore(handle, dwFlags: 0);
     }
 }

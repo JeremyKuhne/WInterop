@@ -3,32 +3,31 @@
 
 using System;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+/// <summary>
+///  [LIBFLAGS]
+/// </summary>
+[Flags]
+public enum LibraryFlags : ushort
 {
     /// <summary>
-    ///  [LIBFLAGS]
+    ///  Restricted and should not be displayed to users. [LIBFLAG_FRESTRICTED]
     /// </summary>
-    [Flags]
-    public enum LibraryFlags : ushort
-    {
-        /// <summary>
-        ///  Restricted and should not be displayed to users. [LIBFLAG_FRESTRICTED]
-        /// </summary>
-        Restricted = 0x1,
+    Restricted = 0x1,
 
-        /// <summary>
-        ///  Library describes UI controls. [LIBFLAG_FCONTROL]
-        /// </summary>
-        Control = 0x2,
+    /// <summary>
+    ///  Library describes UI controls. [LIBFLAG_FCONTROL]
+    /// </summary>
+    Control = 0x2,
 
-        /// <summary>
-        ///  Hidden and should not be displayed to users. [LIBFLAG_FHIDDEN]
-        /// </summary>
-        Hidden = 0x4,
+    /// <summary>
+    ///  Hidden and should not be displayed to users. [LIBFLAG_FHIDDEN]
+    /// </summary>
+    Hidden = 0x4,
 
-        /// <summary>
-        ///  Library has a disk image. [LIBFLAG_FHASDISKIMAGE]
-        /// </summary>
-        HasDiskImage = 0x8
-    }
+    /// <summary>
+    ///  Library has a disk image. [LIBFLAG_FHASDISKIMAGE]
+    /// </summary>
+    HasDiskImage = 0x8
 }

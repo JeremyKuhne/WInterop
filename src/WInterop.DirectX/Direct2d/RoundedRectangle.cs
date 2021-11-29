@@ -4,25 +4,24 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Direct2d
+namespace WInterop.Direct2d;
+
+/// <summary>
+///  [D2D1_ROUNDED_RECT]
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+public readonly struct RoundedRectangle
 {
-    /// <summary>
-    ///  [D2D1_ROUNDED_RECT]
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public readonly struct RoundedRectangle
+    private readonly LtrbRectangleF _rect;
+    public readonly float RadiusX;
+    public readonly float RadiusY;
+
+    public RoundedRectangle(RectangleF rectangle, float radiusX, float radiusY)
     {
-        private readonly LtrbRectangleF _rect;
-        public readonly float RadiusX;
-        public readonly float RadiusY;
-
-        public RoundedRectangle(RectangleF rectangle, float radiusX, float radiusY)
-        {
-            _rect = new LtrbRectangleF(rectangle);
-            RadiusX = radiusX;
-            RadiusY = radiusY;
-        }
-
-        public RectangleF Rectangle => _rect;
+        _rect = new LtrbRectangleF(rectangle);
+        RadiusX = radiusX;
+        RadiusY = radiusY;
     }
+
+    public RectangleF Rectangle => _rect;
 }

@@ -4,29 +4,28 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles
+namespace WInterop.Handles;
+
+/// <summary>
+///  Use to scope unwrapping safe handles.
+/// </summary>
+public readonly struct UnwrapHandle : IDisposable
 {
-    /// <summary>
-    ///  Use to scope unwrapping safe handles.
-    /// </summary>
-    public readonly struct UnwrapHandle : IDisposable
+    private readonly SafeHandle? _handle;
+    private readonly bool _refCounted;
+
+    public UnwrapHandle(SafeHandle? handle)
     {
-        private readonly SafeHandle? _handle;
-        private readonly bool _refCounted;
+        _handle = handle;
+        _refCounted = false;
+        _handle?.DangerousAddRef(ref _refCounted);
+    }
 
-        public UnwrapHandle(SafeHandle? handle)
-        {
-            _handle = handle;
-            _refCounted = false;
-            _handle?.DangerousAddRef(ref _refCounted);
-        }
+    public static implicit operator IntPtr(UnwrapHandle handle) => handle._handle?.DangerousGetHandle() ?? IntPtr.Zero;
 
-        public static implicit operator IntPtr(UnwrapHandle handle) => handle._handle?.DangerousGetHandle() ?? IntPtr.Zero;
-
-        public void Dispose()
-        {
-            if (_refCounted)
-                _handle?.DangerousRelease();
-        }
+    public void Dispose()
+    {
+        if (_refCounted)
+            _handle?.DangerousRelease();
     }
 }

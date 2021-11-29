@@ -5,29 +5,28 @@ using System;
 using WInterop.Errors;
 using WInterop.Windows.Native;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public static partial class Windows
 {
-    public static partial class Windows
+    public static MenuHandle CreateMenu()
     {
-        public static MenuHandle CreateMenu()
-        {
-            MenuHandle menu = new MenuHandle(WindowsImports.CreateMenu(), ownsHandle: true);
-            if (menu.IsInvalid)
-                Error.ThrowLastError();
-            return menu;
-        }
+        MenuHandle menu = new MenuHandle(WindowsImports.CreateMenu(), ownsHandle: true);
+        if (menu.IsInvalid)
+            Error.ThrowLastError();
+        return menu;
+    }
 
-        public static unsafe void AppendMenu(MenuHandle menu, string text, int id, bool disabled = false, bool @checked = false)
-        {
-            MenuFlags flags = MenuFlags.String;
-            if (disabled) flags |= MenuFlags.Grayed;
-            if (@checked) flags |= MenuFlags.Checked;
+    public static unsafe void AppendMenu(MenuHandle menu, string text, int id, bool disabled = false, bool @checked = false)
+    {
+        MenuFlags flags = MenuFlags.String;
+        if (disabled) flags |= MenuFlags.Grayed;
+        if (@checked) flags |= MenuFlags.Checked;
 
-            fixed (char* c = text)
-            {
-                Error.ThrowLastErrorIfFalse(
-                    WindowsImports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c));
-            }
+        fixed (char* c = text)
+        {
+            Error.ThrowLastErrorIfFalse(
+                WindowsImports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c));
         }
     }
 }

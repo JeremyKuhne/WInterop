@@ -3,13 +3,12 @@
 
 using System;
 
-namespace WInterop.Cryptography
-{
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376059.aspx
-    public delegate bool CertEnumSystemStoreCallback(
-        IntPtr pvSystemStore,
-        uint dwFlags,
-        IntPtr pStoreInfo,
-        IntPtr pvReserved,
-        IntPtr pvArg);
-}
+namespace WInterop.Cryptography;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa376059.aspx
+public delegate bool CertEnumSystemStoreCallback(
+    IntPtr pvSystemStore,
+    uint dwFlags,
+    IntPtr pStoreInfo,
+    IntPtr pvReserved,
+    IntPtr pvArg);

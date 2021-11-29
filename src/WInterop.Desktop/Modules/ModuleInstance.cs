@@ -5,32 +5,31 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Handles;
 
-namespace WInterop.Modules
+namespace WInterop.Modules;
+
+/// <summary>
+///  Module handle. This is synonymous with HINSTANCE and HMODULE.
+/// </summary>
+public class ModuleInstance : HandleZeroIsInvalid
 {
-    /// <summary>
-    ///  Module handle. This is synonymous with HINSTANCE and HMODULE.
-    /// </summary>
-    public class ModuleInstance : HandleZeroIsInvalid
+    public static ModuleInstance Null = new ModuleInstance(IntPtr.Zero);
+
+    public ModuleInstance() : this(ownsHandle: false) { }
+
+    protected ModuleInstance(bool ownsHandle) : base(ownsHandle) { }
+
+    public ModuleInstance(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
+
+    public static implicit operator ModuleInstance(IntPtr handle) => new ModuleInstance(handle);
+
+    public static ModuleInstance GetModuleForType(Type type)
+        => Marshal.GetHINSTANCE(type.Module);
+
+    protected override bool ReleaseHandle()
     {
-        public static ModuleInstance Null = new ModuleInstance(IntPtr.Zero);
-
-        public ModuleInstance() : this(ownsHandle: false) { }
-
-        protected ModuleInstance(bool ownsHandle) : base(ownsHandle) { }
-
-        public ModuleInstance(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
-
-        public static implicit operator ModuleInstance(IntPtr handle) => new ModuleInstance(handle);
-
-        public static ModuleInstance GetModuleForType(Type type)
-            => Marshal.GetHINSTANCE(type.Module);
-
-        protected override bool ReleaseHandle()
-        {
-            // Module handles are ref counted with LoadLibrary/FreeLibrary.
-            // We use a derived class to return a module handle from LoadLibary
-            // that will decrement appropriately.
-            return true;
-        }
+        // Module handles are ref counted with LoadLibrary/FreeLibrary.
+        // We use a derived class to return a module handle from LoadLibary
+        // that will decrement appropriately.
+        return true;
     }
 }

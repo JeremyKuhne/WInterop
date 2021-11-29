@@ -3,14 +3,13 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct METAFILEPICT
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct METAFILEPICT
-    {
-        public int mm;
-        public int xExt;
-        public int yExt;
-        public HMETAFILE hMF;
-    }
+    public int mm;
+    public int xExt;
+    public int yExt;
+    public HMETAFILE hMF;
 }

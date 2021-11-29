@@ -3,12 +3,11 @@
 
 using System;
 
-namespace WInterop.Windows
-{
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644949.aspx
-    public delegate void SendAsyncProcedure(
-        WindowHandle hwnd,
-        MessageType uMsg,
-        UIntPtr dwData,
-        LResult result);
-}
+namespace WInterop.Windows;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ms644949.aspx
+public delegate void SendAsyncProcedure(
+    WindowHandle hwnd,
+    MessageType uMsg,
+    UIntPtr dwData,
+    LResult result);

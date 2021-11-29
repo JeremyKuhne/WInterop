@@ -3,14 +3,13 @@
 
 using System;
 
-namespace WInterop.Com.Native
+namespace WInterop.Com.Native;
+
+[Flags]
+public enum DVASPECT : uint
 {
-    [Flags]
-    public enum DVASPECT : uint
-    {
-        DVASPECT_CONTENT    = 1,
-        DVASPECT_THUMBNAIL  = 2,
-        DVASPECT_ICON       = 4,
-        DVASPECT_DOCPRINT   = 8
-    }
+    DVASPECT_CONTENT = 1,
+    DVASPECT_THUMBNAIL = 2,
+    DVASPECT_ICON = 4,
+    DVASPECT_DOCPRINT = 8
 }

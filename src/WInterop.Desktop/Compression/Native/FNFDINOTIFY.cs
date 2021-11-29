@@ -4,10 +4,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Compression.Native
-{
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr FNFDINOTIFY(
-        FdiNotificationType fdint,
-        FDINOTIFICATION pfdin);
-}
+namespace WInterop.Compression.Native;
+
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate IntPtr FNFDINOTIFY(
+    FdiNotificationType fdint,
+    FDINOTIFICATION pfdin);

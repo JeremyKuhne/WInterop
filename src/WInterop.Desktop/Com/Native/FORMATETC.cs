@@ -3,35 +3,34 @@
 
 using WInterop.Clipboard;
 
-namespace WInterop.Com.Native
+namespace WInterop.Com.Native;
+
+/// <docs>https://docs.microsoft.com/windows/win32/api/objidl/ns-objidl-formatetc</docs>
+public unsafe struct FORMATETC
 {
-    /// <docs>https://docs.microsoft.com/windows/win32/api/objidl/ns-objidl-formatetc</docs>
-    public unsafe struct FORMATETC
+    /// <summary>
+    ///  <see cref="ClipboardFormat"/>
+    /// </summary>
+    public ushort cfFormat;
+    public DVTARGETDEVICE* ptd;
+    public DVASPECT dwAspect;
+
+    /// <summary>
+    ///  Part of the <see cref="dwAspect"/>, -1 is all data.
+    /// </summary>
+    public int lindex;
+
+    public MediumType tymed;
+
+    public FORMATETC(ClipboardFormat format, MediumType medium)
     {
-        /// <summary>
-        ///  <see cref="ClipboardFormat"/>
-        /// </summary>
-        public ushort cfFormat;
-        public DVTARGETDEVICE* ptd;
-        public DVASPECT dwAspect;
-
-        /// <summary>
-        ///  Part of the <see cref="dwAspect"/>, -1 is all data.
-        /// </summary>
-        public int lindex;
-
-        public MediumType tymed;
-
-        public FORMATETC(ClipboardFormat format, MediumType medium)
-        {
-            cfFormat = checked((ushort)format);
-            tymed = medium;
-            ptd = null;
-            dwAspect = DVASPECT.DVASPECT_CONTENT;
-            lindex = -1;
-        }
-
-        public ClipboardFormat Format => (ClipboardFormat)cfFormat;
-        public MediumType Medium => tymed;
+        cfFormat = checked((ushort)format);
+        tymed = medium;
+        ptd = null;
+        dwAspect = DVASPECT.DVASPECT_CONTENT;
+        lindex = -1;
     }
+
+    public ClipboardFormat Format => (ClipboardFormat)cfFormat;
+    public MediumType Medium => tymed;
 }

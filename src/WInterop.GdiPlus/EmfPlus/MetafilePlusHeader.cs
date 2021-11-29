@@ -3,15 +3,14 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.GdiPlus.EmfPlus
+namespace WInterop.GdiPlus.EmfPlus;
+
+[StructLayout(LayoutKind.Sequential)]
+public readonly ref struct MetafilePlusHeader
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public readonly ref struct MetafilePlusHeader
-    {
-        public readonly MetafilePlusRecord Record;
-        public readonly uint Version;
-        public readonly uint EmfPlusFlags;
-        public readonly uint LogicalDpiX;
-        public readonly uint LogicalDpiY;
-    }
+    public readonly MetafilePlusRecord Record;
+    public readonly uint Version;
+    public readonly uint EmfPlusFlags;
+    public readonly uint LogicalDpiX;
+    public readonly uint LogicalDpiY;
 }

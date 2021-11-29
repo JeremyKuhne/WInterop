@@ -3,18 +3,17 @@
 
 using System;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+/// <summary>
+///  [KEYBDINPUT]
+/// </summary>
+/// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646271.aspx"/></remarks>
+public struct KeyboardInput
 {
-    /// <summary>
-    ///  [KEYBDINPUT]
-    /// </summary>
-    /// <remarks><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646271.aspx"/></remarks>
-    public struct KeyboardInput
-    {
-        public VirtualKey VirtualKey;
-        public ushort Scan;
-        public KeyEvent Flags;
-        public uint Time;
-        public IntPtr ExtraInfo;
-    }
+    public VirtualKey VirtualKey;
+    public ushort Scan;
+    public KeyEvent Flags;
+    public uint Time;
+    public IntPtr ExtraInfo;
 }

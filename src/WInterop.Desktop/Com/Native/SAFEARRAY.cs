@@ -3,18 +3,17 @@
 
 using System;
 
-namespace WInterop.Com.Native
+namespace WInterop.Com.Native;
+
+public unsafe struct SAFEARRAY
 {
-    public unsafe struct SAFEARRAY
-    {
-        public ushort cDims;
-        public FADF fFeatures;
-        public uint cbElements;
-        public uint cLocks;
-        public void* pvData;
+    public ushort cDims;
+    public FADF fFeatures;
+    public uint cbElements;
+    public uint cLocks;
+    public void* pvData;
 
-        public SafeArrayBound _rgsabound;
+    public SafeArrayBound _rgsabound;
 
-        public ReadOnlySpan<SafeArrayBound> rgsabound => TrailingArray<SafeArrayBound>.GetBuffer(in _rgsabound, cDims);
-    }
+    public ReadOnlySpan<SafeArrayBound> rgsabound => TrailingArray<SafeArrayBound>.GetBuffer(in _rgsabound, cDims);
 }

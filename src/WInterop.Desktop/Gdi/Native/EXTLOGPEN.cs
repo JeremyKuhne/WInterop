@@ -3,17 +3,16 @@
 
 using System;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+// https://msdn.microsoft.com/en-us/library/dd162711.aspx
+public struct EXTLOGPEN
 {
-    // https://msdn.microsoft.com/en-us/library/dd162711.aspx
-    public struct EXTLOGPEN
-    {
-        public uint elpPenStyle;
-        public uint elpWidth;
-        public BrushStyle elpBrushStyle;
-        public COLORREF elpColor;
-        public UIntPtr elpHatch;
-        public uint elpNumEntries;
-        public uint elpStyleEntry;
-    }
+    public uint elpPenStyle;
+    public uint elpWidth;
+    public BrushStyle elpBrushStyle;
+    public COLORREF elpColor;
+    public UIntPtr elpHatch;
+    public uint elpNumEntries;
+    public uint elpStyleEntry;
 }

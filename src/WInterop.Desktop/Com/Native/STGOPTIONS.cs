@@ -3,14 +3,13 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public unsafe ref struct STGOPTIONS
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe ref struct STGOPTIONS
-    {
-        public ushort usVersion;
-        public ushort reserved;
-        public uint ulSectorSize;
-        public char* pwcsTemplateFile;
-    }
+    public ushort usVersion;
+    public ushort reserved;
+    public uint ulSectorSize;
+    public char* pwcsTemplateFile;
 }

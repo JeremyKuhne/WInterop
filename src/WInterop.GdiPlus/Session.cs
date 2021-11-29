@@ -3,24 +3,23 @@
 
 using System;
 
-namespace WInterop.GdiPlus
+namespace WInterop.GdiPlus;
+
+public class Session : IDisposable
 {
-    public class Session : IDisposable
+    private UIntPtr _token;
+
+    public Session(uint version = 2)
     {
-        private UIntPtr _token;
+        _token = GdiPlus.Startup(version);
+    }
 
-        public Session(uint version = 2)
-        {
-            _token = GdiPlus.Startup(version);
-        }
+    ~Session() => Dispose();
 
-        ~Session() => Dispose();
-
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-            GdiPlus.Shutdown(_token);
-            _token = UIntPtr.Zero;
-        }
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        GdiPlus.Shutdown(_token);
+        _token = UIntPtr.Zero;
     }
 }

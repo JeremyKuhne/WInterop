@@ -1,32 +1,31 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+// https://msdn.microsoft.com/en-us/library/dd145132.aspx
+// https://msdn.microsoft.com/en-us/library/dd208051.aspx
+public struct PitchAndFamily
 {
-    // https://msdn.microsoft.com/en-us/library/dd145132.aspx
-    // https://msdn.microsoft.com/en-us/library/dd208051.aspx
-    public struct PitchAndFamily
+    public byte RawValue;
+
+    /// <summary>
+    ///  Only has meaning when creating a font.
+    /// </summary>
+    public FontPitch Pitch
     {
-        public byte RawValue;
+        get => (FontPitch)(RawValue & 0x0F);
+        set => RawValue = (byte)((byte)Family | (byte)value);
+    }
 
-        /// <summary>
-        ///  Only has meaning when creating a font.
-        /// </summary>
-        public FontPitch Pitch
-        {
-            get => (FontPitch)(RawValue & 0x0F);
-            set => RawValue = (byte)((byte)Family | (byte)value);
-        }
+    /// <summary>
+    ///  Only has meaning when enumerating a font.
+    /// </summary>
+    public FontPitchTypes PitchTypes => (FontPitchTypes)(RawValue & 0x0F);
 
-        /// <summary>
-        ///  Only has meaning when enumerating a font.
-        /// </summary>
-        public FontPitchTypes PitchTypes => (FontPitchTypes)(RawValue & 0x0F);
-
-        public FontFamilyType Family
-        {
-            get => (FontFamilyType)(RawValue & 0xF0);
-            set => RawValue = (byte)((byte)value | (byte)Pitch);
-        }
+    public FontFamilyType Family
+    {
+        get => (FontFamilyType)(RawValue & 0xF0);
+        set => RawValue = (byte)((byte)value | (byte)Pitch);
     }
 }

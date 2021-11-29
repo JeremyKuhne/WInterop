@@ -4,39 +4,38 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Shell
+namespace WInterop.Shell;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb761768.aspx
+[ComImport,
+    Guid(InterfaceIds.IID_IKnownFolder),
+    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface IKnownFolder
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb761768.aspx
-    [ComImport,
-        Guid(InterfaceIds.IID_IKnownFolder),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IKnownFolder
-    {
-        Guid GetId();
+    Guid GetId();
 
-        KnownFolderCategory GetCategory();
+    KnownFolderCategory GetCategory();
 
-        [return: MarshalAs(UnmanagedType.Interface)]
-        IShellItem GetShellItem(
-            KnownFolderFlags dwFlags,
-            [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
+    [return: MarshalAs(UnmanagedType.Interface)]
+    IShellItem GetShellItem(
+        KnownFolderFlags dwFlags,
+        [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
 
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        string GetPath(
-            KnownFolderFlags dwFlags);
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string GetPath(
+        KnownFolderFlags dwFlags);
 
-        void SetPath(
-            KnownFolderFlags dwFlags,
-            [MarshalAs(UnmanagedType.LPWStr)] string pszPath);
+    void SetPath(
+        KnownFolderFlags dwFlags,
+        [MarshalAs(UnmanagedType.LPWStr)] string pszPath);
 
-        ItemIdList GetIDList(
-            KnownFolderFlags dwFlags);
+    ItemIdList GetIDList(
+        KnownFolderFlags dwFlags);
 
-        Guid GetFolderType();
+    Guid GetFolderType();
 
-        KnownFolderRedirectionCapabilities GetRedirectionCapabilities();
+    KnownFolderRedirectionCapabilities GetRedirectionCapabilities();
 
-        void GetFolderDefinition(
-            KnownFolderDefinition pKFD);
-    }
+    void GetFolderDefinition(
+        KnownFolderDefinition pKFD);
 }

@@ -3,15 +3,14 @@
 
 using System;
 
-namespace WInterop.Support.Buffers
-{
-    public struct ActionWrapper<TBuffer> : IBufferAction<TBuffer>
-    {
-        public Action<TBuffer> Action;
+namespace WInterop.Support.Buffers;
 
-        void IBufferAction<TBuffer>.Action(TBuffer buffer)
-        {
-            Action(buffer);
-        }
+public struct ActionWrapper<TBuffer> : IBufferAction<TBuffer>
+{
+    public Action<TBuffer> Action;
+
+    void IBufferAction<TBuffer>.Action(TBuffer buffer)
+    {
+        Action(buffer);
     }
 }

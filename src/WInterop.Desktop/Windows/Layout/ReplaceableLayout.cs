@@ -3,29 +3,28 @@
 
 using System.Drawing;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public class ReplaceableLayout : ILayoutHandler
 {
-    public class ReplaceableLayout : ILayoutHandler
+    public Rectangle _lastBounds;
+    private ILayoutHandler _layoutHandler;
+
+    public ILayoutHandler Handler
     {
-        public Rectangle _lastBounds;
-        private ILayoutHandler _layoutHandler;
-
-        public ILayoutHandler Handler
+        get => _layoutHandler;
+        set
         {
-            get => _layoutHandler;
-            set
-            {
-                _layoutHandler = value;
-                _layoutHandler.Layout(_lastBounds);
-            }
+            _layoutHandler = value;
+            _layoutHandler.Layout(_lastBounds);
         }
+    }
 
-        public ReplaceableLayout(ILayoutHandler handler) => _layoutHandler = handler;
+    public ReplaceableLayout(ILayoutHandler handler) => _layoutHandler = handler;
 
-        public void Layout(Rectangle bounds)
-        {
-            _lastBounds = bounds;
-            Handler.Layout(bounds);
-        }
+    public void Layout(Rectangle bounds)
+    {
+        _lastBounds = bounds;
+        Handler.Layout(bounds);
     }
 }

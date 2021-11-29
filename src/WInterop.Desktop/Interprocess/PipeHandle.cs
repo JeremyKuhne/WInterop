@@ -3,9 +3,8 @@
 
 using WInterop.Handles;
 
-namespace WInterop.Interprocess
+namespace WInterop.Interprocess;
+
+public class PipeHandle : CloseHandle
 {
-    public class PipeHandle : CloseHandle
-    {
-    }
 }

@@ -3,13 +3,12 @@
 
 using System;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+[Flags]
+public enum SystemParameterOptions : uint
 {
-    [Flags]
-    public enum SystemParameterOptions : uint
-    {
-        SPIF_UPDATEINIFILE    = 0x0001,
-        SPIF_SENDWININICHANGE = 0x0002,
-        SPIF_SENDCHANGE       = SPIF_SENDWININICHANGE
-    }
+    SPIF_UPDATEINIFILE = 0x0001,
+    SPIF_SENDWININICHANGE = 0x0002,
+    SPIF_SENDCHANGE = SPIF_SENDWININICHANGE
 }

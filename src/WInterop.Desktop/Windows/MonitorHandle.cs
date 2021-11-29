@@ -4,35 +4,34 @@
 using System;
 using WInterop.Windows.Native;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+/// <summary>
+///  Simple struct to encapsulate a monitor handle (HMONITOR).
+/// </summary>
+public readonly struct MonitorHandle
 {
-    /// <summary>
-    ///  Simple struct to encapsulate a monitor handle (HMONITOR).
-    /// </summary>
-    public readonly struct MonitorHandle
+    public HMONITOR HMONITOR { get; }
+
+    public MonitorHandle(HMONITOR hmonitor) => HMONITOR = hmonitor;
+
+    public static implicit operator HMONITOR(MonitorHandle handle) => handle.HMONITOR;
+    public static implicit operator MonitorHandle(HMONITOR handle) => new MonitorHandle(handle);
+
+    public override int GetHashCode() => HMONITOR.GetHashCode();
+
+    public override bool Equals(object? obj)
     {
-        public HMONITOR HMONITOR { get; }
-
-        public MonitorHandle(HMONITOR hmonitor) => HMONITOR = hmonitor;
-
-        public static implicit operator HMONITOR(MonitorHandle handle) => handle.HMONITOR;
-        public static implicit operator MonitorHandle(HMONITOR handle) => new MonitorHandle(handle);
-
-        public override int GetHashCode() => HMONITOR.GetHashCode();
-
-        public override bool Equals(object? obj)
-        {
-            return obj is MonitorHandle other
-                ? other.HMONITOR == HMONITOR
-                : false;
-        }
-
-        public bool Equals(MonitorHandle other) => other.HMONITOR == HMONITOR;
-
-        public static bool operator ==(MonitorHandle a, MonitorHandle b) => a.HMONITOR == b.HMONITOR;
-
-        public static bool operator !=(MonitorHandle a, MonitorHandle b) => a.HMONITOR != b.HMONITOR;
-
-        public bool IsInvalid => HMONITOR.IsInvalid;
+        return obj is MonitorHandle other
+            ? other.HMONITOR == HMONITOR
+            : false;
     }
+
+    public bool Equals(MonitorHandle other) => other.HMONITOR == HMONITOR;
+
+    public static bool operator ==(MonitorHandle a, MonitorHandle b) => a.HMONITOR == b.HMONITOR;
+
+    public static bool operator !=(MonitorHandle a, MonitorHandle b) => a.HMONITOR != b.HMONITOR;
+
+    public bool IsInvalid => HMONITOR.IsInvalid;
 }

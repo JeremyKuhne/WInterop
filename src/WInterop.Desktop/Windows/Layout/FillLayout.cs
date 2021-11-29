@@ -4,14 +4,13 @@
 using System;
 using System.Drawing;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public class FillLayout : ILayoutHandler
 {
-    public class FillLayout : ILayoutHandler
-    {
-        private readonly ILayoutHandler _handler;
+    private readonly ILayoutHandler _handler;
 
-        public FillLayout(ILayoutHandler handler) => _handler = handler;
+    public FillLayout(ILayoutHandler handler) => _handler = handler;
 
-        public void Layout(Rectangle bounds) => _handler.Layout(bounds);
-    }
+    public void Layout(Rectangle bounds) => _handler.Layout(bounds);
 }

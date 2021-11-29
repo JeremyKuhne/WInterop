@@ -6,93 +6,92 @@ using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Direct2d
+namespace WInterop.Direct2d;
+
+/// <summary>
+///  Paints an area with a radial gradient. [ID2D1RadialGradientBrush]
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+[Guid(InterfaceIds.IID_ID2D1RadialGradientBrush)]
+public readonly unsafe struct RadialGradientBrush : RadialGradientBrush.Interface, IDisposable
 {
-    /// <summary>
-    ///  Paints an area with a radial gradient. [ID2D1RadialGradientBrush]
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    [Guid(InterfaceIds.IID_ID2D1RadialGradientBrush)]
-    public readonly unsafe struct RadialGradientBrush : RadialGradientBrush.Interface, IDisposable
+    private readonly ID2D1RadialGradientBrush* _handle;
+
+    public Factory GetFactory() => Resource.From(this).GetFactory();
+
+    public float Opacity
     {
-        private readonly ID2D1RadialGradientBrush* _handle;
+        get => Brush.From(this).Opacity;
+        set => Brush.From(this).Opacity = value;
+    }
 
-        public Factory GetFactory() => Resource.From(this).GetFactory();
+    public Matrix3x2 Transform
+    {
+        get => Brush.From(this).Transform;
+        set => Brush.From(this).Transform = value;
+    }
 
-        public float Opacity
-        {
-            get => Brush.From(this).Opacity;
-            set => Brush.From(this).Opacity = value;
-        }
+    /// <inheritdoc />
+    public PointF Center
+    {
+        get => _handle->GetCenter().ToPointF();
+        set => _handle->SetCenter(value.ToD2D());
+    }
 
-        public Matrix3x2 Transform
-        {
-            get => Brush.From(this).Transform;
-            set => Brush.From(this).Transform = value;
-        }
+    public PointF GradientOriginOffset
+    {
+        get => _handle->GetGradientOriginOffset().ToPointF();
+        set => _handle->SetGradientOriginOffset(value.ToD2D());
+    }
 
-        /// <inheritdoc />
-        public PointF Center
-        {
-            get => _handle->GetCenter().ToPointF();
-            set => _handle->SetCenter(value.ToD2D());
-        }
+    public float RadiusX
+    {
+        get => _handle->GetRadiusX();
+        set => _handle->SetRadiusX(value);
+    }
 
-        public PointF GradientOriginOffset
-        {
-            get => _handle->GetGradientOriginOffset().ToPointF();
-            set => _handle->SetGradientOriginOffset(value.ToD2D());
-        }
+    public float RadiusY
+    {
+        get => _handle->GetRadiusY();
+        set => _handle->SetRadiusY(value);
+    }
 
-        public float RadiusX
-        {
-            get => _handle->GetRadiusX();
-            set => _handle->SetRadiusX(value);
-        }
+    public PointF GetCenter() => _handle->GetCenter().ToPointF();
 
-        public float RadiusY
-        {
-            get => _handle->GetRadiusY();
-            set => _handle->SetRadiusY(value);
-        }
+    public PointF GetGradientOriginOffset() => _handle->GetGradientOriginOffset().ToPointF();
 
-        public PointF GetCenter() => _handle->GetCenter().ToPointF();
+    public GradientStopCollection GetGradientStopCollection()
+    {
+        ID2D1GradientStopCollection* collection;
+        _handle->GetGradientStopCollection(&collection);
+        return new(collection);
+    }
 
-        public PointF GetGradientOriginOffset() => _handle->GetGradientOriginOffset().ToPointF();
+    public void Dispose() => _handle->Release();
 
-        public GradientStopCollection GetGradientStopCollection()
-        {
-            ID2D1GradientStopCollection* collection;
-            _handle->GetGradientStopCollection(&collection);
-            return new(collection);
-        }
+    public static implicit operator Brush(RadialGradientBrush brush) => new((ID2D1Brush*)brush._handle);
 
-        public void Dispose() => _handle->Release();
+    internal interface Interface : Brush.Interface
+    {
+        /// <summary>
+        ///  The center of the radial gradient. This will be in local coordinates and
+        ///  will not depend on the geometry being filled.
+        /// </summary>
+        PointF Center { get; set; }
 
-        public static implicit operator Brush(RadialGradientBrush brush) => new((ID2D1Brush*)brush._handle);
+        /// <summary>
+        ///  The offset of the origin relative to the radial gradient center.
+        /// </summary>
+        PointF GradientOriginOffset { get; set; }
 
-        internal interface Interface : Brush.Interface
-        {
-            /// <summary>
-            ///  The center of the radial gradient. This will be in local coordinates and
-            ///  will not depend on the geometry being filled.
-            /// </summary>
-            PointF Center { get; set; }
+        float RadiusX { get; set; }
 
-            /// <summary>
-            ///  The offset of the origin relative to the radial gradient center.
-            /// </summary>
-            PointF GradientOriginOffset { get; set; }
+        float RadiusY { get; set; }
 
-            float RadiusX { get; set; }
+        PointF GetCenter();
 
-            float RadiusY { get; set; }
+        PointF GetGradientOriginOffset();
 
-            PointF GetCenter();
-
-            PointF GetGradientOriginOffset();
-
-            GradientStopCollection GetGradientStopCollection();
-        }
+        GradientStopCollection GetGradientStopCollection();
     }
 }

@@ -3,15 +3,14 @@
 
 using System.Drawing;
 
-namespace WInterop.Direct2d
+namespace WInterop.Direct2d;
+
+/// <summary>
+///  Describes a triangle. [D2D1_TRIANGLE]
+/// </summary>
+public struct Triangle
 {
-    /// <summary>
-    ///  Describes a triangle. [D2D1_TRIANGLE]
-    /// </summary>
-    public struct Triangle
-    {
-        public PointF Point1;
-        public PointF Point2;
-        public PointF Point3;
-    }
+    public PointF Point1;
+    public PointF Point2;
+    public PointF Point3;
 }

@@ -4,16 +4,15 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Compression.Native
-{
-    // https://msdn.microsoft.com/en-us/library/ff797930.aspx
+namespace WInterop.Compression.Native;
 
-    /// <summary>
-    ///  File close callback for an FDI context.
-    /// </summary>
-    /// <param name="hf">Application defined handle to the open file.</param>
-    /// <returns>0 for success, -1 for error.</returns>
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int FNCLOSE(
-        IntPtr hf);
-}
+// https://msdn.microsoft.com/en-us/library/ff797930.aspx
+
+/// <summary>
+///  File close callback for an FDI context.
+/// </summary>
+/// <param name="hf">Application defined handle to the open file.</param>
+/// <returns>0 for success, -1 for error.</returns>
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate int FNCLOSE(
+    IntPtr hf);

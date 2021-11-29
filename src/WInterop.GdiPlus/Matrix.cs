@@ -4,35 +4,34 @@
 using System;
 using WInterop.GdiPlus.Native;
 
-namespace WInterop.GdiPlus
+namespace WInterop.GdiPlus;
+
+public class Matrix : IDisposable
 {
-    public class Matrix : IDisposable
+    private readonly GpMatrix _gpMatrix;
+
+    public Matrix(GpMatrix gpMatrix)
     {
-        private readonly GpMatrix _gpMatrix;
+        if (gpMatrix.Handle == 0)
+            throw new ArgumentNullException(nameof(gpMatrix));
 
-        public Matrix(GpMatrix gpMatrix)
+        _gpMatrix = gpMatrix;
+    }
+
+    private void Dispose(bool disposing)
+    {
+        GpStatus status = GdiPlusImports.GdipDeleteMatrix(_gpMatrix);
+        if (disposing)
         {
-            if (gpMatrix.Handle == 0)
-                throw new ArgumentNullException(nameof(gpMatrix));
-
-            _gpMatrix = gpMatrix;
+            status.ThrowIfFailed();
         }
+    }
 
-        private void Dispose(bool disposing)
-        {
-            GpStatus status = GdiPlusImports.GdipDeleteMatrix(_gpMatrix);
-            if (disposing)
-            {
-                status.ThrowIfFailed();
-            }
-        }
+    ~Matrix() => Dispose(disposing: false);
 
-        ~Matrix() => Dispose(disposing: false);
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

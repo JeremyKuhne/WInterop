@@ -3,11 +3,10 @@
 
 using WInterop.Gdi;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Native;
+
+public struct TPMPARAMS
 {
-    public struct TPMPARAMS
-    {
-        public uint cbSize;
-        public Rect rcExclude;
-    }
+    public uint cbSize;
+    public Rect rcExclude;
 }

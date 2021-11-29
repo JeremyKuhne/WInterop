@@ -4,18 +4,17 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Devices.Native
-{
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562256.aspx
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct MOUNTDEV_NAME
-    {
-        /// <summary>
-        ///  Name length, in bytes.
-        /// </summary>
-        public ushort NameLength;
+namespace WInterop.Devices.Native;
 
-        private char _Name;
-        public ReadOnlySpan<char> Name => TrailingArray<char>.GetBufferInBytes(in _Name, NameLength);
-    }
+// https://msdn.microsoft.com/en-us/library/windows/hardware/ff562256.aspx
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public struct MOUNTDEV_NAME
+{
+    /// <summary>
+    ///  Name length, in bytes.
+    /// </summary>
+    public ushort NameLength;
+
+    private char _Name;
+    public ReadOnlySpan<char> Name => TrailingArray<char>.GetBufferInBytes(in _Name, NameLength);
 }

@@ -3,48 +3,47 @@
 
 using System;
 
-namespace WInterop.Support
+namespace WInterop.Support;
+
+public static class Pointers
 {
-    public static class Pointers
+    /// <summary>
+    ///  Offset the given pointer by the specified number of bytes.
+    /// </summary>
+    public static unsafe void* Offset(void* pointer, int offset)
     {
-        /// <summary>
-        ///  Offset the given pointer by the specified number of bytes.
-        /// </summary>
-        public static unsafe void* Offset(void* pointer, int offset)
-        {
-            return (void*)(((byte*)pointer) + offset);
-        }
+        return (void*)(((byte*)pointer) + offset);
+    }
 
-        /// <summary>
-        ///  Offset the given pointer by the specified number of bytes.
-        /// </summary>
-        public static unsafe void* Offset(void* pointer, uint offset)
-        {
-            return (void*)(((byte*)pointer) + offset);
-        }
+    /// <summary>
+    ///  Offset the given pointer by the specified number of bytes.
+    /// </summary>
+    public static unsafe void* Offset(void* pointer, uint offset)
+    {
+        return (void*)(((byte*)pointer) + offset);
+    }
 
-        /// <summary>
-        ///  Offset the given pointer by the specified number of bytes.
-        /// </summary>
-        public static unsafe void* Offset(this IntPtr pointer, uint offset)
-        {
-            return (void*)(((byte*)pointer) + offset);
-        }
+    /// <summary>
+    ///  Offset the given pointer by the specified number of bytes.
+    /// </summary>
+    public static unsafe void* Offset(this IntPtr pointer, uint offset)
+    {
+        return (void*)(((byte*)pointer) + offset);
+    }
 
-        /// <summary>
-        ///  Offset the given pointer by the specified number of bytes.
-        /// </summary>
-        public static unsafe void* Offset(this IntPtr pointer, ulong offset)
-        {
-            return (void*)(((byte*)pointer) + offset);
-        }
+    /// <summary>
+    ///  Offset the given pointer by the specified number of bytes.
+    /// </summary>
+    public static unsafe void* Offset(this IntPtr pointer, ulong offset)
+    {
+        return (void*)(((byte*)pointer) + offset);
+    }
 
-        /// <summary>
-        ///  Move the pointer forward by the size of <typeparamref name="T"/>.
-        /// </summary>
-        public static unsafe void* Offset<T>(void* pointer) where T : unmanaged
-        {
-            return (void*)(((byte*)pointer) + sizeof(T));
-        }
+    /// <summary>
+    ///  Move the pointer forward by the size of <typeparamref name="T"/>.
+    /// </summary>
+    public static unsafe void* Offset<T>(void* pointer) where T : unmanaged
+    {
+        return (void*)(((byte*)pointer) + sizeof(T));
     }
 }

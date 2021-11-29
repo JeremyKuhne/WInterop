@@ -3,12 +3,11 @@
 
 using System;
 
-namespace WInterop.Memory.Native
-{
-    public readonly struct HGLOBAL
-    {
-        public IntPtr Value { get; }
+namespace WInterop.Memory.Native;
 
-        public HGLOBAL(IntPtr handle) => Value = handle;
-    }
+public readonly struct HGLOBAL
+{
+    public IntPtr Value { get; }
+
+    public HGLOBAL(IntPtr handle) => Value = handle;
 }

@@ -4,18 +4,17 @@
 using System;
 using System.Diagnostics;
 
-namespace WInterop.Security
-{
-    [DebuggerDisplay("{Privilege} : {Attributes}")]
-    public struct PrivilegeSetting
-    {
-        public PrivilegeSetting(Privilege privilege, PrivilegeAttributes attributes)
-        {
-            Privilege = privilege;
-            Attributes = attributes;
-        }
+namespace WInterop.Security;
 
-        public Privilege Privilege;
-        public PrivilegeAttributes Attributes;
+[DebuggerDisplay("{Privilege} : {Attributes}")]
+public struct PrivilegeSetting
+{
+    public PrivilegeSetting(Privilege privilege, PrivilegeAttributes attributes)
+    {
+        Privilege = privilege;
+        Attributes = attributes;
     }
+
+    public Privilege Privilege;
+    public PrivilegeAttributes Attributes;
 }

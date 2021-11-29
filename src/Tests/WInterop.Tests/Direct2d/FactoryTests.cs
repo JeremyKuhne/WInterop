@@ -6,25 +6,24 @@ using System.Drawing;
 using WInterop.Direct2d;
 using Xunit;
 
-namespace Direct2dTests
+namespace Direct2dTests;
+
+public class FactoryTests
 {
-    public class FactoryTests
+    [Fact]
+    public void Initialize()
     {
-        [Fact]
-        public void Initialize()
-        {
-            using Factory factory = Direct2d.CreateFactory();
+        using Factory factory = Direct2d.CreateFactory();
 
-            Ellipse ellipse = new(new PointF(1.0f, 2.0f), 3.0f, 4.0f);
-            using EllipseGeometry ellipseGeometry = factory.CreateEllipseGeometry(ellipse);
-            ellipseGeometry.GetEllipse().Should().Be(ellipse);
-        }
+        Ellipse ellipse = new(new PointF(1.0f, 2.0f), 3.0f, 4.0f);
+        using EllipseGeometry ellipseGeometry = factory.CreateEllipseGeometry(ellipse);
+        ellipseGeometry.GetEllipse().Should().Be(ellipse);
+    }
 
-        [Fact]
-        public void GetDpi()
-        {
-            using Factory factory = Direct2d.CreateFactory();
-            SizeF dpi = factory.GetDesktopDpi();
-        }
+    [Fact]
+    public void GetDpi()
+    {
+        using Factory factory = Direct2d.CreateFactory();
+        SizeF dpi = factory.GetDesktopDpi();
     }
 }

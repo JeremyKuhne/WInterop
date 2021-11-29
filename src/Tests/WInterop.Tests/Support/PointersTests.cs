@@ -5,24 +5,23 @@ using Xunit;
 using FluentAssertions;
 using WInterop.Support;
 
-namespace SupportTests
-{
-    public class PointersTests
-    {
-        [Fact]
-        public unsafe void PointerOffset()
-        {
-            void* v = (void*)1000;
-            v = Pointers.Offset(v, 42);
-            ((int)v).Should().Be(1042);
-        }
+namespace SupportTests;
 
-        [Fact]
-        public unsafe void PointerOffset_Negative()
-        {
-            void* v = (void*)1000;
-            v = Pointers.Offset(v, -42);
-            ((int)v).Should().Be(958);
-        }
+public class PointersTests
+{
+    [Fact]
+    public unsafe void PointerOffset()
+    {
+        void* v = (void*)1000;
+        v = Pointers.Offset(v, 42);
+        ((int)v).Should().Be(1042);
+    }
+
+    [Fact]
+    public unsafe void PointerOffset_Negative()
+    {
+        void* v = (void*)1000;
+        v = Pointers.Offset(v, -42);
+        ((int)v).Should().Be(958);
     }
 }

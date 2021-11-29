@@ -4,19 +4,18 @@
 using System;
 using WInterop.Windows;
 
-namespace HelloMsg
+namespace HelloMsg;
+
+/// <summary>
+///  Sample from Programming Windows, 5th Edition.
+///  Original (c) Charles Petzold, 1998
+///  Page 14.
+/// </summary>
+internal static class Program
 {
-    /// <summary>
-    ///  Sample from Programming Windows, 5th Edition.
-    ///  Original (c) Charles Petzold, 1998
-    ///  Page 14.
-    /// </summary>
-    internal static class Program
+    [STAThread]
+    private static void Main()
     {
-        [STAThread]
-        private static void Main()
-        {
-            Windows.MessageBox("Hello, Windows 98!", "HelloMsg", 0);
-        }
+        Windows.MessageBox("Hello, Windows 98!", "HelloMsg", 0);
     }
 }

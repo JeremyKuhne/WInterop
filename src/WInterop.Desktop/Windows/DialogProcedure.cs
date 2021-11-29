@@ -3,12 +3,11 @@
 
 using System;
 
-namespace WInterop.Windows
-{
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms645469.aspx
-    public delegate IntPtr DialogProcedure(
-        WindowHandle hwndDlg,
-        MessageType uMsg,
-        WParam wParam,
-        LParam lParam);
-}
+namespace WInterop.Windows;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ms645469.aspx
+public delegate IntPtr DialogProcedure(
+    WindowHandle hwndDlg,
+    MessageType uMsg,
+    WParam wParam,
+    LParam lParam);

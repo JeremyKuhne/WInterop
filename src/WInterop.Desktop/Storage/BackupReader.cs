@@ -8,114 +8,113 @@ using WInterop.Storage.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
-namespace WInterop.Storage
+namespace WInterop.Storage;
+
+public class BackupReader : IDisposable
 {
-    public class BackupReader : IDisposable
+    private IntPtr _context = IntPtr.Zero;
+    private readonly SafeFileHandle _fileHandle;
+    private readonly StringBuffer _buffer = StringBufferCache.Instance.Acquire();
+
+    // BackupReader requires us to read the header and its string separately. Given packing, the
+    // string starts a uint in from the end.
+    private static readonly unsafe uint s_headerSize = (uint)sizeof(WIN32_STREAM_ID) - sizeof(uint);
+
+    public BackupReader(SafeFileHandle fileHandle)
     {
-        private IntPtr _context = IntPtr.Zero;
-        private readonly SafeFileHandle _fileHandle;
-        private readonly StringBuffer _buffer = StringBufferCache.Instance.Acquire();
+        _fileHandle = fileHandle;
+    }
 
-        // BackupReader requires us to read the header and its string separately. Given packing, the
-        // string starts a uint in from the end.
-        private static readonly unsafe uint s_headerSize = (uint)sizeof(WIN32_STREAM_ID) - sizeof(uint);
+    public unsafe BackupStreamInformation? GetNextInfo()
+    {
+        void* buffer = _buffer.VoidPointer;
+        Error.ThrowLastErrorIfFalse(
+            StorageImports.BackupRead(
+                hFile: _fileHandle,
+                lpBuffer: buffer,
+                nNumberOfBytesToRead: s_headerSize,
+                lpNumberOfBytesRead: out uint bytesRead,
+                bAbort: false,
+                bProcessSecurity: true,
+                context: ref _context));
 
-        public BackupReader(SafeFileHandle fileHandle)
+        // Exit if at the end
+        if (bytesRead == 0) return null;
+
+        WIN32_STREAM_ID* streamId = (WIN32_STREAM_ID*)buffer;
+        if (streamId->dwStreamNameSize > 0)
         {
-            _fileHandle = fileHandle;
-        }
-
-        public unsafe BackupStreamInformation? GetNextInfo()
-        {
-            void* buffer = _buffer.VoidPointer;
+            _buffer.EnsureByteCapacity(s_headerSize + streamId->dwStreamNameSize);
             Error.ThrowLastErrorIfFalse(
                 StorageImports.BackupRead(
                     hFile: _fileHandle,
-                    lpBuffer: buffer,
-                    nNumberOfBytesToRead: s_headerSize,
-                    lpNumberOfBytesRead: out uint bytesRead,
+                    lpBuffer: Pointers.Offset(buffer, s_headerSize),
+                    nNumberOfBytesToRead: streamId->dwStreamNameSize,
+                    lpNumberOfBytesRead: out bytesRead,
                     bAbort: false,
                     bProcessSecurity: true,
                     context: ref _context));
-
-            // Exit if at the end
-            if (bytesRead == 0) return null;
-
-            WIN32_STREAM_ID* streamId = (WIN32_STREAM_ID*)buffer;
-            if (streamId->dwStreamNameSize > 0)
-            {
-                _buffer.EnsureByteCapacity(s_headerSize + streamId->dwStreamNameSize);
-                Error.ThrowLastErrorIfFalse(
-                    StorageImports.BackupRead(
-                        hFile: _fileHandle,
-                        lpBuffer: Pointers.Offset(buffer, s_headerSize),
-                        nNumberOfBytesToRead: streamId->dwStreamNameSize,
-                        lpNumberOfBytesRead: out bytesRead,
-                        bAbort: false,
-                        bProcessSecurity: true,
-                        context: ref _context));
-            }
-
-            if (streamId->Size > 0)
-            {
-                // Move to the next header, if any
-                if (!StorageImports.BackupSeek(
-                    hFile: _fileHandle,
-                    dwLowBytesToSeek: uint.MaxValue,
-                    dwHighBytesToSeek: int.MaxValue,
-                    lpdwLowByteSeeked: out _,
-                    lpdwHighByteSeeked: out _,
-                    context: ref _context))
-                {
-                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
-                }
-            }
-
-            return new BackupStreamInformation
-            {
-                Name = streamId->cStreamName.CreateString(),
-                StreamType = streamId->dwStreamId,
-                Size = streamId->Size
-            };
         }
 
-        public void Dispose()
+        if (streamId->Size > 0)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            // Move to the next header, if any
+            if (!StorageImports.BackupSeek(
+                hFile: _fileHandle,
+                dwLowBytesToSeek: uint.MaxValue,
+                dwHighBytesToSeek: int.MaxValue,
+                lpdwLowByteSeeked: out _,
+                lpdwHighByteSeeked: out _,
+                context: ref _context))
+            {
+                Error.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
+            }
         }
 
-        private unsafe void Dispose(bool disposing)
+        return new BackupStreamInformation
         {
-            if (disposing)
-            {
-                StringBufferCache.Instance.Release(_buffer);
-            }
+            Name = streamId->cStreamName.CreateString(),
+            StreamType = streamId->dwStreamId,
+            Size = streamId->Size
+        };
+    }
 
-            if (_context != IntPtr.Zero)
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private unsafe void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            StringBufferCache.Instance.Release(_buffer);
+        }
+
+        if (_context != IntPtr.Zero)
+        {
+            // Free the context memory
+            if (!StorageImports.BackupRead(
+                hFile: _fileHandle,
+                lpBuffer: null,
+                nNumberOfBytesToRead: 0,
+                lpNumberOfBytesRead: out _,
+                bAbort: true,
+                bProcessSecurity: false,
+                context: ref _context))
             {
-                // Free the context memory
-                if (!StorageImports.BackupRead(
-                    hFile: _fileHandle,
-                    lpBuffer: null,
-                    nNumberOfBytesToRead: 0,
-                    lpNumberOfBytesRead: out _,
-                    bAbort: true,
-                    bProcessSecurity: false,
-                    context: ref _context))
-                {
 #if DEBUG
-                    Error.ThrowLastError();
+                Error.ThrowLastError();
 #endif
-                }
-
-                _context = IntPtr.Zero;
             }
-        }
 
-        ~BackupReader()
-        {
-            Dispose(false);
+            _context = IntPtr.Zero;
         }
+    }
+
+    ~BackupReader()
+    {
+        Dispose(false);
     }
 }

@@ -3,33 +3,32 @@
 
 using System;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+[Flags]
+public enum FontPitchTypes : byte
 {
-    [Flags]
-    public enum FontPitchTypes : byte
-    {
-        // https://msdn.microsoft.com/en-us/library/dd145132.aspx
-        // https://msdn.microsoft.com/en-us/library/cc250403.aspx
+    // https://msdn.microsoft.com/en-us/library/dd145132.aspx
+    // https://msdn.microsoft.com/en-us/library/cc250403.aspx
 
-        /// <summary>
-        ///  The font is NOT fixed. (TMPF_FIXED_PITCH)
-        /// </summary>
-        /// <remarks>Yes, this doesn't match the define.</remarks>
-        VariablePitch = 0x01,
+    /// <summary>
+    ///  The font is NOT fixed. (TMPF_FIXED_PITCH)
+    /// </summary>
+    /// <remarks>Yes, this doesn't match the define.</remarks>
+    VariablePitch = 0x01,
 
-        /// <summary>
-        ///  The font is vector based. (TMPF_VECTOR)
-        /// </summary>
-        Vector = 0x02,
+    /// <summary>
+    ///  The font is vector based. (TMPF_VECTOR)
+    /// </summary>
+    Vector = 0x02,
 
-        /// <summary>
-        ///  The font is a Device font. (TMPF_DEVICE)
-        /// </summary>
-        Device = 0x08,
+    /// <summary>
+    ///  The font is a Device font. (TMPF_DEVICE)
+    /// </summary>
+    Device = 0x08,
 
-        /// <summary>
-        ///  The font is a TrueType font. (TMPF_TRUETYPE)
-        /// </summary>
-        TrueType = 0x04,
-    }
+    /// <summary>
+    ///  The font is a TrueType font. (TMPF_TRUETYPE)
+    /// </summary>
+    TrueType = 0x04,
 }

@@ -4,24 +4,23 @@
 using System;
 using WInterop.Windows;
 
-namespace ScrnSize
+namespace ScrnSize;
+
+/// <summary>
+///  Sample from Programming Windows, 5th Edition.
+///  Original (c) Charles Petzold, 1998
+///  Figure 2-3, Pages 37-38.
+/// </summary>
+internal static class Program
 {
-    /// <summary>
-    ///  Sample from Programming Windows, 5th Edition.
-    ///  Original (c) Charles Petzold, 1998
-    ///  Figure 2-3, Pages 37-38.
-    /// </summary>
-    internal static class Program
+    [STAThread]
+    private static void Main()
     {
-        [STAThread]
-        private static void Main()
-        {
-            int cxScreen, cyScreen;
+        int cxScreen, cyScreen;
 
-            cxScreen = Windows.GetSystemMetrics(SystemMetric.ScreenWidth);
-            cyScreen = Windows.GetSystemMetrics(SystemMetric.ScreenHeight);
+        cxScreen = Windows.GetSystemMetrics(SystemMetric.ScreenWidth);
+        cyScreen = Windows.GetSystemMetrics(SystemMetric.ScreenHeight);
 
-            Windows.MessageBox($"The screen is {cxScreen} pixels wide by {cyScreen} pixels high.", "ScrnSize");
-        }
+        Windows.MessageBox($"The screen is {cxScreen} pixels wide by {cyScreen} pixels high.", "ScrnSize");
     }
 }

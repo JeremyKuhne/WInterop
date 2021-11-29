@@ -3,16 +3,15 @@
 
 using System;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Native;
+
+public readonly struct WNDPROC
 {
-    public readonly struct WNDPROC
-    {
-        public readonly IntPtr Value;
+    public readonly IntPtr Value;
 
-        public WNDPROC(IntPtr value) => Value = value;
-        public bool IsNull => Value == IntPtr.Zero;
+    public WNDPROC(IntPtr value) => Value = value;
+    public bool IsNull => Value == IntPtr.Zero;
 
-        public static explicit operator WNDPROC(IntPtr value) => new WNDPROC(value);
-        public static explicit operator IntPtr(WNDPROC value) => value.Value;
-    }
+    public static explicit operator WNDPROC(IntPtr value) => new WNDPROC(value);
+    public static explicit operator IntPtr(WNDPROC value) => value.Value;
 }

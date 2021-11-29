@@ -4,15 +4,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Compression.Native
-{
-    // https://msdn.microsoft.com/en-us/library/ff797945.aspx
+namespace WInterop.Compression.Native;
 
-    /// <summary>
-    ///  Memory free callback for an FDI context.
-    /// </summary>
-    /// <param name="pv">Pointer to the memory block to free.</param>
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void FNFREE(
-        IntPtr pv);
-}
+// https://msdn.microsoft.com/en-us/library/ff797945.aspx
+
+/// <summary>
+///  Memory free callback for an FDI context.
+/// </summary>
+/// <param name="pv">Pointer to the memory block to free.</param>
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate void FNFREE(
+    IntPtr pv);

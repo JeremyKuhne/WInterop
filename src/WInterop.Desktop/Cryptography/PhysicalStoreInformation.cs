@@ -3,14 +3,13 @@
 
 using System.Diagnostics;
 
-namespace WInterop.Cryptography
+namespace WInterop.Cryptography;
+
+[DebuggerDisplay("{SystemStoreInfo.Name} {PhysicalStoreName}")]
+public struct PhysicalStoreInformation
 {
-    [DebuggerDisplay("{SystemStoreInfo.Name} {PhysicalStoreName}")]
-    public struct PhysicalStoreInformation
-    {
-        public SystemStoreInformation SystemStoreInformation;
-        public string PhysicalStoreName;
-        public string ProviderType;
-        public SystemStoreLocation Location;
-    }
+    public SystemStoreInformation SystemStoreInformation;
+    public string PhysicalStoreName;
+    public string ProviderType;
+    public SystemStoreLocation Location;
 }

@@ -4,14 +4,13 @@
 using System;
 using System.Drawing;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ms648381.aspx
+public struct CURSORINFO
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648381.aspx
-    public struct CURSORINFO
-    {
-        public uint cbSize;
-        public CursorState flags;
-        public HCURSOR hCursor;
-        public Point ptScreenPos;
-    }
+    public uint cbSize;
+    public CursorState flags;
+    public HCURSOR hCursor;
+    public Point ptScreenPos;
 }

@@ -3,39 +3,38 @@
 
 using System;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+[Flags]
+public enum MenuStyles : uint
 {
-    [Flags]
-    public enum MenuStyles : uint
-    {
-        /// <summary>
-        ///  [MNS_AUTODISMISS]
-        /// </summary>
-        AutoDismiss = 0x10000000,
+    /// <summary>
+    ///  [MNS_AUTODISMISS]
+    /// </summary>
+    AutoDismiss = 0x10000000,
 
-        /// <summary>
-        ///  [MNS_CHECKORBMP]
-        /// </summary>
-        CheckOrBitmap = 0x04000000,
+    /// <summary>
+    ///  [MNS_CHECKORBMP]
+    /// </summary>
+    CheckOrBitmap = 0x04000000,
 
-        /// <summary>
-        ///  [MNS_DRAGDROP]
-        /// </summary>
-        DragDrop = 0x20000000,
+    /// <summary>
+    ///  [MNS_DRAGDROP]
+    /// </summary>
+    DragDrop = 0x20000000,
 
-        /// <summary>
-        ///  [MNS_MODELESS]
-        /// </summary>
-        ModeLess = 0x40000000,
+    /// <summary>
+    ///  [MNS_MODELESS]
+    /// </summary>
+    ModeLess = 0x40000000,
 
-        /// <summary>
-        ///  [MNS_NOCHECK]
-        /// </summary>
-        NoCheck = 0x80000000,
+    /// <summary>
+    ///  [MNS_NOCHECK]
+    /// </summary>
+    NoCheck = 0x80000000,
 
-        /// <summary>
-        ///  [MNS_NOTIFYBYPOS]
-        /// </summary>
-        NotifyByPosition = 0x08000000
-    }
+    /// <summary>
+    ///  [MNS_NOTIFYBYPOS]
+    /// </summary>
+    NotifyByPosition = 0x08000000
 }

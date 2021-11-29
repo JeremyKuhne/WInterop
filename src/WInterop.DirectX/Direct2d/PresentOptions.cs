@@ -3,29 +3,28 @@
 
 using System;
 
-namespace WInterop.Direct2d
+namespace WInterop.Direct2d;
+
+/// <summary>
+///  Describes how present should behave. [D2D1_PRESENT_OPTIONS]
+/// </summary>
+[Flags]
+public enum PresentOptions : uint
 {
     /// <summary>
-    ///  Describes how present should behave. [D2D1_PRESENT_OPTIONS]
+    ///  [D2D1_PRESENT_OPTIONS_NONE]
     /// </summary>
-    [Flags]
-    public enum PresentOptions : uint
-    {
-        /// <summary>
-        ///  [D2D1_PRESENT_OPTIONS_NONE]
-        /// </summary>
-        None = 0x00000000,
+    None = 0x00000000,
 
-        /// <summary>
-        ///  Keep the target contents intact through present.
-        ///  [D2D1_PRESENT_OPTIONS_RETAIN_CONTENTS]
-        /// </summary>
-        RetainContents = 0x00000001,
+    /// <summary>
+    ///  Keep the target contents intact through present.
+    ///  [D2D1_PRESENT_OPTIONS_RETAIN_CONTENTS]
+    /// </summary>
+    RetainContents = 0x00000001,
 
-        /// <summary>
-        ///  Do not wait for display refresh to commit changes to display.
-        ///  [D2D1_PRESENT_OPTIONS_IMMEDIATELY]
-        /// </summary>
-        PresentOptionsImmediately = 0x00000002
-    }
+    /// <summary>
+    ///  Do not wait for display refresh to commit changes to display.
+    ///  [D2D1_PRESENT_OPTIONS_IMMEDIATELY]
+    /// </summary>
+    PresentOptionsImmediately = 0x00000002
 }

@@ -4,34 +4,33 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Native;
+
+// typedef struct _ENCRYPTION_CERTIFICATE
+//  {
+//      DWORD cbTotalLength;
+//      SID* pUserSid;
+//      PEFS_CERTIFICATE_BLOB pCertBlob;
+//  }
+//  ENCRYPTION_CERTIFICATE, *PENCRYPTION_CERTIFICATE;
+
+/// <summary>
+/// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364032.aspx">ENCRYPTION_CERTIFICATE</a> structure.
+/// </summary>
+public struct ENCRYPTION_CERTIFICATE
 {
-    // typedef struct _ENCRYPTION_CERTIFICATE
-    //  {
-    //      DWORD cbTotalLength;
-    //      SID* pUserSid;
-    //      PEFS_CERTIFICATE_BLOB pCertBlob;
-    //  }
-    //  ENCRYPTION_CERTIFICATE, *PENCRYPTION_CERTIFICATE;
+    /// <summary>
+    ///  Size of the struct in bytes
+    /// </summary>
+    public uint cbTotalLength;
 
     /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364032.aspx">ENCRYPTION_CERTIFICATE</a> structure.
+    ///  Pointer to SID
     /// </summary>
-    public struct ENCRYPTION_CERTIFICATE
-    {
-        /// <summary>
-        ///  Size of the struct in bytes
-        /// </summary>
-        public uint cbTotalLength;
+    public IntPtr pUserSid;
 
-        /// <summary>
-        ///  Pointer to SID
-        /// </summary>
-        public IntPtr pUserSid;
-
-        /// <summary>
-        ///  Pointer to EFS_CERTIFICATE_BLOB
-        /// </summary>
-        public IntPtr pCertBlob;
-    }
+    /// <summary>
+    ///  Pointer to EFS_CERTIFICATE_BLOB
+    /// </summary>
+    public IntPtr pCertBlob;
 }

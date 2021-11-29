@@ -4,13 +4,12 @@
 using System;
 using WInterop.Storage.Native;
 
-namespace WInterop.Storage
-{
-    /// <summary>
-    ///  Callback for [IO_APC_ROUTINE]. Defined in wdm.h.
-    /// </summary>
-    public delegate void AsyncProcedureCall(
-        IntPtr apcContext,
-        ref IO_STATUS_BLOCK ioStatusBlock,
-        uint reserved);
-}
+namespace WInterop.Storage;
+
+/// <summary>
+///  Callback for [IO_APC_ROUTINE]. Defined in wdm.h.
+/// </summary>
+public delegate void AsyncProcedureCall(
+    IntPtr apcContext,
+    ref IO_STATUS_BLOCK ioStatusBlock,
+    uint reserved);

@@ -3,13 +3,12 @@
 
 using System;
 
-namespace WInterop.Modules
+namespace WInterop.Modules;
+
+[Flags]
+public enum GetModuleFlags : uint
 {
-    [Flags]
-    public enum GetModuleFlags : uint
-    {
-        Pin = 0x00000001,
-        UnchangedRefCount = 0x00000002,
-        FromAddress = 0x00000004
-    }
+    Pin = 0x00000001,
+    UnchangedRefCount = 0x00000002,
+    FromAddress = 0x00000004
 }

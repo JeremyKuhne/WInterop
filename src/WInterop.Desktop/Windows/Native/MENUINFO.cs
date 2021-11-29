@@ -5,17 +5,16 @@ using System;
 using WInterop.Gdi;
 using WInterop.Gdi.Native;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ms647575.aspx
+public struct MENUINFO
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms647575.aspx
-    public struct MENUINFO
-    {
-        public uint cbSize;
-        public MenuInfoMembers fMask;
-        public MenuStyles dwStyle;
-        public uint cyMax;
-        public HBRUSH hbrBack;
-        public uint dwContextHelpID;
-        public UIntPtr dwMenuData;
-    }
+    public uint cbSize;
+    public MenuInfoMembers fMask;
+    public MenuStyles dwStyle;
+    public uint cyMax;
+    public HBRUSH hbrBack;
+    public uint dwContextHelpID;
+    public UIntPtr dwMenuData;
 }

@@ -4,15 +4,14 @@
 using WInterop.Compression.Native;
 using WInterop.Handles;
 
-namespace WInterop.Compression
-{
-    public class FdiHandle : HandleZeroOrMinusOneIsInvalid
-    {
-        public FdiHandle() : base(ownsHandle: true) { }
+namespace WInterop.Compression;
 
-        protected override bool ReleaseHandle()
-        {
-            return Imports.FDIDestroy(handle);
-        }
+public class FdiHandle : HandleZeroOrMinusOneIsInvalid
+{
+    public FdiHandle() : base(ownsHandle: true) { }
+
+    protected override bool ReleaseHandle()
+    {
+        return Imports.FDIDestroy(handle);
     }
 }

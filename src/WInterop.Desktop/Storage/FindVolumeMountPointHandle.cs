@@ -4,20 +4,19 @@
 using WInterop.Handles;
 using WInterop.Storage.Native;
 
-namespace WInterop.Storage
-{
-    /// <summary>
-    ///  Handle for enumerating volume mount points.
-    /// </summary>
-    public class FindVolumeMountPointHandle : HandleZeroOrMinusOneIsInvalid
-    {
-        public FindVolumeMountPointHandle() : base(ownsHandle: true)
-        {
-        }
+namespace WInterop.Storage;
 
-        protected override bool ReleaseHandle()
-        {
-            return StorageImports.FindVolumeMountPointClose(handle);
-        }
+/// <summary>
+///  Handle for enumerating volume mount points.
+/// </summary>
+public class FindVolumeMountPointHandle : HandleZeroOrMinusOneIsInvalid
+{
+    public FindVolumeMountPointHandle() : base(ownsHandle: true)
+    {
+    }
+
+    protected override bool ReleaseHandle()
+    {
+        return StorageImports.FindVolumeMountPointClose(handle);
     }
 }

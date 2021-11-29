@@ -3,12 +3,11 @@
 
 using WInterop.ProcessAndThreads.Native;
 
-namespace WInterop.ProcessAndThreads
-{
-    public static class Threads
-    {
-        public static ThreadHandle GetCurrentThread() => ProcessAndThreadImports.GetCurrentThread();
+namespace WInterop.ProcessAndThreads;
 
-        public static uint GetCurrentThreadId() => ProcessAndThreadImports.GetCurrentThreadId();
-    }
+public static class Threads
+{
+    public static ThreadHandle GetCurrentThread() => ProcessAndThreadImports.GetCurrentThread();
+
+    public static uint GetCurrentThreadId() => ProcessAndThreadImports.GetCurrentThreadId();
 }

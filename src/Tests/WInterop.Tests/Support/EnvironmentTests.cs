@@ -5,19 +5,18 @@ using FluentAssertions;
 using WInterop.WindowsStore;
 using Xunit;
 
-namespace SupportTests
+namespace SupportTests;
+
+public class EnvironmentTests
 {
-    public class EnvironmentTests
+    [Fact]
+    public void IsWindowsStore()
     {
-        [Fact]
-        public void IsWindowsStore()
-        {
-            bool isWindowsStore = WindowsStore.IsWindowsStoreApplication();
+        bool isWindowsStore = WindowsStore.IsWindowsStoreApplication();
 #if WINRT
             isWindowsStore.Should().BeTrue();
 #else
-            isWindowsStore.Should().BeFalse();
+        isWindowsStore.Should().BeFalse();
 #endif
-        }
     }
 }

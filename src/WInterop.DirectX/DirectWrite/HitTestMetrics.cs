@@ -1,60 +1,59 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.DirectWrite
+namespace WInterop.DirectWrite;
+
+/// <summary>
+///  Geometry enclosing of text positions. [DWRITE_HIT_TEST_METRICS]
+/// </summary>
+public readonly struct HitTestMetrics
 {
     /// <summary>
-    ///  Geometry enclosing of text positions. [DWRITE_HIT_TEST_METRICS]
+    ///  First text position within the geometry.
     /// </summary>
-    public readonly struct HitTestMetrics
-    {
-        /// <summary>
-        ///  First text position within the geometry.
-        /// </summary>
-        public readonly uint TextPosition;
+    public readonly uint TextPosition;
 
-        /// <summary>
-        ///  Number of text positions within the geometry.
-        /// </summary>
-        public readonly uint Length;
+    /// <summary>
+    ///  Number of text positions within the geometry.
+    /// </summary>
+    public readonly uint Length;
 
-        /// <summary>
-        ///  Left position of the top-left coordinate of the geometry.
-        /// </summary>
-        public readonly float Left;
+    /// <summary>
+    ///  Left position of the top-left coordinate of the geometry.
+    /// </summary>
+    public readonly float Left;
 
-        /// <summary>
-        ///  Top position of the top-left coordinate of the geometry.
-        /// </summary>
-        public readonly float Top;
+    /// <summary>
+    ///  Top position of the top-left coordinate of the geometry.
+    /// </summary>
+    public readonly float Top;
 
-        /// <summary>
-        ///  Geometry's width.
-        /// </summary>
-        public readonly float Width;
+    /// <summary>
+    ///  Geometry's width.
+    /// </summary>
+    public readonly float Width;
 
-        /// <summary>
-        ///  Geometry's height.
-        /// </summary>
-        public readonly float Height;
+    /// <summary>
+    ///  Geometry's height.
+    /// </summary>
+    public readonly float Height;
 
-        /// <summary>
-        ///  Bidi level of text positions enclosed within the geometry.
-        /// </summary>
-        public readonly uint BidiLevel;
+    /// <summary>
+    ///  Bidi level of text positions enclosed within the geometry.
+    /// </summary>
+    public readonly uint BidiLevel;
 
-        private readonly TerraFX.Interop.Windows.BOOL _isText;
+    private readonly TerraFX.Interop.Windows.BOOL _isText;
 
-        /// <summary>
-        ///  Geometry encloses text?
-        /// </summary>
-        public bool IsText => _isText;
+    /// <summary>
+    ///  Geometry encloses text?
+    /// </summary>
+    public bool IsText => _isText;
 
-        private readonly TerraFX.Interop.Windows.BOOL _isTrimmed;
+    private readonly TerraFX.Interop.Windows.BOOL _isTrimmed;
 
-        /// <summary>
-        ///  Range is trimmed.
-        /// </summary>
-        public bool IsTrimmed => _isTrimmed;
-    }
+    /// <summary>
+    ///  Range is trimmed.
+    /// </summary>
+    public bool IsTrimmed => _isTrimmed;
 }

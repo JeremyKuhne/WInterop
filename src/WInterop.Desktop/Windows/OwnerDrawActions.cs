@@ -3,26 +3,25 @@
 
 using System;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+[Flags]
+public enum OwnerDrawActions : uint
 {
-    [Flags]
-    public enum OwnerDrawActions : uint
-    {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/bb775802.aspx
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb775802.aspx
 
-        /// <summary>
-        ///  (ODA_DRAWENTIRE)
-        /// </summary>
-        DrawEntire = 0x0001,
+    /// <summary>
+    ///  (ODA_DRAWENTIRE)
+    /// </summary>
+    DrawEntire = 0x0001,
 
-        /// <summary>
-        ///  (ODA_SELECT)
-        /// </summary>
-        Select = 0x0002,
+    /// <summary>
+    ///  (ODA_SELECT)
+    /// </summary>
+    Select = 0x0002,
 
-        /// <summary>
-        ///  (ODA_FOCUS)
-        /// </summary>
-        Focut = 0x0004
-    }
+    /// <summary>
+    ///  (ODA_FOCUS)
+    /// </summary>
+    Focut = 0x0004
 }

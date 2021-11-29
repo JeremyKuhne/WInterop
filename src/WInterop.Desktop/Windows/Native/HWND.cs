@@ -3,21 +3,20 @@
 
 using System.Diagnostics;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Native;
+
+[DebuggerDisplay("{Value}")]
+public readonly struct HWND
 {
-    [DebuggerDisplay("{Value}")]
-    public readonly struct HWND
-    {
-        public nint Value { get; }
+    public nint Value { get; }
 
-        public HWND(nint handle) => Value = handle;
+    public HWND(nint handle) => Value = handle;
 
-        public bool IsInvalid => Value == 0 || Value == (-1);
+    public bool IsInvalid => Value == 0 || Value == (-1);
 
-        public override bool Equals(object? obj) => obj is HWND other && other.Value == Value;
-        public bool Equals(HWND other) => other.Value == Value;
-        public static bool operator ==(HWND a, HWND b) => a.Value == b.Value;
-        public static bool operator !=(HWND a, HWND b) => a.Value != b.Value;
-        public override int GetHashCode() => Value.GetHashCode();
-    }
+    public override bool Equals(object? obj) => obj is HWND other && other.Value == Value;
+    public bool Equals(HWND other) => other.Value == Value;
+    public static bool operator ==(HWND a, HWND b) => a.Value == b.Value;
+    public static bool operator !=(HWND a, HWND b) => a.Value != b.Value;
+    public override int GetHashCode() => Value.GetHashCode();
 }

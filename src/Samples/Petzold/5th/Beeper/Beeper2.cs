@@ -5,35 +5,34 @@ using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Windows;
 
-namespace Beeper
+namespace Beeper;
+
+internal class Beeper2 : WindowClass
 {
-    internal class Beeper2 : WindowClass
+    private static bool s_fFlipFlop = false;
+    private const int ID_TIMER = 1;
+
+    protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
-        private static bool s_fFlipFlop = false;
-        private const int ID_TIMER = 1;
-
-        protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        switch (message)
         {
-            switch (message)
-            {
-                case MessageType.Create:
-                    window.SetTimer(ID_TIMER, 1000, TimerProcedure);
-                    return 0;
-                case MessageType.Destroy:
-                    window.KillTimer(ID_TIMER);
-                    break;
-            }
-
-            return base.WindowProcedure(window, message, wParam, lParam);
+            case MessageType.Create:
+                window.SetTimer(ID_TIMER, 1000, TimerProcedure);
+                return 0;
+            case MessageType.Destroy:
+                window.KillTimer(ID_TIMER);
+                break;
         }
 
-        private static void TimerProcedure(WindowHandle window, MessageType message, TimerId timerId, uint time)
-        {
-            Windows.MessageBeep();
-            s_fFlipFlop = !s_fFlipFlop;
-            using DeviceContext dc = window.GetDeviceContext();
-            using BrushHandle brush = Gdi.CreateSolidBrush(s_fFlipFlop ? Color.Red : Color.Blue);
-            dc.FillRectangle(window.GetClientRectangle(), brush);
-        }
+        return base.WindowProcedure(window, message, wParam, lParam);
+    }
+
+    private static void TimerProcedure(WindowHandle window, MessageType message, TimerId timerId, uint time)
+    {
+        Windows.MessageBeep();
+        s_fFlipFlop = !s_fFlipFlop;
+        using DeviceContext dc = window.GetDeviceContext();
+        using BrushHandle brush = Gdi.CreateSolidBrush(s_fFlipFlop ? Color.Red : Color.Blue);
+        dc.FillRectangle(window.GetClientRectangle(), brush);
     }
 }

@@ -6,131 +6,130 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using WInterop.Storage;
 
-namespace WInterop.Shell
+namespace WInterop.Shell;
+
+/// <summary>
+///  Known folder definition. [KNOWNFOLDER_DEFINITION]
+/// </summary>
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb773325.aspx
+[StructLayout(LayoutKind.Sequential)]
+public class KnownFolderDefinition : IDisposable
 {
-    /// <summary>
-    ///  Known folder definition. [KNOWNFOLDER_DEFINITION]
-    /// </summary>
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773325.aspx
-    [StructLayout(LayoutKind.Sequential)]
-    public class KnownFolderDefinition : IDisposable
+    private readonly KnownFolderCategory _category;
+    private IntPtr _pszName;
+    private IntPtr _pszDescription;
+    private Guid _fidParent;
+    private IntPtr _pszRelativePath;
+    private IntPtr _pszParsingName;
+    private IntPtr _pszTooltip;
+    private IntPtr _pszLocalizedName;
+    private IntPtr _pszIcon;
+    private IntPtr _pszSecurity;
+    private readonly AllFileAttributes _dwAttributes;
+    private readonly KnownFolderDefinitionFlags _kfdFlags;
+    private Guid _ftidType;
+
+    // Can't use a bool here as the class will no longer be blittable
+    private int _disposed;
+
+    private bool Disposed
     {
-        private readonly KnownFolderCategory _category;
-        private IntPtr _pszName;
-        private IntPtr _pszDescription;
-        private Guid _fidParent;
-        private IntPtr _pszRelativePath;
-        private IntPtr _pszParsingName;
-        private IntPtr _pszTooltip;
-        private IntPtr _pszLocalizedName;
-        private IntPtr _pszIcon;
-        private IntPtr _pszSecurity;
-        private readonly AllFileAttributes _dwAttributes;
-        private readonly KnownFolderDefinitionFlags _kfdFlags;
-        private Guid _ftidType;
+        get { return _disposed != 0; }
+    }
 
-        // Can't use a bool here as the class will no longer be blittable
-        private int _disposed;
+    public KnownFolderDefinition()
+    {
+    }
 
-        private bool Disposed
+    protected virtual void Dispose(bool disposing)
+    {
+        if (Interlocked.CompareExchange(ref _disposed, 0, 1) == 0)
         {
-            get { return _disposed != 0; }
+            // This API doesn't care if the pointer is already zero
+            Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszName, IntPtr.Zero));
+            Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszDescription, IntPtr.Zero));
+            Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszRelativePath, IntPtr.Zero));
+            Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszParsingName, IntPtr.Zero));
+            Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszTooltip, IntPtr.Zero));
+            Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszLocalizedName, IntPtr.Zero));
+            Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszIcon, IntPtr.Zero));
+            Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszSecurity, IntPtr.Zero));
         }
+    }
 
-        public KnownFolderDefinition()
-        {
-        }
+    ~KnownFolderDefinition()
+    {
+        Dispose(false);
+    }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (Interlocked.CompareExchange(ref _disposed, 0, 1) == 0)
-            {
-                // This API doesn't care if the pointer is already zero
-                Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszName, IntPtr.Zero));
-                Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszDescription, IntPtr.Zero));
-                Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszRelativePath, IntPtr.Zero));
-                Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszParsingName, IntPtr.Zero));
-                Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszTooltip, IntPtr.Zero));
-                Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszLocalizedName, IntPtr.Zero));
-                Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszIcon, IntPtr.Zero));
-                Marshal.FreeCoTaskMem(Interlocked.Exchange(ref _pszSecurity, IntPtr.Zero));
-            }
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        ~KnownFolderDefinition()
-        {
-            Dispose(false);
-        }
+    public KnownFolderCategory Category
+    {
+        get { return Disposed ? 0 : _category; }
+    }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+    public string? Name
+    {
+        get { return Disposed ? null : Marshal.PtrToStringUni(_pszName); }
+    }
 
-        public KnownFolderCategory Category
-        {
-            get { return Disposed ? 0 : _category; }
-        }
+    public string? Description
+    {
+        get { return Disposed ? null : Marshal.PtrToStringUni(_pszDescription); }
+    }
 
-        public string? Name
-        {
-            get { return Disposed ? null : Marshal.PtrToStringUni(_pszName); }
-        }
+    public Guid Parent
+    {
+        get { return Disposed ? Guid.Empty : _fidParent; }
+    }
 
-        public string? Description
-        {
-            get { return Disposed ? null : Marshal.PtrToStringUni(_pszDescription); }
-        }
+    public string? RelativePath
+    {
+        get { return Disposed ? null : Marshal.PtrToStringUni(_pszRelativePath); }
+    }
 
-        public Guid Parent
-        {
-            get { return Disposed ? Guid.Empty : _fidParent; }
-        }
+    public string? ParsingName
+    {
+        get { return Disposed ? null : Marshal.PtrToStringUni(_pszParsingName); }
+    }
 
-        public string? RelativePath
-        {
-            get { return Disposed ? null : Marshal.PtrToStringUni(_pszRelativePath); }
-        }
+    public string? Tooltip
+    {
+        get { return Disposed ? null : Marshal.PtrToStringUni(_pszTooltip); }
+    }
 
-        public string? ParsingName
-        {
-            get { return Disposed ? null : Marshal.PtrToStringUni(_pszParsingName); }
-        }
+    public string? LocalizedName
+    {
+        get { return Disposed ? null : Marshal.PtrToStringUni(_pszLocalizedName); }
+    }
 
-        public string? Tooltip
-        {
-            get { return Disposed ? null : Marshal.PtrToStringUni(_pszTooltip); }
-        }
+    public string? Icon
+    {
+        get { return Disposed ? null : Marshal.PtrToStringUni(_pszIcon); }
+    }
 
-        public string? LocalizedName
-        {
-            get { return Disposed ? null : Marshal.PtrToStringUni(_pszLocalizedName); }
-        }
+    public string? Security
+    {
+        get { return Disposed ? null : Marshal.PtrToStringUni(_pszSecurity); }
+    }
 
-        public string? Icon
-        {
-            get { return Disposed ? null : Marshal.PtrToStringUni(_pszIcon); }
-        }
+    public AllFileAttributes Attributes
+    {
+        get { return Disposed ? 0 : _dwAttributes; }
+    }
 
-        public string? Security
-        {
-            get { return Disposed ? null : Marshal.PtrToStringUni(_pszSecurity); }
-        }
+    public KnownFolderDefinitionFlags Flags
+    {
+        get { return Disposed ? 0 : _kfdFlags; }
+    }
 
-        public AllFileAttributes Attributes
-        {
-            get { return Disposed ? 0 : _dwAttributes; }
-        }
-
-        public KnownFolderDefinitionFlags Flags
-        {
-            get { return Disposed ? 0 : _kfdFlags; }
-        }
-
-        public Guid FolderTypeId
-        {
-            get { return Disposed ? Guid.Empty : _ftidType; }
-        }
+    public Guid FolderTypeId
+    {
+        get { return Disposed ? Guid.Empty : _ftidType; }
     }
 }

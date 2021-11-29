@@ -3,13 +3,12 @@
 
 using System;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+// https://msdn.microsoft.com/en-us/library/dd145035.aspx
+public struct LOGBRUSH
 {
-    // https://msdn.microsoft.com/en-us/library/dd145035.aspx
-    public struct LOGBRUSH
-    {
-        public BrushStyle lpStyle;
-        public COLORREF lbColor;
-        public UIntPtr lbHatch;
-    }
+    public BrushStyle lpStyle;
+    public COLORREF lbColor;
+    public UIntPtr lbHatch;
 }

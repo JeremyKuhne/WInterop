@@ -3,18 +3,17 @@
 
 using System;
 
-namespace WInterop.Handles
+namespace WInterop.Handles;
+
+public abstract class HandleZeroOrMinusOneIsInvalid : BaseHandle
 {
-    public abstract class HandleZeroOrMinusOneIsInvalid : BaseHandle
+    protected HandleZeroOrMinusOneIsInvalid(bool ownsHandle)
+        : base(ownsHandle) { }
+
+    protected HandleZeroOrMinusOneIsInvalid(IntPtr handle, bool ownsHandle = false)
+        : base(handle, ownsHandle)
     {
-        protected HandleZeroOrMinusOneIsInvalid(bool ownsHandle)
-            : base(ownsHandle) { }
-
-        protected HandleZeroOrMinusOneIsInvalid(IntPtr handle, bool ownsHandle = false)
-            : base(handle, ownsHandle)
-        {
-        }
-
-        public override bool IsInvalid => handle == IntPtr.Zero || handle == new IntPtr(-1);
     }
+
+    public override bool IsInvalid => handle == IntPtr.Zero || handle == new IntPtr(-1);
 }

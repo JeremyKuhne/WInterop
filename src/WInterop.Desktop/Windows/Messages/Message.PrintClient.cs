@@ -4,20 +4,19 @@
 using WInterop.Gdi;
 using WInterop.Gdi.Native;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public static partial class Message
 {
-    public static partial class Message
+    public readonly ref struct PrintClient
     {
-        public readonly ref struct PrintClient
+        public HDC HDC { get; }
+
+        public DeviceContext DeviceContext => new(HDC);
+
+        public PrintClient(WParam wParam)
         {
-            public HDC HDC { get; }
-
-            public DeviceContext DeviceContext => new(HDC);
-
-            public PrintClient(WParam wParam)
-            {
-                HDC = new(wParam);
-            }
+            HDC = new(wParam);
         }
     }
 }

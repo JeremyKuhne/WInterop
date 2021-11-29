@@ -3,23 +3,22 @@
 
 using System.Drawing;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+/// <summary>
+///  Point with two <see cref="short"/> values. [POINTS]
+/// </summary>
+/// <docs>https://docs.microsoft.com/windows/win32/api/windef/ns-windef-points</docs>
+public struct PointS
 {
-    /// <summary>
-    ///  Point with two <see cref="short"/> values. [POINTS]
-    /// </summary>
-    /// <docs>https://docs.microsoft.com/windows/win32/api/windef/ns-windef-points</docs>
-    public struct PointS
+    public short X;
+    public short Y;
+
+    public PointS(short x, short y)
     {
-        public short X;
-        public short Y;
-
-        public PointS(short x, short y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public static implicit operator Point(PointS point) => new Point(point.X, point.Y);
+        X = x;
+        Y = y;
     }
+
+    public static implicit operator Point(PointS point) => new Point(point.X, point.Y);
 }

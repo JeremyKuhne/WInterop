@@ -3,20 +3,19 @@
 
 using System;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+public readonly struct HBITMAP
 {
-    public readonly struct HBITMAP
+    public IntPtr Handle { get; }
+
+    public HBITMAP(IntPtr handle)
     {
-        public IntPtr Handle { get; }
-
-        public HBITMAP(IntPtr handle)
-        {
-            Handle = handle;
-        }
-
-        public bool IsInvalid => Handle == IntPtr.Zero;
-
-        public static implicit operator HGDIOBJ(HBITMAP handle) => new HGDIOBJ(handle.Handle);
-        public static explicit operator HBITMAP(HGDIOBJ handle) => new HBITMAP(handle.Handle);
+        Handle = handle;
     }
+
+    public bool IsInvalid => Handle == IntPtr.Zero;
+
+    public static implicit operator HGDIOBJ(HBITMAP handle) => new HGDIOBJ(handle.Handle);
+    public static explicit operator HBITMAP(HGDIOBJ handle) => new HBITMAP(handle.Handle);
 }

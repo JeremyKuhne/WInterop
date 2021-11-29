@@ -4,20 +4,19 @@
 using System.Drawing;
 using WInterop.Gdi;
 
-namespace WInterop.Windows
-{
-    public static partial class Message
-    {
-        public readonly ref struct DpiChanged
-        {
-            public uint Dpi { get; }
-            public Rectangle SuggestedBounds { get; }
+namespace WInterop.Windows;
 
-            public unsafe DpiChanged(WParam wParam, LParam lParam)
-            {
-                Dpi = wParam.HighWord;
-                SuggestedBounds = *(Rect*)lParam;
-            }
+public static partial class Message
+{
+    public readonly ref struct DpiChanged
+    {
+        public uint Dpi { get; }
+        public Rectangle SuggestedBounds { get; }
+
+        public unsafe DpiChanged(WParam wParam, LParam lParam)
+        {
+            Dpi = wParam.HighWord;
+            SuggestedBounds = *(Rect*)lParam;
         }
     }
 }

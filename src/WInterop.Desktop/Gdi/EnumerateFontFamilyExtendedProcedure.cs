@@ -3,12 +3,11 @@
 
 using WInterop.Windows;
 
-namespace WInterop.Gdi
-{
-    // https://msdn.microsoft.com/en-us/library/dd162618.aspx
-    public delegate int EnumerateFontFamilyExtendedProcedure(
-        ref EnumerateLogicalFontExtendedDesignVector lpelfe,
-        ref NewTextMetricsExtended lpntme,
-        FontTypes fontType,
-        LParam lParam);
-}
+namespace WInterop.Gdi;
+
+// https://msdn.microsoft.com/en-us/library/dd162618.aspx
+public delegate int EnumerateFontFamilyExtendedProcedure(
+    ref EnumerateLogicalFontExtendedDesignVector lpelfe,
+    ref NewTextMetricsExtended lpntme,
+    FontTypes fontType,
+    LParam lParam);

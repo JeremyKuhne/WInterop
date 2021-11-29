@@ -5,34 +5,33 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 
-namespace WInterop.Web.Native
+namespace WInterop.Web.Native;
+
+/// <summary>
+///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+/// </summary>
+public static partial class WebImports
 {
-    /// <summary>
-    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-    /// </summary>
-    public static partial class WebImports
-    {
-        [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
-        public static extern HResult CreateCoreWebView2EnvironmentWithDetails(
-            string? browserExecutableFolder,
-            string? userDataFolder,
-            string? additionalBrowserArguments,
-            ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler environment_created_handler);
+    [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
+    public static extern HResult CreateCoreWebView2EnvironmentWithDetails(
+        string? browserExecutableFolder,
+        string? userDataFolder,
+        string? additionalBrowserArguments,
+        ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler environment_created_handler);
 
-        [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
-        public static extern HResult CreateCoreWebView2Environment(
-            ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler environment_created_handler);
+    [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
+    public static extern HResult CreateCoreWebView2Environment(
+        ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler environment_created_handler);
 
-        [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
-        public static extern HResult GetCoreWebView2BrowserVersionInfo(
-            string browserExecutableFolder,
-            // This is a CoTaskMem allocated string
-            out string versionInfo);
+    [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
+    public static extern HResult GetCoreWebView2BrowserVersionInfo(
+        string browserExecutableFolder,
+        // This is a CoTaskMem allocated string
+        out string versionInfo);
 
-        [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
-        public static unsafe extern HResult CompareBrowserVersions(
-            string version1,
-            string version2,
-            int* result);
-    }
+    [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
+    public static unsafe extern HResult CompareBrowserVersions(
+        string version1,
+        string version2,
+        int* result);
 }

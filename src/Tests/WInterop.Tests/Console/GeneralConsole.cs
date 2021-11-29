@@ -6,17 +6,16 @@ using WInterop.Console;
 using WInterop.Windows;
 using Xunit;
 
-namespace ConsoleTests
+namespace ConsoleTests;
+
+public class GeneralConsole
 {
-    public class GeneralConsole
+    [Fact]
+    public void GetConsoleWindow()
     {
-        [Fact]
-        public void GetConsoleWindow()
-        {
-            // Xunit tests in core don't have an attached console window
-            WindowHandle window = Console.GetConsoleWindow();
-            window.IsInvalid.Should().BeTrue();
-            window = Windows.GetActiveWindow();
-        }
+        // Xunit tests in core don't have an attached console window
+        WindowHandle window = Console.GetConsoleWindow();
+        window.IsInvalid.Should().BeTrue();
+        window = Windows.GetActiveWindow();
     }
 }

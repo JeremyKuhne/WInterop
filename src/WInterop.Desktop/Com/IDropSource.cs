@@ -3,11 +3,10 @@
 
 using WInterop.Errors;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+public interface IDropSource
 {
-    public interface IDropSource
-    {
-        HResult QueryContinueDrag(bool escapePressed, KeyState keyState);
-        HResult GiveFeedback(DropEffect dropEffect);
-    }
+    HResult QueryContinueDrag(bool escapePressed, KeyState keyState);
+    HResult GiveFeedback(DropEffect dropEffect);
 }

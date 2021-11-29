@@ -3,13 +3,12 @@
 
 using System;
 
-namespace WInterop.Registry.Native
+namespace WInterop.Registry.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/hardware/ff553381.aspx
+public struct KEY_NAME_INFORMATION
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff553381.aspx
-    public struct KEY_NAME_INFORMATION
-    {
-        public uint NameLength;
-        private char _Name;
-        public ReadOnlySpan<char> Name => TrailingArray<char>.GetBufferInBytes(in _Name, NameLength);
-    }
+    public uint NameLength;
+    private char _Name;
+    public ReadOnlySpan<char> Name => TrailingArray<char>.GetBufferInBytes(in _Name, NameLength);
 }

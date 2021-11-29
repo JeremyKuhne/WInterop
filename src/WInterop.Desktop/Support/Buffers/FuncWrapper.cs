@@ -3,15 +3,14 @@
 
 using System;
 
-namespace WInterop.Support.Buffers
-{
-    public struct FuncWrapper<TBuffer, T> : IBufferFunc<TBuffer, T>
-    {
-        public Func<TBuffer, T> Func;
+namespace WInterop.Support.Buffers;
 
-        T IBufferFunc<TBuffer, T>.Func(TBuffer buffer)
-        {
-            return Func(buffer);
-        }
+public struct FuncWrapper<TBuffer, T> : IBufferFunc<TBuffer, T>
+{
+    public Func<TBuffer, T> Func;
+
+    T IBufferFunc<TBuffer, T>.Func(TBuffer buffer)
+    {
+        return Func(buffer);
     }
 }

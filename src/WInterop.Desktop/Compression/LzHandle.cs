@@ -4,35 +4,34 @@
 using System;
 using WInterop.Compression.Native;
 
-namespace WInterop.Compression
+namespace WInterop.Compression;
+
+public class LzHandle : IDisposable
 {
-    public class LzHandle : IDisposable
+    // The handles used by the LZ methods are not IntPtr like most handles.
+
+    public LzHandle(int handle)
     {
-        // The handles used by the LZ methods are not IntPtr like most handles.
-
-        public LzHandle(int handle)
-        {
-            RawHandle = handle;
-        }
-
-        public int RawHandle { get; private set; }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            Imports.LZClose(RawHandle);
-        }
-
-        ~LzHandle()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public static implicit operator int(LzHandle handle) => handle.RawHandle;
+        RawHandle = handle;
     }
+
+    public int RawHandle { get; private set; }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        Imports.LZClose(RawHandle);
+    }
+
+    ~LzHandle()
+    {
+        Dispose(false);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    public static implicit operator int(LzHandle handle) => handle.RawHandle;
 }

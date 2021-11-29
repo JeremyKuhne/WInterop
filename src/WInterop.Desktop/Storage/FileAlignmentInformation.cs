@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Storage
+namespace WInterop.Storage;
+
+/// <summary>
+///  [FILE_ALIGNMENT_INFORMATION]
+/// </summary>
+// https://msdn.microsoft.com/en-us/library/windows/hardware/ff545740.aspx
+public struct FileAlignmentInformation
 {
-    /// <summary>
-    ///  [FILE_ALIGNMENT_INFORMATION]
-    /// </summary>
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff545740.aspx
-    public struct FileAlignmentInformation
-    {
-        public uint AlignmentRequirement;
-    }
+    public uint AlignmentRequirement;
 }

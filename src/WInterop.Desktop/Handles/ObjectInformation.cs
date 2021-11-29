@@ -3,12 +3,11 @@
 
 using System.Diagnostics;
 
-namespace WInterop.Handles
+namespace WInterop.Handles;
+
+[DebuggerDisplay("{Name} {TypeName}")]
+public struct ObjectInformation
 {
-    [DebuggerDisplay("{Name} {TypeName}")]
-    public struct ObjectInformation
-    {
-        public string Name;
-        public string TypeName;
-    }
+    public string Name;
+    public string TypeName;
 }

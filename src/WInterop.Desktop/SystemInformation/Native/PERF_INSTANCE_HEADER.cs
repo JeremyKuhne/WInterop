@@ -3,13 +3,12 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.SystemInformation.Native
+namespace WInterop.SystemInformation.Native;
+
+// https://docs.microsoft.com/windows/win32/api/perflib/ns-perflib-perf_instance_header
+[StructLayout(LayoutKind.Sequential)]
+public struct PERF_INSTANCE_HEADER
 {
-    // https://docs.microsoft.com/windows/win32/api/perflib/ns-perflib-perf_instance_header
-    [StructLayout(LayoutKind.Sequential)]
-    public struct PERF_INSTANCE_HEADER
-    {
-        public uint Size;
-        public uint InstanceId;
-    }
+    public uint Size;
+    public uint InstanceId;
 }

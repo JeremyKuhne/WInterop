@@ -6,43 +6,42 @@ using WInterop.Gdi;
 using WInterop.GdiPlus;
 using Xunit;
 
-namespace WInteropTests.GdiPlusTests
+namespace WInteropTests.GdiPlusTests;
+
+public class ClippingTests
 {
-    public class ClippingTests
+    [Fact]
+    public unsafe void DeviceContextWithClip()
     {
-        [Fact]
-        public unsafe void DeviceContextWithClip()
-        {
-            GdiPlus.Initialize();
+        GdiPlus.Initialize();
 
-            using DeviceContext deviceContext = Gdi.GetDeviceContext();
-            using RegionHandle regionHandle = Gdi.CreateRectangleRegion(new(1, 2, 3, 4));
-            deviceContext.SelectClippingRegion(regionHandle);
-            using Graphics graphics = new(deviceContext);
+        using DeviceContext deviceContext = Gdi.GetDeviceContext();
+        using RegionHandle regionHandle = Gdi.CreateRectangleRegion(new(1, 2, 3, 4));
+        deviceContext.SelectClippingRegion(regionHandle);
+        using Graphics graphics = new(deviceContext);
 
-            graphics.IsVisibleClipEmpty().Should().BeFalse();
+        graphics.IsVisibleClipEmpty().Should().BeFalse();
 
-            using Region region = graphics.GetClip();
-            region.IsEmpty(graphics).Should().BeFalse();
-            region.IsInfinite(graphics).Should().BeTrue();
-        }
+        using Region region = graphics.GetClip();
+        region.IsEmpty(graphics).Should().BeFalse();
+        region.IsInfinite(graphics).Should().BeTrue();
+    }
 
-        [Fact]
-        public unsafe void DeviceContextWithFullClip()
-        {
-            GdiPlus.Initialize();
+    [Fact]
+    public unsafe void DeviceContextWithFullClip()
+    {
+        GdiPlus.Initialize();
 
-            using DeviceContext deviceContext = Gdi.GetDeviceContext();
-            var rect = deviceContext.GetBoundsRect();
-            using RegionHandle regionHandle = Gdi.CreateRectangleRegion(rect);
-            deviceContext.SelectClippingRegion(regionHandle);
-            using Graphics graphics = new(deviceContext);
+        using DeviceContext deviceContext = Gdi.GetDeviceContext();
+        var rect = deviceContext.GetBoundsRect();
+        using RegionHandle regionHandle = Gdi.CreateRectangleRegion(rect);
+        deviceContext.SelectClippingRegion(regionHandle);
+        using Graphics graphics = new(deviceContext);
 
-            graphics.IsVisibleClipEmpty().Should().BeTrue();
+        graphics.IsVisibleClipEmpty().Should().BeTrue();
 
-            using Region region = graphics.GetClip();
-            region.IsEmpty(graphics).Should().BeFalse();
-            region.IsInfinite(graphics).Should().BeTrue();
-        }
+        using Region region = graphics.GetClip();
+        region.IsEmpty(graphics).Should().BeFalse();
+        region.IsInfinite(graphics).Should().BeTrue();
     }
 }

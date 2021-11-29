@@ -5,19 +5,18 @@ using System;
 using WInterop.Gdi;
 using WInterop.Gdi.Native;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Native;
+
+// https://docs.microsoft.com/en-us/windows/desktop/api/winuser/ns-winuser-tagdrawitemstruct
+public readonly struct DRAWITEMSTRUCT
 {
-    // https://docs.microsoft.com/en-us/windows/desktop/api/winuser/ns-winuser-tagdrawitemstruct
-    public readonly struct DRAWITEMSTRUCT
-    {
-        public readonly OwnerDrawType CtlType;
-        public readonly uint CtlID;
-        public readonly uint itemID;
-        public readonly OwnerDrawActions itemAction;
-        public readonly OwnerDrawStates itemState;
-        public readonly HWND hwndItem;
-        public readonly HDC hDC;
-        public readonly Rect rcItem;
-        public readonly IntPtr itemData;
-    }
+    public readonly OwnerDrawType CtlType;
+    public readonly uint CtlID;
+    public readonly uint itemID;
+    public readonly OwnerDrawActions itemAction;
+    public readonly OwnerDrawStates itemState;
+    public readonly HWND hwndItem;
+    public readonly HDC hDC;
+    public readonly Rect rcItem;
+    public readonly IntPtr itemData;
 }

@@ -5,44 +5,43 @@ using System.Threading;
 using WInterop.Errors;
 using WInterop.Web.Native;
 
-namespace WInterop.Web
+namespace WInterop.Web;
+
+public static partial class Web
 {
-    public static partial class Web
+    public static ICoreWebView2Environment CreateWebView2Environment()
     {
-        public static ICoreWebView2Environment CreateWebView2Environment()
+        var handler = new CreateEnvironmentHandler();
+        WebImports.CreateCoreWebView2Environment(handler).ThrowIfFailed();
+
+        // Imports.CreateCoreWebView2EnvironmentWithDetails(
+        //    @"C:\Program Files (x86)\Microsoft\Edge\Application",
+        //    null,
+        //    null,
+        //    handler).ThrowIfFailed();
+
+        while (!handler.Completed)
         {
-            var handler = new CreateEnvironmentHandler();
-            WebImports.CreateCoreWebView2Environment(handler).ThrowIfFailed();
-
-            // Imports.CreateCoreWebView2EnvironmentWithDetails(
-            //    @"C:\Program Files (x86)\Microsoft\Edge\Application",
-            //    null,
-            //    null,
-            //    handler).ThrowIfFailed();
-
-            while (!handler.Completed)
-            {
-                Thread.Yield();
-            }
-
-            handler.Result.ThrowIfFailed();
-            return handler.Environment!;
+            Thread.Yield();
         }
 
-        private class CreateEnvironmentHandler : ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler
+        handler.Result.ThrowIfFailed();
+        return handler.Environment!;
+    }
+
+    private class CreateEnvironmentHandler : ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler
+    {
+        public ICoreWebView2Environment? Environment;
+        public bool Completed;
+        public HResult Result;
+
+        public HResult Invoke(HResult result, ICoreWebView2Environment created_environment)
         {
-            public ICoreWebView2Environment? Environment;
-            public bool Completed;
-            public HResult Result;
+            Environment = created_environment;
+            Result = result;
+            Completed = true;
 
-            public HResult Invoke(HResult result, ICoreWebView2Environment created_environment)
-            {
-                Environment = created_environment;
-                Result = result;
-                Completed = true;
-
-                return HResult.S_OK;
-            }
+            return HResult.S_OK;
         }
     }
 }

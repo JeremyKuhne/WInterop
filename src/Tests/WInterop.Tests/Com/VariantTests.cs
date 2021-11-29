@@ -5,21 +5,20 @@ using System;
 using WInterop.Com.Native;
 using Xunit;
 
-namespace ComTests
+namespace ComTests;
+
+public class VariantTests
 {
-    public class VariantTests
+    [Fact]
+    public unsafe void VariantTest()
     {
-        [Fact]
-        public unsafe void VariantTest()
+        if (Environment.Is64BitProcess)
         {
-            if (Environment.Is64BitProcess)
-            {
-                Assert.Equal(24, sizeof(VARIANT));
-            }
-            else
-            {
-                Assert.Equal(16, sizeof(VARIANT));
-            }
+            Assert.Equal(24, sizeof(VARIANT));
+        }
+        else
+        {
+            Assert.Equal(16, sizeof(VARIANT));
         }
     }
 }

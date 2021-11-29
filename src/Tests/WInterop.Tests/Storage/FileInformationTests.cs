@@ -8,107 +8,106 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace StorageTests
+namespace StorageTests;
+
+public class FileInformation
 {
-    public class FileInformation
+    [Fact]
+    public void TestFileRights()
     {
-        [Fact]
-        public void TestFileRights()
+        using var cleaner = new TestFileCleaner();
+        string testFile = cleaner.CreateTestFile(nameof(TestFileRights));
+
+        // CreateFile ALWAYS adds SYNCHRONIZE & FILE_READ_ATTRIBUTES.
+        using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadControl))
         {
-            using var cleaner = new TestFileCleaner();
-            string testFile = cleaner.CreateTestFile(nameof(TestFileRights));
-
-            // CreateFile ALWAYS adds SYNCHRONIZE & FILE_READ_ATTRIBUTES.
-            using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadControl))
-            {
-                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl | FileAccessRights.Synchronize);
-            }
-
-            using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes))
-            {
-                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
-            }
-
-            using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.Synchronize))
-            {
-                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
-            }
-
-            using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
-            {
-                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl
-                    | FileAccessRights.Synchronize | FileAccessRights.ReadData | FileAccessRights.ReadExtendedAttributes);
-            }
-
-            // DesiredAccess.Synchronize is required for synchronous access.
-            string directTestFile = @"\??\" + testFile;
-            using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.Synchronize))
-            {
-                Storage.GetRights(handle).Should().Be(FileAccessRights.Synchronize);
-            }
-
-            // Open async
-            using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes, ShareModes.ReadWrite, 0, 0))
-            {
-                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes);
-            }
-
-            using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes | DesiredAccess.Synchronize, ShareModes.ReadWrite, 0, 0))
-            {
-                Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
-            }
+            Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl | FileAccessRights.Synchronize);
         }
 
-        [Fact(Skip = "This test is difficult to get timing to go correctly.")]
-        public void ProcessWithActiveHandle()
+        using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.ReadAttributes))
         {
-            using (var cleaner = new TestFileCleaner())
+            Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
+        }
+
+        using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.Synchronize))
+        {
+            Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
+        }
+
+        using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting, DesiredAccess.GenericRead))
+        {
+            Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.ReadControl
+                | FileAccessRights.Synchronize | FileAccessRights.ReadData | FileAccessRights.ReadExtendedAttributes);
+        }
+
+        // DesiredAccess.Synchronize is required for synchronous access.
+        string directTestFile = @"\??\" + testFile;
+        using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.Synchronize))
+        {
+            Storage.GetRights(handle).Should().Be(FileAccessRights.Synchronize);
+        }
+
+        // Open async
+        using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes, ShareModes.ReadWrite, 0, 0))
+        {
+            Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes);
+        }
+
+        using (var handle = Storage.CreateFileDirect(directTestFile, CreateDisposition.Open, DesiredAccess.ReadAttributes | DesiredAccess.Synchronize, ShareModes.ReadWrite, 0, 0))
+        {
+            Storage.GetRights(handle).Should().Be(FileAccessRights.ReadAttributes | FileAccessRights.Synchronize);
+        }
+    }
+
+    [Fact(Skip = "This test is difficult to get timing to go correctly.")]
+    public void ProcessWithActiveHandle()
+    {
+        using (var cleaner = new TestFileCleaner())
+        {
+            const int MAX_TRIES = 10;
+
+            // It is tricky to get an open handle conflict- give it a few tries
+            for (int i = 0; i < MAX_TRIES; i++)
             {
-                const int MAX_TRIES = 10;
+                string testFile = cleaner.CreateTestFile(nameof(ProcessWithActiveHandle));
 
-                // It is tricky to get an open handle conflict- give it a few tries
-                for (int i = 0; i < MAX_TRIES; i++)
+                // Create an open handle on the test file. Note that this must come first as
+                // the redirect (>>) will refuse to execute if there is already an open handle.
+                Process process = null;
+                ProcessStartInfo startInfo = new ProcessStartInfo
                 {
-                    string testFile = cleaner.CreateTestFile(nameof(ProcessWithActiveHandle));
+                    FileName = "cmd",
+                    Arguments = $"/K copy con >> {testFile}",
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
 
-                    // Create an open handle on the test file. Note that this must come first as
-                    // the redirect (>>) will refuse to execute if there is already an open handle.
-                    Process process = null;
-                    ProcessStartInfo startInfo = new ProcessStartInfo
+                try
+                {
+                    process = Process.Start(startInfo);
+
+                    // The existing cmd handle won't let us access much
+                    using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting,
+                        DesiredAccess.ReadAttributes, ShareModes.ReadWrite | ShareModes.Delete))
                     {
-                        FileName = "cmd",
-                        Arguments = $"/K copy con >> {testFile}",
-                        WindowStyle = ProcessWindowStyle.Hidden
-                    };
+                        var ids = Storage.GetProcessIds(handle);
+                        if (ids.Count() == 0)
+                            continue;
 
-                    try
-                    {
-                        process = Process.Start(startInfo);
-
-                        // The existing cmd handle won't let us access much
-                        using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting,
-                            DesiredAccess.ReadAttributes, ShareModes.ReadWrite | ShareModes.Delete))
-                        {
-                            var ids = Storage.GetProcessIds(handle);
-                            if (ids.Count() == 0)
-                                continue;
-
-                            // If this ends up being problematic (i.e. antivirus gets us a count of 2)
-                            // we can look to see we have an id that matches the known process and that we
-                            // don't contain our own process id.
-                            ids.Should().HaveCount(1);
-                            ((int)(ulong)ids.First()).Should().Be(process.Id);
-                            return;
-                        }
-                    }
-                    finally
-                    {
-                        process?.CloseMainWindow();
+                        // If this ends up being problematic (i.e. antivirus gets us a count of 2)
+                        // we can look to see we have an id that matches the known process and that we
+                        // don't contain our own process id.
+                        ids.Should().HaveCount(1);
+                        ((int)(ulong)ids.First()).Should().Be(process.Id);
+                        return;
                     }
                 }
-
-                false.Should().BeTrue($"Did not get a locked file in {MAX_TRIES} tries.");
+                finally
+                {
+                    process?.CloseMainWindow();
+                }
             }
+
+            false.Should().BeTrue($"Did not get a locked file in {MAX_TRIES} tries.");
         }
     }
 }

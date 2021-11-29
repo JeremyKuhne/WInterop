@@ -3,14 +3,13 @@
 
 using WInterop.Gdi.Native;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+public unsafe readonly ref struct MetafileRecord
 {
-    public unsafe readonly ref struct MetafileRecord
-    {
-        private readonly ENHMETARECORD* _record;
+    private readonly ENHMETARECORD* _record;
 
-        public MetafileRecord(ENHMETARECORD* record) => _record = record;
+    public MetafileRecord(ENHMETARECORD* record) => _record = record;
 
-        public MetafileRecordType RecordType => (MetafileRecordType)_record->iType;
-    }
+    public MetafileRecordType RecordType => (MetafileRecordType)_record->iType;
 }

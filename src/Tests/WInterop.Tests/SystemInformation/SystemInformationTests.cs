@@ -7,47 +7,46 @@ using WInterop.SystemInformation;
 using Xunit;
 using System.Diagnostics;
 
-namespace SystemInformationTests
+namespace SystemInformationTests;
+
+public partial class Basic
 {
-    public partial class Basic
+    [Fact]
+    public void IsProcessorFeaturePresent()
     {
-        [Fact]
-        public void IsProcessorFeaturePresent()
-        {
-            // We shouldn't be able to run on the original Pentium, so this should always be false.
-            SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.FloatingPointPrecisionErrata).Should().BeFalse();
+        // We shouldn't be able to run on the original Pentium, so this should always be false.
+        SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.FloatingPointPrecisionErrata).Should().BeFalse();
 
-            // I don't think any platform doesn't support this
-            SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.CompareExchangeDouble).Should().BeTrue();
-        }
+        // I don't think any platform doesn't support this
+        SystemInformation.IsProcessorFeaturePresent(ProcessorFeature.CompareExchangeDouble).Should().BeTrue();
+    }
 
-        [Fact(Skip = "Just a helper test method.")]
-        public void DumpProcessorFeatures()
+    [Fact(Skip = "Just a helper test method.")]
+    public void DumpProcessorFeatures()
+    {
+        foreach (ProcessorFeature feature in Enum.GetValues(typeof(ProcessorFeature)))
         {
-            foreach (ProcessorFeature feature in Enum.GetValues(typeof(ProcessorFeature)))
-            {
-                Debug.WriteLine($"{feature}: {SystemInformation.IsProcessorFeaturePresent(feature)}");
-            }
+            Debug.WriteLine($"{feature}: {SystemInformation.IsProcessorFeaturePresent(feature)}");
         }
+    }
 
-        [Fact]
-        public void CeipIsOptedIn()
-        {
-            // Can't really validate this, just make sure it doesn't blow up.
-            SystemInformation.CeipIsOptedIn();
-        }
+    [Fact]
+    public void CeipIsOptedIn()
+    {
+        // Can't really validate this, just make sure it doesn't blow up.
+        SystemInformation.CeipIsOptedIn();
+    }
 
-        [Fact]
-        public void GetComputerName()
-        {
-            SystemInformation.GetComputerName().Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
-        }
+    [Fact]
+    public void GetComputerName()
+    {
+        SystemInformation.GetComputerName().Should().Be(Environment.GetEnvironmentVariable("COMPUTERNAME"));
+    }
 
-        [Fact]
-        public void GetVersionInfo()
-        {
-            OsVersionInfo info = SystemInformation.GetVersionInfo();
-            info.MajorVersion.Should().BeGreaterOrEqualTo(6, "Windows 7 was 6.1");
-        }
+    [Fact]
+    public void GetVersionInfo()
+    {
+        OsVersionInfo info = SystemInformation.GetVersionInfo();
+        info.MajorVersion.Should().BeGreaterOrEqualTo(6, "Windows 7 was 6.1");
     }
 }

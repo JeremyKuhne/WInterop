@@ -4,16 +4,15 @@
 using System.Runtime.InteropServices;
 using WInterop.Security;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Native;
+
+// https://docs.microsoft.com/en-us/windows/desktop/api/winefs/ns-winefs-_encryption_certificate_hash
+// https://msdn.microsoft.com/en-us/library/cc230500.aspx
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public unsafe struct ENCRYPTION_CERTIFICATE_HASH
 {
-    // https://docs.microsoft.com/en-us/windows/desktop/api/winefs/ns-winefs-_encryption_certificate_hash
-    // https://msdn.microsoft.com/en-us/library/cc230500.aspx
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct ENCRYPTION_CERTIFICATE_HASH
-    {
-        public uint cbTotalLength;
-        public SID* pUserSid;
-        public EFS_HASH_BLOB* pHash;
-        public char* lpDisplayInformation;
-    }
+    public uint cbTotalLength;
+    public SID* pUserSid;
+    public EFS_HASH_BLOB* pHash;
+    public char* lpDisplayInformation;
 }

@@ -3,13 +3,12 @@
 
 using System.Diagnostics;
 
-namespace WInterop.Cryptography
+namespace WInterop.Cryptography;
+
+[DebuggerDisplay("{Name}")]
+public struct SystemStoreInformation
 {
-    [DebuggerDisplay("{Name}")]
-    public struct SystemStoreInformation
-    {
-        public string Name;
-        public string Key;
-        public SystemStoreLocation Location;
-    }
+    public string Name;
+    public string Key;
+    public SystemStoreLocation Location;
 }

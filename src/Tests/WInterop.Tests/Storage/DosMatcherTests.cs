@@ -6,17 +6,17 @@ using System;
 using WInterop.Storage;
 using Xunit;
 
-namespace StorageTests
-{
-    public class DosMatcherTests
-    {
-        [Theory, MemberData(nameof(DosMatchData))]
-        public static void DosMatch(string expression, string name, bool ignoreCase, bool expected)
-        {
-            DosMatcher.MatchPattern(expression, name.AsSpan(), ignoreCase).Should().Be(expected);
-        }
+namespace StorageTests;
 
-        public static TheoryData<string, string, bool, bool> DosMatchData => new TheoryData<string, string, bool, bool>
+public class DosMatcherTests
+{
+    [Theory, MemberData(nameof(DosMatchData))]
+    public static void DosMatch(string expression, string name, bool ignoreCase, bool expected)
+    {
+        DosMatcher.MatchPattern(expression, name.AsSpan(), ignoreCase).Should().Be(expected);
+    }
+
+    public static TheoryData<string, string, bool, bool> DosMatchData => new TheoryData<string, string, bool, bool>
         {
             { null, "", false, false },
             { null, "", true, false },
@@ -85,5 +85,4 @@ namespace StorageTests
             { @"<.", @"a.", true, true },
             { @"<.", @"a.b", true, false },
         };
-    }
 }

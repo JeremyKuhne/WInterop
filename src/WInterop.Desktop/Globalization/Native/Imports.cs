@@ -6,45 +6,44 @@ using WInterop.Globalization;
 using WInterop.Windows;
 using WInterop.Windows.Native;
 
-namespace WInterop.Globalization.Native
+namespace WInterop.Globalization.Native;
+
+/// <summary>
+///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
+/// </summary>
+public static partial class Imports
 {
-    /// <summary>
-    ///  Direct usage of Imports isn't recommended. Use the wrappers that do the heavy lifting for you.
-    /// </summary>
-    public static partial class Imports
-    {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318103.aspx
-        [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern int GetLocaleInfoEx(
-            string? lpLocaleName,
-            uint LCType,
-            void* lpLCData,
-            int cchData);
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318103.aspx
+    [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+    public static unsafe extern int GetLocaleInfoEx(
+        string? lpLocaleName,
+        uint LCType,
+        void* lpLCData,
+        int cchData);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317762.aspx
-        [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern int CompareStringOrdinal(
-            ref char lpString1,
-            int cchCount1,
-            ref char lpString2,
-            int cchCount2,
-            bool bIgnoreCase);
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317762.aspx
+    [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+    public static unsafe extern int CompareStringOrdinal(
+        ref char lpString1,
+        int cchCount1,
+        ref char lpString2,
+        int cchCount2,
+        bool bIgnoreCase);
 
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318702.aspx
-        [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-        public static unsafe extern int LCMapStringEx(
-            char* lpLocaleName,
-            LocaleMapFlags dwMapFlags,
-            char* lpSrcStr,
-            int cchSrc,
-            char* lpDestStr,
-            int cchDest,
-            NlsVersionInfoExtended* lpVersionInformation,
-            void* lpReserved,
-            LParam sortHandle);
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318702.aspx
+    [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+    public static unsafe extern int LCMapStringEx(
+        char* lpLocaleName,
+        LocaleMapFlags dwMapFlags,
+        char* lpSrcStr,
+        int cchSrc,
+        char* lpDestStr,
+        int cchDest,
+        NlsVersionInfoExtended* lpVersionInformation,
+        void* lpReserved,
+        LParam sortHandle);
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/winnls/nf-winnls-getacp
-        [DllImport(Libraries.Winnls, ExactSpelling = true)]
-        public static extern uint GetACP();
-    }
+    // https://docs.microsoft.com/en-us/windows/desktop/api/winnls/nf-winnls-getacp
+    [DllImport(Libraries.Winnls, ExactSpelling = true)]
+    public static extern uint GetACP();
 }

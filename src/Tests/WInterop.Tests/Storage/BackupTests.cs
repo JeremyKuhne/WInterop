@@ -7,32 +7,31 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace StorageTests
+namespace StorageTests;
+
+public class Backup
 {
-    public class Backup
+    [Fact]
+    public void NoAlternateStreamData()
     {
-        [Fact]
-        public void NoAlternateStreamData()
+        using (var cleaner = new TestFileCleaner())
         {
-            using (var cleaner = new TestFileCleaner())
-            {
-                Storage.GetAlternateStreamInformation(cleaner.CreateTestFile("NoAlternateStreamData")).Should().BeEmpty();
-            }
+            Storage.GetAlternateStreamInformation(cleaner.CreateTestFile("NoAlternateStreamData")).Should().BeEmpty();
         }
+    }
 
-        [Fact]
-        public void OneAlternateDataStream()
+    [Fact]
+    public void OneAlternateDataStream()
+    {
+        using (var cleaner = new TestFileCleaner())
         {
-            using (var cleaner = new TestFileCleaner())
-            {
-                string testFile = cleaner.CreateTestFile("OneAlternateDataStream");
-                string firstStream = testFile + ":First";
-                FileHelper.WriteAllText(firstStream, "First alternate data stream");
+            string testFile = cleaner.CreateTestFile("OneAlternateDataStream");
+            string firstStream = testFile + ":First";
+            FileHelper.WriteAllText(firstStream, "First alternate data stream");
 
-                var info = Storage.GetAlternateStreamInformation(testFile);
-                info.Should().HaveCount(1);
-                info.First().Name.Should().Be(":First:$DATA");
-            }
+            var info = Storage.GetAlternateStreamInformation(testFile);
+            info.Should().HaveCount(1);
+            info.First().Name.Should().Be(":First:$DATA");
         }
     }
 }

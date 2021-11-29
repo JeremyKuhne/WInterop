@@ -3,10 +3,9 @@
 
 using System.Drawing;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public interface ILayoutHandler
 {
-    public interface ILayoutHandler
-    {
-        void Layout(Rectangle bounds);
-    }
+    void Layout(Rectangle bounds);
 }

@@ -3,14 +3,13 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Native;
+
+// https://docs.microsoft.com/en-us/windows/desktop/api/winefs/ns-winefs-_encryption_certificate_hash_list
+// https://msdn.microsoft.com/en-us/library/cc230501.aspx
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public unsafe struct ENCRYPTION_CERTIFICATE_HASH_LIST
 {
-    // https://docs.microsoft.com/en-us/windows/desktop/api/winefs/ns-winefs-_encryption_certificate_hash_list
-    // https://msdn.microsoft.com/en-us/library/cc230501.aspx
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct ENCRYPTION_CERTIFICATE_HASH_LIST
-    {
-        public uint nCert_Hash;
-        public ENCRYPTION_CERTIFICATE_HASH** pUsers;
-    }
+    public uint nCert_Hash;
+    public ENCRYPTION_CERTIFICATE_HASH** pUsers;
 }

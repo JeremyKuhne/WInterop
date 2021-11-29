@@ -3,28 +3,27 @@
 
 using System;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+/// <summary>
+///  Locking type for <see cref="IStream.LockRegion(ulong, ulong, uint)"/> and
+///  ILockBytes.LockRegion. <see cref="https://docs.microsoft.com/windows/win32/api/objidl/ne-objidl-locktype"/>
+/// </summary>
+[Flags]
+public enum LockType : uint
 {
     /// <summary>
-    ///  Locking type for <see cref="IStream.LockRegion(ulong, ulong, uint)"/> and
-    ///  ILockBytes.LockRegion. <see cref="https://docs.microsoft.com/windows/win32/api/objidl/ne-objidl-locktype"/>
+    ///  [LOCK_WRITE]
     /// </summary>
-    [Flags]
-    public enum LockType : uint
-    {
-        /// <summary>
-        ///  [LOCK_WRITE]
-        /// </summary>
-        Write = 1,
+    Write = 1,
 
-        /// <summary>
-        ///  [LOCK_EXCLUSIVE]
-        /// </summary>
-        Exclusive = 2,
+    /// <summary>
+    ///  [LOCK_EXCLUSIVE]
+    /// </summary>
+    Exclusive = 2,
 
-        /// <summary>
-        ///  [LOCK_ONLYONCE]
-        /// </summary>
-        OnlyOnce = 4
-    }
+    /// <summary>
+    ///  [LOCK_ONLYONCE]
+    /// </summary>
+    OnlyOnce = 4
 }

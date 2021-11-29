@@ -11,111 +11,110 @@ using WInterop.Registry;
 using WInterop.Storage;
 using WInterop.Windows;
 
-namespace WInterop.Communications
+namespace WInterop.Communications;
+
+public static partial class Communications
 {
-    public static partial class Communications
+    public static unsafe DeviceControlBlock GetCommunicationsState(SafeFileHandle fileHandle)
     {
-        public static unsafe DeviceControlBlock GetCommunicationsState(SafeFileHandle fileHandle)
+        DeviceControlBlock dcb = new()
         {
-            DeviceControlBlock dcb = new()
-            {
-                DCBlength = (uint)sizeof(DeviceControlBlock)
-            };
+            DCBlength = (uint)sizeof(DeviceControlBlock)
+        };
 
-            Error.ThrowLastErrorIfFalse(
-                Imports.GetCommState(fileHandle, ref dcb));
+        Error.ThrowLastErrorIfFalse(
+            Imports.GetCommState(fileHandle, ref dcb));
 
-            return dcb;
-        }
+        return dcb;
+    }
 
-        public static unsafe void SetCommunicationsState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
-        {
-            dcb.DCBlength = (uint)sizeof(DeviceControlBlock);
+    public static unsafe void SetCommunicationsState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
+    {
+        dcb.DCBlength = (uint)sizeof(DeviceControlBlock);
 
-            Error.ThrowLastErrorIfFalse(
-                Imports.GetCommState(fileHandle, ref dcb));
-        }
+        Error.ThrowLastErrorIfFalse(
+            Imports.GetCommState(fileHandle, ref dcb));
+    }
 
-        public static unsafe DeviceControlBlock BuildDeviceControlBlock(string definition)
-        {
-            Error.ThrowLastErrorIfFalse(
-                Imports.BuildCommDCBW(definition, out DeviceControlBlock dcb));
+    public static unsafe DeviceControlBlock BuildDeviceControlBlock(string definition)
+    {
+        Error.ThrowLastErrorIfFalse(
+            Imports.BuildCommDCBW(definition, out DeviceControlBlock dcb));
 
-            return dcb;
-        }
+        return dcb;
+    }
 
-        public static CommunicationsProperties GetCommunicationsProperties(SafeFileHandle fileHandle)
-        {
-            Error.ThrowLastErrorIfFalse(
-                Imports.GetCommProperties(fileHandle, out CommunicationsProperties properties));
+    public static CommunicationsProperties GetCommunicationsProperties(SafeFileHandle fileHandle)
+    {
+        Error.ThrowLastErrorIfFalse(
+            Imports.GetCommProperties(fileHandle, out CommunicationsProperties properties));
 
-            return properties;
-        }
+        return properties;
+    }
 
-        public static unsafe CommunicationsConfig GetCommunicationsConfig(SafeFileHandle fileHandle)
-        {
-            CommunicationsConfig config = default;
-            uint size = (uint)sizeof(CommunicationsConfig);
+    public static unsafe CommunicationsConfig GetCommunicationsConfig(SafeFileHandle fileHandle)
+    {
+        CommunicationsConfig config = default;
+        uint size = (uint)sizeof(CommunicationsConfig);
 
-            Error.ThrowLastErrorIfFalse(
-                Imports.GetCommConfig(fileHandle, ref config, ref size));
+        Error.ThrowLastErrorIfFalse(
+            Imports.GetCommConfig(fileHandle, ref config, ref size));
 
-            return config;
-        }
+        return config;
+    }
 
-        /// <summary>
-        ///  Get the default config values for the given com port.
-        /// </summary>
-        /// <param name="port">Simple name only (COM1, not \\.\COM1)</param>
-        public static unsafe CommunicationsConfig GetDefaultCommunicationsConfig(string port)
-        {
-            CommunicationsConfig config = default;
-            uint size = (uint)sizeof(CommunicationsConfig);
+    /// <summary>
+    ///  Get the default config values for the given com port.
+    /// </summary>
+    /// <param name="port">Simple name only (COM1, not \\.\COM1)</param>
+    public static unsafe CommunicationsConfig GetDefaultCommunicationsConfig(string port)
+    {
+        CommunicationsConfig config = default;
+        uint size = (uint)sizeof(CommunicationsConfig);
 
-            Error.ThrowLastErrorIfFalse(
-                Imports.GetDefaultCommConfigW(port, ref config, ref size));
+        Error.ThrowLastErrorIfFalse(
+            Imports.GetDefaultCommConfigW(port, ref config, ref size));
 
-            return config;
-        }
+        return config;
+    }
 
-        /// <summary>
-        ///  Pops the COM port configuration dialog and returns the selected settings.
-        /// </summary>
-        /// <exception cref="OperationCanceledException">Thrown if the dialog is cancelled.</exception>
-        public static unsafe CommunicationsConfig CommunicationsConfigDialog(string port, WindowHandle parent)
-        {
-            CommunicationsConfig config = GetDefaultCommunicationsConfig(port);
+    /// <summary>
+    ///  Pops the COM port configuration dialog and returns the selected settings.
+    /// </summary>
+    /// <exception cref="OperationCanceledException">Thrown if the dialog is cancelled.</exception>
+    public static unsafe CommunicationsConfig CommunicationsConfigDialog(string port, WindowHandle parent)
+    {
+        CommunicationsConfig config = GetDefaultCommunicationsConfig(port);
 
-            Error.ThrowLastErrorIfFalse(
-                Imports.CommConfigDialogW(port, parent, ref config));
+        Error.ThrowLastErrorIfFalse(
+            Imports.CommConfigDialogW(port, parent, ref config));
 
-            return config;
-        }
+        return config;
+    }
 
-        /// <summary>
-        ///  Simple helper for CreateFile call that sets the expected values when opening a COM port.
-        /// </summary>
-        public static SafeFileHandle CreateComPortFileHandle(
-            string path,
-            AllFileAttributes fileAttributes = AllFileAttributes.None,
-            FileFlags fileFlags = FileFlags.None)
-        {
-            return Storage.Storage.CreateFile(
-                path,
-                CreationDisposition.OpenExisting,
-                DesiredAccess.GenericReadWrite,
-                0,
-                fileAttributes,
-                fileFlags);
-        }
+    /// <summary>
+    ///  Simple helper for CreateFile call that sets the expected values when opening a COM port.
+    /// </summary>
+    public static SafeFileHandle CreateComPortFileHandle(
+        string path,
+        AllFileAttributes fileAttributes = AllFileAttributes.None,
+        FileFlags fileFlags = FileFlags.None)
+    {
+        return Storage.Storage.CreateFile(
+            path,
+            CreationDisposition.OpenExisting,
+            DesiredAccess.GenericReadWrite,
+            0,
+            fileAttributes,
+            fileFlags);
+    }
 
-        public static IEnumerable<string> GetAvailableComPorts()
-        {
-            using var key = Registry.Registry.OpenKey(
-                RegistryKeyHandle.HKEY_LOCAL_MACHINE,
-                @"HARDWARE\DEVICEMAP\SERIALCOMM");
+    public static IEnumerable<string> GetAvailableComPorts()
+    {
+        using var key = Registry.Registry.OpenKey(
+            RegistryKeyHandle.HKEY_LOCAL_MACHINE,
+            @"HARDWARE\DEVICEMAP\SERIALCOMM");
 
-            return Registry.Registry.GetValueDataDirect(key, RegistryValueType.String).OfType<string>().ToArray();
-        }
+        return Registry.Registry.GetValueDataDirect(key, RegistryValueType.String).OfType<string>().ToArray();
     }
 }

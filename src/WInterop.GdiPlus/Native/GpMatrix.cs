@@ -3,10 +3,9 @@
 
 using System;
 
-namespace WInterop.GdiPlus.Native
+namespace WInterop.GdiPlus.Native;
+
+public struct GpMatrix
 {
-    public struct GpMatrix
-    {
-        public nuint Handle { get; }
-    }
+    public nuint Handle { get; }
 }

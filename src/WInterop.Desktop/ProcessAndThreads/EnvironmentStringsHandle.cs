@@ -5,22 +5,21 @@ using System;
 using WInterop.Handles;
 using WInterop.ProcessAndThreads.Native;
 
-namespace WInterop.ProcessAndThreads
-{
-    /// <summary>
-    ///  Safe handle for a block of memory returned by GetEnvironmentStrings.
-    /// </summary>
-    public class EnvironmentStringsHandle : HandleZeroIsInvalid
-    {
-        public EnvironmentStringsHandle() : base(ownsHandle: true)
-        {
-        }
+namespace WInterop.ProcessAndThreads;
 
-        protected override bool ReleaseHandle()
-        {
-            ProcessAndThreadImports.FreeEnvironmentStringsW(handle);
-            handle = IntPtr.Zero;
-            return true;
-        }
+/// <summary>
+///  Safe handle for a block of memory returned by GetEnvironmentStrings.
+/// </summary>
+public class EnvironmentStringsHandle : HandleZeroIsInvalid
+{
+    public EnvironmentStringsHandle() : base(ownsHandle: true)
+    {
+    }
+
+    protected override bool ReleaseHandle()
+    {
+        ProcessAndThreadImports.FreeEnvironmentStringsW(handle);
+        handle = IntPtr.Zero;
+        return true;
     }
 }

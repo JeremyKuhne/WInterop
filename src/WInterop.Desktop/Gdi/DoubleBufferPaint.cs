@@ -5,37 +5,36 @@ using System;
 using System.Drawing;
 using WInterop.Windows;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+public ref struct DoubleBufferPaint
 {
-    public ref struct DoubleBufferPaint
+    private readonly DeviceContext _originalDC;
+    private readonly BitmapHandle _bitmap;
+    private Rectangle _client;
+
+    public DeviceContext DeviceContext { get; private set; }
+
+    public DoubleBufferPaint(WindowHandle window)
     {
-        private readonly DeviceContext _originalDC;
-        private readonly BitmapHandle _bitmap;
-        private Rectangle _client;
+        _client = window.GetClientRectangle();
+        _originalDC = window.BeginPaint();
+        DeviceContext = _originalDC.CreateCompatibleDeviceContext();
+        _bitmap = DeviceContext.CreateCompatibleBitmap(_client.Size);
+        DeviceContext.SelectObject(_bitmap);
+    }
 
-        public DeviceContext DeviceContext { get; private set; }
-
-        public DoubleBufferPaint(WindowHandle window)
+    public void Dispose()
+    {
+        try
         {
-            _client = window.GetClientRectangle();
-            _originalDC = window.BeginPaint();
-            DeviceContext = _originalDC.CreateCompatibleDeviceContext();
-            _bitmap = DeviceContext.CreateCompatibleBitmap(_client.Size);
-            DeviceContext.SelectObject(_bitmap);
+            DeviceContext.BitBlit(_originalDC, default, new Rectangle(default, _client.Size), new RasterOperation(RasterOperation.Common.SourceCopy));
         }
-
-        public void Dispose()
+        finally
         {
-            try
-            {
-                DeviceContext.BitBlit(_originalDC, default, new Rectangle(default, _client.Size), new RasterOperation(RasterOperation.Common.SourceCopy));
-            }
-            finally
-            {
-                DeviceContext.Dispose();
-                _bitmap.Dispose();
-                _originalDC.Dispose();
-            }
+            DeviceContext.Dispose();
+            _bitmap.Dispose();
+            _originalDC.Dispose();
         }
     }
 }

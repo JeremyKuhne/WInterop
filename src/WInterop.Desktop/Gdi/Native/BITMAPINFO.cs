@@ -4,16 +4,15 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi.Native
-{
-    // https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-tagbitmapinfo
-    [StructLayout(LayoutKind.Sequential)]
-    public struct BITMAPINFO
-    {
-        public BitmapInfoHeader bmiHeader;
-        private readonly RgbQuad _bmiColors;
+namespace WInterop.Gdi.Native;
 
-        // TODO: Compute the count from the BitmapInfoHeader
-        // public ReadOnlySpan<RgbQuad> bmiColors = TrailingArray<RgbQuad>.GetBuffer
-    }
+// https://docs.microsoft.com/en-us/windows/desktop/api/wingdi/ns-wingdi-tagbitmapinfo
+[StructLayout(LayoutKind.Sequential)]
+public struct BITMAPINFO
+{
+    public BitmapInfoHeader bmiHeader;
+    private readonly RgbQuad _bmiColors;
+
+    // TODO: Compute the count from the BitmapInfoHeader
+    // public ReadOnlySpan<RgbQuad> bmiColors = TrailingArray<RgbQuad>.GetBuffer
 }

@@ -3,32 +3,31 @@
 
 using System.Drawing;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public class LayoutBinder
 {
-    public class LayoutBinder
+    private readonly ILayoutHandler _handler;
+
+    public LayoutBinder(Window window, ILayoutHandler handler)
     {
-        private readonly ILayoutHandler _handler;
+        _handler = handler;
+        window.MessageHandler += Window_MessageHandler;
+    }
 
-        public LayoutBinder(Window window, ILayoutHandler handler)
+    private LResult? Window_MessageHandler(
+        object sender,
+        WindowHandle window,
+        MessageType message,
+        WParam wParam,
+        LParam lParam)
+    {
+        if (message != MessageType.WindowPositionChanged)
         {
-            _handler = handler;
-            window.MessageHandler += Window_MessageHandler;
+            return null;
         }
 
-        private LResult? Window_MessageHandler(
-            object sender,
-            WindowHandle window,
-            MessageType message,
-            WParam wParam,
-            LParam lParam)
-        {
-            if (message != MessageType.WindowPositionChanged)
-            {
-                return null;
-            }
-
-            _handler.Layout(new Message.WindowPositionChanged(lParam).ClientBounds);
-            return 0;
-        }
+        _handler.Layout(new Message.WindowPositionChanged(lParam).ClientBounds);
+        return 0;
     }
 }

@@ -6,27 +6,26 @@ using System.Runtime.InteropServices;
 using WInterop.Windows;
 using WInterop.Windows.Native;
 
-namespace WInterop.Direct2d
-{
-    /// <summary>
-    ///  Contains the HWND, pixel size, and presentation options for an ID2D1HwndRenderTarget.
-    ///  [D2D1_HWND_RENDER_TARGET_PROPERTIES]
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public readonly struct WindowRenderTargetProperties
-    {
-        private readonly HWND _hwnd;
-        public readonly SizeU PixelSize;
-        public readonly PresentOptions PresentOptions;
+namespace WInterop.Direct2d;
 
-        public WindowRenderTargetProperties(
-            WindowHandle window,
-            Size pixelSize,
-            PresentOptions options = PresentOptions.None)
-        {
-            _hwnd = window;
-            PixelSize = pixelSize;
-            PresentOptions = options;
-        }
+/// <summary>
+///  Contains the HWND, pixel size, and presentation options for an ID2D1HwndRenderTarget.
+///  [D2D1_HWND_RENDER_TARGET_PROPERTIES]
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+public readonly struct WindowRenderTargetProperties
+{
+    private readonly HWND _hwnd;
+    public readonly SizeU PixelSize;
+    public readonly PresentOptions PresentOptions;
+
+    public WindowRenderTargetProperties(
+        WindowHandle window,
+        Size pixelSize,
+        PresentOptions options = PresentOptions.None)
+    {
+        _hwnd = window;
+        PixelSize = pixelSize;
+        PresentOptions = options;
     }
 }

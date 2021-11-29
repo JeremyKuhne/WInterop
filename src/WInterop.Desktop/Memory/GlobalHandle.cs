@@ -4,24 +4,23 @@
 using System;
 using WInterop.Memory.Native;
 
-namespace WInterop.Memory
+namespace WInterop.Memory;
+
+public struct GlobalHandle : IDisposable
 {
-    public struct GlobalHandle : IDisposable
+    public HGLOBAL HGLOBAL { get; }
+    public ulong Size { get; }
+
+    public GlobalHandle(HGLOBAL handle, ulong size)
     {
-        public HGLOBAL HGLOBAL { get; }
-        public ulong Size { get; }
+        HGLOBAL = handle;
+        Size = size;
+    }
 
-        public GlobalHandle(HGLOBAL handle, ulong size)
-        {
-            HGLOBAL = handle;
-            Size = size;
-        }
+    public GlobalLock Lock => new GlobalLock(this);
 
-        public GlobalLock Lock => new GlobalLock(this);
-
-        public void Dispose()
-        {
-            Memory.GlobalFree(HGLOBAL);
-        }
+    public void Dispose()
+    {
+        Memory.GlobalFree(HGLOBAL);
     }
 }

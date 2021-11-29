@@ -4,20 +4,19 @@
 using WInterop.Handles;
 using WInterop.Storage.Native;
 
-namespace WInterop.Storage
-{
-    /// <summary>
-    ///  Handle for enumerating volumes.
-    /// </summary>
-    public class FindVolumeHandle : HandleZeroOrMinusOneIsInvalid
-    {
-        public FindVolumeHandle() : base(ownsHandle: true)
-        {
-        }
+namespace WInterop.Storage;
 
-        protected override bool ReleaseHandle()
-        {
-            return StorageImports.FindVolumeClose(handle);
-        }
+/// <summary>
+///  Handle for enumerating volumes.
+/// </summary>
+public class FindVolumeHandle : HandleZeroOrMinusOneIsInvalid
+{
+    public FindVolumeHandle() : base(ownsHandle: true)
+    {
+    }
+
+    protected override bool ReleaseHandle()
+    {
+        return StorageImports.FindVolumeClose(handle);
     }
 }

@@ -4,21 +4,20 @@
 using System;
 using WInterop.Handles;
 
-namespace WInterop.Security
+namespace WInterop.Security;
+
+public class LsaMemoryHandle : HandleZeroIsInvalid
 {
-    public class LsaMemoryHandle : HandleZeroIsInvalid
+    public LsaMemoryHandle() : base(ownsHandle: true) { }
+
+    public LsaMemoryHandle(IntPtr handle, bool ownsHandle = true) : base(ownsHandle)
     {
-        public LsaMemoryHandle() : base(ownsHandle: true) { }
+        SetHandle(handle);
+    }
 
-        public LsaMemoryHandle(IntPtr handle, bool ownsHandle = true) : base(ownsHandle)
-        {
-            SetHandle(handle);
-        }
-
-        protected override bool ReleaseHandle()
-        {
-            Security.LsaFreeMemory(handle);
-            return true;
-        }
+    protected override bool ReleaseHandle()
+    {
+        Security.LsaFreeMemory(handle);
+        return true;
     }
 }

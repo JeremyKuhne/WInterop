@@ -4,16 +4,15 @@
 using System.Drawing;
 using WInterop.Gdi;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Native;
+
+// https://docs.microsoft.com/windows/win32/api/winuser/ns-winuser-windowplacement
+public struct WINDOWPLACEMENT
 {
-    // https://docs.microsoft.com/windows/win32/api/winuser/ns-winuser-windowplacement
-    public struct WINDOWPLACEMENT
-    {
-        public uint length;
-        public uint flags;
-        public ShowWindowCommand showCmd;
-        public Point ptMinPosition;
-        public Point ptMaxPosition;
-        public Rect rcNormalPosition;
-    }
+    public uint length;
+    public uint flags;
+    public ShowWindowCommand showCmd;
+    public Point ptMinPosition;
+    public Point ptMaxPosition;
+    public Rect rcNormalPosition;
 }

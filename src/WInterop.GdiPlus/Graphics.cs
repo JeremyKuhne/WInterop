@@ -6,45 +6,44 @@ using System.Runtime.CompilerServices;
 using WInterop.Gdi;
 using WInterop.GdiPlus.Native;
 
-namespace WInterop.GdiPlus
+namespace WInterop.GdiPlus;
+
+public class Graphics : IDisposable
 {
-    public class Graphics : IDisposable
+    private readonly GpGraphics _gpGraphics;
+
+    public unsafe Graphics(DeviceContext deviceContext)
     {
-        private readonly GpGraphics _gpGraphics;
+        GdiPlus.Init();
+        Unsafe.SkipInit(out GpGraphics gpGraphics);
+        GdiPlusImports.GdipCreateFromHDC(deviceContext, &gpGraphics).ThrowIfFailed();
+        _gpGraphics = gpGraphics;
+    }
 
-        public unsafe Graphics(DeviceContext deviceContext)
+    public unsafe Graphics(Image image)
+    {
+        GpGraphics graphics;
+        GdiPlusImports.GdipGetImageGraphicsContext(image, &graphics).ThrowIfFailed();
+        _gpGraphics = graphics;
+    }
+
+    public static implicit operator GpGraphics(Graphics graphics) => graphics._gpGraphics;
+
+    private void Dispose(bool disposing)
+    {
+        GpStatus status = GdiPlusImports.GdipDeleteGraphics(_gpGraphics);
+
+        if (disposing)
         {
-            GdiPlus.Init();
-            Unsafe.SkipInit(out GpGraphics gpGraphics);
-            GdiPlusImports.GdipCreateFromHDC(deviceContext, &gpGraphics).ThrowIfFailed();
-            _gpGraphics = gpGraphics;
+            status.ThrowIfFailed();
         }
+    }
 
-        public unsafe Graphics(Image image)
-        {
-            GpGraphics graphics;
-            GdiPlusImports.GdipGetImageGraphicsContext(image, &graphics).ThrowIfFailed();
-            _gpGraphics = graphics;
-        }
+    ~Graphics() => Dispose(disposing: false);
 
-        public static implicit operator GpGraphics(Graphics graphics) => graphics._gpGraphics;
-
-        private void Dispose(bool disposing)
-        {
-            GpStatus status = GdiPlusImports.GdipDeleteGraphics(_gpGraphics);
-
-            if (disposing)
-            {
-                status.ThrowIfFailed();
-            }
-        }
-
-        ~Graphics() => Dispose(disposing: false);
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

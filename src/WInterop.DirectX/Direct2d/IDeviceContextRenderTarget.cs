@@ -5,20 +5,19 @@ using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Gdi.Native;
 
-namespace WInterop.Direct2d
-{
-    public interface IDeviceContextRenderTarget : IRenderTarget
-    {
-        void BindDC(
-            HDC deviceContext,
-            Rect subRectangle);
-    }
+namespace WInterop.Direct2d;
 
-    public static class DeviceContextRenderTargetExtensions
+public interface IDeviceContextRenderTarget : IRenderTarget
+{
+    void BindDC(
+        HDC deviceContext,
+        Rect subRectangle);
+}
+
+public static class DeviceContextRenderTargetExtensions
+{
+    public static void BindDC(this IDeviceContextRenderTarget renderTarget, DeviceContext deviceContext, Rectangle subRectangle)
     {
-        public static void BindDC(this IDeviceContextRenderTarget renderTarget, DeviceContext deviceContext, Rectangle subRectangle)
-        {
-            renderTarget.BindDC(deviceContext, subRectangle);
-        }
+        renderTarget.BindDC(deviceContext, subRectangle);
     }
 }

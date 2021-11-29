@@ -4,16 +4,15 @@
 using System;
 using WInterop.Windows;
 
-namespace Windows101
+namespace Windows101;
+
+internal class Program
 {
-    internal class Program
+    [STAThread]
+    private static void Main()
     {
-        [STAThread]
-        private static void Main()
-        {
-            var context = Windows.SetThreadDpiAwarenessContext(DpiAwarenessContext.PerMonitorV2);
-            Windows.CreateMainWindowAndRun(new DrawLines(), windowTitle: "Draw Lines");
-            Windows.CreateMainWindowAndRun(new DrawRectangle(), windowTitle: "Draw Rectangles");
-        }
+        var context = Windows.SetThreadDpiAwarenessContext(DpiAwarenessContext.PerMonitorV2);
+        Windows.CreateMainWindowAndRun(new DrawLines(), windowTitle: "Draw Lines");
+        Windows.CreateMainWindowAndRun(new DrawRectangle(), windowTitle: "Draw Rectangles");
     }
 }

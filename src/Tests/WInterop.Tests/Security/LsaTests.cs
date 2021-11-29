@@ -6,22 +6,21 @@ using System;
 using WInterop.Security;
 using Xunit;
 
-namespace SecurityTests
-{
-    public class LsaTests
-    {
-        [Fact(Skip = "Need to conditionalize on admin access")]
-        public void LsaOpenPolicy_StandardRead()
-        {
-            LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.Read);
-            handle.IsInvalid.Should().BeFalse();
-        }
+namespace SecurityTests;
 
-        [Fact]
-        public void LsaOpenPolicy_GenericRead()
-        {
-            Action action = () => Security.LsaOpenLocalPolicy((PolicyAccessRights)GenericAccessRights.Read);
-            action.Should().Throw<UnauthorizedAccessException>();
-        }
+public class LsaTests
+{
+    [Fact(Skip = "Need to conditionalize on admin access")]
+    public void LsaOpenPolicy_StandardRead()
+    {
+        LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.Read);
+        handle.IsInvalid.Should().BeFalse();
+    }
+
+    [Fact]
+    public void LsaOpenPolicy_GenericRead()
+    {
+        Action action = () => Security.LsaOpenLocalPolicy((PolicyAccessRights)GenericAccessRights.Read);
+        action.Should().Throw<UnauthorizedAccessException>();
     }
 }

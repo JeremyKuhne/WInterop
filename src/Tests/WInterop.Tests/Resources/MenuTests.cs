@@ -5,32 +5,31 @@ using FluentAssertions;
 using WInterop.Windows;
 using Xunit;
 
-namespace ResourceTests
+namespace ResourceTests;
+
+public class Menus
 {
-    public class Menus
+    private static LResult CallDefaultProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
-        private static LResult CallDefaultProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
-        {
-            return window.DefaultWindowProcedure(message, wParam, lParam);
-        }
+        return window.DefaultWindowProcedure(message, wParam, lParam);
+    }
 
-        [Fact]
-        public void CreateMenu()
+    [Fact]
+    public void CreateMenu()
+    {
+        using (MenuHandle menu = Windows.CreateMenu())
         {
-            using (MenuHandle menu = Windows.CreateMenu())
-            {
-                menu.IsInvalid.Should().BeFalse();
-            }
+            menu.IsInvalid.Should().BeFalse();
         }
+    }
 
-        [Fact]
-        public void AppendMenu()
+    [Fact]
+    public void AppendMenu()
+    {
+        using (MenuHandle menu = Windows.CreateMenu())
         {
-            using (MenuHandle menu = Windows.CreateMenu())
-            {
-                menu.IsInvalid.Should().BeFalse();
-                Windows.AppendMenu(menu, "&File", 1000);
-            }
+            menu.IsInvalid.Should().BeFalse();
+            Windows.AppendMenu(menu, "&File", 1000);
         }
     }
 }

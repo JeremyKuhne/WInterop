@@ -3,18 +3,17 @@
 
 using System;
 
-namespace WInterop.Globalization
+namespace WInterop.Globalization;
+
+/// <summary>
+///  [NLSVERSIONINFOEX]
+/// </summary>
+/// <docs>https://docs.microsoft.com/windows/win32/api/winnls/ns-winnls-nlsversioninfoex</docs>
+public struct NlsVersionInfoExtended
 {
-    /// <summary>
-    ///  [NLSVERSIONINFOEX]
-    /// </summary>
-    /// <docs>https://docs.microsoft.com/windows/win32/api/winnls/ns-winnls-nlsversioninfoex</docs>
-    public struct NlsVersionInfoExtended
-    {
-        public uint NLSVersionInfoSize;
-        public uint NLSVersion;
-        public uint DefinedVersion;
-        public uint EffectiveId;
-        public Guid CustomVersion;
-    }
+    public uint NLSVersionInfoSize;
+    public uint NLSVersion;
+    public uint DefinedVersion;
+    public uint EffectiveId;
+    public Guid CustomVersion;
 }

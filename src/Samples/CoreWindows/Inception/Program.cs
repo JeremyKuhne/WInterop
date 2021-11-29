@@ -4,14 +4,13 @@
 using System;
 using WInterop.Windows;
 
-namespace Inception
+namespace Inception;
+
+internal static class Program
 {
-    internal static class Program
+    [STAThread]
+    private static void Main()
     {
-        [STAThread]
-        private static void Main()
-        {
-            Windows.CreateMainWindowAndRun(new Inception(), "Inception");
-        }
+        Windows.CreateMainWindowAndRun(new Inception(), "Inception");
     }
 }

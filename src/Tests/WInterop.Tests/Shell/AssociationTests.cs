@@ -8,153 +8,152 @@ using WInterop.Errors;
 using WInterop.Shell;
 using Xunit;
 
-namespace ShellTests
+namespace ShellTests;
+
+public class AssociationTests
 {
-    public class AssociationTests
+    [Fact]
+    public void GetTextAssociation_ProgID()
     {
-        [Fact]
-        public void GetTextAssociation_ProgID()
-        {
-            string value = ShellMethods.AssocQueryString(AssociationFlags.NoUserSettings, AssociationString.ProgId, ".txt", null);
+        string value = ShellMethods.AssocQueryString(AssociationFlags.NoUserSettings, AssociationString.ProgId, ".txt", null);
 
-            if (!string.Equals(value, "txtfile"))
-            {
-                // Example: Applications\notepad++.exe
-                value.Should().StartWith("Applications\\").And.EndWith(".exe");
-            }
+        if (!string.Equals(value, "txtfile"))
+        {
+            // Example: Applications\notepad++.exe
+            value.Should().StartWith("Applications\\").And.EndWith(".exe");
         }
+    }
 
-        [Fact]
-        public void GetTextAssociation_OpenCommand()
+    [Fact]
+    public void GetTextAssociation_OpenCommand()
+    {
+        string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.Command, ".txt", "open");
+
+        // Example: "C:\Program Files (x86)\Notepad++\notepad++.exe" "%1"
+        value.Should().Contain("%1");
+    }
+
+    [Fact]
+    public void GetTextAssociation_OpenCommandExecutable()
+    {
+        string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.Executable, ".txt", "open");
+        // Example: C:\Program Files (x86)\Notepad++\notepad++.exe
+        value.Should().EndWithEquivalent(".exe");
+    }
+
+    [Fact]
+    public void GetTextAssociation_FriendlyDocName()
+    {
+        string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.FriendlyDocName, ".txt", null);
+        value.Should().BeOneOf("TXT File", "Text Document");
+    }
+
+    [Fact]
+    public void GetTextAssociation_FriendlyAppName()
+    {
+        string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.FriendlyAppName, ".txt", null);
+        // Example: Notepad++ : a free (GNU) source code editor
+        value.Should().StartWith("Notepad");
+    }
+
+    [Fact]
+    public void GetTextAssociation_AppId()
+    {
+        Action action = () => ShellMethods.AssocQueryString(AssociationFlags.NoUserSettings, AssociationString.AppId, ".txt", null);
+        // No application is associated with the specified file for this operation.
+        action.Should().Throw<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x80070483));
+    }
+
+    [Fact]
+    public void GetTextAssociation_ContentType()
+    {
+        string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.ContentType, ".txt", null);
+        value.Should().Be(@"text/plain");
+    }
+
+    [Fact]
+    public void GetTextAssociation_QuickTip()
+    {
+        string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.QuickTip, ".txt", null);
+        value.Should().Be("prop:System.ItemTypeText;System.Size;System.DateModified");
+
+        IPropertyDescriptionList list = ShellMethods.GetPropertyDescriptionListFromString(value);
+        list.GetCount().Should().Be(3);
+        IPropertyDescription desc = list.GetAt(0, new Guid(InterfaceIds.IID_IPropertyDescription));
+        desc.GetCanonicalName().Should().Be("System.ItemTypeText");
+        desc = list.GetAt(1, new Guid(InterfaceIds.IID_IPropertyDescription));
+        desc.GetCanonicalName().Should().Be("System.Size");
+        desc = list.GetAt(2, new Guid(InterfaceIds.IID_IPropertyDescription));
+        desc.GetCanonicalName().Should().Be("System.DateModified");
+    }
+
+    [Fact]
+    public void GetTextAssociation_AppKey()
+    {
+        RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.App, ".txt", null);
+
+        string name = Registry.QueryKeyName(key);
+
+        if (name.StartsWith(@"\REGISTRY\MACHINE"))
         {
-            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.Command, ".txt", "open");
-
-            // Example: "C:\Program Files (x86)\Notepad++\notepad++.exe" "%1"
-            value.Should().Contain("%1");
+            // No user overrides.
+            name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\Applications\notepad.exe");
         }
-
-        [Fact]
-        public void GetTextAssociation_OpenCommandExecutable()
+        else
         {
-            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.Executable, ".txt", "open");
-            // Example: C:\Program Files (x86)\Notepad++\notepad++.exe
-            value.Should().EndWithEquivalent(".exe");
-        }
-
-        [Fact]
-        public void GetTextAssociation_FriendlyDocName()
-        {
-            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.FriendlyDocName, ".txt", null);
-            value.Should().BeOneOf("TXT File", "Text Document");
-        }
-
-        [Fact]
-        public void GetTextAssociation_FriendlyAppName()
-        {
-            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.FriendlyAppName, ".txt", null);
-            // Example: Notepad++ : a free (GNU) source code editor
-            value.Should().StartWith("Notepad");
-        }
-
-        [Fact]
-        public void GetTextAssociation_AppId()
-        {
-            Action action = () => ShellMethods.AssocQueryString(AssociationFlags.NoUserSettings, AssociationString.AppId, ".txt", null);
-            // No application is associated with the specified file for this operation.
-            action.Should().Throw<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x80070483));
-        }
-
-        [Fact]
-        public void GetTextAssociation_ContentType()
-        {
-            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.ContentType, ".txt", null);
-            value.Should().Be(@"text/plain");
-        }
-
-        [Fact]
-        public void GetTextAssociation_QuickTip()
-        {
-            string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.QuickTip, ".txt", null);
-            value.Should().Be("prop:System.ItemTypeText;System.Size;System.DateModified");
-
-            IPropertyDescriptionList list = ShellMethods.GetPropertyDescriptionListFromString(value);
-            list.GetCount().Should().Be(3);
-            IPropertyDescription desc = list.GetAt(0, new Guid(InterfaceIds.IID_IPropertyDescription));
-            desc.GetCanonicalName().Should().Be("System.ItemTypeText");
-            desc = list.GetAt(1, new Guid(InterfaceIds.IID_IPropertyDescription));
-            desc.GetCanonicalName().Should().Be("System.Size");
-            desc = list.GetAt(2, new Guid(InterfaceIds.IID_IPropertyDescription));
-            desc.GetCanonicalName().Should().Be("System.DateModified");
-        }
-
-        [Fact]
-        public void GetTextAssociation_AppKey()
-        {
-            RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.App, ".txt", null);
-
-            string name = Registry.QueryKeyName(key);
-
-            if (name.StartsWith(@"\REGISTRY\MACHINE"))
-            {
-                // No user overrides.
-                name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\Applications\notepad.exe");
-            }
-            else
-            {
-                // Has a user setting, should be something like:
-                // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
-                name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
-            }
-        }
-
-        [Fact]
-        public void GetTextAssociation_BaseClassKey()
-        {
-            RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.BaseClass, ".txt", null);
-
-            string name = Registry.QueryKeyName(key);
-
-            // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\*
-            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(@"_Classes\*");
-        }
-
-        [Fact]
-        public void GetTextAssociation_ClassKey()
-        {
-            RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.Class, ".txt", null);
-
+            // Has a user setting, should be something like:
             // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
-            string name = Registry.QueryKeyName(key);
-
-            if (name.StartsWith(@"\REGISTRY\MACHINE"))
-            {
-                // No user overrides.
-                name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\txtfile");
-            }
-            else
-            {
-                // Has a user setting, should be something like:
-                name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
-            }
+            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
         }
+    }
 
-        [Fact]
-        public void GetTextAssociation_ShellExecClassKey()
+    [Fact]
+    public void GetTextAssociation_BaseClassKey()
+    {
+        RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.BaseClass, ".txt", null);
+
+        string name = Registry.QueryKeyName(key);
+
+        // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\*
+        name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(@"_Classes\*");
+    }
+
+    [Fact]
+    public void GetTextAssociation_ClassKey()
+    {
+        RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.Class, ".txt", null);
+
+        // \REGISTRY\USER\S-1-5-21-2477298427-4111324449-2912218533-1001_Classes\Applications\notepad++.exe
+        string name = Registry.QueryKeyName(key);
+
+        if (name.StartsWith(@"\REGISTRY\MACHINE"))
         {
-            RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.ShellExecClass, ".txt", null);
+            // No user overrides.
+            name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\txtfile");
+        }
+        else
+        {
+            // Has a user setting, should be something like:
+            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+        }
+    }
 
-            string name = Registry.QueryKeyName(key);
+    [Fact]
+    public void GetTextAssociation_ShellExecClassKey()
+    {
+        RegistryKeyHandle key = ShellMethods.AssocQueryKey(AssociationFlags.None, AssociationKey.ShellExecClass, ".txt", null);
 
-            if (name.StartsWith(@"\REGISTRY\MACHINE"))
-            {
-                // No user overrides.
-                name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\txtfile");
-            }
-            else
-            {
-                // Has a user setting, should be something like:
-                name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
-            }
+        string name = Registry.QueryKeyName(key);
+
+        if (name.StartsWith(@"\REGISTRY\MACHINE"))
+        {
+            // No user overrides.
+            name.Should().StartWith(@"\REGISTRY\MACHINE\SOFTWARE\Classes\txtfile");
+        }
+        else
+        {
+            // Has a user setting, should be something like:
+            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
         }
     }
 }

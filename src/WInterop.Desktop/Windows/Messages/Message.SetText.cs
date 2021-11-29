@@ -4,18 +4,17 @@
 using System;
 using WInterop.Support;
 
-namespace WInterop.Windows
-{
-    public static partial class Message
-    {
-        public readonly ref struct SetText
-        {
-            public ReadOnlySpan<char> Text { get; }
+namespace WInterop.Windows;
 
-            public unsafe SetText(LParam lParam)
-            {
-                Text = Strings.GetSpanFromNullTerminatedBuffer((char*)lParam);
-            }
+public static partial class Message
+{
+    public readonly ref struct SetText
+    {
+        public ReadOnlySpan<char> Text { get; }
+
+        public unsafe SetText(LParam lParam)
+        {
+            Text = Strings.GetSpanFromNullTerminatedBuffer((char*)lParam);
         }
     }
 }

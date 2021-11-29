@@ -3,15 +3,14 @@
 
 using System;
 
-namespace WInterop.Shell
+namespace WInterop.Shell;
+
+/// <summary>
+///  [PROPERTYKEY]
+/// </summary>
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb773381.aspx
+public struct PropertyKey
 {
-    /// <summary>
-    ///  [PROPERTYKEY]
-    /// </summary>
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb773381.aspx
-    public struct PropertyKey
-    {
-        public Guid FormatId;
-        public uint PropertyId;
-    }
+    public Guid FormatId;
+    public uint PropertyId;
 }

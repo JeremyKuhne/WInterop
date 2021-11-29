@@ -3,12 +3,11 @@
 
 using System.Drawing;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public class EmptyLayout : ILayoutHandler
 {
-    public class EmptyLayout : ILayoutHandler
-    {
-        public void Layout(Rectangle bounds) { }
-        private EmptyLayout() { }
-        public static EmptyLayout Instance { get; } = new EmptyLayout();
-    }
+    public void Layout(Rectangle bounds) { }
+    private EmptyLayout() { }
+    public static EmptyLayout Instance { get; } = new EmptyLayout();
 }

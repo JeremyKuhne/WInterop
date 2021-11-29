@@ -3,17 +3,16 @@
 
 using System;
 
-namespace WInterop.Handles
-{
-    /// <summary>
-    ///  Wrapper for an event handle
-    /// </summary>
-    public class EventHandle : CloseHandle
-    {
-        public EventHandle() : base() { }
+namespace WInterop.Handles;
 
-        public EventHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
-        {
-        }
+/// <summary>
+///  Wrapper for an event handle
+/// </summary>
+public class EventHandle : CloseHandle
+{
+    public EventHandle() : base() { }
+
+    public EventHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
+    {
     }
 }

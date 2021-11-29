@@ -6,14 +6,13 @@ using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using Xunit;
 
-namespace GdiTests
+namespace GdiTests;
+
+public class DISPLAY_DEVICE_Tests
 {
-    public class DISPLAY_DEVICE_Tests
+    [Fact]
+    public void MarshalSize()
     {
-        [Fact]
-        public void MarshalSize()
-        {
-            Marshal.SizeOf<DisplayDevice>().Should().Be(840);
-        }
+        Marshal.SizeOf<DisplayDevice>().Should().Be(840);
     }
 }

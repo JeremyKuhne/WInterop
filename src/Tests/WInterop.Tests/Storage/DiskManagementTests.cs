@@ -6,28 +6,27 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace StorageTests
-{
-    public partial class DiskTests
-    {
-        [Fact]
-        public void GetDiskFreeSpaceExtendedForCurrentDrive()
-        {
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
-            {
-                var freeSpace = Storage.GetDiskFreeSpaceExtended(null);
-                freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfBytes);
-                freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfFreeBytes);
-            });
-        }
+namespace StorageTests;
 
-        [Fact]
-        public void GetDiskFreeSpaceForTempDirectory()
+public partial class DiskTests
+{
+    [Fact]
+    public void GetDiskFreeSpaceExtendedForCurrentDrive()
+    {
+        StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
         {
-            string tempPath = Storage.GetTempPath();
-            var freeSpace = Storage.GetDiskFreeSpaceExtended(tempPath);
+            var freeSpace = Storage.GetDiskFreeSpaceExtended(null);
             freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfBytes);
             freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfFreeBytes);
-        }
+        });
+    }
+
+    [Fact]
+    public void GetDiskFreeSpaceForTempDirectory()
+    {
+        string tempPath = Storage.GetTempPath();
+        var freeSpace = Storage.GetDiskFreeSpaceExtended(tempPath);
+        freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfBytes);
+        freeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfFreeBytes);
     }
 }

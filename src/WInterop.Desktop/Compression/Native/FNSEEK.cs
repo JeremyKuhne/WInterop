@@ -5,20 +5,19 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Storage;
 
-namespace WInterop.Compression.Native
-{
-    // https://msdn.microsoft.com/en-us/library/ff797948.aspx
+namespace WInterop.Compression.Native;
 
-    /// <summary>
-    ///  Seek callback for an FDI context.
-    /// </summary>
-    /// <param name="hf">Application defined handle to the open file.</param>
-    /// <param name="dist">Number of bytes to move the file pointer.</param>
-    /// <param name="seektype">Starting point for seeking.</param>
-    /// <returns>Offset from the beginning of the file or -1 for an error.</returns>
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int FNSEEK(
-        IntPtr hf,
-        int dist,
-        MoveMethod seektype);
-}
+// https://msdn.microsoft.com/en-us/library/ff797948.aspx
+
+/// <summary>
+///  Seek callback for an FDI context.
+/// </summary>
+/// <param name="hf">Application defined handle to the open file.</param>
+/// <param name="dist">Number of bytes to move the file pointer.</param>
+/// <param name="seektype">Starting point for seeking.</param>
+/// <returns>Offset from the beginning of the file or -1 for an error.</returns>
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate int FNSEEK(
+    IntPtr hf,
+    int dist,
+    MoveMethod seektype);

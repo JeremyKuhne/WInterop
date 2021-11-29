@@ -5,153 +5,152 @@ using Xunit;
 using FluentAssertions;
 using WInterop.Registry;
 
-namespace RegistryTests
+namespace RegistryTests;
+
+public class Basic
 {
-    public class Basic
+    [Fact]
+    public void OpenUserKey()
     {
-        [Fact]
-        public void OpenUserKey()
+        using (var key = Registry.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
         {
-            using (var key = Registry.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
-            {
-                key.IsInvalid.Should().BeFalse();
-            }
+            key.IsInvalid.Should().BeFalse();
         }
+    }
 
-        [Fact]
-        public void OpenUserSubKey()
+    [Fact]
+    public void OpenUserSubKey()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
         {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
-            {
-                key.IsInvalid.Should().BeFalse();
-            }
+            key.IsInvalid.Should().BeFalse();
         }
+    }
 
-        [Fact]
-        public void IsLocalHandle()
+    [Fact]
+    public void IsLocalHandle()
+    {
+        using (var key = Registry.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
         {
-            using (var key = Registry.OpenKey(RegistryKeyHandle.HKEY_CURRENT_USER, null))
-            {
-                key.IsLocalKey.Should().BeFalse();
-            }
+            key.IsLocalKey.Should().BeFalse();
         }
+    }
 
-        [Fact]
-        public void IsSpecialKey()
+    [Fact]
+    public void IsSpecialKey()
+    {
+        using (var key = Registry.OpenKey(RegistryKeyHandle.HKEY_CLASSES_ROOT, null))
         {
-            using (var key = Registry.OpenKey(RegistryKeyHandle.HKEY_CLASSES_ROOT, null))
-            {
-                key.IsInvalid.Should().BeFalse();
-                key.IsSpecialKey.Should().BeFalse();
-            }
+            key.IsInvalid.Should().BeFalse();
+            key.IsSpecialKey.Should().BeFalse();
         }
+    }
 
-        [Fact]
-        public void QueryValueExists()
+    [Fact]
+    public void QueryValueExists()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
         {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
-            {
-                Registry.QueryValueExists(key, "BuildNumber").Should().BeTrue();
-            }
+            Registry.QueryValueExists(key, "BuildNumber").Should().BeTrue();
         }
+    }
 
-        [Fact]
-        public void QueryValueExists_False()
+    [Fact]
+    public void QueryValueExists_False()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
         {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
-            {
-                Registry.QueryValueExists(key, "Fizzlewig").Should().BeFalse();
-            }
+            Registry.QueryValueExists(key, "Fizzlewig").Should().BeFalse();
         }
+    }
 
-        [Fact]
-        public void QueryValueType()
+    [Fact]
+    public void QueryValueType()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
         {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
-            {
-                Registry.QueryValueType(key, "BuildNumber").Should().Be(RegistryValueType.Unsigned32BitInteger);
-            }
+            Registry.QueryValueType(key, "BuildNumber").Should().Be(RegistryValueType.Unsigned32BitInteger);
         }
+    }
 
-        [Fact]
-        public void GetValueNames()
+    [Fact]
+    public void GetValueNames()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
         {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
-            {
-                var names = Registry.GetValueNames(key);
-                names.Should().Contain("BuildNumber");
-            }
+            var names = Registry.GetValueNames(key);
+            names.Should().Contain("BuildNumber");
         }
+    }
 
-        [Fact]
-        public void GetValueNames_PerformanceData()
+    [Fact]
+    public void GetValueNames_PerformanceData()
+    {
+        var names = Registry.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_DATA);
+        names.Should().ContainInOrder("Global", "Costly");
+    }
+
+    [Fact]
+    public void GetValueNames_PerformanceText()
+    {
+        var names = Registry.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_TEXT);
+        names.Should().ContainInOrder("Counter", "Help");
+    }
+
+    [Fact]
+    public void GetValueNames_PerformanceNlsText()
+    {
+        var names = Registry.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_NLSTEXT);
+        names.Should().ContainInOrder("Counter", "Help");
+    }
+
+    [Fact]
+    public void GetValueNamesDirect()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
         {
-            var names = Registry.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_DATA);
-            names.Should().ContainInOrder("Global", "Costly");
+            var names = Registry.GetValueNamesDirect(key);
+            names.Should().Contain("BuildNumber");
         }
+    }
 
-        [Fact]
-        public void GetValueNames_PerformanceText()
+    [Fact]
+    public void GetValueDataDirect()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
         {
-            var names = Registry.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_TEXT);
-            names.Should().ContainInOrder("Counter", "Help");
+            var data = Registry.GetValueDataDirect(key);
+            data.Should().NotBeEmpty();
         }
+    }
 
-        [Fact]
-        public void GetValueNames_PerformanceNlsText()
+    [Fact]
+    public void QueryValue_Uint()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
         {
-            var names = Registry.GetValueNames(RegistryKeyHandle.HKEY_PERFORMANCE_NLSTEXT);
-            names.Should().ContainInOrder("Counter", "Help");
+            var buildNumber = Registry.QueryValue(key, "BuildNumber");
+            buildNumber.Should().BeOfType<uint>();
         }
+    }
 
-        [Fact]
-        public void GetValueNamesDirect()
+    [Fact]
+    public void QueryValue_String()
+    {
+        using (var key = Registry.OpenKey(
+            RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
         {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
-            {
-                var names = Registry.GetValueNamesDirect(key);
-                names.Should().Contain("BuildNumber");
-            }
-        }
-
-        [Fact]
-        public void GetValueDataDirect()
-        {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
-            {
-                var data = Registry.GetValueDataDirect(key);
-                data.Should().NotBeEmpty();
-            }
-        }
-
-        [Fact]
-        public void QueryValue_Uint()
-        {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_CURRENT_USER, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
-            {
-                var buildNumber = Registry.QueryValue(key, "BuildNumber");
-                buildNumber.Should().BeOfType<uint>();
-            }
-        }
-
-        [Fact]
-        public void QueryValue_String()
-        {
-            using (var key = Registry.OpenKey(
-                RegistryKeyHandle.HKEY_LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
-            {
-                var productName = Registry.QueryValue(key, "ProductName");
-                productName.Should().BeOfType<string>();
-                ((string)productName).Should().StartWith("Windows");
-            }
+            var productName = Registry.QueryValue(key, "ProductName");
+            productName.Should().BeOfType<string>();
+            ((string)productName).Should().StartWith("Windows");
         }
     }
 }

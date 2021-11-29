@@ -3,25 +3,24 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Memory
+namespace WInterop.Memory;
+
+/// <summary>
+///  [PROCESS_MEMORY_COUNTERS_EX]
+/// </summary>
+/// <docs>https://docs.microsoft.com/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex</docs>
+[StructLayout(LayoutKind.Sequential)]
+public struct ProcessMemoryCounters
 {
-    /// <summary>
-    ///  [PROCESS_MEMORY_COUNTERS_EX]
-    /// </summary>
-    /// <docs>https://docs.microsoft.com/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex</docs>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ProcessMemoryCounters
-    {
-        public uint StructSize;
-        public uint PageFaultCount;
-        public nuint PeakWorkingSetSize;
-        public nuint WorkingSetSize;
-        public nuint QuotaPeakPagedPoolUsage;
-        public nuint QuotaPagedPoolUsage;
-        public nuint QuotaPeakNonPagedPoolUsage;
-        public nuint QuotaNonPagedPoolUsage;
-        public nuint PagefileUsage;
-        public nuint PeakPagefileUsage;
-        public nuint PrivateUsage;
-    }
+    public uint StructSize;
+    public uint PageFaultCount;
+    public nuint PeakWorkingSetSize;
+    public nuint WorkingSetSize;
+    public nuint QuotaPeakPagedPoolUsage;
+    public nuint QuotaPagedPoolUsage;
+    public nuint QuotaPeakNonPagedPoolUsage;
+    public nuint QuotaNonPagedPoolUsage;
+    public nuint PagefileUsage;
+    public nuint PeakPagefileUsage;
+    public nuint PrivateUsage;
 }

@@ -4,14 +4,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Devices
+namespace WInterop.Devices;
+
+// https://msdn.microsoft.com/en-us/library/windows/hardware/ff562264.aspx
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public struct MOUNTDEV_UNIQUE_ID
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562264.aspx
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct MOUNTDEV_UNIQUE_ID
-    {
-        public ushort UniqueIdLength;
-        private byte _UniqueId;
-        public ReadOnlySpan<byte> UniqueId => TrailingArray<byte>.GetBuffer(in _UniqueId, UniqueIdLength);
-    }
+    public ushort UniqueIdLength;
+    private byte _UniqueId;
+    public ReadOnlySpan<byte> UniqueId => TrailingArray<byte>.GetBuffer(in _UniqueId, UniqueIdLength);
 }

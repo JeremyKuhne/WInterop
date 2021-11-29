@@ -3,29 +3,28 @@
 
 using System;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+/// <summary>
+///  Whether or not the characters in a font have a fixed or variable width (pitch).
+/// </summary>
+[Flags]
+public enum FontPitch : byte
 {
+    // https://msdn.microsoft.com/en-us/library/cc250403.aspx
+
     /// <summary>
-    ///  Whether or not the characters in a font have a fixed or variable width (pitch).
+    ///  Default pitch. (DEFAULT_PITCH)
     /// </summary>
-    [Flags]
-    public enum FontPitch : byte
-    {
-        // https://msdn.microsoft.com/en-us/library/cc250403.aspx
+    Default = 0x00,
 
-        /// <summary>
-        ///  Default pitch. (DEFAULT_PITCH)
-        /// </summary>
-        Default = 0x00,
+    /// <summary>
+    ///  The font is fixed. (FIXED_PITCH)
+    /// </summary>
+    FixedPitch = 0x01,
 
-        /// <summary>
-        ///  The font is fixed. (FIXED_PITCH)
-        /// </summary>
-        FixedPitch = 0x01,
-
-        /// <summary>
-        ///  The width is proportional. (VARIABLE_PITCH)
-        /// </summary>
-        VariablePitch = 0x02
-    }
+    /// <summary>
+    ///  The width is proportional. (VARIABLE_PITCH)
+    /// </summary>
+    VariablePitch = 0x02
 }

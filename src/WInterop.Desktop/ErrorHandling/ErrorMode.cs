@@ -3,29 +3,28 @@
 
 using System;
 
-namespace WInterop.Errors
+namespace WInterop.Errors;
+
+[Flags]
+public enum ErrorMode : uint
 {
-    [Flags]
-    public enum ErrorMode : uint
-    {
-        /// <summary>
-        ///  The system does not display the critical-error-handler message box. Instead, the system sends the error to the calling process.
-        /// </summary>
-        SEM_FAILCRITICALERRORS = 0x0001,
+    /// <summary>
+    ///  The system does not display the critical-error-handler message box. Instead, the system sends the error to the calling process.
+    /// </summary>
+    SEM_FAILCRITICALERRORS = 0x0001,
 
-        /// <summary>
-        ///  The system does not display the Windows Error Reporting dialog.
-        /// </summary>
-        SEM_NOGPFAULTERRORBOX = 0x0002,
+    /// <summary>
+    ///  The system does not display the Windows Error Reporting dialog.
+    /// </summary>
+    SEM_NOGPFAULTERRORBOX = 0x0002,
 
-        /// <summary>
-        ///  The system automatically fixes memory alignment faults and makes them invisible to the application. It does this for the calling process and any descendant processes.
-        /// </summary>
-        SEM_NOALIGNMENTFAULTEXCEPT = 0x0004,
+    /// <summary>
+    ///  The system automatically fixes memory alignment faults and makes them invisible to the application. It does this for the calling process and any descendant processes.
+    /// </summary>
+    SEM_NOALIGNMENTFAULTEXCEPT = 0x0004,
 
-        /// <summary>
-        ///  The system does not display a message box when it fails to find a file. Instead, the error is returned to the calling process.
-        /// </summary>
-        SEM_NOOPENFILEERRORBOX = 0x8000
-    }
+    /// <summary>
+    ///  The system does not display a message box when it fails to find a file. Instead, the error is returned to the calling process.
+    /// </summary>
+    SEM_NOOPENFILEERRORBOX = 0x8000
 }

@@ -4,15 +4,14 @@
 using System;
 using WInterop.Errors;
 
-namespace WInterop.Com.Native
+namespace WInterop.Com.Native;
+
+public unsafe partial struct IUnknown
 {
-    public unsafe partial struct IUnknown
+    public unsafe struct VTable
     {
-        public unsafe struct VTable
-        {
-            public delegate* unmanaged<void*, Guid*, void**, HResult> QueryInterface;
-            public delegate* unmanaged<void*, uint> AddRef;
-            public delegate* unmanaged<void*, uint> Release;
-        }
+        public delegate* unmanaged<void*, Guid*, void**, HResult> QueryInterface;
+        public delegate* unmanaged<void*, uint> AddRef;
+        public delegate* unmanaged<void*, uint> Release;
     }
 }

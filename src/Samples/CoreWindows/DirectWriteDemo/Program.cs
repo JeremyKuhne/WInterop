@@ -4,15 +4,14 @@
 using System;
 using WInterop.Windows;
 
-namespace DirectWriteDemo
+namespace DirectWriteDemo;
+
+internal static class Program
 {
-    internal static class Program
+    [STAThread]
+    private static void Main()
     {
-        [STAThread]
-        private static void Main()
-        {
-            Windows.CreateMainWindowAndRun(new HelloWorld(), "DirectWrite Hello World");
-            Windows.CreateMainWindowAndRun(new CustomText(), "Custom Text Rendering");
-        }
+        Windows.CreateMainWindowAndRun(new HelloWorld(), "DirectWrite Hello World");
+        Windows.CreateMainWindowAndRun(new CustomText(), "Custom Text Rendering");
     }
 }

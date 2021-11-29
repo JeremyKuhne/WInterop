@@ -6,19 +6,18 @@ using Tests.Support;
 using WInterop.Storage;
 using Xunit;
 
-namespace HandlesTests
+namespace HandlesTests;
+
+public partial class Methods
 {
-    public partial class Methods
+    [Fact]
+    public void CanCreateHandleToMountPointManager()
     {
-        [Fact]
-        public void CanCreateHandleToMountPointManager()
+        StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
         {
-            StoreHelper.ValidateStoreGetsUnauthorizedAccess(() =>
-            {
-                using var mountPointManager = Storage.CreateFile(
-                    @"\\.\MountPointManager", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite, AllFileAttributes.Normal);
-                mountPointManager.IsInvalid.Should().BeFalse();
-            });
-        }
+            using var mountPointManager = Storage.CreateFile(
+                @"\\.\MountPointManager", CreationDisposition.OpenExisting, 0, ShareModes.ReadWrite, AllFileAttributes.Normal);
+            mountPointManager.IsInvalid.Should().BeFalse();
+        });
     }
 }

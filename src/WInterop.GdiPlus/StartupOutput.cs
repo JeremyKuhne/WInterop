@@ -3,12 +3,11 @@
 
 using System;
 
-namespace WInterop.GdiPlus
+namespace WInterop.GdiPlus;
+
+// https://msdn.microsoft.com/en-us/library/ms534068.aspx
+public struct StartupOutput
 {
-    // https://msdn.microsoft.com/en-us/library/ms534068.aspx
-    public struct StartupOutput
-    {
-        public IntPtr NotificationHook;
-        public IntPtr NotificationUnhook;
-    }
+    public IntPtr NotificationHook;
+    public IntPtr NotificationUnhook;
 }

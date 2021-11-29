@@ -3,27 +3,26 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Com.Native
+namespace WInterop.Com.Native;
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public unsafe struct VARDESC
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct VARDESC
+    public MemberId memid;
+    public char* lpstrSchema;
+    public UnionType Union;
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct UnionType
     {
-        public MemberId memid;
-        public char* lpstrSchema;
-        public UnionType Union;
+        [FieldOffset(0)]
+        public uint oInst;
 
-        [StructLayout(LayoutKind.Explicit)]
-        public struct UnionType
-        {
-            [FieldOffset(0)]
-            public uint oInst;
-
-            [FieldOffset(0)]
-            public VARIANT* lpvarValue;
-        }
-
-        public ELEMDESC elemdescVar;
-        public VariableFlags wVarFlags;
-        public VariableKind varkind;
+        [FieldOffset(0)]
+        public VARIANT* lpvarValue;
     }
+
+    public ELEMDESC elemdescVar;
+    public VariableFlags wVarFlags;
+    public VariableKind varkind;
 }

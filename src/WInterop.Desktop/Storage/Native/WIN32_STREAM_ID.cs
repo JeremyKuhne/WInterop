@@ -4,29 +4,28 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Native;
+
+/// <summary>
+/// <a href="https://docs.microsoft.com/en-us/windows/desktop/api/winbase/ns-winbase-_win32_stream_id">WIN32_STREAM_ID</a> structure.
+///  See <a href="https://msdn.microsoft.com/en-us/library/dd303907.aspx">[MS-BKUP]</a> specification.
+/// </summary>
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public struct WIN32_STREAM_ID
 {
+    public BackupStreamType dwStreamId;
+    public StreamAttributes dwStreamAttributes;
+
     /// <summary>
-    /// <a href="https://docs.microsoft.com/en-us/windows/desktop/api/winbase/ns-winbase-_win32_stream_id">WIN32_STREAM_ID</a> structure.
-    ///  See <a href="https://msdn.microsoft.com/en-us/library/dd303907.aspx">[MS-BKUP]</a> specification.
+    ///  Data size in bytes
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct WIN32_STREAM_ID
-    {
-        public BackupStreamType dwStreamId;
-        public StreamAttributes dwStreamAttributes;
+    public long Size;
 
-        /// <summary>
-        ///  Data size in bytes
-        /// </summary>
-        public long Size;
+    /// <summary>
+    ///  Stream name size, in bytes.
+    /// </summary>
+    public uint dwStreamNameSize;
 
-        /// <summary>
-        ///  Stream name size, in bytes.
-        /// </summary>
-        public uint dwStreamNameSize;
-
-        private char _cStreamName;
-        public ReadOnlySpan<char> cStreamName => TrailingArray<char>.GetBufferInBytes(in _cStreamName, dwStreamNameSize);
-    }
+    private char _cStreamName;
+    public ReadOnlySpan<char> cStreamName => TrailingArray<char>.GetBufferInBytes(in _cStreamName, dwStreamNameSize);
 }

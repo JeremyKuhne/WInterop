@@ -3,11 +3,10 @@
 
 using System;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public struct DeferWindowPositionHandle
 {
-    public struct DeferWindowPositionHandle
-    {
-        public IntPtr HDWP;
-        public bool IsValid => HDWP != IntPtr.Zero && HDWP != (IntPtr)(-1);
-    }
+    public IntPtr HDWP;
+    public bool IsValid => HDWP != IntPtr.Zero && HDWP != (IntPtr)(-1);
 }

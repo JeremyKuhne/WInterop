@@ -4,18 +4,17 @@
 using System;
 using WInterop.Globalization;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+/// <summary>
+///  [TLIBATTR]
+/// </summary>
+public struct TypeLibraryAttributes
 {
-    /// <summary>
-    ///  [TLIBATTR]
-    /// </summary>
-    public struct TypeLibraryAttributes
-    {
-        public Guid Guid;
-        public LocaleId LocaleId;
-        public SystemKind SystemKind;
-        public ushort MajorVerNum;
-        public ushort MinorVerNum;
-        public LibraryFlags LibraryFlags;
-    }
+    public Guid Guid;
+    public LocaleId LocaleId;
+    public SystemKind SystemKind;
+    public ushort MajorVerNum;
+    public ushort MinorVerNum;
+    public LibraryFlags LibraryFlags;
 }

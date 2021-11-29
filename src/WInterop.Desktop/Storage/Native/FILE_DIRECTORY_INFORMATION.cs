@@ -4,23 +4,22 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/hardware/ff540248.aspx
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public struct FILE_DIRECTORY_INFORMATION
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff540248.aspx
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct FILE_DIRECTORY_INFORMATION
-    {
-        public uint NextEntryOffset;
-        public uint FileIndex;
-        public LongFileTime CreationTime;
-        public LongFileTime LastAccessTime;
-        public LongFileTime LastWriteTime;
-        public LongFileTime ChangeTime;
-        public long EndOfFile;
-        public long AllocationSize;
-        public AllFileAttributes FileAttributes;
-        public uint FileNameLength;
-        private char _FileName;
-        public ReadOnlySpan<char> FileName => TrailingArray<char>.GetBufferInBytes(in _FileName, FileNameLength);
-    }
+    public uint NextEntryOffset;
+    public uint FileIndex;
+    public LongFileTime CreationTime;
+    public LongFileTime LastAccessTime;
+    public LongFileTime LastWriteTime;
+    public LongFileTime ChangeTime;
+    public long EndOfFile;
+    public long AllocationSize;
+    public AllFileAttributes FileAttributes;
+    public uint FileNameLength;
+    private char _FileName;
+    public ReadOnlySpan<char> FileName => TrailingArray<char>.GetBufferInBytes(in _FileName, FileNameLength);
 }

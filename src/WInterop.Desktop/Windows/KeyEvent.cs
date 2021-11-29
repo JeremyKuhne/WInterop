@@ -3,30 +3,29 @@
 
 using System;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ms646271.aspx
+[Flags]
+public enum KeyEvent : uint
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms646271.aspx
-    [Flags]
-    public enum KeyEvent : uint
-    {
-        /// <summary>
-        ///  [KEYEVENTF_EXTENDEDKEY]
-        /// </summary>
-        ExtendedKey = 0x0001,
+    /// <summary>
+    ///  [KEYEVENTF_EXTENDEDKEY]
+    /// </summary>
+    ExtendedKey = 0x0001,
 
-        /// <summary>
-        ///  [KEYEVENTF_KEYUP]
-        /// </summary>
-        KeyUp = 0x0002,
+    /// <summary>
+    ///  [KEYEVENTF_KEYUP]
+    /// </summary>
+    KeyUp = 0x0002,
 
-        /// <summary>
-        ///  [KEYEVENTF_UNICODE]
-        /// </summary>
-        Unicode = 0x0004,
+    /// <summary>
+    ///  [KEYEVENTF_UNICODE]
+    /// </summary>
+    Unicode = 0x0004,
 
-        /// <summary>
-        ///  [KEYEVENTF_SCANCODE]
-        /// </summary>
-        ScanCode = 0x0008
-    }
+    /// <summary>
+    ///  [KEYEVENTF_SCANCODE]
+    /// </summary>
+    ScanCode = 0x0008
 }

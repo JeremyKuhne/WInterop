@@ -3,27 +3,26 @@
 
 using System;
 
-namespace WInterop.Memory
+namespace WInterop.Memory;
+
+public readonly struct GlobalLock : IDisposable
 {
-    public readonly struct GlobalLock : IDisposable
+    public GlobalHandle Handle { get; }
+    public IntPtr Pointer { get; }
+
+    public GlobalLock(GlobalHandle handle)
     {
-        public GlobalHandle Handle { get; }
-        public IntPtr Pointer { get; }
+        Handle = handle;
+        Pointer = Memory.GlobalLock(handle);
+    }
 
-        public GlobalLock(GlobalHandle handle)
-        {
-            Handle = handle;
-            Pointer = Memory.GlobalLock(handle);
-        }
+    public unsafe Span<T> GetSpan<T>() where T : unmanaged
+    {
+        return new Span<T>(Pointer.ToPointer(), (int)Handle.Size / sizeof(T));
+    }
 
-        public unsafe Span<T> GetSpan<T>() where T : unmanaged
-        {
-            return new Span<T>(Pointer.ToPointer(), (int)Handle.Size / sizeof(T));
-        }
-
-        public void Dispose()
-        {
-            Memory.GlobalUnlock(Handle);
-        }
+    public void Dispose()
+    {
+        Memory.GlobalUnlock(Handle);
     }
 }

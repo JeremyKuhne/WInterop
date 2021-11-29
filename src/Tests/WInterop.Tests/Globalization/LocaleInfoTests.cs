@@ -4,20 +4,19 @@
 using Xunit;
 using WInterop.Globalization;
 
-namespace GlobalizationTests
-{
-    public class LocaleInfoTests
-    {
-        [Fact]
-        public void GetIs24Clock_Default()
-        {
-            LocaleInfo.Instance.GetIs24HourClock();
-        }
+namespace GlobalizationTests;
 
-        [Fact]
-        public void GetHoursHaveLeadingZeros_Default()
-        {
-            LocaleInfo.Instance.GetHoursHaveLeadingZeros();
-        }
+public class LocaleInfoTests
+{
+    [Fact]
+    public void GetIs24Clock_Default()
+    {
+        LocaleInfo.Instance.GetIs24HourClock();
+    }
+
+    [Fact]
+    public void GetHoursHaveLeadingZeros_Default()
+    {
+        LocaleInfo.Instance.GetHoursHaveLeadingZeros();
     }
 }

@@ -5,29 +5,28 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+/// <summary>
+///  OLE IEnumOleUndoUnits interface.
+/// </summary>
+/// <see cref="https://docs.microsoft.com/windows/win32/api/ocidl/nn-ocidl-ienumoleundounits"/>
+[ComImport,
+    Guid("B3E7C340-EF97-11CE-9BC9-00AA00608E01"),
+    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface IEnumOleUndoUnits
 {
-    /// <summary>
-    ///  OLE IEnumOleUndoUnits interface.
-    /// </summary>
-    /// <see cref="https://docs.microsoft.com/windows/win32/api/ocidl/nn-ocidl-ienumoleundounits"/>
-    [ComImport,
-        Guid("B3E7C340-EF97-11CE-9BC9-00AA00608E01"),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IEnumOleUndoUnits
-    {
-        [PreserveSig]
-        HResult Next(
-            uint cElt,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]
+    [PreserveSig]
+    HResult Next(
+        uint cElt,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]
             out IOleUndoUnit[] rgElt,
-            out uint pcEltFetched);
+        out uint pcEltFetched);
 
-        [PreserveSig]
-        HResult Skip(uint cElt);
+    [PreserveSig]
+    HResult Skip(uint cElt);
 
-        void Reset();
+    void Reset();
 
-        IEnumOleUndoUnits Clone();
-    }
+    IEnumOleUndoUnits Clone();
 }

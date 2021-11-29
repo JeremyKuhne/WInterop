@@ -7,23 +7,22 @@ using WInterop.SafeString.Native;
 using WInterop.Support.Buffers;
 using Xunit;
 
-namespace SafeStringTests
+namespace SafeStringTests;
+
+public class Basic
 {
-    public class Basic
+    [Theory,
+        InlineData("Fizzle", "FIZZLE"),
+        InlineData("POP", "POP"),
+        InlineData("craCKLE", "CRACKLE"),
+        InlineData("swi\0zzle", "SWI\0ZZLE")]
+    public unsafe void ToUpperInvariant(string value, string expected)
     {
-        [Theory,
-            InlineData("Fizzle", "FIZZLE"),
-            InlineData("POP", "POP"),
-            InlineData("craCKLE", "CRACKLE"),
-            InlineData("swi\0zzle", "SWI\0ZZLE")]
-        public unsafe void ToUpperInvariant(string value, string expected)
+        using (var buffer = new StringBuffer(value))
         {
-            using (var buffer = new StringBuffer(value))
-            {
-                UNICODE_STRING s = buffer.ToUnicodeString();
-                StringMethods.ToUpperInvariant(ref s);
-                s.ToString().Should().Be(expected);
-            }
+            UNICODE_STRING s = buffer.ToUnicodeString();
+            StringMethods.ToUpperInvariant(ref s);
+            s.ToString().Should().Be(expected);
         }
     }
 }

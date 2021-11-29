@@ -4,16 +4,15 @@
 using System.Runtime.InteropServices;
 using WInterop.SystemInformation;
 
-namespace WInterop.SystemInformation.Native
+namespace WInterop.SystemInformation.Native;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct PERF_DATA_HEADER
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct PERF_DATA_HEADER
-    {
-        public uint dwTotalSize;
-        public uint dwNumCounters;
-        public long PerfTimeStamp;
-        public long PerfTime100NSec;
-        public long PerfFreq;
-        public SystemTime SystemTime;
-    }
+    public uint dwTotalSize;
+    public uint dwNumCounters;
+    public long PerfTimeStamp;
+    public long PerfTime100NSec;
+    public long PerfFreq;
+    public SystemTime SystemTime;
 }

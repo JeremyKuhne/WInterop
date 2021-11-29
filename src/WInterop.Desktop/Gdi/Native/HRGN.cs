@@ -3,20 +3,19 @@
 
 using System;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+public readonly struct HRGN
 {
-    public readonly struct HRGN
+    public IntPtr Handle { get; }
+
+    public HRGN(IntPtr handle)
     {
-        public IntPtr Handle { get; }
-
-        public HRGN(IntPtr handle)
-        {
-            Handle = handle;
-        }
-
-        public bool IsInvalid => Handle == IntPtr.Zero;
-
-        public static implicit operator HGDIOBJ(HRGN handle) => new HGDIOBJ(handle.Handle);
-        public static explicit operator HRGN(HGDIOBJ handle) => new HRGN(handle.Handle);
+        Handle = handle;
     }
+
+    public bool IsInvalid => Handle == IntPtr.Zero;
+
+    public static implicit operator HGDIOBJ(HRGN handle) => new HGDIOBJ(handle.Handle);
+    public static explicit operator HRGN(HGDIOBJ handle) => new HRGN(handle.Handle);
 }

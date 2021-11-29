@@ -4,18 +4,17 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Shell
-{
-    [ComImport,
-        Guid(InterfaceIds.IID_IPropertyDescriptionList),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IPropertyDescriptionList
-    {
-        uint GetCount();
+namespace WInterop.Shell;
 
-        [return: MarshalAs(UnmanagedType.Interface)]
-        IPropertyDescription GetAt(
-            uint iElem,
-            [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
-    }
+[ComImport,
+    Guid(InterfaceIds.IID_IPropertyDescriptionList),
+    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface IPropertyDescriptionList
+{
+    uint GetCount();
+
+    [return: MarshalAs(UnmanagedType.Interface)]
+    IPropertyDescription GetAt(
+        uint iElem,
+        [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
 }

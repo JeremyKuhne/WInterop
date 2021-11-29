@@ -3,38 +3,37 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.GdiPlus.EmfPlus
+namespace WInterop.GdiPlus.EmfPlus;
+
+[StructLayout(LayoutKind.Sequential)]
+public readonly ref struct MetafilePlusObject
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public readonly ref struct MetafilePlusObject
+    public const ushort ContinueObjectFlag = 0b1000_0000_0000_0000;
+    public const ushort ObjectTypeMask = 0b0111_1111_0000_0000;
+    public const ushort ObjectIdMask = 0b0000_0000_1111_1111;
+
+    public readonly MetafilePlusRecord Record;
+
+    private readonly byte _data;
+
+    public uint TotalObjectSize => Continued ? Record.DataSize : 0;
+    public unsafe uint DataSize
     {
-        public const ushort ContinueObjectFlag      = 0b1000_0000_0000_0000;
-        public const ushort ObjectTypeMask          = 0b0111_1111_0000_0000;
-        public const ushort ObjectIdMask            = 0b0000_0000_1111_1111;
-
-        public readonly MetafilePlusRecord Record;
-
-        private readonly byte _data;
-
-        public uint TotalObjectSize => Continued ? Record.DataSize : 0;
-        public unsafe uint DataSize
+        get
         {
-            get
+            if (!Continued)
             {
-                if (!Continued)
-                {
-                    return Record.DataSize;
-                }
+                return Record.DataSize;
+            }
 
-                fixed (byte* b = &_data)
-                {
-                    return *(uint*)b;
-                }
+            fixed (byte* b = &_data)
+            {
+                return *(uint*)b;
             }
         }
-
-        public MetafilePlusObjectType ObjectType => (MetafilePlusObjectType)((Record.Flags & ObjectTypeMask) >> 8);
-        public int ObjectId => Record.Flags & ObjectIdMask;
-        public bool Continued => (Record.Flags & ContinueObjectFlag) != 0;
     }
+
+    public MetafilePlusObjectType ObjectType => (MetafilePlusObjectType)((Record.Flags & ObjectTypeMask) >> 8);
+    public int ObjectId => Record.Flags & ObjectIdMask;
+    public bool Continued => (Record.Flags & ContinueObjectFlag) != 0;
 }

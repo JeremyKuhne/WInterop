@@ -4,18 +4,17 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+/// <summary>
+///  OLE IServiceProvider interface.
+/// </summary>
+[ComImport,
+    Guid("6d5140c1-7436-11ce-8034-00aa006009fa"),
+    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface IServiceProvider
 {
-    /// <summary>
-    ///  OLE IServiceProvider interface.
-    /// </summary>
-    [ComImport,
-        Guid("6d5140c1-7436-11ce-8034-00aa006009fa"),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IServiceProvider
-    {
-        object QueryService(
-            ref Guid guidService,
-            ref Guid riid);
-    }
+    object QueryService(
+        ref Guid guidService,
+        ref Guid riid);
 }

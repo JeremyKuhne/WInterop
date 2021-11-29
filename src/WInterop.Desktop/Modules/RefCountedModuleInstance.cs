@@ -4,23 +4,22 @@
 using System;
 using WInterop.Modules.Native;
 
-namespace WInterop.Modules
+namespace WInterop.Modules;
+
+/// <summary>
+///  Use this ModuleHandle when you want to decrement the module ref count when disposed.
+/// </summary>
+public class RefCountedModuleInstance : ModuleInstance
 {
-    /// <summary>
-    ///  Use this ModuleHandle when you want to decrement the module ref count when disposed.
-    /// </summary>
-    public class RefCountedModuleInstance : ModuleInstance
+    public RefCountedModuleInstance() : base(ownsHandle: true) { }
+
+    public RefCountedModuleInstance(IntPtr handle) : base(handle, ownsHandle: true) { }
+
+    protected override bool ReleaseHandle()
     {
-        public RefCountedModuleInstance() : base(ownsHandle: true) { }
-
-        public RefCountedModuleInstance(IntPtr handle) : base(handle, ownsHandle: true) { }
-
-        protected override bool ReleaseHandle()
-        {
-            // Supported in store apps
-            Imports.FreeLibrary(handle);
-            handle = IntPtr.Zero;
-            return true;
-        }
+        // Supported in store apps
+        Imports.FreeLibrary(handle);
+        handle = IntPtr.Zero;
+        return true;
     }
 }

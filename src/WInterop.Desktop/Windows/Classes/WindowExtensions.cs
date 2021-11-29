@@ -7,11 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public static class WindowExtensions
 {
-    public static class WindowExtensions
-    {
-        public static void AddLayoutHandler(this Window window, ILayoutHandler handler)
-            => new LayoutBinder(window, handler);
-    }
+    public static void AddLayoutHandler(this Window window, ILayoutHandler handler)
+        => new LayoutBinder(window, handler);
 }

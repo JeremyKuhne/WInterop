@@ -5,56 +5,55 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+[ComImport,
+    Guid("00020402-0000-0000-C000-000000000046"),
+    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public unsafe interface ITypeLib
 {
-    [ComImport,
-        Guid("00020402-0000-0000-C000-000000000046"),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public unsafe interface ITypeLib
-    {
-        [PreserveSig]
-        uint GetTypeInfoCount();
+    [PreserveSig]
+    uint GetTypeInfoCount();
 
-        // TYPE_E_ELEMENTNOTFOUND if out of range of GetTypeInfoCount
-        [PreserveSig]
-        HResult GetTypeInfo(
-            uint index,
-            out ITypeInfo ppTInfo);
+    // TYPE_E_ELEMENTNOTFOUND if out of range of GetTypeInfoCount
+    [PreserveSig]
+    HResult GetTypeInfo(
+        uint index,
+        out ITypeInfo ppTInfo);
 
-        HResult GetTypeInfoType(
-            uint index,
-            out TypeKind pTKind);
+    HResult GetTypeInfoType(
+        uint index,
+        out TypeKind pTKind);
 
-        HResult GetTypeInfoOfGuid(
-            ref Guid guid,
-            out ITypeInfo ppTinfo);
+    HResult GetTypeInfoOfGuid(
+        ref Guid guid,
+        out ITypeInfo ppTinfo);
 
-        HResult GetLibAttr(
-            TypeLibraryAttributes** ppTLibAttr);
+    HResult GetLibAttr(
+        TypeLibraryAttributes** ppTLibAttr);
 
-        HResult GetTypeComp(
-            out ITypeComp ppTComp);
+    HResult GetTypeComp(
+        out ITypeComp ppTComp);
 
-        HResult GetDocumentation(
-            int index,
-            BasicString* pBstrName,
-            BasicString* pBstrDocString,
-            uint* pdwHelpContext,
-            BasicString* pBstrHelpFile);
+    HResult GetDocumentation(
+        int index,
+        BasicString* pBstrName,
+        BasicString* pBstrDocString,
+        uint* pdwHelpContext,
+        BasicString* pBstrHelpFile);
 
-        HResult IsName(
-            char* szNameBuf,
-            uint lHashVal,
-            out IntBoolean pfName);
+    HResult IsName(
+        char* szNameBuf,
+        uint lHashVal,
+        out IntBoolean pfName);
 
-        HResult FindName(
-            char* szNameBuf,
-            uint lHashVal,
-            IntPtr* ppTInfo,
-            MemberId* rgMemId,
-            ushort* pcFound);
+    HResult FindName(
+        char* szNameBuf,
+        uint lHashVal,
+        IntPtr* ppTInfo,
+        MemberId* rgMemId,
+        ushort* pcFound);
 
-        void ReleaseTLibAttr(
-            TypeLibraryAttributes* pTLibAttr);
-    }
+    void ReleaseTLibAttr(
+        TypeLibraryAttributes* pTLibAttr);
 }

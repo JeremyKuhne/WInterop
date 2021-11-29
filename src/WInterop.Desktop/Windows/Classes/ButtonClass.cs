@@ -4,12 +4,11 @@
 using System;
 using System.Drawing;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public class ButtonClass : WindowClass
 {
-    public class ButtonClass : WindowClass
+    public ButtonClass() : base("Button")
     {
-        public ButtonClass() : base("Button")
-        {
-        }
     }
 }

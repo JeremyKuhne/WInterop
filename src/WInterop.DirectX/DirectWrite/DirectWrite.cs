@@ -5,17 +5,16 @@ using System;
 using WInterop.Errors;
 using WInterop.DirectWrite.Native;
 
-namespace WInterop.DirectWrite
-{
-    public static class DirectWrite
-    {
-        public static WriteFactory CreateFactory(FactoryType factoryType = FactoryType.Shared)
-        {
-            Imports.DWriteCreateFactory(
-                factoryType, new Guid(InterfaceIds.IID_IDWriteFactory), out WriteFactory factory)
-                .ThrowIfFailed();
+namespace WInterop.DirectWrite;
 
-            return factory;
-        }
+public static class DirectWrite
+{
+    public static WriteFactory CreateFactory(FactoryType factoryType = FactoryType.Shared)
+    {
+        Imports.DWriteCreateFactory(
+            factoryType, new Guid(InterfaceIds.IID_IDWriteFactory), out WriteFactory factory)
+            .ThrowIfFailed();
+
+        return factory;
     }
 }

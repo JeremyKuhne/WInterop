@@ -3,13 +3,12 @@
 
 using WInterop.Handles;
 
-namespace WInterop.ProcessAndThreads
+namespace WInterop.ProcessAndThreads;
+
+/// <summary>
+///  Safe handle for a thread.
+/// </summary>
+public class ThreadHandle : CloseHandle
 {
-    /// <summary>
-    ///  Safe handle for a thread.
-    /// </summary>
-    public class ThreadHandle : CloseHandle
-    {
-        public ThreadHandle() : base() { }
-    }
+    public ThreadHandle() : base() { }
 }

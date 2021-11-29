@@ -3,49 +3,48 @@
 
 using System;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+[Flags]
+public enum MenuStates : uint
 {
-    [Flags]
-    public enum MenuStates : uint
-    {
-        /// <summary>
-        ///  [MFS_GRAYED]
-        /// </summary>
-        Grayed = 0x00000003,
+    /// <summary>
+    ///  [MFS_GRAYED]
+    /// </summary>
+    Grayed = 0x00000003,
 
-        /// <summary>
-        ///  [MFS_DISABLED]
-        /// </summary>
-        Disabled = Grayed,
+    /// <summary>
+    ///  [MFS_DISABLED]
+    /// </summary>
+    Disabled = Grayed,
 
-        /// <summary>
-        ///  [MFS_CHECKED]
-        /// </summary>
-        Checked = MenuFlags.Checked,
+    /// <summary>
+    ///  [MFS_CHECKED]
+    /// </summary>
+    Checked = MenuFlags.Checked,
 
-        /// <summary>
-        ///  [MFS_HILITE]
-        /// </summary>
-        Hilite = MenuFlags.Hilite,
+    /// <summary>
+    ///  [MFS_HILITE]
+    /// </summary>
+    Hilite = MenuFlags.Hilite,
 
-        /// <summary>
-        ///  [MFS_ENABLED]
-        /// </summary>
-        Enabled = MenuFlags.Enabled,
+    /// <summary>
+    ///  [MFS_ENABLED]
+    /// </summary>
+    Enabled = MenuFlags.Enabled,
 
-        /// <summary>
-        ///  [MFS_UNCHECKED]
-        /// </summary>
-        Unchecked = MenuFlags.Unchecked,
+    /// <summary>
+    ///  [MFS_UNCHECKED]
+    /// </summary>
+    Unchecked = MenuFlags.Unchecked,
 
-        /// <summary>
-        ///  [MFS_UNHILITE]
-        /// </summary>
-        Unhilite = MenuFlags.Unhilite,
+    /// <summary>
+    ///  [MFS_UNHILITE]
+    /// </summary>
+    Unhilite = MenuFlags.Unhilite,
 
-        /// <summary>
-        ///  [MFS_DEFAULT]
-        /// </summary>
-        Default = MenuFlags.Default
-    }
+    /// <summary>
+    ///  [MFS_DEFAULT]
+    /// </summary>
+    Default = MenuFlags.Default
 }

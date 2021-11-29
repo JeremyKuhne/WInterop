@@ -4,32 +4,31 @@
 using System;
 using System.Drawing;
 
-namespace WInterop.Windows
-{
-    public class StaticControl : Window
-    {
-        private static readonly StaticClass s_buttonClass = new StaticClass();
+namespace WInterop.Windows;
 
-        public StaticControl(
-            Rectangle bounds,
-            string? text = default,
-            StaticStyles staticStyle = StaticStyles.Center | StaticStyles.EditControl,
-            WindowStyles style = WindowStyles.Overlapped,
-            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
-            bool isMainWindow = false,
-            Window? parentWindow = default,
-            IntPtr parameters = default,
-            MenuHandle menuHandle = default) : base(
-                s_buttonClass,
-                bounds,
-                text,
-                style |= (WindowStyles)staticStyle,
-                extendedStyle,
-                isMainWindow,
-                parentWindow,
-                parameters,
-                menuHandle)
-        {
-        }
+public class StaticControl : Window
+{
+    private static readonly StaticClass s_buttonClass = new StaticClass();
+
+    public StaticControl(
+        Rectangle bounds,
+        string? text = default,
+        StaticStyles staticStyle = StaticStyles.Center | StaticStyles.EditControl,
+        WindowStyles style = WindowStyles.Overlapped,
+        ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
+        bool isMainWindow = false,
+        Window? parentWindow = default,
+        IntPtr parameters = default,
+        MenuHandle menuHandle = default) : base(
+            s_buttonClass,
+            bounds,
+            text,
+            style |= (WindowStyles)staticStyle,
+            extendedStyle,
+            isMainWindow,
+            parentWindow,
+            parameters,
+            menuHandle)
+    {
     }
 }

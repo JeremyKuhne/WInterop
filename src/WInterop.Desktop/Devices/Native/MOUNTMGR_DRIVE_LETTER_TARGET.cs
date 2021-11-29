@@ -4,14 +4,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Devices.Native
+namespace WInterop.Devices.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/hardware/ff562285.aspx
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public struct MOUNTMGR_DRIVE_LETTER_TARGET
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562285.aspx
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct MOUNTMGR_DRIVE_LETTER_TARGET
-    {
-        public ushort DeviceNameLength;
-        private char _DeviceName;
-        public ReadOnlySpan<char> DeviceName => TrailingArray<char>.GetBufferInBytes(in _DeviceName, DeviceNameLength);
-    }
+    public ushort DeviceNameLength;
+    private char _DeviceName;
+    public ReadOnlySpan<char> DeviceName => TrailingArray<char>.GetBufferInBytes(in _DeviceName, DeviceNameLength);
 }

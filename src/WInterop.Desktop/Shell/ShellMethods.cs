@@ -13,156 +13,155 @@ using WInterop.Shell.Native;
 using WInterop.Support;
 using WInterop.Support.Buffers;
 
-namespace WInterop.Shell
+namespace WInterop.Shell;
+
+public static partial class ShellMethods
 {
-    public static partial class ShellMethods
+    public static IPropertyDescriptionList GetPropertyDescriptionListFromString(string value)
     {
-        public static IPropertyDescriptionList GetPropertyDescriptionListFromString(string value)
-        {
-            ShellImports.PSGetPropertyDescriptionListFromString(
-                value,
-                new Guid(InterfaceIds.IID_IPropertyDescriptionList),
-                out IPropertyDescriptionList list).ThrowIfFailed();
+        ShellImports.PSGetPropertyDescriptionListFromString(
+            value,
+            new Guid(InterfaceIds.IID_IPropertyDescriptionList),
+            out IPropertyDescriptionList list).ThrowIfFailed();
 
-            return list;
-        }
+        return list;
+    }
 
-        public static RegistryKeyHandle AssocQueryKey(
-            AssociationFlags flags,
-            AssociationKey key,
-            string association,
-            string extraInfo)
-        {
-            ShellImports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle)
-                .ThrowIfFailed();
-            return handle;
-        }
+    public static RegistryKeyHandle AssocQueryKey(
+        AssociationFlags flags,
+        AssociationKey key,
+        string association,
+        string extraInfo)
+    {
+        ShellImports.AssocQueryKeyW(flags, key, association, extraInfo, out RegistryKeyHandle handle)
+            .ThrowIfFailed();
+        return handle;
+    }
 
-        public static string AssocQueryString(
-            AssociationFlags flags,
-            AssociationString @string,
-            string association,
-            string extraInfo)
+    public static string AssocQueryString(
+        AssociationFlags flags,
+        AssociationString @string,
+        string association,
+        string extraInfo)
+    {
+        return BufferHelper.BufferInvoke((StringBuffer buffer) =>
         {
-            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
+            flags |= AssociationFlags.NoTruncate;
+
+            HResult result;
+            uint count = buffer.CharCapacity;
+            while ((result = ShellImports.AssocQueryStringW(flags, @string, association, extraInfo, buffer, ref count))
+                == HResult.E_POINTER)
             {
-                flags |= AssociationFlags.NoTruncate;
+                buffer.EnsureCharCapacity(count);
+            }
 
-                HResult result;
-                uint count = buffer.CharCapacity;
-                while ((result = ShellImports.AssocQueryStringW(flags, @string, association, extraInfo, buffer, ref count))
-                    == HResult.E_POINTER)
-                {
-                    buffer.EnsureCharCapacity(count);
-                }
-
-                result.ThrowIfFailed(association);
+            result.ThrowIfFailed(association);
 
                 // Count includes the null
                 buffer.Length = count - 1;
-                return buffer.ToString();
-            });
+            return buffer.ToString();
+        });
+    }
+
+    /// <summary>
+    ///  Get the path for the given known folder Guid.
+    /// </summary>
+    public static string GetKnownFolderPath(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
+    {
+        ShellImports.SHGetKnownFolderPath(ref folderIdentifier, flags, EmptySafeHandle.Instance, out string path)
+            .ThrowIfFailed();
+
+        return path;
+    }
+
+    /// <summary>
+    ///  Get the Shell item id for the given known folder Guid.
+    /// </summary>
+    public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
+    {
+        ShellImports.SHGetKnownFolderIDList(ref folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id)
+            .ThrowIfFailed();
+
+        return id;
+    }
+
+    /// <summary>
+    ///  Get the name for a given Shell item ID.
+    /// </summary>
+    public static string GetNameFromId(ItemIdList id, ShellItemDisplayNames form = ShellItemDisplayNames.NormalDisplay)
+    {
+        ShellImports.SHGetNameFromIDList(id, form, out string name).ThrowIfFailed();
+        return name;
+    }
+
+    /// <summary>
+    ///  Get the IKnownFolderManager.
+    /// </summary>
+    public static IKnownFolderManager GetKnownFolderManager()
+    {
+        Type? type = Marshal.GetTypeFromCLSID(new Guid(ClassIds.CLSID_KnownFolderManager));
+
+        return type is null
+            ? throw new InvalidOperationException()
+            : (IKnownFolderManager?)Activator.CreateInstance(type) ?? throw new InvalidOperationException();
+    }
+
+    /// <summary>
+    ///  Get the Guid identifiers for all known folders.
+    /// </summary>
+    public static unsafe IEnumerable<Guid> GetKnownFolderIds()
+    {
+        List<Guid> ids = new List<Guid>();
+
+        IKnownFolderManager manager = GetKnownFolderManager();
+        uint count = manager.GetFolderIds(out SafeComHandle buffer);
+
+        using (buffer)
+        {
+            Guid* g = (Guid*)buffer.DangerousGetHandle();
+            for (int i = 0; i < count; i++)
+                ids.Add(*g++);
         }
 
-        /// <summary>
-        ///  Get the path for the given known folder Guid.
-        /// </summary>
-        public static string GetKnownFolderPath(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
+        return ids;
+    }
+
+    /// <summary>
+    ///  Collapses common path segments into the equivalent environment string.
+    ///  Returns null if unsuccessful.
+    /// </summary>
+    public static string? UnexpandEnvironmentStrings(string path)
+    {
+        return BufferHelper.BufferInvoke((StringBuffer buffer) =>
         {
-            ShellImports.SHGetKnownFolderPath(ref folderIdentifier, flags, EmptySafeHandle.Instance, out string path)
-                .ThrowIfFailed();
-
-            return path;
-        }
-
-        /// <summary>
-        ///  Get the Shell item id for the given known folder Guid.
-        /// </summary>
-        public static ItemIdList GetKnownFolderId(Guid folderIdentifier, KnownFolderFlags flags = KnownFolderFlags.Default)
-        {
-            ShellImports.SHGetKnownFolderIDList(ref folderIdentifier, flags, EmptySafeHandle.Instance, out ItemIdList id)
-                .ThrowIfFailed();
-
-            return id;
-        }
-
-        /// <summary>
-        ///  Get the name for a given Shell item ID.
-        /// </summary>
-        public static string GetNameFromId(ItemIdList id, ShellItemDisplayNames form = ShellItemDisplayNames.NormalDisplay)
-        {
-            ShellImports.SHGetNameFromIDList(id, form, out string name).ThrowIfFailed();
-            return name;
-        }
-
-        /// <summary>
-        ///  Get the IKnownFolderManager.
-        /// </summary>
-        public static IKnownFolderManager GetKnownFolderManager()
-        {
-            Type? type = Marshal.GetTypeFromCLSID(new Guid(ClassIds.CLSID_KnownFolderManager));
-
-            return type is null
-                ? throw new InvalidOperationException()
-                : (IKnownFolderManager?)Activator.CreateInstance(type) ?? throw new InvalidOperationException();
-        }
-
-        /// <summary>
-        ///  Get the Guid identifiers for all known folders.
-        /// </summary>
-        public static unsafe IEnumerable<Guid> GetKnownFolderIds()
-        {
-            List<Guid> ids = new List<Guid>();
-
-            IKnownFolderManager manager = GetKnownFolderManager();
-            uint count = manager.GetFolderIds(out SafeComHandle buffer);
-
-            using (buffer)
+            buffer.EnsureCharCapacity(Paths.MaxPath);
+            if (!ShellImports.PathUnExpandEnvStringsW(path, buffer, buffer.CharCapacity))
             {
-                Guid* g = (Guid*)buffer.DangerousGetHandle();
-                for (int i = 0; i < count; i++)
-                    ids.Add(*g++);
+                return null;
             }
 
-            return ids;
-        }
+            buffer.SetLengthToFirstNull();
+            return buffer.ToString();
+        });
+    }
 
-        /// <summary>
-        ///  Collapses common path segments into the equivalent environment string.
-        ///  Returns null if unsuccessful.
-        /// </summary>
-        public static string? UnexpandEnvironmentStrings(string path)
+    /// <summary>
+    ///  Expands environment variables for the given user token. If the token is
+    ///  null, returns the system variables.
+    /// </summary>
+    public static string ExpandEnvironmentVariablesForUser(AccessToken token, string value)
+    {
+        return BufferHelper.BufferInvoke((StringBuffer buffer) =>
         {
-            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
+            while (!ShellImports.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
             {
-                buffer.EnsureCharCapacity(Paths.MaxPath);
-                if (!ShellImports.PathUnExpandEnvStringsW(path, buffer, buffer.CharCapacity))
-                {
-                    return null;
-                }
+                Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
+            }
 
-                buffer.SetLengthToFirstNull();
-                return buffer.ToString();
-            });
-        }
-
-        /// <summary>
-        ///  Expands environment variables for the given user token. If the token is
-        ///  null, returns the system variables.
-        /// </summary>
-        public static string ExpandEnvironmentVariablesForUser(AccessToken token, string value)
-        {
-            return BufferHelper.BufferInvoke((StringBuffer buffer) =>
-            {
-                while (!ShellImports.ExpandEnvironmentStringsForUserW(token, value, buffer, buffer.CharCapacity))
-                {
-                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
-                    buffer.EnsureCharCapacity(buffer.CharCapacity * 2);
-                }
-
-                buffer.SetLengthToFirstNull();
-                return buffer.ToString();
-            });
-        }
+            buffer.SetLengthToFirstNull();
+            return buffer.ToString();
+        });
     }
 }

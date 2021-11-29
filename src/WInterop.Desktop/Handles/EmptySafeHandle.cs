@@ -4,27 +4,26 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Handles
+namespace WInterop.Handles;
+
+public sealed class EmptySafeHandle : SafeHandle
 {
-    public sealed class EmptySafeHandle : SafeHandle
+    private static readonly SafeHandle s_Instance = new EmptySafeHandle();
+
+    private EmptySafeHandle() : base(IntPtr.Zero, true) { }
+
+    public static SafeHandle Instance
     {
-        private static readonly SafeHandle s_Instance = new EmptySafeHandle();
+        get { return s_Instance; }
+    }
 
-        private EmptySafeHandle() : base(IntPtr.Zero, true) { }
+    public override bool IsInvalid
+    {
+        get { return true; }
+    }
 
-        public static SafeHandle Instance
-        {
-            get { return s_Instance; }
-        }
-
-        public override bool IsInvalid
-        {
-            get { return true; }
-        }
-
-        protected override bool ReleaseHandle()
-        {
-            return true;
-        }
+    protected override bool ReleaseHandle()
+    {
+        return true;
     }
 }

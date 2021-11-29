@@ -5,70 +5,69 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Com;
 
-namespace WInterop.Shell
+namespace WInterop.Shell;
+
+[ComImport,
+    Guid(InterfaceIds.IID_IPropertyDescription),
+    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface IPropertyDescription
 {
-    [ComImport,
-        Guid(InterfaceIds.IID_IPropertyDescription),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IPropertyDescription
-    {
-        PropertyKey GetPropertyKey();
+    PropertyKey GetPropertyKey();
 
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        string GetCanonicalName();
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string GetCanonicalName();
 
-        VariantType GetPropertyType();
+    VariantType GetPropertyType();
 
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        string GetDisplayName();
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string GetDisplayName();
 
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        string GetEditInvitation();
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string GetEditInvitation();
 
-        PropertyTypeFlags GetTypeFlags(PropertyTypeFlags mask);
+    PropertyTypeFlags GetTypeFlags(PropertyTypeFlags mask);
 
-        PropertyViewFlags GetViewFlags();
+    PropertyViewFlags GetViewFlags();
 
-        uint GetDefaultColumnWidth();
+    uint GetDefaultColumnWidth();
 
-        PropertyDisplayType GetDisplayType();
+    PropertyDisplayType GetDisplayType();
 
-        ColumnState GetColumnState();
+    ColumnState GetColumnState();
 
-        PropertyGroupingRange GetGroupingRange();
+    PropertyGroupingRange GetGroupingRange();
 
-        PropertyRelativeDescriptionType GetRelativeDescriptionType();
+    PropertyRelativeDescriptionType GetRelativeDescriptionType();
 
-        void GetRelativeDescription(
-            PROPVARIANT propvar1,
-            PROPVARIANT propvar2,
-            [MarshalAs(UnmanagedType.LPWStr)] out string ppszDesc1,
-            [MarshalAs(UnmanagedType.LPWStr)] out string ppszDesc2);
+    void GetRelativeDescription(
+        PROPVARIANT propvar1,
+        PROPVARIANT propvar2,
+        [MarshalAs(UnmanagedType.LPWStr)] out string ppszDesc1,
+        [MarshalAs(UnmanagedType.LPWStr)] out string ppszDesc2);
 
-        PropertySortDescription GetSortDescription();
+    PropertySortDescription GetSortDescription();
 
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        string GetSortDescriptionLabel(
-            [MarshalAs(UnmanagedType.Bool)] bool fDescending);
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string GetSortDescriptionLabel(
+        [MarshalAs(UnmanagedType.Bool)] bool fDescending);
 
-        PropertyAggregationType GetAggregationType();
+    PropertyAggregationType GetAggregationType();
 
-        ConditionOperation GetConditionType(
-            out PropertyConditionType pcontype);
+    ConditionOperation GetConditionType(
+        out PropertyConditionType pcontype);
 
-        [return: MarshalAs(UnmanagedType.Interface)]
-        object GetEnumTypeList(
-            [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
+    [return: MarshalAs(UnmanagedType.Interface)]
+    object GetEnumTypeList(
+        [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
 
-        void CoerceToCanonicalValue(
-            PROPVARIANT ppropvar);
+    void CoerceToCanonicalValue(
+        PROPVARIANT ppropvar);
 
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        string FormatForDisplay(
-            PROPVARIANT propvar,
-            PropertyFormatFlags pdfFlags);
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string FormatForDisplay(
+        PROPVARIANT propvar,
+        PropertyFormatFlags pdfFlags);
 
-        void IsValueCanonical(
-            PROPVARIANT provar);
-    }
+    void IsValueCanonical(
+        PROPVARIANT provar);
 }

@@ -3,27 +3,26 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+/// <summary>
+///  [DISPLAY_DEVICE]
+/// </summary>
+/// <msdn><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/dd183569.aspx"/></msdn>
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public struct DisplayDevice
 {
-    /// <summary>
-    ///  [DISPLAY_DEVICE]
-    /// </summary>
-    /// <msdn><see cref="https://msdn.microsoft.com/en-us/library/windows/desktop/dd183569.aspx"/></msdn>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct DisplayDevice
+    // Should be 840 bytes
+    private uint cb;
+
+    public static unsafe DisplayDevice Create()
     {
-        // Should be 840 bytes
-        private uint cb;
-
-        public static unsafe DisplayDevice Create()
-        {
-            return new DisplayDevice { cb = (uint)sizeof(DisplayDevice) };
-        }
-
-        public FixedString.Size32 DeviceName;
-        public FixedString.Size128 DeviceString;
-        public DeviceState StateFlags;
-        public FixedString.Size128 DeviceID;
-        public FixedString.Size128 DeviceKey;
+        return new DisplayDevice { cb = (uint)sizeof(DisplayDevice) };
     }
+
+    public FixedString.Size32 DeviceName;
+    public FixedString.Size128 DeviceString;
+    public DeviceState StateFlags;
+    public FixedString.Size128 DeviceID;
+    public FixedString.Size128 DeviceKey;
 }

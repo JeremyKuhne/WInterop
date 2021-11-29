@@ -1,26 +1,25 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Storage
+namespace WInterop.Storage;
+
+/// <summary>
+///  Basic information about a stream
+/// </summary>
+public struct BackupStreamInformation
 {
     /// <summary>
-    ///  Basic information about a stream
+    ///  Name of the alternate stream
     /// </summary>
-    public struct BackupStreamInformation
-    {
-        /// <summary>
-        ///  Name of the alternate stream
-        /// </summary>
-        public string Name;
+    public string Name;
 
-        /// <summary>
-        ///  Size of the alternate stream
-        /// </summary>
-        public long Size;
+    /// <summary>
+    ///  Size of the alternate stream
+    /// </summary>
+    public long Size;
 
-        /// <summary>
-        ///  Stream type.
-        /// </summary>
-        public BackupStreamType StreamType;
-    }
+    /// <summary>
+    ///  Stream type.
+    /// </summary>
+    public BackupStreamType StreamType;
 }

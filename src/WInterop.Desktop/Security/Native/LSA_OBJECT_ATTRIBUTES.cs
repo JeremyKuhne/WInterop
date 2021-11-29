@@ -3,16 +3,15 @@
 
 using System;
 
-namespace WInterop.Security.Native
+namespace WInterop.Security.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ms721829.aspx
+public struct LSA_OBJECT_ATTRIBUTES
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721829.aspx
-    public struct LSA_OBJECT_ATTRIBUTES
-    {
-        public uint Length;
-        public IntPtr RootDirectory;
-        public IntPtr ObjectName;
-        public uint Attributes;
-        public IntPtr SecurityDescriptor;
-        public IntPtr SecurityQualityOfService;
-    }
+    public uint Length;
+    public IntPtr RootDirectory;
+    public IntPtr ObjectName;
+    public uint Attributes;
+    public IntPtr SecurityDescriptor;
+    public IntPtr SecurityQualityOfService;
 }

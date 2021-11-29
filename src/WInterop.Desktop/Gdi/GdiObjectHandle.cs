@@ -5,42 +5,41 @@ using System;
 using WInterop.Gdi.Native;
 using WInterop.Windows;
 
-namespace WInterop.Gdi
+namespace WInterop.Gdi;
+
+/// <summary>
+///  GDI object handle (HGDIOBJ)
+/// </summary>
+public readonly struct GdiObjectHandle : IDisposable
 {
-    /// <summary>
-    ///  GDI object handle (HGDIOBJ)
-    /// </summary>
-    public readonly struct GdiObjectHandle : IDisposable
+    public HGDIOBJ Handle { get; }
+    private readonly bool _ownsHandle;
+
+    public static GdiObjectHandle Null = new GdiObjectHandle(default);
+
+    public GdiObjectHandle(HGDIOBJ handle, bool ownsHandle = true)
     {
-        public HGDIOBJ Handle { get; }
-        private readonly bool _ownsHandle;
+        Handle = handle;
+        _ownsHandle = ownsHandle;
+    }
 
-        public static GdiObjectHandle Null = new GdiObjectHandle(default);
+    public ObjectType GetObjectType()
+    {
+        return GdiImports.GetObjectType(Handle);
+    }
 
-        public GdiObjectHandle(HGDIOBJ handle, bool ownsHandle = true)
-        {
-            Handle = handle;
-            _ownsHandle = ownsHandle;
-        }
+    public static implicit operator GdiObjectHandle(StockFont font) => new GdiObjectHandle(Gdi.GetStockFont(font).Handle, false);
+    public static implicit operator GdiObjectHandle(StockBrush brush) => new GdiObjectHandle(Gdi.GetStockBrush(brush), false);
+    public static implicit operator GdiObjectHandle(SystemColor color) => new GdiObjectHandle(Gdi.GetSystemColorBrush(color), false);
+    public static implicit operator GdiObjectHandle(StockPen pen) => new GdiObjectHandle(Gdi.GetStockPen(pen), false);
 
-        public ObjectType GetObjectType()
-        {
-            return GdiImports.GetObjectType(Handle);
-        }
+    public static implicit operator HGDIOBJ(GdiObjectHandle handle) => handle.Handle;
 
-        public static implicit operator GdiObjectHandle(StockFont font) => new GdiObjectHandle(Gdi.GetStockFont(font).Handle, false);
-        public static implicit operator GdiObjectHandle(StockBrush brush) => new GdiObjectHandle(Gdi.GetStockBrush(brush), false);
-        public static implicit operator GdiObjectHandle(SystemColor color) => new GdiObjectHandle(Gdi.GetSystemColorBrush(color), false);
-        public static implicit operator GdiObjectHandle(StockPen pen) => new GdiObjectHandle(Gdi.GetStockPen(pen), false);
+    public bool IsInvalid => Handle.IsInvalid;
 
-        public static implicit operator HGDIOBJ(GdiObjectHandle handle) => handle.Handle;
-
-        public bool IsInvalid => Handle.IsInvalid;
-
-        public void Dispose()
-        {
-            if (_ownsHandle)
-                GdiImports.DeleteObject(Handle);
-        }
+    public void Dispose()
+    {
+        if (_ownsHandle)
+            GdiImports.DeleteObject(Handle);
     }
 }

@@ -9,210 +9,209 @@ using WInterop.Gdi;
 using WInterop.Modules;
 using WInterop.Windows.Native;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public class WindowClass : IDisposable
 {
-    public class WindowClass : IDisposable
+    // Stash the delegate to keep it from being collected
+    private readonly WindowProcedure _windowProcedure;
+    private WNDCLASSEX _wndClass;
+    private readonly string _className;
+    private readonly string _menuName;
+    private bool _disposedValue;
+
+    public Atom Atom { get; private set; }
+    public WindowHandle MainWindow { get; private set; }
+    public ModuleInstance ModuleInstance { get; }
+
+    public unsafe WindowClass(
+        string? className = default,
+        ModuleInstance? moduleInstance = default,
+        ClassStyle classStyle = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
+        BrushHandle backgroundBrush = default,
+        IconHandle icon = default,
+        IconHandle smallIcon = default,
+        CursorHandle cursor = default,
+        string? menuName = null,
+        int menuId = 0,
+        int classExtraBytes = 0,
+        int windowExtraBytes = 0)
     {
-        // Stash the delegate to keep it from being collected
-        private readonly WindowProcedure _windowProcedure;
-        private WNDCLASSEX _wndClass;
-        private readonly string _className;
-        private readonly string _menuName;
-        private bool _disposedValue;
+        // Handle default values
+        className ??= Guid.NewGuid().ToString();
 
-        public Atom Atom { get; private set; }
-        public WindowHandle MainWindow { get; private set; }
-        public ModuleInstance ModuleInstance { get; }
+        if (backgroundBrush == default)
+            backgroundBrush = SystemColor.Window;
+        else if (backgroundBrush == BrushHandle.NoBrush)
+            backgroundBrush = default;
 
-        public unsafe WindowClass(
-            string? className = default,
-            ModuleInstance? moduleInstance = default,
-            ClassStyle classStyle = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-            BrushHandle backgroundBrush = default,
-            IconHandle icon = default,
-            IconHandle smallIcon = default,
-            CursorHandle cursor = default,
-            string? menuName = null,
-            int menuId = 0,
-            int classExtraBytes = 0,
-            int windowExtraBytes = 0)
+        if (icon == default)
+            icon = IconId.Application;
+        else if (icon == IconHandle.NoIcon)
+            icon = default;
+
+        if (cursor == default)
+            cursor = CursorId.Arrow;
+        else if (cursor == CursorHandle.NoCursor)
+            cursor = default;
+
+        moduleInstance ??= Modules.Modules.GetExeModuleHandle();
+
+        if (menuId != 0 && menuName != null)
+            throw new ArgumentException($"Can't set both {nameof(menuName)} and {nameof(menuId)}.");
+
+        _windowProcedure = WindowProcedure;
+        ModuleInstance = moduleInstance;
+
+        _className = className;
+        _menuName = menuName ?? string.Empty;
+
+        _wndClass = new WNDCLASSEX
         {
-            // Handle default values
-            className ??= Guid.NewGuid().ToString();
+            cbSize = (uint)sizeof(WNDCLASSEX),
+            style = classStyle,
+            lpfnWndProc = Marshal.GetFunctionPointerForDelegate(_windowProcedure),
+            cbClassExtra = classExtraBytes,
+            cbWndExtra = windowExtraBytes,
+            hInstance = (IntPtr)moduleInstance,
+            hIcon = icon,
+            hCursor = cursor,
+            hbrBackground = backgroundBrush,
+            hIconSm = smallIcon,
+            lpszMenuName = (char*)menuId
+        };
+    }
 
-            if (backgroundBrush == default)
-                backgroundBrush = SystemColor.Window;
-            else if (backgroundBrush == BrushHandle.NoBrush)
-                backgroundBrush = default;
+    public WindowClass(string registeredClassName)
+    {
+        _windowProcedure = WindowProcedure;
+        _className = registeredClassName;
+        _menuName = string.Empty;
+        ModuleInstance = ModuleInstance.Null;
+    }
 
-            if (icon == default)
-                icon = IconId.Application;
-            else if (icon == IconHandle.NoIcon)
-                icon = default;
+    public bool IsRegistered => Atom.IsValid || ModuleInstance == ModuleInstance.Null;
 
-            if (cursor == default)
-                cursor = CursorId.Arrow;
-            else if (cursor == CursorHandle.NoCursor)
-                cursor = default;
+    public BrushHandle BackgroundBrush
+        => new(_wndClass.hbrBackground, ownsHandle: false);
 
-            moduleInstance ??= Modules.Modules.GetExeModuleHandle();
-
-            if (menuId != 0 && menuName != null)
-                throw new ArgumentException($"Can't set both {nameof(menuName)} and {nameof(menuId)}.");
-
-            _windowProcedure = WindowProcedure;
-            ModuleInstance = moduleInstance;
-
-            _className = className;
-            _menuName = menuName ?? string.Empty;
-
-            _wndClass = new WNDCLASSEX
+    /// <summary>
+    ///  Registers this <see cref="WindowClass"/> so that instances can be created.
+    /// </summary>
+    public unsafe WindowClass Register()
+    {
+        fixed (char* name = _className)
+        {
+            fixed (char* menuName = _menuName)
             {
-                cbSize = (uint)sizeof(WNDCLASSEX),
-                style = classStyle,
-                lpfnWndProc = Marshal.GetFunctionPointerForDelegate(_windowProcedure),
-                cbClassExtra = classExtraBytes,
-                cbWndExtra = windowExtraBytes,
-                hInstance = (IntPtr)moduleInstance,
-                hIcon = icon,
-                hCursor = cursor,
-                hbrBackground = backgroundBrush,
-                hIconSm = smallIcon,
-                lpszMenuName = (char*)menuId
-            };
-        }
+                _wndClass.lpszClassName = name;
+                if (!string.IsNullOrEmpty(_menuName))
+                    _wndClass.lpszMenuName = menuName;
 
-        public WindowClass(string registeredClassName)
-        {
-            _windowProcedure = WindowProcedure;
-            _className = registeredClassName;
-            _menuName = string.Empty;
-            ModuleInstance = ModuleInstance.Null;
-        }
-
-        public bool IsRegistered => Atom.IsValid || ModuleInstance == ModuleInstance.Null;
-
-        public BrushHandle BackgroundBrush
-            => new(_wndClass.hbrBackground, ownsHandle: false);
-
-        /// <summary>
-        ///  Registers this <see cref="WindowClass"/> so that instances can be created.
-        /// </summary>
-        public unsafe WindowClass Register()
-        {
-            fixed (char* name = _className)
-            {
-                fixed (char* menuName = _menuName)
-                {
-                    _wndClass.lpszClassName = name;
-                    if (!string.IsNullOrEmpty(_menuName))
-                        _wndClass.lpszMenuName = menuName;
-
-                    Atom atom = WindowsImports.RegisterClassExW(ref _wndClass);
-                    if (!atom.IsValid)
-                        Error.ThrowLastError();
-                    Atom = atom;
-                    return this;
-                }
+                Atom atom = WindowsImports.RegisterClassExW(ref _wndClass);
+                if (!atom.IsValid)
+                    Error.ThrowLastError();
+                Atom = atom;
+                return this;
             }
         }
+    }
 
-        /// <summary>
-        ///  Creates an instance of this <see cref="WindowClass"/>.
-        /// </summary>
-        /// <param name="bounds">
-        ///  Pass <see cref="Windows.DefaultBounds"/> for the default size.
-        /// </param>
-        /// <param name="windowName">
-        ///  The text for the title bar when using <see cref="WindowStyles.Caption"/> or <see cref="WindowStyles.Overlapped"/>.
-        ///  For buttons, checkboxes, and other static controls this is the text of the control or a resource reference.
-        /// </param>
-        /// <param name="isMainWindow">
-        ///  Set this to indicate that this is the main window for the application and closing it should terminate the message loop.
-        /// </param>
-        public virtual WindowHandle CreateWindow(
-            Rectangle bounds,
-            string? windowName = null,
-            WindowStyles style = WindowStyles.Overlapped,
-            ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
-            bool isMainWindow = false,
-            WindowHandle parentWindow = default,
-            IntPtr parameters = default,
-            MenuHandle menuHandle = default)
+    /// <summary>
+    ///  Creates an instance of this <see cref="WindowClass"/>.
+    /// </summary>
+    /// <param name="bounds">
+    ///  Pass <see cref="Windows.DefaultBounds"/> for the default size.
+    /// </param>
+    /// <param name="windowName">
+    ///  The text for the title bar when using <see cref="WindowStyles.Caption"/> or <see cref="WindowStyles.Overlapped"/>.
+    ///  For buttons, checkboxes, and other static controls this is the text of the control or a resource reference.
+    /// </param>
+    /// <param name="isMainWindow">
+    ///  Set this to indicate that this is the main window for the application and closing it should terminate the message loop.
+    /// </param>
+    public virtual WindowHandle CreateWindow(
+        Rectangle bounds,
+        string? windowName = null,
+        WindowStyles style = WindowStyles.Overlapped,
+        ExtendedWindowStyles extendedStyle = ExtendedWindowStyles.Default,
+        bool isMainWindow = false,
+        WindowHandle parentWindow = default,
+        IntPtr parameters = default,
+        MenuHandle menuHandle = default)
+    {
+        if (!IsRegistered)
+            throw new InvalidOperationException("Window class must be registered before using.");
+
+        if (isMainWindow && !MainWindow.IsNull)
+            throw new ArgumentException("Main window has already been set.", nameof(isMainWindow));
+
+        WindowHandle window = Atom.IsValid
+            ? Windows.CreateWindow(
+                Atom,
+                windowName,
+                style,
+                extendedStyle,
+                bounds,
+                parentWindow,
+                menuHandle,
+                parameters)
+            : Windows.CreateWindow(
+                _className,
+                windowName,
+                style,
+                extendedStyle,
+                bounds,
+                parentWindow,
+                menuHandle,
+                parameters);
+
+        if (!Atom.IsValid)
         {
-            if (!IsRegistered)
-                throw new InvalidOperationException("Window class must be registered before using.");
-
-            if (isMainWindow && !MainWindow.IsNull)
-                throw new ArgumentException("Main window has already been set.", nameof(isMainWindow));
-
-            WindowHandle window = Atom.IsValid
-                ? Windows.CreateWindow(
-                    Atom,
-                    windowName,
-                    style,
-                    extendedStyle,
-                    bounds,
-                    parentWindow,
-                    menuHandle,
-                    parameters)
-                : Windows.CreateWindow(
-                    _className,
-                    windowName,
-                    style,
-                    extendedStyle,
-                    bounds,
-                    parentWindow,
-                    menuHandle,
-                    parameters);
-
-            if (!Atom.IsValid)
-            {
-                Atom = window.GetClassLong(ClassLong.Atom);
-            }
-
-            if (isMainWindow)
-            {
-                MainWindow = window;
-            }
-
-            return window;
+            Atom = window.GetClassLong(ClassLong.Atom);
         }
 
-        protected virtual LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+        if (isMainWindow)
         {
-            switch (message)
-            {
-                case MessageType.Destroy:
-                    if (window == MainWindow)
-                        Windows.PostQuitMessage(0);
-                    return 0;
-            }
-
-            return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+            MainWindow = window;
         }
 
-        protected virtual void Dispose(bool disposing)
+        return window;
+    }
+
+    protected virtual LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+    {
+        switch (message)
         {
+            case MessageType.Destroy:
+                if (window == MainWindow)
+                    Windows.PostQuitMessage(0);
+                return 0;
         }
 
-        ~WindowClass()
-        {
-            if (!_disposedValue)
-            {
-                _disposedValue = true;
-                Dispose(disposing: false);
-            }
-        }
+        return Windows.DefaultWindowProcedure(window, message, wParam, lParam);
+    }
 
-        public void Dispose()
+    protected virtual void Dispose(bool disposing)
+    {
+    }
+
+    ~WindowClass()
+    {
+        if (!_disposedValue)
         {
-            GC.SuppressFinalize(this);
-            if (!_disposedValue)
-            {
-                _disposedValue = true;
-                Dispose(disposing: true);
-            }
+            _disposedValue = true;
+            Dispose(disposing: false);
+        }
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        if (!_disposedValue)
+        {
+            _disposedValue = true;
+            Dispose(disposing: true);
         }
     }
 }

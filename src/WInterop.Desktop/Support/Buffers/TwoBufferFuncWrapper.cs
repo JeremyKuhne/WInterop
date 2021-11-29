@@ -3,28 +3,27 @@
 
 using System;
 
-namespace WInterop.Support.Buffers
+namespace WInterop.Support.Buffers;
+
+public struct TwoBufferFuncWrapper<TBuffer, T> : ITwoBufferAction<TBuffer>
 {
-    public struct TwoBufferFuncWrapper<TBuffer, T> : ITwoBufferAction<TBuffer>
-    {
-        public Func<TBuffer, TBuffer, T> Func;
-        public T Result;
+    public Func<TBuffer, TBuffer, T> Func;
+    public T Result;
 
-        void ITwoBufferAction<TBuffer>.Action(TBuffer buffer1, TBuffer buffer2)
-        {
-            Result = Func(buffer1, buffer2);
-        }
+    void ITwoBufferAction<TBuffer>.Action(TBuffer buffer1, TBuffer buffer2)
+    {
+        Result = Func(buffer1, buffer2);
     }
+}
 
-    public struct TwoBufferFuncWrapper<TBufferFunc, TBuffer, T>
-        : ITwoBufferAction<TBuffer> where TBufferFunc : ITwoBufferFunc<TBuffer, T>
+public struct TwoBufferFuncWrapper<TBufferFunc, TBuffer, T>
+    : ITwoBufferAction<TBuffer> where TBufferFunc : ITwoBufferFunc<TBuffer, T>
+{
+    public TBufferFunc Func;
+    public T Result;
+
+    void ITwoBufferAction<TBuffer>.Action(TBuffer buffer1, TBuffer buffer2)
     {
-        public TBufferFunc Func;
-        public T Result;
-
-        void ITwoBufferAction<TBuffer>.Action(TBuffer buffer1, TBuffer buffer2)
-        {
-            Result = Func.Func(buffer1, buffer2);
-        }
+        Result = Func.Func(buffer1, buffer2);
     }
 }

@@ -3,21 +3,20 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Com.Native
+namespace WInterop.Com.Native;
+
+public struct ELEMDESC
 {
-    public struct ELEMDESC
+    public TYPEDESC tdesc;
+    public UnionType Union;
+
+    [StructLayout(LayoutKind.Explicit)]
+    public unsafe struct UnionType
     {
-        public TYPEDESC tdesc;
-        public UnionType Union;
+        [FieldOffset(0)]
+        public IdlDescription idldesc;
 
-        [StructLayout(LayoutKind.Explicit)]
-        public unsafe struct UnionType
-        {
-            [FieldOffset(0)]
-            public IdlDescription idldesc;
-
-            [FieldOffset(0)]
-            public PARAMDESC paramdesc;
-        }
+        [FieldOffset(0)]
+        public PARAMDESC paramdesc;
     }
 }

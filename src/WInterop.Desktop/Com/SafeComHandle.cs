@@ -4,24 +4,23 @@
 using System.Runtime.InteropServices;
 using WInterop.Handles;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+public class SafeComHandle : HandleZeroOrMinusOneIsInvalid
 {
-    public class SafeComHandle : HandleZeroOrMinusOneIsInvalid
+    public SafeComHandle() : this(ownsHandle: true)
     {
-        public SafeComHandle() : this(ownsHandle: true)
-        {
-        }
+    }
 
-        public SafeComHandle(bool ownsHandle) : base(ownsHandle)
-        {
-        }
+    public SafeComHandle(bool ownsHandle) : base(ownsHandle)
+    {
+    }
 
-        protected override bool ReleaseHandle()
-        {
-            if (!IsInvalid)
-                Marshal.FreeCoTaskMem(handle);
+    protected override bool ReleaseHandle()
+    {
+        if (!IsInvalid)
+            Marshal.FreeCoTaskMem(handle);
 
-            return true;
-        }
+        return true;
     }
 }

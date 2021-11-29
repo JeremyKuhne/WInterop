@@ -3,16 +3,15 @@
 
 using System;
 
-namespace WInterop.Errors
+namespace WInterop.Errors;
+
+public class DriveNotReadyException : WInteropIOException
 {
-    public class DriveNotReadyException : WInteropIOException
-    {
-        private const WindowsError DefaultError = WindowsError.ERROR_NOT_READY;
+    private const WindowsError DefaultError = WindowsError.ERROR_NOT_READY;
 
-        public DriveNotReadyException()
-            : base(DefaultError) { }
+    public DriveNotReadyException()
+        : base(DefaultError) { }
 
-        public DriveNotReadyException(string? message, Exception? innerException = null)
-            : base(message, DefaultError.ToHResult(), innerException) { }
-    }
+    public DriveNotReadyException(string? message, Exception? innerException = null)
+        : base(message, DefaultError.ToHResult(), innerException) { }
 }

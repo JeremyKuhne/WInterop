@@ -6,44 +6,43 @@ using WInterop.Gdi;
 using WInterop.Gdi.Native;
 using WInterop.Windows.Native;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public struct MenuInformation
 {
-    public struct MenuInformation
+    public MenuInfoMembers Mask;
+    public MenuStyles Style;
+    public uint MaxHeight;
+    private HBRUSH _background;
+    public uint ContextHelpId;
+    public UIntPtr MenuData;
+
+    public BrushHandle Background => new BrushHandle(_background, ownsHandle: false);
+
+    public static implicit operator MenuInformation(MENUINFO info)
     {
-        public MenuInfoMembers Mask;
-        public MenuStyles Style;
-        public uint MaxHeight;
-        private HBRUSH _background;
-        public uint ContextHelpId;
-        public UIntPtr MenuData;
-
-        public BrushHandle Background => new BrushHandle(_background, ownsHandle: false);
-
-        public static implicit operator MenuInformation(MENUINFO info)
+        return new MenuInformation
         {
-            return new MenuInformation
-            {
-                Mask = info.fMask,
-                Style = info.dwStyle,
-                MaxHeight = info.cyMax,
-                _background = info.hbrBack,
-                ContextHelpId = info.dwContextHelpID,
-                MenuData = info.dwMenuData
-            };
-        }
+            Mask = info.fMask,
+            Style = info.dwStyle,
+            MaxHeight = info.cyMax,
+            _background = info.hbrBack,
+            ContextHelpId = info.dwContextHelpID,
+            MenuData = info.dwMenuData
+        };
+    }
 
-        public static unsafe implicit operator MENUINFO(MenuInformation info)
+    public static unsafe implicit operator MENUINFO(MenuInformation info)
+    {
+        return new MENUINFO
         {
-            return new MENUINFO
-            {
-                cbSize = (uint)sizeof(MENUINFO),
-                fMask = info.Mask,
-                dwStyle = info.Style,
-                cyMax = info.MaxHeight,
-                hbrBack = info.Background.HBRUSH,
-                dwContextHelpID = info.ContextHelpId,
-                dwMenuData = info.MenuData
-            };
-        }
+            cbSize = (uint)sizeof(MENUINFO),
+            fMask = info.Mask,
+            dwStyle = info.Style,
+            cyMax = info.MaxHeight,
+            hbrBack = info.Background.HBRUSH,
+            dwContextHelpID = info.ContextHelpId,
+            dwMenuData = info.MenuData
+        };
     }
 }

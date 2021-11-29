@@ -3,17 +3,16 @@
 
 using System;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+public readonly struct HGDIOBJ
 {
-    public readonly struct HGDIOBJ
+    public IntPtr Handle { get; }
+
+    public HGDIOBJ(IntPtr handle)
     {
-        public IntPtr Handle { get; }
-
-        public HGDIOBJ(IntPtr handle)
-        {
-            Handle = handle;
-        }
-
-        public bool IsInvalid => Handle == IntPtr.Zero;
+        Handle = handle;
     }
+
+    public bool IsInvalid => Handle == IntPtr.Zero;
 }

@@ -4,23 +4,22 @@
 using System;
 using WInterop.WindowsStore;
 
-namespace Tests.Support
+namespace Tests.Support;
+
+public static class StoreHelper
 {
-    public static class StoreHelper
+    public static void ValidateStoreGetsUnauthorizedAccess(Action action)
     {
-        public static void ValidateStoreGetsUnauthorizedAccess(Action action)
+        try
         {
-            try
-            {
-                action();
-                if (WindowsStore.IsWindowsStoreApplication())
-                    throw new InvalidOperationException("Should not succeed if Windows Store app");
-            }
-            catch (UnauthorizedAccessException)
-            {
-                if (!WindowsStore.IsWindowsStoreApplication())
-                    throw new InvalidOperationException("Should succeed if not Windows Store app");
-            }
+            action();
+            if (WindowsStore.IsWindowsStoreApplication())
+                throw new InvalidOperationException("Should not succeed if Windows Store app");
+        }
+        catch (UnauthorizedAccessException)
+        {
+            if (!WindowsStore.IsWindowsStoreApplication())
+                throw new InvalidOperationException("Should succeed if not Windows Store app");
         }
     }
 }

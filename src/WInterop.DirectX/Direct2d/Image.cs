@@ -5,21 +5,20 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Direct2d
+namespace WInterop.Direct2d;
+
+/// <summary>
+///  Represents a producer of pixels that can fill an arbitrary 2D plane. [ID2D1Image]
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+[Guid(InterfaceIds.IID_ID2D1Image)]
+public unsafe struct Image : Resource.Interface, IDisposable
 {
-    /// <summary>
-    ///  Represents a producer of pixels that can fill an arbitrary 2D plane. [ID2D1Image]
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    [Guid(InterfaceIds.IID_ID2D1Image)]
-    public unsafe struct Image : Resource.Interface, IDisposable
-    {
-        internal readonly ID2D1Image* _handle;
+    internal readonly ID2D1Image* _handle;
 
-        internal Image(ID2D1Image* handle) => _handle = handle;
+    internal Image(ID2D1Image* handle) => _handle = handle;
 
-        public unsafe Factory GetFactory() => Resource.From(this).GetFactory();
+    public unsafe Factory GetFactory() => Resource.From(this).GetFactory();
 
-        public void Dispose() => _handle->Release();
-    }
+    public void Dispose() => _handle->Release();
 }

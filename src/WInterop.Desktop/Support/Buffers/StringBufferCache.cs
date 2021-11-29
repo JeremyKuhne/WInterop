@@ -3,57 +3,56 @@
 
 using WInterop.Support.Collections;
 
-namespace WInterop.Support.Buffers
+namespace WInterop.Support.Buffers;
+
+/// <summary>
+///  Allows caching of StringBuffer objects to ease GC pressure when creating many StringBuffers.
+/// </summary>
+public sealed class StringBufferCache : Cache<StringBuffer>
 {
-    /// <summary>
-    ///  Allows caching of StringBuffer objects to ease GC pressure when creating many StringBuffers.
-    /// </summary>
-    public sealed class StringBufferCache : Cache<StringBuffer>
+    private readonly uint _maxSize;
+
+    public StringBufferCache(int maxBuffers, uint maxSize = 4096) : base(maxBuffers) => _maxSize = maxSize;
+
+    public StringBuffer Acquire(uint minCharCapacity)
     {
-        private readonly uint _maxSize;
+        StringBuffer item;
 
-        public StringBufferCache(int maxBuffers, uint maxSize = 4096) : base(maxBuffers) => _maxSize = maxSize;
-
-        public StringBuffer Acquire(uint minCharCapacity)
+        // Don't want to end up resizing a buffer we'll throw away
+        if (minCharCapacity > _maxSize)
         {
-            StringBuffer item;
-
-            // Don't want to end up resizing a buffer we'll throw away
-            if (minCharCapacity > _maxSize)
-            {
-                item = new StringBuffer(minCharCapacity);
-                CacheEventSource.Log.ObjectCreated(s_type);
-            }
-            else
-            {
-                item = Acquire();
-                item.EnsureCharCapacity(minCapacity: minCharCapacity);
-            }
-
-            return item;
+            item = new StringBuffer(minCharCapacity);
+            CacheEventSource.Log.ObjectCreated(s_type);
+        }
+        else
+        {
+            item = Acquire();
+            item.EnsureCharCapacity(minCapacity: minCharCapacity);
         }
 
-        public static StringBufferCache Instance { get; } = new StringBufferCache(0);
+        return item;
+    }
 
-        public override void Release(StringBuffer item)
-        {
-            if (item.CharCapacity <= _maxSize)
-            {
-                item.Length = 0;
-                base.Release(item);
-            }
-            else
-            {
-                CacheEventSource.Log.ObjectDestroyed(s_type, "OverSize");
-                item.Dispose();
-            }
-        }
+    public static StringBufferCache Instance { get; } = new StringBufferCache(0);
 
-        public string ToStringAndRelease(StringBuffer item)
+    public override void Release(StringBuffer item)
+    {
+        if (item.CharCapacity <= _maxSize)
         {
-            string returnValue = item.ToString();
-            Release(item);
-            return returnValue;
+            item.Length = 0;
+            base.Release(item);
         }
+        else
+        {
+            CacheEventSource.Log.ObjectDestroyed(s_type, "OverSize");
+            item.Dispose();
+        }
+    }
+
+    public string ToStringAndRelease(StringBuffer item)
+    {
+        string returnValue = item.ToString();
+        Release(item);
+        return returnValue;
     }
 }

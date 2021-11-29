@@ -3,12 +3,11 @@
 
 using System.Runtime.InteropServices;
 
-namespace WInterop.Cryptography.Native
+namespace WInterop.Cryptography.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa377568.aspx
+[StructLayout(LayoutKind.Sequential)]
+public struct CERT_SYSTEM_STORE_INFO
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa377568.aspx
-    [StructLayout(LayoutKind.Sequential)]
-    public struct CERT_SYSTEM_STORE_INFO
-    {
-        public uint cbSize;
-    }
+    public uint cbSize;
 }

@@ -4,12 +4,12 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace Tests.Shared.Support.Resources
+namespace Tests.Shared.Support.Resources;
+
+public static class TestFiles
 {
-    public static class TestFiles
+    private static readonly byte[] s_cursorData =
     {
-        private static readonly byte[] s_cursorData =
-        {
             0xb5, 0xcb, 0x31, 0x0e, 0x40, 0x40, 0x10, 0x46, 0xe1, 0xb7, 0x22, 0x11, 0x15, 0x95, 0x96, 0x52,
             0xe9, 0x08, 0x6e, 0xc6, 0xd1, 0xf6, 0x28, 0x8e, 0xa0, 0x24, 0x11, 0xbf, 0xd9, 0xd8, 0x84, 0x0a,
             0x8d, 0x37, 0xf9, 0x9a, 0x99, 0x0c, 0x24, 0x38, 0x9a, 0x06, 0x4a, 0x72, 0x3a, 0x07, 0x15, 0xd0,
@@ -18,11 +18,10 @@ namespace Tests.Shared.Support.Resources
             0x1b, 0xa4, 0xc5, 0x7e, 0xd6, 0xe8, 0xa5, 0x03
         };
 
-        private static Stream GetUncompressedStream(byte[] compressedData)
-        {
-            return new DeflateStream(new MemoryStream(compressedData, writable: false), CompressionMode.Decompress);
-        }
-
-        public static Stream GetTestCursor() => GetUncompressedStream(s_cursorData);
+    private static Stream GetUncompressedStream(byte[] compressedData)
+    {
+        return new DeflateStream(new MemoryStream(compressedData, writable: false), CompressionMode.Decompress);
     }
+
+    public static Stream GetTestCursor() => GetUncompressedStream(s_cursorData);
 }

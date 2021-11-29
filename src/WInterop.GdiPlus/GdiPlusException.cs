@@ -3,15 +3,14 @@
 
 using WInterop.Errors;
 
-namespace WInterop.GdiPlus
-{
-    public class GdiPlusException : WInteropIOException
-    {
-        public GdiPlusException(GpStatus status) : base(status.ToString())
-        {
-            Status = status;
-        }
+namespace WInterop.GdiPlus;
 
-        public GpStatus Status { get; private set; }
+public class GdiPlusException : WInteropIOException
+{
+    public GdiPlusException(GpStatus status) : base(status.ToString())
+    {
+        Status = status;
     }
+
+    public GpStatus Status { get; private set; }
 }

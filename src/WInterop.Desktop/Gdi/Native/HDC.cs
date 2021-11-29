@@ -3,17 +3,16 @@
 
 using System;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+public readonly struct HDC
 {
-    public readonly struct HDC
+    public nuint Handle { get; }
+
+    public HDC(nuint handle)
     {
-        public nuint Handle { get; }
-
-        public HDC(nuint handle)
-        {
-            Handle = handle;
-        }
-
-        public bool IsInvalid => Handle == 0 || Handle == unchecked((nuint)(-1));
+        Handle = handle;
     }
+
+    public bool IsInvalid => Handle == 0 || Handle == unchecked((nuint)(-1));
 }

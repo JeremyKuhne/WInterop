@@ -5,26 +5,25 @@ using Xunit;
 using FluentAssertions;
 using WInterop.Support;
 
-namespace SupportTests
-{
-    public class StructsTests
-    {
-        [Fact]
-        public unsafe void AddressOf()
-        {
-            int foo = 6;
-            int* directAddress = &foo;
-            int* helper = Structs.AddressOf(ref foo);
-            (directAddress == helper).Should().BeTrue("Address should be the same");
-            helper->Should().Be(*directAddress);
-        }
+namespace SupportTests;
 
-        [Fact]
-        public unsafe void SizeOf_Int()
-        {
-            Structs.SizeInBytes<int>().Should().Be(4);
-            int i = 6;
-            Structs.SizeInBytes(ref i).Should().Be(4);
-        }
+public class StructsTests
+{
+    [Fact]
+    public unsafe void AddressOf()
+    {
+        int foo = 6;
+        int* directAddress = &foo;
+        int* helper = Structs.AddressOf(ref foo);
+        (directAddress == helper).Should().BeTrue("Address should be the same");
+        helper->Should().Be(*directAddress);
+    }
+
+    [Fact]
+    public unsafe void SizeOf_Int()
+    {
+        Structs.SizeInBytes<int>().Should().Be(4);
+        int i = 6;
+        Structs.SizeInBytes(ref i).Should().Be(4);
     }
 }

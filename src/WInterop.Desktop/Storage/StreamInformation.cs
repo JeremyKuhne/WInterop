@@ -4,47 +4,46 @@
 using System.Collections.Generic;
 using WInterop.Storage.Native;
 
-namespace WInterop.Storage
+namespace WInterop.Storage;
+
+/// <summary>
+///  Basic information about an alternate stream.
+/// </summary>
+public struct StreamInformation
 {
     /// <summary>
-    ///  Basic information about an alternate stream.
+    ///  Name of the stream
     /// </summary>
-    public struct StreamInformation
+    public string Name;
+
+    /// <summary>
+    ///  Size of the stream
+    /// </summary>
+    public ulong Size;
+
+    /// <summary>
+    ///  Allocated size of the stream
+    /// </summary>
+    public ulong AllocationSize;
+
+    public unsafe StreamInformation(FILE_STREAM_INFORMATION* info)
     {
-        /// <summary>
-        ///  Name of the stream
-        /// </summary>
-        public string Name;
+        Name = info->StreamName.CreateString();
+        Size = info->StreamSize;
+        AllocationSize = info->StreamAllocationSize;
+    }
 
-        /// <summary>
-        ///  Size of the stream
-        /// </summary>
-        public ulong Size;
-
-        /// <summary>
-        ///  Allocated size of the stream
-        /// </summary>
-        public ulong AllocationSize;
-
-        public unsafe StreamInformation(FILE_STREAM_INFORMATION* info)
+    public static unsafe IEnumerable<StreamInformation> Create(FILE_STREAM_INFORMATION* info)
+    {
+        var infos = new List<StreamInformation>();
+        byte* start = (byte*)info;
+        while (true)
         {
-            Name = info->StreamName.CreateString();
-            Size = info->StreamSize;
-            AllocationSize = info->StreamAllocationSize;
+            infos.Add(new StreamInformation(info));
+            if (info->NextEntryOffset == 0) break;
+            info = (FILE_STREAM_INFORMATION*)(start + info->NextEntryOffset);
         }
 
-        public static unsafe IEnumerable<StreamInformation> Create(FILE_STREAM_INFORMATION* info)
-        {
-            var infos = new List<StreamInformation>();
-            byte* start = (byte*)info;
-            while (true)
-            {
-                infos.Add(new StreamInformation(info));
-                if (info->NextEntryOffset == 0) break;
-                info = (FILE_STREAM_INFORMATION*)(start + info->NextEntryOffset);
-            }
-
-            return infos;
-        }
+        return infos;
     }
 }

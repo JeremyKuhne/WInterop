@@ -3,34 +3,33 @@
 
 using System;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+[Flags]
+public enum IdlFlag : ushort
 {
-    [Flags]
-    public enum IdlFlag : ushort
-    {
-        /// <summary>
-        ///  [IDLFLAG_NONE]
-        /// </summary>
-        None = 0x0,
+    /// <summary>
+    ///  [IDLFLAG_NONE]
+    /// </summary>
+    None = 0x0,
 
-        /// <summary>
-        ///  [IDLFLAG_FIN]
-        /// </summary>
-        In = 0x1,
+    /// <summary>
+    ///  [IDLFLAG_FIN]
+    /// </summary>
+    In = 0x1,
 
-        /// <summary>
-        ///  [IDLFLAG_FOUT]
-        /// </summary>
-        Out = 0x2,
+    /// <summary>
+    ///  [IDLFLAG_FOUT]
+    /// </summary>
+    Out = 0x2,
 
-        /// <summary>
-        ///  [IDLFLAG_FLCID]
-        /// </summary>
-        LocalIdentifer = 0x4,
+    /// <summary>
+    ///  [IDLFLAG_FLCID]
+    /// </summary>
+    LocalIdentifer = 0x4,
 
-        /// <summary>
-        ///  [IDLFLAG_FRETVAL]
-        /// </summary>
-        ReturnValue = 0x8,
-    }
+    /// <summary>
+    ///  [IDLFLAG_FRETVAL]
+    /// </summary>
+    ReturnValue = 0x8,
 }

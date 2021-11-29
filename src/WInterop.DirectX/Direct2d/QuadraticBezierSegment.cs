@@ -3,14 +3,13 @@
 
 using System.Drawing;
 
-namespace WInterop.Direct2d
+namespace WInterop.Direct2d;
+
+/// <summary>
+///  [D2D1_QUADRATIC_BEZIER_SEGMENT]
+/// </summary>
+public readonly struct QuadraticBezierSegment
 {
-    /// <summary>
-    ///  [D2D1_QUADRATIC_BEZIER_SEGMENT]
-    /// </summary>
-    public readonly struct QuadraticBezierSegment
-    {
-        public readonly PointF Point1;
-        public readonly PointF Point2;
-    }
+    public readonly PointF Point1;
+    public readonly PointF Point2;
 }

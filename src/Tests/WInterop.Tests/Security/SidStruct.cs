@@ -5,73 +5,72 @@ using FluentAssertions;
 using WInterop.Security;
 using Xunit;
 
-namespace SecurityTests
+namespace SecurityTests;
+
+public class SidStruct
 {
-    public class SidStruct
+    [Fact]
+    public unsafe void SidSize()
     {
-        [Fact]
-        public unsafe void SidSize()
-        {
-            sizeof(SID).Should().Be(68);
-        }
+        sizeof(SID).Should().Be(68);
+    }
 
-        [Fact]
-        public unsafe void PassedAsInDoesNotCopy()
-        {
-            SID sid = new SID();
-            SID* sp = &sid;
+    [Fact]
+    public unsafe void PassedAsInDoesNotCopy()
+    {
+        SID sid = new SID();
+        SID* sp = &sid;
 
-            void CheckSid(in SID insid, SID* insp)
+        void CheckSid(in SID insid, SID* insp)
+        {
+            fixed (SID* pinsid = &insid)
             {
-                fixed (SID* pinsid = &insid)
-                {
-                    (pinsid == insp).Should().BeTrue();
-                }
+                (pinsid == insp).Should().BeTrue();
             }
-
-            CheckSid(sid, sp);
         }
 
-        [Fact]
-        public void EmptySidEqualsSelf()
-        {
-            SID sid = new SID();
-            sid.Equals(sid).Should().BeTrue();
-        }
+        CheckSid(sid, sp);
+    }
 
-        [Fact]
-        public void EmptySidEqualsNewEmptySid()
-        {
-            SID sid = new SID();
-            sid.Equals(new SID()).Should().BeTrue();
-        }
+    [Fact]
+    public void EmptySidEqualsSelf()
+    {
+        SID sid = new SID();
+        sid.Equals(sid).Should().BeTrue();
+    }
 
-        [Fact]
-        public void EmptySidEqualsDefault()
-        {
-            SID sid = new SID();
-            sid.Equals(new SID()).Should().BeTrue();
-        }
+    [Fact]
+    public void EmptySidEqualsNewEmptySid()
+    {
+        SID sid = new SID();
+        sid.Equals(new SID()).Should().BeTrue();
+    }
 
-        [Fact]
-        public void KnownSidEqualsSelf()
-        {
-            SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
-            sid.Equals(sid).Should().BeTrue();
-        }
+    [Fact]
+    public void EmptySidEqualsDefault()
+    {
+        SID sid = new SID();
+        sid.Equals(new SID()).Should().BeTrue();
+    }
 
-        [Fact]
-        public unsafe void KnownSidNotEqualsDefault()
-        {
-            SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
-            sid.Equals(default).Should().BeFalse();
-        }
+    [Fact]
+    public void KnownSidEqualsSelf()
+    {
+        SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
+        sid.Equals(sid).Should().BeTrue();
+    }
 
-        [Fact]
-        public void KnownSidNotEqualsOtherKnownSid()
-        {
-            SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
-            sid.Equals(Security.CreateWellKnownSid(WellKnownSID.Users)).Should().BeFalse();
-        }
+    [Fact]
+    public unsafe void KnownSidNotEqualsDefault()
+    {
+        SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
+        sid.Equals(default).Should().BeFalse();
+    }
+
+    [Fact]
+    public void KnownSidNotEqualsOtherKnownSid()
+    {
+        SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
+        sid.Equals(Security.CreateWellKnownSid(WellKnownSID.Users)).Should().BeFalse();
     }
 }

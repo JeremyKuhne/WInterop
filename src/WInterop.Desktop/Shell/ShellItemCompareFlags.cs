@@ -3,15 +3,14 @@
 
 using System;
 
-namespace WInterop.Shell
+namespace WInterop.Shell;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb762543.aspx
+[Flags]
+public enum ShellItemCompareFlags : uint
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb762543.aspx
-    [Flags]
-    public enum ShellItemCompareFlags : uint
-    {
-        Display = 0,
-        AllFields = 0x80000000,
-        Canonical = 0x10000000,
-        TestFileSystemPathIfNotEqual = 0x20000000
-    }
+    Display = 0,
+    AllFields = 0x80000000,
+    Canonical = 0x10000000,
+    TestFileSystemPathIfNotEqual = 0x20000000
 }

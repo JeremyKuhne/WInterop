@@ -3,10 +3,9 @@
 
 using System;
 
-namespace WInterop.GdiPlus.Native
+namespace WInterop.GdiPlus.Native;
+
+public readonly struct GpPen
 {
-    public readonly struct GpPen
-    {
-        public nuint Handle { get; }
-    }
+    public nuint Handle { get; }
 }

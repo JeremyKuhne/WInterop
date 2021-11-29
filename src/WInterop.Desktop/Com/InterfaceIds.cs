@@ -3,14 +3,13 @@
 
 using System;
 
-namespace WInterop.Com
+namespace WInterop.Com;
+
+public static class InterfaceIds
 {
-    public static class InterfaceIds
-    {
-        /// <summary>
-        ///  Interface ID for <see cref="IStorage"/>.
-        ///  0000000b-0000-0000-C000-000000000046
-        /// </summary>
-        public static Guid IID_IStorage = new Guid(0x0000000B, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46);
-    }
+    /// <summary>
+    ///  Interface ID for <see cref="IStorage"/>.
+    ///  0000000b-0000-0000-C000-000000000046
+    /// </summary>
+    public static Guid IID_IStorage = new Guid(0x0000000B, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46);
 }

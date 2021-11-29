@@ -3,13 +3,12 @@
 
 using WInterop.Handles;
 
-namespace WInterop.Security
+namespace WInterop.Security;
+
+/// <summary>
+///  Safe handle for an access token
+/// </summary>
+public class AccessToken : CloseHandle
 {
-    /// <summary>
-    ///  Safe handle for an access token
-    /// </summary>
-    public class AccessToken : CloseHandle
-    {
-        public AccessToken() : base() { }
-    }
+    public AccessToken() : base() { }
 }

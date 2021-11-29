@@ -4,25 +4,24 @@
 using System;
 using WInterop.GdiPlus.Native;
 
-namespace WInterop.GdiPlus
+namespace WInterop.GdiPlus;
+
+public class Image : IDisposable
 {
-    public class Image : IDisposable
+    protected GpImage _gpImage;
+
+    public static implicit operator GpImage(Image image) => image._gpImage;
+
+    private void Dispose(bool disposing)
     {
-        protected GpImage _gpImage;
+        GdiPlusImports.GdipDisposeImage(_gpImage).ThrowIfFailed();
+    }
 
-        public static implicit operator GpImage(Image image) => image._gpImage;
+    ~Image() => Dispose(disposing: false);
 
-        private void Dispose(bool disposing)
-        {
-            GdiPlusImports.GdipDisposeImage(_gpImage).ThrowIfFailed();
-        }
-
-        ~Image() => Dispose(disposing: false);
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

@@ -3,12 +3,11 @@
 
 using System;
 
-namespace WInterop.GdiPlus.EmfPlus
-{
-    public delegate bool EnumerateMetafilePlusCallback(
-        RecordType recordType,
-        uint flags,
-        uint dataSize,
-        IntPtr data,
-        IntPtr callbackData);
-}
+namespace WInterop.GdiPlus.EmfPlus;
+
+public delegate bool EnumerateMetafilePlusCallback(
+    RecordType recordType,
+    uint flags,
+    uint dataSize,
+    IntPtr data,
+    IntPtr callbackData);

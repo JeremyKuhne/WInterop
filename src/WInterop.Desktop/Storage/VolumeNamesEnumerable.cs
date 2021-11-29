@@ -10,131 +10,130 @@ using WInterop.Errors;
 using WInterop.Storage.Native;
 using WInterop.Support.Buffers;
 
-namespace WInterop.Storage
+namespace WInterop.Storage;
+
+/// <summary>
+///  Encapsulates a finding volume names.
+/// </summary>
+public sealed class VolumeNamesEnumerable : IEnumerable<string>
 {
-    /// <summary>
-    ///  Encapsulates a finding volume names.
-    /// </summary>
-    public sealed class VolumeNamesEnumerable : IEnumerable<string>
+    public IEnumerator<string> GetEnumerator() => new VolumeNamesEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    private class VolumeNamesEnumerator : IEnumerator<string>
     {
-        public IEnumerator<string> GetEnumerator() => new VolumeNamesEnumerator();
+        private FindVolumeHandle? _findHandle;
+        private bool _lastEntryFound;
+        private StringBuffer? _buffer;
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        private class VolumeNamesEnumerator : IEnumerator<string>
+        public VolumeNamesEnumerator()
         {
-            private FindVolumeHandle? _findHandle;
-            private bool _lastEntryFound;
-            private StringBuffer? _buffer;
+            _buffer = StringBuffer.Cache.Acquire();
+            Current = string.Empty;
+            Reset();
+        }
 
-            public VolumeNamesEnumerator()
+        public string Current { get; private set; }
+
+        object IEnumerator.Current => Current;
+
+        public bool MoveNext()
+        {
+            if (_lastEntryFound) return false;
+
+            Current = _findHandle is null
+                ? FindFirstVolume()
+                : FindNextVolume();
+
+            return !_lastEntryFound;
+        }
+
+        private string FindFirstVolume()
+        {
+            if (_buffer is null)
+                throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
+
+            _findHandle = StorageImports.FindFirstVolumeW(
+                _buffer,
+                _buffer.CharCapacity);
+
+            if (_findHandle.IsInvalid)
             {
-                _buffer = StringBuffer.Cache.Acquire();
-                Current = string.Empty;
-                Reset();
-            }
-
-            public string Current { get; private set; }
-
-            object IEnumerator.Current => Current;
-
-            public bool MoveNext()
-            {
-                if (_lastEntryFound) return false;
-
-                Current = _findHandle is null
-                    ? FindFirstVolume()
-                    : FindNextVolume();
-
-                return !_lastEntryFound;
-            }
-
-            private string FindFirstVolume()
-            {
-                if (_buffer is null)
-                    throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
-
-                _findHandle = StorageImports.FindFirstVolumeW(
-                    _buffer,
-                    _buffer.CharCapacity);
-
-                if (_findHandle.IsInvalid)
+                WindowsError error = Error.GetLastError();
+                if (error == WindowsError.ERROR_FILENAME_EXCED_RANGE)
                 {
-                    WindowsError error = Error.GetLastError();
-                    if (error == WindowsError.ERROR_FILENAME_EXCED_RANGE)
-                    {
+                    _buffer.EnsureCharCapacity(_buffer.CharCapacity + 64);
+                    return FindFirstVolume();
+                }
+
+                throw error.GetException();
+            }
+
+            _buffer.SetLengthToFirstNull();
+            return _buffer.ToString();
+        }
+
+        private string FindNextVolume()
+        {
+            Debug.Assert(!(_findHandle is null));
+
+            if (_buffer is null)
+                throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
+
+            if (!StorageImports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
+            {
+                WindowsError error = Error.GetLastError();
+                switch (error)
+                {
+                    case WindowsError.ERROR_FILENAME_EXCED_RANGE:
                         _buffer.EnsureCharCapacity(_buffer.CharCapacity + 64);
-                        return FindFirstVolume();
-                    }
-
-                    throw error.GetException();
+                        return FindNextVolume();
+                    case WindowsError.ERROR_NO_MORE_FILES:
+                        _lastEntryFound = true;
+                        return string.Empty;
+                    default:
+                        throw error.GetException();
                 }
-
-                _buffer.SetLengthToFirstNull();
-                return _buffer.ToString();
             }
 
-            private string FindNextVolume()
-            {
-                Debug.Assert(!(_findHandle is null));
+            _buffer.SetLengthToFirstNull();
+            return _buffer.ToString();
+        }
 
-                if (_buffer is null)
-                    throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
+        public void Reset()
+        {
+            CloseHandle();
+            _lastEntryFound = false;
+        }
 
-                if (!StorageImports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
-                {
-                    WindowsError error = Error.GetLastError();
-                    switch (error)
-                    {
-                        case WindowsError.ERROR_FILENAME_EXCED_RANGE:
-                            _buffer.EnsureCharCapacity(_buffer.CharCapacity + 64);
-                            return FindNextVolume();
-                        case WindowsError.ERROR_NO_MORE_FILES:
-                            _lastEntryFound = true;
-                            return string.Empty;
-                        default:
-                            throw error.GetException();
-                    }
-                }
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
 
-                _buffer.SetLengthToFirstNull();
-                return _buffer.ToString();
-            }
-
-            public void Reset()
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
             {
                 CloseHandle();
-                _lastEntryFound = false;
             }
 
-            public void Dispose()
-            {
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
+            StringBuffer? buffer = Interlocked.Exchange(ref _buffer, null);
+            if (buffer != null)
+                StringBuffer.Cache.Release(buffer);
+        }
 
-            private void Dispose(bool disposing)
-            {
-                if (disposing)
-                {
-                    CloseHandle();
-                }
+        private void CloseHandle()
+        {
+            _findHandle?.Dispose();
+            _findHandle = null;
+        }
 
-                StringBuffer? buffer = Interlocked.Exchange(ref _buffer, null);
-                if (buffer != null)
-                    StringBuffer.Cache.Release(buffer);
-            }
-
-            private void CloseHandle()
-            {
-                _findHandle?.Dispose();
-                _findHandle = null;
-            }
-
-            ~VolumeNamesEnumerator()
-            {
-                Dispose(disposing: false);
-            }
+        ~VolumeNamesEnumerator()
+        {
+            Dispose(disposing: false);
         }
     }
 }

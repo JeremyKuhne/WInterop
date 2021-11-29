@@ -3,10 +3,9 @@
 
 using System;
 
-namespace WInterop.GdiPlus.Native
+namespace WInterop.GdiPlus.Native;
+
+public struct GpRegion
 {
-    public struct GpRegion
-    {
-        public nuint Handle { get; }
-    }
+    public nuint Handle { get; }
 }

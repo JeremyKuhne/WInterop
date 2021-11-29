@@ -3,36 +3,35 @@
 
 using System;
 
-namespace WInterop.Support.Buffers
+namespace WInterop.Support.Buffers;
+
+public class CheckedDisposableReader : CheckedReader, IDisposable
 {
-    public class CheckedDisposableReader : CheckedReader, IDisposable
+    private readonly IDisposable? _disposable;
+
+    public CheckedDisposableReader(ISizedBuffer buffer) : base(buffer)
     {
-        private readonly IDisposable? _disposable;
+        _disposable = buffer as IDisposable;
+    }
 
-        public CheckedDisposableReader(ISizedBuffer buffer) : base(buffer)
-        {
-            _disposable = buffer as IDisposable;
-        }
+    public CheckedDisposableReader(IBuffer buffer, ulong byteCapacity)
+        : base(buffer, byteCapacity)
+    {
+        _disposable = buffer as IDisposable;
+    }
 
-        public CheckedDisposableReader(IBuffer buffer, ulong byteCapacity)
-            : base(buffer, byteCapacity)
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            _disposable = buffer as IDisposable;
+            _disposable?.Dispose();
         }
+    }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _disposable?.Dispose();
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
+    // This code added to correctly implement the disposable pattern.
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        Dispose(true);
     }
 }

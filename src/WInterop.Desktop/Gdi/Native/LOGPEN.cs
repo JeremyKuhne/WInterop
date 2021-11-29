@@ -3,13 +3,12 @@
 
 using System.Drawing;
 
-namespace WInterop.Gdi.Native
+namespace WInterop.Gdi.Native;
+
+// https://msdn.microsoft.com/en-us/library/dd145041.aspx
+public struct LOGPEN
 {
-    // https://msdn.microsoft.com/en-us/library/dd145041.aspx
-    public struct LOGPEN
-    {
-        public PenStyle lopnStyle;
-        public Point lopnWidth;
-        public COLORREF lopnColor;
-    }
+    public PenStyle lopnStyle;
+    public Point lopnWidth;
+    public COLORREF lopnColor;
 }

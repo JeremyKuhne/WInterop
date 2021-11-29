@@ -3,13 +3,12 @@
 
 using System;
 
-namespace WInterop.Com.Native
+namespace WInterop.Com.Native;
+
+public ref struct ARRAYDESC
 {
-    public ref struct ARRAYDESC
-    {
-        public TYPEDESC tdescElem;
-        public ushort cDims;
-        private SafeArrayBound _rgbounds;
-        public ReadOnlySpan<SafeArrayBound> rgbounds => TrailingArray<SafeArrayBound>.GetBuffer(in _rgbounds, cDims);
-    }
+    public TYPEDESC tdescElem;
+    public ushort cDims;
+    private SafeArrayBound _rgbounds;
+    public ReadOnlySpan<SafeArrayBound> rgbounds => TrailingArray<SafeArrayBound>.GetBuffer(in _rgbounds, cDims);
 }

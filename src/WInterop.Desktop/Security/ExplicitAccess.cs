@@ -3,26 +3,25 @@
 
 using WInterop.Security.Native;
 
-namespace WInterop.Security
-{
-    /// <summary>
-    ///  Access right
-    /// </summary>
-    public unsafe readonly struct ExplicitAccess
-    {
-        public AccessMask Permissions { get; }
-        public AccessMode Mode { get; }
-        public Inheritance Inheritance { get; }
-        public TrusteeType TrusteeType { get; }
-        public string? TrusteeName { get; }
+namespace WInterop.Security;
 
-        public ExplicitAccess(EXPLICIT_ACCESS* access)
-        {
-            Permissions = access->grfAccessPermissions;
-            Mode = access->grfAccessMode;
-            Inheritance = access->grfInheritance;
-            TrusteeType = access->Trustee.TrusteeType;
-            TrusteeName = access->Trustee.TrusteeName;
-        }
+/// <summary>
+///  Access right
+/// </summary>
+public unsafe readonly struct ExplicitAccess
+{
+    public AccessMask Permissions { get; }
+    public AccessMode Mode { get; }
+    public Inheritance Inheritance { get; }
+    public TrusteeType TrusteeType { get; }
+    public string? TrusteeName { get; }
+
+    public ExplicitAccess(EXPLICIT_ACCESS* access)
+    {
+        Permissions = access->grfAccessPermissions;
+        Mode = access->grfAccessMode;
+        Inheritance = access->grfInheritance;
+        TrusteeType = access->Trustee.TrusteeType;
+        TrusteeName = access->Trustee.TrusteeName;
     }
 }

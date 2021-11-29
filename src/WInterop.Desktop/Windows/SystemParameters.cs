@@ -4,52 +4,51 @@
 using WInterop.Errors;
 using WInterop.Windows.Native;
 
-namespace WInterop.Windows
+namespace WInterop.Windows;
+
+public class SystemParameters
 {
-    public class SystemParameters
+    private SystemParameters() { }
+
+    public static SystemParameters Instance { get; } = new SystemParameters();
+
+    public unsafe bool GetBeep()
     {
-        private SystemParameters() { }
+        IntBoolean beeperOn = default;
+        Error.ThrowLastErrorIfFalse(
+            WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_GETBEEP, 0, &beeperOn, 0));
+        return beeperOn;
+    }
 
-        public static SystemParameters Instance { get; } = new SystemParameters();
+    public unsafe void SetBeep(bool beeperOn, SystemParameterOptions options = 0)
+        => Error.ThrowLastErrorIfFalse(
+            WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_SETBEEP, (IntBoolean)beeperOn, null, options));
 
-        public unsafe bool GetBeep()
-        {
-            IntBoolean beeperOn = default;
-            Error.ThrowLastErrorIfFalse(
-                WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_GETBEEP, 0, &beeperOn, 0));
-            return beeperOn;
-        }
+    public unsafe bool GetBlockSendInputResets()
+    {
+        IntBoolean simulatedInputBlocked = default;
+        Error.ThrowLastErrorIfFalse(
+            WindowsImports.SystemParametersInfoW(
+                SystemParameterType.SPI_GETBLOCKSENDINPUTRESETS,
+                0,
+                &simulatedInputBlocked,
+                0));
+        return simulatedInputBlocked;
+    }
 
-        public unsafe void SetBeep(bool beeperOn, SystemParameterOptions options = 0)
-            => Error.ThrowLastErrorIfFalse(
-                WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_SETBEEP, (IntBoolean)beeperOn, null, options));
+    public unsafe void SetBlockSendInputResets(bool simulatedInputBlocked, SystemParameterOptions options = 0)
+        => Error.ThrowLastErrorIfFalse(
+            WindowsImports.SystemParametersInfoW(
+                SystemParameterType.SPI_SETBLOCKSENDINPUTRESETS,
+                (IntBoolean)simulatedInputBlocked,
+                null,
+                options));
 
-        public unsafe bool GetBlockSendInputResets()
-        {
-            IntBoolean simulatedInputBlocked = default;
-            Error.ThrowLastErrorIfFalse(
-                WindowsImports.SystemParametersInfoW(
-                    SystemParameterType.SPI_GETBLOCKSENDINPUTRESETS,
-                    0,
-                    &simulatedInputBlocked,
-                    0));
-            return simulatedInputBlocked;
-        }
-
-        public unsafe void SetBlockSendInputResets(bool simulatedInputBlocked, SystemParameterOptions options = 0)
-            => Error.ThrowLastErrorIfFalse(
-                WindowsImports.SystemParametersInfoW(
-                    SystemParameterType.SPI_SETBLOCKSENDINPUTRESETS,
-                    (IntBoolean)simulatedInputBlocked,
-                    null,
-                    options));
-
-        public unsafe uint GetWheelScrollLines()
-        {
-            uint linesToScroll;
-            Error.ThrowLastErrorIfFalse(
-                WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_GETWHEELSCROLLLINES, 0, &linesToScroll, 0));
-            return linesToScroll;
-        }
+    public unsafe uint GetWheelScrollLines()
+    {
+        uint linesToScroll;
+        Error.ThrowLastErrorIfFalse(
+            WindowsImports.SystemParametersInfoW(SystemParameterType.SPI_GETWHEELSCROLLLINES, 0, &linesToScroll, 0));
+        return linesToScroll;
     }
 }

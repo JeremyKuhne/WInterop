@@ -5,45 +5,44 @@ using System;
 using System.Runtime.CompilerServices;
 using WInterop.GdiPlus.Native;
 
-namespace WInterop.GdiPlus
+namespace WInterop.GdiPlus;
+
+public class Brush : IDisposable
 {
-    public class Brush : IDisposable
+    private readonly GpBrush _gpBrush;
+
+    public Brush(GpBrush gpBrush)
     {
-        private readonly GpBrush _gpBrush;
+        if (gpBrush.Handle == 0)
+            throw new ArgumentNullException(nameof(gpBrush));
 
-        public Brush(GpBrush gpBrush)
+        _gpBrush = gpBrush;
+    }
+
+    public unsafe Brush(ARGB color)
+    {
+        GdiPlus.Init();
+        Unsafe.SkipInit(out GpBrush gpBrush);
+        GdiPlusImports.GdipCreateSolidFill(color, &gpBrush).ThrowIfFailed();
+        _gpBrush = gpBrush;
+    }
+
+    public static implicit operator GpBrush(Brush brush) => brush._gpBrush;
+
+    private void Dispose(bool disposing)
+    {
+        GpStatus status = GdiPlusImports.GdipDeleteBrush(_gpBrush);
+        if (disposing)
         {
-            if (gpBrush.Handle == 0)
-                throw new ArgumentNullException(nameof(gpBrush));
-
-            _gpBrush = gpBrush;
+            status.ThrowIfFailed();
         }
+    }
 
-        public unsafe Brush(ARGB color)
-        {
-            GdiPlus.Init();
-            Unsafe.SkipInit(out GpBrush gpBrush);
-            GdiPlusImports.GdipCreateSolidFill(color, &gpBrush).ThrowIfFailed();
-            _gpBrush = gpBrush;
-        }
+    ~Brush() => Dispose(disposing: false);
 
-        public static implicit operator GpBrush(Brush brush) => brush._gpBrush;
-
-        private void Dispose(bool disposing)
-        {
-            GpStatus status = GdiPlusImports.GdipDeleteBrush(_gpBrush);
-            if (disposing)
-            {
-                status.ThrowIfFailed();
-            }
-        }
-
-        ~Brush() => Dispose(disposing: false);
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

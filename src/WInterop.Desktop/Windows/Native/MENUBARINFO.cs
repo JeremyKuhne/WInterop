@@ -3,15 +3,14 @@
 
 using WInterop.Gdi;
 
-namespace WInterop.Windows.Native
+namespace WInterop.Windows.Native;
+
+public struct MENUBARINFO
 {
-    public struct MENUBARINFO
-    {
-        public uint cbSize;
-        public Rect rcBar;
-        public HMENU hMenu;
-        public HWND hwndMenu;
-        public IntBoolean fBarFocused;
-        public IntBoolean fFocused;
-    }
+    public uint cbSize;
+    public Rect rcBar;
+    public HMENU hMenu;
+    public HWND hwndMenu;
+    public IntBoolean fBarFocused;
+    public IntBoolean fFocused;
 }

@@ -5,19 +5,18 @@ using FluentAssertions;
 using WInterop.Storage;
 using Xunit;
 
-namespace StorageTests
+namespace StorageTests;
+
+public partial class DiskTests
 {
-    public partial class DiskTests
+    [Fact]
+    public void GetDiskFreeSpaceForCurrentDrive()
     {
-        [Fact]
-        public void GetDiskFreeSpaceForCurrentDrive()
-        {
-            var freeSpace = Storage.GetDiskFreeSpace(null);
-            freeSpace.NumberOfFreeClusters.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfClusters);
-            var extendedFreeSpace = Storage.GetDiskFreeSpaceExtended(null);
-            extendedFreeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(extendedFreeSpace.TotalNumberOfBytes);
-            extendedFreeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(extendedFreeSpace.TotalNumberOfFreeBytes);
-            extendedFreeSpace.TotalNumberOfBytes.Should().Be(freeSpace.SectorsPerCluster * (ulong)freeSpace.BytesPerSector * freeSpace.TotalNumberOfClusters);
-        }
+        var freeSpace = Storage.GetDiskFreeSpace(null);
+        freeSpace.NumberOfFreeClusters.Should().BeLessOrEqualTo(freeSpace.TotalNumberOfClusters);
+        var extendedFreeSpace = Storage.GetDiskFreeSpaceExtended(null);
+        extendedFreeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(extendedFreeSpace.TotalNumberOfBytes);
+        extendedFreeSpace.FreeBytesAvailable.Should().BeLessOrEqualTo(extendedFreeSpace.TotalNumberOfFreeBytes);
+        extendedFreeSpace.TotalNumberOfBytes.Should().Be(freeSpace.SectorsPerCluster * (ulong)freeSpace.BytesPerSector * freeSpace.TotalNumberOfClusters);
     }
 }

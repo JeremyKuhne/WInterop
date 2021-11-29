@@ -3,25 +3,24 @@
 
 using System;
 
-namespace WInterop.Devices.Native
+namespace WInterop.Devices.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/hardware/ff562288.aspx
+public unsafe struct MOUNTMGR_MOUNT_POINTS
 {
-    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff562288.aspx
-    public unsafe struct MOUNTMGR_MOUNT_POINTS
+    public uint Size;
+    public uint NumberOfMountPoints;
+    private MOUNTMGR_MOUNT_POINT _MountPoints;
+
+    public unsafe ReadOnlySpan<MOUNTMGR_MOUNT_POINT> MountPoints
     {
-        public uint Size;
-        public uint NumberOfMountPoints;
-        private MOUNTMGR_MOUNT_POINT _MountPoints;
-
-        public unsafe ReadOnlySpan<MOUNTMGR_MOUNT_POINT> MountPoints
+        get
         {
-            get
-            {
-                if (NumberOfMountPoints == 0)
-                    return default;
+            if (NumberOfMountPoints == 0)
+                return default;
 
-                fixed (MOUNTMGR_MOUNT_POINT* m = &_MountPoints)
-                    return new ReadOnlySpan<MOUNTMGR_MOUNT_POINT>(m, (int)NumberOfMountPoints);
-            }
+            fixed (MOUNTMGR_MOUNT_POINT* m = &_MountPoints)
+                return new ReadOnlySpan<MOUNTMGR_MOUNT_POINT>(m, (int)NumberOfMountPoints);
         }
     }
 }

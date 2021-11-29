@@ -4,13 +4,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Cryptography.Native
+namespace WInterop.Cryptography.Native;
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa381414.aspx
+[StructLayout(LayoutKind.Sequential)]
+public struct CRYPT_DATA_BLOB
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa381414.aspx
-    [StructLayout(LayoutKind.Sequential)]
-    public struct CRYPT_DATA_BLOB
-    {
-        private readonly uint cbData;
-        private readonly IntPtr pbData;
-    }
+    private readonly uint cbData;
+    private readonly IntPtr pbData;
 }

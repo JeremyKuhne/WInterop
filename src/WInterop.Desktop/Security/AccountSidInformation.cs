@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace WInterop.Security
+namespace WInterop.Security;
+
+public struct AccountSidInformation
 {
-    public struct AccountSidInformation
-    {
-        public string Name;
-        public string DomainName;
-        public SidNameUse Usage;
-    }
+    public string Name;
+    public string DomainName;
+    public SidNameUse Usage;
 }

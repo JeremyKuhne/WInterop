@@ -4,23 +4,22 @@
 using System;
 using WInterop.Handles;
 
-namespace WInterop.ProcessAndThreads
+namespace WInterop.ProcessAndThreads;
+
+/// <summary>
+///  Safe handle for a process.
+/// </summary>
+public class SafeProcessHandle : CloseHandle
 {
-    /// <summary>
-    ///  Safe handle for a process.
-    /// </summary>
-    public class SafeProcessHandle : CloseHandle
+    public SafeProcessHandle() : base() { }
+
+    public SafeProcessHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
     {
-        public SafeProcessHandle() : base() { }
+        SetHandle(handle);
+    }
 
-        public SafeProcessHandle(IntPtr handle, bool ownsHandle = true) : base(handle, ownsHandle)
-        {
-            SetHandle(handle);
-        }
-
-        public static implicit operator ProcessHandle(SafeProcessHandle handle)
-        {
-            return new ProcessHandle(handle.handle);
-        }
+    public static implicit operator ProcessHandle(SafeProcessHandle handle)
+    {
+        return new ProcessHandle(handle.handle);
     }
 }

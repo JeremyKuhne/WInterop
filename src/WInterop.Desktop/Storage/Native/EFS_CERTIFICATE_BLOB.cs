@@ -3,15 +3,14 @@
 
 using System;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Native;
+
+/// <summary>
+/// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364015.aspx">EFS_CERTIFICATE_BLOB</a> structure.
+/// </summary>
+public struct EFS_CERTIFICATE_BLOB
 {
-    /// <summary>
-    /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364015.aspx">EFS_CERTIFICATE_BLOB</a> structure.
-    /// </summary>
-    public struct EFS_CERTIFICATE_BLOB
-    {
-        public uint dwCertEncodingType;
-        public uint cbData;
-        public IntPtr pbData;
-    }
+    public uint dwCertEncodingType;
+    public uint cbData;
+    public IntPtr pbData;
 }

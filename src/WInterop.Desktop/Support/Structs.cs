@@ -3,40 +3,39 @@
 
 using System;
 
-namespace WInterop.Support
+namespace WInterop.Support;
+
+public static class Structs
 {
-    public static class Structs
+    /// <summary>
+    ///  Returns the address of the given target struct.
+    /// </summary>
+    public static unsafe T* AddressOf<T>(ref T target) where T : unmanaged
     {
-        /// <summary>
-        ///  Returns the address of the given target struct.
-        /// </summary>
-        public static unsafe T* AddressOf<T>(ref T target) where T : unmanaged
+        fixed (T* p = &target)
         {
-            fixed (T* p = &target)
-            {
-                return p;
-            }
+            return p;
         }
+    }
 
-        /// <summary>
-        ///  Get the size (in bytes) of the given struct type.
-        /// </summary>
-        public static unsafe uint SizeInBytes<T>() where T : unmanaged
-        {
-            return (uint)sizeof(T);
-        }
+    /// <summary>
+    ///  Get the size (in bytes) of the given struct type.
+    /// </summary>
+    public static unsafe uint SizeInBytes<T>() where T : unmanaged
+    {
+        return (uint)sizeof(T);
+    }
 
-        /// <summary>
-        ///  Get the size (in bytes) of the given struct.
-        /// </summary>
-        public static unsafe uint SizeInBytes<T>(ref T target) where T : unmanaged
-        {
-            return (uint)sizeof(T);
-        }
+    /// <summary>
+    ///  Get the size (in bytes) of the given struct.
+    /// </summary>
+    public static unsafe uint SizeInBytes<T>(ref T target) where T : unmanaged
+    {
+        return (uint)sizeof(T);
+    }
 
-        public static unsafe Span<byte> AsByteSpan<T>(ref T target) where T : unmanaged
-        {
-            return new Span<byte>(AddressOf(ref target), (int)SizeInBytes(ref target));
-        }
+    public static unsafe Span<byte> AsByteSpan<T>(ref T target) where T : unmanaged
+    {
+        return new Span<byte>(AddressOf(ref target), (int)SizeInBytes(ref target));
     }
 }

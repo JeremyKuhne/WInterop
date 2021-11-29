@@ -5,18 +5,17 @@ using System;
 using System.Runtime.InteropServices;
 using WInterop.Windows;
 
-namespace WInterop.Shell.Native
+namespace WInterop.Shell.Native;
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+public unsafe struct BROWSEINFO
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct BROWSEINFO
-    {
-        public WindowHandle hwndOwner;
-        public ItemIdList pidlRoot;
-        public char* pszDisplayName;
-        public char* lpszTitle;
-        public BrowseInfoFlags ulFlags;
-        public IntPtr lpfn;
-        public LParam lParam;
-        public int iImage;
-    }
+    public WindowHandle hwndOwner;
+    public ItemIdList pidlRoot;
+    public char* pszDisplayName;
+    public char* lpszTitle;
+    public BrowseInfoFlags ulFlags;
+    public IntPtr lpfn;
+    public LParam lParam;
+    public int iImage;
 }

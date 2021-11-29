@@ -4,20 +4,19 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WInterop.Cryptography.Native
-{
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa377575.aspx
-    [StructLayout(LayoutKind.Sequential)]
-    public struct CERT_SYSTEM_STORE_RELOCATE_PARA
-    {
-        /// <summary>
-        ///  Can be HKEY hKeyBase
-        /// </summary>
-        public IntPtr pvBase;
+namespace WInterop.Cryptography.Native;
 
-        /// <summary>
-        ///  Can be LPCSTR pszSystemStore or LPCWSTR pwszSystemStore
-        /// </summary>
-        public IntPtr pvSystemStore;
-    }
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa377575.aspx
+[StructLayout(LayoutKind.Sequential)]
+public struct CERT_SYSTEM_STORE_RELOCATE_PARA
+{
+    /// <summary>
+    ///  Can be HKEY hKeyBase
+    /// </summary>
+    public IntPtr pvBase;
+
+    /// <summary>
+    ///  Can be LPCSTR pszSystemStore or LPCWSTR pwszSystemStore
+    /// </summary>
+    public IntPtr pvSystemStore;
 }

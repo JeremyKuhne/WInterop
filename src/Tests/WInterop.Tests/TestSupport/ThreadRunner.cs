@@ -5,40 +5,39 @@ using System;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 
-namespace Tests.Shared.Support
+namespace Tests.Shared.Support;
+
+public class ThreadRunner
 {
-    public class ThreadRunner
+    private void InstanceRun(Action action)
     {
-        private void InstanceRun(Action action)
+        Exception exception = null;
+        void CatchException()
         {
-            Exception exception = null;
-            void CatchException()
+            try
             {
-                try
-                {
-                    action();
-                }
-                catch (Exception inner)
-                {
-                    exception = inner;
-                }
+                action();
             }
-
-            Thread thread = new Thread(CatchException);
-            thread.Start();
-            thread.Join();
-            if (exception != null)
-                ExceptionDispatchInfo.Capture(exception).Throw();
+            catch (Exception inner)
+            {
+                exception = inner;
+            }
         }
 
-        /// <summary>
-        ///  Helper to run code on a separate thread and propogate exceptions to the current thread.
-        ///  Unlike Task.Run this won't use the ThreadPool to avoid messing up ThreadPool threads when
-        ///  attempting to change native thread state.
-        /// </summary>
-        public static void Run(Action action)
-        {
-            new ThreadRunner().InstanceRun(action);
-        }
+        Thread thread = new Thread(CatchException);
+        thread.Start();
+        thread.Join();
+        if (exception != null)
+            ExceptionDispatchInfo.Capture(exception).Throw();
+    }
+
+    /// <summary>
+    ///  Helper to run code on a separate thread and propogate exceptions to the current thread.
+    ///  Unlike Task.Run this won't use the ThreadPool to avoid messing up ThreadPool threads when
+    ///  attempting to change native thread state.
+    /// </summary>
+    public static void Run(Action action)
+    {
+        new ThreadRunner().InstanceRun(action);
     }
 }

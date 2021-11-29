@@ -3,15 +3,14 @@
 
 using WInterop.Compression.Native;
 
-namespace WInterop.Compression
-{
-    public class LzCreateHandle : LzHandle
-    {
-        public LzCreateHandle(int handle) : base(handle) { }
+namespace WInterop.Compression;
 
-        protected override void Dispose(bool disposing)
-        {
-            Imports.LZCloseFile(RawHandle);
-        }
+public class LzCreateHandle : LzHandle
+{
+    public LzCreateHandle(int handle) : base(handle) { }
+
+    protected override void Dispose(bool disposing)
+    {
+        Imports.LZCloseFile(RawHandle);
     }
 }

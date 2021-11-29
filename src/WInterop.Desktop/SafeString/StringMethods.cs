@@ -4,13 +4,12 @@
 using WInterop.Errors;
 using WInterop.SafeString.Native;
 
-namespace WInterop.SafeString
+namespace WInterop.SafeString;
+
+public static partial class StringMethods
 {
-    public static partial class StringMethods
+    public static unsafe void ToUpperInvariant(ref UNICODE_STRING value)
     {
-        public static unsafe void ToUpperInvariant(ref UNICODE_STRING value)
-        {
-            Imports.RtlUpcaseUnicodeString(ref value, ref value, false).ThrowIfFailed();
-        }
+        Imports.RtlUpcaseUnicodeString(ref value, ref value, false).ThrowIfFailed();
     }
 }

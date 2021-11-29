@@ -3,23 +3,22 @@
 
 using System;
 
-namespace WInterop.Storage.Native
+namespace WInterop.Storage.Native;
+
+/// <summary>
+///  Gets all of the process IDs using the given file.
+/// </summary>
+public struct FILE_PROCESS_IDS_USING_FILE_INFORMATION
 {
+    // Note that this is only documented in the DDK (in wdm.h)
+
+    public uint NumberOfProcessIdsInList;
+
+    private UIntPtr _ProcessIdList;
+
     /// <summary>
-    ///  Gets all of the process IDs using the given file.
+    ///  While internal process ids are always the size of an native int they're always returned as
+    ///  a uint in Win32 APIs.
     /// </summary>
-    public struct FILE_PROCESS_IDS_USING_FILE_INFORMATION
-    {
-        // Note that this is only documented in the DDK (in wdm.h)
-
-        public uint NumberOfProcessIdsInList;
-
-        private UIntPtr _ProcessIdList;
-
-        /// <summary>
-        ///  While internal process ids are always the size of an native int they're always returned as
-        ///  a uint in Win32 APIs.
-        /// </summary>
-        public ReadOnlySpan<UIntPtr> ProcessIdList => TrailingArray<UIntPtr>.GetBuffer(in _ProcessIdList, NumberOfProcessIdsInList);
-    }
+    public ReadOnlySpan<UIntPtr> ProcessIdList => TrailingArray<UIntPtr>.GetBuffer(in _ProcessIdList, NumberOfProcessIdsInList);
 }

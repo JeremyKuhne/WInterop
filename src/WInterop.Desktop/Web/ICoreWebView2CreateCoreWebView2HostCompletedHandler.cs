@@ -6,16 +6,15 @@ using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Web.Native;
 
-namespace WInterop.Web
+namespace WInterop.Web;
+
+[ComImport,
+    Guid(InterfaceIds.IID_ICoreWebView2CreateCoreWebView2HostCompletedHandler),
+    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface ICoreWebView2CreateCoreWebView2HostCompletedHandler
 {
-    [ComImport,
-        Guid(InterfaceIds.IID_ICoreWebView2CreateCoreWebView2HostCompletedHandler),
-        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface ICoreWebView2CreateCoreWebView2HostCompletedHandler
-    {
-        [PreserveSig]
-        HResult Invoke(
-            HResult result,
-            ICoreWebView2Host created_host);
-    }
+    [PreserveSig]
+    HResult Invoke(
+        HResult result,
+        ICoreWebView2Host created_host);
 }

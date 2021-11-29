@@ -3,10 +3,9 @@
 
 using System;
 
-namespace WInterop.GdiPlus.Native
+namespace WInterop.GdiPlus.Native;
+
+public readonly struct GpBrush
 {
-    public readonly struct GpBrush
-    {
-        public nuint Handle { get; }
-    }
+    public nuint Handle { get; }
 }
