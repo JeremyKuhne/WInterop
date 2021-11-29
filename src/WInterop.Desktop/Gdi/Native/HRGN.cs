@@ -14,6 +14,6 @@ public readonly struct HRGN
 
     public bool IsInvalid => Handle == IntPtr.Zero;
 
-    public static implicit operator HGDIOBJ(HRGN handle) => new HGDIOBJ(handle.Handle);
-    public static explicit operator HRGN(HGDIOBJ handle) => new HRGN(handle.Handle);
+    public static implicit operator HGDIOBJ(HRGN handle) => new(handle.Handle);
+    public static explicit operator HRGN(HGDIOBJ handle) => new(handle.Handle);
 }

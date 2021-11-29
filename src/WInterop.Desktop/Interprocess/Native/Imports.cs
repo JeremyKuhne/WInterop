@@ -14,7 +14,7 @@ public static partial class Imports
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365152.aspx
     [DllImport(Libraries.Kernel32, ExactSpelling = true, SetLastError = true)]
-    public static unsafe extern bool CreatePipe(
+    public static extern unsafe bool CreatePipe(
         out SafeFileHandle hReadPipe,
         out SafeFileHandle hWritePipe,
         SECURITY_ATTRIBUTES* lpPipeAttributes,
@@ -22,7 +22,7 @@ public static partial class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365150.aspx
     [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
-    public static unsafe extern PipeHandle CreateNamedPipeW(
+    public static extern unsafe PipeHandle CreateNamedPipeW(
         string lpName,
         uint dwOpenMode,
         uint dwPipeMode,
@@ -34,7 +34,7 @@ public static partial class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365147.aspx
     [DllImport(Libraries.Kernel32, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern SafeMailslotHandle CreateMailslotW(
+    public static extern unsafe SafeMailslotHandle CreateMailslotW(
         string lpName,
         uint nMaxMessageSize,
         uint lReadTimeout,
@@ -42,7 +42,7 @@ public static partial class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365435.aspx
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool GetMailslotInfo(
+    public static extern unsafe bool GetMailslotInfo(
         SafeMailslotHandle hMailslot,
         uint* lpMaxMessageSize,
         uint* lpNextSize,
@@ -51,7 +51,7 @@ public static partial class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365786.aspx
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool SetMailslotInfo(
+    public static extern unsafe bool SetMailslotInfo(
         SafeMailslotHandle hMailslot,
         uint lReadTimeout);
 }

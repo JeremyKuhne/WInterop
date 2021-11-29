@@ -25,7 +25,7 @@ internal class PopPad1 : WindowClass
     private WindowHandle _hwndEdit;
     private const int ID_EDIT = 1;
 
-    protected unsafe override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+    protected override unsafe LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
         switch (message)
         {

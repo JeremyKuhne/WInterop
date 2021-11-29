@@ -5,7 +5,7 @@ using WInterop.Gdi.Native;
 
 namespace WInterop.Gdi;
 
-public unsafe readonly ref struct MetafileRecord
+public readonly unsafe ref struct MetafileRecord
 {
     private readonly ENHMETARECORD* _record;
 

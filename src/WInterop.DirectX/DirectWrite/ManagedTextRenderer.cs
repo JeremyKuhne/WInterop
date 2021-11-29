@@ -9,7 +9,7 @@ using WInterop.Com.Native;
 
 namespace WInterop.DirectWrite;
 
-public unsafe abstract class ManagedTextRenderer : IDisposable
+public abstract unsafe class ManagedTextRenderer : IDisposable
 {
     private readonly IDWriteTextRenderer* _ccw;
     private bool _disposedValue;
@@ -64,7 +64,7 @@ public unsafe abstract class ManagedTextRenderer : IDisposable
 
     public static implicit operator TextRenderer(ManagedTextRenderer renderer) => new(renderer._ccw);
 
-    private unsafe static class CCW
+    private static unsafe class CCW
     {
         private static readonly IDWriteTextRenderer.Vtbl* s_vtable = AllocateVTable();
 

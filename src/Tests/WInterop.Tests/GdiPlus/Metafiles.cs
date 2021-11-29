@@ -130,7 +130,7 @@ public class Metafiles
     }
 
     public static TheoryData<EmfType, RecordType[], MetafileRecordType[]> RecordTypesForEmfTypes =>
-        new TheoryData<EmfType, RecordType[], MetafileRecordType[]>
+        new()
         {
                 {
                     EmfType.EmfOnly,
@@ -274,20 +274,18 @@ public class Metafiles
             graphics.DrawLine(pen, new(1, 1), new(3, 5));
         }
 
-        using (MetafilePlus playback = new(stream))
-        {
-            using Metafile metafile = playback.GetMetafile();
+        using MetafilePlus playback = new(stream);
+        using Metafile metafile = playback.GetMetafile();
 
-            ENHMETAHEADER emh = default;
+        ENHMETAHEADER emh = default;
 
-            // Note that this API never copies back more data than the size of a header
-            GdiImports.GetEnhMetaFileHeader(metafile, (uint)sizeof(ENHMETAHEADER), &emh);
+        // Note that this API never copies back more data than the size of a header
+        GdiImports.GetEnhMetaFileHeader(metafile, (uint)sizeof(ENHMETAHEADER), &emh);
 
-            emh.iType.Should().Be(MetafileRecordType.Header);
-            emh.nSize.Should().BeGreaterOrEqualTo((uint)sizeof(ENHMETAHEADER));
-            emh.nRecords.Should().Be(20);
-            emh.nVersion.Should().Be(65536);
-        }
+        emh.iType.Should().Be(MetafileRecordType.Header);
+        emh.nSize.Should().BeGreaterOrEqualTo((uint)sizeof(ENHMETAHEADER));
+        emh.nRecords.Should().Be(20);
+        emh.nVersion.Should().Be(65536);
     }
 
     [Fact]

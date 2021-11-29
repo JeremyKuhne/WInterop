@@ -32,7 +32,7 @@ public class ConversionsTests
         ]
     public void OleTimeToDateTime(double oleTime, long expectedTicks)
     {
-        DateTime expected = new DateTime(expectedTicks);
+        DateTime expected = new(expectedTicks);
         DateTime result = Conversion.VariantDateToDateTime(oleTime);
         result.Should().Be(expected);
     }

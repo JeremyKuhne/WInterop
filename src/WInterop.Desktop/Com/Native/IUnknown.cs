@@ -20,7 +20,7 @@ namespace WInterop.Com.Native;
 [StructLayout(LayoutKind.Sequential)]
 public unsafe partial struct IUnknown
 {
-    public static readonly Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
+    public static readonly Guid IID_IUnknown = new("00000000-0000-0000-C000-000000000046");
 
     private readonly VTable* _vtable;
 

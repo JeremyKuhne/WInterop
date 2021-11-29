@@ -12,7 +12,7 @@ public readonly struct BitmapHandle : IDisposable
     public HBITMAP Handle { get; }
     private readonly bool _ownsHandle;
 
-    public static BitmapHandle Null = new BitmapHandle(default);
+    public static BitmapHandle Null = new(default);
 
     public BitmapHandle(HBITMAP handle, bool ownsHandle = true)
     {
@@ -33,5 +33,5 @@ public readonly struct BitmapHandle : IDisposable
     public static implicit operator HGDIOBJ(BitmapHandle handle) => handle.Handle;
     public static implicit operator HBITMAP(BitmapHandle handle) => handle.Handle;
     public static implicit operator LResult(BitmapHandle handle) => handle.Handle.Handle;
-    public static implicit operator GdiObjectHandle(BitmapHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
+    public static implicit operator GdiObjectHandle(BitmapHandle handle) => new(handle.Handle, ownsHandle: false);
 }

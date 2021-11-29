@@ -56,7 +56,7 @@ public struct COLORREF
     public bool Equals(COLORREF other) => other.Value == Value;
     public static bool operator ==(COLORREF a, COLORREF b) => a.Value == b.Value;
     public static bool operator !=(COLORREF a, COLORREF b) => a.Value != b.Value;
-    public static implicit operator COLORREF(uint value) => new COLORREF(value);
-    public static implicit operator COLORREF(Color color) => new COLORREF(color.R, color.G, color.B);
+    public static implicit operator COLORREF(uint value) => new(value);
+    public static implicit operator COLORREF(Color color) => new(color.R, color.G, color.B);
     public static implicit operator Color(COLORREF color) => Color.FromArgb(color.R, color.G, color.B);
 }

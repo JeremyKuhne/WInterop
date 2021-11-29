@@ -20,5 +20,5 @@ public struct PointS
         Y = y;
     }
 
-    public static implicit operator Point(PointS point) => new Point(point.X, point.Y);
+    public static implicit operator Point(PointS point) => new(point.X, point.Y);
 }

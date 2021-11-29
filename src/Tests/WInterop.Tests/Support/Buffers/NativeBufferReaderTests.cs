@@ -19,98 +19,84 @@ public class NativeBufferReaderTests
     [Fact]
     public void SetOffsetPastEndOfStreamFails()
     {
-        using (var buffer = new HeapBuffer(0))
-        {
-            var reader = new CheckedReader(buffer);
-            reader.ByteOffset = buffer.ByteCapacity;
+        using var buffer = new HeapBuffer(0);
+        var reader = new CheckedReader(buffer);
+        reader.ByteOffset = buffer.ByteCapacity;
 
-            Action action = () => reader.ByteOffset = buffer.ByteCapacity + 1;
-            action.Should().Throw<ArgumentOutOfRangeException>();
-        }
+        Action action = () => reader.ByteOffset = buffer.ByteCapacity + 1;
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
     public void ReadShortPastCapacityFails()
     {
-        using (var buffer = new HeapBuffer(sizeof(short)))
+        using var buffer = new HeapBuffer(sizeof(short));
+        var reader = new CheckedReader(buffer);
+
+        Action action = () => reader.ReadShort();
+
+        for (uint i = 1; i < sizeof(short); i++)
         {
-            var reader = new CheckedReader(buffer);
-
-            Action action = () => reader.ReadShort();
-
-            for (uint i = 1; i < sizeof(short); i++)
-            {
-                reader.ByteOffset = buffer.ByteCapacity - i;
-                action.Should().Throw<System.IO.EndOfStreamException>();
-            }
+            reader.ByteOffset = buffer.ByteCapacity - i;
+            action.Should().Throw<System.IO.EndOfStreamException>();
         }
     }
 
     [Fact]
     public void ReadShortInCapacityPasses()
     {
-        using (var buffer = new HeapBuffer(2))
-        {
-            var reader = new CheckedReader(buffer);
-            reader.ByteOffset = buffer.ByteCapacity - 2;
-            reader.ReadShort();
-        }
+        using var buffer = new HeapBuffer(2);
+        var reader = new CheckedReader(buffer);
+        reader.ByteOffset = buffer.ByteCapacity - 2;
+        reader.ReadShort();
     }
 
     [Fact]
     public void ReadIntPastCapacityFails()
     {
-        using (var buffer = new HeapBuffer(sizeof(int)))
+        using var buffer = new HeapBuffer(sizeof(int));
+        var reader = new CheckedReader(buffer);
+
+        Action action = () => reader.ReadInt();
+
+        for (uint i = 1; i < sizeof(int); i++)
         {
-            var reader = new CheckedReader(buffer);
-
-            Action action = () => reader.ReadInt();
-
-            for (uint i = 1; i < sizeof(int); i++)
-            {
-                reader.ByteOffset = buffer.ByteCapacity - i;
-                action.Should().Throw<System.IO.EndOfStreamException>();
-            }
+            reader.ByteOffset = buffer.ByteCapacity - i;
+            action.Should().Throw<System.IO.EndOfStreamException>();
         }
     }
 
     [Fact]
     public void ReadIntInCapacityPasses()
     {
-        using (var buffer = new HeapBuffer(4))
-        {
-            var reader = new CheckedReader(buffer);
-            reader.ByteOffset = buffer.ByteCapacity - 4;
-            reader.ReadInt();
-        }
+        using var buffer = new HeapBuffer(4);
+        var reader = new CheckedReader(buffer);
+        reader.ByteOffset = buffer.ByteCapacity - 4;
+        reader.ReadInt();
     }
 
     [Fact]
     public void ReadLongPastCapacityFails()
     {
-        using (var buffer = new HeapBuffer(sizeof(long)))
+        using var buffer = new HeapBuffer(sizeof(long));
+        var reader = new CheckedReader(buffer);
+
+        Action action = () => reader.ReadLong();
+
+        for (uint i = 1; i < sizeof(long); i++)
         {
-            var reader = new CheckedReader(buffer);
-
-            Action action = () => reader.ReadLong();
-
-            for (uint i = 1; i < sizeof(long); i++)
-            {
-                reader.ByteOffset = buffer.ByteCapacity - i;
-                action.Should().Throw<System.IO.EndOfStreamException>();
-            }
+            reader.ByteOffset = buffer.ByteCapacity - i;
+            action.Should().Throw<System.IO.EndOfStreamException>();
         }
     }
 
     [Fact]
     public void ReadLongInCapacityPasses()
     {
-        using (var buffer = new HeapBuffer(8))
-        {
-            var reader = new CheckedReader(buffer);
-            reader.ByteOffset = buffer.ByteCapacity - 8;
-            reader.ReadLong();
-        }
+        using var buffer = new HeapBuffer(8);
+        var reader = new CheckedReader(buffer);
+        reader.ByteOffset = buffer.ByteCapacity - 8;
+        reader.ReadLong();
     }
 
     [Theory,
@@ -120,33 +106,29 @@ public class NativeBufferReaderTests
         ]
     public void ReadShort(ulong offset, short expected)
     {
-        using (var buffer = new HeapBuffer(4))
+        using var buffer = new HeapBuffer(4);
+        for (ulong i = 0; i < 4; i++)
         {
-            for (ulong i = 0; i < 4; i++)
-            {
-                buffer[i] = (byte)(i + 1);
-            }
-
-            var reader = new CheckedReader(buffer);
-            reader.ByteOffset = offset;
-            reader.ReadShort().Should().Be(expected, $"offset is {offset}");
+            buffer[i] = (byte)(i + 1);
         }
+
+        var reader = new CheckedReader(buffer);
+        reader.ByteOffset = offset;
+        reader.ReadShort().Should().Be(expected, $"offset is {offset}");
     }
 
     [Fact]
     public void ReadTwoShorts()
     {
-        using (var buffer = new HeapBuffer(4))
+        using var buffer = new HeapBuffer(4);
+        for (ulong i = 0; i < 4; i++)
         {
-            for (ulong i = 0; i < 4; i++)
-            {
-                buffer[i] = (byte)(i + 1);
-            }
-
-            var reader = new CheckedReader(buffer);
-            reader.ReadShort().Should().Be(0x0201);
-            reader.ReadShort().Should().Be(0x0403);
+            buffer[i] = (byte)(i + 1);
         }
+
+        var reader = new CheckedReader(buffer);
+        reader.ReadShort().Should().Be(0x0201);
+        reader.ReadShort().Should().Be(0x0403);
     }
 
     [Theory,
@@ -158,33 +140,29 @@ public class NativeBufferReaderTests
         ]
     public void ReadInt(ulong offset, int expected)
     {
-        using (var buffer = new HeapBuffer(8))
+        using var buffer = new HeapBuffer(8);
+        for (ulong i = 0; i < 8; i++)
         {
-            for (ulong i = 0; i < 8; i++)
-            {
-                buffer[i] = (byte)(i + 1);
-            }
-
-            var reader = new CheckedReader(buffer);
-            reader.ByteOffset = offset;
-            reader.ReadInt().Should().Be(expected, $"offset is {offset}");
+            buffer[i] = (byte)(i + 1);
         }
+
+        var reader = new CheckedReader(buffer);
+        reader.ByteOffset = offset;
+        reader.ReadInt().Should().Be(expected, $"offset is {offset}");
     }
 
     [Fact]
     public void ReadTwoInts()
     {
-        using (var buffer = new HeapBuffer(8))
+        using var buffer = new HeapBuffer(8);
+        for (ulong i = 0; i < 8; i++)
         {
-            for (ulong i = 0; i < 8; i++)
-            {
-                buffer[i] = (byte)(i + 1);
-            }
-
-            var reader = new CheckedReader(buffer);
-            reader.ReadInt().Should().Be(0x04030201);
-            reader.ReadInt().Should().Be(0x08070605);
+            buffer[i] = (byte)(i + 1);
         }
+
+        var reader = new CheckedReader(buffer);
+        reader.ReadInt().Should().Be(0x04030201);
+        reader.ReadInt().Should().Be(0x08070605);
     }
 
     [Theory,
@@ -200,80 +178,70 @@ public class NativeBufferReaderTests
         ]
     public void ReadLong(ulong offset, long expected)
     {
-        using (var buffer = new HeapBuffer(16))
+        using var buffer = new HeapBuffer(16);
+        for (ulong i = 0; i < 16; i++)
         {
-            for (ulong i = 0; i < 16; i++)
-            {
-                buffer[i] = (byte)(i + 1);
-            }
-
-            var reader = new CheckedReader(buffer);
-            reader.ByteOffset = offset;
-            reader.ReadLong().Should().Be(expected, $"offset is {offset}");
+            buffer[i] = (byte)(i + 1);
         }
+
+        var reader = new CheckedReader(buffer);
+        reader.ByteOffset = offset;
+        reader.ReadLong().Should().Be(expected, $"offset is {offset}");
     }
 
     [Fact]
     public void ReadTwoLongs()
     {
-        using (var buffer = new HeapBuffer(16))
+        using var buffer = new HeapBuffer(16);
+        for (ulong i = 0; i < 16; i++)
         {
-            for (ulong i = 0; i < 16; i++)
-            {
-                buffer[i] = (byte)(i + 1);
-            }
-
-            var reader = new CheckedReader(buffer);
-            reader.ReadLong().Should().Be(0x0807060504030201);
-            reader.ReadLong().Should().Be(0x100F0E0D0C0B0A09);
+            buffer[i] = (byte)(i + 1);
         }
+
+        var reader = new CheckedReader(buffer);
+        reader.ReadLong().Should().Be(0x0807060504030201);
+        reader.ReadLong().Should().Be(0x100F0E0D0C0B0A09);
     }
 
     [Fact]
     public void ReadStringPastEndFails()
     {
-        using (var buffer = new HeapBuffer(1))
-        {
-            var reader = new CheckedReader(buffer);
+        using var buffer = new HeapBuffer(1);
+        var reader = new CheckedReader(buffer);
 
-            Action action = () => reader.ReadString(1);
+        Action action = () => reader.ReadString(1);
 
-            reader.ByteOffset = buffer.ByteCapacity - 1;
-            action.Should().Throw<ArgumentOutOfRangeException>();
-        }
+        reader.ByteOffset = buffer.ByteCapacity - 1;
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
     public void ReadAlignedString()
     {
-        using (var buffer = new HeapBuffer(4))
-        {
-            buffer[0] = 65;
-            buffer[1] = 0;
-            buffer[2] = 66;
-            buffer[3] = 0;
+        using var buffer = new HeapBuffer(4);
+        buffer[0] = 65;
+        buffer[1] = 0;
+        buffer[2] = 66;
+        buffer[3] = 0;
 
-            var reader = new CheckedReader(buffer);
-            reader.ReadString(1).Should().Be("A");
-            reader.ReadString(1).Should().Be("B");
-        }
+        var reader = new CheckedReader(buffer);
+        reader.ReadString(1).Should().Be("A");
+        reader.ReadString(1).Should().Be("B");
     }
 
     [Fact]
     public void ReadUnalignedString()
     {
-        using (var buffer = new HeapBuffer(5))
-        {
-            buffer[0] = 67;
-            buffer[1] = 65;
-            buffer[2] = 0;
-            buffer[3] = 66;
-            buffer[4] = 0;
+        using var buffer = new HeapBuffer(5);
+        buffer[0] = 67;
+        buffer[1] = 65;
+        buffer[2] = 0;
+        buffer[3] = 66;
+        buffer[4] = 0;
 
-            var reader = new CheckedReader(buffer);
-            reader.ByteOffset = 1;
-            reader.ReadString(1).Should().Be("A");
-            reader.ReadString(1).Should().Be("B");
-        }
+        var reader = new CheckedReader(buffer);
+        reader.ByteOffset = 1;
+        reader.ReadString(1).Should().Be("A");
+        reader.ReadString(1).Should().Be("B");
     }
 }

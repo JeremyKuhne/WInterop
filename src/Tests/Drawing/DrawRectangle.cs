@@ -10,8 +10,8 @@ namespace Windows101;
 
 public class DrawRectangle : WindowClass
 {
-    private readonly Pen _bluePen = new Pen(Color.Blue);
-    private readonly Brush _blueBrush = new Brush(Color.Blue);
+    private readonly Pen _bluePen = new(Color.Blue);
+    private readonly Brush _blueBrush = new(Color.Blue);
 
     protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
@@ -22,16 +22,16 @@ public class DrawRectangle : WindowClass
                     using DeviceContext dc = window.BeginPaint();
                     using Graphics graphics = new(dc);
 
-                    Rectangle first = new Rectangle(new Point(50, 50), new Size(50, 50));
+                    Rectangle first = new(new Point(50, 50), new Size(50, 50));
                     dc.Rectangle(first);
                     graphics.DrawRectangle(_bluePen, first);
 
-                    Rectangle second = new Rectangle(new Point(150, 50), new Size(50, 50));
+                    Rectangle second = new(new Point(150, 50), new Size(50, 50));
                     dc.FillRectangle(second, StockBrush.Black);
                     graphics.FillRectangle(_blueBrush, second);
 
                     // Flip to see what underlap we have
-                    Rectangle third = new Rectangle(new Point(250, 50), new Size(50, 50));
+                    Rectangle third = new(new Point(250, 50), new Size(50, 50));
                     graphics.FillRectangle(_blueBrush, third);
                     dc.FillRectangle(third, StockBrush.Black);
 

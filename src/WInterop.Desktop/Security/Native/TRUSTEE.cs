@@ -4,7 +4,7 @@
 namespace WInterop.Security.Native;
 
 /// <docs>https://docs.microsoft.com/windows/desktop/api/accctrl/ns-accctrl-_trustee_w</docs>
-public unsafe readonly struct TRUSTEE
+public readonly unsafe struct TRUSTEE
 {
     // Not used, must be IntPtr.Zero
     public readonly IntPtr pMultipleTrustee;

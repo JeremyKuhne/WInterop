@@ -21,19 +21,17 @@ public class ComRuntimeCompat
         ]
     public unsafe void DecimalRoundTrip(double value)
     {
-        decimal d = new decimal(value);
+        decimal d = new(value);
 
         byte* b = stackalloc byte[24];
 
-        using (Variant v = new Variant((IntPtr)b, ownsHandle: true))
-        {
-            Marshal.GetNativeVariantForObject(d, v.DangerousGetHandle());
-            v.VariantType.Should().Be(VariantType.Decimal);
-            var data = v.GetData();
-            data.Should().NotBeNull();
-            data.Should().BeOfType<decimal>();
-            data.Should().Be(d);
-        }
+        using Variant v = new((IntPtr)b, ownsHandle: true);
+        Marshal.GetNativeVariantForObject(d, v.DangerousGetHandle());
+        v.VariantType.Should().Be(VariantType.Decimal);
+        var data = v.GetData();
+        data.Should().NotBeNull();
+        data.Should().BeOfType<decimal>();
+        data.Should().Be(d);
     }
 
     [Theory,
@@ -46,15 +44,13 @@ public class ComRuntimeCompat
     {
         byte* b = stackalloc byte[24];
 
-        using (Variant v = new Variant((IntPtr)b, ownsHandle: true))
-        {
-            Marshal.GetNativeVariantForObject(value, v.DangerousGetHandle());
-            v.VariantType.Should().Be(VariantType.Double);
-            var data = v.GetData();
-            data.Should().NotBeNull();
-            data.Should().BeOfType<double>();
-            data.Should().Be(value);
-        }
+        using Variant v = new((IntPtr)b, ownsHandle: true);
+        Marshal.GetNativeVariantForObject(value, v.DangerousGetHandle());
+        v.VariantType.Should().Be(VariantType.Double);
+        var data = v.GetData();
+        data.Should().NotBeNull();
+        data.Should().BeOfType<double>();
+        data.Should().Be(value);
     }
 
     [Theory,
@@ -66,14 +62,12 @@ public class ComRuntimeCompat
     {
         byte* b = stackalloc byte[24];
 
-        using (Variant v = new Variant((IntPtr)b, ownsHandle: true))
-        {
-            Marshal.GetNativeVariantForObject(value, v.DangerousGetHandle());
-            v.VariantType.Should().Be(VariantType.BasicString);
-            var data = v.GetData();
-            data.Should().NotBeNull();
-            data.Should().BeOfType<string>();
-            data.Should().Be(value);
-        }
+        using Variant v = new((IntPtr)b, ownsHandle: true);
+        Marshal.GetNativeVariantForObject(value, v.DangerousGetHandle());
+        v.VariantType.Should().Be(VariantType.BasicString);
+        var data = v.GetData();
+        data.Should().NotBeNull();
+        data.Should().BeOfType<string>();
+        data.Should().Be(value);
     }
 }

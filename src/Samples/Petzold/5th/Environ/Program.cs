@@ -39,7 +39,7 @@ internal class Environ : WindowClass
         }
     }
 
-    protected unsafe override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+    protected override unsafe LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
         switch (message)
         {

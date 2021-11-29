@@ -10,7 +10,7 @@ namespace WInterop.DirectWrite;
 ///  related to those in <see cref="GlyphRun"/>. [DWRITE_GLYPH_RUN_DESCRIPTION]
 /// </summary>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-public unsafe readonly struct GlyphRunDescription
+public readonly unsafe struct GlyphRunDescription
 {
     /// <summary>
     ///  The locale name associated with this run.

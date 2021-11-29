@@ -42,8 +42,8 @@ public class ConsoleWriter : TextWriter
             autoFlush);
     }
 
-    public unsafe override void Write(char value) => InternalWrite(value);
-    public unsafe override void WriteLine(char value) => InternalWrite(value, newLine: true);
+    public override unsafe void Write(char value) => InternalWrite(value);
+    public override unsafe void WriteLine(char value) => InternalWrite(value, newLine: true);
     public override void Write(int value) => InternalWrite(value);
     public override void WriteLine(int value) => InternalWrite(value, newLine: true);
     public override void Write(uint value) => InternalWrite(value);

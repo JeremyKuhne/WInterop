@@ -33,7 +33,7 @@ public readonly struct LtrbRectangleF
     public static implicit operator RectangleF(LtrbRectangleF rect)
         => RectangleF.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
-    public unsafe static implicit operator LtrbRectangleF((float Left, float Top, float Right, float Bottom) rectangle)
+    public static unsafe implicit operator LtrbRectangleF((float Left, float Top, float Right, float Bottom) rectangle)
         => *(LtrbRectangleF*)&rectangle;
 
     public static implicit operator LtrbRectangleF(RectangleF rectangle) => new(rectangle);

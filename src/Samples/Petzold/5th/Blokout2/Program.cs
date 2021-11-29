@@ -28,12 +28,10 @@ internal class Blockout2 : WindowClass
 
     private void DrawBoxOutline(WindowHandle window, Point ptBeg, Point ptEnd)
     {
-        using (DeviceContext dc = window.GetDeviceContext())
-        {
-            dc.SetRasterOperation(PenMixMode.Not);
-            dc.SelectObject(StockBrush.Null);
-            dc.Rectangle(Rectangle.FromLTRB(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y));
-        }
+        using DeviceContext dc = window.GetDeviceContext();
+        dc.SetRasterOperation(PenMixMode.Not);
+        dc.SelectObject(StockBrush.Null);
+        dc.Rectangle(Rectangle.FromLTRB(ptBeg.X, ptBeg.Y, ptEnd.X, ptEnd.Y));
     }
 
     protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)

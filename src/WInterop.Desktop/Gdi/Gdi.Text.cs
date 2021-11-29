@@ -13,7 +13,7 @@ namespace WInterop.Gdi;
 public static partial class Gdi
 {
     public static FontHandle GetStockFont(StockFont font)
-        => new FontHandle((HFONT)GdiImports.GetStockObject((int)font), ownsHandle: false);
+        => new((HFONT)GdiImports.GetStockObject((int)font), ownsHandle: false);
 
     public static Color GetTextColor(this in DeviceContext context) => GdiImports.GetTextColor(context);
 
@@ -132,14 +132,14 @@ public static partial class Gdi
 
     public static IEnumerable<FontInformation> EnumerateFontFamilies(in DeviceContext context, CharacterSet characterSet, string faceName)
     {
-        LogicalFont logFont = new LogicalFont
+        LogicalFont logFont = new()
         {
             CharacterSet = characterSet,
         };
 
         logFont.FaceName.CopyFrom(faceName);
 
-        List<FontInformation> info = new List<FontInformation>();
+        List<FontInformation> info = new();
         GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);
         try
         {

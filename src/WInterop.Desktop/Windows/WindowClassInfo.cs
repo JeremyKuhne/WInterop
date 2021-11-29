@@ -29,7 +29,7 @@ public struct WindowClassInfo
 
     public BrushHandle Background
     {
-        get => new BrushHandle(_background, ownsHandle: false);
+        get => new(_background, ownsHandle: false);
         set => _background = value.HBRUSH;
     }
 

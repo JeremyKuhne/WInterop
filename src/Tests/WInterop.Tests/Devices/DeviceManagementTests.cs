@@ -12,7 +12,7 @@ public class ControlCodeDecoding
     [Fact]
     public void DecodeControlCode()
     {
-        ControlCode code = new ControlCode { Value = 0x0f60401a };
+        ControlCode code = new() { Value = 0x0f60401a };
         code.DeviceType.Should().Be(ControlCodeDeviceType.Infrared);
         code.RequiredAccess.Should().Be(ControlCodeAccess.Read);
         code.TransferType.Should().Be(ControlCodeMethod.OutDirect);

@@ -18,7 +18,7 @@ public class SidStruct
     [Fact]
     public unsafe void PassedAsInDoesNotCopy()
     {
-        SID sid = new SID();
+        SID sid = new();
         SID* sp = &sid;
 
         void CheckSid(in SID insid, SID* insp)
@@ -35,21 +35,21 @@ public class SidStruct
     [Fact]
     public void EmptySidEqualsSelf()
     {
-        SID sid = new SID();
+        SID sid = new();
         sid.Equals(sid).Should().BeTrue();
     }
 
     [Fact]
     public void EmptySidEqualsNewEmptySid()
     {
-        SID sid = new SID();
+        SID sid = new();
         sid.Equals(new SID()).Should().BeTrue();
     }
 
     [Fact]
     public void EmptySidEqualsDefault()
     {
-        SID sid = new SID();
+        SID sid = new();
         sid.Equals(new SID()).Should().BeTrue();
     }
 

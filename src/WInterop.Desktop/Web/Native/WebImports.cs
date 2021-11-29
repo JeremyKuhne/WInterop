@@ -29,7 +29,7 @@ public static partial class WebImports
         out string versionInfo);
 
     [DllImport(Libraries.WebView2Loader, ExactSpelling = true)]
-    public static unsafe extern HResult CompareBrowserVersions(
+    public static extern unsafe HResult CompareBrowserVersions(
         string version1,
         string version2,
         int* result);

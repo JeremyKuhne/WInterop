@@ -25,7 +25,7 @@ public readonly struct MenuHandle : IDisposable
     }
 
     public static implicit operator HMENU(MenuHandle handle) => handle.HMENU;
-    public static explicit operator MenuHandle(int id) => new MenuHandle(new HMENU((IntPtr)id), ownsHandle: true);
+    public static explicit operator MenuHandle(int id) => new(new HMENU((IntPtr)id), ownsHandle: true);
 
     public override bool Equals(object? obj) => obj is MenuHandle other ? other.HMENU == HMENU : false;
     public bool Equals(MenuHandle other) => other.HMENU == HMENU;

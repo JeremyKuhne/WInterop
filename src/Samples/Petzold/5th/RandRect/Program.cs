@@ -24,7 +24,7 @@ internal static class Program
         const string szAppName = "RandRect";
 
         ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-        WindowClassInfo wndclass = new WindowClassInfo
+        WindowClassInfo wndclass = new()
         {
             Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
             WindowProcedure = WindowProcedure,
@@ -65,7 +65,7 @@ internal static class Program
     }
 
     private static int s_cxClient, s_cyClient;
-    private static readonly Random s_rand = new Random();
+    private static readonly Random s_rand = new();
 
     private static LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
@@ -94,13 +94,9 @@ internal static class Program
             s_rand.Next() % s_cxClient,
             s_rand.Next() % s_cyClient);
 
-        using (BrushHandle brush = Gdi.CreateSolidBrush(
-            Color.FromArgb((byte)(s_rand.Next() % 256), (byte)(s_rand.Next() % 256), (byte)(s_rand.Next() % 256))))
-        {
-            using (DeviceContext dc = window.GetDeviceContext())
-            {
-                dc.FillRectangle(rect, brush);
-            }
-        }
+        using BrushHandle brush = Gdi.CreateSolidBrush(
+            Color.FromArgb((byte)(s_rand.Next() % 256), (byte)(s_rand.Next() % 256), (byte)(s_rand.Next() % 256)));
+        using DeviceContext dc = window.GetDeviceContext();
+        dc.FillRectangle(rect, brush);
     }
 }

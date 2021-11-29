@@ -13,13 +13,13 @@ public static partial class Imports
 {
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff563005.aspx
     [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern NTStatus RtlUpcaseUnicodeString(
+    public static extern unsafe NTStatus RtlUpcaseUnicodeString(
         ref UNICODE_STRING DestinationString,
         ref UNICODE_STRING SourceString,
         ByteBoolean AllocateDestinationString);
 
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff561903.aspx
     [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern void RtlFreeUnicodeString(
+    public static extern unsafe void RtlFreeUnicodeString(
         ref UNICODE_STRING UnicodeString);
 }

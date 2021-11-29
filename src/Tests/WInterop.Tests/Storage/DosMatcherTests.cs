@@ -15,8 +15,8 @@ public class DosMatcherTests
         DosMatcher.MatchPattern(expression, name.AsSpan(), ignoreCase).Should().Be(expected);
     }
 
-    public static TheoryData<string, string, bool, bool> DosMatchData => new TheoryData<string, string, bool, bool>
-        {
+    public static TheoryData<string, string, bool, bool> DosMatchData => new()
+    {
             { null, "", false, false },
             { null, "", true, false },
             { "*", "", false, false },

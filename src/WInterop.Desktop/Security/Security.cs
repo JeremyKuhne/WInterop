@@ -63,12 +63,9 @@ public static partial class Security
     ///  Get the string constant for the given privilege.
     /// </summary>
     public static string GetPrivilegeConstant(Privilege privilege)
-    {
-        if (!s_privileges.TryGetValue(privilege, out string? value))
-            throw new ArgumentOutOfRangeException(nameof(privilege));
-
-        return value;
-    }
+        => s_privileges.TryGetValue(privilege, out string? value)
+            ? value
+            : throw new ArgumentOutOfRangeException(nameof(privilege));
 
     internal static Privilege ParsePrivilege(ReadOnlySpan<char> privilege)
     {
@@ -98,7 +95,7 @@ public static partial class Security
     public static unsafe Privilege LookupPrivilege(LUID luid)
     {
         char* c = stackalloc char[32];
-        Span<char> nameBuffer = new Span<char>(c, 32);
+        Span<char> nameBuffer = new(c, 32);
 
         uint length = (uint)nameBuffer.Length;
         while (!SecurityImports.LookupPrivilegeNameW(IntPtr.Zero, ref luid, ref MemoryMarshal.GetReference(nameBuffer), ref length))
@@ -111,7 +108,7 @@ public static partial class Security
             nameBuffer = new Span<char>(n, (int)length);
         }
 
-        return ParsePrivilege(nameBuffer.Slice(0, (int)length));
+        return ParsePrivilege(nameBuffer[.. (int)length]);
     }
 
     private static unsafe void TokenInformationInvoke(
@@ -362,7 +359,7 @@ public static partial class Security
             nameBuffer.SetLengthToFirstNull();
             domainNameBuffer.SetLengthToFirstNull();
 
-            AccountSidInformation info = new AccountSidInformation
+            AccountSidInformation info = new()
             {
                 Name = nameBuffer.ToString(),
                 DomainName = domainNameBuffer.ToString(),
@@ -461,7 +458,7 @@ public static partial class Security
             ppSecurityDescriptor: &descriptor)
             .ThrowIfFailed();
 
-        SID sid = new SID(sidp);
+        SID sid = new(sidp);
         Memory.Memory.LocalFree((IntPtr)descriptor);
         return sid;
     }
@@ -482,7 +479,7 @@ public static partial class Security
             ppSecurityDescriptor: &descriptor)
             .ThrowIfFailed();
 
-        SID sid = new SID(sidp);
+        SID sid = new(sidp);
         Memory.Memory.LocalFree((IntPtr)descriptor);
         return sid;
     }
@@ -553,7 +550,7 @@ public static partial class Security
         PrivilegeSet* set = (PrivilegeSet*)buffer;
         set->Control = all ? PRIVILEGE_SET_ALL_NECESSARY : 0;
         set->PrivilegeCount = (uint)privileges.Length;
-        Span<LuidAndAttributes> luids = new Span<LuidAndAttributes>(&set->Privilege, privileges.Length);
+        Span<LuidAndAttributes> luids = new(&set->Privilege, privileges.Length);
         for (int i = 0; i < privileges.Length; i++)
         {
             luids[i] = LookupPrivilegeValue(privileges[i]);
@@ -607,7 +604,7 @@ public static partial class Security
     public static unsafe AccessToken CreateRestrictedToken(this AccessToken token, params SID[] sidsToDisable)
     {
         if (sidsToDisable == null || sidsToDisable.Length == 0)
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(sidsToDisable));
 
         SID_AND_ATTRIBUTES* sids = stackalloc SID_AND_ATTRIBUTES[sidsToDisable.Length];
         fixed (SID* sid = sidsToDisable)
@@ -672,8 +669,8 @@ public static partial class Security
                     throw status.GetException();
             }
 
-            List<string> rights = new List<string>();
-            Reader reader = new Reader(rightsBuffer);
+            List<string> rights = new();
+            Reader reader = new(rightsBuffer);
             for (int i = 0; i < rightsCount; i++)
                 rights.Add(reader.ReadUNICODE_STRING());
 

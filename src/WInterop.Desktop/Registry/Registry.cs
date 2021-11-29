@@ -121,7 +121,7 @@ public static partial class Registry
     /// </remarks>
     public static unsafe IEnumerable<string> GetValueNamesDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.None)
     {
-        List<string> names = new List<string>();
+        List<string> names = new();
 
         BufferHelper.BufferInvoke((HeapBuffer buffer) =>
         {
@@ -169,7 +169,7 @@ public static partial class Registry
     /// </remarks>
     public static unsafe IEnumerable<object> GetValueDataDirect(RegistryKeyHandle key, RegistryValueType filterTo = RegistryValueType.None)
     {
-        List<object> data = new List<object>();
+        List<object> data = new();
 
         BufferHelper.BufferInvoke((HeapBuffer buffer) =>
         {
@@ -207,7 +207,7 @@ public static partial class Registry
     /// </summary>
     public static unsafe IEnumerable<string> GetValueNames(RegistryKeyHandle key)
     {
-        List<string> names = new List<string>();
+        List<string> names = new();
 
         BufferHelper.BufferInvoke((StringBuffer buffer) =>
         {

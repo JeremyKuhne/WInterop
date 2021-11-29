@@ -62,7 +62,7 @@ public class StringBufferTests
         for (int i = 1; i <= testString.Length; i++)
         {
             buffer.Length = (uint)(testString.Length - i);
-            buffer.ToString().Should().Be(testString.Substring(0, testString.Length - i));
+            buffer.ToString().Should().Be(testString[..^i]);
             buffer.CharCapacity.Should().Be((uint)testString.Length + 1, "shouldn't reduce capacity when dropping length");
         }
     }
@@ -537,7 +537,7 @@ buffer.Append(sourceBuffer);
         using var buffer = new StringBuffer();
         var splitStrings = new ConcurrentBag<IEnumerable<string>>();
 
-        Task writeTask = new Task(() =>
+        Task writeTask = new(() =>
         {
             Parallel.For(1, 1000, i =>
             {
@@ -546,7 +546,7 @@ buffer.Append(sourceBuffer);
             });
         });
 
-        Task splitTask = new Task(() =>
+        Task splitTask = new(() =>
         {
             Parallel.For(0, 25, i =>
             {
@@ -747,7 +747,7 @@ buffer.Append(sourceBuffer);
         {
             buffer.Append(testString[i]);
             buffer.Length.Should().Be((uint)i + 1);
-            buffer.ToString().Should().Be(testString.Substring(0, i + 1));
+            buffer.ToString().Should().Be(testString[..(i + 1)]);
         }
     }
 
@@ -795,7 +795,7 @@ buffer.Append(sourceBuffer);
     {
         buffer.Length.Should().Be(26 * 3);
 
-        List<string> substrings = new List<string>(26);
+        List<string> substrings = new(26);
         for (uint i = 0; i < 26; i++)
         {
             substrings.Add(buffer.SubString(0 + i * 3, 3));
@@ -826,7 +826,7 @@ buffer.Append((char)('A' + alpha), count: 3);
     [Fact]
     public void DisposedObjectIsCleared()
     {
-        StringBuffer buffer = new StringBuffer("Foo");
+        StringBuffer buffer = new("Foo");
         buffer.Dispose();
         buffer.Length.Should().Be(0);
         buffer.CharCapacity.Should().Be(0);

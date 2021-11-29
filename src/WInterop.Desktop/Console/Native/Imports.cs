@@ -89,7 +89,7 @@ public static partial class Imports
 
     // https://docs.microsoft.com/en-us/windows/console/readconsole
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool ReadConsoleW(
+    public static extern unsafe bool ReadConsoleW(
         SafeHandle hConsoleInput,
         void* lpBuffer,
         uint nNumberOfCharsToRead,
@@ -98,7 +98,7 @@ public static partial class Imports
 
     // https://docs.microsoft.com/en-us/windows/console/writeconsole
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool WriteConsoleW(
+    public static extern unsafe bool WriteConsoleW(
         SafeHandle hConsoleOutput,
         void* lpBuffer,
         uint nNumberOfCharsToWrite,

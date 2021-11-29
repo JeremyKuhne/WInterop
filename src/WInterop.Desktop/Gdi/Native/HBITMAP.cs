@@ -14,6 +14,6 @@ public readonly struct HBITMAP
 
     public bool IsInvalid => Handle == IntPtr.Zero;
 
-    public static implicit operator HGDIOBJ(HBITMAP handle) => new HGDIOBJ(handle.Handle);
-    public static explicit operator HBITMAP(HGDIOBJ handle) => new HBITMAP(handle.Handle);
+    public static implicit operator HGDIOBJ(HBITMAP handle) => new(handle.Handle);
+    public static explicit operator HBITMAP(HGDIOBJ handle) => new(handle.Handle);
 }

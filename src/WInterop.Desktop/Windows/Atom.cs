@@ -19,7 +19,7 @@ public struct Atom
 
     public Atom(ushort atom) => ATOM = atom;
 
-    public static Atom Null = new Atom(0);
+    public static Atom Null = new(0);
 
     public bool IsValid => ATOM != 0;
 
@@ -35,5 +35,5 @@ public struct Atom
 
     public static implicit operator uint(Atom atom) => atom.ATOM;
     public static implicit operator nint(Atom atom) => atom.ATOM;
-    public static implicit operator Atom(nint atom) => new Atom((ushort)atom);
+    public static implicit operator Atom(nint atom) => new((ushort)atom);
 }

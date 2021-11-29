@@ -8,7 +8,7 @@ namespace WInterop.Windows.Native;
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms632603.aspx
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-public unsafe readonly ref struct CREATESTRUCT
+public readonly unsafe ref struct CREATESTRUCT
 {
     public readonly IntPtr lpCreateParams;
     public readonly IntPtr hInstance;

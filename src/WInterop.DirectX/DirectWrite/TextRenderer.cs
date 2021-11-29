@@ -14,7 +14,7 @@ namespace WInterop.DirectWrite;
 ///  such as underlines. [IDWriteTextRenderer]
 /// </summary>
 [Guid(InterfaceIds.IID_IDWriteTextRenderer)]
-public unsafe readonly struct TextRenderer : TextRenderer.Interface, IDisposable
+public readonly unsafe struct TextRenderer : TextRenderer.Interface, IDisposable
 {
     internal IDWriteTextRenderer* Handle { get; }
 

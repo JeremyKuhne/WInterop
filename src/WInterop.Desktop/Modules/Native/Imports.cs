@@ -32,7 +32,7 @@ public static partial class Imports
 
     // https://docs.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexw
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool GetModuleHandleExW(
+    public static extern unsafe bool GetModuleHandleExW(
         GetModuleFlags dwFlags,
         IntPtr lpModuleName,
         out IntPtr moduleHandle);
@@ -40,14 +40,14 @@ public static partial class Imports
     // The non-ex version is more performant for the current process.
     // https://docs.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern uint GetModuleFileNameW(
+    public static extern unsafe uint GetModuleFileNameW(
         ModuleInstance hModule,
         char* lpFileName,
         uint nSize);
 
     // https://docs.microsoft.com/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern uint K32GetModuleFileNameExW(
+    public static extern unsafe uint K32GetModuleFileNameExW(
         SafeProcessHandle hProcess,
         ModuleInstance hModule,
         char* lpFileName,

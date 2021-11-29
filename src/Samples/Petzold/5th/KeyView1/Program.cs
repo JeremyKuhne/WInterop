@@ -29,7 +29,7 @@ internal class KeyView1 : WindowClass
     private int cLinesMax, cLines;
     private Rectangle rectScroll;
     private WindowMessage[] pmsg;
-    private readonly StringBuilder _sb = new StringBuilder(256);
+    private readonly StringBuilder _sb = new(256);
     private ReadOnlyMemory<char> _chunk;
 
     protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
@@ -125,7 +125,7 @@ internal class KeyView1 : WindowClass
                                 (0x80000000 & pmsg[i].LParam) != 0 ? "Up" : "Down",
                                 (VirtualKey)pmsg[i].WParam);
 
-                        dc.TextOut(new Point(0, (cyClient / cyChar - 1 - i) * cyChar), _chunk.Span.Slice(0, _sb.Length));
+                        dc.TextOut(new Point(0, (cyClient / cyChar - 1 - i) * cyChar), _chunk.Span[.._sb.Length]);
                     }
                 }
                 return 0;

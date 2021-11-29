@@ -51,7 +51,7 @@ public class Basic
         Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
             .Should().StartWith(@"\Device\");
         Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
-            .Should().Be(filePath.Substring(2));
+            .Should().Be(filePath[2..]);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class Basic
         Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
             .Should().StartWith(@"\Device\");
         Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
-            .Should().Be(filePath.Substring(2));
+            .Should().Be(filePath[2..]);
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public class Basic
         Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNt)
             .Should().StartWith(@"\Device\");
         Storage.GetFinalPathNameByHandle(handle, GetFinalPathNameByHandleFlags.VolumeNameNone)
-            .Should().Be(filePath.Substring(6));
+            .Should().Be(filePath[6..]);
     }
 
     [Fact]

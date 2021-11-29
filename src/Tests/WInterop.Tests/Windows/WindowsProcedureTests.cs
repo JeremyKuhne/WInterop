@@ -18,7 +18,7 @@ public class WindowsProcedureTests
     [Fact]
     public void WindowCallback_SendMessage()
     {
-        WindowClassInfo myClass = new WindowClassInfo
+        WindowClassInfo myClass = new()
         {
             ClassName = "WindowCallback_SendMessage",
             WindowProcedure = (window, message, wParam, lParam) =>
@@ -54,7 +54,7 @@ public class WindowsProcedureTests
     public void WindowCallback_Subclass()
     {
         int value = 42;
-        WindowClassInfo myClass = new WindowClassInfo
+        WindowClassInfo myClass = new()
         {
             ClassName = "WindowCallback_Subclass",
             WindowProcedure = (window, message, wParam, lParam) =>

@@ -8,7 +8,7 @@ namespace WInterop.Windows.Classes;
 
 public class TextLabelControl : Window
 {
-    private static readonly WindowClass s_textLabelClass = new WindowClass(
+    private static readonly WindowClass s_textLabelClass = new(
         className: "TextLabelClass");
 
     private TextFormat _textFormat;

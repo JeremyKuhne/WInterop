@@ -38,7 +38,7 @@ namespace Performance
         public unsafe string GetTestValueBuffer()
         {
             Span<char> stack = stackalloc char[128];
-            ValueBuffer<char> buffer = new ValueBuffer<char>(stack);
+            ValueBuffer<char> buffer = new(stack);
 
             fixed (char* n = "USERNAME")
             fixed (char* c = &buffer[0])
@@ -54,7 +54,7 @@ namespace Performance
                     Error.ThrowIfLastErrorNot(WindowsError.ERROR_ENVVAR_NOT_FOUND);
                     return string.Empty;
                 }
-                return new string(buffer.Span.Slice(0, (int)returnValue));
+                return new string(buffer.Span[..(int)returnValue]);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Performance
                 uint returnValue = ProcessAndThreadImports.GetEnvironmentVariableW(n, c, (uint)buffer.Length);
                 if (returnValue == 0)
                     Error.ThrowIfLastErrorNot(WindowsError.ERROR_ENVVAR_NOT_FOUND);
-                return new string(buffer.Slice(0, (int)returnValue));
+                return new string(buffer[..(int)returnValue]);
             }
         }
     }

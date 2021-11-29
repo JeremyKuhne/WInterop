@@ -25,7 +25,7 @@ public class CharSpanExtensionTests
         ]
     public void BufferEquals(char[] buffer, string compareTo, bool expected)
     {
-        ReadOnlySpan<char> span = new ReadOnlySpan<char>(buffer);
+        ReadOnlySpan<char> span = new(buffer);
         span.BufferEquals(compareTo).Should().Be(expected);
     }
 
@@ -40,7 +40,7 @@ public class CharSpanExtensionTests
         ]
     public void CreateString(char[] buffer, string expected)
     {
-        ReadOnlySpan<char> span = new ReadOnlySpan<char>(buffer);
+        ReadOnlySpan<char> span = new(buffer);
         span.CreateString().Should().Be(expected);
     }
 
@@ -64,7 +64,7 @@ public class CharSpanExtensionTests
     public void CopyFromString(int bufferSize, string source, bool nullTerminate, char[] expected)
     {
         char[] buffer = new char[bufferSize];
-        Span<char> span = new Span<char>(buffer);
+        Span<char> span = new(buffer);
         span.CopyFrom(source, nullTerminate);
         buffer.Should().Equal(expected);
     }

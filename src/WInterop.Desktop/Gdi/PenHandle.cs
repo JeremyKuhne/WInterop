@@ -12,7 +12,7 @@ public readonly struct PenHandle : IDisposable
     public HPEN Handle { get; }
     private readonly bool _ownsHandle;
 
-    public static FontHandle Null = new FontHandle(default);
+    public static FontHandle Null = new(default);
 
     public PenHandle(HPEN handle, bool ownsHandle = true)
     {
@@ -45,6 +45,6 @@ public readonly struct PenHandle : IDisposable
     public static implicit operator HPEN(PenHandle handle) => handle.Handle;
     public static implicit operator LResult(PenHandle handle) => handle.Handle.Handle;
     public static implicit operator GdiObjectHandle(PenHandle handle)
-        => new GdiObjectHandle(handle.Handle, ownsHandle: false);
+        => new(handle.Handle, ownsHandle: false);
     public static implicit operator PenHandle(StockPen pen) => Gdi.GetStockPen(pen);
 }

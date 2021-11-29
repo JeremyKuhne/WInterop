@@ -15,7 +15,7 @@ public readonly struct HFONT
     public bool IsInvalid => IsNull;
     public bool IsNull => Value == IntPtr.Zero;
 
-    public static implicit operator HGDIOBJ(HFONT handle) => new HGDIOBJ(handle.Value);
-    public static explicit operator HFONT(HGDIOBJ handle) => new HFONT(handle.Handle);
-    public static explicit operator HFONT(IntPtr handle) => new HFONT(handle);
+    public static implicit operator HGDIOBJ(HFONT handle) => new(handle.Value);
+    public static explicit operator HFONT(HGDIOBJ handle) => new(handle.Handle);
+    public static explicit operator HFONT(IntPtr handle) => new(handle);
 }

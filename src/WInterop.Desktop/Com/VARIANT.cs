@@ -14,7 +14,7 @@ public class Variant : HandleZeroOrMinusOneIsInvalid
 {
     protected const ulong DataOffset = 8;
     protected const ulong NativeSize = 24;
-    protected static object s_UnsupportedObject = new object();
+    protected static object s_UnsupportedObject = new();
 
     public Variant() : this(ownsHandle: true)
     {
@@ -39,7 +39,7 @@ public class Variant : HandleZeroOrMinusOneIsInvalid
 
     public virtual bool IsArray => (RawVariantType & VariantType.Array) != 0;
 
-    public unsafe virtual object? GetData()
+    public virtual unsafe object? GetData()
     {
         VariantType propertyType = VariantType;
 

@@ -11,27 +11,27 @@ namespace WInterop.Gdi;
 
 public static partial class Gdi
 {
-    public static BrushHandle CreateSolidBrush(Color color) => new BrushHandle(GdiImports.CreateSolidBrush(color));
+    public static BrushHandle CreateSolidBrush(Color color) => new(GdiImports.CreateSolidBrush(color));
 
     public static PenHandle GetCurrentPen(in this DeviceContext context)
-        => new PenHandle((HPEN)GdiImports.GetCurrentObject(context, ObjectType.Pen), ownsHandle: false);
+        => new((HPEN)GdiImports.GetCurrentObject(context, ObjectType.Pen), ownsHandle: false);
 
     public static BrushHandle GetCurrentBrush(in this DeviceContext context)
-        => new BrushHandle((HBRUSH)GdiImports.GetCurrentObject(context, ObjectType.Brush), ownsHandle: false);
+        => new((HBRUSH)GdiImports.GetCurrentObject(context, ObjectType.Brush), ownsHandle: false);
 
     public static PaletteHandle GetCurrentPalette(in this DeviceContext context)
-        => new PaletteHandle((HPALETTE)GdiImports.GetCurrentObject(context, ObjectType.Palette), ownsHandle: false);
+        => new((HPALETTE)GdiImports.GetCurrentObject(context, ObjectType.Palette), ownsHandle: false);
 
     public static BrushHandle GetStockBrush(StockBrush brush)
-        => new BrushHandle((HBRUSH)GdiImports.GetStockObject((int)brush), ownsHandle: false);
+        => new((HBRUSH)GdiImports.GetStockObject((int)brush), ownsHandle: false);
 
-    public static PenHandle GetStockPen(StockPen pen) => new PenHandle((HPEN)GdiImports.GetStockObject((int)pen), ownsHandle: false);
+    public static PenHandle GetStockPen(StockPen pen) => new((HPEN)GdiImports.GetStockObject((int)pen), ownsHandle: false);
 
-    public static PenHandle CreatePen(PenStyle style, int width, Color color) => new PenHandle(GdiImports.CreatePen(style, width, color));
+    public static PenHandle CreatePen(PenStyle style, int width, Color color) => new(GdiImports.CreatePen(style, width, color));
 
     public static PenHandle CreatePen(PenStyleExtended style, uint width, Color color, PenEndCap endCap = PenEndCap.Round, PenJoin join = PenJoin.Round)
     {
-        LOGBRUSH brush = new LOGBRUSH
+        LOGBRUSH brush = new()
         {
             lbColor = color,
             lpStyle = BrushStyle.Solid

@@ -16,7 +16,7 @@ public struct MenuInformation
     public uint ContextHelpId;
     public UIntPtr MenuData;
 
-    public BrushHandle Background => new BrushHandle(_background, ownsHandle: false);
+    public BrushHandle Background => new(_background, ownsHandle: false);
 
     public static implicit operator MenuInformation(MENUINFO info)
     {

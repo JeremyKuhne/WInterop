@@ -7,7 +7,7 @@ namespace WInterop.Windows;
 
 public class EditControl : Window
 {
-    private static readonly EditClass s_editClass = new EditClass();
+    private static readonly EditClass s_editClass = new();
 
     public EditControl(
         Rectangle bounds,

@@ -45,7 +45,7 @@ public static class Paths
     /// <param name="value">The string to check.</param>
     /// <param name="startIndex">The index to start looking from.</param>
     public static unsafe bool ContainsWildcards(ReadOnlySpan<char> value, int startIndex = 0)
-        => value.Slice(startIndex).IndexOfAny(s_wildCards) != -1;
+        => value[startIndex..].IndexOfAny(s_wildCards) != -1;
 
     /// <summary>
     ///  The default directory separator.
@@ -77,7 +77,7 @@ public static class Paths
     ///  Returns true if the path ends in a directory separator.
     /// </summary>
     public static bool EndsInDirectorySeparator(StringBuilder path)
-        => path?.Length > 0 && IsDirectorySeparator(path[path.Length - 1]);
+        => path?.Length > 0 && IsDirectorySeparator(path[^1]);
 
     /// <summary>
     ///  Returns true if the given character is a directory separator.

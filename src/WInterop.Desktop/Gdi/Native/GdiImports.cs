@@ -187,7 +187,7 @@ public static partial class GdiImports
 
     // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-drawtextw
     [DllImport(Libraries.User32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern int DrawTextW(
+    public static extern unsafe int DrawTextW(
         HDC hDC,
         char* lpchText,
         int nCount,

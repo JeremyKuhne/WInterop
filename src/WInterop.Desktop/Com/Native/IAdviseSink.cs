@@ -8,7 +8,7 @@ namespace WInterop.Com.Native;
 
 public unsafe struct IAdviseSink
 {
-    public static readonly Guid IID_IEnumFORMATETC = new Guid("0000010f-0000-0000-C000-000000000046");
+    public static readonly Guid IID_IEnumFORMATETC = new("0000010f-0000-0000-C000-000000000046");
 
     private readonly VTable* _vtable;
 

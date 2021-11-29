@@ -22,7 +22,7 @@ public class ThreadRunner
             }
         }
 
-        Thread thread = new Thread(CatchException);
+        Thread thread = new(CatchException);
         thread.Start();
         thread.Join();
         if (exception != null)

@@ -23,7 +23,7 @@ public static partial class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa370434.aspx
     [DllImport(Libraries.Netapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern WindowsError NetLocalGroupAdd(
+    public static extern unsafe WindowsError NetLocalGroupAdd(
         string? servername,
         uint level,
         void* buf,

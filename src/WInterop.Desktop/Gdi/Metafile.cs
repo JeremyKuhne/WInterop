@@ -28,7 +28,7 @@ public class Metafile : IDisposable
                 int nHandles,
                 LParam data) =>
             {
-                MetafileRecord record = new MetafileRecord(lpmr);
+                MetafileRecord record = new(lpmr);
                 return callback(ref record, callbackParameter);
             },
             callbackParameter,

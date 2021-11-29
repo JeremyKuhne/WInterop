@@ -13,7 +13,7 @@ public static partial class Imports
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318103.aspx
     [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern int GetLocaleInfoEx(
+    public static extern unsafe int GetLocaleInfoEx(
         string? lpLocaleName,
         uint LCType,
         void* lpLCData,
@@ -21,7 +21,7 @@ public static partial class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317762.aspx
     [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern int CompareStringOrdinal(
+    public static extern unsafe int CompareStringOrdinal(
         ref char lpString1,
         int cchCount1,
         ref char lpString2,
@@ -30,7 +30,7 @@ public static partial class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd318702.aspx
     [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern int LCMapStringEx(
+    public static extern unsafe int LCMapStringEx(
         char* lpLocaleName,
         LocaleMapFlags dwMapFlags,
         char* lpSrcStr,

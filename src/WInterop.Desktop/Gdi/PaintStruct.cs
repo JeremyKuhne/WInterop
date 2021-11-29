@@ -30,5 +30,5 @@ public readonly ref struct PaintStruct
         Paint = ps.rcPaint;
     }
 
-    public static implicit operator PaintStruct(in PAINTSTRUCT ps) => new PaintStruct(in ps);
+    public static implicit operator PaintStruct(in PAINTSTRUCT ps) => new(in ps);
 }

@@ -19,6 +19,6 @@ public readonly struct PointU
         Y = y;
     }
 
-    public static implicit operator Point(PointU point) => new Point((int)point.X, (int)point.Y);
-    public static implicit operator PointU(Point point) => new PointU((uint)point.X, (uint)point.Y);
+    public static implicit operator Point(PointU point) => new((int)point.X, (int)point.Y);
+    public static implicit operator PointU(Point point) => new((uint)point.X, (uint)point.Y);
 }

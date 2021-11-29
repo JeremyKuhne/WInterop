@@ -18,5 +18,5 @@ public readonly struct LuidAndAttributes
         Attributes = attributes;
     }
 
-    public static implicit operator LuidAndAttributes(LUID luid) => new LuidAndAttributes(luid);
+    public static implicit operator LuidAndAttributes(LUID luid) => new(luid);
 }

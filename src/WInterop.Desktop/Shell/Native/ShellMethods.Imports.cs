@@ -94,7 +94,7 @@ public static partial class ShellImports
 
     // https://docs.microsoft.com/windows/desktop/api/shlobj_core/nf-shlobj_core-shgetpathfromidlistex
     [DllImport(Libraries.Shell32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern bool SHGetPathFromIDListEx(
+    public static extern unsafe bool SHGetPathFromIDListEx(
         ItemIdList pidl,
         char* pszPath,
         uint cchPath,

@@ -28,7 +28,7 @@ public class FixedStringTests
         ]
     public unsafe void Size12_RoundTrip(string value)
     {
-        FixedString.Size12 s = new FixedString.Size12();
+        FixedString.Size12 s = new();
         s.Buffer.CopyFrom(value);
         s.Buffer.CreateString().Should().Be(value);
     }
@@ -36,7 +36,7 @@ public class FixedStringTests
     [Fact]
     public unsafe void Size12_SetOver()
     {
-        FixedString.Size12 s = new FixedString.Size12();
+        FixedString.Size12 s = new();
         s.Buffer.CopyFrom("Fizzlesticks");
         s.Buffer.CreateString().Should().Be("Fizzlestick");
     }
@@ -44,7 +44,7 @@ public class FixedStringTests
     [Fact]
     public unsafe void Size12_NoNullOnBuffer()
     {
-        FixedString.Size12 s = new FixedString.Size12();
+        FixedString.Size12 s = new();
         char* f = (char*)&s;
         string value = "fizzlesticks";
         fixed (char* c = value)
@@ -108,7 +108,7 @@ public class FixedStringTests
     public unsafe void Size12_Equality(string buffer, string compareTo, bool expected)
     {
         // Manually copy in the buffer to allow testing non-null terminated
-        FixedString.Size12 s = new FixedString.Size12();
+        FixedString.Size12 s = new();
 
         fixed (char* c = buffer)
         {

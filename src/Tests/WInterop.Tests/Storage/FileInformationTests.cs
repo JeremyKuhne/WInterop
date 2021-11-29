@@ -61,52 +61,48 @@ public class FileInformation
     [Fact(Skip = "This test is difficult to get timing to go correctly.")]
     public void ProcessWithActiveHandle()
     {
-        using (var cleaner = new TestFileCleaner())
+        using var cleaner = new TestFileCleaner();
+        const int MAX_TRIES = 10;
+
+        // It is tricky to get an open handle conflict- give it a few tries
+        for (int i = 0; i < MAX_TRIES; i++)
         {
-            const int MAX_TRIES = 10;
+            string testFile = cleaner.CreateTestFile(nameof(ProcessWithActiveHandle));
 
-            // It is tricky to get an open handle conflict- give it a few tries
-            for (int i = 0; i < MAX_TRIES; i++)
+            // Create an open handle on the test file. Note that this must come first as
+            // the redirect (>>) will refuse to execute if there is already an open handle.
+            Process process = null;
+            ProcessStartInfo startInfo = new()
             {
-                string testFile = cleaner.CreateTestFile(nameof(ProcessWithActiveHandle));
+                FileName = "cmd",
+                Arguments = $"/K copy con >> {testFile}",
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
 
-                // Create an open handle on the test file. Note that this must come first as
-                // the redirect (>>) will refuse to execute if there is already an open handle.
-                Process process = null;
-                ProcessStartInfo startInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd",
-                    Arguments = $"/K copy con >> {testFile}",
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
+            try
+            {
+                process = Process.Start(startInfo);
 
-                try
-                {
-                    process = Process.Start(startInfo);
+                // The existing cmd handle won't let us access much
+                using var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting,
+                    DesiredAccess.ReadAttributes, ShareModes.ReadWrite | ShareModes.Delete);
+                var ids = Storage.GetProcessIds(handle);
+                if (ids.Count() == 0)
+                    continue;
 
-                    // The existing cmd handle won't let us access much
-                    using (var handle = Storage.CreateFile(testFile, CreationDisposition.OpenExisting,
-                        DesiredAccess.ReadAttributes, ShareModes.ReadWrite | ShareModes.Delete))
-                    {
-                        var ids = Storage.GetProcessIds(handle);
-                        if (ids.Count() == 0)
-                            continue;
-
-                        // If this ends up being problematic (i.e. antivirus gets us a count of 2)
-                        // we can look to see we have an id that matches the known process and that we
-                        // don't contain our own process id.
-                        ids.Should().HaveCount(1);
-                        ((int)(ulong)ids.First()).Should().Be(process.Id);
-                        return;
-                    }
-                }
-                finally
-                {
-                    process?.CloseMainWindow();
-                }
+                // If this ends up being problematic (i.e. antivirus gets us a count of 2)
+                // we can look to see we have an id that matches the known process and that we
+                // don't contain our own process id.
+                ids.Should().HaveCount(1);
+                ((int)(ulong)ids.First()).Should().Be(process.Id);
+                return;
             }
-
-            false.Should().BeTrue($"Did not get a locked file in {MAX_TRIES} tries.");
+            finally
+            {
+                process?.CloseMainWindow();
+            }
         }
+
+        false.Should().BeTrue($"Did not get a locked file in {MAX_TRIES} tries.");
     }
 }

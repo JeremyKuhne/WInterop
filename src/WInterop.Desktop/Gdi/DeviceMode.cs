@@ -13,7 +13,7 @@ namespace WInterop.Gdi;
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 public struct DeviceMode
 {
-    public static unsafe DeviceMode Create() => new DeviceMode { Size = (ushort)sizeof(DeviceMode) };
+    public static unsafe DeviceMode Create() => new() { Size = (ushort)sizeof(DeviceMode) };
 
     private const int CCHDEVICENAME = 32;
     private const int CCHFORMNAME = 32;

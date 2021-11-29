@@ -63,7 +63,7 @@ public sealed class DotNetStream : IStream
 
     public unsafe void Read(byte* pv, uint cb, uint* pcbRead)
     {
-        Span<byte> buffer = new Span<byte>(pv, checked((int)cb));
+        Span<byte> buffer = new(pv, checked((int)cb));
         int read = _wrappedStream.Read(buffer);
 
         if (pcbRead != null)

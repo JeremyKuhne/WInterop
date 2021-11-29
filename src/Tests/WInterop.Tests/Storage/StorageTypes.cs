@@ -17,7 +17,7 @@ public class FileManagementTypes
 
         // An extra sanity check to make sure we're aligning correctly as
         // we're forcing uint size packing.
-        Win32FileAttributeData data = new Win32FileAttributeData();
+        Win32FileAttributeData data = new();
         ((ulong)&data.FileSize - (ulong)&data).Should().Be(28);
     }
 

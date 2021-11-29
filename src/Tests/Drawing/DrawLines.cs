@@ -10,7 +10,7 @@ namespace Windows101;
 
 public class DrawLines : DpiAwareClass
 {
-    private readonly Pen _redPen = new Pen(Color.Red);
+    private readonly Pen _redPen = new(Color.Red);
 
     protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
@@ -26,8 +26,8 @@ public class DrawLines : DpiAwareClass
 
                     for (int i = 0; i < 20; i += 2)
                     {
-                        Point start = new Point(50, 50 + i);
-                        Point end = new Point(50 + i, 50 + i);
+                        Point start = new(50, 50 + i);
+                        Point end = new(50 + i, 50 + i);
                         dc.MoveTo(start);
                         dc.LineTo(end);
 
@@ -43,8 +43,8 @@ public class DrawLines : DpiAwareClass
 
                     for (int i = 0; i < 20; i += 2)
                     {
-                        Point start = new Point(50 + i, 100 + i);
-                        Point end = new Point(50, 100 + i);
+                        Point start = new(50 + i, 100 + i);
+                        Point end = new(50, 100 + i);
                         dc.MoveTo(start);
                         dc.LineTo(end);
 

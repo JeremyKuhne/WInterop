@@ -170,7 +170,7 @@ public static partial class SystemInformation
     /// </summary>
     public static unsafe OsVersionInfo GetVersionInfo()
     {
-        OsVersionInfo info = new OsVersionInfo { OSVersionInfoSize = (uint)sizeof(OsVersionInfo) };
+        OsVersionInfo info = new() { OSVersionInfoSize = (uint)sizeof(OsVersionInfo) };
         SystemInformationImports.RtlGetVersion(ref info).ThrowIfFailed();
         return info;
     }

@@ -24,7 +24,7 @@ public static partial class WindowsImports
 
     // https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowtextw
     [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern int GetWindowTextW(
+    public static extern unsafe int GetWindowTextW(
         HWND hWnd,
         char* lpString,
         int nMaxCount);
@@ -387,7 +387,7 @@ public static partial class WindowsImports
     // https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-getclientrect
     [SuppressGCTransition]
     [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool GetClientRect(
+    public static extern unsafe bool GetClientRect(
         HWND hWnd,
         Rect* lpRect);
 

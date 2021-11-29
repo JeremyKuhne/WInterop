@@ -40,7 +40,7 @@ public class ValueBufferTests
 
     private unsafe void CheckAlignment<T>(int alignment) where T : unmanaged
     {
-        ValueBuffer<T> t = new ValueBuffer<T>();
+        ValueBuffer<T> t = new();
         try
         {
             t.EnsureCapacity(42);

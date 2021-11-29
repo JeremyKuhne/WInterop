@@ -36,7 +36,7 @@ public static partial class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365226.aspx
     [DllImport(Libraries.Lz32, ExactSpelling = true)]
-    public static unsafe extern int LZRead(
+    public static extern unsafe int LZRead(
         int hFile,
         byte* lpBuffer,
         int cbRead);
@@ -72,7 +72,7 @@ public static partial class Imports
     /// <param name="lpCompressedName">MAX_PATH (260 char) buffer for the uncompressed name of the file.</param>
     /// <returns>Handle or LZ error code (as LZOpenFileW).</returns>
     [DllImport(Libraries.Lz32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern int LZCreateFileW(
+    public static extern unsafe int LZCreateFileW(
         string lpFileName,
         DesiredAccess dwAccess,
         ShareModes dwShareMode,

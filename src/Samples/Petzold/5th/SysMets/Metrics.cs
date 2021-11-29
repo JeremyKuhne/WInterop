@@ -5,7 +5,7 @@ using WInterop.Windows;
 
 public static class Metrics
 {
-    public static Dictionary<SystemMetric, string> SystemMetrics = new Dictionary<SystemMetric, string>
+    public static Dictionary<SystemMetric, string> SystemMetrics = new()
     {
         { SystemMetric.ScreenWidth, "Screen width in pixels" },
         { SystemMetric.ScreenHeight, "Screen height in pixels" },

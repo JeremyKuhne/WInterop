@@ -128,7 +128,7 @@ public static partial class Cryptography
         GCHandle handle = GCHandle.FromIntPtr(pvArg);
         var infos = (List<PhysicalStoreInformation>)(handle.Target ?? throw new InvalidOperationException());
 
-        PhysicalStoreInformation info = new PhysicalStoreInformation
+        PhysicalStoreInformation info = new()
         {
             SystemStoreInformation = GetSystemNameAndKey(dwFlags, pvSystemStore),
             PhysicalStoreName = Marshal.PtrToStringUni(pwszStoreName) ?? string.Empty

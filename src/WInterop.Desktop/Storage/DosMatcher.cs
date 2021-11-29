@@ -37,7 +37,7 @@ public static class DosMatcher
                     return false;
 
                 // See if we end with the expression (minus the *, of course)
-                return name.EndsWith(expression.AsSpan().Slice(1), ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+                return name.EndsWith(expression.AsSpan()[1..], ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
             }
         }
 
@@ -56,8 +56,8 @@ public static class DosMatcher
 
         int* priorStack = stackalloc int[16];
         int* currentStack = stackalloc int[16];
-        Span<int> priorMatches = new Span<int>(priorStack, 16);
-        Span<int> currentMatches = new Span<int>(currentStack, 16);
+        Span<int> priorMatches = new(priorStack, 16);
+        Span<int> currentMatches = new(currentStack, 16);
 
         int maxState = expression.Length * 2;
         int currentState;

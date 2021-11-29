@@ -65,7 +65,7 @@ public static partial class Imports
         sbyte cChar);
 
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool WaitCommEvent(
+    public static extern unsafe bool WaitCommEvent(
         SafeFileHandle hFile,
         out EventMask lpEvtMask,
         OVERLAPPED* lpOverlapped);

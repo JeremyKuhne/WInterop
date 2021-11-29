@@ -11,7 +11,7 @@ namespace WInterop.Modules;
 /// </summary>
 public class ModuleInstance : HandleZeroIsInvalid
 {
-    public static ModuleInstance Null = new ModuleInstance(IntPtr.Zero);
+    public static ModuleInstance Null = new(IntPtr.Zero);
 
     public ModuleInstance() : this(ownsHandle: false) { }
 
@@ -19,7 +19,7 @@ public class ModuleInstance : HandleZeroIsInvalid
 
     public ModuleInstance(IntPtr handle, bool ownsHandle = false) : base(handle, ownsHandle) { }
 
-    public static implicit operator ModuleInstance(IntPtr handle) => new ModuleInstance(handle);
+    public static implicit operator ModuleInstance(IntPtr handle) => new(handle);
 
     public static ModuleInstance GetModuleForType(Type type)
         => Marshal.GetHINSTANCE(type.Module);

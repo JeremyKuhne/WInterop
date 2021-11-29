@@ -21,5 +21,5 @@ public readonly struct TimerId
 
     public static bool operator !=(TimerId a, TimerId b) => a.Value != b.Value;
 
-    public static implicit operator TimerId(uint value) => new TimerId(value);
+    public static implicit operator TimerId(uint value) => new(value);
 }

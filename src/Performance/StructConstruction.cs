@@ -36,7 +36,7 @@ namespace Performance
                 _y = vector.Y;
             }
 
-            public Vector2 ToVector2() => new Vector2(_x, _y);
+            public Vector2 ToVector2() => new(_x, _y);
         }
 
         public struct PointF2

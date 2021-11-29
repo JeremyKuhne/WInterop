@@ -17,7 +17,7 @@ public unsafe struct ExtendedMonitorInfo
     private readonly MonitorInfo _info;
     private FixedString.Size32 _szDevice;
 
-    public static unsafe ExtendedMonitorInfo Create() => new ExtendedMonitorInfo(sizeof(ExtendedMonitorInfo));
+    public static unsafe ExtendedMonitorInfo Create() => new(sizeof(ExtendedMonitorInfo));
 
     private ExtendedMonitorInfo(int size)
     {

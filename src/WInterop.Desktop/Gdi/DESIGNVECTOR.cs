@@ -15,16 +15,16 @@ public struct DesignVector
     private const uint STAMP_DESIGNVECTOR = 0x8000000 + 'd' + ('v' << 8);
     private const int MM_MAX_NUMAXES = 16;
 
-    private readonly uint dvReserved;
-    private readonly uint dvNumAxes;
-    private FixedInt.Size16 dvValues;
+    private readonly uint _dvReserved;
+    private readonly uint _dvNumAxes;
+    private FixedInt.Size16 _dvValues;
 
     public DesignVector(ReadOnlySpan<int> values)
     {
-        dvReserved = STAMP_DESIGNVECTOR;
-        dvNumAxes = (uint)values.Length;
-        values.CopyTo(dvValues.Buffer);
+        _dvReserved = STAMP_DESIGNVECTOR;
+        _dvNumAxes = (uint)values.Length;
+        values.CopyTo(_dvValues.Buffer);
     }
 
-    public ReadOnlySpan<int> Values => dvValues.Buffer.Slice(0, (int)dvNumAxes);
+    public ReadOnlySpan<int> Values => _dvValues.Buffer[.. (int)_dvNumAxes];
 }

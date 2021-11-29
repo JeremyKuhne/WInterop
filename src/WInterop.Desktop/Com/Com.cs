@@ -15,7 +15,7 @@ public static partial class Com
         StorageMode mode = StorageMode.ReadWrite | StorageMode.Create | StorageMode.ShareExclusive,
         StorageFormat format = StorageFormat.DocFile)
     {
-        STGOPTIONS options = new STGOPTIONS
+        STGOPTIONS options = new()
         {
             usVersion = 1,
 
@@ -42,7 +42,7 @@ public static partial class Com
         StorageMode mode = StorageMode.ReadWrite | StorageMode.ShareExclusive,
         StorageFormat format = StorageFormat.Any)
     {
-        STGOPTIONS options = new STGOPTIONS
+        STGOPTIONS options = new()
         {
             // Must have version set before using
             usVersion = 1
@@ -72,7 +72,7 @@ public static partial class Com
         // with the actual found casing.
 
         char* nameBuffer = stackalloc char[typeName.Length + 1];
-        Span<char> nameSpan = new Span<char>(nameBuffer, typeName.Length);
+        Span<char> nameSpan = new(nameBuffer, typeName.Length);
         typeName.AsSpan().CopyTo(nameSpan);
         nameBuffer[typeName.Length] = '\0';
 
@@ -135,10 +135,5 @@ public static partial class Com
     }
 
     public static unsafe uint Release(IntPtr pUnk)
-    {
-        if (pUnk == IntPtr.Zero)
-            throw new ArgumentNullException(nameof(pUnk));
-
-        return ((IUnknown*)pUnk)->Release();
-    }
+        => pUnk == IntPtr.Zero ? throw new ArgumentNullException(nameof(pUnk)) : ((IUnknown*)pUnk)->Release();
 }

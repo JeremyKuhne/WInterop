@@ -70,7 +70,7 @@ public static partial class Handles
                 Buffer = pathPointer
             };
 
-            OBJECT_ATTRIBUTES attributes = new OBJECT_ATTRIBUTES
+            OBJECT_ATTRIBUTES attributes = new()
             {
                 Length = (uint)sizeof(OBJECT_ATTRIBUTES),
                 RootDirectory = IntPtr.Zero,
@@ -108,7 +108,7 @@ public static partial class Handles
 
     public static unsafe IEnumerable<ObjectInformation> GetDirectoryEntries(DirectoryObjectHandle directoryHandle)
     {
-        List<ObjectInformation> infos = new List<ObjectInformation>();
+        List<ObjectInformation> infos = new();
 
         BufferHelper.BufferInvoke((StringBuffer buffer) =>
         {

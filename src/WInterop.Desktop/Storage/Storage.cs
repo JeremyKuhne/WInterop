@@ -38,7 +38,7 @@ public static partial class Storage
             buffer.EnsureCapacity((int)result);
 
         Error.ThrowLastErrorIfZero(result);
-        return buffer.Span.Slice(0, (int)result).ToString();
+        return buffer.Span[.. (int)result].ToString();
     }
 
     /// <summary>
@@ -1494,7 +1494,7 @@ public static partial class Storage
             buffer.EnsureCapacity((int)result);
 
         Error.ThrowLastErrorIfZero(result);
-        return buffer.Span.Slice(0, (int)result).ToString();
+        return buffer.Span[.. (int)result].ToString();
     }
 
     /// <summary>

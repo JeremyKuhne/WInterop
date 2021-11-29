@@ -19,17 +19,17 @@ public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
     /// <summary>
     ///  Null SID authority. Only valid with the NULL well-known SID (S-1-0-0). [SECURITY_NULL_SID_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority Null = new IdentifierAuthority(0);
+    public static IdentifierAuthority Null = new(0);
 
     /// <summary>
     ///  World SID authority. Only valid with the Everyone well-known SID (S-1-1-0). [SECURITY_WORLD_SID_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority World = new IdentifierAuthority(1);
+    public static IdentifierAuthority World = new(1);
 
     /// <summary>
     ///  Local SID authority. Only valid with the Local well-known SID (S-1-2-0). [SECURITY_LOCAL_SID_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority Local = new IdentifierAuthority(2);
+    public static IdentifierAuthority Local = new(2);
 
     /// <summary>
     ///  Creator SID authority. Used with Creator Owner, Creator Group, and Creator Owner Server well-known SIDs.
@@ -38,7 +38,7 @@ public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
     ///  These SIDs are used as ACL placeholders and are replaced by user, group, and machine SIDs of the security
     ///  principal. [SECURITY_CREATOR_SID_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority Creator = new IdentifierAuthority(3);
+    public static IdentifierAuthority Creator = new(3);
 
     // Not used
     // public static SID_IDENTIFIER_AUTHORITY SECURITY_NON_UNIQUE_AUTHORITY = new SID_IDENTIFIER_AUTHORITY(4);
@@ -46,38 +46,38 @@ public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
     /// <summary>
     ///  Specifies the Windows NT operating system security subsystem SID authority. [SECURITY_NT_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority NT = new IdentifierAuthority(5);
+    public static IdentifierAuthority NT = new(5);
 
     /// <summary>
     ///  [SECURITY_RESOURCE_MANAGER_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority ResourceManager = new IdentifierAuthority(9);
+    public static IdentifierAuthority ResourceManager = new(9);
 
     /// <summary>
     ///  Specifies the application package authority. Defines application capabilities. [SECURITY_APP_PACKAGE_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority AppPackage = new IdentifierAuthority(15);
+    public static IdentifierAuthority AppPackage = new(15);
 
     /// <summary>
     ///  Specified the mandatory label authority. Defines integrity levels. [SECURITY_MANDATORY_LABEL_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority MandatoryLabel = new IdentifierAuthority(16);
+    public static IdentifierAuthority MandatoryLabel = new(16);
 
     /// <summary>
     ///  Part of Server 2012+ Kerberos KDCs. [SECURITY_SCOPED_POLICY_ID_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority ScopedPolicy = new IdentifierAuthority(17);
+    public static IdentifierAuthority ScopedPolicy = new(17);
 
     /// <summary>
     ///  Authentication authority that asserts the client's identity. Part of Server 2012+ Kerberos KDCs.
     ///  [SECURITY_AUTHENTICATION_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority Authentication = new IdentifierAuthority(18);
+    public static IdentifierAuthority Authentication = new(18);
 
     /// <summary>
     ///  [SECURITY_PROCESS_TRUST_AUTHORITY]
     /// </summary>
-    public static IdentifierAuthority ProcessTrust = new IdentifierAuthority(19);
+    public static IdentifierAuthority ProcessTrust = new(19);
 
     private IdentifierAuthority(byte knownAuthority)
     {

@@ -30,10 +30,10 @@ public readonly struct Rect
         => (point.X >= Left) && (point.X < Right) && (point.Y >= Top) && (point.Y < Bottom);
 
     public Rect Offset(int dx, int dy)
-        => new Rect(Left + dx, Top + dy, Right + dx, Bottom + dy);
+        => new(Left + dx, Top + dy, Right + dx, Bottom + dy);
 
     public Rect Inflate(int dx, int dy)
-        => new Rect(Left - dx, Top + dy, Right + dx, Bottom - dy);
+        => new(Left - dx, Top + dy, Right + dx, Bottom - dy);
 
     public bool Intersects(Rect rect)
         => !Intersect(rect).IsEmpty();
@@ -64,5 +64,5 @@ public readonly struct Rect
         => Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
     public static implicit operator Rect(Rectangle rectangle)
-        => new Rect(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
+        => new(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
 }

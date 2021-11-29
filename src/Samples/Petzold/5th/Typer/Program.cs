@@ -37,14 +37,12 @@ internal class Typer : WindowClass
             case MessageType.Create:
                 using (DeviceContext dc = window.GetDeviceContext())
                 {
-                    using (FontHandle font = Gdi.CreateFont(characterSet: dwCharSet, pitch: FontPitch.FixedPitch))
-                    {
-                        dc.SelectObject(font);
-                        dc.GetTextMetrics(out TextMetrics tm);
-                        cxChar = tm.AverageCharWidth;
-                        cyChar = tm.Height;
-                        dc.SelectObject(StockFont.System);
-                    }
+                    using FontHandle font = Gdi.CreateFont(characterSet: dwCharSet, pitch: FontPitch.FixedPitch);
+                    dc.SelectObject(font);
+                    dc.GetTextMetrics(out TextMetrics tm);
+                    cxChar = tm.AverageCharWidth;
+                    cyChar = tm.Height;
+                    dc.SelectObject(StockFont.System);
                 }
                 goto CalculateSize;
             case MessageType.Size:
@@ -205,18 +203,16 @@ internal class Typer : WindowClass
             case MessageType.Paint:
                 using (DeviceContext dc = window.BeginPaint())
                 {
-                    using (FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                        OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null))
+                    using FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
+                        OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null);
+                    dc.SelectObject(font);
+                    unsafe
                     {
-                        dc.SelectObject(font);
-                        unsafe
-                        {
-                            for (int y = 0; y < cyBuffer; y++)
-                                fixed (char* c = &pBuffer[0, y])
-                                    dc.TextOut(new Point(0, y * cyChar), new ReadOnlySpan<char>(c, cxBuffer));
-                        }
-                        dc.SelectObject(StockFont.System);
+                        for (int y = 0; y < cyBuffer; y++)
+                            fixed (char* c = &pBuffer[0, y])
+                                dc.TextOut(new Point(0, y * cyChar), new ReadOnlySpan<char>(c, cxBuffer));
                     }
+                    dc.SelectObject(StockFont.System);
                 }
                 return 0;
         }

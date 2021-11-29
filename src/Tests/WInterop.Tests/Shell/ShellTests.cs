@@ -20,20 +20,16 @@ public class Basic
     [Fact]
     public void GetKnownFolderId_Basic()
     {
-        using (var id = ShellMethods.GetKnownFolderId(KnownFolderIds.ProgramData))
-        {
-            id.IsInvalid.Should().BeFalse();
-        }
+        using var id = ShellMethods.GetKnownFolderId(KnownFolderIds.ProgramData);
+        id.IsInvalid.Should().BeFalse();
     }
 
     [Fact]
     public void GetIdName_Basic()
     {
-        using (var id = ShellMethods.GetKnownFolderId(KnownFolderIds.Windows))
-        {
-            id.IsInvalid.Should().BeFalse();
-            ShellMethods.GetNameFromId(id, ShellItemDisplayNames.ParentRelative).Should().Be("Windows");
-        }
+        using var id = ShellMethods.GetKnownFolderId(KnownFolderIds.Windows);
+        id.IsInvalid.Should().BeFalse();
+        ShellMethods.GetNameFromId(id, ShellItemDisplayNames.ParentRelative).Should().Be("Windows");
     }
 
     [Fact]
@@ -91,15 +87,13 @@ public class Basic
     [Fact]
     public void KnownFolder_GetPath()
     {
-        using (var id = ShellMethods.GetKnownFolderId(KnownFolderIds.Windows))
-        {
-            id.IsInvalid.Should().BeFalse();
-            ShellMethods.GetNameFromId(id, ShellItemDisplayNames.ParentRelative).Should().BeEquivalentTo("Windows");
+        using var id = ShellMethods.GetKnownFolderId(KnownFolderIds.Windows);
+        id.IsInvalid.Should().BeFalse();
+        ShellMethods.GetNameFromId(id, ShellItemDisplayNames.ParentRelative).Should().BeEquivalentTo("Windows");
 
-            IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
-            IKnownFolder folder = manager.GetFolder(KnownFolderIds.Windows);
-            folder.GetPath(0).Should().BeEquivalentTo(ShellMethods.GetNameFromId(id, ShellItemDisplayNames.FilesysPath));
-        }
+        IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
+        IKnownFolder folder = manager.GetFolder(KnownFolderIds.Windows);
+        folder.GetPath(0).Should().BeEquivalentTo(ShellMethods.GetNameFromId(id, ShellItemDisplayNames.FilesysPath));
     }
 
     [Fact]
@@ -107,11 +101,9 @@ public class Basic
     {
         IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
         IKnownFolder folder = manager.GetFolder(KnownFolderIds.Windows);
-        using (var id = folder.GetIDList(0))
-        {
-            id.IsInvalid.Should().BeFalse();
-            ShellMethods.GetNameFromId(id, ShellItemDisplayNames.ParentRelative).Should().Be("Windows");
-        }
+        using var id = folder.GetIDList(0);
+        id.IsInvalid.Should().BeFalse();
+        ShellMethods.GetNameFromId(id, ShellItemDisplayNames.ParentRelative).Should().Be("Windows");
     }
 
     [Fact]
@@ -136,15 +128,13 @@ public class Basic
     {
         IKnownFolderManager manager = ShellMethods.GetKnownFolderManager();
         IKnownFolder folder = manager.GetFolder(KnownFolderIds.LocalAppData);
-        using (KnownFolderDefinition definition = new KnownFolderDefinition())
-        {
-            folder.GetFolderDefinition(definition);
-            definition.FolderTypeId.Should().Be(Guid.Empty);
-            definition.Category.Should().Be(KnownFolderCategory.PerUser);
-            definition.Name.Should().Be("Local AppData");
-            definition.RelativePath.Should().Be(@"AppData\Local");
-            definition.Parent.Should().Be(KnownFolderIds.Profile);
-        }
+        using KnownFolderDefinition definition = new();
+        folder.GetFolderDefinition(definition);
+        definition.FolderTypeId.Should().Be(Guid.Empty);
+        definition.Category.Should().Be(KnownFolderCategory.PerUser);
+        definition.Name.Should().Be("Local AppData");
+        definition.RelativePath.Should().Be(@"AppData\Local");
+        definition.Parent.Should().Be(KnownFolderIds.Profile);
     }
 
     [Fact]

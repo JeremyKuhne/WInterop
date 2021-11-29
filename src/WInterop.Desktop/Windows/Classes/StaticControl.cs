@@ -7,7 +7,7 @@ namespace WInterop.Windows;
 
 public class StaticControl : Window
 {
-    private static readonly StaticClass s_buttonClass = new StaticClass();
+    private static readonly StaticClass s_buttonClass = new();
 
     public StaticControl(
         Rectangle bounds,

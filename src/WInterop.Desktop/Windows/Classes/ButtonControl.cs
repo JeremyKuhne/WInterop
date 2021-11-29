@@ -7,7 +7,7 @@ namespace WInterop.Windows;
 
 public class ButtonControl : Window
 {
-    private static readonly ButtonClass s_buttonClass = new ButtonClass();
+    private static readonly ButtonClass s_buttonClass = new();
 
     public ButtonControl(
         Rectangle bounds,

@@ -508,7 +508,7 @@ public partial class FileManagementTests
         string cursorPath = cleaner.GetTestPath() + ".cur";
 
         // Create a handle with read only sharing and leave open
-        using FileStream file = new FileStream(cursorPath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
+        using FileStream file = new(cursorPath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
 
         // Write out a valid file
         using (Stream data = TestFiles.GetTestCursor())
@@ -518,7 +518,7 @@ public partial class FileManagementTests
         file.Flush();
 
         // See that we can open a handle on it directly
-        using (FileStream file2 = new FileStream(cursorPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) { }
+        using (FileStream file2 = new(cursorPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) { }
 
         // Try letting the OS read it in
         using (Windows.LoadCursorFromFile(cursorPath)) { };

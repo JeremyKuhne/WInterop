@@ -10,7 +10,7 @@ namespace WInterop.DirectWrite;
 ///  [IDWriteRenderingParams]
 /// </summary>
 [Guid(InterfaceIds.IID_IDWriteRenderingParams)]
-public unsafe readonly struct RenderingParams : RenderingParams.Interface, IDisposable
+public readonly unsafe struct RenderingParams : RenderingParams.Interface, IDisposable
 {
     internal IDWriteRenderingParams* Handle { get; }
 

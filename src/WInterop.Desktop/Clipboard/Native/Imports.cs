@@ -51,7 +51,7 @@ public static partial class Imports
 
     // https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-getupdatedclipboardformats
     [DllImport(Libraries.User32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool GetUpdatedClipboardFormats(
+    public static extern unsafe bool GetUpdatedClipboardFormats(
         ref uint lpuiFormats,
         uint cFormats,
         out uint pcFormatsOut);

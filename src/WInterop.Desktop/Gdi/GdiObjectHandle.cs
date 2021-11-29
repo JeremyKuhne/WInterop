@@ -14,7 +14,7 @@ public readonly struct GdiObjectHandle : IDisposable
     public HGDIOBJ Handle { get; }
     private readonly bool _ownsHandle;
 
-    public static GdiObjectHandle Null = new GdiObjectHandle(default);
+    public static GdiObjectHandle Null = new(default);
 
     public GdiObjectHandle(HGDIOBJ handle, bool ownsHandle = true)
     {
@@ -27,10 +27,10 @@ public readonly struct GdiObjectHandle : IDisposable
         return GdiImports.GetObjectType(Handle);
     }
 
-    public static implicit operator GdiObjectHandle(StockFont font) => new GdiObjectHandle(Gdi.GetStockFont(font).Handle, false);
-    public static implicit operator GdiObjectHandle(StockBrush brush) => new GdiObjectHandle(Gdi.GetStockBrush(brush), false);
-    public static implicit operator GdiObjectHandle(SystemColor color) => new GdiObjectHandle(Gdi.GetSystemColorBrush(color), false);
-    public static implicit operator GdiObjectHandle(StockPen pen) => new GdiObjectHandle(Gdi.GetStockPen(pen), false);
+    public static implicit operator GdiObjectHandle(StockFont font) => new(Gdi.GetStockFont(font).Handle, false);
+    public static implicit operator GdiObjectHandle(StockBrush brush) => new(Gdi.GetStockBrush(brush), false);
+    public static implicit operator GdiObjectHandle(SystemColor color) => new(Gdi.GetSystemColorBrush(color), false);
+    public static implicit operator GdiObjectHandle(StockPen pen) => new(Gdi.GetStockPen(pen), false);
 
     public static implicit operator HGDIOBJ(GdiObjectHandle handle) => handle.Handle;
 

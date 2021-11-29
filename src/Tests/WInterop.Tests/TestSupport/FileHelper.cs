@@ -38,7 +38,7 @@ public static class FileHelper
         if (!Storage.PathExists(path))
         {
             int lastSeparator = path.LastIndexOfAny(new char[] { Paths.DirectorySeparator, Paths.AltDirectorySeparator });
-            CreateDirectoryRecursive(path.Substring(0, lastSeparator));
+            CreateDirectoryRecursive(path[..lastSeparator]);
             Storage.CreateDirectory(path);
         }
 
@@ -90,6 +90,6 @@ public static class FileHelper
         while (((length > 0)
             && (path[--length] != Paths.DirectorySeparator))
             && (path[length] != Paths.AltDirectorySeparator)) { }
-        return path.Substring(0, length);
+        return path[..length];
     }
 }

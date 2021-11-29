@@ -39,10 +39,10 @@ public readonly ref struct StringSpan
             ? _string.AsSpan()
             : IsNullTerminated ? _span[0..^1] : _span;
 
-    public static implicit operator StringSpan(string value) => new StringSpan(value);
-    public static implicit operator StringSpan(ReadOnlySpan<char> span) => new StringSpan(span);
-    public static implicit operator StringSpan(Span<char> span) => new StringSpan(span);
-    public static implicit operator StringSpan(char[] buffer) => new StringSpan(buffer);
+    public static implicit operator StringSpan(string value) => new(value);
+    public static implicit operator StringSpan(ReadOnlySpan<char> span) => new(span);
+    public static implicit operator StringSpan(Span<char> span) => new(span);
+    public static implicit operator StringSpan(char[] buffer) => new(buffer);
 
     public override string ToString() => _string ?? GetSpanWithoutTerminator().ToString();
 }

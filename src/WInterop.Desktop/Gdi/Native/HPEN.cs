@@ -14,6 +14,6 @@ public readonly struct HPEN
 
     public bool IsInvalid => Handle == IntPtr.Zero;
 
-    public static implicit operator HGDIOBJ(HPEN handle) => new HGDIOBJ(handle.Handle);
-    public static explicit operator HPEN(HGDIOBJ handle) => new HPEN(handle.Handle);
+    public static implicit operator HGDIOBJ(HPEN handle) => new(handle.Handle);
+    public static explicit operator HPEN(HGDIOBJ handle) => new(handle.Handle);
 }

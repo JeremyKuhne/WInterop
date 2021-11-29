@@ -12,7 +12,7 @@ public struct ProcessHandle
 {
     public IntPtr HANDLE;
 
-    public static ProcessHandle Null = new ProcessHandle(IntPtr.Zero);
+    public static ProcessHandle Null = new(IntPtr.Zero);
 
     public ProcessHandle(IntPtr hprocess)
     {

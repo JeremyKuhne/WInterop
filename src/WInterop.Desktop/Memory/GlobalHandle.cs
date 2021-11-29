@@ -16,7 +16,7 @@ public struct GlobalHandle : IDisposable
         Size = size;
     }
 
-    public GlobalLock Lock => new GlobalLock(this);
+    public GlobalLock Lock => new(this);
 
     public void Dispose()
     {

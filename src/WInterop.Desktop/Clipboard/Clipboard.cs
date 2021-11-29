@@ -42,7 +42,7 @@ public static partial class Clipboard
         uint count;
 
         Span<uint> initialBuffer = stackalloc uint[5];
-        ValueBuffer<uint> buffer = new ValueBuffer<uint>(initialBuffer);
+        ValueBuffer<uint> buffer = new(initialBuffer);
 
         while (!Imports.GetUpdatedClipboardFormats(ref MemoryMarshal.GetReference(buffer.Span), (uint)buffer.Length, out count))
         {
@@ -50,7 +50,7 @@ public static partial class Clipboard
             buffer.EnsureCapacity((int)count);
         }
 
-        return buffer.Span.Slice(0, (int)count).ToArray();
+        return buffer.Span[.. (int)count].ToArray();
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public static partial class Clipboard
         using GlobalLock globalLock = global.Lock;
         Span<char> buffer = globalLock.GetSpan<char>();
         span.CopyTo(buffer);
-        buffer[buffer.Length - 1] = '\0';
+        buffer[^1] = '\0';
 
         Imports.SetClipboardData((uint)format, globalLock.Pointer);
     }
@@ -164,7 +164,7 @@ public static partial class Clipboard
         using GlobalLock globalLock = global.Lock;
         Span<byte> buffer = globalLock.GetSpan<byte>();
         span.CopyTo(buffer);
-        buffer[buffer.Length - 1] = 0;
+        buffer[^1] = 0;
 
         Imports.SetClipboardData((uint)format, globalLock.Pointer);
     }

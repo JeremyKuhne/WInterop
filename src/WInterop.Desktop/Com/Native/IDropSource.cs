@@ -18,7 +18,7 @@ namespace WInterop.Com.Native;
 /// </example>
 public unsafe partial struct IDropSource
 {
-    public static readonly Guid IID_IDropSource = new Guid("00000121-0000-0000-C000-000000000046");
+    public static readonly Guid IID_IDropSource = new("00000121-0000-0000-C000-000000000046");
 
     private readonly VTable* _vtable;
 

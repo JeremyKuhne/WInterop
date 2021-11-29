@@ -66,7 +66,7 @@ public static partial class Processes
                 int separator = entry.IndexOf('=', startIndex: 1);
                 if (separator == -1) throw new InvalidOperationException("There should never be a string given back from Windows without an equals sign");
 
-                string key = entry.Substring(startIndex: 0, length: separator);
+                string key = entry[..separator];
                 string value = entry[(separator + 1)..];
                 variables.Add(key, value);
             }

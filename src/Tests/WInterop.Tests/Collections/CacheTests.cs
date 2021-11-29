@@ -40,48 +40,40 @@ public class CacheTests
     [Fact]
     public void CachedItemCountTest()
     {
-        using (var cache = new TestCache(5))
+        using var cache = new TestCache(5);
+        TestItem item = new();
+        for (int i = 0; i < 7; i++)
         {
-            TestItem item = new TestItem();
-            for (int i = 0; i < 7; i++)
-            {
-                cache.Release(item);
-            }
-
-            cache.CachedCount.Should().Be(5);
+            cache.Release(item);
         }
+
+        cache.CachedCount.Should().Be(5);
     }
 
     [Fact]
     public void GetCachedItem()
     {
-        using (var cache = new TestCache(5))
-        {
-            TestItem item = new TestItem();
-            cache.Release(item);
-            cache.Acquire().Should().BeSameAs(item);
-            cache.Acquire().Should().NotBeSameAs(item);
-        }
+        using var cache = new TestCache(5);
+        TestItem item = new();
+        cache.Release(item);
+        cache.Acquire().Should().BeSameAs(item);
+        cache.Acquire().Should().NotBeSameAs(item);
     }
 
     [Fact]
     public void CachedItemParallelCountTest()
     {
-        using (var cache = new TestCache(5))
-        {
-            TestItem item = new TestItem();
-            Parallel.For(0, 5, (i) => cache.Release(item));
-            cache.CachedCount.Should().Be(5);
-        }
+        using var cache = new TestCache(5);
+        TestItem item = new();
+        Parallel.For(0, 5, (i) => cache.Release(item));
+        cache.CachedCount.Should().Be(5);
     }
 
     [Fact]
     public void NonDisposableContent()
     {
-        using (var cache = new Cache<object>(1))
-        {
-            cache.Release(new object());
-            cache.Release(new object());
-        }
+        using var cache = new Cache<object>(1);
+        cache.Release(new object());
+        cache.Release(new object());
     }
 }

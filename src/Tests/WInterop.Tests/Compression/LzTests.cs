@@ -18,21 +18,15 @@ public class LzTests
     public void ReadStream_ExpandedSmaller(bool useCreateFile)
     {
         // Try a file that is bigger compressed
-        using (var cleaner = new TestFileCleaner())
-        {
-            string path = cleaner.CreateTestFile(CompressedFile1);
+        using var cleaner = new TestFileCleaner();
+        string path = cleaner.CreateTestFile(CompressedFile1);
 
-            using (var lzStream = new LzStream(path, useCreateFile))
-            {
-                lzStream.UncompressedName.Should().Be(path);
+        using var lzStream = new LzStream(path, useCreateFile);
+        lzStream.UncompressedName.Should().Be(path);
 
-                using (var reader = new StreamReader(lzStream, Encoding.ASCII))
-                {
-                    string result = reader.ReadToEnd();
-                    result.Should().Be(CompressedContent1);
-                }
-            }
-        }
+        using var reader = new StreamReader(lzStream, Encoding.ASCII);
+        string result = reader.ReadToEnd();
+        result.Should().Be(CompressedContent1);
     }
 
     [Theory,
@@ -41,21 +35,15 @@ public class LzTests
     public void ReadStream_ExpandedLarger(bool useCreateFile)
     {
         // Try a file that is bigger uncompressed
-        using (var cleaner = new TestFileCleaner())
-        {
-            string path = cleaner.CreateTestFile(CompressedFile2);
+        using var cleaner = new TestFileCleaner();
+        string path = cleaner.CreateTestFile(CompressedFile2);
 
-            using (var lzStream = new LzStream(path, useCreateFile))
-            {
-                lzStream.UncompressedName.Should().Be(path);
+        using var lzStream = new LzStream(path, useCreateFile);
+        lzStream.UncompressedName.Should().Be(path);
 
-                using (var reader = new StreamReader(lzStream, Encoding.ASCII))
-                {
-                    string result = reader.ReadToEnd();
-                    result.Should().Be(CompressedContent2);
-                }
-            }
-        }
+        using var reader = new StreamReader(lzStream, Encoding.ASCII);
+        string result = reader.ReadToEnd();
+        result.Should().Be(CompressedContent2);
     }
 
     [Theory,
@@ -63,15 +51,13 @@ public class LzTests
         InlineData(false)]
     public void CopyFile(bool useCreateFile)
     {
-        using (var cleaner = new TestFileCleaner())
-        {
-            string source = cleaner.CreateTestFile(CompressedFile2);
-            string destination = cleaner.GetTestPath();
+        using var cleaner = new TestFileCleaner();
+        string source = cleaner.CreateTestFile(CompressedFile2);
+        string destination = cleaner.GetTestPath();
 
-            Compression.LzCopyFile(source, destination, false, useCreateFile).Should().Be(563);
+        Compression.LzCopyFile(source, destination, false, useCreateFile).Should().Be(563);
 
-            FileHelper.ReadAllText(destination).Should().Be(CompressedContent2);
-        }
+        FileHelper.ReadAllText(destination).Should().Be(CompressedContent2);
     }
 
     [Theory,
@@ -79,14 +65,12 @@ public class LzTests
         InlineData(false)]
     public void CopyFile_OverExisting(bool useCreateFile)
     {
-        using (var cleaner = new TestFileCleaner())
-        {
-            string source = cleaner.CreateTestFile(CompressedFile2);
-            string destination = cleaner.CreateTestFile($"CopyFile_OverExisting({useCreateFile})");
+        using var cleaner = new TestFileCleaner();
+        string source = cleaner.CreateTestFile(CompressedFile2);
+        string destination = cleaner.CreateTestFile($"CopyFile_OverExisting({useCreateFile})");
 
-            Compression.LzCopyFile(source, destination, overwrite: true, useCreateFile: useCreateFile).Should().Be(563);
-            FileHelper.ReadAllText(destination).Should().Be(CompressedContent2);
-        }
+        Compression.LzCopyFile(source, destination, overwrite: true, useCreateFile: useCreateFile).Should().Be(563);
+        FileHelper.ReadAllText(destination).Should().Be(CompressedContent2);
     }
 
     [Theory,
@@ -94,14 +78,12 @@ public class LzTests
         InlineData(false)]
     public void CopyFile_NotOverExisting(bool useCreateFile)
     {
-        using (var cleaner = new TestFileCleaner())
-        {
-            string source = cleaner.CreateTestFile(CompressedFile2);
-            string destination = cleaner.CreateTestFile($"CopyFile_NotOverExisting({useCreateFile})");
+        using var cleaner = new TestFileCleaner();
+        string source = cleaner.CreateTestFile(CompressedFile2);
+        string destination = cleaner.CreateTestFile($"CopyFile_NotOverExisting({useCreateFile})");
 
-            Action action = () => Compression.LzCopyFile(source, destination, overwrite: false, useCreateFile: useCreateFile);
-            action.Should().Throw<IOException>().And.HResult.Should().Be((int)WindowsError.ERROR_FILE_EXISTS.ToHResult());
-        }
+        Action action = () => Compression.LzCopyFile(source, destination, overwrite: false, useCreateFile: useCreateFile);
+        action.Should().Throw<IOException>().And.HResult.Should().Be((int)WindowsError.ERROR_FILE_EXISTS.ToHResult());
     }
 
     [Fact]
@@ -147,29 +129,25 @@ public class LzTests
     [Theory, MemberData(nameof(ExpandedTestData))]
     public void ExpandedName(string compressedName, byte character, string expandedName)
     {
-        using (var cleaner = new TestFileCleaner())
-        {
-            byte[] data = new byte[CompressedFile1.Length];
-            CompressedFile1.CopyTo(data, 0);
-            data[9] = character;
-            string path = Path.Join(cleaner.TempFolder, compressedName);
-            FileHelper.WriteAllBytes(path, data);
-            Path.GetFileName(Compression.GetExpandedName(path)).Should().Be(expandedName);
-        }
+        using var cleaner = new TestFileCleaner();
+        byte[] data = new byte[CompressedFile1.Length];
+        CompressedFile1.CopyTo(data, 0);
+        data[9] = character;
+        string path = Path.Join(cleaner.TempFolder, compressedName);
+        FileHelper.WriteAllBytes(path, data);
+        Path.GetFileName(Compression.GetExpandedName(path)).Should().Be(expandedName);
     }
 
     [Theory, MemberData(nameof(ExpandedTestData))]
     public void ExpandedNameEx(string compressedName, byte character, string expandedName)
     {
-        using (var cleaner = new TestFileCleaner())
-        {
-            byte[] data = new byte[CompressedFile1.Length];
-            CompressedFile1.CopyTo(data, 0);
-            data[9] = character;
-            string path = Path.Join(cleaner.TempFolder, compressedName);
-            FileHelper.WriteAllBytes(path, data);
-            Path.GetFileName(Compression.GetExpandedNameEx(path)).Should().Be(expandedName);
-        }
+        using var cleaner = new TestFileCleaner();
+        byte[] data = new byte[CompressedFile1.Length];
+        CompressedFile1.CopyTo(data, 0);
+        data[9] = character;
+        string path = Path.Join(cleaner.TempFolder, compressedName);
+        FileHelper.WriteAllBytes(path, data);
+        Path.GetFileName(Compression.GetExpandedNameEx(path)).Should().Be(expandedName);
     }
 
     public static TheoryData<string, byte, string> ExpandedTestData
@@ -195,11 +173,9 @@ public class LzTests
     [Fact]
     public void ExpandedName_NotLzFile()
     {
-        using (var cleaner = new TestFileCleaner())
-        {
-            string path = cleaner.CreateTestFile("ExpandedName_NotLzFile");
-            Compression.GetExpandedName(path).Should().Be(path);
-        }
+        using var cleaner = new TestFileCleaner();
+        string path = cleaner.CreateTestFile("ExpandedName_NotLzFile");
+        Compression.GetExpandedName(path).Should().Be(path);
     }
 
     [Fact]
@@ -209,41 +185,33 @@ public class LzTests
         // and accidentally ignores the errors returned, copying garbage into the
         // returned string.
 
-        using (var cleaner = new TestFileCleaner())
-        {
-            string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
-            FileHelper.WriteAllBytes(path, CompressedFile1);
-            Action action = () => Compression.GetExpandedName(path);
-            action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadValue);
-        }
+        using var cleaner = new TestFileCleaner();
+        string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
+        FileHelper.WriteAllBytes(path, CompressedFile1);
+        Action action = () => Compression.GetExpandedName(path);
+        action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadValue);
     }
 
     [Fact]
     public void OpenFile_LongPath()
     {
         // The OpenFile api only supports 128 character paths.
-        using (var cleaner = new TestFileCleaner())
-        {
-            string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
-            FileHelper.WriteAllBytes(path, CompressedFile1);
-            Action action = () => Compression.LzOpenFile(path);
-            action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadInHandle);
-        }
+        using var cleaner = new TestFileCleaner();
+        string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
+        FileHelper.WriteAllBytes(path, CompressedFile1);
+        Action action = () => Compression.LzOpenFile(path);
+        action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadInHandle);
     }
 
     [Fact]
     public void CreateFile_LongPath()
     {
         // Unlike OpenFile, CreateFile handles > 128 character paths.
-        using (var cleaner = new TestFileCleaner())
-        {
-            string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
-            FileHelper.WriteAllBytes(path, CompressedFile1);
-            using (var handle = Compression.LzCreateFile(path))
-            {
-                handle.RawHandle.Should().BeGreaterThan(0);
-            }
-        }
+        using var cleaner = new TestFileCleaner();
+        string path = PathGenerator.CreatePathOfLength(cleaner.TempFolder, 160);
+        FileHelper.WriteAllBytes(path, CompressedFile1);
+        using var handle = Compression.LzCreateFile(path);
+        handle.RawHandle.Should().BeGreaterThan(0);
     }
 
     [Fact]
@@ -251,14 +219,12 @@ public class LzTests
     {
         // Unlike OpenFile, CreateFile handles > 128 character paths. Unfortunately it is
         // constrained by MAX_PATH internal buffers, so it cant go over 260.
-        using (var cleaner = new TestFileCleaner())
-        {
-            string path = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 300);
-            FileHelper.EnsurePathDirectoryExists(path);
-            FileHelper.WriteAllBytes(path, CompressedFile1);
-            Action action = () => Compression.LzCreateFile(path);
-            action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadValue);
-        }
+        using var cleaner = new TestFileCleaner();
+        string path = @"\\?\" + PathGenerator.CreatePathOfLength(cleaner.TempFolder, 300);
+        FileHelper.EnsurePathDirectoryExists(path);
+        FileHelper.WriteAllBytes(path, CompressedFile1);
+        Action action = () => Compression.LzCreateFile(path);
+        action.Should().Throw<LzException>().And.Error.Should().Be(LzError.BadValue);
     }
 
     // COMPRESS.EXE from the Windows Server 2003 resource kit doesn't get the expanded size in the header

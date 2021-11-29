@@ -12,7 +12,7 @@ public readonly struct RegionHandle : IDisposable
     public HRGN Handle { get; }
     private readonly bool _ownsHandle;
 
-    public static RegionHandle Null = new RegionHandle(default);
+    public static RegionHandle Null = new(default);
 
     public RegionHandle(HRGN handle, bool ownsHandle = true)
     {
@@ -33,5 +33,5 @@ public readonly struct RegionHandle : IDisposable
     public static implicit operator HGDIOBJ(RegionHandle handle) => handle.Handle;
     public static implicit operator HRGN(RegionHandle handle) => handle.Handle;
     public static implicit operator LResult(RegionHandle handle) => handle.Handle.Handle;
-    public static implicit operator GdiObjectHandle(RegionHandle handle) => new GdiObjectHandle(handle.Handle, ownsHandle: false);
+    public static implicit operator GdiObjectHandle(RegionHandle handle) => new(handle.Handle, ownsHandle: false);
 }

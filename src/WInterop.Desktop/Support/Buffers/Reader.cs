@@ -36,7 +36,7 @@ public class Reader
     /// <summary>
     ///  Read a string of the given amount of characters from the buffer. Advances the reader offset.
     /// </summary>
-    public unsafe virtual string ReadString(int charCount)
+    public virtual unsafe string ReadString(int charCount)
     {
         if (charCount == 0) return string.Empty;
 
@@ -67,7 +67,7 @@ public class Reader
     /// <summary>
     ///  Read a short at the current offset. Advances the reader offset.
     /// </summary>
-    public unsafe virtual short ReadShort()
+    public virtual unsafe short ReadShort()
     {
         byte* address = BytePointer;
         _byteOffset += sizeof(short);
@@ -92,7 +92,7 @@ public class Reader
     /// <summary>
     ///  Read an int at the current offset. Advances the reader offset.
     /// </summary>
-    public unsafe virtual int ReadInt()
+    public virtual unsafe int ReadInt()
     {
         byte* address = BytePointer;
         _byteOffset += sizeof(int);
@@ -117,7 +117,7 @@ public class Reader
     /// <summary>
     ///  Read a long at the current offset. Advances the reader offset.
     /// </summary>
-    public unsafe virtual long ReadLong()
+    public virtual unsafe long ReadLong()
     {
         byte* address = BytePointer;
         _byteOffset += sizeof(long);
@@ -144,7 +144,7 @@ public class Reader
     /// <summary>
     ///  Read the given struct type at the current offset.
     /// </summary>
-    public unsafe virtual T ReadStruct<T>() where T : struct
+    public virtual unsafe T ReadStruct<T>() where T : struct
     {
         ulong sizeOfStruct = (ulong)Marshal.SizeOf<T>();
 

@@ -30,7 +30,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
     // Anything more than a uint isn't addressable on 32bit as well.
     private unsafe void* _byteCapacity;
 
-    protected ReaderWriterLockSlim _handleLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+    protected ReaderWriterLockSlim _handleLock = new(LockRecursionPolicy.SupportsRecursion);
 
     /// <summary>
     ///  Create a buffer with at least the specified initial capacity in bytes.
@@ -67,7 +67,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe implicit operator ReadOnlySpan<byte>(HeapBuffer buffer)
-        => new ReadOnlySpan<byte>(buffer.VoidPointer, (int)buffer.ByteCapacity);
+        => new(buffer.VoidPointer, (int)buffer.ByteCapacity);
 
     /// <summary>
     ///  The capacity of the buffer in bytes.

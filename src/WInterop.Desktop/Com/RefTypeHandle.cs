@@ -14,5 +14,5 @@ public struct RefTypeHandle
     public RefTypeHandle(uint id) => Value = id;
 
     public static implicit operator uint(RefTypeHandle id) => id.Value;
-    public static implicit operator RefTypeHandle(uint id) => new RefTypeHandle(id);
+    public static implicit operator RefTypeHandle(uint id) => new(id);
 }

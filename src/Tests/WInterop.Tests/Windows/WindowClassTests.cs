@@ -87,7 +87,7 @@ public class WindowClassTests
     [Fact]
     public void GetClassLong_GlobalAtom()
     {
-        WindowHandle window = new WindowHandle();
+        WindowHandle window = new();
         try
         {
             window = Windows.CreateWindow("bUttOn", "GetClassLong_GlobalAtom", WindowStyles.Diabled | WindowStyles.Minimize);
@@ -112,7 +112,7 @@ public class WindowClassTests
     [Fact]
     public void RegisterClass_UnregisterClassAtom()
     {
-        WindowClassInfo myClass = new WindowClassInfo
+        WindowClassInfo myClass = new()
         {
             ClassName = "RegisterClass_UnregisterClassAtom",
             Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
@@ -142,7 +142,7 @@ public class WindowClassTests
     [Fact]
     public void RegisterClass_UnregisterClassName()
     {
-        WindowClassInfo myClass = new WindowClassInfo
+        WindowClassInfo myClass = new()
         {
             ClassName = "RegisterClass_UnregisterClassName",
             Style = ClassStyle.HorizontalRedraw,
@@ -172,7 +172,7 @@ public class WindowClassTests
     [Fact]
     public void RegisterClass_UnregisterActiveWindow()
     {
-        WindowClassInfo myClass = new WindowClassInfo
+        WindowClassInfo myClass = new()
         {
             ClassName = "RegisterClass_UnregisterActiveWindow",
             WindowProcedure = CallDefaultProcedure,
@@ -212,7 +212,7 @@ public class WindowClassTests
     {
         // Some docs claim that 40 is the max, but that isn't true (at least in recent OSes)
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633574.aspx
-        WindowClassInfo myClass = new WindowClassInfo
+        WindowClassInfo myClass = new()
         {
             ClassName = "RegisterClass_GetSetClassLong",
             Style = ClassStyle.HorizontalRedraw,
@@ -258,7 +258,7 @@ public class WindowClassTests
     {
         // Some docs claim that 40 is the max, but that isn't true (at least in recent OSes)
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633574.aspx
-        WindowClassInfo myClass = new WindowClassInfo
+        WindowClassInfo myClass = new()
         {
             ClassName = "RegisterClass_GetSetWindowLong",
             WindowProcedure = CallDefaultProcedure,

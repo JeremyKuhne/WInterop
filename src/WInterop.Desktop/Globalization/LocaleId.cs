@@ -25,5 +25,5 @@ public struct LocaleId
 
     public static bool operator !=(LocaleId a, LocaleId b) => a.RawValue != b.RawValue;
 
-    public static implicit operator LocaleId(uint value) => new LocaleId(value);
+    public static implicit operator LocaleId(uint value) => new(value);
 }

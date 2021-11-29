@@ -11,8 +11,8 @@ public readonly struct HPALETTE
 
     public bool IsInvalid => Value == IntPtr.Zero;
 
-    public static implicit operator HGDIOBJ(HPALETTE handle) => new HGDIOBJ(handle.Value);
-    public static explicit operator HPALETTE(HGDIOBJ handle) => new HPALETTE(handle.Handle);
+    public static implicit operator HGDIOBJ(HPALETTE handle) => new(handle.Value);
+    public static explicit operator HPALETTE(HGDIOBJ handle) => new(handle.Handle);
 
     public override bool Equals(object? obj) => obj is HPALETTE other && other.Value == Value;
     public bool Equals(HPALETTE other) => other.Value == Value;

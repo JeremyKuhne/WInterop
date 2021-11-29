@@ -17,9 +17,9 @@ public class UlongTests
         ]
     public void HighLowUlongValues(uint high, uint low, ulong expected)
     {
-        HighLowUlong hl = new HighLowUlong(high, low);
+        HighLowUlong hl = new(high, low);
         ((ulong)hl).Should().Be(expected, "high low converts correctly");
-        LowHighUlong lh = new LowHighUlong(low, high);
+        LowHighUlong lh = new(low, high);
         ((ulong)lh).Should().Be(expected, "low high converts correctly");
         hl = expected;
         ((ulong)hl).Should().Be(expected, "high low roundtrips");

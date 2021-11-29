@@ -17,19 +17,15 @@ public class Menus
     [Fact]
     public void CreateMenu()
     {
-        using (MenuHandle menu = Windows.CreateMenu())
-        {
-            menu.IsInvalid.Should().BeFalse();
-        }
+        using MenuHandle menu = Windows.CreateMenu();
+        menu.IsInvalid.Should().BeFalse();
     }
 
     [Fact]
     public void AppendMenu()
     {
-        using (MenuHandle menu = Windows.CreateMenu())
-        {
-            menu.IsInvalid.Should().BeFalse();
-            Windows.AppendMenu(menu, "&File", 1000);
-        }
+        using MenuHandle menu = Windows.CreateMenu();
+        menu.IsInvalid.Should().BeFalse();
+        Windows.AppendMenu(menu, "&File", 1000);
     }
 }

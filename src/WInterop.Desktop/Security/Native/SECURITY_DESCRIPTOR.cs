@@ -6,7 +6,7 @@ namespace WInterop.Security.Native;
 /// <summary>
 ///  <see cref="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor"/>
 /// </summary>
-public unsafe readonly struct SECURITY_DESCRIPTOR
+public readonly unsafe struct SECURITY_DESCRIPTOR
 {
     public readonly byte Revision;
     public readonly byte Sbz1;

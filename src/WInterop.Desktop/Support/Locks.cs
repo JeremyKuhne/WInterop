@@ -53,5 +53,5 @@ public static class Locks
     }
 
     public static ReaderWriterLockSlimScope Lock(this ReaderWriterLockSlim @lock, Type type)
-        => new ReaderWriterLockSlimScope(@lock, type);
+        => new(@lock, type);
 }

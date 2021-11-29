@@ -36,7 +36,7 @@ public static partial class Imports
     // https://msdn.microsoft.com/en-us/library/bb470236.aspx
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567030.aspx
     [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-    public static unsafe extern NTStatus NtOpenSymbolicLinkObject(
+    public static extern unsafe NTStatus NtOpenSymbolicLinkObject(
         out SymbolicLinkObjectHandle LinkHandle,
         SymbolicLinkObjectRights DesiredAccess,
         ref OBJECT_ATTRIBUTES ObjectAttributes);

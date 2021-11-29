@@ -41,13 +41,11 @@ internal class Connect : WindowClass
                 // Machines are way to fast to make this look interesting now, adding TakeEvery
                 if ((MouseKey)wParam == MouseKey.LeftButton && iCount < MAXPOINTS && (sampleCount++ % TakeEvery == 0))
                 {
-                    Point point = new Point(lParam.LowWord, lParam.HighWord);
+                    Point point = new(lParam.LowWord, lParam.HighWord);
                     pt[iCount++] = point;
 
-                    using (DeviceContext dc = window.GetDeviceContext())
-                    {
-                        dc.SetPixel(point, default);
-                    }
+                    using DeviceContext dc = window.GetDeviceContext();
+                    dc.SetPixel(point, default);
                 }
                 return 0;
             case MessageType.LeftButtonUp:

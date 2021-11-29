@@ -18,11 +18,9 @@ public class Basic
         InlineData("swi\0zzle", "SWI\0ZZLE")]
     public unsafe void ToUpperInvariant(string value, string expected)
     {
-        using (var buffer = new StringBuffer(value))
-        {
-            UNICODE_STRING s = buffer.ToUnicodeString();
-            StringMethods.ToUpperInvariant(ref s);
-            s.ToString().Should().Be(expected);
-        }
+        using var buffer = new StringBuffer(value);
+        UNICODE_STRING s = buffer.ToUnicodeString();
+        StringMethods.ToUpperInvariant(ref s);
+        s.ToString().Should().Be(expected);
     }
 }

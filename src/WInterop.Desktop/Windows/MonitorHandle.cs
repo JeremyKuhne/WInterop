@@ -15,7 +15,7 @@ public readonly struct MonitorHandle
     public MonitorHandle(HMONITOR hmonitor) => HMONITOR = hmonitor;
 
     public static implicit operator HMONITOR(MonitorHandle handle) => handle.HMONITOR;
-    public static implicit operator MonitorHandle(HMONITOR handle) => new MonitorHandle(handle);
+    public static implicit operator MonitorHandle(HMONITOR handle) => new(handle);
 
     public override int GetHashCode() => HMONITOR.GetHashCode();
 

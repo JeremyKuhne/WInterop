@@ -56,7 +56,7 @@ public class ComStream : Stream
         }
     }
 
-    public unsafe override long Position
+    public override unsafe long Position
     {
         get
         {
@@ -75,7 +75,7 @@ public class ComStream : Stream
         Stream.Commit(StorageCommit.Default);
     }
 
-    public unsafe override int Read(byte[] buffer, int offset, int count)
+    public override unsafe int Read(byte[] buffer, int offset, int count)
     {
         if (Stream == null)
             throw new ObjectDisposedException(nameof(ComStream));
@@ -88,7 +88,7 @@ public class ComStream : Stream
         }
     }
 
-    public unsafe override void Write(byte[] buffer, int offset, int count)
+    public override unsafe void Write(byte[] buffer, int offset, int count)
     {
         fixed (byte* b = buffer)
         {
@@ -111,10 +111,10 @@ public class ComStream : Stream
         Stream.SetSize((ulong)value);
     }
 
-    public unsafe override string ToString()
+    public override unsafe string ToString()
     {
         Stream.Stat(out STATSTG stat, StatFlag.Default);
-        string name = new string(stat.pwcsName);
+        string name = new(stat.pwcsName);
         Marshal.FreeCoTaskMem((IntPtr)stat.pwcsName);
         return name;
     }

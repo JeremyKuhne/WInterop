@@ -20,7 +20,7 @@ public static partial class Message
             WindowPosition* position = (WindowPosition*)lParam;
             InsertAfter = position->InsertAfter;
             Handle = position->Handle;
-            Rectangle bounds = new Rectangle(position->X, position->Y, position->Width, position->Height);
+            Rectangle bounds = new(position->X, position->Y, position->Width, position->Height);
             Handle.ScreenToClient(ref bounds);
             Bounds = bounds;
             ClientBounds = Handle.GetClientRectangle();

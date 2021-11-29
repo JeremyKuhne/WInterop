@@ -12,16 +12,16 @@ public class RegistryKeyHandle : HandleZeroOrMinusOneIsInvalid
     private const uint REMOTE_HANDLE_TAG = 0x00000001;
     private const uint REG_CLASSES_SPECIAL_TAG = 0x00000002;
 
-    public static RegistryKeyHandle HKEY_CLASSES_ROOT = new RegistryKeyHandle(0x80000000);
-    public static RegistryKeyHandle HKEY_CURRENT_USER = new RegistryKeyHandle(0x80000001);
-    public static RegistryKeyHandle HKEY_LOCAL_MACHINE = new RegistryKeyHandle(0x80000002);
-    public static RegistryKeyHandle HKEY_USERS = new RegistryKeyHandle(0x80000003);
-    public static RegistryKeyHandle HKEY_PERFORMANCE_DATA = new RegistryKeyHandle(0x80000004, isPerfKey: true);
-    public static RegistryKeyHandle HKEY_PERFORMANCE_TEXT = new RegistryKeyHandle(0x80000050, isPerfKey: true);
-    public static RegistryKeyHandle HKEY_PERFORMANCE_NLSTEXT = new RegistryKeyHandle(0x80000060, isPerfKey: true);
-    public static RegistryKeyHandle HKEY_CURRENT_CONFIG = new RegistryKeyHandle(0x80000005);
-    public static RegistryKeyHandle HKEY_DYN_DATA = new RegistryKeyHandle(0x80000006);
-    public static RegistryKeyHandle HKEY_CURRENT_USER_LOCAL_SETTINGS = new RegistryKeyHandle(0x80000007);
+    public static RegistryKeyHandle HKEY_CLASSES_ROOT = new(0x80000000);
+    public static RegistryKeyHandle HKEY_CURRENT_USER = new(0x80000001);
+    public static RegistryKeyHandle HKEY_LOCAL_MACHINE = new(0x80000002);
+    public static RegistryKeyHandle HKEY_USERS = new(0x80000003);
+    public static RegistryKeyHandle HKEY_PERFORMANCE_DATA = new(0x80000004, isPerfKey: true);
+    public static RegistryKeyHandle HKEY_PERFORMANCE_TEXT = new(0x80000050, isPerfKey: true);
+    public static RegistryKeyHandle HKEY_PERFORMANCE_NLSTEXT = new(0x80000060, isPerfKey: true);
+    public static RegistryKeyHandle HKEY_CURRENT_CONFIG = new(0x80000005);
+    public static RegistryKeyHandle HKEY_DYN_DATA = new(0x80000006);
+    public static RegistryKeyHandle HKEY_CURRENT_USER_LOCAL_SETTINGS = new(0x80000007);
 
     public RegistryKeyHandle() : this(ownsHandle: true)
     {

@@ -19,7 +19,7 @@ public readonly struct MonitorInfo
     public readonly Rect Work;
     public readonly uint Flags;
 
-    public static unsafe MonitorInfo Create() => new MonitorInfo(sizeof(MonitorInfo));
+    public static unsafe MonitorInfo Create() => new(sizeof(MonitorInfo));
 
     internal MonitorInfo(int size)
     {

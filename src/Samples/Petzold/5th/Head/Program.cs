@@ -44,7 +44,7 @@ internal class Head : WindowClass
     private readonly char[] _decoded = new char[MAXREAD];
     private Rectangle _rect;
 
-    protected unsafe override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+    protected override unsafe LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
         const string filter = "*.*";
 

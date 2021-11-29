@@ -8,7 +8,7 @@ namespace WInterop.Security;
 /// <summary>
 ///  Access right
 /// </summary>
-public unsafe readonly struct ExplicitAccess
+public readonly unsafe struct ExplicitAccess
 {
     public AccessMask Permissions { get; }
     public AccessMode Mode { get; }

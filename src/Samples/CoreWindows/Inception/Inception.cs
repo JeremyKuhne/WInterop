@@ -12,7 +12,7 @@ public class Inception : WindowClass
     private Rectangle _client;
     private Rectangle _screen;
     private MonitorHandle _initialMonitor;
-    private readonly TimerId _timerId = new TimerId(1);
+    private readonly TimerId _timerId = new(1);
 
     public Inception() : base(backgroundBrush: BrushHandle.NoBrush) { }
 

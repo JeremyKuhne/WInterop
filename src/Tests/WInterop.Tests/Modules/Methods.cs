@@ -213,7 +213,7 @@ public class Basic
         {
             IntPtr current = (IntPtr)v;
 
-            ReadOnlySpan<int> span = new ReadOnlySpan<int>(values);
+            ReadOnlySpan<int> span = new(values);
             IntPtr result = CheckIntAsRef(ref MemoryMarshal.GetReference(span), values.Length);
 
             // By ref doesn't copy, so we get the same result back
@@ -241,7 +241,7 @@ public class Basic
             action.Should().Throw<IndexOutOfRangeException>();
 
             // While you can't fix an empty array, you can GetReference for a wrapping span
-            ReadOnlySpan<int> span = new ReadOnlySpan<int>(values);
+            ReadOnlySpan<int> span = new(values);
             IntPtr result = CheckIntAsRef(ref MemoryMarshal.GetReference(span), 0);
             result.Should().NotBe(IntPtr.Zero);
         }
@@ -288,7 +288,7 @@ public class Basic
     }
 
     [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-    public unsafe static extern IntPtr CheckStructAsPointerArray(Point* points, int count);
+    public static extern unsafe IntPtr CheckStructAsPointerArray(Point* points, int count);
 
     [Fact]
     public unsafe void AsPointerArrayInvoke()
@@ -308,12 +308,12 @@ public class Basic
     }
 
     [DllImport(NativeTestLibrary, EntryPoint = "StructPointerCheck")]
-    public unsafe static extern IntPtr CheckStructAsRef(ref Point points, int count);
+    public static extern unsafe IntPtr CheckStructAsRef(ref Point points, int count);
 
     [Fact]
     public unsafe void AsSingleRefInvoke()
     {
-        Point point = new Point(4, 6);
+        Point point = new(4, 6);
         Point* p = &point;
 
         IntPtr current = (IntPtr)p;
@@ -370,10 +370,10 @@ public class Basic
     }
 
     [DllImport(NativeTestLibrary, EntryPoint = "ReturnPoint")]
-    public unsafe static extern Point ReturnPoint(int x, int y);
+    public static extern unsafe Point ReturnPoint(int x, int y);
 
     [DllImport(NativeTestLibrary, EntryPoint = "ReturnPointFloat")]
-    public unsafe static extern PointF ReturnPointFloat(float x, float y);
+    public static extern unsafe PointF ReturnPointFloat(float x, float y);
 
     [Fact]
     public void ReturnPointInvoke()

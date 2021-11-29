@@ -11,12 +11,12 @@ public struct MemberId
     /// <summary>
     ///  Used for getting info about the type itself. [MEMBERID_NIL]
     /// </summary>
-    public static MemberId Nil => new MemberId(-1);
+    public static MemberId Nil => new(-1);
 
     public int Value;
 
     public MemberId(int id) => Value = id;
 
     public static implicit operator int(MemberId id) => id.Value;
-    public static implicit operator MemberId(int id) => new MemberId(id);
+    public static implicit operator MemberId(int id) => new(id);
 }

@@ -27,7 +27,7 @@ public static class CharSpanExtensions
         int count = buffer.Length - (nullTerminate ? 1 : 0);
         ReadOnlySpan<char> span = source.AsSpan();
         if (span.Length >= count)
-            span = span.Slice(0, count);
+            span = span[..count];
 
         span.CopyTo(buffer);
 
@@ -49,9 +49,9 @@ public static class CharSpanExtensions
         if (nullChar == 0)
             return string.Empty;
         if (nullChar != -1)
-            buffer = buffer.Slice(0, nullChar);
+            buffer = buffer[..nullChar];
 
-        string value = new string('\0', buffer.Length);
+        string value = new('\0', buffer.Length);
         fixed (char* v = value)
             buffer.CopyTo(new Span<char>(v, value.Length));
 

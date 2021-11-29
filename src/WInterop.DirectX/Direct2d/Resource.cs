@@ -15,7 +15,7 @@ internal interface IResource<T> : IHandle<T> where T : unmanaged
 {
 }
 
-internal unsafe static class ResourceExtensions
+internal static unsafe class ResourceExtensions
 {
     public static Factory GetFactory<T, H>(this T resource) where T : IResource<H> where H : unmanaged
     {

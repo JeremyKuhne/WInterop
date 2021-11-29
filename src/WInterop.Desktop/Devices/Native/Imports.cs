@@ -13,7 +13,7 @@ public static partial class Imports
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363216.aspx
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern bool DeviceIoControl(
+    public static extern unsafe bool DeviceIoControl(
         SafeHandle hDevice,
         ControlCode dwIoControlCode,
         void* lpInBuffer,

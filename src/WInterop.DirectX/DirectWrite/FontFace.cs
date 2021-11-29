@@ -13,7 +13,7 @@ namespace WInterop.DirectWrite;
 ///  [IDWriteFontFace]
 /// </summary>
 [Guid(InterfaceIds.IID_IDWriteFontFace)]
-public unsafe readonly struct FontFace : FontFace.Interface, IDisposable
+public readonly unsafe struct FontFace : FontFace.Interface, IDisposable
 {
     internal readonly IDWriteFontFace* _handle;
 

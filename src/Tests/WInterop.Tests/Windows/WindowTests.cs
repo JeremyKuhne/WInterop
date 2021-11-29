@@ -9,7 +9,7 @@ namespace WindowsTests;
 
 public class WindowTests
 {
-    private static readonly WindowClass s_windowClass = new WindowClass(className: "WindowTests");
+    private static readonly WindowClass s_windowClass = new(className: "WindowTests");
 
     [Fact]
     public void Window_GetDefaultText()

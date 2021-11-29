@@ -3,7 +3,7 @@
 
 namespace WInterop.Security.Native;
 
-public unsafe readonly struct SECURITY_DESCRIPTOR_RELATIVE
+public readonly unsafe struct SECURITY_DESCRIPTOR_RELATIVE
 {
     public readonly byte Revision;
     public readonly byte Sbz1;

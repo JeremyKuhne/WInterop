@@ -38,7 +38,7 @@ internal class OwnDraw : WindowClass
     private const int ID_SMALLER = 1;
     private const int ID_LARGER = 2;
 
-    protected unsafe override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
+    protected override unsafe LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
         switch (message)
         {
@@ -92,7 +92,7 @@ internal class OwnDraw : WindowClass
                 DRAWITEMSTRUCT* pdis = (DRAWITEMSTRUCT*)lParam;
 
                 // Fill area with white and frame it black
-                using (DeviceContext dc = new DeviceContext(pdis->hDC))
+                using (DeviceContext dc = new(pdis->hDC))
                 {
                     Rectangle rect = pdis->rcItem;
 

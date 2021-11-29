@@ -16,7 +16,7 @@ public class DateTimeTests
         ]
     public void FromFileTimeTest(int high, int low, long expectedTicks)
     {
-        FileTime fileTime = new FileTime((uint)low, (uint)high);
+        FileTime fileTime = new((uint)low, (uint)high);
         fileTime.ToDateTimeUtc().ToLocalTime().Ticks.Should().Be(expectedTicks);
     }
 }

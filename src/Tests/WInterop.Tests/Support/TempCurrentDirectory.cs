@@ -10,7 +10,7 @@ namespace Tests.Support;
 public class TempCurrentDirectory : IDisposable
 {
     private readonly string _priorDirectory;
-    private static readonly object s_tempDirectoryLock = new object();
+    private static readonly object s_tempDirectoryLock = new();
 
     public TempCurrentDirectory(string directory = null)
     {

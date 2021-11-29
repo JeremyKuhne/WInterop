@@ -32,7 +32,7 @@ public readonly ref struct PaletteHandle
     public static implicit operator HGDIOBJ(in PaletteHandle handle) => handle.HPALETTE;
     public static implicit operator HPALETTE(in PaletteHandle handle) => handle.HPALETTE;
     public static implicit operator LResult(in PaletteHandle handle) => handle.HPALETTE.Value;
-    public static implicit operator GdiObjectHandle(in PaletteHandle handle) => new GdiObjectHandle(handle.HPALETTE, ownsHandle: false);
+    public static implicit operator GdiObjectHandle(in PaletteHandle handle) => new(handle.HPALETTE, ownsHandle: false);
 
     // You can't box a ref struct, therefore it will never be object
     public override bool Equals(object? obj) => false;

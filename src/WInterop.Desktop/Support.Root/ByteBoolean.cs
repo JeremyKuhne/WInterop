@@ -26,7 +26,7 @@ public readonly struct ByteBoolean
 
     public static implicit operator bool(ByteBoolean b) => b.IsTrue;
 
-    public static implicit operator ByteBoolean(bool b) => new ByteBoolean(b);
+    public static implicit operator ByteBoolean(bool b) => new(b);
 
     public override string ToString() => IsTrue.ToString();
 }

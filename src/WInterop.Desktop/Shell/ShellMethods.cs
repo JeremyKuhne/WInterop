@@ -110,7 +110,7 @@ public static partial class ShellMethods
     /// </summary>
     public static unsafe IEnumerable<Guid> GetKnownFolderIds()
     {
-        List<Guid> ids = new List<Guid>();
+        List<Guid> ids = new();
 
         IKnownFolderManager manager = GetKnownFolderManager();
         uint count = manager.GetFolderIds(out SafeComHandle buffer);

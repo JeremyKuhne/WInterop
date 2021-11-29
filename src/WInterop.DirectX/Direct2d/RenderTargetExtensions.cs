@@ -36,7 +36,7 @@ public static class RenderTargetExtensions
         this IRenderTarget renderTarget)
         => renderTarget.EndDraw(out _);
 
-    public unsafe static void DrawLine(
+    public static unsafe void DrawLine(
         this IRenderTarget renderTarget,
         (float X, float Y) point0,
         (float X, float Y) point1,

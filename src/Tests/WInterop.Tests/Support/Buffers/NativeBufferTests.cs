@@ -14,42 +14,34 @@ public class NativeBufferTests
     [Fact]
     public void EnsureZeroCapacityDoesNotFreeBuffer()
     {
-        using (var buffer = new HeapBuffer(10))
-        {
-            buffer.DangerousGetHandle().Should().NotBe(IntPtr.Zero);
-            buffer.EnsureByteCapacity(0);
-            buffer.DangerousGetHandle().Should().NotBe(IntPtr.Zero);
-        }
+        using var buffer = new HeapBuffer(10);
+        buffer.DangerousGetHandle().Should().NotBe(IntPtr.Zero);
+        buffer.EnsureByteCapacity(0);
+        buffer.DangerousGetHandle().Should().NotBe(IntPtr.Zero);
     }
 
     [Fact]
     public void GetOverIndexThrowsArgumentOutOfRange()
     {
-        using (var buffer = new HeapBuffer())
-        {
-            Action action = () => { byte c = buffer[buffer.ByteCapacity]; };
-            action.Should().Throw<ArgumentOutOfRangeException>();
-        }
+        using var buffer = new HeapBuffer();
+        Action action = () => { byte c = buffer[buffer.ByteCapacity]; };
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
     public void SetOverIndexThrowsArgumentOutOfRange()
     {
-        using (var buffer = new HeapBuffer())
-        {
-            Action action = () => { buffer[buffer.ByteCapacity] = 0; };
-            action.Should().Throw<ArgumentOutOfRangeException>();
-        }
+        using var buffer = new HeapBuffer();
+        Action action = () => { buffer[buffer.ByteCapacity] = 0; };
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
     public void CanGetSetBytes()
     {
-        using (var buffer = new HeapBuffer(1))
-        {
-            buffer[0] = 0xA;
-            buffer[0].Should().Be(0xA);
-        }
+        using var buffer = new HeapBuffer(1);
+        buffer[0] = 0xA;
+        buffer[0].Should().Be(0xA);
     }
 
     [Fact]
@@ -85,32 +77,28 @@ public class NativeBufferTests
     {
         if (!Environment.Is64BitProcess)
         {
-            using (var buffer = new HeapBuffer(initialBufferSize))
-            {
-                Action action = () => buffer.EnsureByteCapacity(uint.MaxValue + 1ul);
-                action.Should().Throw<OverflowException>();
-            }
+            using var buffer = new HeapBuffer(initialBufferSize);
+            Action action = () => buffer.EnsureByteCapacity(uint.MaxValue + 1ul);
+            action.Should().Throw<OverflowException>();
         }
     }
 
     [Fact]
     public void MultithreadedSetCapacityIsMax()
     {
-        using (var buffer = new HeapBuffer(0))
+        using var buffer = new HeapBuffer(0);
+        ulong[] bufferCapacity = new ulong[100];
+        for (ulong i = 0; i < 100; i++)
         {
-            ulong[] bufferCapacity = new ulong[100];
-            for (ulong i = 0; i < 100; i++)
-            {
-                bufferCapacity[i] = i + 1;
-            }
-
-            Parallel.ForEach(bufferCapacity, capacity =>
-            {
-                buffer.EnsureByteCapacity(capacity);
-            });
-
-            buffer.ByteCapacity.Should().Be(100);
+            bufferCapacity[i] = i + 1;
         }
+
+        Parallel.ForEach(bufferCapacity, capacity =>
+        {
+            buffer.EnsureByteCapacity(capacity);
+        });
+
+        buffer.ByteCapacity.Should().Be(100);
     }
 
     [Fact]

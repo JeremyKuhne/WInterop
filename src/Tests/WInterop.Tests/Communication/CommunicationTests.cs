@@ -32,7 +32,7 @@ public class Basic
         ]
     public unsafe void DcbDtrControl(DtrControl dtrControl)
     {
-        DeviceControlBlock dcb = new DeviceControlBlock()
+        DeviceControlBlock dcb = new()
         {
             DtrControl = dtrControl
         };
@@ -53,19 +53,15 @@ public class Basic
     [Fact(Skip = "Needs conditioned on specific com port availability")]
     public unsafe void GetCommProperties()
     {
-        using (SafeFileHandle handle = Communications.CreateComPortFileHandle(@"\\.\COM4"))
-        {
-            CommunicationsProperties properties = Communications.GetCommunicationsProperties(handle);
-        }
+        using SafeFileHandle handle = Communications.CreateComPortFileHandle(@"\\.\COM4");
+        CommunicationsProperties properties = Communications.GetCommunicationsProperties(handle);
     }
 
     [Fact(Skip = "Needs conditioned on specific com port availability")]
     public unsafe void GetCommConfig()
     {
-        using (SafeFileHandle handle = Communications.CreateComPortFileHandle(@"\\.\COM4"))
-        {
-            CommunicationsConfig config = Communications.GetCommunicationsConfig(handle);
-        }
+        using SafeFileHandle handle = Communications.CreateComPortFileHandle(@"\\.\COM4");
+        CommunicationsConfig config = Communications.GetCommunicationsConfig(handle);
     }
 
     [Fact(Skip = "Needs conditioned on specific com port availability")]

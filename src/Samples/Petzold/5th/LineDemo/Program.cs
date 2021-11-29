@@ -19,7 +19,7 @@ internal static class Program
     private static void Main()
     {
         ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-        WindowClassInfo wndclass = new WindowClassInfo
+        WindowClassInfo wndclass = new()
         {
             Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
             WindowProcedure = WindowProcedure,

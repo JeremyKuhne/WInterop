@@ -89,7 +89,7 @@ public class TypeLibTests
 
         string name = "ifont";
         char* nameBuffer = stackalloc char[name.Length + 1];
-        Span<char> nameSpan = new Span<char>(nameBuffer, name.Length);
+        Span<char> nameSpan = new(nameBuffer, name.Length);
         name.AsSpan().CopyTo(nameSpan);
         nameBuffer[name.Length] = '\0';
 
@@ -115,7 +115,7 @@ public class TypeLibTests
 
         string name = "picture";
         char* nameBuffer = stackalloc char[name.Length + 1];
-        Span<char> nameSpan = new Span<char>(nameBuffer, name.Length);
+        Span<char> nameSpan = new(nameBuffer, name.Length);
         name.AsSpan().CopyTo(nameSpan);
         nameBuffer[name.Length] = '\0';
 

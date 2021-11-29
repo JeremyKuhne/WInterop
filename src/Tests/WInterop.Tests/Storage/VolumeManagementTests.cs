@@ -84,7 +84,7 @@ public class Volumes
     {
         foreach (string volumeName in Storage.GetVolumes())
         {
-            var mountPoints = Storage.GetVolumeMountPoints(volumeName).ToArray();
+            _ = Storage.GetVolumeMountPoints(volumeName).ToArray();
         }
     }
 

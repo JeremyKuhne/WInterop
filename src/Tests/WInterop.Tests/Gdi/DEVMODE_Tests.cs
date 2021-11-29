@@ -22,11 +22,11 @@ public class DEVMODE_Tests
     [Fact]
     public unsafe void DeviceName()
     {
-        DeviceMode devMode = new DeviceMode();
+        DeviceMode devMode = new();
         devMode.DeviceName.CreateString().Should().Be(string.Empty);
         devMode.DeviceName.CopyFrom("Foo");
         devMode.DeviceName.CreateString().Should().Be("Foo");
-        string tooLong = new string('a', 40);
+        string tooLong = new('a', 40);
         devMode.DeviceName.CopyFrom(tooLong);
         devMode.DeviceName.CreateString().Should().Be(new string('a', 31));
 
@@ -37,11 +37,11 @@ public class DEVMODE_Tests
     [Fact]
     public unsafe void FormName()
     {
-        DeviceMode devMode = new DeviceMode();
+        DeviceMode devMode = new();
         devMode.FormName.CreateString().Should().Be(string.Empty);
         devMode.FormName.CopyFrom("Bar");
         devMode.FormName.CreateString().Should().Be("Bar");
-        string tooLong = new string('z', 40);
+        string tooLong = new('z', 40);
         devMode.FormName.CopyFrom(tooLong);
         devMode.FormName.CreateString().Should().Be(new string('z', 31));
 

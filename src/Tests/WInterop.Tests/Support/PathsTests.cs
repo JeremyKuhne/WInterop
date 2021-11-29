@@ -130,7 +130,7 @@ public class PathsTests
         ]
     public void Join(string[] paths, string expected)
     {
-        StringBuilder builder = new StringBuilder(paths[0]);
+        StringBuilder builder = new(paths[0]);
         Paths.Join(builder, paths[1]);
         builder.ToString().Should().Be(expected);
     }

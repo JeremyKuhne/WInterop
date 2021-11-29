@@ -7,7 +7,7 @@ namespace WInterop.Direct2d;
 
 public static class Direct2d
 {
-    public unsafe static Factory CreateFactory(
+    public static unsafe Factory CreateFactory(
         FactoryType factoryType = FactoryType.SingleThreaded,
         DebugLevel debugLevel = DebugLevel.None)
     {

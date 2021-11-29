@@ -32,7 +32,7 @@ public class EnumerateRights
     public void EnumerateAccountRights_BadSidFails()
     {
         LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.Read);
-        SID sid = new SID();
+        SID sid = new();
         Action action = () => Security.LsaEnumerateAccountRights(handle, in sid);
         action.Should().Throw<ArgumentException>();
     }

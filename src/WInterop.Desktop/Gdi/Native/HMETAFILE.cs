@@ -15,7 +15,7 @@ public readonly struct HMETAFILE
     public bool IsInvalid => IsNull;
     public bool IsNull => Value == 0;
 
-    public static implicit operator HGDIOBJ(HMETAFILE handle) => new HGDIOBJ(handle.Value);
-    public static explicit operator HMETAFILE(HGDIOBJ handle) => new HMETAFILE(handle.Handle);
-    public static explicit operator HMETAFILE(nint handle) => new HMETAFILE(handle);
+    public static implicit operator HGDIOBJ(HMETAFILE handle) => new(handle.Value);
+    public static explicit operator HMETAFILE(HGDIOBJ handle) => new(handle.Handle);
+    public static explicit operator HMETAFILE(nint handle) => new(handle);
 }

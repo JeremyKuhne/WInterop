@@ -9,5 +9,5 @@ public readonly struct GpMetafile
 
     private GpMetafile(nuint handle) => Handle = handle;
 
-    public static explicit operator GpMetafile(GpImage metafile) => new GpMetafile(metafile.Handle);
+    public static explicit operator GpMetafile(GpImage metafile) => new(metafile.Handle);
 }

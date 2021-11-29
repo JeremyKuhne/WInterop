@@ -15,7 +15,7 @@ public static partial class WindowsImports
 
     // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-getcurrentthemename
     [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-    public static unsafe extern HResult GetCurrentThemeName(
+    public static extern unsafe HResult GetCurrentThemeName(
         char* pszThemeFileName,
         int cchMaxNameChars,
         char* pszColorBuff,
@@ -47,7 +47,7 @@ public static partial class WindowsImports
 
     // https://docs.microsoft.com/windows/win32/api/uxtheme/nf-uxtheme-openthemedataex
     [DllImport(Libraries.UxTheme, ExactSpelling = true, CharSet = CharSet.Unicode)]
-    public static unsafe extern HTHEME OpenThemeDataEx(
+    public static extern unsafe HTHEME OpenThemeDataEx(
         HWND hwnd,
         char* pszClassList,
         uint dwFlags);

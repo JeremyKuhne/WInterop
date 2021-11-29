@@ -80,7 +80,7 @@ internal class Program
                     (.7f, Layout.FixedPercent(.4f, _replaceableLayout)),
                     (.3f, Layout.FixedPercent(.5f, _buttonControl))))));
 
-            MouseHandler handler = new MouseHandler(_buttonControl);
+            MouseHandler handler = new(_buttonControl);
             handler.MouseUp += Handler_MouseUp;
         }
 

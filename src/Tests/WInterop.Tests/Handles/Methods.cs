@@ -16,100 +16,82 @@ public partial class Methods
     public void GetHandleTypeBasic()
     {
         string tempPath = Storage.GetTempPath();
-        using (var directory = Storage.CreateDirectoryHandle(tempPath))
-        {
-            string name = Handles.GetObjectType(directory);
-            name.Should().Be("File");
-        }
+        using var directory = Storage.CreateDirectoryHandle(tempPath);
+        string name = Handles.GetObjectType(directory);
+        name.Should().Be("File");
     }
 
     [Fact]
     public void GetHandleNameBasic()
     {
         string tempPath = Storage.GetTempPath();
-        using (var directory = Storage.CreateDirectoryHandle(tempPath))
-        {
-            // This will give back the NT path (\Device\HarddiskVolumen...)
-            string name = Handles.GetObjectName(directory);
+        using var directory = Storage.CreateDirectoryHandle(tempPath);
+        // This will give back the NT path (\Device\HarddiskVolumen...)
+        string name = Handles.GetObjectName(directory);
 
-            // Skip past the C:\
-            Paths.AddTrailingSeparator(name).Should().EndWith(tempPath.Substring(3));
-        }
+        // Skip past the C:\
+        Paths.AddTrailingSeparator(name).Should().EndWith(tempPath[3..]);
     }
 
     [Fact]
     public void OpenDosDeviceDirectory()
     {
-        using (var directory = Handles.OpenDirectoryObject(@"\??"))
-        {
-            directory.IsInvalid.Should().BeFalse();
-        }
+        using var directory = Handles.OpenDirectoryObject(@"\??");
+        directory.IsInvalid.Should().BeFalse();
     }
 
     [Fact]
     public void OpenGlobalDosDeviceDirectory()
     {
-        using (var directory = Handles.OpenDirectoryObject(@"\Global??"))
-        {
-            directory.IsInvalid.Should().BeFalse();
-        }
+        using var directory = Handles.OpenDirectoryObject(@"\Global??");
+        directory.IsInvalid.Should().BeFalse();
     }
 
     [Fact]
     public void OpenRootDirectory()
     {
-        using (var directory = Handles.OpenDirectoryObject(@"\"))
-        {
-            directory.IsInvalid.Should().BeFalse();
-        }
+        using var directory = Handles.OpenDirectoryObject(@"\");
+        directory.IsInvalid.Should().BeFalse();
     }
 
     [Fact]
     public void GetRootDirectoryEntries()
     {
-        using (var directory = Handles.OpenDirectoryObject(@"\"))
-        {
-            IEnumerable<ObjectInformation> objects = Handles.GetDirectoryEntries(directory);
-            objects.Should().NotBeEmpty();
-            objects.Should().Contain(new ObjectInformation { Name = "Device", TypeName = "Directory" });
-        }
+        using var directory = Handles.OpenDirectoryObject(@"\");
+        IEnumerable<ObjectInformation> objects = Handles.GetDirectoryEntries(directory);
+        objects.Should().NotBeEmpty();
+        objects.Should().Contain(new ObjectInformation { Name = "Device", TypeName = "Directory" });
     }
 
     [Fact]
     public void OpenCDriveSymbolicLink()
     {
-        using (var link = Handles.OpenSymbolicLinkObject(@"\??\C:"))
-        {
-            link.IsInvalid.Should().BeFalse();
-        }
+        using var link = Handles.OpenSymbolicLinkObject(@"\??\C:");
+        link.IsInvalid.Should().BeFalse();
     }
 
     [Fact]
     public void GetTargetForCDriveSymbolicLink()
     {
-        using (var link = Handles.OpenSymbolicLinkObject(@"\??\C:"))
-        {
-            string target = Handles.GetSymbolicLinkTarget(link);
-            target.Should().StartWith(@"\Device\");
-        }
+        using var link = Handles.OpenSymbolicLinkObject(@"\??\C:");
+        string target = Handles.GetSymbolicLinkTarget(link);
+        target.Should().StartWith(@"\Device\");
     }
 
     [Fact]
     public void QueryDosVolumePathBasic()
     {
         string tempPath = Storage.GetTempPath();
-        using (var directory = Storage.CreateDirectoryHandle(tempPath))
-        {
-            // This will give back the NT path (\Device\HarddiskVolumen...)
-            string fullName = Handles.GetObjectName(directory);
-            string fileName = Storage.GetFileName(directory);
-            string deviceName = fullName.Substring(0, fullName.Length - fileName.Length);
+        using var directory = Storage.CreateDirectoryHandle(tempPath);
+        // This will give back the NT path (\Device\HarddiskVolumen...)
+        string fullName = Handles.GetObjectName(directory);
+        string fileName = Storage.GetFileName(directory);
+        string deviceName = fullName[..^fileName.Length];
 
-            string dosVolumePath = Devices.QueryDosVolumePath(deviceName);
+        string dosVolumePath = Devices.QueryDosVolumePath(deviceName);
 
-            tempPath.Should().StartWith(dosVolumePath);
-            tempPath.Should().Be(dosVolumePath + fileName + @"\");
-        }
+        tempPath.Should().StartWith(dosVolumePath);
+        tempPath.Should().Be($@"{dosVolumePath}{fileName}\");
     }
 
     [Fact]

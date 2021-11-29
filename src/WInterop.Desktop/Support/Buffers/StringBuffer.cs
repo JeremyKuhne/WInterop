@@ -556,7 +556,7 @@ public class StringBuffer : HeapBuffer
     /// <exception cref="OverflowException">
     ///  Thrown if the length of the buffer is larger than a string's max capacity (int.MaxValue).
     /// </exception>
-    public unsafe override string ToString()
+    public override unsafe string ToString()
     {
         if (_length == 0) return string.Empty;
 
@@ -567,7 +567,7 @@ public class StringBuffer : HeapBuffer
     /// <summary>
     ///  Gets a span representing the current value.
     /// </summary>
-    public unsafe ReadOnlySpan<char> AsSpan() => new ReadOnlySpan<char>(CharPointer, checked((int)_length));
+    public unsafe ReadOnlySpan<char> AsSpan() => new(CharPointer, checked((int)_length));
 
     /// <summary>
     ///  Gets a reference to the first char.
@@ -606,7 +606,7 @@ public class StringBuffer : HeapBuffer
         base.Dispose(disposing);
     }
 
-    public UNICODE_STRING ToUnicodeString() => new UNICODE_STRING(this);
+    public UNICODE_STRING ToUnicodeString() => new(this);
 
     public static StringBufferCache Cache => StringBufferCache.Instance;
 }

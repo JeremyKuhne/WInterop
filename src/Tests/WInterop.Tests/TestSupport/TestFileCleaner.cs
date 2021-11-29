@@ -10,7 +10,7 @@ namespace Tests.Support;
 public class TestFileCleaner : IDisposable
 {
     protected const string WinteropFlagFileName = @"%WinteropFlagFile%";
-    protected ConcurrentBag<string> _filesToClean = new ConcurrentBag<string>();
+    protected ConcurrentBag<string> _filesToClean = new();
     private Stream _flagFile;
     private static readonly string s_rootTempFolder;
     private static readonly object s_cleanLock;
@@ -59,7 +59,7 @@ public class TestFileCleaner : IDisposable
     private static void CleanOrphanedTempFolders()
     {
         // Clean up orphaned temp folders
-        DirectoryInfo rootInfo = new DirectoryInfo(s_rootTempFolder);
+        DirectoryInfo rootInfo = new(s_rootTempFolder);
 
         if (rootInfo != null)
         {
@@ -105,10 +105,8 @@ public class TestFileCleaner : IDisposable
         using (var stream = Storage.CreateFileStream(testFile,
             DesiredAccess.GenericReadWrite, ShareModes.ReadWrite, CreationDisposition.CreateNew))
         {
-            using (var writer = new StreamWriter(stream))
-            {
-                writer.Write(content);
-            }
+            using var writer = new StreamWriter(stream);
+            writer.Write(content);
         }
 
         return testFile;
@@ -120,10 +118,8 @@ public class TestFileCleaner : IDisposable
         using (var stream = Storage.CreateFileStream(testFile,
             DesiredAccess.GenericReadWrite, ShareModes.ReadWrite, CreationDisposition.CreateNew))
         {
-            using (var writer = new BinaryWriter(stream))
-            {
-                writer.Write(content);
-            }
+            using var writer = new BinaryWriter(stream);
+            writer.Write(content);
         }
 
         return testFile;

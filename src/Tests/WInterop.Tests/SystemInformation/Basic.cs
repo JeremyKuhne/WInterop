@@ -87,7 +87,7 @@ public partial class Basic
     [Fact]
     public void ExpandEnvironmentVariables_Long()
     {
-        string longValue = new string('a', 100);
+        string longValue = new('a', 100);
         try
         {
             Environment.SetEnvironmentVariable("ExpandEnvironmentVariables_Long", longValue);

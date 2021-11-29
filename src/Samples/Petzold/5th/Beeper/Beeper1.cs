@@ -9,7 +9,7 @@ namespace Beeper;
 
 internal class Beeper1 : WindowClass
 {
-    private bool fFlipFlop = false;
+    private bool _flipFlop = false;
     private const int ID_TIMER = 1;
 
     protected override LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
@@ -21,16 +21,14 @@ internal class Beeper1 : WindowClass
                 return 0;
             case MessageType.Timer:
                 Windows.MessageBeep();
-                fFlipFlop = !fFlipFlop;
+                _flipFlop = !_flipFlop;
                 window.Invalidate();
                 return 0;
             case MessageType.Paint:
                 using (DeviceContext dc = window.BeginPaint())
                 {
-                    using (BrushHandle brush = Gdi.CreateSolidBrush(fFlipFlop ? Color.Red : Color.Blue))
-                    {
-                        dc.FillRectangle(window.GetClientRectangle(), brush);
-                    }
+                    using BrushHandle brush = Gdi.CreateSolidBrush(_flipFlop ? Color.Red : Color.Blue);
+                    dc.FillRectangle(window.GetClientRectangle(), brush);
                 }
                 return 0;
             case MessageType.Destroy:

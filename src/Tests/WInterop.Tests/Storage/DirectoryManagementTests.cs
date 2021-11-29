@@ -66,50 +66,40 @@ public class DirectoryManagement
     [Fact]
     public void SetCurrentDirectoryToNonExistant()
     {
-        using (var cleaner = new TestFileCleaner())
-        {
-            string directoryPath = cleaner.GetTestPath();
-            Action action = () => Storage.SetCurrentDirectory(directoryPath);
-            action.Should().Throw<System.IO.FileNotFoundException>();
-        }
+        using var cleaner = new TestFileCleaner();
+        string directoryPath = cleaner.GetTestPath();
+        Action action = () => Storage.SetCurrentDirectory(directoryPath);
+        action.Should().Throw<System.IO.FileNotFoundException>();
     }
 
     [Fact]
     public void CreateDirectoryBasic()
     {
-        using (var temp = new TestFileCleaner())
-        {
-            string directoryPath = temp.GetTestPath();
-            Storage.CreateDirectory(directoryPath);
-            using (var directory = Storage.CreateDirectoryHandle(directoryPath))
-            {
-                directory.IsInvalid.Should().BeFalse();
-            }
-        }
+        using var temp = new TestFileCleaner();
+        string directoryPath = temp.GetTestPath();
+        Storage.CreateDirectory(directoryPath);
+        using var directory = Storage.CreateDirectoryHandle(directoryPath);
+        directory.IsInvalid.Should().BeFalse();
     }
 
     [Fact]
     public void DeleteDirectoryBasic()
     {
-        using (var temp = new TestFileCleaner())
+        using var temp = new TestFileCleaner();
+        string directoryPath = temp.GetTestPath();
+        Storage.CreateDirectory(directoryPath);
+        using (var directory = Storage.CreateDirectoryHandle(directoryPath))
         {
-            string directoryPath = temp.GetTestPath();
-            Storage.CreateDirectory(directoryPath);
-            using (var directory = Storage.CreateDirectoryHandle(directoryPath))
-            {
-                directory.IsInvalid.Should().BeFalse();
-            }
-
-            Storage.RemoveDirectory(directoryPath);
-
-            Action action = () =>
-            {
-                using (var directory = Storage.CreateDirectoryHandle(directoryPath))
-                {
-                }
-            };
-
-            action.Should().Throw<System.IO.FileNotFoundException>();
+            directory.IsInvalid.Should().BeFalse();
         }
+
+        Storage.RemoveDirectory(directoryPath);
+
+        Action action = () =>
+        {
+            using var directory = Storage.CreateDirectoryHandle(directoryPath);
+        };
+
+        action.Should().Throw<System.IO.FileNotFoundException>();
     }
 }

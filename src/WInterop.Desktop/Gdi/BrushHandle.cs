@@ -15,7 +15,7 @@ public readonly ref struct BrushHandle
     /// <summary>
     ///  Used to specifiy that you don't want a default brush picked in WInterop method calls.
     /// </summary>
-    public static BrushHandle NoBrush => new BrushHandle(new HBRUSH((IntPtr)(-1)));
+    public static BrushHandle NoBrush => new(new HBRUSH((IntPtr)(-1)));
 
     public BrushHandle(HBRUSH handle, bool ownsHandle = true)
     {
@@ -37,7 +37,7 @@ public readonly ref struct BrushHandle
     public static implicit operator HGDIOBJ(in BrushHandle handle) => handle.HBRUSH;
     public static implicit operator HBRUSH(in BrushHandle handle) => handle.HBRUSH;
     public static implicit operator LResult(in BrushHandle handle) => handle.HBRUSH.Value;
-    public static implicit operator GdiObjectHandle(in BrushHandle handle) => new GdiObjectHandle(handle.HBRUSH, ownsHandle: false);
+    public static implicit operator GdiObjectHandle(in BrushHandle handle) => new(handle.HBRUSH, ownsHandle: false);
     public static implicit operator BrushHandle(in StockBrush brush) => Gdi.GetStockBrush(brush);
     public static implicit operator BrushHandle(in SystemColor color) => Gdi.GetSystemColorBrush(color);
 

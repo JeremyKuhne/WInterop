@@ -14,10 +14,10 @@ public struct LResult
 
     public LResult(IntPtr value) => Value = value;
 
-    public static implicit operator LResult(int value) => new LResult((IntPtr)value);
+    public static implicit operator LResult(int value) => new((IntPtr)value);
     public static implicit operator int(LResult value) => (int)value.Value.ToInt64();
-    public static implicit operator LResult(uint value) => new LResult((IntPtr)value);
+    public static implicit operator LResult(uint value) => new((IntPtr)value);
     public static implicit operator uint(LResult value) => (uint)value.Value.ToInt64();
-    public static implicit operator LResult(IntPtr value) => new LResult(value);
+    public static implicit operator LResult(IntPtr value) => new(value);
     public static implicit operator IntPtr(LResult value) => value.Value;
 }

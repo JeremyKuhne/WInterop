@@ -9,7 +9,7 @@ namespace WInterop.DirectWrite;
 ///  Represents a collection of strings indexed by locale name. [IDWriteLocalizedStrings]
 /// </summary>
 [Guid(InterfaceIds.IID_IDWriteLocalizedStrings)]
-public unsafe readonly struct LocalizedStrings : LocalizedStrings.Interface, IDisposable
+public readonly unsafe struct LocalizedStrings : LocalizedStrings.Interface, IDisposable
 {
     private readonly IDWriteLocalizedStrings* _handle;
 

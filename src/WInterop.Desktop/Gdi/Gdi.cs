@@ -15,13 +15,13 @@ namespace WInterop.Gdi;
 public static partial class Gdi
 {
     public static unsafe DeviceContext CreateDeviceContext(string driver, string device)
-        => new DeviceContext(GdiImports.CreateDCW(driver, device, null, null), ownsHandle: true);
+        => new(GdiImports.CreateDCW(driver, device, null, null), ownsHandle: true);
 
     /// <summary>
     ///  Creates a <see cref="DeviceContext"/> that covers all displays.
     /// </summary>
     public static unsafe DeviceContext CreateDesktopDeviceContext()
-        => new DeviceContext(GdiImports.CreateDCW("DISPLAY", null, null, null), ownsHandle: true);
+        => new(GdiImports.CreateDCW("DISPLAY", null, null, null), ownsHandle: true);
 
     /// <summary>
     ///  Returns an in memory device context that is compatible with the specified device.
@@ -29,7 +29,7 @@ public static partial class Gdi
     /// <param name="deviceContext">An existing device context or default for the application's current screen.</param>
     /// <returns>A 1 by 1 monochrome memory device context.</returns>
     public static DeviceContext CreateCompatibleDeviceContext(this in DeviceContext deviceContext)
-        => new DeviceContext(GdiImports.CreateCompatibleDC(deviceContext), ownsHandle: true);
+        => new(GdiImports.CreateCompatibleDC(deviceContext), ownsHandle: true);
 
     /// <summary>
     ///  Gets a <paramref name="capability"/> for the given <paramref name="deviceContext"/>.
@@ -38,23 +38,23 @@ public static partial class Gdi
         => GdiImports.GetDeviceCaps(deviceContext, capability);
 
     public static Size GetDeviceResolution(this in DeviceContext deviceContext)
-        => new Size(
+        => new(
             deviceContext.GetDeviceCapability(DeviceCapability.HorzontalResolution),
             deviceContext.GetDeviceCapability(DeviceCapability.VerticalResolution));
 
     public static Size GetDesktopResolution(this in DeviceContext deviceContext)
-        => new Size(
+        => new(
             deviceContext.GetDeviceCapability(DeviceCapability.DesktopHorizontalResolution),
             deviceContext.GetDeviceCapability(DeviceCapability.DesktopVerticalResolution));
 
     public static unsafe DeviceContext CreateInformationContext(string driver, string device)
-        => new DeviceContext(GdiImports.CreateICW(driver, device, null, null), ownsHandle: true);
+        => new(GdiImports.CreateICW(driver, device, null, null), ownsHandle: true);
 
     /// <summary>
     ///  Get the device context for the client area of the specified window.
     /// </summary>
     public static DeviceContext GetDeviceContext(this in WindowHandle window)
-        => new DeviceContext(GdiImports.GetDC(window), window);
+        => new(GdiImports.GetDC(window), window);
 
     /// <summary>
     ///  Get the device context for the screen.
@@ -67,10 +67,10 @@ public static partial class Gdi
     /// <param name="window">The window handle, or null for the primary display monitor.</param>
     /// <returns>Returns a device context for the entire window, not just the client area.</returns>
     public static DeviceContext GetWindowDeviceContext(this in WindowHandle window)
-        => new DeviceContext(GdiImports.GetWindowDC(window), window);
+        => new(GdiImports.GetWindowDC(window), window);
 
     public static BitmapHandle CreateCompatibleBitmap(this in DeviceContext context, Size size)
-        => new BitmapHandle(GdiImports.CreateCompatibleBitmap(context, size.Width, size.Height));
+        => new(GdiImports.CreateCompatibleBitmap(context, size.Width, size.Height));
 
     public static void BitBlit(
         this in DeviceContext source,
@@ -229,10 +229,10 @@ public static partial class Gdi
         => GdiImports.InvalidateRect(window, null, erase);
 
     public static RegionHandle CreateEllipticRegion(Rectangle bounds)
-        => new RegionHandle(GdiImports.CreateEllipticRgn(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom));
+        => new(GdiImports.CreateEllipticRgn(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom));
 
     public static RegionHandle CreateRectangleRegion(Rectangle rectangle)
-        => new RegionHandle(GdiImports.CreateRectRgn(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom));
+        => new(GdiImports.CreateRectRgn(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom));
 
     public static RegionType CombineRegion(
         this in RegionHandle destination,
@@ -292,7 +292,7 @@ public static partial class Gdi
     ///  Shared brush, handle doesn't need disposed.
     /// </summary>
     public static BrushHandle GetSystemColorBrush(SystemColor systemColor)
-        => new BrushHandle(GdiImports.GetSysColorBrush(systemColor), ownsHandle: false);
+        => new(GdiImports.GetSysColorBrush(systemColor), ownsHandle: false);
 
     public static Color GetBackgroundColor(this in DeviceContext context)
         => GdiImports.GetBkColor(context);

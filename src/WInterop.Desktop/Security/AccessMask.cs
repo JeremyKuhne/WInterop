@@ -49,8 +49,8 @@ public struct AccessMask
         }
     }
 
-    public static implicit operator AccessMask(FileAccessRights rights) => new AccessMask((uint)rights);
+    public static implicit operator AccessMask(FileAccessRights rights) => new((uint)rights);
     public static implicit operator FileAccessRights(AccessMask mask) => (FileAccessRights)mask.Value;
-    public static implicit operator AccessMask(DirectoryAccessRights rights) => new AccessMask((uint)rights);
+    public static implicit operator AccessMask(DirectoryAccessRights rights) => new((uint)rights);
     public static implicit operator DirectoryAccessRights(AccessMask mask) => (DirectoryAccessRights)mask.Value;
 }

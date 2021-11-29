@@ -15,6 +15,6 @@ public class GeneralConsole
         // Xunit tests in core don't have an attached console window
         WindowHandle window = WInterop.Console.Console.GetConsoleWindow();
         window.IsInvalid.Should().BeTrue();
-        window = Windows.GetActiveWindow();
+        _ = Windows.GetActiveWindow();
     }
 }

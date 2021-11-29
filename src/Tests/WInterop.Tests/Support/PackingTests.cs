@@ -73,7 +73,7 @@ public class PackingTests
     [Fact]
     public unsafe void UnionsAlignOnLargestType()
     {
-        IntLargeInt i = new IntLargeInt();
+        IntLargeInt i = new();
         void* start = &i;
         void* largeInt = &i.LargeInt;
         ((ulong)largeInt - (ulong)start).Should().Be(8u);

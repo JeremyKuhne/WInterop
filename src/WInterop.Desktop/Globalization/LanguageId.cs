@@ -35,5 +35,5 @@ public struct LanguageId
 
     public static bool operator !=(LanguageId a, LanguageId b) => a.RawValue != b.RawValue;
 
-    public static implicit operator LanguageId(ushort value) => new LanguageId(value);
+    public static implicit operator LanguageId(ushort value) => new(value);
 }

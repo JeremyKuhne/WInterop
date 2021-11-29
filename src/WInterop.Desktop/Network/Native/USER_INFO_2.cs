@@ -7,7 +7,7 @@ namespace WInterop.Network.Native;
 
 // https://docs.microsoft.com/en-us/windows/desktop/api/lmaccess/ns-lmaccess-_user_info_2
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-public unsafe readonly struct USER_INFO_2
+public readonly unsafe struct USER_INFO_2
 {
     public readonly char* usri2_name;
     public readonly char* usri2_password;

@@ -59,26 +59,24 @@ internal class Bezier : WindowClass
                 MouseKey mk = (MouseKey)wParam.LowWord;
                 if ((mk & (MouseKey.LeftButton | MouseKey.RightButton)) != 0)
                 {
-                    using (DeviceContext dc = window.GetDeviceContext())
+                    using DeviceContext dc = window.GetDeviceContext();
+                    dc.SelectObject(StockPen.White);
+                    DrawBezier(dc, _apt);
+
+                    if ((mk & MouseKey.LeftButton) != 0)
                     {
-                        dc.SelectObject(StockPen.White);
-                        DrawBezier(dc, _apt);
-
-                        if ((mk & MouseKey.LeftButton) != 0)
-                        {
-                            _apt[1].X = lParam.LowWord;
-                            _apt[1].Y = lParam.HighWord;
-                        }
-
-                        if ((mk & MouseKey.RightButton) != 0)
-                        {
-                            _apt[2].X = lParam.LowWord;
-                            _apt[2].Y = lParam.HighWord;
-                        }
-
-                        dc.SelectObject(StockPen.Black);
-                        DrawBezier(dc, _apt);
+                        _apt[1].X = lParam.LowWord;
+                        _apt[1].Y = lParam.HighWord;
                     }
+
+                    if ((mk & MouseKey.RightButton) != 0)
+                    {
+                        _apt[2].X = lParam.LowWord;
+                        _apt[2].Y = lParam.HighWord;
+                    }
+
+                    dc.SelectObject(StockPen.Black);
+                    DrawBezier(dc, _apt);
                 }
                 return 0;
             case MessageType.Paint:

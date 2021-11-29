@@ -13,7 +13,7 @@ public readonly struct CursorHandle : IDisposable
     /// <summary>
     ///  Used to specifiy that you don't want a default cursor picked in WInterop method calls.
     /// </summary>
-    public static CursorHandle NoCursor = new CursorHandle(new HCURSOR((IntPtr)(-1)));
+    public static CursorHandle NoCursor = new(new HCURSOR((IntPtr)(-1)));
 
     public CursorHandle(HCURSOR handle, bool ownsHandle = true)
     {

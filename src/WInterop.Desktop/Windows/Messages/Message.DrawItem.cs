@@ -9,7 +9,7 @@ namespace WInterop.Windows;
 
 public static partial class Message
 {
-    public unsafe readonly ref struct DrawItem
+    public readonly unsafe ref struct DrawItem
     {
         private readonly DRAWITEMSTRUCT* _drawItemStruct;
 
@@ -24,7 +24,7 @@ public static partial class Message
         public OwnerDrawActions ItemAction => _drawItemStruct->itemAction;
         public OwnerDrawStates ItemState => _drawItemStruct->itemState;
         public WindowHandle ItemWindow => _drawItemStruct->hwndItem;
-        public DeviceContext DeviceContext => new DeviceContext(_drawItemStruct->hDC, ownsHandle: false);
+        public DeviceContext DeviceContext => new(_drawItemStruct->hDC, ownsHandle: false);
         public Rectangle ItemRectangle => _drawItemStruct->rcItem;
         public IntPtr ItemData => _drawItemStruct->itemData;
     }

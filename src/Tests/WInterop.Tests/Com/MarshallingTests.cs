@@ -88,7 +88,7 @@ public class MarshallingTests
 
     // https://docs.microsoft.com/windows/win32/api/coml2api/nf-coml2api-stgcreatestorageex
     [DllImport(Libraries.Ole32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern HResult StgCreateStorageEx(
+    public static extern unsafe HResult StgCreateStorageEx(
         string pwcsName,
         StorageMode grfMode,
         StorageFormat stgfmt,

@@ -20,7 +20,7 @@ public static class Strings
 
         fixed (char* v = value)
         {
-            string newString = new string(v, 0, value.Length);
+            string newString = new(v, 0, value.Length);
             fixed (char* n = newString)
                 n[index] = newChar;
             return newString;
@@ -92,8 +92,8 @@ public static class Strings
             return Span<char>.Empty;
         }
 
-        Span<char> span = new Span<char>(buffer, int.MaxValue);
+        Span<char> span = new(buffer, int.MaxValue);
         int terminator = span.IndexOf('\0');
-        return span.Slice(0, includeNull ? terminator + 1 : terminator);
+        return span[..(includeNull ? terminator + 1 : terminator)];
     }
 }

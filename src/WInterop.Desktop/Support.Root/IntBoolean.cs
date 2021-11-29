@@ -22,10 +22,10 @@ public readonly struct IntBoolean
     public static IntBoolean False => false;
 
     public static implicit operator bool(IntBoolean b) => b.IsTrue;
-    public static implicit operator IntBoolean(bool b) => new IntBoolean(b);
+    public static implicit operator IntBoolean(bool b) => new(b);
     public static implicit operator uint(IntBoolean b) => (uint)b.RawValue;
     public static implicit operator int(IntBoolean b) => b.RawValue;
-    public static implicit operator IntBoolean(uint b) => new IntBoolean((int)b);
+    public static implicit operator IntBoolean(uint b) => new((int)b);
 
     public override string ToString() => IsTrue.ToString();
 }

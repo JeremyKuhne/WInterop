@@ -44,8 +44,8 @@ public readonly struct ARGB
         B = blue;
     }
 
-    public static implicit operator ARGB(COLORREF color) => new ARGB(color.R, color.G, color.B);
-    public static implicit operator COLORREF(ARGB color) => new COLORREF(color.R, color.G, color.B);
-    public static implicit operator ARGB(Color color) => new ARGB(color.R, color.G, color.B);
+    public static implicit operator ARGB(COLORREF color) => new(color.R, color.G, color.B);
+    public static implicit operator COLORREF(ARGB color) => new(color.R, color.G, color.B);
+    public static implicit operator ARGB(Color color) => new(color.R, color.G, color.B);
     public static implicit operator Color(ARGB color) => Color.FromArgb(color.Value);
 }

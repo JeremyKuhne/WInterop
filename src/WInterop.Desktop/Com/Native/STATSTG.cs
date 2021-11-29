@@ -30,7 +30,7 @@ public unsafe ref struct STATSTG
 
     public string GetAndFreeString()
     {
-        string value = new string(pwcsName);
+        string value = new(pwcsName);
         Marshal.FreeCoTaskMem((IntPtr)pwcsName);
         return value;
     }

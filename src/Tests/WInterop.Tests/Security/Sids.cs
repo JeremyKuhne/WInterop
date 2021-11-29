@@ -62,7 +62,7 @@ public class Sids
     [Fact]
     public void IsValidSid_BadSid()
     {
-        SID sid = new SID();
+        SID sid = new();
         sid.IsValidSid().Should().BeFalse();
     }
 }

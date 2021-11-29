@@ -42,7 +42,7 @@ public class StreamTests
         ComStream stream;
         using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))
         {
-            using (StreamWriter writer = new StreamWriter(stream, Encoding.Unicode, 1024, leaveOpen: true))
+            using (StreamWriter writer = new(stream, Encoding.Unicode, 1024, leaveOpen: true))
             {
                 writer.WriteLine("This is line one.");
                 stream.Length.Should().Be(0);
@@ -60,7 +60,7 @@ public class StreamTests
 
             stream.Stream.Should().NotBeNull();
 
-            using (StreamReader reader = new StreamReader(stream, Encoding.Unicode, detectEncodingFromByteOrderMarks: false, 1024, leaveOpen: true))
+            using (StreamReader reader = new(stream, Encoding.Unicode, detectEncodingFromByteOrderMarks: false, 1024, leaveOpen: true))
             {
                 stream.Position = 0;
                 stream.Position.Should().Be(0);

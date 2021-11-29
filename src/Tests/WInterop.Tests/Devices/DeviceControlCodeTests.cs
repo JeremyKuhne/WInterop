@@ -58,7 +58,7 @@ public partial class ControlCodeConstruction
         ]
     public void ValidateMountManagerCodes(ControlCodes.MountManager code, uint function, ControlCodeMethod method, ControlCodeAccess access)
     {
-        ControlCode generatedCode = new ControlCode(ControlCodeDeviceType.MountManager, function, method, access);
+        ControlCode generatedCode = new(ControlCodeDeviceType.MountManager, function, method, access);
         ((ControlCode)code).Should().Be(generatedCode, $"generated code is 0x{generatedCode.Value:x8}");
     }
 
@@ -82,7 +82,7 @@ public partial class ControlCodeConstruction
         ]
     public void ValidateMountDeviceCodes(ControlCodes.MountDevice code, uint function, ControlCodeMethod method, ControlCodeAccess access)
     {
-        ControlCode generatedCode = new ControlCode(ControlCodeDeviceType.MountDevice, function, method, access);
+        ControlCode generatedCode = new(ControlCodeDeviceType.MountDevice, function, method, access);
         ((ControlCode)code).Should().Be(generatedCode, $"generated code is 0x{generatedCode.Value:x8}");
     }
 
@@ -363,7 +363,7 @@ public partial class ControlCodeConstruction
         ]
     public void ValidateFileSystemDeviceCodes(ControlCodes.FileSystem code, uint function, ControlCodeMethod method, ControlCodeAccess access)
     {
-        ControlCode generatedCode = new ControlCode(ControlCodeDeviceType.FileSystem, function, method, access);
+        ControlCode generatedCode = new(ControlCodeDeviceType.FileSystem, function, method, access);
         ((ControlCode)code).Should().Be(generatedCode, $"generated code is 0x{generatedCode.Value:x8}");
     }
 

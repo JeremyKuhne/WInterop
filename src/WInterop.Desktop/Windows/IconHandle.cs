@@ -13,7 +13,7 @@ public readonly struct IconHandle : IDisposable
     /// <summary>
     ///  Used to specifiy that you don't want a default icon picked in WInterop method calls.
     /// </summary>
-    public static IconHandle NoIcon = new IconHandle(new HICON((IntPtr)(-1)));
+    public static IconHandle NoIcon = new(new HICON((IntPtr)(-1)));
 
     public IconHandle(HICON handle, bool ownsHandle = true)
     {

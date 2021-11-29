@@ -45,54 +45,46 @@ public class Basic
     [Fact]
     public void GetTokenGroupSids_ForCurrentProcess()
     {
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
-        {
-            token.IsInvalid.Should().BeFalse();
-            List<SidAndAttributes> groups = token.GetTokenGroupSids().ToList();
-            groups.Should().NotBeEmpty();
-            groups.Should().Contain((group) => group.Sid.LookupAccountSid(null).Name.Equals("Everyone"));
-            TokenStatistics stats = token.GetTokenStatistics();
-            groups.Count.Should().Be((int)stats.GroupCount);
-        }
+        using var token = Security.OpenProcessToken(AccessTokenRights.Read);
+        token.IsInvalid.Should().BeFalse();
+        List<SidAndAttributes> groups = token.GetTokenGroupSids().ToList();
+        groups.Should().NotBeEmpty();
+        groups.Should().Contain((group) => group.Sid.LookupAccountSid(null).Name.Equals("Everyone"));
+        TokenStatistics stats = token.GetTokenStatistics();
+        groups.Count.Should().Be((int)stats.GroupCount);
     }
 
     [Fact]
     public void GetTokenStatistics_ForCurrentProcess()
     {
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
-        {
-            TokenStatistics stats = token.GetTokenStatistics();
-            stats.TokenType.Should().Be(TokenType.Primary);
-        }
+        using var token = Security.OpenProcessToken(AccessTokenRights.Read);
+        TokenStatistics stats = token.GetTokenStatistics();
+        stats.TokenType.Should().Be(TokenType.Primary);
     }
 
     [Fact]
     public void GetTokenPrivileges_ForCurrentProcess()
     {
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
-        {
-            token.IsInvalid.Should().BeFalse();
-            var privileges = token.GetTokenPrivileges();
-            privileges.Should().NotBeEmpty();
+        using var token = Security.OpenProcessToken(AccessTokenRights.Read);
+        token.IsInvalid.Should().BeFalse();
+        var privileges = token.GetTokenPrivileges();
+        privileges.Should().NotBeEmpty();
 
-            // This Privilege should always exist
-            privileges.Should().Contain(s => s.Privilege == Privilege.ChangeNotify);
+        // This Privilege should always exist
+        privileges.Should().Contain(s => s.Privilege == Privilege.ChangeNotify);
 
-            // Check the helper
-            token.HasPrivilege(Privilege.ChangeNotify).Should().BeTrue();
-        }
+        // Check the helper
+        token.HasPrivilege(Privilege.ChangeNotify).Should().BeTrue();
     }
 
     [Fact]
     public void GetTokenPrivileges_NoReadRights()
     {
         // You need Query or Read (which includes Query) rights
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate))
-        {
-            token.IsInvalid.Should().BeFalse();
-            Action action = () => token.GetTokenPrivileges();
-            action.Should().Throw<UnauthorizedAccessException>();
-        }
+        using var token = Security.OpenProcessToken(AccessTokenRights.Duplicate);
+        token.IsInvalid.Should().BeFalse();
+        Action action = () => token.GetTokenPrivileges();
+        action.Should().Throw<UnauthorizedAccessException>();
     }
 
     [Fact]
@@ -128,26 +120,22 @@ public class Basic
     [Fact]
     public void IsPrivilegeEnabled_ForCurrentProcess()
     {
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
-        {
-            token.IsInvalid.Should().BeFalse();
-            token.IsPrivilegeEnabled(Privilege.ChangeNotify).Should().BeTrue();
-            token.IsPrivilegeEnabled(Privilege.Backup).Should().BeFalse();
-        }
+        using var token = Security.OpenProcessToken(AccessTokenRights.Read);
+        token.IsInvalid.Should().BeFalse();
+        token.IsPrivilegeEnabled(Privilege.ChangeNotify).Should().BeTrue();
+        token.IsPrivilegeEnabled(Privilege.Backup).Should().BeFalse();
     }
 
     [Fact]
     public void AreAllPrivilegesEnabled_ForCurrentProcess()
     {
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
-        {
-            token.IsInvalid.Should().BeFalse();
-            token.AreAllPrivilegesEnabled(Privilege.ChangeNotify, Privilege.Backup).Should().BeFalse();
-            token.AreAnyPrivilegesEnabled(Privilege.ChangeNotify, Privilege.Backup).Should().BeTrue();
-            token.AreAllPrivilegesEnabled(Privilege.Backup).Should().BeFalse();
-            token.AreAnyPrivilegesEnabled(Privilege.ChangeNotify).Should().BeTrue();
-            token.AreAllPrivilegesEnabled(Privilege.ChangeNotify, Privilege.ChangeNotify).Should().BeTrue();
-        }
+        using var token = Security.OpenProcessToken(AccessTokenRights.Read);
+        token.IsInvalid.Should().BeFalse();
+        token.AreAllPrivilegesEnabled(Privilege.ChangeNotify, Privilege.Backup).Should().BeFalse();
+        token.AreAnyPrivilegesEnabled(Privilege.ChangeNotify, Privilege.Backup).Should().BeTrue();
+        token.AreAllPrivilegesEnabled(Privilege.Backup).Should().BeFalse();
+        token.AreAnyPrivilegesEnabled(Privilege.ChangeNotify).Should().BeTrue();
+        token.AreAllPrivilegesEnabled(Privilege.ChangeNotify, Privilege.ChangeNotify).Should().BeTrue();
     }
 
     [Fact]
@@ -162,43 +150,37 @@ public class Basic
     public void GetThreadToken(bool openAsSelf)
     {
         // Unless we're impersonating we shouldn't get a token for the thread
-        using (var token = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf))
-        {
-            token.Should().BeNull();
-        }
+        using var token = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf);
+        token.Should().BeNull();
     }
 
     [Fact]
     public void DuplicateProcessToken_NoDuplicateRights()
     {
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Query))
-        {
-            Action action = () => token.DuplicateToken();
-            action.Should().Throw<UnauthorizedAccessException>("didn't ask for duplicate rights");
-        }
+        using var token = Security.OpenProcessToken(AccessTokenRights.Query);
+        Action action = () => token.DuplicateToken();
+        action.Should().Throw<UnauthorizedAccessException>("didn't ask for duplicate rights");
     }
 
     [Fact]
     public void DuplicateProcessToken()
     {
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
+        using var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query);
+        var privileges = token.GetTokenPrivileges();
+
+        using (var duplicate = token.DuplicateToken())
         {
-            var privileges = token.GetTokenPrivileges();
+            duplicate.IsInvalid.Should().BeFalse();
+            duplicate.GetTokenStatistics().TokenType.Should().Be(TokenType.Impersonation);
 
-            using (var duplicate = token.DuplicateToken())
-            {
-                duplicate.IsInvalid.Should().BeFalse();
-                duplicate.GetTokenStatistics().TokenType.Should().Be(TokenType.Impersonation);
+            var duplicatePrivileges = duplicate.GetTokenPrivileges();
+            duplicatePrivileges.Should().Equal(privileges);
+        }
 
-                var duplicatePrivileges = duplicate.GetTokenPrivileges();
-                duplicatePrivileges.Should().Equal(privileges);
-            }
-
-            using (var duplicate = token.DuplicateToken(rights: AccessTokenRights.MaximumAllowed))
-            {
-                duplicate.IsInvalid.Should().BeFalse();
-                duplicate.GetTokenStatistics().GroupCount.Should().BeGreaterOrEqualTo((uint)privileges.Count());
-            }
+        using (var duplicate = token.DuplicateToken(rights: AccessTokenRights.MaximumAllowed))
+        {
+            duplicate.IsInvalid.Should().BeFalse();
+            duplicate.GetTokenStatistics().GroupCount.Should().BeGreaterOrEqualTo((uint)privileges.Count());
         }
     }
 
@@ -214,19 +196,13 @@ public class Basic
 
             using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
             {
-                using (var duplicate = Security.DuplicateToken(token, AccessTokenRights.Query | AccessTokenRights.Impersonate, ImpersonationLevel.Impersonation))
-                {
-                    using (ThreadHandle thread = Threads.GetCurrentThread())
-                    {
-                        Security.SetThreadToken(thread, duplicate);
+                using var duplicate = Security.DuplicateToken(token, AccessTokenRights.Query | AccessTokenRights.Impersonate, ImpersonationLevel.Impersonation);
+                using ThreadHandle thread = Threads.GetCurrentThread();
+                Security.SetThreadToken(thread, duplicate);
 
-                            // We didn't actually change from what the process token is
-                            using (var threadToken = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf: false))
-                        {
-                            threadToken.Should().BeNull();
-                        }
-                    }
-                }
+                // We didn't actually change from what the process token is
+                using var threadToken = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf: false);
+                threadToken.Should().BeNull();
             }
         }));
     }
@@ -234,20 +210,16 @@ public class Basic
     [Fact]
     public void CreateRestrictedToken_Process()
     {
-        using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
-        {
-            SidAndAttributes info = token.GetTokenUserSid();
-            info.Sid.IsValidSid().Should().BeTrue();
-            info.Attributes.Should().NotHaveFlag(SidAttributes.UseForDenyOnly);
-            using (var restricted = token.CreateRestrictedToken(info.Sid))
-            {
-                restricted.IsInvalid.Should().BeFalse();
-                info = restricted.GetTokenUserSid();
-                info.Attributes.Should().HaveFlag(SidAttributes.UseForDenyOnly);
-                info.Sid.IsValidSid().Should().BeTrue();
-                restricted.GetTokenStatistics().TokenType.Should().Be(TokenType.Primary);
-            }
-        }
+        using var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query);
+        SidAndAttributes info = token.GetTokenUserSid();
+        info.Sid.IsValidSid().Should().BeTrue();
+        info.Attributes.Should().NotHaveFlag(SidAttributes.UseForDenyOnly);
+        using var restricted = token.CreateRestrictedToken(info.Sid);
+        restricted.IsInvalid.Should().BeFalse();
+        info = restricted.GetTokenUserSid();
+        info.Attributes.Should().HaveFlag(SidAttributes.UseForDenyOnly);
+        info.Sid.IsValidSid().Should().BeTrue();
+        restricted.GetTokenStatistics().TokenType.Should().Be(TokenType.Primary);
     }
 
     [Fact]
@@ -255,14 +227,10 @@ public class Basic
     {
         ThreadRunner.Run((() =>
         {
-            using (var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query))
-            {
-                using (var restricted = Security.CreateRestrictedToken(token, Security.GetTokenUserSid(token)))
-                {
-                    Security.ImpersonateLoggedOnUser(restricted);
-                    Security.RevertToSelf();
-                }
-            }
+            using var token = Security.OpenProcessToken(AccessTokenRights.Duplicate | AccessTokenRights.Query);
+            using var restricted = Security.CreateRestrictedToken(token, Security.GetTokenUserSid(token));
+            Security.ImpersonateLoggedOnUser(restricted);
+            Security.RevertToSelf();
         }));
     }
 

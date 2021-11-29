@@ -48,7 +48,7 @@ public readonly struct Strikethrough
     /// <summary>
     ///  Locale of the range. Can be pertinent where the locale affects the style.
     /// </summary>
-    public unsafe readonly char* LocaleName;
+    public readonly unsafe char* LocaleName;
 
     /// <summary>
     ///  The measuring mode can be useful to the renderer to determine how

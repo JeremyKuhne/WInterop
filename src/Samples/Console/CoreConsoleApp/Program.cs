@@ -56,7 +56,7 @@ internal class Program
     {
         var writer = ConsoleWriter.Create(autoFlush: false);
 
-        Stopwatch stopwatch = new Stopwatch();
+        Stopwatch stopwatch = new();
         long prebytes = GC.GetAllocatedBytesForCurrentThread();
         stopwatch.Start();
         for (int i = 0; i < 10000; i++)

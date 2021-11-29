@@ -13,7 +13,7 @@ public static partial class ProcessAndThreadImports
 {
     // https://docs.microsoft.com/windows/win32/api/processenv/nf-processenv-getenvironmentvariablew
     [DllImport(Libraries.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-    public static unsafe extern uint GetEnvironmentVariableW(
+    public static extern unsafe uint GetEnvironmentVariableW(
         char* lpName,
         char* lpBuffer,
         uint nSize);
@@ -75,7 +75,7 @@ public static partial class ProcessAndThreadImports
 
     // https://docs.microsoft.com/windows/win32/api/winternl/nf-winternl-ntqueryinformationprocess
     [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-    public static unsafe extern NTStatus NtQueryInformationProcess(
+    public static extern unsafe NTStatus NtQueryInformationProcess(
         SafeProcessHandle ProcessHandle,
         ProcessInfoClass ProcessInformationClass,
         void* ProcessInformation,

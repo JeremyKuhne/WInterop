@@ -10,7 +10,7 @@ public static partial class Windows
 {
     public static MenuHandle CreateMenu()
     {
-        MenuHandle menu = new MenuHandle(WindowsImports.CreateMenu(), ownsHandle: true);
+        MenuHandle menu = new(WindowsImports.CreateMenu(), ownsHandle: true);
         if (menu.IsInvalid)
             Error.ThrowLastError();
         return menu;

@@ -7,7 +7,7 @@ namespace WInterop.Support;
 
 public static class Conversion
 {
-    private static readonly DateTime s_oleBaseDate = new DateTime(year: 1899, month: 12, day: 30);
+    private static readonly DateTime s_oleBaseDate = new(year: 1899, month: 12, day: 30);
     private const double MinOleDate = -657435.0;
     private const double MaxOleDate = 2958466.0;
 

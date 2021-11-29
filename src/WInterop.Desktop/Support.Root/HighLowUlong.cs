@@ -26,6 +26,6 @@ public readonly struct HighLowUlong
         Low = Conversion.LowWord(value);
     }
 
-    public static implicit operator HighLowUlong(ulong u) => new HighLowUlong(u);
+    public static implicit operator HighLowUlong(ulong u) => new(u);
     public static implicit operator ulong(HighLowUlong u) => Conversion.HighLowToLong(u.High, u.Low);
 }

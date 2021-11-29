@@ -27,7 +27,7 @@ public static class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724911.aspx
     [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern WindowsError RegQueryValueExW(
+    public static extern unsafe WindowsError RegQueryValueExW(
         RegistryKeyHandle hKey,
         string lpValueName,
         void* lpReserved,
@@ -41,7 +41,7 @@ public static class Imports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724865.aspx
     [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static unsafe extern WindowsError RegEnumValueW(
+    public static extern unsafe WindowsError RegEnumValueW(
         RegistryKeyHandle hKey,
         uint dwIndex,
         void* lpValueName,
@@ -70,7 +70,7 @@ public static class Imports
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556680.aspx
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff567060.aspx
     [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-    public static unsafe extern NTStatus NtQueryKey(
+    public static extern unsafe NTStatus NtQueryKey(
         RegistryKeyHandle KeyHandle,
         KeyInformationClass KeyInformationClass,
         void* KeyInformation,
@@ -80,7 +80,7 @@ public static class Imports
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff556514.aspx
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff566453.aspx
     [DllImport(Libraries.Ntdll, ExactSpelling = true)]
-    public static unsafe extern NTStatus NtEnumerateValueKey(
+    public static extern unsafe NTStatus NtEnumerateValueKey(
         RegistryKeyHandle KeyHandle,
         uint Index,
         KeyValueInformationClass KeyValueInformationClass,

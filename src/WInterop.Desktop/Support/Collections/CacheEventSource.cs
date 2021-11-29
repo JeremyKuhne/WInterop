@@ -23,5 +23,5 @@ public sealed class CacheEventSource : EventSource
     [Event(4)]
     public void ObjectDestroyed(string type, string reason) { WriteEvent(4, type, reason); }
 
-    public static CacheEventSource Log = new CacheEventSource();
+    public static CacheEventSource Log = new();
 }

@@ -69,7 +69,7 @@ public static class PlatformInvoke
 #endif
 
         Span<char> initialBuffer = stackalloc char[StackSize];
-        ValueBuffer<char> buffer = new ValueBuffer<char>(initialBuffer);
+        ValueBuffer<char> buffer = new(initialBuffer);
 
         static int GrowLength(int length)
         {

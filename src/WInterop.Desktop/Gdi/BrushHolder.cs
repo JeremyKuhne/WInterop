@@ -20,11 +20,11 @@ public sealed class BrushHolder : IDisposable
         }
     }
 
-    public static implicit operator BrushHolder(in BrushHandle handle) => new BrushHolder(handle);
+    public static implicit operator BrushHolder(in BrushHandle handle) => new(handle);
     public static implicit operator BrushHandle(BrushHolder holder)
-        => new BrushHandle(holder._brush, ownsHandle: holder._shouldDispose);
+        => new(holder._brush, ownsHandle: holder._shouldDispose);
     public static implicit operator GdiObjectHandle(in BrushHolder holder)
-        => new GdiObjectHandle(holder._brush, ownsHandle: false);
+        => new(holder._brush, ownsHandle: false);
 
     ~BrushHolder() => Dispose();
 

@@ -60,7 +60,7 @@ public static partial class Compression
         bool noExtension = path.Length == 1 || path[^2] == '.';
 
         return replacement == (char)0x00
-            ? path.Substring(0, path.Length - (noExtension ? 2 : 1))
+            ? path[..^(noExtension ? 2 : 1)]
             : Strings.ReplaceChar(path, path.Length - 1, replacement);
     }
 
@@ -167,7 +167,7 @@ public static partial class Compression
         {
             string expandedName = GetExpandedNameEx(file, filenameOnly: true);
             string targetDirectory =
-                Paths.TrimLastSegment(Path.Join(destinationDirectory, file.Substring(sourceDirectory.Length + 1)));
+                Paths.TrimLastSegment(Path.Join(destinationDirectory, file[(sourceDirectory.Length + 1)..]));
             Directory.CreateDirectory(targetDirectory);
 
             int result = LzCopyFile(

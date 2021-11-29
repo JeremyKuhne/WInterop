@@ -35,9 +35,9 @@ public struct ControlCode
     public ushort FunctionCode => (ushort)((Value & FunctionCodeMask) >> 2);
     public ControlCodeMethod TransferType => (ControlCodeMethod)(Value & TransferTypeMask);
 
-    public static implicit operator ControlCode(ControlCodes.MountManager code) => new ControlCode((uint)code);
-    public static implicit operator ControlCode(ControlCodes.MountDevice code) => new ControlCode((uint)code);
-    public static implicit operator ControlCode(ControlCodes.FileSystem code) => new ControlCode((uint)code);
+    public static implicit operator ControlCode(ControlCodes.MountManager code) => new((uint)code);
+    public static implicit operator ControlCode(ControlCodes.MountDevice code) => new((uint)code);
+    public static implicit operator ControlCode(ControlCodes.FileSystem code) => new((uint)code);
 
     public override string ToString() => $"{DeviceType}, Function Code 0x{FunctionCode:X4}, {RequiredAccess}, {TransferType}";
 }

@@ -10,6 +10,6 @@ public readonly struct WNDPROC
     public WNDPROC(IntPtr value) => Value = value;
     public bool IsNull => Value == IntPtr.Zero;
 
-    public static explicit operator WNDPROC(IntPtr value) => new WNDPROC(value);
+    public static explicit operator WNDPROC(IntPtr value) => new(value);
     public static explicit operator IntPtr(WNDPROC value) => value.Value;
 }

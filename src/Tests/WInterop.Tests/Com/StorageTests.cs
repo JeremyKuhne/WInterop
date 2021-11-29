@@ -45,7 +45,7 @@ public class StorageTests
         using var cleaner = new TestFileCleaner();
         string path = cleaner.GetTestPath();
         IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
-        Guid guid = new Guid();
+        Guid guid = new();
         storage.SetClass(ref guid);
         storage.Commit(StorageCommit.Default);
         Marshal.ReleaseComObject(storage);

@@ -15,7 +15,7 @@ public readonly struct RasterOperation
         Value = (uint)operation;
     }
 
-    public static implicit operator RasterOperation(Common operation) => new RasterOperation(operation);
+    public static implicit operator RasterOperation(Common operation) => new(operation);
 
     /// <summary>
     ///  These are the patterns that are given defines in Windows.

@@ -80,7 +80,7 @@ public ref struct ValueBuffer<T> where T : unmanaged
 
             Debug.Assert(((int)((ulong)p % (uint)alignTo)) == 0);
 
-            Span<T> newSpan = new Span<T>(p, (newBuffer.Length - offset) / sizeOfT);
+            Span<T> newSpan = new(p, (newBuffer.Length - offset) / sizeOfT);
 
             if (copy)
             {
@@ -103,7 +103,7 @@ public ref struct ValueBuffer<T> where T : unmanaged
 
     public string ToStringAndDispose(int length)
     {
-        string result = Span.Slice(0, (int)length).ToString();
+        string result = Span[..length].ToString();
         Dispose();
         return result;
     }
@@ -123,7 +123,7 @@ public ref struct ValueBuffer<T> where T : unmanaged
         where TBuffer : unmanaged
     {
         Span<TBuffer> initialBuffer = stackalloc TBuffer[stackBufferSize];
-        ValueBuffer<TBuffer> buffer = new ValueBuffer<TBuffer>(initialBuffer);
+        ValueBuffer<TBuffer> buffer = new(initialBuffer);
         action(ref buffer);
         buffer.Dispose();
     }
@@ -134,7 +134,7 @@ public ref struct ValueBuffer<T> where T : unmanaged
         where TBuffer : unmanaged
     {
         Span<TBuffer> initialBuffer = stackalloc TBuffer[stackBufferSize];
-        ValueBuffer<TBuffer> buffer = new ValueBuffer<TBuffer>(initialBuffer);
+        ValueBuffer<TBuffer> buffer = new(initialBuffer);
         TResult result = func(ref buffer);
         buffer.Dispose();
         return result;

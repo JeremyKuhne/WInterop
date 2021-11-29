@@ -12,7 +12,7 @@ namespace WInterop.DirectWrite;
 ///  [IDWritePixelSnapping]
 /// </summary>
 [Guid(InterfaceIds.IID_IDWritePixelSnapping)]
-public unsafe readonly struct PixelSnapping : PixelSnapping.Interface, IDisposable
+public readonly unsafe struct PixelSnapping : PixelSnapping.Interface, IDisposable
 {
     private readonly IDWritePixelSnapping* _handle;
 

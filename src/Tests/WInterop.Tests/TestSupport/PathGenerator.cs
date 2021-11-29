@@ -38,7 +38,7 @@ public static class PathGenerator
 
         if (lastDirectory > 0)
         {
-            Paths.Join(fullPath, directory.Substring(0, lastDirectory));
+            Paths.Join(fullPath, directory.AsSpan()[..lastDirectory]);
         }
 
         return fullPath.ToString();
