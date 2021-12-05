@@ -5,73 +5,75 @@ namespace WInterop.Com;
 
 /// <summary>
 ///  [VARFLAGS]
-///  <see cref="https://docs.microsoft.com/en-us/windows/win32/api/oaidl/ne-oaidl-varflags"/>
 /// </summary>
+/// <docs>
+///  <see cref="https://docs.microsoft.com/windows/win32/api/oaidl/ne-oaidl-varflags"/>
+/// </docs>
 [Flags]
 public enum VariableFlags : ushort
 {
     /// <summary>
     ///  [VARFLAG_FREADONLY]
     /// </summary>
-    ReadOnly = 0x1,
+    ReadOnly = VARFLAGS.VARFLAG_FREADONLY,
 
     /// <summary>
     ///  [VARFLAG_FSOURCE]
     /// </summary>
-    Source = 0x2,
+    Source = VARFLAGS.VARFLAG_FSOURCE,
 
     /// <summary>
     ///  [VARFLAG_FBINDABLE]
     /// </summary>
-    Bindable = 0x4,
+    Bindable = VARFLAGS.VARFLAG_FBINDABLE,
 
     /// <summary>
     ///  [VARFLAG_FREQUESTEDIT]
     /// </summary>
-    RequestEdit = 0x8,
+    RequestEdit = VARFLAGS.VARFLAG_FREQUESTEDIT,
 
     /// <summary>
     ///  [VARFLAG_FDISPLAYBIND]
     /// </summary>
-    DisplayBindable = 0x10,
+    DisplayBindable = VARFLAGS.VARFLAG_FDISPLAYBIND,
 
     /// <summary>
     ///  [VARFLAG_FDEFAULTBIND]
     /// </summary>
-    DefaultBinding = 0x20,
+    DefaultBinding = VARFLAGS.VARFLAG_FDEFAULTBIND,
 
     /// <summary>
     ///  [VARFLAG_FHIDDEN]
     /// </summary>
-    Hidden = 0x40,
+    Hidden = VARFLAGS.VARFLAG_FHIDDEN,
 
     /// <summary>
     ///  [VARFLAG_FRESTRICTED]
     /// </summary>
-    Restricted = 0x80,
+    Restricted = VARFLAGS.VARFLAG_FRESTRICTED,
 
     /// <summary>
     ///  [VARFLAG_FDEFAULTCOLLELEM]
     /// </summary>
-    DefaultCollElem = 0x100,
+    DefaultCollElem = VARFLAGS.VARFLAG_FDEFAULTCOLLELEM,
 
     /// <summary>
     ///  [VARFLAG_FUIDEFAULT]
     /// </summary>
-    UIDefault = 0x200,
+    UIDefault = VARFLAGS.VARFLAG_FUIDEFAULT,
 
     /// <summary>
     ///  [VARFLAG_FNONBROWSABLE]
     /// </summary>
-    NonBrowsable = 0x400,
+    NonBrowsable = VARFLAGS.VARFLAG_FNONBROWSABLE,
 
     /// <summary>
     ///  [VARFLAG_FREPLACEABLE]
     /// </summary>
-    Replaceable = 0x800,
+    Replaceable = VARFLAGS.VARFLAG_FREPLACEABLE,
 
     /// <summary>
     ///  [VARFLAG_FIMMEDIATEBIND]
     /// </summary>
-    ImmediateBind = 0x1000
+    ImmediateBind = VARFLAGS.VARFLAG_FIMMEDIATEBIND
 }

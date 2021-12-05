@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using WInterop.Errors;
 using WInterop.Windows;
+using IBindCtx = System.Runtime.InteropServices.ComTypes.IBindCtx;
 
 namespace WInterop.Shell;
 

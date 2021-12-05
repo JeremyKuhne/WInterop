@@ -14,200 +14,200 @@ public enum TokenInformation : uint
     ///  Gets the user account for the given token.
     ///  [TokenUser]
     /// </summary>
-    User = 1,
+    User = TOKEN_INFORMATION_CLASS.TokenUser,
 
     /// <summary>
     ///  The groups for the given token. [TokenGroups]
     /// </summary>
-    Groups,
+    Groups = TOKEN_INFORMATION_CLASS.TokenGroups,
 
     /// <summary>
     ///  Privileges for the given token. [TokenPrivileges]
     /// </summary>
-    Privileges,
+    Privileges = TOKEN_INFORMATION_CLASS.TokenPrivileges,
 
     /// <summary>
     ///  Default owner for newly created objects. [TokenOwner]
     /// </summary>
-    Owner,
+    Owner = TOKEN_INFORMATION_CLASS.TokenOwner,
 
     /// <summary>
     ///  Primary group for newly created objects. [TokenPrimaryGroup]
     /// </summary>
-    PrimaryGroup,
+    PrimaryGroup = TOKEN_INFORMATION_CLASS.TokenPrimaryGroup,
 
     /// <summary>
     ///  [TokenDefaultDacl]
     /// </summary>
-    DefaultDacl,
+    DefaultDacl = TOKEN_INFORMATION_CLASS.TokenDefaultDacl,
 
     /// <summary>
     ///  [TokenSource]
     /// </summary>
-    Source,
+    Source = TOKEN_INFORMATION_CLASS.TokenSource,
 
     /// <summary>
     ///  [TokenType]
     /// </summary>
-    Type,
+    Type = TOKEN_INFORMATION_CLASS.TokenType,
 
     /// <summary>
     ///  [TokenImpersonationLevel]
     /// </summary>
-    ImpersonationLevel,
+    ImpersonationLevel = TOKEN_INFORMATION_CLASS.TokenImpersonationLevel,
 
     /// <summary>
     ///  [TokenStatistics]
     /// </summary>
-    Statistics,
+    Statistics = TOKEN_INFORMATION_CLASS.TokenStatistics,
 
     /// <summary>
     ///  [TokenRestrictedSids]
     /// </summary>
-    RestrictedSids,
+    RestrictedSids = TOKEN_INFORMATION_CLASS.TokenRestrictedSids,
 
     /// <summary>
     ///  [TokenSessionId]
     /// </summary>
-    SessionId,
+    SessionId = TOKEN_INFORMATION_CLASS.TokenSessionId,
 
     /// <summary>
     ///  [TokenGroupsAndPrivileges]
     /// </summary>
-    GroupsAndPrivileges,
+    GroupsAndPrivileges = TOKEN_INFORMATION_CLASS.TokenGroupsAndPrivileges,
 
     /// <summary>
     ///  [TokenSessionReference]
     /// </summary>
-    SessionReference,
+    SessionReference = TOKEN_INFORMATION_CLASS.TokenSessionReference,
 
     /// <summary>
     ///  [TokenSandBoxInert]
     /// </summary>
-    SandBoxInert,
+    SandBoxInert = TOKEN_INFORMATION_CLASS.TokenSandBoxInert,
 
     /// <summary>
     ///  [TokenAuditPolicy]
     /// </summary>
-    AuditPolicy,
+    AuditPolicy = TOKEN_INFORMATION_CLASS.TokenAuditPolicy,
 
     /// <summary>
     ///  [TokenOrigin]
     /// </summary>
-    Origin,
+    Origin = TOKEN_INFORMATION_CLASS.TokenOrigin,
 
     /// <summary>
     ///  [TokenElevationType]
     /// </summary>
-    ElevationType,
+    ElevationType = TOKEN_INFORMATION_CLASS.TokenElevationType,
 
     /// <summary>
     ///  [TokenLinkedToken]
     /// </summary>
-    LinkedToken,
+    LinkedToken = TOKEN_INFORMATION_CLASS.TokenLinkedToken,
 
     /// <summary>
     ///  [TokenElevation]
     /// </summary>
-    Elevation,
+    Elevation = TOKEN_INFORMATION_CLASS.TokenElevation,
 
     /// <summary>
     ///  [TokenHasRestrictions]
     /// </summary>
-    HasRestrictions,
+    HasRestrictions = TOKEN_INFORMATION_CLASS.TokenHasRestrictions,
 
     /// <summary>
     ///  [TokenAccessInformation]
     /// </summary>
-    AccessInformation,
+    AccessInformation = TOKEN_INFORMATION_CLASS.TokenAccessInformation,
 
     /// <summary>
     ///  [TokenVirtualizationAllowed]
     /// </summary>
-    VirtualizationAllowed,
+    VirtualizationAllowed = TOKEN_INFORMATION_CLASS.TokenVirtualizationAllowed,
 
     /// <summary>
     ///  [TokenVirtualizationEnabled]
     /// </summary>
-    VirtualizationEnabled,
+    VirtualizationEnabled = TOKEN_INFORMATION_CLASS.TokenVirtualizationEnabled,
 
     /// <summary>
     ///  [TokenIntegrityLevel]
     /// </summary>
-    IntegrityLevel,
+    IntegrityLevel = TOKEN_INFORMATION_CLASS.TokenIntegrityLevel,
 
     /// <summary>
     ///  [TokenUIAccess]
     /// </summary>
-    UIAccess,
+    UIAccess = TOKEN_INFORMATION_CLASS.TokenUIAccess,
 
     /// <summary>
     ///  [TokenMandatoryPolicy]
     /// </summary>
-    MandatoryPolicy,
+    MandatoryPolicy = TOKEN_INFORMATION_CLASS.TokenMandatoryPolicy,
 
     /// <summary>
     ///  [TokenLogonSid]
     /// </summary>
-    LogonSid,
+    LogonSid = TOKEN_INFORMATION_CLASS.TokenLogonSid,
 
     /// <summary>
     ///  [TokenIsAppContainer]
     /// </summary>
-    IsAppContainer,
+    IsAppContainer = TOKEN_INFORMATION_CLASS.TokenIsAppContainer,
 
     /// <summary>
     ///  [TokenCapabilities]
     /// </summary>
-    Capabilities,
+    Capabilities = TOKEN_INFORMATION_CLASS.TokenCapabilities,
 
     /// <summary>
     ///  [TokenAppContainerSid]
     /// </summary>
-    AppContainerSid,
+    AppContainerSid = TOKEN_INFORMATION_CLASS.TokenAppContainerSid,
 
     /// <summary>
     ///  [TokenAppContainerNumber]
     /// </summary>
-    AppContainerNumber,
+    AppContainerNumber = TOKEN_INFORMATION_CLASS.TokenAppContainerNumber,
 
     /// <summary>
     ///  [TokenUserClaimAttributes]
     /// </summary>
-    UserClaimAttributes,
+    UserClaimAttributes = TOKEN_INFORMATION_CLASS.TokenUserClaimAttributes,
 
     /// <summary>
     ///  [TokenDeviceClaimAttributes]
     /// </summary>
-    DeviceClaimAttributes,
+    DeviceClaimAttributes = TOKEN_INFORMATION_CLASS.TokenDeviceClaimAttributes,
 
     /// <summary>
     ///  [TokenRestrictedUserClaimAttributes]
     /// </summary>
-    RestrictedUserClaimAttributes,
+    RestrictedUserClaimAttributes = TOKEN_INFORMATION_CLASS.TokenRestrictedUserClaimAttributes,
 
     /// <summary>
     ///  [TokenRestrictedDeviceClaimAttributes]
     /// </summary>
-    RestrictedDeviceClaimAttributes,
+    RestrictedDeviceClaimAttributes = TOKEN_INFORMATION_CLASS.TokenRestrictedDeviceClaimAttributes,
 
     /// <summary>
     ///  [TokenDeviceGroups]
     /// </summary>
-    DeviceGroups,
+    DeviceGroups = TOKEN_INFORMATION_CLASS.TokenDeviceGroups,
 
     /// <summary>
     ///  [TokenRestrictedDeviceGroups]
     /// </summary>
-    RestrictedDeviceGroups,
+    RestrictedDeviceGroups = TOKEN_INFORMATION_CLASS.TokenRestrictedDeviceGroups,
 
     /// <summary>
     ///  [TokenSecurityAttributes]
     /// </summary>
-    SecurityAttributes,
+    SecurityAttributes = TOKEN_INFORMATION_CLASS.TokenSecurityAttributes,
 
     /// <summary>
     ///  [TokenIsRestricted]
     /// </summary>
-    IsRestricted
+    IsRestricted = TOKEN_INFORMATION_CLASS.TokenIsRestricted
 }

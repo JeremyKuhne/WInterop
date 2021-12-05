@@ -24,7 +24,7 @@ public unsafe class SecurityDescriptor : LocalHandle
     public SecurityDescriptor(SafeHandle objectHandle, ObjectType objectType, SECURITY_DESCRIPTOR* descriptor, bool ownsHandle = true)
         : base((IntPtr)descriptor, ownsHandle)
     {
-        _control = descriptor->Control;
+        _control = (SECURITY_DESCRIPTOR_CONTROL)descriptor->Control;
         _objectHandle = objectHandle;
         _objectType = objectType;
     }
@@ -55,45 +55,52 @@ public unsafe class SecurityDescriptor : LocalHandle
         if ((systemAcl && !HasSystemAcl) || (!systemAcl && !HasDiscretionaryAcl))
             throw new InvalidOperationException("The specified ACL isn't present on the Security Descriptor");
 
-        EXPLICIT_ACCESS* entries;
-        SecurityImports.GetExplicitEntriesFromAclW(systemAcl ? SACL : DACL, out uint count, &entries).ThrowIfFailed();
+        EXPLICIT_ACCESS_W* entries;
+        uint count;
+
+        ((WindowsError)TerraFXWindows.GetExplicitEntriesFromAclW(systemAcl ? SACL : DACL, &count, &entries)).ThrowIfFailed();
         return new ExplicitAccessEnumerable(entries, count);
     }
 
     // Note that this descriptor will be stale after calling this
-    public void SetAclAccess(in SID sid, AccessMask access, AccessMode mode, Inheritance inheritance = default, bool systemAcl = false)
+    public void SetAclAccess(in SecurityIdentifier sid, AccessMask access, AccessMode mode, Inheritance inheritance = default, bool systemAcl = false)
     {
-        EXPLICIT_ACCESS ea;
-        fixed (SID* sidp = &sid)
+        fixed (void* sidp = &sid)
         {
-            ea = new EXPLICIT_ACCESS
+            EXPLICIT_ACCESS_W ea = new()
             {
-                grfAccessPermissions = access,
-                grfAccessMode = mode,
-                grfInheritance = inheritance,
-                Trustee = new TRUSTEE(sidp)
+                grfAccessPermissions = access.Value,
+                grfAccessMode = (ACCESS_MODE)mode,
+                grfInheritance = (uint)inheritance,
+                Trustee = new TRUSTEE_W()
+                {
+                    TrusteeForm = TRUSTEE_FORM.TRUSTEE_IS_SID,
+                    ptstrName = (ushort*)sidp
+                }
             };
-        }
 
-        ACL* newAcl;
-        SecurityImports.SetEntriesInAclW(1, &ea, systemAcl ? SACL : DACL, &newAcl).ThrowIfFailed();
+            ACL* newAcl;
+            ((WindowsError)TerraFXWindows.SetEntriesInAclW(1, &ea, systemAcl ? SACL : DACL, &newAcl)).ThrowIfFailed();
 
-        try
-        {
-            SecurityImports.SetSecurityInfo(
-                _objectHandle,
-                _objectType,
-                systemAcl ? SecurityInformation.Sacl : SecurityInformation.Dacl,
-                null,
-                null,
-                systemAcl ? null : newAcl,
-                systemAcl ? newAcl : null)
-                .ThrowIfFailed();
-        }
-        finally
-        {
-            if (newAcl != null)
-                Memory.Memory.LocalFree((IntPtr)newAcl);
+            try
+            {
+                ((WindowsError)TerraFXWindows.SetSecurityInfo(
+                    (HANDLE)(_objectHandle?.DangerousGetHandle() ?? IntPtr.Zero),
+                    (SE_OBJECT_TYPE)_objectType,
+                    (uint)(systemAcl ? SecurityInformation.Sacl : SecurityInformation.Dacl),
+                    null,
+                    null,
+                    systemAcl ? null : newAcl,
+                    systemAcl ? newAcl : null))
+                    .ThrowIfFailed();
+            }
+            finally
+            {
+                if (newAcl is not null)
+                {
+                    Memory.Memory.LocalFree((HLOCAL)newAcl);
+                }
+            }
         }
     }
 
@@ -101,11 +108,11 @@ public unsafe class SecurityDescriptor : LocalHandle
     {
         private readonly uint _count;
         private int _current;
-        private readonly EXPLICIT_ACCESS* _entries;
+        private readonly EXPLICIT_ACCESS_W* _entries;
 
         public ExplicitAccessEnumerable() : base() { }
 
-        public unsafe ExplicitAccessEnumerable(EXPLICIT_ACCESS* entries, uint count, bool ownsHandle = true)
+        public unsafe ExplicitAccessEnumerable(EXPLICIT_ACCESS_W* entries, uint count, bool ownsHandle = true)
             : base((IntPtr)entries, ownsHandle)
         {
             _count = count;

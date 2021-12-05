@@ -18,8 +18,8 @@ public class FileSecurityTests
         using var cleaner = new TestFileCleaner();
         using var handle = Storage.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew);
         handle.IsInvalid.Should().BeFalse();
-        SID sid = Storage.GetOwner(handle);
-        sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
+        SecurityIdentifier sid = Storage.GetOwner(handle);
+        sid.Authority.Should().Be(IdentifierAuthority.NT);
         string sidString = sid.ConvertSidToString();
         AccountSidInformation info = sid.LookupAccountSid();
         info.Usage.Should().Be(SidNameUse.User);
@@ -32,8 +32,8 @@ public class FileSecurityTests
         using var cleaner = new TestFileCleaner();
         using var handle = Storage.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew);
         handle.IsInvalid.Should().BeFalse();
-        SID sid = Storage.GetPrimaryGroup(handle);
-        sid.IdentifierAuthority.Should().Be(IdentifierAuthority.NT);
+        SecurityIdentifier sid = Storage.GetPrimaryGroup(handle);
+        sid.Authority.Should().Be(IdentifierAuthority.NT);
         string sidString = sid.ConvertSidToString();
         AccountSidInformation info = sid.LookupAccountSid();
         info.Usage.Should().Be(SidNameUse.User);
@@ -57,7 +57,7 @@ public class FileSecurityTests
         using var cleaner = new TestFileCleaner();
         using var handle = Storage.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew, DesiredAccess.GenericReadWrite);
         handle.IsInvalid.Should().BeFalse();
-        SID usersGroup = Security.CreateWellKnownSid(WellKnownSID.Users);
+        SecurityIdentifier usersGroup = Security.CreateWellKnownSid(WellKnownSID.Users);
         Action action = () => handle.ChangeAccess(usersGroup, FileAccessRights.GenericRead, AccessMode.Grant);
         action.Should().Throw<UnauthorizedAccessException>();
     }
@@ -69,7 +69,7 @@ public class FileSecurityTests
         using var handle = Storage.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew,
             DesiredAccess.GenericReadWrite | DesiredAccess.WriteDac);
         handle.IsInvalid.Should().BeFalse();
-        SID usersGroup = Security.CreateWellKnownSid(WellKnownSID.Users);
+        SecurityIdentifier usersGroup = Security.CreateWellKnownSid(WellKnownSID.Users);
         handle.ChangeAccess(usersGroup, FileAccessRights.GenericRead, AccessMode.Grant);
 
         using SecurityDescriptor descriptor = Storage.GetAccessControlList(handle);
@@ -96,7 +96,7 @@ public class FileSecurityTests
             DesiredAccess.GenericReadWrite | DesiredAccess.WriteDac))
         {
             handle.IsInvalid.Should().BeFalse();
-            SID anonymous = Security.CreateWellKnownSid(WellKnownSID.Anonymous);
+            SecurityIdentifier anonymous = Security.CreateWellKnownSid(WellKnownSID.Anonymous);
             handle.ChangeAccess(anonymous, FileAccessRights.GenericRead, AccessMode.Grant);
         }
 
@@ -146,7 +146,7 @@ public class FileSecurityTests
             DesiredAccess.GenericReadWrite | DesiredAccess.WriteDac))
             {
                 handle.IsInvalid.Should().BeFalse();
-                SID usersGroup = Security.CreateWellKnownSid(WellKnownSID.Users);
+                SecurityIdentifier usersGroup = Security.CreateWellKnownSid(WellKnownSID.Users);
                 handle.ChangeAccess(usersGroup, FileAccessRights.GenericRead, AccessMode.Grant);
             }
 

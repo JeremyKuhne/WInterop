@@ -35,10 +35,10 @@ public class ValueBufferTests
     public void CheckSidAligment()
     {
         // Max alignment is 16 bytes (128 bit)
-        CheckAlignment<SID>(16);
+        CheckAlignment<SecurityIdentifier>(16);
     }
 
-    private unsafe void CheckAlignment<T>(int alignment) where T : unmanaged
+    private static unsafe void CheckAlignment<T>(int alignment) where T : unmanaged
     {
         ValueBuffer<T> t = new();
         try

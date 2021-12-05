@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using TerraFX.Interop.Windows;
+using WInterop.Com;
 using WInterop.Com.Native;
 
 namespace WInterop.DirectWrite;
@@ -66,17 +68,20 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
 
     private static unsafe class CCW
     {
-        private static readonly IDWriteTextRenderer.Vtbl* s_vtable = AllocateVTable();
+        private static readonly IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>* s_vtable = AllocateVTable();
 
-        private static IDWriteTextRenderer.Vtbl* AllocateVTable()
+        private static IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>* AllocateVTable()
         {
             // Allocate and create a singular VTable for this type projection.
-            var vtable = (IDWriteTextRenderer.Vtbl*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(CCW), sizeof(IDWriteTextRenderer.Vtbl));
+            var vtable = (IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>*)RuntimeHelpers.AllocateTypeAssociatedMemory(
+                typeof(CCW),
+                sizeof(IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>));
 
             // IUnknown
             vtable->QueryInterface = &QueryInterface;
             vtable->AddRef = &AddRef;
             vtable->Release = &Release;
+
             vtable->GetPixelsPerDip = &GetPixelsPerDip;
             vtable->GetCurrentTransform = &GetCurrentTransform;
             vtable->IsPixelSnappingDisabled = &IsPixelSnappingDisabled;
@@ -88,12 +93,15 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
         }
 
         public static IDWriteTextRenderer* CreateInstance(ManagedTextRenderer renderer)
-            => (IDWriteTextRenderer*)Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.Allocate(renderer, s_vtable);
+            => (IDWriteTextRenderer*)Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.Allocate(renderer, s_vtable);
+
+        private static ManagedTextRenderer? Renderer(void* @this)
+            => Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.GetObject(@this);
 
         [UnmanagedCallersOnly]
         private static int QueryInterface(void* @this, Guid* iid, void* ppObject)
         {
-            if (*iid == Com.Native.IUnknown.IID_IUnknown
+            if (*iid == Unknown.IID_IUnknown
                 || *iid == typeof(PixelSnapping).GUID
                 || *iid == typeof(TextRenderer).GUID)
             {
@@ -105,29 +113,27 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
                 return (int)Errors.HResult.E_NOINTERFACE;
             }
 
-            Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.AddRef(@this);
+            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.AddRef(@this);
             return (int)Errors.HResult.S_OK;
         }
 
         [UnmanagedCallersOnly]
-        private static uint AddRef(void* @this) => Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.AddRef(@this);
+        private static uint AddRef(void* @this) => Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.AddRef(@this);
 
         [UnmanagedCallersOnly]
-        private static uint Release(void* @this) => Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.Release(@this);
+        private static uint Release(void* @this) => Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.Release(@this);
 
         [UnmanagedCallersOnly]
         private static int IsPixelSnappingDisabled(void* @this, void* clientDrawingContext, TerraFX.Interop.Windows.BOOL* isDisabled)
         {
-            *isDisabled = Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)
-                ?.IsPixelSnappingDisabled((IntPtr)clientDrawingContext) ?? false;
+            *isDisabled = Renderer(@this)?.IsPixelSnappingDisabled((IntPtr)clientDrawingContext) ?? false;
             return (int)Errors.HResult.S_OK;
         }
 
         [UnmanagedCallersOnly]
         private static int GetCurrentTransform(void* @this, void* clientDrawingContext, DWRITE_MATRIX* transform)
         {
-            Matrix3x2 matrix = Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)
-                ?.GetCurrentTransform((IntPtr)clientDrawingContext) ?? Matrix3x2.Identity;
+            Matrix3x2 matrix = Renderer(@this)?.GetCurrentTransform((IntPtr)clientDrawingContext) ?? Matrix3x2.Identity;
             *transform = *(DWRITE_MATRIX*)&matrix;
             return (int)Errors.HResult.S_OK;
         }
@@ -135,8 +141,7 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
         [UnmanagedCallersOnly]
         private static unsafe int GetPixelsPerDip(void* @this, void* clientDrawingContext, float* pixelsPerDip)
         {
-            *pixelsPerDip = Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)
-                ?.GetPixelsPerDip((IntPtr)clientDrawingContext) ?? 1;
+            *pixelsPerDip = Renderer(@this)?.GetPixelsPerDip((IntPtr)clientDrawingContext) ?? 1;
             return (int)Errors.HResult.S_OK;
         }
 
@@ -149,9 +154,9 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
             DWRITE_MEASURING_MODE measuringMode,
             DWRITE_GLYPH_RUN* glyphRun,
             DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,
-            TerraFX.Interop.Windows.IUnknown* clientDrawingEffect)
+            IUnknown* clientDrawingEffect)
         {
-            Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)?.DrawGlyphRun(
+            Renderer(@this)?.DrawGlyphRun(
                 (IntPtr)clientDrawingContext,
                 new(baselineOriginX, baselineOriginY),
                 (MeasuringMode)measuringMode,
@@ -169,9 +174,9 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
             float baselineOriginX,
             float baselineOriginY,
             DWRITE_UNDERLINE* underline,
-            TerraFX.Interop.Windows.IUnknown* clientDrawingEffect)
+            IUnknown* clientDrawingEffect)
         {
-            Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)?.DrawUnderline(
+            Renderer(@this)?.DrawUnderline(
                 (IntPtr)clientDrawingContext,
                 new(baselineOriginX, baselineOriginY),
                 *(Underline*)underline,
@@ -187,9 +192,9 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
             float baselineOriginX,
             float baselineOriginY,
             DWRITE_STRIKETHROUGH* strikethrough,
-            TerraFX.Interop.Windows.IUnknown* clientDrawingEffect)
+            IUnknown* clientDrawingEffect)
         {
-            Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)?.DrawStrikethrough(
+            Renderer(@this)?.DrawStrikethrough(
                 (IntPtr)clientDrawingContext,
                 new(baselineOriginX, baselineOriginY),
                 *(Strikethrough*)strikethrough,
@@ -205,11 +210,11 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
             float originX,
             float originY,
             IDWriteInlineObject* inlineObject,
-            TerraFX.Interop.Windows.BOOL isSideways,
-            TerraFX.Interop.Windows.BOOL isRightToLeft,
-            TerraFX.Interop.Windows.IUnknown* clientDrawingEffect)
+            BOOL isSideways,
+            BOOL isRightToLeft,
+            IUnknown* clientDrawingEffect)
         {
-            Lifetime<IDWriteTextRenderer.Vtbl, ManagedTextRenderer>.GetObject(@this)?.DrawInlineObject(
+            Renderer(@this)?.DrawInlineObject(
                 (IntPtr)clientDrawingContext,
                 new(originX, originY),
                 new(inlineObject),

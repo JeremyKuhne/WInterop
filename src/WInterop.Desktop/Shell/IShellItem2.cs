@@ -4,6 +4,8 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using WInterop.Com;
+using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
+using IBindCtx = System.Runtime.InteropServices.ComTypes.IBindCtx;
 
 namespace WInterop.Shell;
 

@@ -29,22 +29,11 @@ public struct OwnedMemoryEnumerable<T> : IEnumerable<T>, IEnumerator<T>
         _index = -1;
     }
 
-    public T Current
-    {
-        get
-        {
-            if (_index < 0)
-                throw new InvalidOperationException();
-            return _memory.Span[_index];
-        }
-    }
+    public T Current => _index < 0 ? throw new InvalidOperationException() : _memory.Span[_index];
 
     object? IEnumerator.Current => Current;
 
-    public IEnumerator<T> GetEnumerator()
-    {
-        return this;
-    }
+    public IEnumerator<T> GetEnumerator() => this;
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -63,13 +52,7 @@ public struct OwnedMemoryEnumerable<T> : IEnumerable<T>, IEnumerator<T>
         return true;
     }
 
-    public void Reset()
-    {
-        _index = -1;
-    }
+    public void Reset() => _index = -1;
 
-    public void Dispose()
-    {
-        _owner.Dispose();
-    }
+    public void Dispose() => _owner.Dispose();
 }

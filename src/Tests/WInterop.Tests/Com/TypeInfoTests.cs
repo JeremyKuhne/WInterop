@@ -3,8 +3,6 @@
 
 using FluentAssertions;
 using WInterop.Com;
-using WInterop.Com.Native;
-using WInterop.Errors;
 using WInterop.Globalization;
 using Xunit;
 
@@ -15,46 +13,42 @@ public class TypeInfoTests
     [Fact]
     public void GetTypeInfoForIUnknown()
     {
-        TypeLibTests.LoadStdOle2(out ITypeLib typeLib);
-        ITypeInfo typeInfo = typeLib.GetTypeInfoByName("IUnknown");
-        typeInfo.Should().NotBeNull();
+        using var library = TypeLibTests.LoadStdOle2();
+        using var typeInfo = library.FindName("IUnknown", 1, out _)[0].Info;
+        typeInfo.IsNull.Should().BeFalse();
     }
 
     [Fact]
     public unsafe void GetTypeAttributesForIUnknown()
     {
-        TypeLibTests.LoadStdOle2(out ITypeLib typeLib);
-        ITypeInfo typeInfo = typeLib.GetTypeInfoByName("IUnknown");
+        using var library = TypeLibTests.LoadStdOle2();
+        using var typeInfo = library.FindName("IUnknown", 1, out _)[0].Info;
 
-        HResult result = typeInfo.GetTypeAttr(out TYPEATTR* attributes);
-        result.Should().Be(HResult.S_OK);
-        Assert.True(attributes != null);
+        using var attributes = typeInfo.GetTypeAttributes();
 
-        attributes->cFuncs.Should().Be(3);
-        attributes->cImplTypes.Should().Be(0);
-        attributes->cVars.Should().Be(0);
-        attributes->cbAlignment.Should().Be(8);
-        attributes->cbSizeInstance.Should().Be(8);
-        attributes->cbSizeVft.Should().Be(24);
-        attributes->wMajorVerNum.Should().Be(0);
-        attributes->wMinorVerNum.Should().Be(0);
-        attributes->typekind.Should().Be(TypeKind.Interface);
-        attributes->wTypeFlags.Should().Be(TypeFlags.Hidden);
-        attributes->idldescType.Flags.Should().Be(IdlFlag.None);
-        attributes->guid.Should().Be(new Guid("{00000000-0000-0000-c000-000000000046}"));
-        attributes->lcid.Should().Be((LocaleId)0);
-        attributes->memidConstructor.Should().Be(MemberId.Nil);
-        attributes->memidDestructor.Should().Be(MemberId.Nil);
-        attributes->tdescAlias.vt.Should().Be(VariantType.Empty);
-
-        typeInfo.ReleaseTypeAttr(attributes);
+        attributes.FunctionCount.Should().Be(3);
+        attributes.InterfaceCount.Should().Be(0);
+        attributes.VariableCount.Should().Be(0);
+        attributes.Alignment.Should().Be(8);
+        attributes.InstanceSize.Should().Be(8);
+        attributes.VTableSize.Should().Be(24);
+        attributes.MajorVersion.Should().Be(0);
+        attributes.MinorVersion.Should().Be(0);
+        attributes.TypeKind.Should().Be(TypeKind.Interface);
+        attributes.TypeFlags.Should().Be(TypeFlags.Hidden);
+        attributes.IdlFlags.Should().Be(IdlFlag.None);
+        attributes.Guid.Should().Be(new Guid("{00000000-0000-0000-c000-000000000046}"));
+        attributes.Locale.Should().Be(LocaleId.Default);
+        attributes.Constructor.Should().Be(MemberId.Nil);
+        attributes.Destructor.Should().Be(MemberId.Nil);
+        attributes.Alias.Type.Should().Be(VariantType.Empty);
     }
 
     [Fact]
     public unsafe void GetFunctionDescriptionsForIUnknown()
     {
-        TypeLibTests.LoadStdOle2(out ITypeLib typeLib);
-        ITypeInfo typeInfo = typeLib.GetTypeInfoByName("IUnknown");
+        using var library = TypeLibTests.LoadStdOle2();
+        using var typeInfo = library.FindName("IUnknown", 1, out _)[0].Info;
 
         // From OleView:
         //
@@ -63,49 +57,50 @@ public class TypeInfoTests
         //                [in] GUID* riid, 
         //                [out] void** ppvObj);
 
-        HResult result = typeInfo.GetFuncDesc(0, out FUNCDESC* description);
-        result.Should().Be(HResult.S_OK);
+        var description = typeInfo.GetFunctionDescription(0);
 
-        description->cParams.Should().Be(2);
-        description->cParamsOpt.Should().Be(0);
-        description->cScodes.Should().Be(0);
-        description->callconv.Should().Be(CallConvention.StdCall);
-        description->funckind.Should().Be(FunctionKind.PureVirtual);
-        description->invkind.Should().Be(InvokeKind.Function);
-        description->wFuncFlags.Should().Be(FunctionFlags.Restricted);
+        description.ParameterCount.Should().Be(2);
+        description.OptionalParameterCount.Should().Be(0);
+        description.ReturnCodeCount.Should().Be(0);
+        description.CallConvention.Should().Be(CallConvention.StdCall);
+        description.FunctionKind.Should().Be(FunctionKind.PureVirtual);
+        description.InvokeKind.Should().Be(InvokeKind.Function);
+        description.Flags.Should().Be(FunctionFlags.Restricted);
 
         // Return type
-        description->elemdescFunc.tdesc.vt.Should().Be(VariantType.HResult);
+        description.ReturnType.Should().Be(VariantType.HResult);
+
+        var parameters = description.Parameters;
+        parameters.Length.Should().Be(2);
 
         // First arg GUID*
-        ELEMDESC* element = description->lprgelemdescParam;
+        var first = parameters[0];
+        first.ParameterType.Type.Should().Be(VariantType.Pointer);
+        first.Flags.Should().Be(ParameterFlags.In);
 
-        element->tdesc.vt.Should().Be(VariantType.Pointer);
-        element->Union.paramdesc.wParamFlags.Should().Be(ParameterFlags.In);
-        element->tdesc.Union.lptdesc->vt.Should().Be(VariantType.UserDefined);
-        RefTypeHandle handle = element->tdesc.Union.lptdesc->Union.hreftype;
+        var pointerType = first.ParameterType.PointerType;
+        pointerType.Type.Should().Be(VariantType.UserDefined);
 
-        result = typeInfo.GetRefTypeInfo(handle, out ITypeInfo userDefined);
-        result.Should().Be(HResult.S_OK);
-        userDefined.GetMemberName(MemberId.Nil).Should().Be("GUID");
+        using var userDefined = typeInfo.GetRefTypeInfo(pointerType.TypeHandle);
+        userDefined.GetDocumentation(MemberId.Nil, out string name);
+        name.Should().Be("GUID");
 
         // Second arg void**
-        element++;
-        element->tdesc.vt.Should().Be(VariantType.Pointer);
-        element->Union.paramdesc.wParamFlags.Should().Be(ParameterFlags.Out);
-        element->tdesc.Union.lptdesc->vt.Should().Be(VariantType.Pointer);
-        element->tdesc.Union.lptdesc->Union.lptdesc->vt.Should().Be(VariantType.Void);
-
-        typeInfo.ReleaseFuncDesc(description);
+        var second = parameters[1];
+        second.ParameterType.Type.Should().Be(VariantType.Pointer);
+        second.Flags.Should().Be(ParameterFlags.Out);
+        pointerType = second.ParameterType.PointerType;
+        pointerType.Type.Should().Be(VariantType.Pointer);
+        pointerType.PointerType.Type.Should().Be(VariantType.Void);
     }
 
     [Fact]
     public unsafe void GetFunctionNamesForIUnknown()
     {
-        TypeLibTests.LoadStdOle2(out ITypeLib typeLib);
-        ITypeInfo typeInfo = typeLib.GetTypeInfoByName("IUnknown");
+        using var library = TypeLibTests.LoadStdOle2();
+        using var typeInfo = library.FindName("IUnknown", out _).Info;
 
-        ICollection<string> names = typeInfo.GetFunctionNames(0);
+        var names = typeInfo.GetFunctionNames(0);
         names.Should().BeEquivalentTo("QueryInterface", "riid", "ppvObj");
 
         names = typeInfo.GetFunctionNames(1);
@@ -118,92 +113,75 @@ public class TypeInfoTests
     [Fact]
     public unsafe void GetTypeAttributesForGUID()
     {
-        TypeLibTests.LoadStdOle2(out ITypeLib typeLib);
-        ITypeInfo typeInfo = typeLib.GetTypeInfoByName("GUID");
+        using var library = TypeLibTests.LoadStdOle2();
+        using var typeInfo = library.FindName("GUID").Info;
 
-        HResult result = typeInfo.GetTypeAttr(out TYPEATTR* attributes);
-        result.Should().Be(HResult.S_OK);
-        Assert.True(attributes != null);
+        using var attributes = typeInfo.GetTypeAttributes();
 
-        attributes->cFuncs.Should().Be(0);
-        attributes->cImplTypes.Should().Be(0);
-        attributes->cVars.Should().Be(4);
-        attributes->cbAlignment.Should().Be(4);
-        attributes->cbSizeInstance.Should().Be(16);
-        attributes->cbSizeVft.Should().Be(0);
-        attributes->wMajorVerNum.Should().Be(0);
-        attributes->wMinorVerNum.Should().Be(0);
-        attributes->typekind.Should().Be(TypeKind.Record);
-        attributes->wTypeFlags.Should().Be(TypeFlags.Hidden);
-        attributes->idldescType.Flags.Should().Be(IdlFlag.None);
-        attributes->guid.Should().Be(Guid.Empty);
-        attributes->lcid.Should().Be((LocaleId)0);
-        attributes->memidConstructor.Should().Be(MemberId.Nil);
-        attributes->memidDestructor.Should().Be(MemberId.Nil);
-        attributes->tdescAlias.vt.Should().Be(VariantType.Empty);
-
-        typeInfo.ReleaseTypeAttr(attributes);
+        attributes.FunctionCount.Should().Be(0);
+        attributes.InterfaceCount.Should().Be(0);
+        attributes.VariableCount.Should().Be(4);
+        attributes.Alignment.Should().Be(4);
+        attributes.InstanceSize.Should().Be(16);
+        attributes.VTableSize.Should().Be(0);
+        attributes.MajorVersion.Should().Be(0);
+        attributes.MajorVersion.Should().Be(0);
+        attributes.TypeKind.Should().Be(TypeKind.Record);
+        attributes.TypeFlags.Should().Be(TypeFlags.Hidden);
+        attributes.IdlFlags.Should().Be(IdlFlag.None);
+        attributes.Guid.Should().Be(Guid.Empty);
+        attributes.Locale.Should().Be((LocaleId)0);
+        attributes.Constructor.Should().Be(MemberId.Nil);
+        attributes.Destructor.Should().Be(MemberId.Nil);
+        attributes.Alias.Type.Should().Be(VariantType.Empty);
     }
 
     [Fact]
     public unsafe void GetVariableDescriptionsForGUID()
     {
-        TypeLibTests.LoadStdOle2(out ITypeLib typeLib);
-        ITypeInfo typeInfo = typeLib.GetTypeInfoByName("GUID");
+        using var library = TypeLibTests.LoadStdOle2();
+        using var typeInfo = library.FindName("GUID").Info;
 
-        HResult result = typeInfo.GetVarDesc(0, out VARDESC* description);
-        result.Should().Be(HResult.S_OK);
+        using var first = typeInfo.GetVariableDescription(0);
 
         // uint
-        description->varkind.Should().Be(VariableKind.PerInstance);
-        description->wVarFlags.Should().Be((VariableFlags)0);
-        description->elemdescVar.tdesc.vt.Should().Be(VariantType.UInt32);
+        first.Kind.Should().Be(VariableKind.PerInstance);
+        first.Flags.Should().Be((VariableFlags)0);
+        first.VariableType.Type.Should().Be(VariantType.UInt32);
+        typeInfo.GetDocumentation(first.MemberId, out string name);
+        name.Should().Be("Data1");
 
-        typeInfo.ReleaseVarDesc(description);
-
-        result = typeInfo.GetVarDesc(1, out description);
-        result.Should().Be(HResult.S_OK);
-
-        // ushort
-        description->varkind.Should().Be(VariableKind.PerInstance);
-        description->wVarFlags.Should().Be((VariableFlags)0);
-        description->elemdescVar.tdesc.vt.Should().Be(VariantType.UInt16);
-
-        typeInfo.ReleaseVarDesc(description);
-
-        result = typeInfo.GetVarDesc(2, out description);
-        result.Should().Be(HResult.S_OK);
+        using var second = typeInfo.GetVariableDescription(1);
 
         // ushort
-        description->varkind.Should().Be(VariableKind.PerInstance);
-        description->wVarFlags.Should().Be((VariableFlags)0);
-        description->elemdescVar.tdesc.vt.Should().Be(VariantType.UInt16);
+        second.Kind.Should().Be(VariableKind.PerInstance);
+        second.Flags.Should().Be((VariableFlags)0);
+        second.VariableType.Type.Should().Be(VariantType.UInt16);
+        typeInfo.GetDocumentation(second.MemberId, out name);
+        name.Should().Be("Data2");
 
-        typeInfo.ReleaseVarDesc(description);
+        using var third = typeInfo.GetVariableDescription(2);
 
-        result = typeInfo.GetVarDesc(3, out description);
-        result.Should().Be(HResult.S_OK);
+        // ushort
+        third.Kind.Should().Be(VariableKind.PerInstance);
+        third.Flags.Should().Be((VariableFlags)0);
+        third.VariableType.Type.Should().Be(VariantType.UInt16);
+        typeInfo.GetDocumentation(third.MemberId, out name);
+        name.Should().Be("Data3");
+
+        using var fourth = typeInfo.GetVariableDescription(3);
 
         // Fixed 8 byte array
-        description->varkind.Should().Be(VariableKind.PerInstance);
-        description->wVarFlags.Should().Be((VariableFlags)0);
-        description->elemdescVar.tdesc.vt.Should().Be(VariantType.CArray);
-        description->elemdescVar.tdesc.Union.llpadesc->cDims.Should().Be(1);
-        description->elemdescVar.tdesc.Union.llpadesc->rgbounds[0].Count.Should().Be(8);
-        description->elemdescVar.tdesc.Union.llpadesc->tdescElem.vt.Should().Be(VariantType.UnsignedByte);
+        fourth.Kind.Should().Be(VariableKind.PerInstance);
+        fourth.Flags.Should().Be((VariableFlags)0);
+        fourth.VariableType.Type.Should().Be(VariantType.CArray);
+        typeInfo.GetDocumentation(fourth.MemberId, out name);
+        name.Should().Be("Data4");
 
-        typeInfo.ReleaseVarDesc(description);
-    }
-
-    [Fact]
-    public unsafe void GetVariableNamesForGUID()
-    {
-        TypeLibTests.LoadStdOle2(out ITypeLib typeLib);
-        ITypeInfo typeInfo = typeLib.GetTypeInfoByName("GUID");
-
-        typeInfo.GetVariableName(0).Should().Be("Data1");
-        typeInfo.GetVariableName(1).Should().Be("Data2");
-        typeInfo.GetVariableName(2).Should().Be("Data3");
-        typeInfo.GetVariableName(3).Should().Be("Data4");
+        fourth.VariableType.ArrayDescription.Dimensions.Should().Be(1);
+        var bounds = fourth.VariableType.ArrayDescription.Bounds;
+        bounds.Length.Should().Be(1);
+        bounds[0].Count.Should().Be(8);
+        fourth.VariableType.ArrayDescription.ElementType.Type.Should().Be(VariantType.UnsignedByte);
     }
 }

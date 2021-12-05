@@ -30,15 +30,6 @@ public readonly struct IntBoolean
     public override string ToString() => IsTrue.ToString();
 }
 
-/// <remarks>
-///  NEVER compare BOOL to TRUE. Always use result != BOOL.FALSE or result == BOOL.FALSE.
-/// </remarks>
-public enum BOOL : int
-{
-    FALSE = 0,
-    TRUE = 1,
-}
-
 public static class BoolExtensions
 {
     public static bool IsTrue(this BOOL b) => b != BOOL.FALSE;

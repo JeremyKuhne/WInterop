@@ -13,19 +13,13 @@ namespace WInterop.Support.Buffers;
 /// </remarks>
 public static class OwnedMemoryPool
 {
-    public static IMemoryOwner<T> Rent<T>(int minimumLength)
-    {
-        return new ArrayPoolOwner<T>(minimumLength);
-    }
+    public static IMemoryOwner<T> Rent<T>(int minimumLength) => new ArrayPoolOwner<T>(minimumLength);
 
     private struct ArrayPoolOwner<T> : IMemoryOwner<T>
     {
         private T[]? _array;
 
-        public ArrayPoolOwner(int minimumLength)
-        {
-            _array = ArrayPool<T>.Shared.Rent(minimumLength);
-        }
+        public ArrayPoolOwner(int minimumLength) => _array = ArrayPool<T>.Shared.Rent(minimumLength);
 
         public Memory<T> Memory
         {
@@ -41,7 +35,7 @@ public static class OwnedMemoryPool
         public void Dispose()
         {
             T[]? array = _array;
-            if (array != null)
+            if (array is not null)
             {
                 _array = null;
                 ArrayPool<T>.Shared.Return(array);

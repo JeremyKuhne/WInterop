@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace WInterop.Support;
@@ -96,4 +97,34 @@ public static class Strings
         int terminator = span.IndexOf('\0');
         return span[..(includeNull ? terminator + 1 : terminator)];
     }
+
+    /// <summary>
+    ///  Converts a BSTR to string.
+    /// </summary>
+    [return: NotNullIfNotNull("bstr")]
+    public static unsafe string? FromBSTR(ushort* bstr)
+        => bstr is null ? null! : new((char*)bstr, 0, (int)BSTRLength(bstr) / 2);
+
+    /// <summary>
+    ///  Converts a BSTR to string and frees the BSTR.
+    /// </summary>
+    [return: NotNullIfNotNull("bstr")]
+    public static unsafe string? FromBSTRAndFree(ushort* bstr)
+    {
+        string? result = FromBSTR(bstr);
+        if (bstr is not null)
+        {
+            TerraFXWindows.SysFreeString(bstr);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///  Get the length of a BSTR in bytes.
+    /// </summary>
+    public static unsafe uint BSTRLength(ushort* bstr)
+        // BSTRs have the length before the string pointer
+        // https://docs.microsoft.com/previous-versions/windows/desktop/automat/bstr
+        => bstr is null ? 0 : *(((uint*)bstr) - 1);
 }

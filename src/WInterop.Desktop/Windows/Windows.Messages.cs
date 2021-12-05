@@ -23,11 +23,11 @@ public static partial class Windows
         LParam lParam = default) where T : IHandle<WindowHandle>
         => WindowsImports.SendMessageW(window.Handle, message, wParam, lParam);
 
-    public static FontHandle GetFont<T>(this T window, bool getSystemFontHandle = true)
+    public static unsafe FontHandle GetFont<T>(this T window, bool getSystemFontHandle = true)
         where T : IHandle<WindowHandle>
     {
-        var font = new Gdi.Native.HFONT(window.SendMessage(MessageType.GetFont));
-        if (font.IsNull && getSystemFontHandle)
+        HFONT font = new(window.SendMessage(MessageType.GetFont));
+        if (font == HFONT.NULL && getSystemFontHandle)
         {
             // Using the system font
             font = Gdi.Gdi.GetStockFont(StockFont.System);
@@ -36,12 +36,12 @@ public static partial class Windows
         return new FontHandle(font, ownsHandle: false);
     }
 
-    public static void SetFont<T>(this T window, FontHandle font)
+    public static unsafe void SetFont<T>(this T window, FontHandle font)
         where T : IHandle<WindowHandle>
     {
         window.SendMessage(
             MessageType.SetFont,
-            (WParam)font.Handle.Value,
+            (WParam)font.HFONT.Value,
             (0, IntBoolean.True));          // True to force a redraw
     }
 }

@@ -16,7 +16,7 @@ public readonly struct MenuHandle : IDisposable
         _ownsHandle = ownsHandle;
     }
 
-    public bool IsInvalid => HMENU.IsInvalid;
+    public bool IsInvalid => HMENU == HMENU.INVALID_VALUE;
 
     public void Dispose()
     {
@@ -25,9 +25,9 @@ public readonly struct MenuHandle : IDisposable
     }
 
     public static implicit operator HMENU(MenuHandle handle) => handle.HMENU;
-    public static explicit operator MenuHandle(int id) => new(new HMENU((IntPtr)id), ownsHandle: true);
+    public static unsafe explicit operator MenuHandle(int id) => new(new HMENU((void*)id), ownsHandle: true);
 
-    public override bool Equals(object? obj) => obj is MenuHandle other ? other.HMENU == HMENU : false;
+    public override bool Equals(object? obj) => obj is MenuHandle other && other.HMENU == HMENU;
     public bool Equals(MenuHandle other) => other.HMENU == HMENU;
     public static bool operator ==(MenuHandle a, MenuHandle b) => a.HMENU == b.HMENU;
     public static bool operator !=(MenuHandle a, MenuHandle b) => a.HMENU != b.HMENU;

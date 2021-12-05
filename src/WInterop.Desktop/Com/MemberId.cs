@@ -11,7 +11,7 @@ public struct MemberId
     /// <summary>
     ///  Used for getting info about the type itself. [MEMBERID_NIL]
     /// </summary>
-    public static MemberId Nil => new(-1);
+    public static MemberId Nil => new(TerraFXWindows.MEMBERID_NIL);
 
     public int Value;
 

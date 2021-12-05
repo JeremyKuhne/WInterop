@@ -16,7 +16,7 @@ public class StreamTests
     {
         using var cleaner = new TestFileCleaner();
         string path = cleaner.GetTestPath();
-        IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
+        using StructuredStorage storage = Com.CreateStorage(path);
 
         ComStream stream;
         using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))
@@ -37,7 +37,7 @@ public class StreamTests
     {
         using var cleaner = new TestFileCleaner();
         string path = cleaner.GetTestPath();
-        IStorage storage = (IStorage)Com.CreateStorage(path, InterfaceIds.IID_IStorage);
+        using StructuredStorage storage = Com.CreateStorage(path);
 
         ComStream stream;
         using (stream = new ComStream(storage.CreateStream("mystream", StorageMode.Create | StorageMode.ReadWrite | StorageMode.ShareExclusive)))

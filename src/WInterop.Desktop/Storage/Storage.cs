@@ -655,21 +655,21 @@ public static partial class Storage
     public static void DecryptFile(string path)
         => Error.ThrowLastErrorIfFalse(StorageImports.DecryptFileW(path, 0), path);
 
-    public static unsafe IEnumerable<SID> QueryUsersOnEncryptedFile(string path)
+    public static unsafe IEnumerable<SecurityIdentifier> QueryUsersOnEncryptedFile(string path)
     {
         ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
         StorageImports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
         if (hashList->nCert_Hash == 0)
         {
             StorageImports.FreeEncryptionCertificateHashList(hashList);
-            return Enumerable.Empty<SID>();
+            return Enumerable.Empty<SecurityIdentifier>();
         }
 
         ENCRYPTION_CERTIFICATE_HASH* users = *hashList->pUsers;
-        SID[] sids = new SID[hashList->nCert_Hash];
+        SecurityIdentifier[] sids = new SecurityIdentifier[hashList->nCert_Hash];
         for (int i = 0; i < sids.Length; i++)
         {
-            sids[0] = new SID(users->pUserSid);
+            sids[0] = new SecurityIdentifier(users->pUserSid);
             users++;
         }
 
@@ -677,7 +677,7 @@ public static partial class Storage
         return sids;
     }
 
-    public static unsafe bool RemoveUser(in SID sid, string path)
+    public static unsafe bool RemoveUser(ref SecurityIdentifier sid, string path)
     {
         ENCRYPTION_CERTIFICATE_HASH_LIST* hashList;
         StorageImports.QueryUsersOnEncryptedFile(path, &hashList).ThrowIfFailed(path);
@@ -963,9 +963,9 @@ public static partial class Storage
         CREATEFILE2_EXTENDED_PARAMETERS extended = new()
         {
             dwSize = (uint)sizeof(CREATEFILE2_EXTENDED_PARAMETERS),
-            dwFileAttributes = fileAttributes,
-            dwFileFlags = fileFlags,
-            dwSecurityQosFlags = securityQosFlags
+            dwFileAttributes = (uint)fileAttributes,
+            dwFileFlags = (uint)fileFlags,
+            dwSecurityQosFlags = (uint)securityQosFlags
         };
 
         SafeFileHandle handle = StorageImports.CreateFile2(
@@ -1018,12 +1018,12 @@ public static partial class Storage
     /// </summary>
     public static unsafe void CopyFile2(string source, string destination, bool overwrite = false)
     {
-        IntBoolean cancel = false;
+        BOOL cancel;
         COPYFILE2_EXTENDED_PARAMETERS parameters = new()
         {
             dwSize = (uint)sizeof(COPYFILE2_EXTENDED_PARAMETERS),
             pfCancel = &cancel,
-            dwCopyFlags = overwrite ? 0 : CopyFileFlags.FailIfExists
+            dwCopyFlags = overwrite ? 0u : (uint)CopyFileFlags.FailIfExists
         };
 
         StorageImports.CopyFile2(source, destination, ref parameters).ThrowIfFailed();
@@ -1236,7 +1236,10 @@ public static partial class Storage
 
         if (fileOffset.HasValue)
         {
-            OVERLAPPED overlapped = new() { Offset = fileOffset.Value };
+            ulong offset = fileOffset.Value;
+            OVERLAPPED overlapped = default;
+            overlapped.Offset = offset.LowWord();
+            overlapped.OffsetHigh = offset.HighWord();
             Error.ThrowLastErrorIfFalse(
                 StorageImports.ReadFile(fileHandle, ref MemoryMarshal.GetReference(buffer), (uint)buffer.Length, out numberOfBytesRead, &overlapped));
         }
@@ -1259,21 +1262,35 @@ public static partial class Storage
     /// <returns>The number of bytes written.</returns>
     public static unsafe uint WriteFile(SafeFileHandle fileHandle, Span<byte> data, ulong? fileOffset = null)
     {
-        if (fileHandle == null) throw new ArgumentNullException(nameof(fileHandle));
+        if (fileHandle is null) throw new ArgumentNullException(nameof(fileHandle));
         if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException(null, nameof(fileHandle));
 
         uint numberOfBytesWritten;
 
         if (fileOffset.HasValue)
         {
-            OVERLAPPED overlapped = new() { Offset = fileOffset.Value };
+            ulong offset = fileOffset.Value;
+            OVERLAPPED overlapped = default;
+            overlapped.Offset = offset.LowWord();
+            overlapped.OffsetHigh = offset.HighWord();
+
             Error.ThrowLastErrorIfFalse(
-                StorageImports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, &overlapped));
+                StorageImports.WriteFile(
+                    fileHandle,
+                    ref MemoryMarshal.GetReference(data),
+                    (uint)data.Length,
+                    out numberOfBytesWritten,
+                    &overlapped));
         }
         else
         {
             Error.ThrowLastErrorIfFalse(
-                StorageImports.WriteFile(fileHandle, ref MemoryMarshal.GetReference(data), (uint)data.Length, out numberOfBytesWritten, null));
+                StorageImports.WriteFile(
+                    fileHandle,
+                    ref MemoryMarshal.GetReference(data),
+                    (uint)data.Length,
+                    out numberOfBytesWritten,
+                    null));
         }
 
         return numberOfBytesWritten;
@@ -1419,13 +1436,13 @@ public static partial class Storage
     /// <summary>
     ///  Get the owner SID for the given handle.
     /// </summary>
-    public static unsafe SID GetOwner(this SafeFileHandle handle)
+    public static unsafe SecurityIdentifier GetOwner(this SafeFileHandle handle)
         => Security.Security.GetOwner(handle, ObjectType.File);
 
     /// <summary>
     ///  Get the primary group SID for the given handle.
     /// </summary>
-    public static unsafe SID GetPrimaryGroup(this SafeFileHandle handle)
+    public static unsafe SecurityIdentifier GetPrimaryGroup(this SafeFileHandle handle)
         => Security.Security.GetPrimaryGroup(handle, ObjectType.File);
 
     /// <summary>
@@ -1436,7 +1453,7 @@ public static partial class Storage
 
     public static unsafe void ChangeAccess(
         this SafeFileHandle handle,
-        in SID sid,
+        in SecurityIdentifier sid,
         FileAccessRights rights,
         AccessMode access,
         Inheritance inheritance = Inheritance.NoInheritance)

@@ -8,7 +8,7 @@ namespace WInterop.Security;
 /// <summary>
 ///  Describes standard, specific, and generic rights. [ACCESS_MASK]
 /// </summary>
-/// <docs>https://docs.microsoft.com/en-us/windows/win32/secauthz/access-mask</docs>
+/// <docs>https://docs.microsoft.com/windows/win32/secauthz/access-mask</docs>
 public struct AccessMask
 {
     public const uint GenericRightsMask = 0xF0000000;
@@ -53,4 +53,6 @@ public struct AccessMask
     public static implicit operator FileAccessRights(AccessMask mask) => (FileAccessRights)mask.Value;
     public static implicit operator AccessMask(DirectoryAccessRights rights) => new((uint)rights);
     public static implicit operator DirectoryAccessRights(AccessMask mask) => (DirectoryAccessRights)mask.Value;
+    public static explicit operator uint(AccessMask mask) => mask.Value;
+    public static explicit operator AccessMask(uint mask) => new(mask);
 }

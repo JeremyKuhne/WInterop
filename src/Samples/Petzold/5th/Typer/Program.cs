@@ -204,7 +204,7 @@ internal class Typer : WindowClass
                 using (DeviceContext dc = window.BeginPaint())
                 {
                     using FontHandle font = Gdi.CreateFont(0, 0, 0, 0, FontWeight.DoNotCare, false, false, false, dwCharSet,
-                        OutputPrecision.Default, ClippingPrecision.Default, Quality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null);
+                        OutputPrecision.Default, ClippingPrecision.Default, FontQuality.Default, FontPitch.FixedPitch, FontFamilyType.DoNotCare, null);
                     dc.SelectObject(font);
                     unsafe
                     {

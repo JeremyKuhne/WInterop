@@ -164,8 +164,8 @@ public static partial class Gdi
     /// <returns>The previous object or null if failed OR null if the given object was a region.</returns>
     public static GdiObjectHandle SelectObject(this in DeviceContext context, GdiObjectHandle @object)
     {
-        HGDIOBJ handle = GdiImports.SelectObject(context, @object);
-        if (handle.IsInvalid)
+        HGDIOBJ handle = TerraFXWindows.SelectObject(context, @object);
+        if (handle == HGDIOBJ.INVALID_VALUE)
             return default;
 
         ObjectType type = GdiImports.GetObjectType(@object);
@@ -204,7 +204,7 @@ public static partial class Gdi
     {
         PAINTSTRUCT paintStruct = default;
         GdiImports.BeginPaint(window, ref paintStruct);
-        paintRectangle = paintStruct.rcPaint;
+        paintRectangle = paintStruct.rcPaint.ToRectangle();
         return new DeviceContext(paintStruct, window);
     }
 
@@ -295,16 +295,16 @@ public static partial class Gdi
         => new(GdiImports.GetSysColorBrush(systemColor), ownsHandle: false);
 
     public static Color GetBackgroundColor(this in DeviceContext context)
-        => GdiImports.GetBkColor(context);
+        => TerraFXWindows.GetBkColor(context).ToColor();
 
     public static Color GetBrushColor(this in DeviceContext context)
-        => GdiImports.GetDCBrushColor(context);
+        => TerraFXWindows.GetDCBrushColor(context).ToColor();
 
     public static Color SetBackgroundColor(this in DeviceContext context, Color color)
-        => GdiImports.SetBkColor(context, color);
+        => TerraFXWindows.SetBkColor(context, color.ToCOLORREF()).ToColor();
 
     public static Color SetBackgroundColor(this in DeviceContext context, SystemColor color)
-        => GdiImports.SetBkColor(context, Windows.Windows.GetSystemColor(color));
+        => TerraFXWindows.SetBkColor(context, TerraFXWindows.GetSysColor((int)color)).ToColor();
 
     public static BackgroundMode SetBackgroundMode(this in DeviceContext context, BackgroundMode mode)
         => GdiImports.SetBkMode(context, mode);

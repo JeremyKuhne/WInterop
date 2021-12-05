@@ -9,22 +9,37 @@ namespace WInterop.Storage;
 ///  100-nanosecond intervals (ticks) since January 1, 1601 (UTC).
 ///  [FILETIME]
 /// </summary>
+/// <docs>
+///  https://docs.microsoft.com/windows/win32/api/minwinbase/ns-minwinbase-filetime
+///  Why can’t you treat a FILETIME as an __int64?
+///  https://devblogs.microsoft.com/oldnewthing/?p=38053
+///  Converting from a UTC-based SYSTEMTIME directly to a local-time-based SYSTEMTIME
+///  https://devblogs.microsoft.com/oldnewthing/20140307-00/?p=1573
+/// </docs>
 public struct FileTime
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724284.aspx
-    // https://blogs.msdn.microsoft.com/oldnewthing/20040825-00/?p=38053/
-    // https://blogs.msdn.microsoft.com/oldnewthing/20140307-00/?p=1573
-
-    private readonly uint dwLowDateTime;
-    private readonly uint dwHighDateTime;
+    private readonly FILETIME _fileTime;
 
     public FileTime(uint low, uint high)
     {
-        dwLowDateTime = low;
-        dwHighDateTime = high;
+        _fileTime = new()
+        {
+            dwLowDateTime = low,
+            dwHighDateTime = high
+        };
     }
 
-    public ulong FileDateTime => Conversion.HighLowToLong(dwHighDateTime, dwLowDateTime);
+    public FileTime(DateTime time)
+    {
+        ulong filetime = (ulong)time.ToFileTimeUtc();
+        _fileTime = new()
+        {
+            dwLowDateTime = filetime.LowWord(),
+            dwHighDateTime = filetime.HighWord()
+        };
+    }
+
+    public ulong FileDateTime => Conversion.HighLowToLong(_fileTime.dwHighDateTime, _fileTime.dwLowDateTime);
 
     public DateTime ToDateTimeUtc() => DateTime.FromFileTimeUtc((long)FileDateTime);
 }

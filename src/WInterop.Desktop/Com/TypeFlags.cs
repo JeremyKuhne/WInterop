@@ -13,75 +13,75 @@ public enum TypeFlags : ushort
     /// <summary>
     ///  Application object. [TYPEFLAG_FAPPOBJECT]
     /// </summary>
-    AppObject = 0x1,
+    AppObject = TYPEFLAGS.TYPEFLAG_FAPPOBJECT,
 
     /// <summary>
     ///  Can create via <see cref="ITypeInfo.CreateInstance"/>. [TYPEFLAG_FCANCREATE]
     /// </summary>
-    CanCreate = 0x2,
+    CanCreate = TYPEFLAGS.TYPEFLAG_FCANCREATE,
 
     /// <summary>
     ///  [TYPEFLAG_FLICENSED]
     /// </summary>
-    Licensed = 0x4,
+    Licensed = TYPEFLAGS.TYPEFLAG_FLICENSED,
 
     /// <summary>
     ///  Predefined. [TYPEFLAG_FPREDECLID]
     /// </summary>
-    Predeclared = 0x8,
+    Predeclared = TYPEFLAGS.TYPEFLAG_FPREDECLID,
 
     /// <summary>
     ///  Should not be displayed in type browsers. [TYPEFLAG_FHIDDEN]
     /// </summary>
-    Hidden = 0x10,
+    Hidden = TYPEFLAGS.TYPEFLAG_FHIDDEN,
 
     /// <summary>
     ///  [TYPEFLAG_FCONTROL]
     /// </summary>
-    Control = 0x20,
+    Control = TYPEFLAGS.TYPEFLAG_FCONTROL,
 
     /// <summary>
     ///  Supplies both IDispatch and VTable binding. [TYPEFLAG_FDUAL]
     /// </summary>
-    Dual = 0x40,
+    Dual = TYPEFLAGS.TYPEFLAG_FDUAL,
 
     /// <summary>
     ///  Cannot add members at run time. [TYPEFLAG_FNONEXTENSIBLE]
     /// </summary>
-    NonExtensible = 0x80,
+    NonExtensible = TYPEFLAGS.TYPEFLAG_FNONEXTENSIBLE,
 
     /// <summary>
     ///  Fully compatible with Automation. [TYPEFLAG_FOLEAUTOMATION]
     /// </summary>
-    OleAutomation = 0x100,
+    OleAutomation = TYPEFLAGS.TYPEFLAG_FOLEAUTOMATION,
 
     /// <summary>
     ///  Should not be accessible from macro languages. [TYPEFLAG_FRESTRICTED]
     /// </summary>
-    Restricted = 0x200,
+    Restricted = TYPEFLAGS.TYPEFLAG_FRESTRICTED,
 
     /// <summary>
     ///  Supports aggregation. [TYPEFLAG_FAGGREGATABLE]
     /// </summary>
-    Aggregatable = 0x400,
+    Aggregatable = TYPEFLAGS.TYPEFLAG_FAGGREGATABLE,
 
     /// <summary>
     ///  [TYPEFLAG_FREPLACEABLE]
     /// </summary>
-    Replacable = 0x800,
+    Replacable = TYPEFLAGS.TYPEFLAG_FREPLACEABLE,
 
     /// <summary>
     ///  Derives from IDispatch. [TYPEFLAG_FDISPATCHABLE]
     /// </summary>
-    Dispatchable = 0x1000,
+    Dispatchable = TYPEFLAGS.TYPEFLAG_FDISPATCHABLE,
 
     /// <summary>
     ///  [TYPEFLAG_FREVERSEBIND]
     /// </summary>
-    ReverseBinding = 0x2000,
+    ReverseBinding = TYPEFLAGS.TYPEFLAG_FREVERSEBIND,
 
     /// <summary>
     ///  [TYPEFLAG_FPROXY]
     /// </summary>
-    Proxy = 0x4000
+    Proxy = TYPEFLAGS.TYPEFLAG_FPROXY
 }

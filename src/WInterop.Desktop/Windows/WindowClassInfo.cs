@@ -30,7 +30,7 @@ public struct WindowClassInfo
     public BrushHandle Background
     {
         get => new(_background, ownsHandle: false);
-        set => _background = value.HBRUSH;
+        set => _background = value.Handle;
     }
 
     public static unsafe implicit operator WindowClassInfo(WNDCLASSEX nativeClass)
@@ -87,7 +87,7 @@ public struct WindowClassInfo
             native.hInstance = (IntPtr)managed.Instance;
             native.hIcon = managed.Icon;
             native.hCursor = managed.Cursor;
-            native.hbrBackground = managed.Background.HBRUSH;
+            native.hbrBackground = managed.Background.Handle;
             native.hIconSm = managed.SmallIcon;
 
             if (managed.ClassName != null)

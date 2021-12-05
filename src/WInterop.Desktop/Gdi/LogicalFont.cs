@@ -8,7 +8,9 @@ namespace WInterop.Gdi;
 /// <summary>
 ///  [LOGFONT]
 /// </summary>
-// https://msdn.microsoft.com/en-us/library/dd145037.aspx
+/// <docs>
+///  https://docs.microsoft.com/windows/win32/api/wingdi/ns-wingdi-logfontw
+/// </docs>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 public struct LogicalFont
 {
@@ -25,7 +27,7 @@ public struct LogicalFont
     public CharacterSet CharacterSet;
     public OutputPrecision OutputPrecision;
     public ClippingPrecision ClippingPrecision;
-    public Quality Quality;
+    public FontQuality Quality;
     public PitchAndFamily PitchAndFamily;
 
     private FixedString.Size32 _lfFaceName;

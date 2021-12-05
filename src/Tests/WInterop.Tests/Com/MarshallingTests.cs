@@ -3,12 +3,12 @@
 
 using FluentAssertions;
 using System.Runtime.InteropServices;
+using TerraFX.Interop.Windows;
 using Tests.Support;
 using WInterop;
 using WInterop.Com;
 using WInterop.Com.Native;
 using WInterop.Errors;
-using WInterop.Security.Native;
 using WInterop.Storage;
 using Xunit;
 
@@ -17,10 +17,10 @@ namespace ComTests;
 public class MarshallingTests
 {
     [Fact]
-    public unsafe void Unknown()
+    public unsafe void UnknownBasics()
     {
         using var cleaner = new TestFileCleaner();
-        IUnknown* unknown = (IUnknown*)CreateStorage(cleaner.GetTestPath(), InterfaceIds.IID_IStorage);
+        Unknown* unknown = (Unknown*)CreateStorage(cleaner.GetTestPath(), InterfaceIds.IID_IStorage);
 
         uint refCount = unknown->AddRef();
         refCount.Should().Be(2);
@@ -28,7 +28,7 @@ public class MarshallingTests
         refCount.Should().Be(1);
 
         Guid riid = InterfaceIds.IID_IStorage;
-        IUnknown* queried;
+        Unknown* queried;
         HResult result = unknown->QueryInterface(&riid, (void**)&queried);
         result.Should().Be(HResult.S_OK);
 
@@ -46,8 +46,8 @@ public class MarshallingTests
     public unsafe void Unknown_RoundTrip()
     {
         object managed = new();
-        var ccw = IUnknown.CCW.CreateInstance(managed);
-        IUnknown* unknown = (IUnknown*)ccw;
+        var ccw = Unknown.CCW.CreateInstance(managed);
+        Unknown* unknown = (Unknown*)ccw;
 
         uint refCount = unknown->AddRef();
         refCount.Should().Be(2);
@@ -88,7 +88,7 @@ public class MarshallingTests
 
     // https://docs.microsoft.com/windows/win32/api/coml2api/nf-coml2api-stgcreatestorageex
     [DllImport(Libraries.Ole32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    public static extern unsafe HResult StgCreateStorageEx(
+    internal static extern unsafe HResult StgCreateStorageEx(
         string pwcsName,
         StorageMode grfMode,
         StorageFormat stgfmt,

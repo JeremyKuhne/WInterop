@@ -7,17 +7,17 @@ using WInterop.Errors;
 
 namespace WInterop.Com;
 
-public class PROPVARIANT : Variant
+public class PropVariant : Variant
 {
-    public PROPVARIANT() : this(ownsHandle: true)
+    public PropVariant() : this(ownsHandle: true)
     {
     }
 
-    public PROPVARIANT(bool ownsHandle) : base(ownsHandle)
+    public PropVariant(bool ownsHandle) : base(ownsHandle)
     {
     }
 
-    public PROPVARIANT(IntPtr handle, bool ownsHandle)
+    public PropVariant(IntPtr handle, bool ownsHandle)
         : base(handle, ownsHandle)
     {
     }
@@ -93,7 +93,7 @@ public class PROPVARIANT : Variant
         }
     }
 
-    protected override bool ReleaseHandle()
+    protected unsafe override bool ReleaseHandle()
     {
         // PropVariantClear is essentially a superset of VariantClear it calls CoTaskMemFree on the following types:
         //
@@ -110,7 +110,7 @@ public class PROPVARIANT : Variant
 
         IntPtr handle = Interlocked.Exchange(ref this.handle, IntPtr.Zero);
         if (handle != IntPtr.Zero)
-            Imports.VariantClear(handle).ThrowIfFailed();
+            TerraFXWindows.VariantClear((VARIANT*)(void*)handle).ThrowIfFailed();
 
         return true;
     }

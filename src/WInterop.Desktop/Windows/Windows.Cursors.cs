@@ -13,20 +13,23 @@ public static partial class Windows
 {
     public static unsafe CursorHandle LoadCursor(CursorId id)
     {
-        HCURSOR handle = WindowsImports.LoadCursorW(ModuleInstance.Null, (char*)(uint)id);
-        if (handle.IsInvalid)
+        HCURSOR handle = TerraFXWindows.LoadCursorW(default, (ushort*)(uint)id);
+        if (handle == HCURSOR.NULL)
             Error.ThrowLastError(id.ToString());
 
         return new CursorHandle(handle, ownsHandle: false);
     }
 
-    public static CursorHandle LoadCursorFromFile(string path)
+    public static unsafe CursorHandle LoadCursorFromFile(string path)
     {
-        HCURSOR handle = WindowsImports.LoadCursorFromFileW(path);
-        if (handle.IsInvalid)
-            Error.ThrowLastError(path);
+        fixed (char* p = path)
+        {
+            HCURSOR handle = TerraFXWindows.LoadCursorFromFileW((ushort*)p);
+            if (handle == HCURSOR.NULL)
+                Error.ThrowLastError(path);
 
-        return new CursorHandle(handle, ownsHandle: false);
+            return new CursorHandle(handle, ownsHandle: false);
+        }
     }
 
     public static CursorHandle SetCursor(CursorHandle cursor)

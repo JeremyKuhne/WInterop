@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Gdi.Native;
-using WInterop.Memory.Native;
 
 namespace WInterop.Com;
 
@@ -17,7 +16,7 @@ public enum MediumType : uint
     ///  Data is a <see cref="HGLOBAL"/> memory handle. [TYMED_HGLOBAL]
     /// </summary>
     /// <remarks>
-    ///  If theIUnknown handle is null, the handle should be freed via <see cref="Memory.Memory.GlobalFree"/>.
+    ///  The handle should be freed via <see cref="Memory.Memory.GlobalFree"/>.
     /// </remarks>
     Memory = 1,
 
@@ -27,20 +26,14 @@ public enum MediumType : uint
     File = 2,
 
     /// <summary>
-    ///  Data is an <see cref="WInterop.Com.IStream"/>. [TYMED_ISTREAM]
+    ///  Data is an<see cref="WInterop.Com.Stream"/>. [TYMED_ISTREAM]
     /// </summary>
-    /// <remarks>
-    ///  If the IUnknown handle is not null, the handle should be freed via <see cref="Com.Release(IntPtr)"/>.
-    /// </remarks>
-    IStream = 4,
+    Stream = 4,
 
     /// <summary>
-    ///  Data is an <see cref="WInterop.Com.IStorage"/>. [TYMED_ISTORAGE]
+    ///  Data is a <see cref="StructuredStorage"/>. [TYMED_ISTORAGE]
     /// </summary>
-    /// <remarks>
-    ///  If the IUnknown handle is not null, the handle should be freed via <see cref="Com.Release(IntPtr)"/>.
-    /// </remarks>
-    IStorage = 8,
+    Storage = 8,
 
     /// <summary>
     ///  Data is an <see cref="HBITMAP"/> [TYMED_GDI]

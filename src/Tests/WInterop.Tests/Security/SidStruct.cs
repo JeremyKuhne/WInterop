@@ -12,18 +12,18 @@ public class SidStruct
     [Fact]
     public unsafe void SidSize()
     {
-        sizeof(SID).Should().Be(68);
+        sizeof(SecurityIdentifier).Should().Be(68);
     }
 
     [Fact]
     public unsafe void PassedAsInDoesNotCopy()
     {
-        SID sid = new();
-        SID* sp = &sid;
+        SecurityIdentifier sid = new();
+        SecurityIdentifier* sp = &sid;
 
-        void CheckSid(in SID insid, SID* insp)
+        static void CheckSid(in SecurityIdentifier insid, SecurityIdentifier* insp)
         {
-            fixed (SID* pinsid = &insid)
+            fixed (SecurityIdentifier* pinsid = &insid)
             {
                 (pinsid == insp).Should().BeTrue();
             }
@@ -35,42 +35,42 @@ public class SidStruct
     [Fact]
     public void EmptySidEqualsSelf()
     {
-        SID sid = new();
+        SecurityIdentifier sid = new();
         sid.Equals(sid).Should().BeTrue();
     }
 
     [Fact]
     public void EmptySidEqualsNewEmptySid()
     {
-        SID sid = new();
-        sid.Equals(new SID()).Should().BeTrue();
+        SecurityIdentifier sid = new();
+        sid.Equals(new SecurityIdentifier()).Should().BeTrue();
     }
 
     [Fact]
     public void EmptySidEqualsDefault()
     {
-        SID sid = new();
-        sid.Equals(new SID()).Should().BeTrue();
+        SecurityIdentifier sid = new();
+        sid.Equals(new SecurityIdentifier()).Should().BeTrue();
     }
 
     [Fact]
     public void KnownSidEqualsSelf()
     {
-        SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
+        SecurityIdentifier sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
         sid.Equals(sid).Should().BeTrue();
     }
 
     [Fact]
     public unsafe void KnownSidNotEqualsDefault()
     {
-        SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
-        sid.Equals(default).Should().BeFalse();
+        SecurityIdentifier sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
+        sid.Equals((SecurityIdentifier)default).Should().BeFalse();
     }
 
     [Fact]
     public void KnownSidNotEqualsOtherKnownSid()
     {
-        SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
+        SecurityIdentifier sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
         sid.Equals(Security.CreateWellKnownSid(WellKnownSID.Users)).Should().BeFalse();
     }
 }

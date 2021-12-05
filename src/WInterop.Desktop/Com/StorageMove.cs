@@ -4,22 +4,22 @@
 namespace WInterop.Com;
 
 /// <summary>
-///  Options for <see cref="IStorage.MoveElementTo(string, IStorage, string, StorageMove)"/>
+///  Options for <see cref="StructuredStorage.MoveElementTo(string, StructuredStorage, string, StorageMove)"/>
 /// </summary>
 public enum StorageMove : uint
 {
     /// <summary>
     ///  [STGMOVE_MOVE]
     /// </summary>
-    Move = 0,
+    Move = STGMOVE.STGMOVE_MOVE,
 
     /// <summary>
     ///  [STGMOVE_COPY]
     /// </summary>
-    Copy = 1,
+    Copy = STGMOVE.STGMOVE_COPY,
 
     /// <summary>
     ///  Not implemented. [STGMOVE_SHALLOWCOPY]
     /// </summary>
-    ShallowCopy = 2
+    ShallowCopy = STGMOVE.STGMOVE_SHALLOWCOPY
 }

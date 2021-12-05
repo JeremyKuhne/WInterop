@@ -13,10 +13,10 @@ public class Sids
     [Fact]
     public void CreateWellKnownSid_Everyone()
     {
-        SID sid = Security.CreateWellKnownSid(WellKnownSID.World);
+        SecurityIdentifier sid = Security.CreateWellKnownSid(WellKnownSID.World);
         sid.IsValidSid().Should().BeTrue();
         sid.Revision.Should().Be(1);
-        sid.IdentifierAuthority.Should().Be(IdentifierAuthority.World);
+        sid.Authority.Should().Be(IdentifierAuthority.World);
 
         sid.GetSidSubAuthorityCount().Should().Be(1);
         sid.GetSidSubAuthority(0).Should().Be(0);
@@ -33,19 +33,23 @@ public class Sids
     [Fact]
     public void IsValidSid_GoodSid()
     {
-        SID sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
+        SecurityIdentifier sid = Security.CreateWellKnownSid(WellKnownSID.IISUser);
         sid.IsValidSid().Should().BeTrue();
     }
 
     // [Fact]
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable IDE0051 // Remove unused private members
     private void DumpAllWellKnownSids()
+#pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore CA1822 // Mark members as static
     {
         foreach (WellKnownSID type in Enum.GetValues(typeof(WellKnownSID)))
         {
             Debug.WriteLine(@"/// <summary>");
             try
             {
-                SID sid = Security.CreateWellKnownSid(type);
+                SecurityIdentifier sid = Security.CreateWellKnownSid(type);
                 AccountSidInformation info = sid.LookupAccountSid();
                 Debug.WriteLine($"///  {info.Name} ({sid.ConvertSidToString()}) [{info.Usage}]");
             }
@@ -62,7 +66,7 @@ public class Sids
     [Fact]
     public void IsValidSid_BadSid()
     {
-        SID sid = new();
+        SecurityIdentifier sid = new();
         sid.IsValidSid().Should().BeFalse();
     }
 }

@@ -93,7 +93,7 @@ public class Window : IDisposable, IHandle<WindowHandle>, ILayoutHandler
         return Gdi.Gdi.CreateFont(
             typeface: "Microsoft Sans Serif",
             height: window.FontPointSizeToHeight(11),
-            quality: Quality.ClearTypeNatural);
+            quality: FontQuality.ClearTypeNatural);
     }
 
     protected virtual LResult WindowProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
@@ -141,7 +141,7 @@ public class Window : IDisposable, IHandle<WindowHandle>, ILayoutHandler
                     var newFont = Gdi.Gdi.CreateFont(
                         typeface: "Microsoft Sans Serif",
                         height: window.FontPointSizeToHeight(11),
-                        quality: Quality.ClearTypeNatural);
+                        quality: FontQuality.ClearTypeNatural);
 
                     window.SetFont(newFont);
                     window.EnumerateChildWindows(

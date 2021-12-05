@@ -195,7 +195,7 @@ public class GeneralGdi
     {
         // System color brushes are special- they'll always give the same value
         BrushHandle brush = Gdi.GetSystemColorBrush(SystemColor.MenuBar);
-        long handle = (long)brush.HBRUSH.Value;
+        long handle = (long)brush.Handle;
         handle &= 0xFFFF00;
 
         // This changed in RS4 from C5 to BF for the last byte. Checking the first

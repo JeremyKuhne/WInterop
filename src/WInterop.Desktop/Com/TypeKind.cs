@@ -11,40 +11,40 @@ public enum TypeKind : uint
     /// <summary>
     ///  [TKIND_ENUM]
     /// </summary>
-    Enum = 0,
+    Enum = TYPEKIND.TKIND_ENUM,
 
     /// <summary>
     ///  [TKIND_RECORD]
     /// </summary>
-    Record = Enum + 1,
+    Record = TYPEKIND.TKIND_RECORD,
 
     /// <summary>
     ///  [TKIND_MODULE]
     /// </summary>
-    Module = Record + 1,
+    Module = TYPEKIND.TKIND_MODULE,
 
     /// <summary>
     ///  [TKIND_INTERFACE]
     /// </summary>
-    Interface = Module + 1,
+    Interface = TYPEKIND.TKIND_INTERFACE,
 
     /// <summary>
     ///  [TKIND_DISPATCH]
     /// </summary>
-    Dispatch = Interface + 1,
+    Dispatch = TYPEKIND.TKIND_DISPATCH,
 
     /// <summary>
     ///  [TKIND_COCLASS]
     /// </summary>
-    CoClass = Dispatch + 1,
+    CoClass = TYPEKIND.TKIND_COCLASS,
 
     /// <summary>
     ///  [TKIND_ALIAS]
     /// </summary>
-    Alias = CoClass + 1,
+    Alias = TYPEKIND.TKIND_ALIAS,
 
     /// <summary>
     ///  [TKIND_UNION]
     /// </summary>
-    Union = Alias + 1,
+    Union = TYPEKIND.TKIND_UNION
 }

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using TerraFX.Interop.Windows;
 using WInterop.Windows.Native;
 
 namespace WInterop.DirectWrite;
@@ -77,7 +78,7 @@ public readonly unsafe struct WriteFactory : WriteFactory.Interface, IDisposable
     public RenderingParams CreateMonitorRenderingParams(HMONITOR monitor)
     {
         IDWriteRenderingParams* rendering;
-        _handle->CreateMonitorRenderingParams((TerraFX.Interop.Windows.HMONITOR)monitor.Value, &rendering).ThrowIfFailed();
+        _handle->CreateMonitorRenderingParams(monitor, &rendering).ThrowIfFailed();
         return new(rendering);
     }
 

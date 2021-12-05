@@ -9,32 +9,32 @@ namespace WInterop.Gdi;
 
 public readonly struct FontHandle : IDisposable
 {
-    public HFONT Handle { get; }
+    public HFONT HFONT { get; }
     private readonly bool _ownsHandle;
 
     public FontHandle(HFONT handle, bool ownsHandle = true)
     {
-        Debug.Assert(handle.IsInvalid || GdiImports.GetObjectType(handle) == ObjectType.Font);
+        Debug.Assert(handle == HFONT.NULL || (ObjectType)TerraFXWindows.GetObjectType(handle) == ObjectType.Font);
 
-        Handle = handle;
+        HFONT = handle;
         _ownsHandle = ownsHandle;
     }
 
-    public bool IsNull => Handle.IsNull;
+    public bool IsNull => HFONT == HFONT.NULL;
 
-    public bool IsInvalid => Handle.IsInvalid || GdiImports.GetObjectType(Handle) != ObjectType.Font;
+    public bool IsInvalid => HFONT == HFONT.INVALID_VALUE || (ObjectType)TerraFXWindows.GetObjectType(HFONT) != ObjectType.Font;
 
     public void Dispose()
     {
-        if (_ownsHandle && !Handle.IsInvalid)
+        if (_ownsHandle && !IsNull)
         {
-            GdiImports.DeleteObject(Handle);
+            GdiImports.DeleteObject(HFONT);
         }
     }
 
-    public static implicit operator HGDIOBJ(FontHandle handle) => handle.Handle;
-    public static implicit operator HFONT(FontHandle handle) => handle.Handle;
-    public static implicit operator LResult(FontHandle handle) => handle.Handle.Value;
-    public static implicit operator GdiObjectHandle(FontHandle handle) => new(handle.Handle, ownsHandle: false);
-    public static implicit operator FontHandle(StockFont font) => Gdi.GetStockFont(font);
+    public static implicit operator HGDIOBJ(FontHandle handle) => handle.HFONT;
+    public static implicit operator HFONT(FontHandle handle) => handle.HFONT;
+    public static unsafe implicit operator LResult(FontHandle handle) => handle.HFONT.Value;
+    public static implicit operator GdiObjectHandle(FontHandle handle) => new(handle.HFONT, ownsHandle: false);
+    public static implicit operator FontHandle(StockFont font) => new(TerraFXWindows.GetStockFont((int)font));
 }

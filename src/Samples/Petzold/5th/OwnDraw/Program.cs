@@ -4,7 +4,6 @@
 using System.Drawing;
 using WInterop.Gdi;
 using WInterop.Windows;
-using WInterop.Windows.Native;
 
 namespace OwnDraw;
 
@@ -24,7 +23,7 @@ internal static class Program
 
 internal class OwnDraw : WindowClass
 {
-    private void Triangle(DeviceContext dc, Point[] pt)
+    private static void Triangle(DeviceContext dc, Point[] pt)
     {
         dc.SelectObject(StockBrush.Black);
         dc.Polygon(pt);
@@ -89,12 +88,12 @@ internal class OwnDraw : WindowClass
                 window.MoveWindow(new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top), repaint: true);
                 return 0;
             case MessageType.DrawItem:
-                DRAWITEMSTRUCT* pdis = (DRAWITEMSTRUCT*)lParam;
+                var drawItemMessage = new Message.DrawItem(lParam);
 
                 // Fill area with white and frame it black
-                using (DeviceContext dc = new(pdis->hDC))
+                using (DeviceContext dc = drawItemMessage.DeviceContext)
                 {
-                    Rectangle rect = pdis->rcItem;
+                    Rectangle rect = drawItemMessage.ItemRectangle;
 
                     dc.FillRectangle(rect, StockBrush.White);
                     dc.FrameRectangle(rect, StockBrush.Black);
@@ -105,7 +104,7 @@ internal class OwnDraw : WindowClass
 
                     Point[] pt = new Point[3];
 
-                    switch ((int)pdis->CtlID)
+                    switch (drawItemMessage.ItemId)
                     {
                         case ID_SMALLER:
                             pt[0].X = 3 * cx / 8; pt[0].Y = 1 * cy / 8;
@@ -146,10 +145,10 @@ internal class OwnDraw : WindowClass
                     }
 
                     // Invert the rectangle if the button is selected
-                    if ((pdis->itemState & OwnerDrawStates.Selected) != 0)
+                    if (drawItemMessage.ItemState.HasFlag(OwnerDrawStates.Selected))
                         dc.InvertRectangle(rect);
 
-                    if ((pdis->itemState & OwnerDrawStates.Focus) != 0)
+                    if (drawItemMessage.ItemState.HasFlag(OwnerDrawStates.Focus))
                     {
                         rect = Rectangle.FromLTRB(
                             rect.Left + cx / 16,

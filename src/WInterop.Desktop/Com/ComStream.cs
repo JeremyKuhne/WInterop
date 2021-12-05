@@ -1,32 +1,36 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Runtime.InteropServices;
-using WInterop.Com.Native;
-
 namespace WInterop.Com;
 
 /// <summary>
 ///  Stream that wraps a COM <see cref="IStream"/>
 /// </summary>
-public class ComStream : Stream
+public class ComStream : System.IO.Stream
 {
     private readonly bool _ownsStream;
-    private IStream? _stream;
+    private Stream _stream;
+
+    public unsafe ComStream(IStream* stream, bool ownsStream = true)
+        : this(new Stream(stream), ownsStream) { }
 
     /// <summary>
-    ///  Construct a Stream wrapper around an <see cref="IStream"/> object.
+    ///  Construct a Stream wrapper around a <see cref="WInterop.Com.Stream"/> object.
     /// </summary>
     /// <param name="stream">The COM stream to wrap.</param>
-    /// <param name="ownsStream">If true (default), will release the <see cref="IStream"/> object when disposed.</param>
-    public ComStream(IStream stream, bool ownsStream = true)
+    /// <param name="ownsStream">If true (default), will release the <see cref="WInterop.Com.Stream"/> object when disposed.</param>
+    public ComStream(Stream stream, bool ownsStream = true)
     {
-        _stream = stream ?? throw new ArgumentNullException(nameof(stream));
+        if (stream.IsNull)
+            throw new ArgumentNullException(nameof(stream));
+
+        _stream = stream;
         _ownsStream = ownsStream;
-        stream.Stat(out STATSTG stat, StatFlag.NoName);
-        StorageType = stat.type;
-        StorageMode = stat.grfMode;
-        ClassId = new Guid("0000000C-0000-0000-C000-000000000046");
+        using var stats = stream.Stat(StatFlag.NoName);
+        StorageType = stats.StorageType;
+        StorageMode = stats.Mode;
+        ClassId = stats.ClassId;
+        // new Guid("0000000C-0000-0000-C000-000000000046");
     }
 
     public StorageType StorageType { get; }
@@ -35,8 +39,8 @@ public class ComStream : Stream
 
     public Guid ClassId { get; }
 
-    public IStream Stream
-        => _stream ?? throw new ObjectDisposedException(nameof(ComStream));
+    public Stream Stream
+        => Stream.IsNull ? throw new ObjectDisposedException(nameof(ComStream)) : Stream;
 
     public override bool CanRead
         // Can read is the default, only can't if in Write only mode
@@ -48,84 +52,48 @@ public class ComStream : Stream
         => (StorageMode & StorageMode.Write) != 0 || (StorageMode & StorageMode.ReadWrite) != 0;
 
     public override long Length
-    {
-        get
-        {
-            Stream.Stat(out STATSTG stat, StatFlag.NoName);
-            return (long)stat.cbSize;
-        }
-    }
+        => checked((long)Stream.Stat(StatFlag.NoName).Size);
 
     public override unsafe long Position
     {
-        get
-        {
-            ulong position;
-            Stream.Seek(0, StreamSeek.Current, &position);
-            return checked((long)position);
-        }
-        set
-        {
-            Stream.Seek(value, StreamSeek.Set, null);
-        }
+        get => checked((long)Stream.Seek(0, StreamSeek.Current));
+        set => Stream.Seek(value, StreamSeek.Set);
     }
 
-    public override void Flush()
-    {
-        Stream.Commit(StorageCommit.Default);
-    }
+    public override void Flush() => Stream.Commit(StorageCommit.Default);
 
     public override unsafe int Read(byte[] buffer, int offset, int count)
-    {
-        if (Stream == null)
-            throw new ObjectDisposedException(nameof(ComStream));
+        => Read(new Span<byte>(buffer, offset, count));
 
-        fixed (byte* b = buffer)
-        {
-            uint read;
-            Stream.Read(b, (uint)count, &read);
-            return checked((int)read);
-        }
-    }
+    public override int Read(Span<byte> buffer) => (int)Stream.Read(buffer);
 
     public override unsafe void Write(byte[] buffer, int offset, int count)
-    {
-        fixed (byte* b = buffer)
-        {
-            Stream.Write(b, (uint)count, null);
-        }
-    }
+        => Write(new ReadOnlySpan<byte>(buffer, offset, count));
+
+    public override void Write(ReadOnlySpan<byte> buffer) => Stream.Write(buffer);
 
     public override unsafe long Seek(long offset, SeekOrigin origin)
     {
         // Not surprisingly SeekOrigin is the same as STREAM_SEEK
         // (given the history of .NET and COM)
-
-        ulong position;
-        Stream.Seek(offset, (StreamSeek)origin, &position);
-        return checked((long)position);
+        return checked((long)Stream.Seek(offset, (StreamSeek)origin));
     }
 
-    public override void SetLength(long value)
-    {
-        Stream.SetSize((ulong)value);
-    }
+    public override void SetLength(long value) => Stream.SetSize((ulong)value);
 
-    public override unsafe string ToString()
+    public override string ToString()
     {
-        Stream.Stat(out STATSTG stat, StatFlag.Default);
-        string name = new(stat.pwcsName);
-        Marshal.FreeCoTaskMem((IntPtr)stat.pwcsName);
-        return name;
+        using var stats = Stream.Stat();
+        return stats.Name.ToString();
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing && _ownsStream)
         {
-            Marshal.ReleaseComObject(Stream);
+            _stream.Dispose();
         }
 
-        _stream = null;
+        _stream = default;
     }
 }

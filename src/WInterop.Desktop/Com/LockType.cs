@@ -4,9 +4,11 @@
 namespace WInterop.Com;
 
 /// <summary>
-///  Locking type for <see cref="IStream.LockRegion(ulong, ulong, uint)"/> and
-///  ILockBytes.LockRegion. <see cref="https://docs.microsoft.com/windows/win32/api/objidl/ne-objidl-locktype"/>
+///  Locking type.
 /// </summary>
+/// <docs>
+///  https://docs.microsoft.com/windows/win32/api/objidl/ne-objidl-locktype
+/// </docs>
 [Flags]
 public enum LockType : uint
 {

@@ -2,8 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Gdi;
-using WInterop.Gdi.Native;
-using WInterop.Windows.Native;
 
 namespace WInterop.Windows;
 
@@ -22,8 +20,8 @@ public struct MenuInformation
     {
         return new MenuInformation
         {
-            Mask = info.fMask,
-            Style = info.dwStyle,
+            Mask = (MenuInfoMembers)info.fMask,
+            Style = (MenuStyles)info.dwStyle,
             MaxHeight = info.cyMax,
             _background = info.hbrBack,
             ContextHelpId = info.dwContextHelpID,
@@ -36,10 +34,10 @@ public struct MenuInformation
         return new MENUINFO
         {
             cbSize = (uint)sizeof(MENUINFO),
-            fMask = info.Mask,
-            dwStyle = info.Style,
+            fMask = (uint)info.Mask,
+            dwStyle = (uint)info.Style,
             cyMax = info.MaxHeight,
-            hbrBack = info.Background.HBRUSH,
+            hbrBack = info.Background.Handle,
             dwContextHelpID = info.ContextHelpId,
             dwMenuData = info.MenuData
         };

@@ -11,4 +11,8 @@ namespace WInterop.Security;
 public class AccessToken : CloseHandle
 {
     public AccessToken() : base() { }
+
+    internal unsafe AccessToken(HANDLE handle) : base((IntPtr)handle.Value) { }
+
+    internal unsafe HANDLE Handle => new((void*)handle);
 }

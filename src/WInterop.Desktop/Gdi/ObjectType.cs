@@ -5,75 +5,75 @@ namespace WInterop.Gdi;
 
 public enum ObjectType : uint
 {
-    // https://msdn.microsoft.com/en-us/library/dd144905.aspx
+    // https://docs.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getobjecttype
 
     /// <summary>
     ///  [OBJ_PEN]
     /// </summary>
-    Pen = 1,
+    Pen = OBJ.OBJ_PEN,
 
     /// <summary>
     ///  [OBJ_BRUSH]
     /// </summary>
-    Brush = 2,
+    Brush = OBJ.OBJ_BRUSH,
 
     /// <summary>
     ///  [OBJ_DC]
     /// </summary>
-    DeviceContext = 3,
+    DeviceContext = OBJ.OBJ_DC,
 
     /// <summary>
     ///  [OBJ_METADC]
     /// </summary>
-    MetafileDeviceContext = 4,
+    MetafileDeviceContext = OBJ.OBJ_METADC,
 
     /// <summary>
     ///  [OBJ_PAL]
     /// </summary>
-    Palette = 5,
+    Palette = OBJ.OBJ_PAL,
 
     /// <summary>
     ///  [OBJ_FONT]
     /// </summary>
-    Font = 6,
+    Font = OBJ.OBJ_FONT,
 
     /// <summary>
     ///  [OBJ_BITMAP]
     /// </summary>
-    Bitmap = 7,
+    Bitmap = OBJ.OBJ_BITMAP,
 
     /// <summary>
     ///  [OBJ_REGION]
     /// </summary>
-    Region = 8,
+    Region = OBJ.OBJ_REGION,
 
     /// <summary>
     ///  [OBJ_METAFILE]
     /// </summary>
-    Metafile = 9,
+    Metafile = OBJ.OBJ_METAFILE,
 
     /// <summary>
     ///  [OBJ_MEMDC]
     /// </summary>
-    MemoryDeviceContext = 10,
+    MemoryDeviceContext = OBJ.OBJ_MEMDC,
 
     /// <summary>
     ///  [OBJ_EXTPEN]
     /// </summary>
-    ExtendedPen = 11,
+    ExtendedPen = OBJ.OBJ_EXTPEN,
 
     /// <summary>
     ///  [OBJ_ENHMETADC]
     /// </summary>
-    EnhancedMetafileDeviceContext = 12,
+    EnhancedMetafileDeviceContext = OBJ.OBJ_ENHMETADC,
 
     /// <summary>
     ///  [OBJ_ENHMETAFILE]
     /// </summary>
-    EnhancedMetafile = 13,
+    EnhancedMetafile = OBJ.OBJ_ENHMETAFILE,
 
     /// <summary>
     ///  [OBJ_COLORSPACE]
     /// </summary>
-    ColorSpace = 14
+    ColorSpace = OBJ.OBJ_COLORSPACE
 }

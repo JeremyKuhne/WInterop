@@ -11,7 +11,7 @@ namespace WInterop.Modules;
 /// </summary>
 public class ModuleInstance : HandleZeroIsInvalid
 {
-    public static ModuleInstance Null = new(IntPtr.Zero);
+    public static readonly ModuleInstance Null = new(IntPtr.Zero);
 
     public ModuleInstance() : this(ownsHandle: false) { }
 
@@ -23,6 +23,8 @@ public class ModuleInstance : HandleZeroIsInvalid
 
     public static ModuleInstance GetModuleForType(Type type)
         => Marshal.GetHINSTANCE(type.Module);
+
+    internal unsafe HMODULE Handle => new((void*)handle);
 
     protected override bool ReleaseHandle()
     {

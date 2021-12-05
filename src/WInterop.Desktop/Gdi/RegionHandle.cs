@@ -9,29 +9,34 @@ namespace WInterop.Gdi;
 
 public readonly struct RegionHandle : IDisposable
 {
-    public HRGN Handle { get; }
+    public HRGN HRGN { get; }
     private readonly bool _ownsHandle;
 
-    public static RegionHandle Null = new(default);
+    public static readonly RegionHandle Null = new(HRGN.NULL);
 
     public RegionHandle(HRGN handle, bool ownsHandle = true)
     {
-        Debug.Assert(handle.IsInvalid || GdiImports.GetObjectType(handle) == ObjectType.Region);
+        Debug.Assert(handle == HRGN.NULL
+            || (ObjectType)TerraFXWindows.GetObjectType(handle) == ObjectType.Region);
 
-        Handle = handle;
+        HRGN = handle;
         _ownsHandle = ownsHandle;
     }
 
-    public bool IsInvalid => Handle.IsInvalid || GdiImports.GetObjectType(Handle) != ObjectType.Region;
+    public bool IsInvalid =>
+        HRGN == HRGN.INVALID_VALUE
+        || (ObjectType)TerraFXWindows.GetObjectType(HRGN) != ObjectType.Region;
+
+    public bool IsNull => HRGN == HRGN.NULL;
 
     public void Dispose()
     {
         if (_ownsHandle)
-            GdiImports.DeleteObject(Handle);
+            TerraFXWindows.DeleteObject(HRGN);
     }
 
-    public static implicit operator HGDIOBJ(RegionHandle handle) => handle.Handle;
-    public static implicit operator HRGN(RegionHandle handle) => handle.Handle;
-    public static implicit operator LResult(RegionHandle handle) => handle.Handle.Handle;
-    public static implicit operator GdiObjectHandle(RegionHandle handle) => new(handle.Handle, ownsHandle: false);
+    public static implicit operator HGDIOBJ(RegionHandle handle) => handle.HRGN;
+    public static implicit operator HRGN(RegionHandle handle) => handle.HRGN;
+    public static unsafe implicit operator LResult(RegionHandle handle) => handle.HRGN.Value;
+    public static implicit operator GdiObjectHandle(RegionHandle handle) => new(handle.HRGN, ownsHandle: false);
 }

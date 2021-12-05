@@ -2,24 +2,24 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
 
 public readonly struct PenHandle : IDisposable
 {
-    public HPEN Handle { get; }
+    public HPEN HPEN { get; }
     private readonly bool _ownsHandle;
 
-    public static FontHandle Null = new(default);
+    public static readonly PenHandle Null = new(HPEN.NULL);
 
     public PenHandle(HPEN handle, bool ownsHandle = true)
     {
-        Debug.Assert(handle.IsInvalid || GdiImports.GetObjectType(handle) == ObjectType.Pen
-            || GdiImports.GetObjectType(handle) == ObjectType.ExtendedPen);
+        Debug.Assert(handle == HPEN.NULL
+            || (ObjectType)TerraFXWindows.GetObjectType(handle) == ObjectType.Pen
+            || (ObjectType)TerraFXWindows.GetObjectType(handle) == ObjectType.ExtendedPen);
 
-        Handle = handle;
+        HPEN = handle;
         _ownsHandle = ownsHandle;
     }
 
@@ -27,10 +27,10 @@ public readonly struct PenHandle : IDisposable
     {
         get
         {
-            if (Handle.IsInvalid)
+            if (HPEN == HPEN.NULL || HPEN == HPEN.INVALID_VALUE)
                 return true;
 
-            ObjectType type = GdiImports.GetObjectType(Handle);
+            ObjectType type = (ObjectType)TerraFXWindows.GetObjectType(HPEN);
             return !(type == ObjectType.Pen || type == ObjectType.ExtendedPen);
         }
     }
@@ -38,13 +38,13 @@ public readonly struct PenHandle : IDisposable
     public void Dispose()
     {
         if (_ownsHandle)
-            GdiImports.DeleteObject(Handle);
+            TerraFXWindows.DeleteObject(HPEN);
     }
 
-    public static implicit operator HGDIOBJ(PenHandle handle) => handle.Handle;
-    public static implicit operator HPEN(PenHandle handle) => handle.Handle;
-    public static implicit operator LResult(PenHandle handle) => handle.Handle.Handle;
+    public static implicit operator HGDIOBJ(PenHandle handle) => handle.HPEN;
+    public static implicit operator HPEN(PenHandle handle) => handle.HPEN;
+    public static unsafe implicit operator LResult(PenHandle handle) => handle.HPEN.Value;
     public static implicit operator GdiObjectHandle(PenHandle handle)
-        => new(handle.Handle, ownsHandle: false);
+        => new(handle.HPEN, ownsHandle: false);
     public static implicit operator PenHandle(StockPen pen) => Gdi.GetStockPen(pen);
 }

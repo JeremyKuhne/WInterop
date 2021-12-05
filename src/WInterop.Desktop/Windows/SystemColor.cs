@@ -8,170 +8,172 @@ public enum SystemColor : int
     /// <summary>
     ///  Scroll bar gray area. [COLOR_SCROLLBAR]
     /// </summary>
-    ScrollBar = 0,
+    ScrollBar = COLOR.COLOR_SCROLLBAR,
 
     /// <summary>
     ///  The Desktop. [COLOR_BACKGROUND]
     /// </summary>
-    Background = 1,
+    Background = COLOR.COLOR_BACKGROUND,
 
     /// <summary>
     ///  [COLOR_ACTIVECAPTION]
     /// </summary>
-    ActiveCaption = 2,
+    ActiveCaption = COLOR.COLOR_ACTIVECAPTION,
 
     /// <summary>
     ///  [COLOR_INACTIVECAPTION]
     /// </summary>
-    InactiveCaption = 3,
+    InactiveCaption = COLOR.COLOR_INACTIVECAPTION,
 
     /// <summary>
     ///  [COLOR_MENU]
     /// </summary>
-    Menu = 4,
+    Menu = COLOR.COLOR_MENU,
 
     /// <summary>
     ///  Window background. [COLOR_WINDOW]
     /// </summary>
-    Window = 5,
+    Window = COLOR.COLOR_WINDOW,
 
     /// <summary>
     ///  [COLOR_WINDOWFRAME]
     /// </summary>
-    WindowFrame = 6,
+    WindowFrame = COLOR.COLOR_WINDOWFRAME,
 
     /// <summary>
     ///  [COLOR_MENUTEXT]
     /// </summary>
-    MenuText = 7,
+    MenuText = COLOR.COLOR_MENUTEXT,
 
     /// <summary>
     ///  [COLOR_WINDOWTEXT]
     /// </summary>
-    WindowText = 8,
+    WindowText = COLOR.COLOR_WINDOWTEXT,
 
     /// <summary>
     ///  [COLOR_CAPTIONTEXT]
     /// </summary>
-    CaptionText = 9,
+    CaptionText = COLOR.COLOR_CAPTIONTEXT,
 
     /// <summary>
     ///  [COLOR_ACTIVEBORDER]
     /// </summary>
-    ActiveBorder = 10,
+    ActiveBorder = COLOR.COLOR_ACTIVEBORDER,
 
     /// <summary>
     ///  [COLOR_INACTIVEBORDER]
     /// </summary>
-    InactiveBorder = 11,
+    InactiveBorder = COLOR.COLOR_INACTIVEBORDER,
 
     /// <summary>
     ///  [COLOR_APPWORKSPACE]
     /// </summary>
-    AppWorkSpace = 12,
+    AppWorkSpace = COLOR.COLOR_APPWORKSPACE,
 
     /// <summary>
     ///  [COLOR_HIGHLIGHT]
     /// </summary>
-    Highlight = 13,
+    Highlight = COLOR.COLOR_HIGHLIGHT,
 
     /// <summary>
     ///  [COLOR_HIGHLIGHTTEXT]
     /// </summary>
-    HighlightText = 14,
+    HighlightText = COLOR.COLOR_HIGHLIGHTTEXT,
 
     /// <summary>
     ///  For dialog box backgrounds. [COLOR_BTNFACE]
     /// </summary>
-    ButtonFace = 15,
+    ButtonFace = COLOR.COLOR_BTNFACE,
 
     /// <summary>
     ///  [COLOR_BTNSHADOW]
     /// </summary>
-    ButtonShadow = 16,
+    ButtonShadow = COLOR.COLOR_BTNSHADOW,
 
     /// <summary>
     ///  [COLOR_GRAYTEXT]
     /// </summary>
-    GrayText = 17,
+    GrayText = COLOR.COLOR_GRAYTEXT,
 
     /// <summary>
     ///  [COLOR_BTNTEXT]
     /// </summary>
-    ButtonText = 18,
+    ButtonText = COLOR.COLOR_BTNTEXT,
 
     /// <summary>
     ///  [COLOR_INACTIVECAPTIONTEXT]
     /// </summary>
-    InactiveCaptionText = 19,
+    InactiveCaptionText = COLOR.COLOR_INACTIVECAPTIONTEXT,
 
     /// <summary>
     ///  [COLOR_BTNHIGHLIGHT]
     /// </summary>
-    ButtonHighlight = 20,
+    ButtonHighlight = COLOR.COLOR_BTNHIGHLIGHT,
 
     /// <summary>
     ///  [COLOR_3DDKSHADOW]
     /// </summary>
-    DarkShadow3d = 21,
+    DarkShadow3d = COLOR.COLOR_3DDKSHADOW,
 
     /// <summary>
     ///  [COLOR_3DLIGHT]
     /// </summary>
-    Light3d = 22,
+    Light3d = COLOR.COLOR_3DLIGHT,
 
     /// <summary>
     ///  [COLOR_INFOTEXT]
     /// </summary>
-    InfoText = 23,
+    InfoText = COLOR.COLOR_INFOTEXT,
 
     /// <summary>
     ///  [COLOR_INFOBK]
     /// </summary>
-    InfoBackground = 24,
+    InfoBackground = COLOR.COLOR_INFOBK,
 
     /// <summary>
     ///  [COLOR_HOTLIGHT]
     /// </summary>
-    HotLight = 26,
+    HotLight = COLOR.COLOR_HOTLIGHT,
 
     /// <summary>
     ///  [COLOR_GRADIENTACTIVECAPTION]
     /// </summary>
-    GradientActiveCaption = 27,
+    GradientActiveCaption = COLOR.COLOR_GRADIENTACTIVECAPTION,
 
     /// <summary>
     ///  [COLOR_GRADIENTINACTIVECAPTION]
     /// </summary>
-    GradientInactiveCaption = 28,
+    GradientInactiveCaption = COLOR.COLOR_GRADIENTINACTIVECAPTION,
 
     /// <summary>
     ///  [COLOR_MENUHILIGHT]
     /// </summary>
-    MenuHighlight = 29,
+    MenuHighlight = COLOR.COLOR_MENUHILIGHT,
 
     /// <summary>
     ///  [COLOR_MENUBAR]
     /// </summary>
-    MenuBar = 30,
+    MenuBar = COLOR.COLOR_MENUBAR,
 
+#pragma warning disable CA1069 // Enums values should not be duplicated
     /// <summary>
     ///  [COLOR_DESKTOP]
     /// </summary>
-    Desktop = Background,
+    Desktop = COLOR.COLOR_DESKTOP,
 
     /// <summary>
     ///  [COLOR_3DFACE]
     /// </summary>
-    Face3d = ButtonFace,
+    Face3d = COLOR.COLOR_3DFACE,
 
     /// <summary>
     ///  [COLOR_3DSHADOW]
     /// </summary>
-    Shadow3d = ButtonShadow,
+    Shadow3d = COLOR.COLOR_3DSHADOW,
 
     /// <summary>
     ///  [COLOR_3DHIGHLIGHT]
     /// </summary>
-    Highlight3d = ButtonHighlight
+    Highlight3d = COLOR.COLOR_3DHIGHLIGHT
+#pragma warning restore CA1069 // Enums values should not be duplicated
 }

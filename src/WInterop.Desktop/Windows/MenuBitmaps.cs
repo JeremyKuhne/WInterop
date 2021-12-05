@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi.Native;
-
 namespace WInterop.Windows;
 
 /// <summary>
@@ -13,55 +11,55 @@ public static class MenuBitmaps
     /// <summary>
     ///  [HBMMENU_CALLBACK]
     /// </summary>
-    public static HBITMAP CallBack = new((IntPtr)(-1));
+    public static readonly HBITMAP CallBack = HBMMENU.HBMMENU_CALLBACK;
 
     /// <summary>
     ///  [HBMMENU_MBAR_CLOSE]
     /// </summary>
-    public static HBITMAP Close = new((IntPtr)5);
+    public static readonly HBITMAP Close = HBMMENU.HBMMENU_MBAR_CLOSE;
 
     /// <summary>
     ///  [HBMMENU_MBAR_CLOSE_D]
     /// </summary>
-    public static HBITMAP DisabledClose = new((IntPtr)6);
+    public static readonly HBITMAP DisabledClose = HBMMENU.HBMMENU_MBAR_CLOSE_D;
 
     /// <summary>
     ///  [HBMMENU_MBAR_MINIMIZE]
     /// </summary>
-    public static HBITMAP Minimize = new((IntPtr)3);
+    public static readonly HBITMAP Minimize = HBMMENU.HBMMENU_MBAR_MINIMIZE;
 
     /// <summary>
     ///  [HBMMENU_MBAR_MINIMIZE_D]
     /// </summary>
-    public static HBITMAP DisabledMinimize = new((IntPtr)7);
+    public static readonly HBITMAP DisabledMinimize = HBMMENU.HBMMENU_MBAR_MINIMIZE_D;
 
     /// <summary>
     ///  [HBMMENU_MBAR_RESTORE]
     /// </summary>
-    public static HBITMAP Restore = new((IntPtr)2);
+    public static readonly HBITMAP Restore = HBMMENU.HBMMENU_MBAR_RESTORE;
 
     /// <summary>
     ///  [HBMMENU_POPUP_CLOSE]
     /// </summary>
-    public static HBITMAP PopupClose = new((IntPtr)8);
+    public static readonly HBITMAP PopupClose = HBMMENU.HBMMENU_POPUP_CLOSE;
 
     /// <summary>
     ///  [HBMMENU_POPUP_MAXIMIZE]
     /// </summary>
-    public static HBITMAP PopupMaximize = new((IntPtr)10);
+    public static readonly HBITMAP PopupMaximize = HBMMENU.HBMMENU_POPUP_MAXIMIZE;
 
     /// <summary>
     ///  [HBMMENU_POPUP_MINIMIZE]
     /// </summary>
-    public static HBITMAP PopupMinimize = new((IntPtr)11);
+    public static readonly HBITMAP PopupMinimize = HBMMENU.HBMMENU_POPUP_MINIMIZE;
 
     /// <summary>
     ///  [HBMMENU_POPUP_RESTORE]
     /// </summary>
-    public static HBITMAP PopupRestore = new((IntPtr)9);
+    public static readonly HBITMAP PopupRestore = HBMMENU.HBMMENU_POPUP_RESTORE;
 
     /// <summary>
     ///  [HBMMENU_SYSTEM]
     /// </summary>
-    public static HBITMAP System = new((IntPtr)1);
+    public static readonly HBITMAP System = HBMMENU.HBMMENU_SYSTEM;
 }

@@ -2,19 +2,20 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.Com.Native;
 using WInterop.Errors;
 using WInterop.Handles;
 using WInterop.Support;
 
 namespace WInterop.Com;
 
-// https://msdn.microsoft.com/en-us/library/windows/desktop/ms221627.aspx
-public class Variant : HandleZeroOrMinusOneIsInvalid
+/// <docs>
+///  https://docs.microsoft.com/windows/win32/api/oaidl/ns-oaidl-variant
+/// </docs>
+public unsafe class Variant : HandleZeroOrMinusOneIsInvalid
 {
     protected const ulong DataOffset = 8;
     protected const ulong NativeSize = 24;
-    protected static object s_UnsupportedObject = new();
+    protected static readonly object s_UnsupportedObject = new();
 
     public Variant() : this(ownsHandle: true)
     {
@@ -70,10 +71,7 @@ public class Variant : HandleZeroOrMinusOneIsInvalid
         }
 
         object? result = GetCoreType(propertyType, data);
-        if (ReferenceEquals(result, s_UnsupportedObject))
-            throw new InvalidOleVariantTypeException();
-
-        return result;
+        return ReferenceEquals(result, s_UnsupportedObject) ? throw new InvalidOleVariantTypeException() : result;
     }
 
     // VARENUMs that are VARIANT only (e.g. not valid for PROPVARIANT)
@@ -112,7 +110,7 @@ public class Variant : HandleZeroOrMinusOneIsInvalid
     {
         IntPtr handle = Interlocked.Exchange(ref this.handle, IntPtr.Zero);
         if (handle != IntPtr.Zero)
-            Imports.VariantClear(handle).ThrowIfFailed();
+            TerraFXWindows.VariantClear((VARIANT*)(void*)handle).ThrowIfFailed();
 
         return true;
     }

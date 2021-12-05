@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Security.Native;
-
 namespace WInterop.Security;
 
 /// <summary>
@@ -16,12 +14,12 @@ public readonly unsafe struct ExplicitAccess
     public TrusteeType TrusteeType { get; }
     public string? TrusteeName { get; }
 
-    public ExplicitAccess(EXPLICIT_ACCESS* access)
+    public ExplicitAccess(EXPLICIT_ACCESS_W* access)
     {
-        Permissions = access->grfAccessPermissions;
-        Mode = access->grfAccessMode;
-        Inheritance = access->grfInheritance;
-        TrusteeType = access->Trustee.TrusteeType;
-        TrusteeName = access->Trustee.TrusteeName;
+        Permissions = new(access->grfAccessPermissions);
+        Mode = (AccessMode)access->grfAccessMode;
+        Inheritance = (Inheritance)access->grfInheritance;
+        TrusteeType = (TrusteeType)access->Trustee.TrusteeType;
+        TrusteeName = access->Trustee.TrusteeName();
     }
 }

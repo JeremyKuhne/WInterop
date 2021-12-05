@@ -4,7 +4,7 @@
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Native;
+using TerraFX.Interop.Windows;
 
 namespace WInterop.GdiPlus;
 
@@ -44,8 +44,8 @@ public readonly struct ARGB
         B = blue;
     }
 
-    public static implicit operator ARGB(COLORREF color) => new(color.R, color.G, color.B);
-    public static implicit operator COLORREF(ARGB color) => new(color.R, color.G, color.B);
+    public static implicit operator ARGB(COLORREF color) => new(color.R(), color.G(), color.B());
+    public static implicit operator COLORREF(ARGB color) => (color.R, color.G, color.B).ToCOLORREF();
     public static implicit operator ARGB(Color color) => new(color.R, color.G, color.B);
     public static implicit operator Color(ARGB color) => Color.FromArgb(color.Value);
 }

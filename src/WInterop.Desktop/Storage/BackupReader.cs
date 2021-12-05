@@ -55,7 +55,7 @@ public class BackupReader : IDisposable
                     context: ref _context));
         }
 
-        if (streamId->Size > 0)
+        if (streamId->Size.QuadPart > 0)
         {
             // Move to the next header, if any
             if (!StorageImports.BackupSeek(
@@ -72,9 +72,9 @@ public class BackupReader : IDisposable
 
         return new BackupStreamInformation
         {
-            Name = streamId->cStreamName.CreateString(),
-            StreamType = streamId->dwStreamId,
-            Size = streamId->Size
+            Name = new((char*)streamId->cStreamName, 0, (int)streamId->dwStreamNameSize),
+            StreamType = (BackupStreamType)streamId->dwStreamId,
+            Size = streamId->Size.QuadPart
         };
     }
 

@@ -11,20 +11,20 @@ public enum InvokeKind
     /// <summary>
     ///  [INVOKE_FUNC]
     /// </summary>
-    Function = 1,
+    Function = INVOKEKIND.INVOKE_FUNC,
 
     /// <summary>
     ///  [INVOKE_PROPERTYGET]
     /// </summary>
-    PropertyGet = 2,
+    PropertyGet = INVOKEKIND.INVOKE_PROPERTYGET,
 
     /// <summary>
     ///  [INVOKE_PROPERTYPUT]
     /// </summary>
-    PropertyPut = 4,
+    PropertyPut = INVOKEKIND.INVOKE_PROPERTYPUT,
 
     /// <summary>
     ///  [INVOKE_PROPERTYPUTREF]
     /// </summary>
-    PropertyPutRef = 8
+    PropertyPutRef = INVOKEKIND.INVOKE_PROPERTYPUTREF
 }

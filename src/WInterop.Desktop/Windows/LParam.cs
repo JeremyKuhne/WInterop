@@ -28,8 +28,8 @@ public struct LParam
 
     public static unsafe implicit operator void*(LParam lParam) => (void*)lParam.Value;
     public static unsafe implicit operator LParam(void* value) => new((nint)value);
-    public static explicit operator WindowHandle(LParam lParam) => new HWND(lParam.Value);
-    public static explicit operator LParam(WindowHandle value) => new(value.HWND.Value);
+    public static unsafe explicit operator WindowHandle(LParam lParam) => new HWND((void*)lParam.Value);
+    public static unsafe explicit operator LParam(WindowHandle value) => new((nint)value.HWND.Value);
 
     public override string ToString() => Value.ToString();
 }

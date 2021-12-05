@@ -160,6 +160,8 @@ public class StringBuffer : HeapBuffer
 
     public unsafe char* CharPointer => (char*)VoidPointer;
 
+    public unsafe ushort* UShortPointer => (ushort*)VoidPointer;
+
     /// <summary>
     ///  Check for the index of a specified character.
     /// </summary>

@@ -351,3 +351,6 @@ dotnet_diagnostic.SA1118.severity = silent
 
 # SA1023: Dereference symbol '*' should be followed by a space.
 dotnet_diagnostic.SA1023.severity = silent
+
+# SA1519: Braces should not be omitted from multi-line child statement
+dotnet_diagnostic.SA1519.severity = silent

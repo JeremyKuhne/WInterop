@@ -77,14 +77,18 @@ public static partial class Cryptography
         return info;
     }
 
-    private static bool SystemStoreEnumeratorCallback(
-        IntPtr pvSystemStore,
+    /// <docs>
+    ///  https://docs.microsoft.com/windows/win32/api/wincrypt/nc-wincrypt-pfn_cert_enum_system_store
+    /// </docs>
+    [UnmanagedCallersOnly]
+    private static unsafe BOOL CertEnumSystemStore(
+        void* pvSystemStore,
         uint dwFlags,
-        IntPtr pStoreInfo,
-        IntPtr pvReserved,
-        IntPtr pvArg)
+        CERT_SYSTEM_STORE_INFO* pStoreInfo,
+        void* pvReserved,
+        void* pvArg)
     {
-        GCHandle handle = GCHandle.FromIntPtr(pvArg);
+        GCHandle handle = GCHandle.FromIntPtr((IntPtr)pvArg);
         var infos = (List<SystemStoreInformation>)(handle.Target ?? throw new InvalidOperationException());
         infos.Add(GetSystemNameAndKey(dwFlags, pvSystemStore));
         return true;
@@ -101,12 +105,11 @@ public static partial class Cryptography
             {
                 // To lookup system stores in an alternate location you need to set CERT_SYSTEM_STORE_RELOCATE_FLAG
                 // and pass in the name and alternate location (HKEY) in pvSystemStoreLocationPara.
-                var callBack = new CertEnumSystemStoreCallback(SystemStoreEnumeratorCallback);
-                Imports.CertEnumSystemStore(
+                TerraFXWindows.CertEnumSystemStore(
                     dwFlags: (uint)location,
-                    pvSystemStoreLocationPara: (IntPtr)namePointer,
-                    pvArg: GCHandle.ToIntPtr(infoHandle),
-                    pfnEnum: callBack);
+                    pvSystemStoreLocationPara: namePointer,
+                    pvArg: (void*)GCHandle.ToIntPtr(infoHandle),
+                    pfnEnum: &CertEnumSystemStore);
             }
             finally
             {
@@ -117,24 +120,28 @@ public static partial class Cryptography
         return info;
     }
 
-    private static bool PhysicalStoreEnumeratorCallback(
-        IntPtr pvSystemStore,
+    /// <docs>
+    ///  https://docs.microsoft.com/windows/win32/api/wincrypt/nc-wincrypt-pfn_cert_enum_physical_store
+    /// </docs>
+    [UnmanagedCallersOnly]
+    private static unsafe BOOL CertEnumPhysicalStore(
+        void* pvSystemStore,
         uint dwFlags,
-        IntPtr pwszStoreName,
-        IntPtr pStoreInfo,
-        IntPtr pvReserved,
-        IntPtr pvArg)
+        ushort* pwszStoreName,
+        CERT_PHYSICAL_STORE_INFO* pStoreInfo,
+        void* pvReserved,
+        void* pvArg)
     {
-        GCHandle handle = GCHandle.FromIntPtr(pvArg);
+        GCHandle handle = GCHandle.FromIntPtr((IntPtr)pvArg);
         var infos = (List<PhysicalStoreInformation>)(handle.Target ?? throw new InvalidOperationException());
 
         PhysicalStoreInformation info = new()
         {
             SystemStoreInformation = GetSystemNameAndKey(dwFlags, pvSystemStore),
-            PhysicalStoreName = Marshal.PtrToStringUni(pwszStoreName) ?? string.Empty
+            PhysicalStoreName = new string((char*)pwszStoreName)
         };
-        var physicalInfo = Marshal.PtrToStructure<CERT_PHYSICAL_STORE_INFO>(pStoreInfo);
-        info.ProviderType = physicalInfo.pszOpenStoreProvider;
+
+        info.ProviderType = new string((char*)pStoreInfo->pszOpenStoreProvider);
         infos.Add(info);
 
         return true;
@@ -145,18 +152,17 @@ public static partial class Cryptography
         var info = new List<PhysicalStoreInformation>();
         GCHandle infoHandle = GCHandle.Alloc(info);
 
-        fixed (char* namePointer = systemStoreName)
+        fixed (void* s = systemStoreName)
         {
             try
             {
                 // To lookup system stores in an alternate location you need to set CERT_SYSTEM_STORE_RELOCATE_FLAG
                 // and pass in the name and alternate location (HKEY) in pvSystemStoreLocationPara.
-                var callBack = new CertEnumPhysicalStoreCallback(PhysicalStoreEnumeratorCallback);
-                Imports.CertEnumPhysicalStore(
-                    pvSystemStore: (IntPtr)namePointer,
+                TerraFXWindows.CertEnumPhysicalStore(
+                    pvSystemStore: s,
                     dwFlags: (uint)location,
-                    pvArg: GCHandle.ToIntPtr(infoHandle),
-                    pfnEnum: callBack);
+                    pvArg: (void*)GCHandle.ToIntPtr(infoHandle),
+                    pfnEnum: &CertEnumPhysicalStore);
             }
             finally
             {
@@ -167,7 +173,7 @@ public static partial class Cryptography
         return info;
     }
 
-    private static SystemStoreInformation GetSystemNameAndKey(uint dwFlags, IntPtr pvSystemStore)
+    private static unsafe SystemStoreInformation GetSystemNameAndKey(uint dwFlags, void* pvSystemStore)
     {
         SystemStoreInformation info = default;
 
@@ -183,7 +189,7 @@ public static partial class Cryptography
         else
         {
             // The name is null terminated
-            info.Name = Marshal.PtrToStringUni(pvSystemStore) ?? string.Empty;
+            info.Name = Marshal.PtrToStringUni((IntPtr)pvSystemStore) ?? string.Empty;
         }
 
         info.Location = (SystemStoreLocation)(dwFlags & CryptoDefines.CERT_SYSTEM_STORE_LOCATION_MASK);

@@ -1,15 +1,27 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Runtime.InteropServices;
 using WInterop.Com.Native;
 using WInterop.Errors;
+using WInterop.Globalization;
 
 namespace WInterop.Com;
 
-public static partial class Com
+public static unsafe partial class Com
 {
-    public static unsafe object CreateStorage(
+    public static StructuredStorage CreateStorage(
+        string path,
+        StorageMode mode = StorageMode.ReadWrite | StorageMode.Create | StorageMode.ShareExclusive,
+        StorageFormat format = StorageFormat.DocFile)
+    {
+        return new((IStorage*)CreateStorageInternal(
+            path,
+            InterfaceIds.IID_IStorage,
+            mode,
+            format));
+    }
+
+    private static void* CreateStorageInternal(
         string path,
         Guid riid,
         StorageMode mode = StorageMode.ReadWrite | StorageMode.Create | StorageMode.ShareExclusive,
@@ -23,20 +35,36 @@ public static partial class Com
             ulSectorSize = (mode & StorageMode.Simple) != 0 ? 512u : 4096
         };
 
-        Imports.StgCreateStorageEx(
-            path,
-            mode,
-            format,
-            0,
-            format == StorageFormat.DocFile ? &options : null,
-            null,
-            ref riid,
-            out object created).ThrowIfFailed(path);
+        void* created;
+        fixed (void* p = path)
+        {
+            TerraFXWindows.StgCreateStorageEx(
+                (ushort*)p,
+                (uint)mode,
+                (uint)format,
+                0,
+                format == StorageFormat.DocFile ? &options : null,
+                null,
+                &riid,
+                &created).ThrowIfFailed(path);
+        }
 
         return created;
     }
 
-    public static unsafe object OpenStorage(
+    public static StructuredStorage OpenStorage(
+        string path,
+        StorageMode mode = StorageMode.ReadWrite | StorageMode.ShareExclusive,
+        StorageFormat format = StorageFormat.Any)
+    {
+        return new((IStorage*)OpenStorageInternal(
+            path,
+            InterfaceIds.IID_IStorage,
+            mode,
+            format));
+    }
+
+    private static void* OpenStorageInternal(
         string path,
         Guid riid,
         StorageMode mode = StorageMode.ReadWrite | StorageMode.ShareExclusive,
@@ -48,92 +76,38 @@ public static partial class Com
             usVersion = 1
         };
 
-        Imports.StgOpenStorageEx(
-            path,
-            mode,
-            format,
-            0,
-            format == StorageFormat.DocFile ? &options : null,
-            null,
-            ref riid,
-            out object created).ThrowIfFailed(path);
+        void* created;
+        fixed (void* p = path)
+        {
+            TerraFXWindows.StgOpenStorageEx(
+                (ushort*)p,
+                (uint)mode,
+                (uint)format,
+                0,
+                format == StorageFormat.DocFile ? &options : null,
+                null,
+                &riid,
+                &created).ThrowIfFailed(path);
+        }
 
         return created;
     }
 
     public static bool IsStorageFile(string path)
     {
-        return Imports.StgIsStorageFile(path) == HResult.S_OK;
-    }
-
-    public static unsafe ITypeInfo GetTypeInfoByName(this ITypeLib typeLib, string typeName)
-    {
-        // The find method is case insensitive, and will overwrite the input buffer
-        // with the actual found casing.
-
-        char* nameBuffer = stackalloc char[typeName.Length + 1];
-        Span<char> nameSpan = new(nameBuffer, typeName.Length);
-        typeName.AsSpan().CopyTo(nameSpan);
-        nameBuffer[typeName.Length] = '\0';
-
-        IntPtr* typeInfos = stackalloc IntPtr[1];
-        MemberId* memberIds = stackalloc MemberId[1];
-        ushort found = 1;
-        typeLib.FindName(
-            nameBuffer,
-            lHashVal: 0,
-            typeInfos,
-            memberIds,
-            &found).ThrowIfFailed(typeName);
-
-        return (ITypeInfo)Marshal.GetTypedObjectForIUnknown(typeInfos[0], typeof(ITypeInfo));
-    }
-
-    public static unsafe ICollection<string?> GetFunctionNames(this ITypeInfo typeInfo, uint functionIndex)
-    {
-        typeInfo.GetFuncDesc(functionIndex, out FUNCDESC* description)
-            .ThrowIfFailed($"Failed to get description for function index: {functionIndex}");
-
-        uint count = (uint)description->cParams + 1;
-        MemberId id = description->memid;
-        typeInfo.ReleaseFuncDesc(description);
-        return GetMemberNames(typeInfo, id, count);
-    }
-
-    public static unsafe ICollection<string?> GetMemberNames(this ITypeInfo typeInfo, MemberId id, uint count)
-    {
-        BasicString* names = stackalloc BasicString[(int)count];
-        typeInfo.GetNames(id, names, count, out count)
-            .ThrowIfFailed($"Failed to get names for member id: {id.Value}");
-
-        var results = new List<string?>((int)count);
-        for (int i = 0; i < count; i++)
+        fixed (void* p = path)
         {
-            results.Add(names[i].ToStringAndFree());
+            return TerraFXWindows.StgIsStorageFile((ushort*)p).ToHResult() == HResult.S_OK;
         }
-
-        return results;
     }
 
-    public static unsafe string? GetMemberName(this ITypeInfo typeInfo, MemberId id)
+    public static TypeLibrary LoadRegisteredTypeLibrary(Guid guid, ushort majorVersion, ushort minorVersion = 0, LocaleId locale = default)
     {
-        BasicString name;
-        typeInfo.GetDocumentation(id, &name)
-            .ThrowIfFailed($"Failed to get documention for member id: {id.Value}");
-        return name.ToStringAndFree();
-    }
-
-    public static unsafe string? GetVariableName(this ITypeInfo typeInfo, uint variableIndex)
-    {
-        typeInfo.GetVarDesc(variableIndex, out VARDESC* description)
-            .ThrowIfFailed($"Failed to get description for variable index: {variableIndex}");
-
-        MemberId id = description->memid;
-        typeInfo.ReleaseVarDesc(description);
-
-        return typeInfo.GetMemberName(id);
+        ITypeLib* library;
+        TerraFXWindows.LoadRegTypeLib(&guid, majorVersion, minorVersion, locale.RawValue, &library).ThrowIfFailed();
+        return new(library);
     }
 
     public static unsafe uint Release(IntPtr pUnk)
-        => pUnk == IntPtr.Zero ? throw new ArgumentNullException(nameof(pUnk)) : ((IUnknown*)pUnk)->Release();
+        => pUnk == IntPtr.Zero ? throw new ArgumentNullException(nameof(pUnk)) : ((Unknown*)pUnk)->Release();
 }

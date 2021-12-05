@@ -87,7 +87,7 @@ public class Encryption
             DesiredAccess.GenericReadWrite | DesiredAccess.WriteDac))
             {
                 handle.IsInvalid.Should().BeFalse();
-                SID usersGroup = Security.CreateWellKnownSid(WellKnownSID.Users);
+                SecurityIdentifier usersGroup = Security.CreateWellKnownSid(WellKnownSID.Users);
                 handle.ChangeAccess(usersGroup, FileAccessRights.GenericRead, AccessMode.Grant);
             }
 
@@ -119,7 +119,7 @@ public class Encryption
             DesiredAccess.GenericReadWrite | DesiredAccess.WriteDac))
             {
                 handle.IsInvalid.Should().BeFalse();
-                SID anonymous = Security.CreateWellKnownSid(WellKnownSID.Anonymous);
+                SecurityIdentifier anonymous = Security.CreateWellKnownSid(WellKnownSID.Anonymous);
                 handle.ChangeAccess(anonymous, FileAccessRights.GenericRead, AccessMode.Grant);
             }
 
@@ -162,7 +162,8 @@ public class Encryption
         // Check that the SID is our current user
         using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
         {
-            Action action = () => Storage.RemoveUser(token.GetTokenUserSid().Sid, path);
+            var sid = token.GetTokenUserSid().Sid;
+            Action action = () => Storage.RemoveUser(ref sid, path);
 
             // You can't remove all users
             action.Should().Throw<UnauthorizedAccessException>();

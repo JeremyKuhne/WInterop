@@ -6,7 +6,7 @@ namespace WInterop.Com;
 /// <summary>
 ///  [HREFTYPE]
 /// </summary>
-/// <docs>https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-oaut/ed6620b1-6b23-4fa1-99e6-781832999f93</docs>
+/// <docs>https://docs.microsoft.com/openspecs/windows_protocols/ms-oaut/ed6620b1-6b23-4fa1-99e6-781832999f93</docs>
 public struct RefTypeHandle
 {
     public uint Value;

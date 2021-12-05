@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
+using TerraFX.Interop.Windows;
 
 namespace WInterop.Direct2d;
 
@@ -21,5 +22,5 @@ internal unsafe class WindowRenderTarget : RenderTarget, IWindowRenderTarget
 
     public void Resize(SizeU pixelSize) => _handle->Resize((D2D_SIZE_U*)&pixelSize).ThrowIfFailed();
 
-    public Windows.Native.HWND GetHwnd() => new(_handle->GetHwnd());
+    public HWND GetHwnd() => new(_handle->GetHwnd());
 }

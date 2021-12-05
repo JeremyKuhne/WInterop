@@ -9,25 +9,25 @@ public enum IdlFlag : ushort
     /// <summary>
     ///  [IDLFLAG_NONE]
     /// </summary>
-    None = 0x0,
+    None = TerraFXWindows.IDLFLAG_NONE,
 
     /// <summary>
     ///  [IDLFLAG_FIN]
     /// </summary>
-    In = 0x1,
+    In = TerraFXWindows.IDLFLAG_FIN,
 
     /// <summary>
     ///  [IDLFLAG_FOUT]
     /// </summary>
-    Out = 0x2,
+    Out = TerraFXWindows.IDLFLAG_FOUT,
 
     /// <summary>
     ///  [IDLFLAG_FLCID]
     /// </summary>
-    LocalIdentifer = 0x4,
+    LocalIdentifer = TerraFXWindows.IDLFLAG_FLCID,
 
     /// <summary>
     ///  [IDLFLAG_FRETVAL]
     /// </summary>
-    ReturnValue = 0x8,
+    ReturnValue = TerraFXWindows.IDLFLAG_FRETVAL,
 }

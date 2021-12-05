@@ -13,7 +13,7 @@ public readonly struct IconHandle : IDisposable
     /// <summary>
     ///  Used to specifiy that you don't want a default icon picked in WInterop method calls.
     /// </summary>
-    public static IconHandle NoIcon = new(new HICON((IntPtr)(-1)));
+    public static readonly IconHandle NoIcon = new(HICON.INVALID_VALUE);
 
     public IconHandle(HICON handle, bool ownsHandle = true)
     {
@@ -21,7 +21,7 @@ public readonly struct IconHandle : IDisposable
         _ownsHandle = ownsHandle;
     }
 
-    public bool IsInvalid => HICON.IsInvalid;
+    public bool IsInvalid => HICON == HICON.INVALID_VALUE;
 
     public void Dispose()
     {
@@ -30,10 +30,10 @@ public readonly struct IconHandle : IDisposable
     }
 
     public static implicit operator HICON(IconHandle handle) => handle.HICON;
-    public static implicit operator LResult(IconHandle handle) => handle.HICON.Value;
+    public static unsafe implicit operator LResult(IconHandle handle) => handle.HICON.Value;
     public static implicit operator IconHandle(IconId id) => Windows.LoadIcon(id);
 
-    public override bool Equals(object? obj) => obj is IconHandle other ? other.HICON == HICON : false;
+    public override bool Equals(object? obj) => obj is IconHandle other && other.HICON == HICON;
     public bool Equals(IconHandle other) => other.HICON == HICON;
     public static bool operator ==(IconHandle a, IconHandle b) => a.HICON == b.HICON;
     public static bool operator !=(IconHandle a, IconHandle b) => a.HICON != b.HICON;

@@ -13,7 +13,7 @@ public class EnumerateRights
     public void EnumerateAccountRights_UserGroup()
     {
         LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.Execute);
-        SID sid = Security.CreateWellKnownSid(WellKnownSID.Users);
+        SecurityIdentifier sid = Security.CreateWellKnownSid(WellKnownSID.Users);
         var rights = Security.LsaEnumerateAccountRights(handle, in sid);
         rights.Should().NotBeEmpty();
         rights.Should().Contain("SeChangeNotifyPrivilege");
@@ -23,7 +23,7 @@ public class EnumerateRights
     public void EnumerateAccountRights_ReadRightsFails()
     {
         LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.Read);
-        SID sid = Security.CreateWellKnownSid(WellKnownSID.Users);
+        SecurityIdentifier sid = Security.CreateWellKnownSid(WellKnownSID.Users);
         Action action = () => Security.LsaEnumerateAccountRights(handle, in sid);
         action.Should().Throw<UnauthorizedAccessException>();
     }
@@ -32,7 +32,7 @@ public class EnumerateRights
     public void EnumerateAccountRights_BadSidFails()
     {
         LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.Read);
-        SID sid = new();
+        SecurityIdentifier sid = new();
         Action action = () => Security.LsaEnumerateAccountRights(handle, in sid);
         action.Should().Throw<ArgumentException>();
     }
@@ -41,7 +41,7 @@ public class EnumerateRights
     public void EnumerateAccountRights_NoRightsFails()
     {
         LsaHandle handle = Security.LsaOpenLocalPolicy(PolicyAccessRights.Read);
-        SID sid = Security.CreateWellKnownSid(WellKnownSID.AllApplicationPackages);
+        SecurityIdentifier sid = Security.CreateWellKnownSid(WellKnownSID.AllApplicationPackages);
         Security.LsaEnumerateAccountRights(handle, in sid).Should().BeEmpty();
     }
 }

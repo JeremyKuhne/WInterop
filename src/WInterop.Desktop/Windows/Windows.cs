@@ -457,13 +457,13 @@ public static partial class Windows
     ///  Whether or not the returned brush should own the handle. If true the brush handle
     ///  will be deleted when disposed.
     /// </param>
-    public static BrushHandle SetClassBackgroundBrush<T>(
+    public static unsafe BrushHandle SetClassBackgroundBrush<T>(
         this T window,
         BrushHandle value,
         bool ownsHandle = true) where T : IHandle<WindowHandle>
     {
-        IntPtr result = SetClassLong(window, ClassLong.BackgroundBrush, value.HBRUSH.Value);
-        return new BrushHandle(new Gdi.Native.HBRUSH(result), ownsHandle);
+        IntPtr result = SetClassLong(window, ClassLong.BackgroundBrush, (IntPtr)value.Handle.Value);
+        return new BrushHandle(new HBRUSH((void*)result), ownsHandle);
     }
 
     public static bool ShowWindow<T>(this T window, ShowWindowCommand command)
@@ -718,7 +718,8 @@ public static partial class Windows
     public static void KillTimer<T>(this T window, TimerId id) where T : IHandle<WindowHandle>
         => Error.ThrowLastErrorIfFalse(WindowsImports.KillTimer(window.Handle, id));
 
-    public static Color GetSystemColor(SystemColor systemColor) => WindowsImports.GetSysColor(systemColor);
+    public static Color GetSystemColor(SystemColor systemColor)
+        => new COLORREF(TerraFXWindows.GetSysColor((int)systemColor)).ToColor();
 
     /// <summary>
     ///  Gets the value for the given system metric.
@@ -795,8 +796,8 @@ public static partial class Windows
 
     public static unsafe IconHandle LoadIcon(IconId id)
     {
-        HICON handle = WindowsImports.LoadIconW(ModuleInstance.Null, (char*)(uint)id);
-        if (handle.IsInvalid)
+        HICON handle = TerraFXWindows.LoadIconW(default, (ushort*)(uint)id);
+        if (handle == HICON.NULL)
             Error.ThrowLastError();
 
         return new IconHandle(handle, ownsHandle: false);
@@ -804,11 +805,11 @@ public static partial class Windows
 
     public static unsafe IconHandle LoadIcon(string name, ModuleInstance module)
     {
-        fixed (char* n = name)
+        fixed (void* n = name)
         {
-            HICON handle = WindowsImports.LoadIconW(module, n);
+            HICON handle = TerraFXWindows.LoadIconW(module.Handle, (ushort*)n);
 
-            if (handle.IsInvalid)
+            if (handle == HICON.NULL)
                 Error.ThrowLastError();
 
             return new IconHandle(handle, ownsHandle: false);

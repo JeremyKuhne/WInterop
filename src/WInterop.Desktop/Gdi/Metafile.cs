@@ -10,6 +10,8 @@ public class Metafile : IDisposable
 {
     private readonly HENHMETAFILE _hemf;
 
+    public const uint EMFPlusSignature = 0x2B464D45; // '+' 'F' 'M' 'E'
+
     public Metafile(HENHMETAFILE hemf) => _hemf = hemf;
 
     public static implicit operator HENHMETAFILE(Metafile metafile) => metafile._hemf;

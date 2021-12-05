@@ -1,11 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using System.Runtime.InteropServices;
-using WInterop;
+using TerraFX.Interop.Windows;
 using WInterop.Com;
-using WInterop.Com.Native;
-using WInterop.Errors;
-using WInterop.Security.Native;
-using WInterop.Storage;
 
 namespace Performance;
 
@@ -20,7 +16,7 @@ public unsafe class FunctionPointers
     public void GlobalSetup()
     {
         _path = Path.Join(Path.GetTempPath(), Path.GetRandomFileName());
-        _punk = (IUnknown*)CreateStorage(_path, InterfaceIds.IID_IStorage);
+        _punk = (IUnknown*)Com.CreateStorage(_path).IStorage;
     }
 
     [GlobalCleanup]
@@ -56,45 +52,4 @@ public unsafe class FunctionPointers
     {
         return (uint)Marshal.AddRef((IntPtr)_punk);
     }
-
-    public unsafe static void* CreateStorage(
-        string path,
-        Guid riid,
-        StorageMode mode = StorageMode.ReadWrite | StorageMode.Create | StorageMode.ShareExclusive,
-        StorageFormat format = StorageFormat.DocFile)
-    {
-        STGOPTIONS options = new()
-        {
-            usVersion = 1,
-
-            // If possible, we want the larger 4096 sector size
-            ulSectorSize = (mode & StorageMode.Simple) != 0 ? 512u : 4096
-        };
-
-        void* created = default;
-
-        StgCreateStorageEx(
-            path,
-            mode,
-            format,
-            0,
-            format == StorageFormat.DocFile ? &options : null,
-            null,
-            ref riid,
-            &created).ThrowIfFailed(path);
-
-        return created;
-    }
-
-    // https://docs.microsoft.com/windows/win32/api/coml2api/nf-coml2api-stgcreatestorageex
-    [DllImport(Libraries.Ole32, CharSet = CharSet.Unicode, ExactSpelling = true)]
-    internal unsafe static extern HResult StgCreateStorageEx(
-        string pwcsName,
-        StorageMode grfMode,
-        StorageFormat stgfmt,
-        FileFlags grfAttrs,
-        STGOPTIONS* pStgOptions,
-        SECURITY_DESCRIPTOR** pSecurityDescriptor,
-        ref Guid riid,
-        void** ppObjectOpen);
 }

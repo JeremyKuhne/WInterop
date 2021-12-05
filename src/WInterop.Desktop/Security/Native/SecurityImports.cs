@@ -41,19 +41,6 @@ public static partial class SecurityImports
     [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
     public static extern IntBoolean RevertToSelf();
 
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446583.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe IntBoolean CreateRestrictedToken(
-        AccessToken ExistingTokenHandle,
-        uint Flags,
-        uint DisableSidCount,
-        SID_AND_ATTRIBUTES* SidsToDisable,
-        uint DeletePrivilegeCount,
-        LuidAndAttributes* PrivilegesToDelete,
-        uint RestrictedSidCount,
-        SID_AND_ATTRIBUTES* SidsToRestrict,
-        out AccessToken NewTokenHandle);
-
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378299.aspx
     [DllImport(Libraries.Advapi32, ExactSpelling = true)]
     public static extern unsafe NTStatus LsaOpenPolicy(
@@ -78,68 +65,17 @@ public static partial class SecurityImports
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms721790.aspx
     [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-    public static extern NTStatus LsaEnumerateAccountRights(
+    public static extern unsafe NTStatus LsaEnumerateAccountRights(
         LsaHandle PolicyHandle,
-        in SID AccountSid,
+        SID* AccountSid,
         out LsaMemoryHandle UserRights,
         out uint CountOfRights);
 
-    // This isn't allowed in Windows Store apps, but is exactly the same as
-    // calling LookupAccountSidW with a null or empty computer name.
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/mt779143.aspx
-    // The docs claim that it is in Advapi.dll, but it actually lives in sechost.dll
-    // [DllImport(ApiSets.api_ms_win_security_lsalookup_l1_1_0, SetLastError = true, ExactSpelling = true)]
-    // public static extern BOOL LookupAccountSidLocalW(
-    //    in SID lpSid,
-    //    SafeHandle lpName,
-    //    ref uint cchName,
-    //    SafeHandle lpReferencedDomainName,
-    //    ref uint cchReferencedDomainName,
-    //    out SidNameUse peUse);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446585.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe IntBoolean CreateWellKnownSid(
-        WellKnownSID WellKnownSidType,
-        SID* DomainSid,
-        SID* pSid,
-        ref uint cbSid);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379154.aspx
-    [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-    public static extern unsafe IntBoolean IsWellKnownSid(
-        in SID pSid,
-        WellKnownSID WellKnownSidType);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379151.aspx
-    [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-    public static extern unsafe IntBoolean IsValidSid(
-        in SID pSid);
-
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376399.aspx
     [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern IntBoolean ConvertSidToStringSidW(
-        in SID Sid,
+    public static unsafe extern IntBoolean ConvertSidToStringSidW(
+        SID* Sid,
         out LocalHandle StringSid);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446658.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe byte* GetSidSubAuthorityCount(
-        in SID pSid);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446657.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe uint* GetSidSubAuthority(
-        in SID pSid,
-        uint nSubAuthority);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376404.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe IntBoolean CopySid(
-        uint nDestinationSidLength,
-        out SID pDestinationSid,
-        SID* pSourceSid);
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379159.aspx
     [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
@@ -149,18 +85,6 @@ public static partial class SecurityImports
         SID* Sid,
         ref uint cbSid,
         char* ReferencedDomainName,
-        ref uint cchReferencedDomainName,
-        out SidNameUse peUse);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379166.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
-
-    public static extern unsafe bool LookupAccountSidW(
-        string? lpSystemName,
-        in SID lpSid,
-        SafeHandle lpName,
-        ref uint cchName,
-        SafeHandle lpReferencedDomainName,
         ref uint cchReferencedDomainName,
         out SidNameUse peUse);
 
@@ -175,47 +99,6 @@ public static partial class SecurityImports
         ACL** ppDacl = null,
         ACL** ppSacl = null,
         SECURITY_DESCRIPTOR** ppSecurityDescriptor = null);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446645.aspx
-    [DllImport(Libraries.Advapi32, ExactSpelling = true, CharSet = CharSet.Unicode)]
-    public static extern unsafe WindowsError GetNamedSecurityInfoW(
-        string pObjectName,
-        ObjectType ObjectType,
-        SecurityInformation SecurityInfo,
-        SID** ppsidOwner = null,
-        SID** ppsidGroup = null,
-        ACL** ppDacl = null,
-        ACL** ppSacl = null,
-        SECURITY_DESCRIPTOR** ppSecurityDescriptor = null);
-
-    // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-setsecurityinfo
-    [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-    public static extern unsafe WindowsError SetSecurityInfo(
-        SafeHandle? handle,
-        ObjectType ObjectType,
-        SecurityInformation SecurityInfo,
-        SID* psidOwner,
-        SID* psidGroup,
-        ACL* pDacl,
-        ACL* pSacl);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446635.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe IntBoolean GetAclInformation(
-        SecurityDescriptor pAcl,
-        void* pAclInformation,
-        uint nAclInformationLength,
-        AclInformationClass dwAclInformationClass);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374951.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe IntBoolean AddAccessAllowedAceEx(
-        SecurityDescriptor pAcl,
-        uint dwAceRevision,
-        // This is AceInheritence
-        uint AceFlags,
-        AccessMask AccessMask,
-        SID* pSid);
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379296.aspx
     [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
@@ -271,29 +154,4 @@ public static partial class SecurityImports
         void* TokenInformation,
         uint TokenInformationLength,
         out uint ReturnLength);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa375202.aspx
-    [DllImport(Libraries.Advapi32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe IntBoolean AdjustTokenPrivileges(
-        AccessToken TokenHandle,
-        IntBoolean DisableAllPrivileges,
-        TOKEN_PRIVILEGES* NewState,
-        uint BufferLength,
-        TOKEN_PRIVILEGES* PreviousState,
-        out uint ReturnLength);
-
-    // https://docs.microsoft.com/en-us/windows/desktop/api/Aclapi/nf-aclapi-getexplicitentriesfromaclw
-    [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-    public static extern unsafe WindowsError GetExplicitEntriesFromAclW(
-        ACL* pacl,
-        out uint pcCountOfExplicitEntries,
-        EXPLICIT_ACCESS** pListOfExplicitEntries);
-
-    // https://docs.microsoft.com/en-us/windows/desktop/api/aclapi/nf-aclapi-setentriesinaclw
-    [DllImport(Libraries.Advapi32, ExactSpelling = true)]
-    public static extern unsafe WindowsError SetEntriesInAclW(
-        uint cCountOfExplicitEntries,
-        EXPLICIT_ACCESS* pListOfExplicitEntries,
-        ACL* OldAcl,
-        ACL** NewAcl);
 }

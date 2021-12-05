@@ -20,11 +20,7 @@ public readonly struct MonitorHandle
     public override int GetHashCode() => HMONITOR.GetHashCode();
 
     public override bool Equals(object? obj)
-    {
-        return obj is MonitorHandle other
-            ? other.HMONITOR == HMONITOR
-            : false;
-    }
+        => obj is MonitorHandle other && other.HMONITOR == HMONITOR;
 
     public bool Equals(MonitorHandle other) => other.HMONITOR == HMONITOR;
 
@@ -32,5 +28,5 @@ public readonly struct MonitorHandle
 
     public static bool operator !=(MonitorHandle a, MonitorHandle b) => a.HMONITOR != b.HMONITOR;
 
-    public bool IsInvalid => HMONITOR.IsInvalid;
+    public bool IsInvalid => HMONITOR == HMONITOR.INVALID_VALUE;
 }

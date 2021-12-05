@@ -3,6 +3,7 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices;
+using TerraFX.Interop.Windows;
 using WInterop.Com;
 using WInterop.Gdi.Native;
 using WInterop.GdiPlus.EmfPlus;
@@ -172,12 +173,12 @@ public static partial class GdiPlusImports
 
     [DllImport(Libraries.GdiPlus, SetLastError = true, ExactSpelling = true)]
     public static extern GpStatus GdipCreateMetafileFromStream(
-        IStream stream,
+        Com.Stream stream,
         out GpMetafile metafile);
 
     [DllImport(Libraries.GdiPlus, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
     public static extern unsafe GpStatus GdipRecordMetafileStream(
-        IStream stream,
+        IStream* stream,
         HDC referenceHdc,
         EmfType type,
         RectangleF* frameRect,
@@ -187,7 +188,7 @@ public static partial class GdiPlusImports
 
     [DllImport(Libraries.GdiPlus, SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true)]
     public static extern unsafe GpStatus GdipRecordMetafileStreamI(
-        IStream stream,
+        IStream* stream,
         HDC referenceHdc,
         EmfType type,
         Rectangle* frameRect,

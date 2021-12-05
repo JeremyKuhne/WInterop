@@ -2,28 +2,27 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
-using System.Drawing.Internal;
-using WInterop.Com;
+using TerraFX.Interop.Windows;
 using WInterop.Gdi;
-using WInterop.Gdi.Native;
 using WInterop.GdiPlus.Native;
+using Stream = WInterop.Com.Stream;
 
 namespace WInterop.GdiPlus.EmfPlus;
 
 public class MetafilePlus : Image
 {
-    private readonly IStream _stream;
+    private readonly Stream _stream;
 
     /// <summary>
     ///  Creates a record metafile on the given <paramref name="stream"/>.
     /// </summary>
     public MetafilePlus(
-        Stream stream,
+        System.IO.Stream stream,
         DeviceContext deviceContext,
         EmfType emfType = EmfType.EmfPlusDual,
         string? description = null)
     {
-        _stream = new DotNetStream(stream);
+        _stream = Stream.FromStream(stream);
         _gpImage = CreateRecordMetafile(
             _stream,
             deviceContext,
@@ -34,17 +33,17 @@ public class MetafilePlus : Image
     /// <summary>
     ///  Creates a playback metafile for the given <paramref name="stream"/>.
     /// </summary>
-    public MetafilePlus(Stream stream)
+    public MetafilePlus(System.IO.Stream stream)
     {
         stream.Position = 0;
-        _stream = new DotNetStream(stream);
+        _stream = Stream.FromStream(stream);
         GdiPlusImports.GdipCreateMetafileFromStream(_stream, out GpMetafile metafile).ThrowIfFailed();
         _gpImage = (GpImage)metafile;
     }
 
     private static unsafe GpImage CreateRecordMetafile(
-        IStream stream,
-        Gdi.Native.HDC deviceContext,
+        Stream stream,
+        HDC deviceContext,
         EmfType emfType,
         RectangleF? frame = null,
         MetafileFrameUnit frameUnit = MetafileFrameUnit.Gdi,
@@ -55,7 +54,7 @@ public class MetafilePlus : Image
         fixed (char* c = description)
         {
             GdiPlusImports.GdipRecordMetafileStream(
-                stream,
+                stream.IStream,
                 deviceContext,
                 emfType,
                 frame.HasValue ? &frameRectangle : null,

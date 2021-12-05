@@ -3,6 +3,7 @@
 
 using FluentAssertions;
 using System.Drawing;
+using TerraFX.Interop.Windows;
 using WInterop.Gdi;
 using WInterop.Gdi.Native;
 using WInterop.GdiPlus;
@@ -115,13 +116,13 @@ public class Metafiles
         fixed (byte* b = stream.GetBuffer())
         {
             ENHMETAHEADER* emh = (ENHMETAHEADER*)b;
-            emh->iType.Should().Be(MetafileRecordType.Header);
+            emh->iType.Should().Be((uint)MetafileRecordType.Header);
             int count = (int)emh->nRecords;
 
             ENHMETARECORD* emr = (ENHMETARECORD*)b;
             while (count-- > 0)
             {
-                emfTypes.Add(emr->iType);
+                emfTypes.Add((MetafileRecordType)emr->iType);
                 emr = (ENHMETARECORD*)((byte*)emr + emr->nSize);
             }
         }
@@ -252,7 +253,7 @@ public class Metafiles
         fixed (byte* b = stream.GetBuffer())
         {
             ENHMETAHEADER* emh = (ENHMETAHEADER*)b;
-            emh->iType.Should().Be(MetafileRecordType.Header);
+            emh->iType.Should().Be((uint)MetafileRecordType.Header);
             emh->nSize.Should().BeGreaterOrEqualTo((uint)sizeof(ENHMETAHEADER));
             emh->nRecords.Should().Be(20);
             emh->nVersion.Should().Be(65536);
@@ -280,9 +281,9 @@ public class Metafiles
         ENHMETAHEADER emh = default;
 
         // Note that this API never copies back more data than the size of a header
-        GdiImports.GetEnhMetaFileHeader(metafile, (uint)sizeof(ENHMETAHEADER), &emh);
+        _ = GdiImports.GetEnhMetaFileHeader(metafile, (uint)sizeof(ENHMETAHEADER), &emh);
 
-        emh.iType.Should().Be(MetafileRecordType.Header);
+        emh.iType.Should().Be((uint)MetafileRecordType.Header);
         emh.nSize.Should().BeGreaterOrEqualTo((uint)sizeof(ENHMETAHEADER));
         emh.nRecords.Should().Be(20);
         emh.nVersion.Should().Be(65536);
@@ -303,28 +304,38 @@ public class Metafiles
             graphics.DrawLine(pen, new(1, 1), new(3, 5));
         }
 
+        ENHMETARECORD* GetNextRecord(ENHMETARECORD* record)
+        {
+            return (ENHMETARECORD*)((byte*)record + record->nSize);
+        }
+
+        ReadOnlySpan<uint> GetdParam(ENHMETARECORD* record)
+        {
+            return new(&record->dParm, ((int)record->nSize - sizeof(uint) - sizeof(uint)) / sizeof(uint));
+        }
+
         fixed (byte* b = stream.GetBuffer())
         {
             ENHMETAHEADER* emh = (ENHMETAHEADER*)b;
-            emh->iType.Should().Be(MetafileRecordType.Header);
+            emh->iType.Should().Be((uint)MetafileRecordType.Header);
             int count = (int)emh->nRecords;
 
             ENHMETARECORD* emr = (ENHMETARECORD*)b;
-            emr = emr->GetNextRecord();
+            emr = GetNextRecord(emr);
 
-            emr->iType.Should().Be(MetafileRecordType.GdiComment);
+            emr->iType.Should().Be((uint)MetafileRecordType.GdiComment);
 
-            emr->dParam[0].Should().Be(32);
-            emr->dParam[1].Should().Be(EMRGDICOMMENT.EMFPlusSignature);
+            GetdParam(emr)[0].Should().Be(32);
+            GetdParam(emr)[1].Should().Be(Metafile.EMFPlusSignature);
 
             MetafilePlusRecord* record = MetafilePlusRecord.GetFromMetafileComment((EMRGDICOMMENT*)emr);
             record->Type.Should().Be(RecordType.EmfPlusHeader);
             record->Size.Should().Be((uint)sizeof(MetafilePlusHeader)); // 28 bytes
 
-            emr = emr->GetNextRecord();
-            emr->iType.Should().Be(MetafileRecordType.GdiComment);
+            emr = GetNextRecord(emr);
+            emr->iType.Should().Be((uint)MetafileRecordType.GdiComment);
 
-            emr->dParam[0].Should().Be(76);
+            GetdParam(emr)[0].Should().Be(76);
 
             record = MetafilePlusRecord.GetFromMetafileComment((EMRGDICOMMENT*)emr);
             record->Type.Should().Be(RecordType.EmfPlusObject);

@@ -49,7 +49,11 @@ public readonly ref struct DeviceContext
                 { } // Debug.Fail("Failed to release DC");
                 break;
             case CollectionType.EndPaint:
-                PAINTSTRUCT ps = new(Handle);
+                PAINTSTRUCT ps = new()
+                {
+                    hdc = Handle
+                };
+
                 if (!GdiImports.EndPaint(_window, in ps))
                 { } // Debug.Fail("Failed to end paint");
                 break;
@@ -60,10 +64,10 @@ public readonly ref struct DeviceContext
         }
     }
 
-    public bool IsInvalid => Handle.IsInvalid;
+    public bool IsInvalid => Handle == HDC.INVALID_VALUE;
 
     public static implicit operator HDC(DeviceContext context) => context.Handle;
-    public static explicit operator DeviceContext(WParam wparam) => new(new(wparam));
+    public static unsafe explicit operator DeviceContext(WParam wparam) => new(new(wparam));
 
     private enum CollectionType
     {

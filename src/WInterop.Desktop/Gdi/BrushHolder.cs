@@ -12,7 +12,7 @@ public sealed class BrushHolder : IDisposable
 
     private BrushHolder(BrushHandle handle)
     {
-        _brush = handle.HBRUSH;
+        _brush = handle.Handle;
         _shouldDispose = handle.OwnsHandle;
         if (!_shouldDispose)
         {

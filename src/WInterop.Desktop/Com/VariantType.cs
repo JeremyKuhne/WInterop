@@ -14,255 +14,257 @@ public enum VariantType : ushort
     /// <summary>
     ///  [VT_EMPTY]
     /// </summary>
-    Empty = 0,
+    Empty = VARENUM.VT_EMPTY,
 
     /// <summary>
     ///  [VT_NULL]
     /// </summary>
-    Null = 1,
+    Null = VARENUM.VT_NULL,
 
     /// <summary>
     ///  [VT_I2]
     /// </summary>
-    Int16 = 2,
+    Int16 = VARENUM.VT_I2,
 
     /// <summary>
     ///  [VT_I4]
     /// </summary>
-    Int32 = 3,
+    Int32 = VARENUM.VT_I4,
 
     /// <summary>
     ///  [VT_R4]
     /// </summary>
-    Single = 4,
+    Single = VARENUM.VT_R4,
 
     /// <summary>
     ///  [VT_R8]
     /// </summary>
-    Double = 5,
+    Double = VARENUM.VT_R8,
 
     /// <summary>
     ///  [VT_CY]
     /// </summary>
-    Currency = 6,
+    Currency = VARENUM.VT_CY,
 
     /// <summary>
     ///  [VT_DATE]
     /// </summary>
-    Date = 7,
+    Date = VARENUM.VT_DATE,
 
     /// <summary>
     ///  [VT_BSTR]
     /// </summary>
-    BasicString = 8,
+    BasicString = VARENUM.VT_BSTR,
 
     /// <summary>
     ///  [VT_DISPATCH]
     /// </summary>
-    IDispatch = 9,
+    IDispatch = VARENUM.VT_DISPATCH,
 
     /// <summary>
     ///  SCODE value. [VT_ERROR]
     /// </summary>
-    Error = 10,
+    Error = VARENUM.VT_ERROR,
 
     /// <summary>
     ///  -1 is true, 0 is false. [VT_BOOL]
     /// </summary>
-    Boolean = 11,
+    Boolean = VARENUM.VT_BOOL,
 
     /// <summary>
     ///  Variant pointer. [VT_VARIANT]
     /// </summary>
-    Variant = 12,
+    Variant = VARENUM.VT_VARIANT,
 
     /// <summary>
     ///  [VT_UNKNOWN]
     /// </summary>
-    IUnknown = 13,
+    IUnknown = VARENUM.VT_UNKNOWN,
 
     /// <summary>
     ///  [VT_DECIMAL]
     /// </summary>
-    Decimal = 14,
+    Decimal = VARENUM.VT_DECIMAL,
 
     /// <summary>
     ///  [VT_I1]
     /// </summary>
-    SignedByte = 16,
+    SignedByte = VARENUM.VT_I1,
 
     /// <summary>
     ///  [VT_UI1]
     /// </summary>
-    UnsignedByte = 17,
+    UnsignedByte = VARENUM.VT_UI1,
 
     /// <summary>
     ///  [VT_UI2]
     /// </summary>
-    UInt16 = 18,
+    UInt16 = VARENUM.VT_UI2,
 
     /// <summary>
     ///  [VT_UI4]
     /// </summary>
-    UInt32 = 19,
+    UInt32 = VARENUM.VT_UI4,
 
     /// <summary>
     ///  [VT_I8]
     /// </summary>
-    Int64 = 20,
+    Int64 = VARENUM.VT_I8,
 
     /// <summary>
     ///  [VT_UI8]
     /// </summary>
-    UInt64 = 21,
+    UInt64 = VARENUM.VT_UI8,
 
     /// <summary>
     ///  [VT_INT]
     /// </summary>
-    Integer = 22,
+    Integer = VARENUM.VT_INT,
 
     /// <summary>
     ///  [VT_UINT]
     /// </summary>
-    UnsignedInteger = 23,
+    UnsignedInteger = VARENUM.VT_UINT,
 
     /// <summary>
     ///  C-style void. [VT_VOID]
     /// </summary>
-    Void = 24,
+    Void = VARENUM.VT_VOID,
 
     /// <summary>
     ///  [VT_HRESULT]
     /// </summary>
-    HResult = 25,
+    HResult = VARENUM.VT_HRESULT,
 
     /// <summary>
     ///  [VT_PTR]
     /// </summary>
-    Pointer = 26,
+    Pointer = VARENUM.VT_PTR,
 
     /// <summary>
     ///  [VT_SAFEARRAY]
     /// </summary>
-    SafeArray = 27,
+    SafeArray = VARENUM.VT_SAFEARRAY,
 
     /// <summary>
     ///  [VT_CARRAY]
     /// </summary>
-    CArray = 28,
+    CArray = VARENUM.VT_CARRAY,
 
     /// <summary>
     ///  [VT_USERDEFINED]
     /// </summary>
-    UserDefined = 29,
+    UserDefined = VARENUM.VT_USERDEFINED,
 
     /// <summary>
     ///  [VT_LPSTR]
     /// </summary>
-    LPSTR = 30,
+    LPSTR = VARENUM.VT_LPSTR,
 
     /// <summary>
     ///  [VT_LPWSTR]
     /// </summary>
-    LPWSTR = 31,
+    LPWSTR = VARENUM.VT_LPWSTR,
 
     /// <summary>
     ///  [VT_RECORD]
     /// </summary>
-    Record = 36,
+    Record = VARENUM.VT_RECORD,
 
     /// <summary>
     ///  [VT_INT_PTR]
     /// </summary>
-    NativeInteger = 37,
+    NativeInteger = VARENUM.VT_INT_PTR,
 
     /// <summary>
     ///  [VT_UINT_PTR]
     /// </summary>
-    NativeUnsignedInteger = 38,
+    NativeUnsignedInteger = VARENUM.VT_UINT_PTR,
 
     /// <summary>
     ///  [VT_FILETIME]
     /// </summary>
-    FileTime = 64,
+    FileTime = VARENUM.VT_FILETIME,
 
     /// <summary>
     ///  [VT_BLOB]
     /// </summary>
-    Blob = 65,
+    Blob = VARENUM.VT_BLOB,
 
     /// <summary>
     ///  [VT_STREAM]
     /// </summary>
-    Stream = 66,
+    Stream = VARENUM.VT_STREAM,
 
     /// <summary>
     ///  [VT_STORAGE]
     /// </summary>
-    Storage = 67,
+    Storage = VARENUM.VT_STORAGE,
 
     /// <summary>
     ///  [VT_STREAMED_OBJECT]
     /// </summary>
-    StreamedObject = 68,
+    StreamedObject = VARENUM.VT_STREAMED_OBJECT,
 
     /// <summary>
     ///  [VT_STORED_OBJECT]
     /// </summary>
-    StoredObject = 69,
+    StoredObject = VARENUM.VT_STORED_OBJECT,
 
     /// <summary>
     ///  [VT_BLOB_OBJECT]
     /// </summary>
-    BlobObject = 70,
+    BlobObject = VARENUM.VT_BLOB_OBJECT,
 
     /// <summary>
     ///  [VT_CF]
     /// </summary>
-    ClipboardFormat = 71,
+    ClipboardFormat = VARENUM.VT_CF,
 
     /// <summary>
     ///  [VT_CLSID]
     /// </summary>
-    ClassId = 72,
+    ClassId = VARENUM.VT_CLSID,
 
     /// <summary>
     ///  [VT_VERSIONED_STREAM]
     /// </summary>
-    VersionedStream = 73,
+    VersionedStream = VARENUM.VT_VERSIONED_STREAM,
 
     /// <summary>
     ///  Reserved. [VT_BSTR_BLOB]
     /// </summary>
-    BasicStringBlob = 0xfff,
+    BasicStringBlob = VARENUM.VT_BSTR_BLOB,
 
     /// <summary>
-    ///  Simple counted array. [VT_VECTOR]
+    ///  Simple counted array flag. [VT_VECTOR]
     /// </summary>
-    Vector = 0x1000,
+    Vector = VARENUM.VT_VECTOR,
 
     /// <summary>
-    ///  SafeArray pointer. [VT_ARRAY]
+    ///  SafeArray pointer flag. [VT_ARRAY]
     /// </summary>
-    Array = 0x2000,
+    Array = VARENUM.VT_ARRAY,
 
     /// <summary>
-    ///  Void pointer for local use. [VT_BYREF]
+    ///  Void pointer for local use flag. [VT_BYREF]
     /// </summary>
-    ByRef = 0x4000,
+    ByRef = VARENUM.VT_BYREF,
 
     /// <summary>
-    ///  [VT_RESERVED]
+    ///  Reserved mask. [VT_RESERVED]
     /// </summary>
-    Reserved = 0x8000,
+    Reserved = VARENUM.VT_RESERVED,
 
     /// <summary>
     ///  [VT_ILLEGAL]
     /// </summary>
-    Illegal = 0xffff,
+    Illegal = VARENUM.VT_ILLEGAL,
 
     /// <summary>
-    ///  [VT_TYPEMASK]
+    ///  Type maks. [VT_TYPEMASK]
     /// </summary>
-    TypeMask = 0xfff
+#pragma warning disable CA1069 // Enums values should not be duplicated
+    TypeMask = VARENUM.VT_TYPEMASK
+#pragma warning restore CA1069 // Enums values should not be duplicated
 }

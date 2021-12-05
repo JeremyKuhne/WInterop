@@ -8,12 +8,15 @@ namespace WInterop.Com;
 /// <summary>
 ///  [TLIBATTR]
 /// </summary>
+/// <docs>
+///  https://docs.microsoft.com/windows/win32/api/oaidl/ns-oaidl-tlibattr
+/// </docs>
 public struct TypeLibraryAttributes
 {
     public Guid Guid;
     public LocaleId LocaleId;
     public SystemKind SystemKind;
-    public ushort MajorVerNum;
-    public ushort MinorVerNum;
+    public ushort MajorVersion;
+    public ushort MinorVersion;
     public LibraryFlags LibraryFlags;
 }

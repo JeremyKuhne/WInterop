@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Gdi;
-using WInterop.Gdi.Native;
 
 namespace WInterop.Windows;
 
@@ -14,7 +13,7 @@ public static partial class Message
 
         public DeviceContext DeviceContext => new(HDC);
 
-        public PrintClient(WParam wParam)
+        public unsafe PrintClient(WParam wParam)
         {
             HDC = new(wParam);
         }

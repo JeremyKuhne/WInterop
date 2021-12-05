@@ -2,9 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Buffers;
-using System.Runtime.InteropServices;
 using System.Text;
-using WInterop.Clipboard.Native;
 using WInterop.Errors;
 using WInterop.Memory;
 using WInterop.Support.Buffers;
@@ -12,7 +10,7 @@ using WInterop.Windows;
 
 namespace WInterop.Clipboard;
 
-public static partial class Clipboard
+public static unsafe partial class Clipboard
 {
     /// <summary>
     ///  This only works for types that aren't built in (e.g. defined in ClipboardFormat).
@@ -22,14 +20,14 @@ public static partial class Clipboard
     {
         return BufferHelper.BufferInvoke((StringBuffer buffer) =>
         {
-            int count;
-            while ((count = Imports.GetClipboardFormatNameW(format, buffer, (int)buffer.CharCapacity)) == 0)
+            uint count;
+            while ((count = (uint)TerraFXWindows.GetClipboardFormatNameW(format, buffer.UShortPointer, (int)buffer.CharCapacity)) == 0u)
             {
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                 buffer.EnsureCharCapacity(buffer.CharCapacity + 50);
             }
 
-            buffer.Length = (uint)count;
+            buffer.Length = count;
             return buffer.ToString();
         });
     }
@@ -41,14 +39,22 @@ public static partial class Clipboard
     {
         uint count;
 
-        Span<uint> initialBuffer = stackalloc uint[5];
+        Span<uint> initialBuffer = stackalloc uint[10];
         ValueBuffer<uint> buffer = new(initialBuffer);
 
-        while (!Imports.GetUpdatedClipboardFormats(ref MemoryMarshal.GetReference(buffer.Span), (uint)buffer.Length, out count))
+        do
         {
-            Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
-            buffer.EnsureCapacity((int)count);
-        }
+            fixed (uint* b = buffer)
+            {
+                if (TerraFXWindows.GetUpdatedClipboardFormats(b, buffer.Length, &count))
+                {
+                    break;
+                }
+
+                Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                buffer.EnsureCapacity((int)count);
+            }
+        } while (true);
 
         return buffer.Span[.. (int)count].ToArray();
     }
@@ -57,17 +63,13 @@ public static partial class Clipboard
     ///  Returns true if the requested format is available.
     /// </summary>
     public static bool IsClipboardFormatAvailable(ClipboardFormat format)
-    {
-        return Imports.IsClipboardFormatAvailable((uint)format);
-    }
+        => TerraFXWindows.IsClipboardFormatAvailable((uint)format);
 
     /// <summary>
     ///  Returns true if the requested format is available.
     /// </summary>
     public static bool IsClipboardFormatAvailable(uint format)
-    {
-        return Imports.IsClipboardFormatAvailable(format);
-    }
+        => TerraFXWindows.IsClipboardFormatAvailable(format);
 
     /// <summary>
     ///  Returns the format of the first matching available format.
@@ -79,14 +81,18 @@ public static partial class Clipboard
     /// </returns>
     public static uint GetPriorityClipboardFormat(params uint[] formats)
     {
-        return unchecked((uint)Imports.GetPriorityClipboardFormat(formats, formats.Length));
+        fixed (uint* f = formats)
+        {
+            return (uint)TerraFXWindows.GetPriorityClipboardFormat(f, formats.Length);
+        }
     }
 
-    public static void OpenClipboard(WindowHandle window = default) => Error.ThrowLastErrorIfFalse(Imports.OpenClipboard(window));
+    public static void OpenClipboard(WindowHandle window = default)
+        => Error.ThrowLastErrorIfFalse(TerraFXWindows.OpenClipboard(window));
 
-    public static void EmptyClipboard() => Error.ThrowLastErrorIfFalse(Imports.EmptyClipboard());
+    public static void EmptyClipboard() => Error.ThrowLastErrorIfFalse(TerraFXWindows.EmptyClipboard());
 
-    public static void CloseClipboard() => Error.ThrowLastErrorIfFalse(Imports.CloseClipboard());
+    public static void CloseClipboard() => Error.ThrowLastErrorIfFalse(TerraFXWindows.CloseClipboard());
 
     public static WindowHandle GetOpenClipboardWindow()
     {
@@ -95,7 +101,7 @@ public static partial class Clipboard
         // error before calling makes spurious errors go away.
 
         Error.SetLastError(WindowsError.NO_ERROR);
-        WindowHandle handle = Imports.GetOpenClipboardWindow();
+        WindowHandle handle = TerraFXWindows.GetOpenClipboardWindow();
         if (handle.IsInvalid)
             Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
@@ -109,7 +115,7 @@ public static partial class Clipboard
         // error before calling makes spurious errors go away.
 
         Error.SetLastError(WindowsError.NO_ERROR);
-        WindowHandle handle = Imports.GetClipboardOwner();
+        WindowHandle handle = TerraFXWindows.GetClipboardOwner();
         if (handle.IsInvalid)
             Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
 
@@ -119,7 +125,7 @@ public static partial class Clipboard
     /// <summary>
     ///  Set Unicode text in the clipboard under the given format.
     /// </summary>
-    public static void SetClipboardUnicodeText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.UnicodeText)
+    public static unsafe void SetClipboardUnicodeText(ReadOnlySpan<char> span, ClipboardFormat format = ClipboardFormat.UnicodeText)
     {
         using GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)((span.Length + 1) * sizeof(char)), GlobalMemoryFlags.Moveable);
         using GlobalLock globalLock = global.Lock;
@@ -127,7 +133,7 @@ public static partial class Clipboard
         span.CopyTo(buffer);
         buffer[^1] = '\0';
 
-        Imports.SetClipboardData((uint)format, globalLock.Pointer);
+        TerraFXWindows.SetClipboardData((uint)format, (HANDLE)globalLock.Pointer);
     }
 
     /// <summary>
@@ -151,14 +157,12 @@ public static partial class Clipboard
     ///  Set ASCII text in the clipboard under the given format.
     /// </summary>
     public static unsafe void SetClipboardAsciiText(ReadOnlySpan<char> span, string format)
-    {
-        SetClipboardAsciiText(span, (ClipboardFormat)RegisterClipboardFormat(format));
-    }
+        => SetClipboardAsciiText(span, (ClipboardFormat)RegisterClipboardFormat(format));
 
     /// <summary>
     ///  Set binary data in the clipboard under the given format.
     /// </summary>
-    public static void SetClipboardBinaryData(ReadOnlySpan<byte> span, ClipboardFormat format)
+    public static unsafe void SetClipboardBinaryData(ReadOnlySpan<byte> span, ClipboardFormat format)
     {
         using GlobalHandle global = Memory.Memory.GlobalAlloc((ulong)(span.Length + 1), GlobalMemoryFlags.Moveable);
         using GlobalLock globalLock = global.Lock;
@@ -166,25 +170,26 @@ public static partial class Clipboard
         span.CopyTo(buffer);
         buffer[^1] = 0;
 
-        Imports.SetClipboardData((uint)format, globalLock.Pointer);
+        TerraFXWindows.SetClipboardData((uint)format, (HANDLE)globalLock.Pointer);
     }
 
     /// <summary>
     ///  Set binary data in the clipboard under the given format.
     /// </summary>
     public static void SetClipboardBinaryData(ReadOnlySpan<byte> span, string format)
-    {
-        SetClipboardBinaryData(span, (ClipboardFormat)RegisterClipboardFormat(format));
-    }
+        => SetClipboardBinaryData(span, (ClipboardFormat)RegisterClipboardFormat(format));
 
     /// <summary>
     ///  Registers the given format if not already registered. Returns the format id.
     /// </summary>
     public static uint RegisterClipboardFormat(string format)
     {
-        uint id = Imports.RegisterClipboardFormatW(format);
-        if (id == 0)
-            Error.ThrowLastError(format);
-        return id;
+        fixed (void* f = format)
+        {
+            uint id = TerraFXWindows.RegisterClipboardFormatW((ushort*)f);
+            if (id == 0)
+                Error.ThrowLastError(format);
+            return id;
+        }
     }
 }

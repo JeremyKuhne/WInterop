@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Errors;
-using WInterop.Memory.Native;
 
 namespace WInterop.Memory;
 
@@ -11,110 +10,111 @@ public static partial class Memory
     /// <summary>
     ///  The handle for the process heap.
     /// </summary>
-    public static IntPtr ProcessHeap = MemoryImports.GetProcessHeap();
+    public static readonly HANDLE ProcessHeap = TerraFXWindows.GetProcessHeap();
 
     /// <summary>
     ///  Allocate memory on the process heap.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
-    public static IntPtr HeapAllocate(ulong bytes, bool zeroMemory = true)
-    {
-        return HeapAllocate(bytes, zeroMemory, IntPtr.Zero);
-    }
+    /// <exception cref="OverflowException">
+    ///  Running in 32 bit and <paramref name="bytes"/> is greater than <see cref="uint.MaxValue"/>
+    /// </exception>
+    public static unsafe void* HeapAllocate(ulong bytes, bool zeroMemory = true)
+        => HeapAllocate(bytes, zeroMemory, HANDLE.NULL);
 
     /// <summary>
     ///  Allocate memory on the given heap.
     /// </summary>
-    /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
-    /// <exception cref="OverflowException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
-    public static IntPtr HeapAllocate(ulong bytes, bool zeroMemory, IntPtr heap)
+    /// <param name="heap">If <see cref="HANDLE.NULL"/> will use the process heap.</param>
+    /// <exception cref="OverflowException">
+    ///  Running in 32 bit and <paramref name="bytes"/> is greater than <see cref="uint.MaxValue"/>
+    /// </exception>
+    public static unsafe void* HeapAllocate(ulong bytes, bool zeroMemory, HANDLE heap)
     {
-        return MemoryImports.HeapAlloc(
+        return TerraFXWindows.HeapAlloc(
             hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
-            dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
-            dwBytes: (UIntPtr)bytes);
+            dwFlags: zeroMemory ? (uint)HEAP.HEAP_ZERO_MEMORY : 0,
+            dwBytes: checked((nuint)bytes));
     }
 
     /// <summary>
     ///  Reallocate memory on the process heap.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
-    public static IntPtr HeapReallocate(IntPtr memory, ulong bytes, bool zeroMemory = true)
-    {
-        return HeapReallocate(memory, bytes, zeroMemory, IntPtr.Zero);
-    }
+    /// <exception cref="OverflowException">
+    ///  Running in 32 bit and <paramref name="bytes"/> is greater than <see cref="uint.MaxValue"/>
+    /// </exception>
+    public static unsafe void* HeapReallocate(void* memory, ulong bytes, bool zeroMemory = true)
+        => HeapReallocate(memory, bytes, zeroMemory, HANDLE.NULL);
 
     /// <summary>
     ///  Reallocate memory on the given heap.
     /// </summary>
-    /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
-    /// <exception cref="OverflowException">Thrown if running in 32 bit and <paramref name="bytes"/> is greater than uint.MaxValue.</exception>
-    public static IntPtr HeapReallocate(IntPtr memory, ulong bytes, bool zeroMemory, IntPtr heap)
+    /// <param name="heap">If <see cref="HANDLE.NULL"/> will use the process heap.</param>
+    /// <exception cref="OverflowException">
+    ///  Running in 32 bit and <paramref name="bytes"/> is greater than <see cref="uint.MaxValue"/>
+    /// </exception>
+    public static unsafe void* HeapReallocate(void* memory, ulong bytes, bool zeroMemory, HANDLE heap)
     {
-        return MemoryImports.HeapReAlloc(
-            hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
-            dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
+        return TerraFXWindows.HeapReAlloc(
+            hHeap: heap == HANDLE.NULL ? ProcessHeap : heap,
+            dwFlags: zeroMemory ? (uint)HEAP.HEAP_ZERO_MEMORY : 0,
             lpMem: memory,
-            dwBytes: (UIntPtr)bytes);
+            dwBytes: checked((nuint)bytes));
     }
 
     /// <summary>
     ///  Free the specified memory on the process heap.
     /// </summary>
-    public static bool HeapFree(IntPtr memory)
-    {
-        return HeapFree(memory, IntPtr.Zero);
-    }
+    public static unsafe bool HeapFree(void* memory) => HeapFree(memory, HANDLE.NULL);
 
     /// <summary>
     ///  Free the specified memory on the given heap.
     /// </summary>
     /// <param name="heap">If IntPtr.Zero will use the process heap.</param>
-    public static bool HeapFree(IntPtr memory, IntPtr heap)
+    public static unsafe bool HeapFree(void* memory, HANDLE heap)
     {
-        return MemoryImports.HeapFree(
-            hHeap: heap == IntPtr.Zero ? ProcessHeap : heap,
+        return TerraFXWindows.HeapFree(
+            hHeap: heap == HANDLE.NULL ? ProcessHeap : heap,
             dwFlags: 0,
             lpMem: memory);
     }
 
-    public static void LocalFree(IntPtr memory)
+    public static unsafe void LocalFree(HLOCAL memory)
     {
-        if (MemoryImports.LocalFree(memory) != IntPtr.Zero)
+        if (TerraFXWindows.LocalFree(memory) != HLOCAL.NULL)
             Error.ThrowLastError();
     }
 
     public static GlobalHandle GlobalAlloc(ulong bytes, GlobalMemoryFlags flags)
     {
-        HGLOBAL handle = MemoryImports.GlobalAlloc(flags, (UIntPtr)bytes);
-        if (handle.Value == IntPtr.Zero)
+        HGLOBAL handle = TerraFXWindows.GlobalAlloc((uint)flags, (nuint)bytes);
+        if (handle == HGLOBAL.NULL)
             Error.ThrowLastError();
         return new GlobalHandle(handle, bytes);
     }
 
-    public static IntPtr GlobalLock(GlobalHandle handle)
+    public static unsafe void* GlobalLock(GlobalHandle handle)
     {
-        IntPtr memory = MemoryImports.GlobalLock(handle.HGLOBAL);
-        if (memory == IntPtr.Zero)
+        void* memory = TerraFXWindows.GlobalLock(handle.HGLOBAL);
+        if (memory == null)
             Error.ThrowLastError();
         return memory;
     }
 
     public static void GlobalUnlock(GlobalHandle handle)
     {
-        if (!MemoryImports.GlobalUnlock(handle.HGLOBAL))
+        if (!TerraFXWindows.GlobalUnlock(handle.HGLOBAL))
             Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
     }
 
     public static void GlobalFree(HGLOBAL handle)
     {
-        if (MemoryImports.GlobalFree(handle).Value != IntPtr.Zero)
+        if (TerraFXWindows.GlobalFree(handle) != HGLOBAL.NULL)
             Error.ThrowLastError();
     }
 
-    public static IntPtr CoTaskAllocate(nuint bytes)
-        => MemoryImports.CoTaskMemAlloc(bytes);
+    public static unsafe void* CoTaskAllocate(nuint bytes)
+        => TerraFXWindows.CoTaskMemAlloc(bytes);
 
-    public static void CoTaskFree(IntPtr handle)
-        => MemoryImports.CoTaskMemFree(handle);
+    public static unsafe void CoTaskFree(void* handle)
+        => TerraFXWindows.CoTaskMemFree(handle);
 }

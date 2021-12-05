@@ -51,7 +51,9 @@ public class Volumes
             catch (DriveLockedException)
             {
             }
-            catch (WInteropIOException e) when ((HResult)e.HResult == WindowsError.ERROR_FT_READ_FAILURE.ToHResult())
+            catch (WInteropIOException e) when (
+                (HResult)e.HResult == WindowsError.ERROR_FT_READ_FAILURE.ToHResult()
+                || (HResult)e.HResult == WindowsError.ERROR_UNRECOGNIZED_VOLUME.ToHResult())
             {
                 // Had this happen with Storage Spaces not being online
             }

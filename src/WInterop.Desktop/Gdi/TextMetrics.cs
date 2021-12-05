@@ -8,7 +8,9 @@ namespace WInterop.Gdi;
 /// <summary>
 ///  [TEXTMETRIC]
 /// </summary>
-/// <remarks><see cref="https://msdn.microsoft.com/en-us/library/dd145132.aspx"/></remarks>
+/// <docs>
+///  https://docs.microsoft.com/windows/win32/api/wingdi/ns-wingdi-textmetricw
+/// </docs>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 public struct TextMetrics
 {
@@ -27,9 +29,30 @@ public struct TextMetrics
     public char LastChar;
     public char DefaultChar;
     public char BreakChar;
-    public ByteBoolean Italic;
-    public ByteBoolean Underlined;
-    public ByteBoolean StruckOut;
+    private ByteBoolean _italic;
+
+    public bool Italic
+    {
+        get => _italic;
+        set => _italic = value;
+    }
+
+    private ByteBoolean _underlined;
+
+    public bool Underlined
+    {
+        get => _underlined;
+        set => _underlined = value;
+    }
+
+    private ByteBoolean _struckOut;
+
+    public bool StruckOut
+    {
+        get => _struckOut;
+        set => _struckOut = value;
+    }
+
     public PitchAndFamily PitchAndFamily;
     public CharacterSet CharacterSet;
 }

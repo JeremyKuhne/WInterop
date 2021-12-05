@@ -2,7 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.Gdi.Native;
+using TerraFX.Interop.Windows;
+using WInterop.Gdi;
 
 namespace WInterop.GdiPlus.EmfPlus;
 
@@ -37,7 +38,7 @@ public readonly ref struct MetafilePlusRecord
 
     public static unsafe MetafilePlusRecord* GetFromMetafileComment(EMRGDICOMMENT* comment)
     {
-        if (comment->emr.iType != Gdi.MetafileRecordType.GdiComment)
+        if (comment->emr.iType != (uint)MetafileRecordType.GdiComment)
         {
             throw new ArgumentException("Does not have the proper record type.", nameof(comment));
         }
@@ -45,12 +46,10 @@ public readonly ref struct MetafilePlusRecord
         uint recordBytes = comment->emr.nSize;
         uint dataBytes = comment->cbData;
 
-        if (dataBytes < sizeof(MetafilePlusRecord) + 4 // 4 for the uint signature below
-            || *(uint*)&comment->Data != EMRGDICOMMENT.EMFPlusSignature)
-        {
-            return null;
-        }
+        // 4 for the uint signature below
 
-        return (MetafilePlusRecord*)(&comment->Data + sizeof(uint));
+        return dataBytes < sizeof(MetafilePlusRecord) + 4 || *(uint*)&comment->Data != Metafile.EMFPlusSignature
+            ? (MetafilePlusRecord*)null
+            : (MetafilePlusRecord*)(&comment->Data + sizeof(uint));
     }
 }

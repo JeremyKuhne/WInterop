@@ -8,6 +8,7 @@ using WInterop.ProcessAndThreads;
 using WInterop.Security;
 using WInterop.SystemInformation;
 using Xunit;
+using SecurityIdentifier = WInterop.Security.SecurityIdentifier;
 
 namespace SecurityTests;
 
@@ -30,7 +31,7 @@ public class Basic
     [Fact]
     public void GetTokenUserSid_ForCurrentProcess()
     {
-        SID sid;
+        SecurityIdentifier sid;
         using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
         {
             token.IsInvalid.Should().BeFalse();
@@ -90,7 +91,7 @@ public class Basic
     [Fact]
     public void GetTokenOwnerSid_ForCurrentProcess()
     {
-        SID sid;
+        SecurityIdentifier sid;
         using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
         {
             token.IsInvalid.Should().BeFalse();
@@ -105,7 +106,7 @@ public class Basic
     [Fact]
     public void GetTokenPrimaryGroupSid_ForCurrentProcess()
     {
-        SID sid;
+        SecurityIdentifier sid;
         using (var token = Security.OpenProcessToken(AccessTokenRights.Read))
         {
             token.IsInvalid.Should().BeFalse();
@@ -257,7 +258,7 @@ public class Basic
         ThreadRunner.Run((() =>
         {
             Security.ImpersonateAnonymousToken();
-            SID sid;
+            SecurityIdentifier sid;
             using (var threadToken = Security.OpenThreadToken(AccessTokenRights.Query, openAsSelf))
             {
                 threadToken.Should().NotBeNull();

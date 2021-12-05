@@ -14,14 +14,18 @@ public readonly ref struct PaletteHandle
 
     public PaletteHandle(HPALETTE handle, bool ownsHandle = true)
     {
-        Debug.Assert(handle.IsInvalid || handle.Value == ((IntPtr)(-1))
-            || GdiImports.GetObjectType(handle) == ObjectType.Palette || GdiImports.GetObjectType(handle) == 0);
+        Debug.Assert(handle == HPALETTE.INVALID_VALUE
+            || handle == HPALETTE.NULL
+            || (ObjectType)TerraFXWindows.GetObjectType(handle) == ObjectType.Palette
+            || TerraFXWindows.GetObjectType(handle) == 0);
 
         HPALETTE = handle;
         _ownsHandle = ownsHandle;
     }
 
-    public bool IsInvalid => HPALETTE.IsInvalid || GdiImports.GetObjectType(HPALETTE) != ObjectType.Brush;
+    public bool IsInvalid => HPALETTE == HPALETTE.INVALID_VALUE
+        || HPALETTE == HPALETTE.NULL
+        || (ObjectType)TerraFXWindows.GetObjectType(HPALETTE) != ObjectType.Brush;
 
     public void Dispose()
     {
@@ -31,7 +35,7 @@ public readonly ref struct PaletteHandle
 
     public static implicit operator HGDIOBJ(in PaletteHandle handle) => handle.HPALETTE;
     public static implicit operator HPALETTE(in PaletteHandle handle) => handle.HPALETTE;
-    public static implicit operator LResult(in PaletteHandle handle) => handle.HPALETTE.Value;
+    public static unsafe implicit operator LResult(in PaletteHandle handle) => handle.HPALETTE.Value;
     public static implicit operator GdiObjectHandle(in PaletteHandle handle) => new(handle.HPALETTE, ownsHandle: false);
 
     // You can't box a ref struct, therefore it will never be object

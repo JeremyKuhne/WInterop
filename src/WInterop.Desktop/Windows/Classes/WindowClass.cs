@@ -145,6 +145,9 @@ public class WindowClass : IDisposable
         if (isMainWindow && !MainWindow.IsNull)
             throw new ArgumentException("Main window has already been set.", nameof(isMainWindow));
 
+        if (bounds == default)
+            bounds = Windows.DefaultBounds;
+
         WindowHandle window = Atom.IsValid
             ? Windows.CreateWindow(
                 Atom,

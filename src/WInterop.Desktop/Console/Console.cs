@@ -2,43 +2,44 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Win32.SafeHandles;
-using System.Runtime.InteropServices;
-using WInterop.Console.Native;
+
 using WInterop.Errors;
 using WInterop.Support.Buffers;
 using WInterop.Windows;
 
 namespace WInterop.Console;
 
-public static partial class Console
+public static unsafe partial class Console
 {
-    public static WindowHandle GetConsoleWindow() => Imports.GetConsoleWindow();
+    public static WindowHandle GetConsoleWindow() => TerraFXWindows.GetConsoleWindow();
 
-    public static void FreeConsole() => Error.ThrowLastErrorIfFalse(Imports.FreeConsole());
+    public static void FreeConsole() => Error.ThrowLastErrorIfFalse(TerraFXWindows.FreeConsole());
 
-    public static bool TryFreeConsole() => Imports.FreeConsole();
+    public static bool TryFreeConsole() => TerraFXWindows.FreeConsole();
 
-    public static uint GetConsoleInputCodePage() => Imports.GetConsoleCP();
+    public static uint GetConsoleInputCodePage() => TerraFXWindows.GetConsoleCP();
 
-    public static uint GetConsoleOuputCodePage() => Imports.GetConsoleOutputCP();
+    public static uint GetConsoleOuputCodePage() => TerraFXWindows.GetConsoleOutputCP();
 
     public static ConsoleInputMode GetConsoleInputMode(SafeFileHandle inputHandle)
     {
-        Error.ThrowLastErrorIfFalse(Imports.GetConsoleMode(inputHandle, out uint mode));
+        uint mode;
+        Error.ThrowLastErrorIfFalse(TerraFXWindows.GetConsoleMode(inputHandle.ToHANDLE(), &mode));
         return (ConsoleInputMode)mode;
     }
 
     public static void SetConsoleInputMode(SafeFileHandle inputHandle, ConsoleInputMode mode)
-        => Error.ThrowLastErrorIfFalse(Imports.SetConsoleMode(inputHandle, (uint)mode));
+        => Error.ThrowLastErrorIfFalse(TerraFXWindows.SetConsoleMode(inputHandle.ToHANDLE(), (uint)mode));
 
     public static ConsoleOuputMode GetConsoleOutputMode(SafeFileHandle outputHandle)
     {
-        Error.ThrowLastErrorIfFalse(Imports.GetConsoleMode(outputHandle, out uint mode));
+        uint mode;
+        Error.ThrowLastErrorIfFalse(TerraFXWindows.GetConsoleMode(outputHandle.ToHANDLE(), &mode));
         return (ConsoleOuputMode)mode;
     }
 
     public static void SetConsoleOutputMode(SafeFileHandle outputHandle, ConsoleOuputMode mode)
-        => Error.ThrowLastErrorIfFalse(Imports.SetConsoleMode(outputHandle, (uint)mode));
+        => Error.ThrowLastErrorIfFalse(TerraFXWindows.SetConsoleMode(outputHandle.ToHANDLE(), (uint)mode));
 
     /// <summary>
     ///  Get the specified standard handle.
@@ -46,12 +47,12 @@ public static partial class Console
     /// <returns>Handle or null if there is no associated handle for the given type.</returns>
     public static SafeFileHandle? GetStandardHandle(StandardHandleType type)
     {
-        IntPtr handle = Imports.GetStdHandle(type);
-        if (handle == (IntPtr)(-1))
+        HANDLE handle = TerraFXWindows.GetStdHandle((uint)type);
+        if (handle == HANDLE.INVALID_VALUE)
             Error.ThrowLastError();
 
         // If there is no associated standard handle, return null
-        if (handle == IntPtr.Zero)
+        if (handle == HANDLE.NULL)
             return null;
 
         // The standard handles do not need to be released.
@@ -63,10 +64,18 @@ public static partial class Console
     /// </summary>
     public static IEnumerable<InputRecord> ReadConsoleInput(SafeFileHandle inputHandle)
     {
-        InputRecord buffer = default;
-        while (Imports.ReadConsoleInputW(inputHandle, ref buffer, 1, out _))
+        while (ReadNextLine(out InputRecord record))
         {
-            yield return buffer;
+            yield return record;
+        }
+
+        bool ReadNextLine(out InputRecord record)
+        {
+            uint read;
+            fixed (void* r = &record)
+            {
+                return TerraFXWindows.ReadConsoleInputW(inputHandle.ToHANDLE(), (INPUT_RECORD*)r, 1, &read);
+            }
         }
 
         Error.ThrowLastError();
@@ -79,10 +88,15 @@ public static partial class Console
     public static IEnumerable<InputRecord> PeekConsoleInput(SafeFileHandle inputHandle, int count)
     {
         var owner = OwnedMemoryPool.Rent<InputRecord>(count);
-        if (!Imports.PeekConsoleInputW(inputHandle, ref MemoryMarshal.GetReference(owner.Memory.Span), (uint)count, out uint read))
+        uint read;
+
+        fixed (void* r = owner.Memory.Span)
         {
-            owner.Dispose();
-            Error.ThrowLastError();
+            if (!TerraFXWindows.PeekConsoleInputW(inputHandle.ToHANDLE(), (INPUT_RECORD*)r, (uint)count, &read))
+            {
+                owner.Dispose();
+                Error.ThrowLastError();
+            }
         }
 
         return new OwnedMemoryEnumerable<InputRecord>(owner, 0, (int)read);
@@ -93,10 +107,11 @@ public static partial class Console
     /// </summary>
     public static unsafe uint WriteConsole(SafeFileHandle outputHandle, ReadOnlySpan<char> text)
     {
-        fixed (char* c = &MemoryMarshal.GetReference(text))
+        fixed (char* c = text)
         {
+            uint charsWritten;
             Error.ThrowLastErrorIfFalse(
-                Imports.WriteConsoleW(outputHandle, c, (uint)text.Length, out uint charsWritten));
+                TerraFXWindows.WriteConsoleW(outputHandle.ToHANDLE(), (void*)c, (uint)text.Length, &charsWritten, null));
 
             return charsWritten;
         }

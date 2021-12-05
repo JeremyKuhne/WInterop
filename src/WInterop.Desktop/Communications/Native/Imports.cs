@@ -3,7 +3,6 @@
 
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
-using WInterop.Synchronization;
 using WInterop.Windows;
 
 namespace WInterop.Communications.Native;
@@ -63,10 +62,4 @@ public static partial class Imports
     public static extern bool TransmitCommChar(
         SafeFileHandle hFile,
         sbyte cChar);
-
-    [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
-    public static extern unsafe bool WaitCommEvent(
-        SafeFileHandle hFile,
-        out EventMask lpEvtMask,
-        OVERLAPPED* lpOverlapped);
 }

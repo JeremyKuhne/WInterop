@@ -7,17 +7,19 @@ namespace WInterop.Windows;
 
 public struct LResult
 {
-    public IntPtr Value;
+    public nint Value;
 
     public ushort LowWord => Conversion.LowWord(Value);
     public ushort HighWord => Conversion.HighWord(Value);
 
-    public LResult(IntPtr value) => Value = value;
+    public LResult(nint value) => Value = value;
 
     public static implicit operator LResult(int value) => new((IntPtr)value);
-    public static implicit operator int(LResult value) => (int)value.Value.ToInt64();
+    public static implicit operator int(LResult value) => (int)value.Value;
     public static implicit operator LResult(uint value) => new((IntPtr)value);
-    public static implicit operator uint(LResult value) => (uint)value.Value.ToInt64();
-    public static implicit operator LResult(IntPtr value) => new(value);
-    public static implicit operator IntPtr(LResult value) => value.Value;
+    public static implicit operator uint(LResult value) => (uint)value.Value;
+    public static implicit operator LResult(nint value) => new(value);
+    public static implicit operator nint(LResult value) => value.Value;
+    public static unsafe implicit operator void*(LResult value) => (void*)value.Value;
+    public static unsafe implicit operator LResult(void* value) => new((nint)value);
 }

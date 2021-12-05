@@ -3,7 +3,6 @@
 
 using System.Drawing;
 using WInterop.Gdi;
-using WInterop.Windows.Native;
 
 namespace WInterop.Windows;
 
@@ -18,14 +17,14 @@ public static partial class Message
             _drawItemStruct = (DRAWITEMSTRUCT*)lParam;
         }
 
-        public OwnerDrawType ControlType => _drawItemStruct->CtlType;
+        public OwnerDrawType ControlType => (OwnerDrawType)_drawItemStruct->CtlType;
         public uint ControlId => _drawItemStruct->CtlID;
         public uint ItemId => _drawItemStruct->itemID;
-        public OwnerDrawActions ItemAction => _drawItemStruct->itemAction;
-        public OwnerDrawStates ItemState => _drawItemStruct->itemState;
+        public OwnerDrawActions ItemAction => (OwnerDrawActions)_drawItemStruct->itemAction;
+        public OwnerDrawStates ItemState => (OwnerDrawStates)_drawItemStruct->itemState;
         public WindowHandle ItemWindow => _drawItemStruct->hwndItem;
         public DeviceContext DeviceContext => new(_drawItemStruct->hDC, ownsHandle: false);
-        public Rectangle ItemRectangle => _drawItemStruct->rcItem;
-        public IntPtr ItemData => _drawItemStruct->itemData;
+        public Rectangle ItemRectangle => _drawItemStruct->rcItem.ToRectangle();
+        public nuint ItemData => _drawItemStruct->itemData;
     }
 }

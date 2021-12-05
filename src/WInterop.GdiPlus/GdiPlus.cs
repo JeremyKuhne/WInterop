@@ -3,6 +3,7 @@
 
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using TerraFX.Interop.Windows;
 using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.GdiPlus.Native;

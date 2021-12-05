@@ -10,8 +10,15 @@ using WInterop.SystemInformation;
 
 namespace WInterop.Security;
 
-public static partial class Security
+public static unsafe partial class Security
 {
+    // The Windows NT Multiple Access RouTing Authority (NTMARTA) Provider component supports the
+    // security Win32 API to manage the permissions of various objects, such as files, keys and
+    // services. This component provides the core support for security inheritance and is required
+    // by advapi32.dll.
+    //
+    // "https://docs.microsoft.com/previous-versions/windows/embedded/aa939264(v=winembedded.5)"
+
     // In winnt.h
     private const uint PRIVILEGE_SET_ALL_NECESSARY = 1;
 
@@ -162,9 +169,10 @@ public static partial class Security
             TokenInformation.Privileges,
             buffer =>
             {
-                foreach (LuidAndAttributes privilege in ((TOKEN_PRIVILEGES*)buffer)->Privileges)
+                TOKEN_PRIVILEGES* tp = (TOKEN_PRIVILEGES*)buffer;
+                foreach (LUID_AND_ATTRIBUTES privilege in tp->Privileges.AsSpan((int)tp->PrivilegeCount))
                 {
-                    privileges.Add(new PrivilegeSetting(LookupPrivilege(privilege.Luid), privilege.Attributes));
+                    privileges.Add(new PrivilegeSetting(LookupPrivilege(privilege.Luid), (PrivilegeAttributes)privilege.Attributes));
                 }
             });
 
@@ -185,13 +193,13 @@ public static partial class Security
             {
                 TOKEN_GROUPS* groups = (TOKEN_GROUPS*)buffer;
                 info = new SidAndAttributes[(int)groups->GroupCount];
-                SID_AND_ATTRIBUTES* group = &groups->Groups;
+                Span<SID_AND_ATTRIBUTES> sids = groups->Groups.AsSpan((int)groups->GroupCount);
 
-                    // Copy the SID pointers into our own SID structs.
-                    for (int i = 0; i < info.Length; i++)
+                // Copy the SID pointers into our own SID structs.
+                for (int i = 0; i < info.Length; i++)
                 {
                     info[i] = new SidAndAttributes(
-                        CopySid(group[i].Sid), group[i].Attributes);
+                        CopySid((SID*)sids[i].Sid), (SidAttributes)sids[i].Attributes);
                 }
             });
 
@@ -204,57 +212,75 @@ public static partial class Security
     public static unsafe SidAndAttributes GetTokenUserSid(this AccessToken token)
     {
         // This size should always be sufficient as SID alignment is uint.
-        int size = sizeof(TOKEN_USER) + sizeof(SID);
+        int size = sizeof(TOKEN_USER) + sizeof(SecurityIdentifier);
         byte* buffer = stackalloc byte[size];
+        uint returnLength;
 
         Error.ThrowLastErrorIfFalse(
-            SecurityImports.GetTokenInformation(token, TokenInformation.User, buffer, (uint)size, out uint _));
+            TerraFXWindows.GetTokenInformation(
+                token.Handle,
+                TOKEN_INFORMATION_CLASS.TokenUser,
+                buffer,
+                (uint)size,
+                &returnLength));
 
         TOKEN_USER* user = (TOKEN_USER*)buffer;
-        return new SidAndAttributes(CopySid(user->User.Sid), user->User.Attributes);
+        return new SidAndAttributes(CopySid((SID*)user->User.Sid), (SidAttributes)user->User.Attributes);
     }
 
     /// <summary>
     ///  Get the SID that will be used as the owner for objects created by the given token.
     /// </summary>
-    public static unsafe SID GetTokenOwnerSid(this AccessToken token)
+    public static unsafe SecurityIdentifier GetTokenOwnerSid(this AccessToken token)
     {
         // This size should always be sufficient as SID alignment is uint.
-        int size = sizeof(TOKEN_OWNER) + sizeof(SID);
+        int size = sizeof(TOKEN_OWNER) + sizeof(SecurityIdentifier);
         byte* buffer = stackalloc byte[size];
+        uint returnLength;
 
         Error.ThrowLastErrorIfFalse(
-            SecurityImports.GetTokenInformation(token, TokenInformation.Owner, buffer, (uint)size, out uint _));
+            TerraFXWindows.GetTokenInformation(
+                token.Handle,
+                TOKEN_INFORMATION_CLASS.TokenOwner,
+                buffer,
+                (uint)size,
+                &returnLength));
 
         TOKEN_OWNER* owner = (TOKEN_OWNER*)buffer;
-        return CopySid(owner->Owner);
+        return CopySid((SID*)owner->Owner);
     }
 
     /// <summary>
     ///  Get the SID that will be used as the primary group for objects created by the given token.
     /// </summary>
-    public static unsafe SID GetTokenPrimaryGroupSid(this AccessToken token)
+    public static unsafe SecurityIdentifier GetTokenPrimaryGroupSid(this AccessToken token)
     {
         // This size should always be sufficient as SID alignment is uint.
-        int size = sizeof(TOKEN_PRIMARY_GROUP) + sizeof(SID);
+        int size = sizeof(TOKEN_PRIMARY_GROUP) + sizeof(SecurityIdentifier);
         byte* buffer = stackalloc byte[size];
+        uint returnLength;
 
         Error.ThrowLastErrorIfFalse(
-            SecurityImports.GetTokenInformation(token, TokenInformation.PrimaryGroup, buffer, (uint)size, out uint _));
+            TerraFXWindows.GetTokenInformation(
+                token.Handle,
+                TOKEN_INFORMATION_CLASS.TokenPrimaryGroup,
+                buffer,
+                (uint)size,
+                &returnLength));
 
-        return CopySid(((TOKEN_PRIMARY_GROUP*)buffer)->PrimaryGroup);
+        return CopySid((SID*)((TOKEN_PRIMARY_GROUP*)buffer)->PrimaryGroup);
     }
 
     /// <summary>
     ///  Get the specified "well known" SID. Note that not all well known SIDs are available on all OSes.
     /// </summary>
-    public static unsafe SID CreateWellKnownSid(WellKnownSID sidType)
+    public static unsafe SecurityIdentifier CreateWellKnownSid(WellKnownSID sidType)
     {
-        SID sid = default;
+        SecurityIdentifier sid = default;
 
-        uint size = (uint)sizeof(SID);
+        uint size = (uint)sizeof(SecurityIdentifier);
         Error.ThrowLastErrorIfFalse(
-            SecurityImports.CreateWellKnownSid(sidType, null, &sid, ref size));
+            TerraFXWindows.CreateWellKnownSid((WELL_KNOWN_SID_TYPE)sidType, null, &sid, &size));
 
         return sid;
     }
@@ -262,53 +288,74 @@ public static partial class Security
     /// <summary>
     ///  Returns true if the given SID is the specified "well known" SID type.
     /// </summary>
-    public static bool IsWellKnownSid(this in SID sid, WellKnownSID sidType)
-        => SecurityImports.IsWellKnownSid(in sid, sidType);
+    public static bool IsWellKnownSid(this in SecurityIdentifier sid, WellKnownSID sidType)
+    {
+        fixed (void* s = &sid)
+        {
+            return TerraFXWindows.IsWellKnownSid(s, (WELL_KNOWN_SID_TYPE)sidType);
+        }
+    }
 
     /// <summary>
     ///  Returns true if the given SID is valid.
     /// </summary>
-    public static bool IsValidSid(this in SID sid) => SecurityImports.IsValidSid(in sid);
+    public static bool IsValidSid(this in SecurityIdentifier sid)
+    {
+        fixed (void* s = &sid)
+        {
+            return TerraFXWindows.IsValidSid(s);
+        }
+    }
 
     /// <summary>
     ///  Returns the S-n-n-n... string version of the given SID.
     /// </summary>
-    public static unsafe string ConvertSidToString(this in SID sid)
+    public static unsafe string ConvertSidToString(this in SecurityIdentifier sid)
     {
-        Error.ThrowLastErrorIfFalse(
-            SecurityImports.ConvertSidToStringSidW(sid, out var handle));
+        fixed (void* s = &sid)
+        {
+            Error.ThrowLastErrorIfFalse(
+                SecurityImports.ConvertSidToStringSidW((SID*)s, out var handle));
 
-        return new string((char*)handle);
+            return new string((char*)handle);
+        }
     }
 
     /// <summary>
     ///  Returns the count of sub authorities for the given SID.
     /// </summary>
-    public static unsafe byte GetSidSubAuthorityCount(this in SID sid)
+    public static unsafe byte GetSidSubAuthorityCount(this in SecurityIdentifier sid)
     {
-        byte* b = SecurityImports.GetSidSubAuthorityCount(sid);
-        if (b == null)
-            Error.ThrowLastError();
+        fixed (void* s = &sid)
+        {
+            byte* b = TerraFXWindows.GetSidSubAuthorityCount(s);
+            if (b is null)
+                Error.ThrowLastError();
 
-        return *b;
+            return *b;
+        }
     }
 
     /// <summary>
     ///  Get the sub authority at the specified index for the given SID.
     /// </summary>
-    public static unsafe uint GetSidSubAuthority(this in SID sid, uint nSubAuthority)
+    public static unsafe uint GetSidSubAuthority(this in SecurityIdentifier sid, uint nSubAuthority)
     {
-        uint* u = SecurityImports.GetSidSubAuthority(sid, nSubAuthority);
-        if (u == null)
-            Error.ThrowLastError();
+        fixed (void* s = &sid)
+        {
+            uint* u = TerraFXWindows.GetSidSubAuthority(s, nSubAuthority);
+            if (u is null)
+                Error.ThrowLastError();
 
-        return *u;
+            return *u;
+        }
     }
 
-    private static unsafe SID CopySid(SID* source)
+    private static SecurityIdentifier CopySid(SID* source)
     {
+        SecurityIdentifier destination;
         Error.ThrowLastErrorIfFalse(
-            SecurityImports.CopySid((uint)sizeof(SID), out SID destination, source));
+            TerraFXWindows.CopySid((uint)sizeof(SecurityIdentifier), &destination, source));
         return destination;
     }
 
@@ -319,7 +366,7 @@ public static partial class Security
     ///  The target computer to look up the SID on. When null will look on the local machine then trusted
     ///  domain controllers.
     /// </param>
-    public static unsafe AccountSidInformation LookupAccountSid(this in SID sid, string? systemName = null)
+    public static AccountSidInformation LookupAccountSid(this in SecurityIdentifier sid, string? systemName = null)
     {
         var wrapper = new LookupAccountSidWrapper(in sid, systemName);
         return BufferHelper.TwoBufferInvoke<LookupAccountSidWrapper, StringBuffer, AccountSidInformation>(ref wrapper);
@@ -328,9 +375,9 @@ public static partial class Security
     private readonly struct LookupAccountSidWrapper : ITwoBufferFunc<StringBuffer, AccountSidInformation>
     {
         private readonly string? _systemName;
-        private readonly SID _sid;
+        private readonly SecurityIdentifier _sid;
 
-        public LookupAccountSidWrapper(in SID sid, string? systemName)
+        public LookupAccountSidWrapper(in SecurityIdentifier sid, string? systemName)
         {
             _systemName = systemName;
             _sid = sid;
@@ -342,18 +389,22 @@ public static partial class Security
             uint nameCharCapacity = nameBuffer.CharCapacity;
             uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
 
-            while (!SecurityImports.LookupAccountSidW(
-                _systemName,
-                _sid,
-                nameBuffer,
-                ref nameCharCapacity,
-                domainNameBuffer,
-                ref domainNameCharCapacity,
-                out usage))
+            fixed (void* n = _systemName)
+            fixed (void* s = &_sid)
             {
-                Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
-                nameBuffer.EnsureCharCapacity(nameCharCapacity);
-                domainNameBuffer.EnsureCharCapacity(domainNameCharCapacity);
+                while (!TerraFXWindows.LookupAccountSidW(
+                    (ushort*)n,
+                    s,
+                    (ushort*)nameBuffer.CharPointer,
+                    &nameCharCapacity,
+                    (ushort*)domainNameBuffer.CharPointer,
+                    &domainNameCharCapacity,
+                    (SID_NAME_USE*)&usage))
+                {
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    nameBuffer.EnsureCharCapacity(nameCharCapacity);
+                    domainNameBuffer.EnsureCharCapacity(domainNameCharCapacity);
+                }
             }
 
             nameBuffer.SetLengthToFirstNull();
@@ -445,7 +496,7 @@ public static partial class Security
     /// <summary>
     ///  Get the owner SID for the given handle.
     /// </summary>
-    public static unsafe SID GetOwner(SafeHandle handle, ObjectType type)
+    public static unsafe SecurityIdentifier GetOwner(SafeHandle handle, ObjectType type)
     {
         SID* sidp;
         SECURITY_DESCRIPTOR* descriptor;
@@ -458,15 +509,15 @@ public static partial class Security
             ppSecurityDescriptor: &descriptor)
             .ThrowIfFailed();
 
-        SID sid = new(sidp);
-        Memory.Memory.LocalFree((IntPtr)descriptor);
+        SecurityIdentifier sid = new(sidp);
+        Memory.Memory.LocalFree((HLOCAL)descriptor);
         return sid;
     }
 
     /// <summary>
     ///  Get the primary group SID for the given handle.
     /// </summary>
-    public static unsafe SID GetPrimaryGroup(SafeHandle handle, ObjectType type)
+    public static unsafe SecurityIdentifier GetPrimaryGroup(SafeHandle handle, ObjectType type)
     {
         SID* sidp;
         SECURITY_DESCRIPTOR* descriptor;
@@ -479,8 +530,8 @@ public static partial class Security
             ppSecurityDescriptor: &descriptor)
             .ThrowIfFailed();
 
-        SID sid = new(sidp);
-        Memory.Memory.LocalFree((IntPtr)descriptor);
+        SecurityIdentifier sid = new(sidp);
+        Memory.Memory.LocalFree((HLOCAL)descriptor);
         return sid;
     }
 
@@ -601,21 +652,32 @@ public static partial class Security
         }
     }
 
-    public static unsafe AccessToken CreateRestrictedToken(this AccessToken token, params SID[] sidsToDisable)
+    public static unsafe AccessToken CreateRestrictedToken(this AccessToken token, params SecurityIdentifier[] sidsToDisable)
     {
         if (sidsToDisable == null || sidsToDisable.Length == 0)
             throw new ArgumentNullException(nameof(sidsToDisable));
 
         SID_AND_ATTRIBUTES* sids = stackalloc SID_AND_ATTRIBUTES[sidsToDisable.Length];
-        fixed (SID* sid = sidsToDisable)
+        fixed (SecurityIdentifier* sid = sidsToDisable)
         {
             for (int i = 0; i < sidsToDisable.Length; i++)
                 sids[i].Sid = &sid[i];
 
-            Error.ThrowLastErrorIfFalse(
-                SecurityImports.CreateRestrictedToken(token, 0, (uint)sidsToDisable.Length, sids, 0, null, 0, null, out AccessToken restricted));
+            HANDLE restricted;
 
-            return restricted;
+            Error.ThrowLastErrorIfFalse(
+                TerraFXWindows.CreateRestrictedToken(
+                    token.Handle,
+                    0,
+                    (uint)sidsToDisable.Length,
+                    sids,
+                    0,
+                    null,
+                    0,
+                    null,
+                    &restricted));
+
+            return new(restricted);
         }
     }
 
@@ -654,27 +716,30 @@ public static partial class Security
     ///  Enumerates rights explicitly given to the specified SID. If the given SID doesn't have any directly
     ///  applied rights, returns an empty collection.
     /// </summary>
-    public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, in SID sid)
+    public static IEnumerable<string> LsaEnumerateAccountRights(LsaHandle policyHandle, in SecurityIdentifier sid)
     {
-        NTStatus status = SecurityImports.LsaEnumerateAccountRights(policyHandle, in sid, out var rightsBuffer, out uint rightsCount);
-        using (rightsBuffer)
+        fixed (void* s = &sid)
         {
-            switch (status)
+            NTStatus status = SecurityImports.LsaEnumerateAccountRights(policyHandle, (SID*)s, out var rightsBuffer, out uint rightsCount);
+            using (rightsBuffer)
             {
-                case NTStatus.STATUS_OBJECT_NAME_NOT_FOUND:
-                    return Enumerable.Empty<string>();
-                case NTStatus.STATUS_SUCCESS:
-                    break;
-                default:
-                    throw status.GetException();
+                switch (status)
+                {
+                    case NTStatus.STATUS_OBJECT_NAME_NOT_FOUND:
+                        return Enumerable.Empty<string>();
+                    case NTStatus.STATUS_SUCCESS:
+                        break;
+                    default:
+                        throw status.GetException();
+                }
+
+                List<string> rights = new();
+                Reader reader = new(rightsBuffer);
+                for (int i = 0; i < rightsCount; i++)
+                    rights.Add(reader.ReadUNICODE_STRING());
+
+                return rights;
             }
-
-            List<string> rights = new();
-            Reader reader = new(rightsBuffer);
-            for (int i = 0; i < rightsCount; i++)
-                rights.Add(reader.ReadUNICODE_STRING());
-
-            return rights;
         }
     }
 }

@@ -3,6 +3,7 @@
 
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using IBindCtx = System.Runtime.InteropServices.ComTypes.IBindCtx;
 
 namespace WInterop.Shell;
 

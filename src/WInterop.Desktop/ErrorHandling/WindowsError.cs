@@ -11,7 +11,7 @@ public enum WindowsError : uint
     // Note that the first 90 error codes come from DOS extended error codes.
 
     // From winerror.h
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx
+    // https://docs.microsoft.com/windows/win32/debug/system-error-codes
 
 #pragma warning disable CA1069 // Enums values should not be duplicated
     NO_ERROR = 0,
@@ -189,6 +189,7 @@ public enum WindowsError : uint
     ERROR_MR_MID_NOT_FOUND = 317,
     ERROR_FT_READ_FAILURE = 415,
     ERROR_OPERATION_ABORTED = 995,
+    ERROR_UNRECOGNIZED_VOLUME = 1005,
     ERROR_NO_TOKEN = 1008,
     ERROR_NO_ASSOCIATION = 1155,
     ERROR_NOT_FOUND = 1168,

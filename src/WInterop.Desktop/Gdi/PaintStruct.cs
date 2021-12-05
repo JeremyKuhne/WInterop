@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
-using WInterop.Gdi.Native;
 
 namespace WInterop.Gdi;
 
@@ -27,7 +26,7 @@ public readonly ref struct PaintStruct
     {
         DeviceContext = new DeviceContext(ps.hdc);
         Erase = ps.fErase;
-        Paint = ps.rcPaint;
+        Paint = ps.rcPaint.ToRectangle();
     }
 
     public static implicit operator PaintStruct(in PAINTSTRUCT ps) => new(in ps);

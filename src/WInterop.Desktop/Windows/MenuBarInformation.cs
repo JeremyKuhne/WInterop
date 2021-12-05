@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
-using WInterop.Windows.Native;
 
 namespace WInterop.Windows;
 
@@ -18,7 +17,7 @@ public struct MenuBarInformation
     {
         return new MenuBarInformation
         {
-            Bar = info.rcBar,
+            Bar = info.rcBar.ToRectangle(),
             Menu = new MenuHandle(info.hMenu, ownsHandle: false),
             SubMenu = info.hwndMenu,
             BarFocused = info.fBarFocused,
@@ -31,7 +30,7 @@ public struct MenuBarInformation
         return new MENUBARINFO
         {
             cbSize = (uint)sizeof(MENUBARINFO),
-            rcBar = info.Bar,
+            rcBar = info.Bar.ToRECT(),
             hMenu = (HMENU)info.Menu,
             hwndMenu = info.SubMenu.HWND,
             fBarFocused = info.BarFocused,

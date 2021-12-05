@@ -9,43 +9,45 @@ namespace WInterop.Gdi;
 
 public readonly ref struct BrushHandle
 {
-    public HBRUSH HBRUSH { get; }
+    public HBRUSH Handle { get; }
     public bool OwnsHandle { get; }
 
     /// <summary>
     ///  Used to specifiy that you don't want a default brush picked in WInterop method calls.
     /// </summary>
-    public static BrushHandle NoBrush => new(new HBRUSH((IntPtr)(-1)));
+    public static BrushHandle NoBrush => new(HBRUSH.INVALID_VALUE);
 
     public BrushHandle(HBRUSH handle, bool ownsHandle = true)
     {
-        Debug.Assert(handle.IsInvalid || handle.Value == ((IntPtr)(-1)) || GdiImports.GetObjectType(handle) == ObjectType.Brush
+        Debug.Assert(handle == HBRUSH.NULL
+            || handle == HBRUSH.INVALID_VALUE
+            || GdiImports.GetObjectType(handle) == ObjectType.Brush
             || GdiImports.GetObjectType(handle) == 0);
 
-        HBRUSH = handle;
+        Handle = handle;
         OwnsHandle = ownsHandle;
     }
 
-    public bool IsInvalid => HBRUSH.IsInvalid || GdiImports.GetObjectType(HBRUSH) != ObjectType.Brush;
+    public bool IsInvalid => Handle == HBRUSH.INVALID_VALUE || GdiImports.GetObjectType(Handle) != ObjectType.Brush;
 
     public void Dispose()
     {
         if (OwnsHandle)
-            GdiImports.DeleteObject(HBRUSH);
+            GdiImports.DeleteObject(Handle);
     }
 
-    public static implicit operator HGDIOBJ(in BrushHandle handle) => handle.HBRUSH;
-    public static implicit operator HBRUSH(in BrushHandle handle) => handle.HBRUSH;
-    public static implicit operator LResult(in BrushHandle handle) => handle.HBRUSH.Value;
-    public static implicit operator GdiObjectHandle(in BrushHandle handle) => new(handle.HBRUSH, ownsHandle: false);
+    public static implicit operator HGDIOBJ(in BrushHandle handle) => handle.Handle;
+    public static implicit operator HBRUSH(in BrushHandle handle) => handle.Handle;
+    public static unsafe implicit operator LResult(in BrushHandle handle) => (nint)handle.Handle.Value;
+    public static implicit operator GdiObjectHandle(in BrushHandle handle) => new(handle.Handle, ownsHandle: false);
     public static implicit operator BrushHandle(in StockBrush brush) => Gdi.GetStockBrush(brush);
     public static implicit operator BrushHandle(in SystemColor color) => Gdi.GetSystemColorBrush(color);
 
     // You can't box a ref struct, therefore it will never be object
     public override bool Equals(object? obj) => false;
 
-    public bool Equals(BrushHandle other) => other.HBRUSH == HBRUSH;
-    public static bool operator ==(BrushHandle a, BrushHandle b) => a.HBRUSH == b.HBRUSH;
-    public static bool operator !=(BrushHandle a, BrushHandle b) => a.HBRUSH != b.HBRUSH;
-    public override int GetHashCode() => HBRUSH.GetHashCode();
+    public bool Equals(BrushHandle other) => other.Handle == Handle;
+    public static bool operator ==(BrushHandle a, BrushHandle b) => a.Handle == b.Handle;
+    public static bool operator !=(BrushHandle a, BrushHandle b) => a.Handle != b.Handle;
+    public override int GetHashCode() => Handle.GetHashCode();
 }

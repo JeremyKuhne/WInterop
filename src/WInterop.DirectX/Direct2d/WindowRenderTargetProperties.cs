@@ -3,8 +3,8 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices;
+using TerraFX.Interop.Windows;
 using WInterop.Windows;
-using WInterop.Windows.Native;
 
 namespace WInterop.Direct2d;
 

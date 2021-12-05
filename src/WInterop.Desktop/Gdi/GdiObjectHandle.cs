@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
@@ -11,34 +10,32 @@ namespace WInterop.Gdi;
 /// </summary>
 public readonly struct GdiObjectHandle : IDisposable
 {
-    public HGDIOBJ Handle { get; }
+    public HGDIOBJ HGDIOBJ { get; }
     private readonly bool _ownsHandle;
 
-    public static GdiObjectHandle Null = new(default);
+    public static readonly GdiObjectHandle Null = new(HGDIOBJ.NULL);
 
     public GdiObjectHandle(HGDIOBJ handle, bool ownsHandle = true)
     {
-        Handle = handle;
+        HGDIOBJ = handle;
         _ownsHandle = ownsHandle;
     }
 
-    public ObjectType GetObjectType()
-    {
-        return GdiImports.GetObjectType(Handle);
-    }
+    public ObjectType GetObjectType() => (ObjectType)TerraFXWindows.GetObjectType(HGDIOBJ);
 
-    public static implicit operator GdiObjectHandle(StockFont font) => new(Gdi.GetStockFont(font).Handle, false);
+    public static implicit operator GdiObjectHandle(StockFont font) => new(Gdi.GetStockFont(font).HFONT, false);
     public static implicit operator GdiObjectHandle(StockBrush brush) => new(Gdi.GetStockBrush(brush), false);
     public static implicit operator GdiObjectHandle(SystemColor color) => new(Gdi.GetSystemColorBrush(color), false);
     public static implicit operator GdiObjectHandle(StockPen pen) => new(Gdi.GetStockPen(pen), false);
 
-    public static implicit operator HGDIOBJ(GdiObjectHandle handle) => handle.Handle;
+    public static implicit operator HGDIOBJ(GdiObjectHandle handle) => handle.HGDIOBJ;
 
-    public bool IsInvalid => Handle.IsInvalid;
+    public bool IsNull => HGDIOBJ == HGDIOBJ.NULL;
+    public bool IsInvalid => HGDIOBJ == HGDIOBJ.INVALID_VALUE;
 
     public void Dispose()
     {
         if (_ownsHandle)
-            GdiImports.DeleteObject(Handle);
+            TerraFXWindows.DeleteObject(HGDIOBJ);
     }
 }

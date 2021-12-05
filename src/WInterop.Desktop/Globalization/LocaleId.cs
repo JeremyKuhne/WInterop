@@ -9,7 +9,7 @@ namespace WInterop.Globalization;
 /// <docs>https://docs.microsoft.com/windows/win32/intl/locale-identifiers</docs>
 public struct LocaleId
 {
-    public static LocaleId Null => default;
+    public static LocaleId Default => default;
 
     public uint RawValue;
 

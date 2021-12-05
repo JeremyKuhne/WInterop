@@ -5,14 +5,14 @@ namespace WInterop.Security;
 
 public readonly struct SidAndAttributes
 {
-    public SID Sid { get; }
+    public SecurityIdentifier Sid { get; }
     public SidAttributes Attributes { get; }
 
-    public SidAndAttributes(SID sid, SidAttributes attributes)
+    public SidAndAttributes(SecurityIdentifier sid, SidAttributes attributes)
     {
         Sid = sid;
         Attributes = attributes;
     }
 
-    public static implicit operator SID(SidAndAttributes info) => info.Sid;
+    public static implicit operator SecurityIdentifier(SidAndAttributes info) => info.Sid;
 }
