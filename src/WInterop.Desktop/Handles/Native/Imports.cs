@@ -46,7 +46,7 @@ public static partial class Imports
     [DllImport(Libraries.Ntdll, ExactSpelling = true)]
     public static extern NTStatus NtQuerySymbolicLinkObject(
         SymbolicLinkObjectHandle LinkHandle,
-        ref UNICODE_STRING LinkTarget,
+        ref SafeString.Native.UNICODE_STRING LinkTarget,
         out uint ReturnedLength);
 
     // https://msdn.microsoft.com/en-us/library/bb470238.aspx

@@ -209,7 +209,7 @@ public static partial class StorageImports
     public static extern unsafe NTStatus NtCreateFile(
         out IntPtr FileHandle,
         DesiredAccess DesiredAccess,
-        ref OBJECT_ATTRIBUTES ObjectAttributes,
+        ref Handles.Native.OBJECT_ATTRIBUTES ObjectAttributes,
         out IO_STATUS_BLOCK IoStatusBlock,
         long* AllocationSize,
         AllFileAttributes FileAttributes,
@@ -249,7 +249,7 @@ public static partial class StorageImports
         uint Length,
         FileInformationClass FileInformationClass,
         ByteBoolean ReturnSingleEntry,
-        UNICODE_STRING* FileName,
+        SafeString.Native.UNICODE_STRING* FileName,
         ByteBoolean RestartScan);
 
     [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -263,28 +263,28 @@ public static partial class StorageImports
         uint Length,
         FileInformationClass FileInformationClass,
         ByteBoolean ReturnSingleEntry,
-        UNICODE_STRING* FileName,
+        SafeString.Native.UNICODE_STRING* FileName,
         ByteBoolean RestartScan);
 
     // https://msdn.microsoft.com/en-us/library/windows/hardware/ff546850.aspx
     // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/rtlisnameinexpression
     [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
     public static extern unsafe ByteBoolean RtlIsNameInExpression(
-        UNICODE_STRING* Expression,
-        UNICODE_STRING* Name,
+        SafeString.Native.UNICODE_STRING* Expression,
+        SafeString.Native.UNICODE_STRING* Name,
         ByteBoolean IgnoreCase,
         IntPtr UpcaseTable);
 
     // https://docs.microsoft.com/en-us/windows/desktop/DevNotes/ntqueryattributesfile
     [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
     public static extern NTStatus NtQueryAttributesFile(
-        ref OBJECT_ATTRIBUTES ObjectAttributes,
+        ref Handles.Native.OBJECT_ATTRIBUTES ObjectAttributes,
         out FileBasicInformation FileInformation);
 
     // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/wdm/nf-wdm-zwqueryfullattributesfile
     [DllImport(Libraries.Ntdll, CharSet = CharSet.Unicode, ExactSpelling = true)]
     public static extern NTStatus NtQueryFullAttributesFile(
-        ref OBJECT_ATTRIBUTES ObjectAttributes,
+        ref Handles.Native.OBJECT_ATTRIBUTES ObjectAttributes,
         out FileNetworkOpenInformation FileInformation);
 
     // NTFS Technical Reference

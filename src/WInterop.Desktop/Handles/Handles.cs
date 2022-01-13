@@ -58,7 +58,7 @@ public static partial class Handles
         });
     }
 
-    private static unsafe SafeHandle OpenObjectHelper(string path, Func<OBJECT_ATTRIBUTES, SafeHandle> invoker)
+    private static unsafe SafeHandle OpenObjectHelper(string path, Func<Native.OBJECT_ATTRIBUTES, SafeHandle> invoker)
     {
         fixed (char* pathPointer = path)
         {
@@ -70,9 +70,9 @@ public static partial class Handles
                 Buffer = pathPointer
             };
 
-            OBJECT_ATTRIBUTES attributes = new()
+            Native.OBJECT_ATTRIBUTES attributes = new()
             {
-                Length = (uint)sizeof(OBJECT_ATTRIBUTES),
+                Length = (uint)sizeof(Native.OBJECT_ATTRIBUTES),
                 RootDirectory = IntPtr.Zero,
                 ObjectName = &objectName,
                 SecurityDescriptor = null,
@@ -198,8 +198,8 @@ public static partial class Handles
         {
             NTStatus status = NTStatus.STATUS_BUFFER_OVERFLOW;
 
-                // We'll initially give room for 50 characters for the type name
-                uint returnLength = (uint)sizeof(OBJECT_TYPE_INFORMATION) + (50 * sizeof(char));
+            // We'll initially give room for 50 characters for the type name
+            uint returnLength = (uint)sizeof(OBJECT_TYPE_INFORMATION) + (50 * sizeof(char));
 
             while (status == NTStatus.STATUS_BUFFER_OVERFLOW || status == NTStatus.STATUS_BUFFER_TOO_SMALL || status == NTStatus.STATUS_INFO_LENGTH_MISMATCH)
             {

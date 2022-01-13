@@ -608,7 +608,7 @@ public class StringBuffer : HeapBuffer
         base.Dispose(disposing);
     }
 
-    public UNICODE_STRING ToUnicodeString() => new(this);
+    public SafeString.Native.UNICODE_STRING ToUnicodeString() => new(this);
 
     public static StringBufferCache Cache => StringBufferCache.Instance;
 }

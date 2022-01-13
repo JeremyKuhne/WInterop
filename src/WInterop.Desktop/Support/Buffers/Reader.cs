@@ -53,9 +53,9 @@ public class Reader
     /// </remarks>
     public unsafe string ReadUNICODE_STRING()
     {
-        UNICODE_STRING us = *(UNICODE_STRING*)BytePointer;
+        SafeString.Native.UNICODE_STRING us = *(SafeString.Native.UNICODE_STRING*)BytePointer;
         string value = new(us.Buffer, 0, us.Length / sizeof(char));
-        ByteOffset += (ulong)sizeof(UNICODE_STRING);
+        ByteOffset += (ulong)sizeof(SafeString.Native.UNICODE_STRING);
         return value;
     }
 

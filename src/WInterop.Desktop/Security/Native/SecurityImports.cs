@@ -44,7 +44,7 @@ public static partial class SecurityImports
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378299.aspx
     [DllImport(Libraries.Advapi32, ExactSpelling = true)]
     public static extern unsafe NTStatus LsaOpenPolicy(
-        UNICODE_STRING* SystemName,
+        SafeString.Native.UNICODE_STRING* SystemName,
         LSA_OBJECT_ATTRIBUTES* ObjectAttributes,
         PolicyAccessRights DesiredAccess,
         out LsaHandle PolicyHandle);

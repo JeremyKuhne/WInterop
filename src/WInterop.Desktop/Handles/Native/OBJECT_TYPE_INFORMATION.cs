@@ -15,7 +15,7 @@ namespace WInterop.Handles.Native;
 //      } PUBLIC_OBJECT_TYPE_INFORMATION, *PPUBLIC_OBJECT_TYPE_INFORMATION;
 public struct OBJECT_TYPE_INFORMATION
 {
-    public UNICODE_STRING TypeName;
+    public SafeString.Native.UNICODE_STRING TypeName;
 
     // All below are not officially documented, names may be incorrect
 

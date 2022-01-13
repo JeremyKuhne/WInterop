@@ -22,7 +22,7 @@ public unsafe struct OBJECT_ATTRIBUTES
     ///  Name of the object. Must be fully qualified if RootDirectory isn't set.
     ///  Otherwise is relative to RootDirectory.
     /// </summary>
-    public UNICODE_STRING* ObjectName;
+    public SafeString.Native.UNICODE_STRING* ObjectName;
 
     public ObjectAttributes Attributes;
 
@@ -41,7 +41,7 @@ public unsafe struct OBJECT_ATTRIBUTES
     ///  Equivalent of InitializeObjectAttributes macro with the exception that you can directly set SQOS.
     /// </summary>
     public unsafe OBJECT_ATTRIBUTES(
-        UNICODE_STRING* objectName,
+        SafeString.Native.UNICODE_STRING* objectName,
         ObjectAttributes attributes,
         IntPtr rootDirectory,
         SECURITY_DESCRIPTOR* securityDescriptor = null,

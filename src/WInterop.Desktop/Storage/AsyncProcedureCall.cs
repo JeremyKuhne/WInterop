@@ -10,5 +10,5 @@ namespace WInterop.Storage;
 /// </summary>
 public delegate void AsyncProcedureCall(
     IntPtr apcContext,
-    ref IO_STATUS_BLOCK ioStatusBlock,
+    ref Native.IO_STATUS_BLOCK ioStatusBlock,
     uint reserved);

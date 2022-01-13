@@ -434,7 +434,7 @@ public static partial class Storage
             {
                 status = StorageImports.NtQueryInformationFile(
                     fileHandle,
-                    out IO_STATUS_BLOCK statusBlock,
+                    out Native.IO_STATUS_BLOCK statusBlock,
                     buffer.VoidPointer,
                     (uint)buffer.ByteCapacity,
                     FileInformationClass.FileProcessIdsUsingFileInformation);
