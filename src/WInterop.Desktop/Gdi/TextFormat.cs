@@ -3,128 +3,130 @@
 
 namespace WInterop.Gdi;
 
+#pragma warning disable CA1069 // Enums values should not be duplicated
+
 [Flags]
 public enum TextFormat : uint
 {
-    // https://msdn.microsoft.com/en-us/library/dd162498.aspx
-
     /// <summary>
     ///  (DT_TOP)
     /// </summary>
-    Top = 0x00000000,
+    Top = DT.DT_TOP,
 
     /// <summary>
     ///  (DT_LEFT)
     /// </summary>
-    Left = 0x00000000,
+    Left = DT.DT_LEFT,
 
     /// <summary>
     ///  (DT_CENTER)
     /// </summary>
-    Center = 0x00000001,
+    Center = DT.DT_CENTER,
 
     /// <summary>
     ///  (DT_RIGHT)
     /// </summary>
-    Right = 0x00000002,
+    Right = DT.DT_RIGHT,
 
     /// <summary>
     ///  (DT_VCENTER)
     /// </summary>
-    VerticallyCenter = 0x00000004,
+    VerticallyCenter = DT.DT_VCENTER,
 
     /// <summary>
     ///  (DT_BOTTOM)
     /// </summary>
-    Bottom = 0x00000008,
+    Bottom = DT.DT_BOTTOM,
 
     /// <summary>
     ///  (DT_WORDBREAK)
     /// </summary>
-    WordBreak = 0x00000010,
+    WordBreak = DT.DT_WORDBREAK,
 
     /// <summary>
     ///  (DT_SINGLELINE)
     /// </summary>
-    SingleLine = 0x00000020,
+    SingleLine = DT.DT_SINGLELINE,
 
     /// <summary>
     ///  (DT_EXPANDTABS)
     /// </summary>
-    ExpandTabs = 0x00000040,
+    ExpandTabs = DT.DT_EXPANDTABS,
 
     /// <summary>
     ///  (DT_TABSTOP)
     /// </summary>
-    TabStop = 0x00000080,
+    TabStop = DT.DT_TABSTOP,
 
     /// <summary>
     ///  (DT_NOCLIP)
     /// </summary>
-    NoClip = 0x00000100,
+    NoClip = DT.DT_NOCLIP,
 
     /// <summary>
     ///  (DT_EXTERNALLEADING)
     /// </summary>
-    ExternalLeading = 0x00000200,
+    ExternalLeading = DT.DT_EXTERNALLEADING,
 
     /// <summary>
     ///  (DT_CALCRECT)
     /// </summary>
-    CalculateRectangle = 0x00000400,
+    CalculateRectangle = DT.DT_CALCRECT,
 
     /// <summary>
     ///  (DT_NOPREFIX)
     /// </summary>
-    NoPrefix = 0x00000800,
+    NoPrefix = DT.DT_NOPREFIX,
 
     /// <summary>
     ///  (DT_INTERNAL)
     /// </summary>
-    Internal = 0x00001000,
+    Internal = DT.DT_INTERNAL,
 
     /// <summary>
     ///  (DT_EDITCONTROL)
     /// </summary>
-    EditControl = 0x00002000,
+    EditControl = DT.DT_EDITCONTROL,
 
     /// <summary>
     ///  (DT_PATH_ELLIPSIS)
     /// </summary>
-    PathEllipsis = 0x00004000,
+    PathEllipsis = DT.DT_PATH_ELLIPSIS,
 
     /// <summary>
     ///  (DT_END_ELLIPSIS)
     /// </summary>
-    EndEllipsis = 0x00008000,
+    EndEllipsis = DT.DT_END_ELLIPSIS,
 
     /// <summary>
     ///  (DT_MODIFYSTRING)
     /// </summary>
-    ModifyString = 0x00010000,
+    ModifyString = DT.DT_RIGHT,
 
     /// <summary>
     ///  (DT_RTLREADING)
     /// </summary>
-    RightToLeftReading = 0x00020000,
+    RightToLeftReading = DT.DT_RTLREADING,
 
     /// <summary>
     ///  (DT_WORD_ELLIPSIS)
     /// </summary>
-    WordEllipsis = 0x00040000,
+    WordEllipsis = DT.DT_RIGHT,
 
     /// <summary>
     ///  (DT_NOFULLWIDTHCHARBREAK)
     /// </summary>
-    NoFullWidthCharacterBreak = 0x00080000,
+    NoFullWidthCharacterBreak = DT.DT_NOFULLWIDTHCHARBREAK,
 
     /// <summary>
     ///  (DT_HIDEPREFIX)
     /// </summary>
-    HidePrefix = 0x00100000,
+    HidePrefix = DT.DT_HIDEPREFIX,
 
     /// <summary>
     ///  (DT_PREFIXONLY)
     /// </summary>
-    PrefixOnly = 0x00200000
+    PrefixOnly = DT.DT_PREFIXONLY
 }
+
+#pragma warning restore CA1069 // Enums values should not be duplicated

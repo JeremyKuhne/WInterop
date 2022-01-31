@@ -5,6 +5,7 @@ using System.Buffers;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using WInterop.Errors;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
@@ -46,14 +47,62 @@ public static unsafe partial class Gdi
         Rectangle bounds,
         TextFormat format)
     {
-        RECT rect = bounds.ToRECT();
+        Rect rect = bounds;
 
+        DRAWTEXTPARAMS* dtp = null;
+        DRAWTEXTPARAMS dt = default;
+
+        if (format.HasFlag(TextFormat.TabStop))
+        {
+            dt.cbSize = (uint)sizeof(DRAWTEXTPARAMS);
+            dt.iTabLength = (int)(((uint)format & 0xFF00) >> 8);
+            format = (TextFormat)((uint)format & 0xFFFF00FF);
+            dtp = &dt;
+        }
+
+        return DrawTextHelper(in context, text, &rect, format, dtp).Height;
+    }
+
+    public static (int Height, uint LengthDrawn, Rectangle Bounds) DrawText(
+        this in DeviceContext context,
+        ReadOnlySpan<char> text,
+        Rectangle bounds,
+        TextFormat format,
+        int tabLength = 0,
+        int leftMargin = 0,
+        int rightMargin = 0)
+    {
+        DRAWTEXTPARAMS dtp = new()
+        {
+            cbSize = (uint)sizeof(DRAWTEXTPARAMS),
+            iTabLength = tabLength,
+            iLeftMargin = leftMargin,
+            iRightMargin = rightMargin
+        };
+
+        Rect rect = bounds;
+        return DrawTextHelper(in context, text, &rect, format, &dtp);
+    }
+
+    private static (int Height, uint LengthDrawn, Rectangle Bounds) DrawTextHelper(
+        this in DeviceContext context,
+        ReadOnlySpan<char> text,
+        Rect* bounds,
+        TextFormat format,
+        DRAWTEXTPARAMS* dtp)
+    {
         if ((format & TextFormat.ModifyString) == 0)
         {
             // The string won't be changed, we can just pin
             fixed (char* c = text)
             {
-                return TerraFXWindows.DrawTextW(context, (ushort*)c, text.Length, &rect, (uint)format);
+                int result = TerraFXWindows.DrawTextExW(context, (ushort*)c, text.Length, (RECT*)bounds, 0, dtp);
+                if (result == 0)
+                {
+                    Error.ThrowLastError();
+                }
+
+                return (result, dtp is null ? 0 : dtp->uiLengthDrawn, *bounds);
             }
         }
 
@@ -61,9 +110,14 @@ public static unsafe partial class Gdi
         text.CopyTo(buffer.AsSpan());
         fixed (char* c = buffer)
         {
-            int result = TerraFXWindows.DrawTextW(context, (ushort*)c, text.Length, &rect, (uint)format);
+            int result = TerraFXWindows.DrawTextExW(context, (ushort*)c, text.Length, (RECT*)bounds, 0, dtp);
+            if (result == 0)
+            {
+                Error.ThrowLastError();
+            }
+
             ArrayPool<char>.Shared.Return(buffer);
-            return result;
+            return (result, dtp is null ? 0 : dtp->uiLengthDrawn, *bounds);
         }
     }
 
@@ -128,6 +182,12 @@ public static unsafe partial class Gdi
                 (ushort*)t));
         }
     }
+
+    /// <summary>
+    ///  Create a logical font with the specified <paramref name="logicalFont"/> characteristics.
+    /// </summary>
+    public static FontHandle CreateFontIndirect(LogicalFont logicalFont)
+        => new(TerraFXWindows.CreateFontIndirectW((LOGFONTW*)&logicalFont));
 
     // https://docs.microsoft.com/previous-versions/dd162618
     [UnmanagedCallersOnly]

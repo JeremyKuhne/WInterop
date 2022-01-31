@@ -20,7 +20,7 @@ public struct LogicalFont
     public int Width;
     public int Escapement;
     public int Orientation;
-    public int Weight;
+    public FontWeight Weight;
     public ByteBoolean Italic;
     public ByteBoolean Underline;
     public ByteBoolean StrikeOut;
