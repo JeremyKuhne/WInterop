@@ -40,7 +40,7 @@ public class ComStream : System.IO.Stream
     public Guid ClassId { get; }
 
     public Stream Stream
-        => Stream.IsNull ? throw new ObjectDisposedException(nameof(ComStream)) : Stream;
+        => _stream.IsNull ? throw new ObjectDisposedException(nameof(ComStream)) : _stream;
 
     public override bool CanRead
         // Can read is the default, only can't if in Write only mode
