@@ -104,13 +104,13 @@ public class StorageTests
             Action action = () => storage.RenameElement("name", "newname");
 
             // Can't rename until after we close the stream
-            action.Should().Throw<COMException>().And.HResult.Should().Be((int)HResult.STG_E_ACCESSDENIED);
+            action.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)HResult.STG_E_ACCESSDENIED);
         }
 
         storage.RenameElement("name", "newname");
 
         Action action2 = () => storage.OpenStream("name", StorageMode.ShareExclusive);
-        action2.Should().Throw<COMException>().And.HResult.Should().Be((int)HResult.STG_E_FILENOTFOUND);
+        action2.Should().Throw<WInteropIOException>().And.HResult.Should().Be((int)HResult.STG_E_FILENOTFOUND);
 
         using var renamedStream = storage.OpenStream("newname", StorageMode.ShareExclusive);
         renamedStream.IsNull.Should().BeFalse();
