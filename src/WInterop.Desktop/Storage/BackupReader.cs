@@ -72,7 +72,7 @@ public class BackupReader : IDisposable
 
         return new BackupStreamInformation
         {
-            Name = new((char*)streamId->cStreamName, 0, (int)streamId->dwStreamNameSize),
+            Name = new((char*)streamId->cStreamName, 0, (int)streamId->dwStreamNameSize / sizeof(char)),
             StreamType = (BackupStreamType)streamId->dwStreamId,
             Size = streamId->Size.QuadPart
         };
