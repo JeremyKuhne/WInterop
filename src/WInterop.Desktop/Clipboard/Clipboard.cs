@@ -56,7 +56,7 @@ public static unsafe partial class Clipboard
             }
         } while (true);
 
-        return buffer.Span[.. (int)count].ToArray();
+        return buffer.Span[..(int)count].ToArray();
     }
 
     /// <summary>

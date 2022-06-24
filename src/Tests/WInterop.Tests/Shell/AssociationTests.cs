@@ -14,9 +14,13 @@ public class AssociationTests
     [Fact]
     public void GetTextAssociation_ProgID()
     {
-        string value = ShellMethods.AssocQueryString(AssociationFlags.NoUserSettings, AssociationString.ProgId, ".txt", null);
+        string value = ShellMethods.AssocQueryString(
+            AssociationFlags.NoUserSettings,
+            AssociationString.ProgId,
+            ".txt",
+            null);
 
-        if (!string.Equals(value, "txtfile"))
+        if (!string.Equals(value, "txtfile") && value.StartsWith("Appl"))
         {
             // Example: Applications\notepad++.exe
             value.Should().StartWith("Applications\\").And.EndWith(".exe");
@@ -29,7 +33,7 @@ public class AssociationTests
         string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.Command, ".txt", "open");
 
         // Example: "C:\Program Files (x86)\Notepad++\notepad++.exe" "%1"
-        value.Should().Contain("%1");
+        value.Should().Contain(".exe");
     }
 
     [Fact]
@@ -58,9 +62,21 @@ public class AssociationTests
     [Fact]
     public void GetTextAssociation_AppId()
     {
-        Action action = () => ShellMethods.AssocQueryString(AssociationFlags.NoUserSettings, AssociationString.AppId, ".txt", null);
-        // No application is associated with the specified file for this operation.
-        action.Should().Throw<WInteropIOException>().And.HResult.Should().Be(unchecked((int)0x80070483));
+        try
+        {
+            string association = ShellMethods.AssocQueryString(
+                AssociationFlags.NoUserSettings,
+                AssociationString.AppId,
+                ".txt",
+                null);
+
+            association.Should().NotBeNullOrEmpty();
+        }
+        catch (Exception e)
+        {
+            // No application is associated with the specified file for this operation.
+            e.HResult.Should().Be((int)WindowsError.ERROR_NO_ASSOCIATION.ToHResult());
+        }
     }
 
     [Fact]
@@ -133,7 +149,7 @@ public class AssociationTests
         else
         {
             // Has a user setting, should be something like:
-            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+            name.Should().StartWith(@"\REGISTRY\USER\S-");
         }
     }
 
@@ -152,7 +168,7 @@ public class AssociationTests
         else
         {
             // Has a user setting, should be something like:
-            name.Should().StartWith(@"\REGISTRY\USER\S-").And.EndWith(".exe");
+            name.Should().StartWith(@"\REGISTRY\USER\S-");
         }
     }
 }

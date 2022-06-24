@@ -56,8 +56,8 @@ public static partial class ShellMethods
 
             result.ThrowIfFailed(association);
 
-                // Count includes the null
-                buffer.Length = count - 1;
+            // Count includes the null
+            buffer.Length = count - 1;
             return buffer.ToString();
         });
     }

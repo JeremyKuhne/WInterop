@@ -26,5 +26,5 @@ public struct DesignVector
         values.CopyTo(_dvValues.Buffer);
     }
 
-    public ReadOnlySpan<int> Values => _dvValues.Buffer[.. (int)_dvNumAxes];
+    public ReadOnlySpan<int> Values => _dvValues.Buffer[..(int)_dvNumAxes];
 }

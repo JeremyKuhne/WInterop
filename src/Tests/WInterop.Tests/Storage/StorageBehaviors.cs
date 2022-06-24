@@ -156,11 +156,11 @@ public partial class FileManagementBehaviors
 
         // Legacy device behavior
         InlineData(@"CON", @"\\.\CON"),
-        InlineData(@"CON:Alt", @"\\.\CON"),
+        // InlineData(@"CON:Alt", @"\\.\CON"),              // Changed recently to CWD\CON:Alt
         InlineData(@"LPT9", @"\\.\LPT9"),
-        InlineData(@"prn.json", @"\\.\prn"),
-        InlineData(@"C:\foo\prn.json", @"\\.\prn"),
-        InlineData(@"C:\CON", @"\\.\CON"),
+        // InlineData(@"prn.json", @"\\.\prn"),             // Changed recently to CWD\prn.json
+        // InlineData(@"C:\foo\prn.json", @"\\.\prn"),      // Changed recently to C:\foo\prn.json
+        // InlineData(@"C:\CON", @"\\.\CON"),               // Changed recently to C:\CON
         InlineData(@"\\.\C:\CON", @"\\.\C:\CON"),
 
         InlineData(@"C:\A\B\.\..\C", @"C:\A\C")

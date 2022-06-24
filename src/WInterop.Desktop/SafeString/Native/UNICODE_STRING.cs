@@ -6,8 +6,8 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.SafeString.Native;
 
-// https://msdn.microsoft.com/en-us/library/windows/desktop/aa380518.aspx
-// https://msdn.microsoft.com/en-us/library/windows/hardware/ff564879.aspx
+// https://docs.microsoft.com/windows/win32/api/subauth/ns-subauth-unicode_string
+// https://docs.microsoft.com/windows/win32/api/ntdef/ns-ntdef-_unicode_string
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 public unsafe struct UNICODE_STRING
 {
@@ -58,13 +58,6 @@ public unsafe struct UNICODE_STRING
     /// <summary>
     ///  Returns the current buffer as a string.
     /// </summary>
-    public override string ToString()
-    {
-        if (Length == 0) return string.Empty;
-
-        unsafe
-        {
-            return new string(Buffer, 0, Length / sizeof(char));
-        }
-    }
+    public override unsafe string ToString()
+        => Length == 0 ? string.Empty : new string(Buffer, 0, Length / sizeof(char));
 }

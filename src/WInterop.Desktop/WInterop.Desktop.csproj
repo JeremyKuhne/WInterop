@@ -27,11 +27,11 @@
     <ProjectReference Include="..\WInterop.SourceGenerators\WInterop.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22000-rc1" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.20348.1" />
   </ItemGroup>
 </Project>

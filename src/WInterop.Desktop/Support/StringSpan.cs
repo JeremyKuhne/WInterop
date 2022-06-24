@@ -27,22 +27,19 @@ public readonly ref struct StringSpan
     public StringSpan(string value)
     {
         _string = value;
-        _span = default;
+        _span = _string;
     }
 
     public StringSpan NullTerminate()
         => IsNullTerminated ? this : new StringSpan(_span.ToString());
 
-    public bool IsEmpty
-        => _span.IsEmpty && string.IsNullOrEmpty(_string);
+    public bool IsEmpty => _span.IsEmpty;
 
     public bool IsNullTerminated
         => _string is not null || (!_span.IsEmpty && _span[^1] == '\0');
 
     public ReadOnlySpan<char> GetSpanWithoutTerminator()
-        => _string is not null
-            ? _string.AsSpan()
-            : IsNullTerminated ? _span[0..^1] : _span;
+        => IsNullTerminated ? _span[0..^1] : _span;
 
     public ref char GetPinnableReference()
         => ref MemoryMarshal.GetReference(_span);

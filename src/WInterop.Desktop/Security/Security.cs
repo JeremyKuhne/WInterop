@@ -115,7 +115,7 @@ public static unsafe partial class Security
             nameBuffer = new Span<char>(n, (int)length);
         }
 
-        return ParsePrivilege(nameBuffer[.. (int)length]);
+        return ParsePrivilege(nameBuffer[..(int)length]);
     }
 
     private static unsafe void TokenInformationInvoke(
@@ -629,22 +629,30 @@ public static unsafe partial class Security
             string? name = SystemInformation.SystemInformation.GetUserName(ExtendedNameFormat.SamCompatible);
 
             if (name is null)
-                throw new InvalidOperationException($"Could not get the {nameof(ExtendedNameFormat.SamCompatible)} user name.");
-
-            SID sid = default;
-            uint sidLength = (uint)sizeof(SID);
-            uint domainNameLength = domainNameBuffer.CharCapacity;
-            while (!SecurityImports.LookupAccountNameW(
-                lpSystemName: null,
-                lpAccountName: name,
-                Sid: &sid,
-                cbSid: ref sidLength,
-                ReferencedDomainName: domainNameBuffer.CharPointer,
-                cchReferencedDomainName: ref domainNameLength,
-                peUse: out _))
             {
-                Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
-                domainNameBuffer.EnsureCharCapacity(domainNameLength);
+                throw new InvalidOperationException($"Could not get the {nameof(ExtendedNameFormat.SamCompatible)} user name.");
+            }
+
+            SecurityIdentifier sid = default;
+            uint sidLength = (uint)sizeof(SecurityIdentifier);
+            uint domainNameLength = domainNameBuffer.CharCapacity;
+            SID_NAME_USE nameUse;
+
+            fixed (char* n = name)
+            {
+                while (!TerraFXWindows.LookupAccountNameW(
+                    lpSystemName: null,
+                    lpAccountName: (ushort*)n,
+                    Sid: (SID*)&sid,
+                    cbSid: &sidLength,
+                    ReferencedDomainName: domainNameBuffer.UShortPointer,
+                    cchReferencedDomainName: &domainNameLength,
+                    peUse: &nameUse))
+                {
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
+                    domainNameBuffer.EnsureCharCapacity(domainNameLength);
+                    domainNameLength = domainNameBuffer.CharCapacity;
+                }
             }
 
             domainNameBuffer.Length = domainNameLength;

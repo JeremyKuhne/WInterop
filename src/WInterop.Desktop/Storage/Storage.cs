@@ -1433,7 +1433,9 @@ public static partial class Storage
     {
         FileType fileType = (FileType)TerraFXWindows.GetFileType(fileHandle.ToHANDLE());
         if (fileType == FileType.Unknown)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
+        }
 
         return fileType;
     }
