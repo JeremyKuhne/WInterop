@@ -51,7 +51,9 @@ public ref struct ValueBuffer<T> where T : unmanaged
     public unsafe void EnsureCapacity(int capacity, bool copy = false)
     {
         if (capacity <= Span.Length)
+        {
             return;
+        }
 
         // We want to align to highest power of 2 less than the size/ up to
         // 128 bits (16 bytes), which should handle all alignment cases.
@@ -110,7 +112,7 @@ public ref struct ValueBuffer<T> where T : unmanaged
 
     public void Dispose()
     {
-        if (_buffer != null)
+        if (_buffer is not null)
         {
             ArrayPool<byte>.Shared.Return(_buffer);
             _buffer = null;

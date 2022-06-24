@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Cryptography.Native;
-
 namespace WInterop.Handles;
 
 /// <summary>
@@ -18,8 +16,14 @@ public class CertificateStoreHandle : HandleZeroIsInvalid
     {
     }
 
-    protected override bool ReleaseHandle()
+    public CertificateStoreHandle(HCERTSTORE handle)
+        : base((IntPtr)handle, ownsHandle: true)
     {
-        return Imports.CertCloseStore(handle, dwFlags: 0);
     }
+
+    protected override bool ReleaseHandle()
+        => TerraFXWindows.CertCloseStore((HCERTSTORE)handle, dwFlags: 0);
+
+    public static implicit operator CertificateStoreHandle(HCERTSTORE handle)
+        => new(handle);
 }

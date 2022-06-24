@@ -8,15 +8,15 @@ namespace WInterop.Devices;
 /// </summary>
 public struct ControlCode
 {
-    // https://msdn.microsoft.com/en-us/library/ms902086.aspx
+    // https://docs.microsoft.com/windows-hardware/drivers/ddi/d4drvif/nf-d4drvif-ctl_code
     // https://social.technet.microsoft.com/wiki/contents/articles/24653.decoding-io-control-codes-ioctl-fsctl-and-deviceiocodes-with-table-of-known-values.aspx
 
-    private const uint TransferTypeMask = 0b0000_0000_0000_0000_0000_0000_0000_0011;
-    private const uint FunctionCodeMask = 0b0000_0000_0000_0000_0001_1111_1111_1100;
-    private const uint CustomMask = 0b0000_0000_0000_0000_0010_0000_0000_0000;
-    private const uint RequiredAccessMask = 0b0000_0000_0000_0000_1100_0000_0000_0000;
-    private const uint DeviceTypeMask = 0b0111_1111_1111_1111_0000_0000_0000_0000;
-    private const uint CommonMask = 0b1000_0000_0000_0000_0000_0000_0000_0000;
+    private const uint TransferTypeMask         = 0b0000_0000_0000_0000_0000_0000_0000_0011;
+    private const uint FunctionCodeMask         = 0b0000_0000_0000_0000_0001_1111_1111_1100;
+    private const uint CustomMask               = 0b0000_0000_0000_0000_0010_0000_0000_0000;
+    private const uint RequiredAccessMask       = 0b0000_0000_0000_0000_1100_0000_0000_0000;
+    private const uint DeviceTypeMask           = 0b0111_1111_1111_1111_0000_0000_0000_0000;
+    private const uint CommonMask               = 0b1000_0000_0000_0000_0000_0000_0000_0000;
 
     public uint Value;
 
@@ -38,6 +38,8 @@ public struct ControlCode
     public static implicit operator ControlCode(ControlCodes.MountManager code) => new((uint)code);
     public static implicit operator ControlCode(ControlCodes.MountDevice code) => new((uint)code);
     public static implicit operator ControlCode(ControlCodes.FileSystem code) => new((uint)code);
+
+    public static explicit operator uint(ControlCode code) => code.Value;
 
     public override string ToString() => $"{DeviceType}, Function Code 0x{FunctionCode:X4}, {RequiredAccess}, {TransferType}";
 }

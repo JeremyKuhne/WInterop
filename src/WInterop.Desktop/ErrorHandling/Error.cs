@@ -85,11 +85,11 @@ public static partial class Error
 
     public static void SetLastError(WindowsError error) => Imports.SetLastError(error);
 
-    public static WindowsError GetLastError() => Imports.GetLastError();
+    public static WindowsError GetLastError() => (WindowsError)TerraFXWindows.GetLastError();
 
     public static void ThrowIfLastErrorNot(WindowsError error, string? path = null)
     {
-        WindowsError lastError = Imports.GetLastError();
+        WindowsError lastError = (WindowsError)TerraFXWindows.GetLastError();
         if (lastError != error)
             throw lastError.GetException(path);
     }
@@ -98,7 +98,7 @@ public static partial class Error
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void ThrowLastError(string? path = null)
-        => throw Imports.GetLastError().GetException(path);
+        => throw ((WindowsError)TerraFXWindows.GetLastError()).GetException(path);
 
     /// <summary>
     ///  Try to get the string for an HRESULT
@@ -205,20 +205,21 @@ public static partial class Error
     /// <summary>
     ///  Gets the error mode for the current process.
     /// </summary>
-    public static ErrorMode GetProcessErrorMode() => Imports.GetErrorMode();
+    public static ErrorMode GetProcessErrorMode() => (ErrorMode)TerraFXWindows.GetErrorMode();
 
     /// <summary>
     ///  Gets the error mode for the current thread.
     /// </summary>
-    public static ErrorMode GetThreadErrorMode() => Imports.GetThreadErrorMode();
+    public static ErrorMode GetThreadErrorMode() => (ErrorMode)TerraFXWindows.GetThreadErrorMode();
 
     /// <summary>
     ///  Set a new error mode for the current thread.
     /// </summary>
     /// <returns>The old error mode for the thread.</returns>
-    public static ErrorMode SetThreadErrorMode(ErrorMode mode)
+    public static unsafe ErrorMode SetThreadErrorMode(ErrorMode mode)
     {
-        ThrowLastErrorIfFalse(Imports.SetThreadErrorMode(mode, out ErrorMode oldMode));
+        ErrorMode oldMode;
+        ThrowLastErrorIfFalse(TerraFXWindows.SetThreadErrorMode((uint)mode, (uint*)&oldMode));
 
         return oldMode;
     }

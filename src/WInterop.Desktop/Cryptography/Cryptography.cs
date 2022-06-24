@@ -2,36 +2,42 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.Cryptography.Native;
 using WInterop.Errors;
 using WInterop.Handles;
 
 namespace WInterop.Cryptography;
 
-public static partial class Cryptography
+public static unsafe partial class Cryptography
 {
+    // Example C Program: Listing System and Physical Stores
+    // https://docs.microsoft.com/windows/win32/seccrypto/example-c-program-listing-system-and-physical-stores
+
     /// <summary>
     ///  Attempts to close the given handle.
     /// </summary>
-    public static void CloseStore(IntPtr handle)
-        => Error.ThrowLastErrorIfFalse(Imports.CertCloseStore(handle, dwFlags: 0));
+    public static void CloseStore(HCERTSTORE handle)
+        => Error.ThrowLastErrorIfFalse(TerraFXWindows.CertCloseStore(handle, dwFlags: 0));
 
     private static unsafe CertificateStoreHandle OpenSystemStoreWrapper(StoreName storeName)
     {
         uint flags = (uint)StoreOpenFlags.NoCryptRelease;
         if (storeName == StoreName.SPC)
+        {
             flags |= (uint)SystemStoreLocation.LocalMachine;
+        }
         else
+        {
             flags |= (uint)SystemStoreLocation.CurrentUser;
+        }
 
         fixed (char* name = storeName.ToString())
         {
-            CertificateStoreHandle store = Imports.CertOpenStore(
-                lpszStoreProvider: (IntPtr)StoreProvider.System,
-                dwMsgAndCertEncodingType: 0,
-                hCryptProv: IntPtr.Zero,
+            CertificateStoreHandle store = TerraFXWindows.CertOpenStore(
+                lpszStoreProvider: (sbyte*)(uint)StoreProvider.System,
+                dwEncodingType: 0,
+                hCryptProv: default,
                 dwFlags: flags,
-                pvPara: (IntPtr)name);
+                pvPara: (void*)name);
 
             return store;
         }
@@ -42,37 +48,33 @@ public static partial class Cryptography
         return OpenSystemStoreWrapper(storeName);
     }
 
-    private static bool SystemStoreLocationCallback(
-        IntPtr pvszStoreLocations,
+    [UnmanagedCallersOnly]
+    private static BOOL SystemStoreLocationCallback(
+        ushort* pvszStoreLocations,
         uint dwFlags,
-        IntPtr pvReserved,
-        IntPtr pvArg)
+        void* pvReserved,
+        void* pvArg)
     {
-        GCHandle handle = GCHandle.FromIntPtr(pvArg);
-        var infos = (List<string>)(handle.Target ?? throw new InvalidOperationException());
-        string? result = Marshal.PtrToStringUni(pvszStoreLocations);
-        if (result != null)
+        GCHandle handle = GCHandle.FromIntPtr((IntPtr)pvArg);
+        var infos = (List<string>)handle.Target!;
+        string? result = new((char*)pvszStoreLocations);
+        if (!string.IsNullOrEmpty(result))
+        {
             infos.Add(result);
+        }
+
         return true;
     }
 
     public static IEnumerable<string> EnumerateSystemStoreLocations()
     {
         var info = new List<string>();
-        GCHandle handle = GCHandle.Alloc(info);
+        var handle = GCHandle.Alloc(info);
 
-        try
-        {
-            var callBack = new CertEnumSystemStoreLocationCallback(SystemStoreLocationCallback);
-            Imports.CertEnumSystemStoreLocation(
-                dwFlags: 0,
-                pvArg: GCHandle.ToIntPtr(handle),
-                pfnEnum: callBack);
-        }
-        finally
-        {
-            handle.Free();
-        }
+        TerraFXWindows.CertEnumSystemStoreLocation(
+            dwFlags: 0,
+            pvArg: (void*)GCHandle.ToIntPtr(handle),
+            pfnEnum: &SystemStoreLocationCallback);
 
         return info;
     }

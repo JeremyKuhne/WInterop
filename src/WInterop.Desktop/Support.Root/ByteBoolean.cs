@@ -16,7 +16,7 @@ public readonly struct ByteBoolean
 {
     public byte RawValue { get; }
 
-    public ByteBoolean(bool b) => RawValue = b ? (byte)1 : (byte)0;
+    public ByteBoolean(bool value) => RawValue = value ? (byte)1 : (byte)0;
 
     public ByteBoolean(byte value) => RawValue = value;
 
@@ -24,9 +24,10 @@ public readonly struct ByteBoolean
 
     public readonly bool IsFalse => RawValue == 0;
 
-    public static implicit operator bool(ByteBoolean b) => b.IsTrue;
+    public static implicit operator bool(ByteBoolean value) => value.IsTrue;
 
-    public static implicit operator ByteBoolean(bool b) => new(b);
+    public static implicit operator ByteBoolean(bool value) => new(value);
+    public static explicit operator ByteBoolean(byte value) => new(value);
 
     public override string ToString() => IsTrue.ToString();
 }

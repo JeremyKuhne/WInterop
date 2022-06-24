@@ -33,7 +33,7 @@ public static class Paths
     // ==========
     //
     // "Naming Files, Paths, and Namespaces"
-    // http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247.aspx
+    // https://docs.microsoft.com/windows/win32/fileio/naming-a-file
     private static readonly char[] s_directorySeparatorCharacters
         = new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
@@ -93,7 +93,7 @@ public static class Paths
     ///  If <paramref name="path"/> is null, returns null.
     /// </returns>
     public static string? AddTrailingSeparator(string? path)
-        => path == null || Path.EndsInDirectorySeparator(path)
+        => path is null || Path.EndsInDirectorySeparator(path)
             ? path
             : path + DirectorySeparator;
 
@@ -111,7 +111,7 @@ public static class Paths
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="path1"/> is null.</exception>
     public static void Join(StringBuilder path1, ReadOnlySpan<char> path2)
     {
-        if (path1 == null) throw new ArgumentNullException(nameof(path1));
+        if (path1 is null) throw new ArgumentNullException(nameof(path1));
 
         // Add nothing to something is something
         if (path2.Length == 0) return;
@@ -153,8 +153,7 @@ public static class Paths
     {
         // While paths like "//?/C:/" will work, they're treated the same as "\\.\" paths.
         // Skipping of normalization will *only* occur if back slashes ('\') are used.
-        return path != null
-            && path.Length >= ExtendedDosDevicePathPrefix.Length
+        return path.Length >= ExtendedDosDevicePathPrefix.Length
             && path[0] == '\\'
             && (path[1] == '\\' || path[1] == '?')
             && path[2] == '?'

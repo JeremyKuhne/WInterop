@@ -3,12 +3,12 @@
 
 using FluentAssertions;
 using Microsoft.Win32.SafeHandles;
+using TerraFX.Interop.Windows;
 using Tests.Support;
+using WInterop;
 using WInterop.Errors;
 using WInterop.Storage;
-using WInterop.Storage.Native;
 using WInterop.Support;
-using WInterop;
 using Xunit;
 
 namespace StorageTests;
@@ -171,117 +171,158 @@ public partial class FileManagementBehaviors
     }
 
     [Fact]
-    public void FindFirstFileBehaviors()
+    public unsafe void FindFirstFileBehaviors()
     {
         using (var cleaner = new TestFileCleaner())
         {
-            IntPtr result = StorageImports.FindFirstFileW(cleaner.TempFolder, out Win32FindData findData);
+            HANDLE handle;
+            WIN32_FIND_DATAW findData;
+            fixed (char* p = cleaner.TempFolder)
+            {
+                handle = TerraFXWindows.FindFirstFileW((ushort*)p, &findData);
+            }
+
             try
             {
-                IsValid(result).Should().BeTrue("root location exists");
+                IsValid(handle).Should().BeTrue("root location exists");
             }
             finally
             {
-                if (IsValid(result))
-                    StorageImports.FindClose(result);
+                if (IsValid(handle))
+                {
+                    TerraFXWindows.FindClose(handle);
+                }
             }
 
-            result = StorageImports.FindFirstFileW(cleaner.GetTestPath(), out findData);
+            fixed (char* p = cleaner.GetTestPath())
+            {
+                handle = TerraFXWindows.FindFirstFileW((ushort*)p, &findData);
+            }
             WindowsError error = Error.GetLastError();
 
             try
             {
-                IsValid(result).Should().BeFalse("non-existant file");
+                IsValid(handle).Should().BeFalse("non-existant file");
                 error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
             }
             finally
             {
-                if (IsValid(result))
-                    StorageImports.FindClose(result);
+                if (IsValid(handle))
+                {
+                    TerraFXWindows.FindClose(handle);
+                }
             }
 
-            result = StorageImports.FindFirstFileW(Path.Join(cleaner.GetTestPath(), "NotHere"), out findData);
+            fixed (char* p = Path.Join(cleaner.GetTestPath(), "NotHere"))
+            handle = TerraFXWindows.FindFirstFileW((ushort*)p, &findData);
             error = Error.GetLastError();
 
             try
             {
-                IsValid(result).Should().BeFalse("non-existant subdir");
+                IsValid(handle).Should().BeFalse("non-existant subdir");
                 error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
             }
             finally
             {
-                if (IsValid(result))
-                    StorageImports.FindClose(result);
+                if (IsValid(handle))
+                {
+                    TerraFXWindows.FindClose(handle);
+                }
             }
         }
 
-        static bool IsValid(IntPtr value)
+        static bool IsValid(HANDLE handle)
         {
-            return value != IntPtr.Zero && value != (IntPtr)(-1);
+            return handle != HANDLE.NULL && handle != HANDLE.INVALID_VALUE;
         }
     }
 
     [Fact]
-    public void GetFileAttributesBehavior_Basic()
+    public unsafe void GetFileAttributesBehavior_Basic()
     {
         using var cleaner = new TestFileCleaner();
-        Win32FileAttributeData attributeData = default;
 
-        bool success = StorageImports.GetFileAttributesExW(
-            cleaner.TempFolder,
-            GetFileExtendedInformationLevels.Standard,
-            ref attributeData);
-        success.Should().BeTrue("root location exists");
+        WIN32_FILE_ATTRIBUTE_DATA attributeData;
+        fixed (char* p = cleaner.TempFolder)
+        {
 
-        success = StorageImports.GetFileAttributesExW(
-            cleaner.GetTestPath(),
-            GetFileExtendedInformationLevels.Standard,
-            ref attributeData);
-        WindowsError error = Error.GetLastError();
-        success.Should().BeFalse("non-existant file");
-        error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
+            bool success = TerraFXWindows.GetFileAttributesExW(
+                (ushort*)p,
+                GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
+                &attributeData);
+            success.Should().BeTrue("root location exists");
+        }
 
-        success = StorageImports.GetFileAttributesExW(
-            Path.Join(cleaner.GetTestPath(), "NotHere"),
-            GetFileExtendedInformationLevels.Standard,
-            ref attributeData);
-        error = Error.GetLastError();
-        success.Should().BeFalse("non-existant subdir");
-        error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
+        fixed (char* p = cleaner.GetTestPath())
+        {
+            bool success = TerraFXWindows.GetFileAttributesExW(
+                (ushort*)p,
+                GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
+                &attributeData);
+            WindowsError error = Error.GetLastError();
+            success.Should().BeFalse("non-existant file");
+            error.Should().Be(WindowsError.ERROR_FILE_NOT_FOUND);
+        }
+
+        fixed (char* p = Path.Join(cleaner.GetTestPath(), "NotHere"))
+        {
+            bool success = TerraFXWindows.GetFileAttributesExW(
+                (ushort*)p,
+                GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
+                &attributeData);
+
+            WindowsError error = Error.GetLastError();
+            success.Should().BeFalse("non-existant subdir");
+            error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
+        }
     }
 
     [Fact]
-    public void GetFileAttributesBehavior_BadCharactersOnNonExistantPath()
+    public unsafe void GetFileAttributesBehavior_BadCharactersOnNonExistantPath()
     {
         string tempPath = Path.GetTempPath();
         Win32FileAttributeData attributeData = default;
-        bool success = StorageImports.GetFileAttributesExW(
-            tempPath,
-            GetFileExtendedInformationLevels.Standard,
-            ref attributeData);
+
+        bool success;
+        fixed (char* p = tempPath)
+        {
+            success = TerraFXWindows.GetFileAttributesExW(
+                (ushort*)p,
+                GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
+                &attributeData);
+        }
+
         success.Should().BeTrue("can get temp folder attributes");
 
         // Try with a bad, non-existent subdir name
-        success = StorageImports.GetFileAttributesExW(
-            Path.Join(tempPath, @"""*"""),
-            GetFileExtendedInformationLevels.Standard,
-            ref attributeData);
+        fixed (char* p = Path.Join(tempPath, @"""*"""))
+        {
+            success = TerraFXWindows.GetFileAttributesExW(
+                (ushort*)p,
+                GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
+                &attributeData);
+        }
+
         WindowsError error = Error.GetLastError();
         success.Should().BeFalse("non-existant subdir");
         error.Should().Be(WindowsError.ERROR_INVALID_NAME);
 
         // Try with a nested nonexistant subdir, with a bad subdir name
-        success = StorageImports.GetFileAttributesExW(
-            Path.Join(tempPath, Path.GetRandomFileName(), @"""*"""),
-            GetFileExtendedInformationLevels.Standard,
-            ref attributeData);
+        fixed (char* p = Path.Join(tempPath, Path.GetRandomFileName(), @"""*"""))
+        {
+            success = TerraFXWindows.GetFileAttributesExW(
+                (ushort*)p,
+                GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
+                &attributeData);
+        }
+
         error = Error.GetLastError();
         success.Should().BeFalse("non-existant subdir");
         error.Should().Be(WindowsError.ERROR_PATH_NOT_FOUND);
     }
 
     [Fact(Skip = "Failing on RS5")]
-    public void GetFileAttributesBehavior_DeletedFile()
+    public unsafe void GetFileAttributesBehavior_DeletedFile()
     {
         using var cleaner = new TestFileCleaner();
         string path = cleaner.CreateTestFile(nameof(GetFileAttributesBehavior_DeletedFile));
@@ -300,9 +341,15 @@ public partial class FileManagementBehaviors
             desiredAccess: DesiredAccess.ReadAttributes);
         action.Should().Throw<UnauthorizedAccessException>();
 
-        // Find file will work at this point.
-        IntPtr findHandle = StorageImports.FindFirstFileW(path, out Win32FindData findData);
-        findHandle.Should().NotBe(IntPtr.Zero);
+        Win32FindData findData;
+        HANDLE findHandle;
+        fixed (char* p = path)
+        {
+            // Find file will work at this point.
+            findHandle = TerraFXWindows.FindFirstFileW((ushort*)p, (WIN32_FIND_DATAW*)&findData);
+            findHandle.Should().NotBe(HANDLE.NULL);
+        }
+
         try
         {
             // This is failing with a corrupted name
@@ -310,7 +357,7 @@ public partial class FileManagementBehaviors
         }
         finally
         {
-            StorageImports.FindClose(findHandle);
+            TerraFXWindows.FindClose(findHandle);
         }
     }
 

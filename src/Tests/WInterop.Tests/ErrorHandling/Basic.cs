@@ -39,7 +39,7 @@ public partial class Basic
     public void BasicThreadErrorMode()
     {
         ErrorMode mode = Error.GetThreadErrorMode();
-        ErrorMode newMode = mode ^ ErrorMode.SEM_NOOPENFILEERRORBOX;
+        ErrorMode newMode = mode ^ ErrorMode.NoOpenFileErrorBox;
         ErrorMode oldMode = Error.SetThreadErrorMode(newMode);
         try
         {

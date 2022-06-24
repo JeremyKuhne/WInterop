@@ -4,13 +4,12 @@
 using System.Collections;
 using System.Diagnostics;
 using WInterop.Errors;
-using WInterop.Storage.Native;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Storage;
 
 /// <summary>
-///  Encapsulates a finding volume names.
+///  Encapsulates finding volume names.
 /// </summary>
 public sealed class VolumeNamesEnumerable : IEnumerable<string>
 {
@@ -46,16 +45,16 @@ public sealed class VolumeNamesEnumerable : IEnumerable<string>
             return !_lastEntryFound;
         }
 
-        private string FindFirstVolume()
+        private unsafe string FindFirstVolume()
         {
             if (_buffer is null)
                 throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
 
-            _findHandle = StorageImports.FindFirstVolumeW(
-                _buffer,
+            HANDLE handle = TerraFXWindows.FindFirstVolumeW(
+                _buffer.UShortPointer,
                 _buffer.CharCapacity);
 
-            if (_findHandle.IsInvalid)
+            if (handle == HANDLE.INVALID_VALUE)
             {
                 WindowsError error = Error.GetLastError();
                 if (error == WindowsError.ERROR_FILENAME_EXCED_RANGE)
@@ -67,18 +66,19 @@ public sealed class VolumeNamesEnumerable : IEnumerable<string>
                 throw error.GetException();
             }
 
+            _findHandle = new(handle);
             _buffer.SetLengthToFirstNull();
             return _buffer.ToString();
         }
 
-        private string FindNextVolume()
+        private unsafe string FindNextVolume()
         {
-            Debug.Assert(!(_findHandle is null));
+            Debug.Assert(_findHandle is not null);
 
             if (_buffer is null)
                 throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
 
-            if (!StorageImports.FindNextVolumeW(_findHandle, _buffer, _buffer.CharCapacity))
+            if (!TerraFXWindows.FindNextVolumeW(_findHandle, _buffer.UShortPointer, _buffer.CharCapacity))
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)
@@ -118,8 +118,10 @@ public sealed class VolumeNamesEnumerable : IEnumerable<string>
             }
 
             StringBuffer? buffer = Interlocked.Exchange(ref _buffer, null);
-            if (buffer != null)
+            if (buffer is not null)
+            {
                 StringBuffer.Cache.Release(buffer);
+            }
         }
 
         private void CloseHandle()

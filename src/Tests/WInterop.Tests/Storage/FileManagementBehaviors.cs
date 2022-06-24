@@ -54,9 +54,19 @@ public class Behaviors
         // Set the current directory to the testdrive and the hidden environment
         // variable for C:'s last current directory
         Processes.SetEnvironmentVariable(@"=C:", @"C:\Users");
-        using (new TempCurrentDirectory(testDrive + @":\"))
+
+        try
         {
-            Storage.GetFullPathName(value).Should().Be(expected);
+            using (new TempCurrentDirectory(testDrive + @":\"))
+            {
+                Storage.GetFullPathName(value).Should().Be(expected);
+            }
+        }
+        catch (IOException e)
+        {
+            // This test could be updated to try and find the first ready drive, but for now
+            // just acknowledge this is expected.
+            Assert.Equal(WindowsError.ERROR_NOT_READY.ToHResult(), (HResult)e.HResult);
         }
     }
 
@@ -77,7 +87,7 @@ public class Behaviors
     {
         string path = System.IO.Path.GetRandomFileName();
         Action action = () => Storage.GetLongPathName(path);
-        action.Should().Throw<System.IO.FileNotFoundException>();
+        action.Should().Throw<FileNotFoundException>();
     }
 
     [Theory,
@@ -109,10 +119,10 @@ public class Behaviors
         string destination = cleaner.GetTestPath();
 
         Action action = () => Storage.CopyFileEx(source, destination);
-        action.Should().Throw<System.IO.FileNotFoundException>();
+        action.Should().Throw<FileNotFoundException>();
 
         source = Path.Join(source, "file");
-        action.Should().Throw<System.IO.DirectoryNotFoundException>();
+        action.Should().Throw<DirectoryNotFoundException>();
     }
 
     [Fact]
@@ -139,10 +149,10 @@ public class Behaviors
         string destination = cleaner.GetTestPath();
 
         Action action = () => System.IO.File.Copy(source, destination);
-        action.Should().Throw<System.IO.FileNotFoundException>();
+        action.Should().Throw<FileNotFoundException>();
 
         source = Path.Join(source, "file");
-        action.Should().Throw<System.IO.DirectoryNotFoundException>();
+        action.Should().Throw<DirectoryNotFoundException>();
     }
 
     [Theory, MemberData(nameof(DosMatchData))]

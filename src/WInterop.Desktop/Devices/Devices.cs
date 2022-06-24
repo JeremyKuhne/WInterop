@@ -20,14 +20,14 @@ public static partial class Devices
         Guid guid = default;
 
         Error.ThrowLastErrorIfFalse(
-            Imports.DeviceIoControl(
-                hDevice: deviceHandle,
-                dwIoControlCode: ControlCodes.MountDevice.QueryStableGuid,
+            TerraFXWindows.DeviceIoControl(
+                hDevice: (HANDLE)deviceHandle.DangerousGetHandle(),
+                dwIoControlCode: (uint)ControlCodes.MountDevice.QueryStableGuid,
                 lpInBuffer: null,
                 nInBufferSize: 0,
                 lpOutBuffer: &guid,
                 nOutBufferSize: (uint)sizeof(Guid),
-                lpBytesReturned: out _,
+                lpBytesReturned: null,
                 lpOverlapped: null));
 
         return guid;
@@ -37,17 +37,13 @@ public static partial class Devices
     ///  Get the device name for the given handle.
     /// </summary>
     public static unsafe string QueryDeviceName(SafeHandle deviceHandle)
-    {
-        return GetMountDevName(deviceHandle, ControlCodes.MountDevice.QueryDeviceName);
-    }
+        => GetMountDevName(deviceHandle, ControlCodes.MountDevice.QueryDeviceName);
 
     /// <summary>
     ///  Get the interface name for the given handle.
     /// </summary>
     public static unsafe string QueryInterfacename(SafeHandle deviceHandle)
-    {
-        return GetMountDevName(deviceHandle, ControlCodes.MountDevice.QueryInterfaceName);
-    }
+        => GetMountDevName(deviceHandle, ControlCodes.MountDevice.QueryInterfaceName);
 
     private static unsafe string GetMountDevName(SafeHandle deviceHandle, ControlCode controlCode)
     {
@@ -55,14 +51,14 @@ public static partial class Devices
         {
             buffer.EnsureByteCapacity((ulong)sizeof(MOUNTDEV_NAME));
 
-            while (!Imports.DeviceIoControl(
-                hDevice: deviceHandle,
-                dwIoControlCode: controlCode,
+            while (!TerraFXWindows.DeviceIoControl(
+                hDevice: (HANDLE)deviceHandle.DangerousGetHandle(),
+                dwIoControlCode: (uint)controlCode,
                 lpInBuffer: null,
                 nInBufferSize: 0,
                 lpOutBuffer: buffer.VoidPointer,
                 nOutBufferSize: checked((uint)buffer.ByteCapacity),
-                lpBytesReturned: out _,
+                lpBytesReturned: null,
                 lpOverlapped: null))
             {
                 WindowsError error = Error.GetLastError();
@@ -90,14 +86,14 @@ public static partial class Devices
             buffer.EnsureByteCapacity((ulong)sizeof(MOUNTDEV_SUGGESTED_LINK_NAME));
             ControlCode controlCode = ControlCodes.MountDevice.QuerySuggestedLinkName;
 
-            while (!Imports.DeviceIoControl(
-                hDevice: deviceHandle,
-                dwIoControlCode: controlCode,
+            while (!TerraFXWindows.DeviceIoControl(
+                hDevice: (HANDLE)deviceHandle.DangerousGetHandle(),
+                dwIoControlCode: (uint)controlCode,
                 lpInBuffer: null,
                 nInBufferSize: 0,
                 lpOutBuffer: buffer.VoidPointer,
                 nOutBufferSize: checked((uint)buffer.ByteCapacity),
-                lpBytesReturned: out _,
+                lpBytesReturned: null,
                 lpOverlapped: null))
             {
                 WindowsError error = Error.GetLastError();
@@ -126,14 +122,14 @@ public static partial class Devices
             buffer.EnsureByteCapacity((ulong)sizeof(MOUNTDEV_UNIQUE_ID));
             ControlCode controlCode = ControlCodes.MountDevice.QueryUniqueId;
 
-            while (!Imports.DeviceIoControl(
-                hDevice: deviceHandle,
-                dwIoControlCode: controlCode,
+            while (!TerraFXWindows.DeviceIoControl(
+                hDevice: (HANDLE)deviceHandle.DangerousGetHandle(),
+                dwIoControlCode: (uint)controlCode,
                 lpInBuffer: null,
                 nInBufferSize: 0,
                 lpOutBuffer: buffer.VoidPointer,
                 nOutBufferSize: checked((uint)buffer.ByteCapacity),
-                lpBytesReturned: out _,
+                lpBytesReturned: null,
                 lpOverlapped: null))
             {
                 WindowsError error = Error.GetLastError();
@@ -166,25 +162,25 @@ public static partial class Devices
 
         BufferHelper.BufferInvoke((StringBuffer inBuffer) =>
         {
-                // The input is MOUNTMGR_TARGET_NAME which is a short length in bytes followed by the unicode string
-                // https://docs.microsoft.com/windows-hardware/drivers/ddi/content/mountmgr/ns-mountmgr-_mountmgr_target_name
+            // The input is MOUNTMGR_TARGET_NAME which is a short length in bytes followed by the unicode string
+            // https://docs.microsoft.com/windows-hardware/drivers/ddi/content/mountmgr/ns-mountmgr-_mountmgr_target_name
 
-                inBuffer.Append((char)(volume.Length * sizeof(char)));
+            inBuffer.Append((char)(volume.Length * sizeof(char)));
             inBuffer.Append(volume);
 
             BufferHelper.BufferInvoke((StringBuffer outBuffer) =>
             {
-                    // Give enough for roughly 50 characters for a start
-                    outBuffer.EnsureCharCapacity(50);
+                // Give enough for roughly 50 characters for a start
+                outBuffer.EnsureCharCapacity(50);
 
-                while (!Imports.DeviceIoControl(
-                    hDevice: mountManager,
-                    dwIoControlCode: controlCode,
+                while (!TerraFXWindows.DeviceIoControl(
+                    hDevice: (HANDLE)mountManager.DangerousGetHandle(),
+                    dwIoControlCode: (uint)controlCode,
                     lpInBuffer: inBuffer.VoidPointer,
                     nInBufferSize: checked((uint)inBuffer.ByteCapacity),
                     lpOutBuffer: outBuffer.VoidPointer,
                     nOutBufferSize: checked((uint)outBuffer.ByteCapacity),
-                    lpBytesReturned: out _,
+                    lpBytesReturned: null,
                     lpOverlapped: null))
                 {
                     WindowsError error = Error.GetLastError();
@@ -221,14 +217,14 @@ public static partial class Devices
             ControlCode controlCode = ControlCodes.FileSystem.GetReparsePoint;
             buffer.EnsureByteCapacity(1024);
 
-            while (!Imports.DeviceIoControl(
-                hDevice: fileHandle,
-                dwIoControlCode: controlCode,
+            while (!TerraFXWindows.DeviceIoControl(
+                hDevice: (HANDLE)fileHandle.DangerousGetHandle(),
+                dwIoControlCode: (uint)controlCode,
                 lpInBuffer: null,
                 nInBufferSize: 0,
                 lpOutBuffer: buffer.VoidPointer,
                 nOutBufferSize: checked((uint)buffer.ByteCapacity),
-                lpBytesReturned: out _,
+                lpBytesReturned: null,
                 lpOverlapped: null))
             {
                 WindowsError error = Error.GetLastError();

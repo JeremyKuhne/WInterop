@@ -6,7 +6,7 @@ using System.Buffers;
 namespace WInterop.Support.Buffers;
 
 /// <summary>
-///  Returns IMemoryOwner wrapped buffers from the shared ArrayPool.
+///  Returns <see cref="IMemoryOwner{T}"/> wrapped buffers from the shared <see cref="ArrayPool{T}"/>.
 /// </summary>
 /// <remarks>
 ///  Similar to <see cref="MemoryPool{T}.Shared"/>, but returns struct based <see cref="IMemoryOwner{T}"/> wrappers.

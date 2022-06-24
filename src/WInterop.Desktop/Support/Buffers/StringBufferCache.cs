@@ -14,6 +14,8 @@ public sealed class StringBufferCache : Cache<StringBuffer>
 
     public StringBufferCache(int maxBuffers, uint maxSize = 4096) : base(maxBuffers) => _maxSize = maxSize;
 
+    public StringBufferCacheScope AcquireScoped(uint minCharCapacity) => new(this, Acquire(minCharCapacity));
+
     public StringBuffer Acquire(uint minCharCapacity)
     {
         StringBuffer item;

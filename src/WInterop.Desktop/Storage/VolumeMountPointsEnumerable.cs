@@ -63,20 +63,24 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
             return Current != null;
         }
 
-        private string FindFirstVolume()
+        private unsafe string FindFirstVolume()
         {
-            if (_buffer == null)
+            if (_buffer is null)
                 throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
 
             // Need at least some length on initial call or we'll get ERROR_INVALID_PARAMETER
             _buffer.EnsureCharCapacity(400);
 
-            _findHandle = StorageImports.FindFirstVolumeMountPointW(
-                _volumeName,
-                _buffer,
-                _buffer.CharCapacity);
+            HANDLE handle;
+            fixed (void* n = _volumeName)
+            {
+                handle = TerraFXWindows.FindFirstVolumeMountPointW(
+                    (ushort*)n,
+                    _buffer.UShortPointer,
+                    _buffer.CharCapacity);
+            }
 
-            if (_findHandle.IsInvalid)
+            if (handle == HANDLE.INVALID_VALUE)
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)
@@ -94,18 +98,19 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
                 }
             }
 
+            _findHandle = new(handle);
             _buffer.SetLengthToFirstNull();
             return _buffer.ToString();
         }
 
-        private string FindNextVolume()
+        private unsafe string FindNextVolume()
         {
-            Debug.Assert(!(_findHandle is null));
+            Debug.Assert(_findHandle is not null);
 
-            if (_buffer == null)
+            if (_buffer is null)
                 throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
 
-            if (!StorageImports.FindNextVolumeMountPointW(_findHandle, _buffer, _buffer.CharCapacity))
+            if (!TerraFXWindows.FindNextVolumeMountPointW(_findHandle, _buffer.UShortPointer, _buffer.CharCapacity))
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)

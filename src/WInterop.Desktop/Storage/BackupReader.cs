@@ -9,9 +9,9 @@ using WInterop.Support.Buffers;
 
 namespace WInterop.Storage;
 
-public class BackupReader : IDisposable
+public unsafe class BackupReader : IDisposable
 {
-    private IntPtr _context = IntPtr.Zero;
+    private void* _context = null;
     private readonly SafeFileHandle _fileHandle;
     private readonly StringBuffer _buffer = StringBufferCache.Instance.Acquire();
 
@@ -26,16 +26,21 @@ public class BackupReader : IDisposable
 
     public unsafe BackupStreamInformation? GetNextInfo()
     {
-        void* buffer = _buffer.VoidPointer;
-        Error.ThrowLastErrorIfFalse(
-            StorageImports.BackupRead(
-                hFile: _fileHandle,
-                lpBuffer: buffer,
-                nNumberOfBytesToRead: s_headerSize,
-                lpNumberOfBytesRead: out uint bytesRead,
-                bAbort: false,
-                bProcessSecurity: true,
-                context: ref _context));
+        byte* buffer = _buffer.BytePointer;
+        uint bytesRead;
+
+        fixed (void** c = &_context)
+        {
+            Error.ThrowLastErrorIfFalse(
+                TerraFXWindows.BackupRead(
+                    hFile: _fileHandle.ToHANDLE(),
+                    lpBuffer: buffer,
+                    nNumberOfBytesToRead: s_headerSize,
+                    lpNumberOfBytesRead: &bytesRead,
+                    bAbort: false,
+                    bProcessSecurity: true,
+                    lpContext: c));
+        }
 
         // Exit if at the end
         if (bytesRead == 0) return null;
@@ -44,29 +49,39 @@ public class BackupReader : IDisposable
         if (streamId->dwStreamNameSize > 0)
         {
             _buffer.EnsureByteCapacity(s_headerSize + streamId->dwStreamNameSize);
-            Error.ThrowLastErrorIfFalse(
-                StorageImports.BackupRead(
-                    hFile: _fileHandle,
-                    lpBuffer: Pointers.Offset(buffer, s_headerSize),
-                    nNumberOfBytesToRead: streamId->dwStreamNameSize,
-                    lpNumberOfBytesRead: out bytesRead,
-                    bAbort: false,
-                    bProcessSecurity: true,
-                    context: ref _context));
+
+            fixed (void** c = &_context)
+            {
+                Error.ThrowLastErrorIfFalse(
+                    TerraFXWindows.BackupRead(
+                        hFile: _fileHandle.ToHANDLE(),
+                        lpBuffer: buffer + s_headerSize,
+                        nNumberOfBytesToRead: streamId->dwStreamNameSize,
+                        lpNumberOfBytesRead: &bytesRead,
+                        bAbort: false,
+                        bProcessSecurity: true,
+                        lpContext: c));
+            }
         }
 
         if (streamId->Size.QuadPart > 0)
         {
+            uint lowSeeked;
+            uint highSeeked;
+
             // Move to the next header, if any
-            if (!StorageImports.BackupSeek(
-                hFile: _fileHandle,
-                dwLowBytesToSeek: uint.MaxValue,
-                dwHighBytesToSeek: int.MaxValue,
-                lpdwLowByteSeeked: out _,
-                lpdwHighByteSeeked: out _,
-                context: ref _context))
+            fixed (void** c = &_context)
             {
-                Error.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
+                if (!TerraFXWindows.BackupSeek(
+                    hFile: _fileHandle.ToHANDLE(),
+                    dwLowBytesToSeek: uint.MaxValue,
+                    dwHighBytesToSeek: int.MaxValue,
+                    lpdwLowByteSeeked: &lowSeeked,
+                    lpdwHighByteSeeked: &highSeeked,
+                    lpContext: c))
+                {
+                    Error.ThrowIfLastErrorNot(WindowsError.ERROR_SEEK);
+                }
             }
         }
 
@@ -91,24 +106,29 @@ public class BackupReader : IDisposable
             StringBufferCache.Instance.Release(_buffer);
         }
 
-        if (_context != IntPtr.Zero)
+        if (_context is not null)
         {
-            // Free the context memory
-            if (!StorageImports.BackupRead(
-                hFile: _fileHandle,
-                lpBuffer: null,
-                nNumberOfBytesToRead: 0,
-                lpNumberOfBytesRead: out _,
-                bAbort: true,
-                bProcessSecurity: false,
-                context: ref _context))
+            fixed (void** c = &_context)
             {
+                uint bytesRead;
+
+                // Free the context memory
+                if (!TerraFXWindows.BackupRead(
+                    hFile: _fileHandle.ToHANDLE(),
+                    lpBuffer: null,
+                    nNumberOfBytesToRead: 0,
+                    lpNumberOfBytesRead: &bytesRead,
+                    bAbort: true,
+                    bProcessSecurity: false,
+                    lpContext: c))
+                {
 #if DEBUG
-                Error.ThrowLastError();
+                    Error.ThrowLastError();
 #endif
+                }
             }
 
-            _context = IntPtr.Zero;
+            _context = null;
         }
     }
 

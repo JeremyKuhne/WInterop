@@ -25,6 +25,8 @@ public readonly struct UnwrapHandle : IDisposable
     public void Dispose()
     {
         if (_refCounted)
+        {
             _handle?.DangerousRelease();
+        }
     }
 }

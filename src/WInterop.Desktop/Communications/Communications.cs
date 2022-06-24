@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Win32.SafeHandles;
-using WInterop.Communications.Native;
 using WInterop.Errors;
 using WInterop.Registry;
 using WInterop.Storage;
@@ -10,9 +9,9 @@ using WInterop.Windows;
 
 namespace WInterop.Communications;
 
-public static partial class Communications
+public static unsafe partial class Communications
 {
-    public static unsafe DeviceControlBlock GetCommunicationsState(SafeFileHandle fileHandle)
+    public static DeviceControlBlock GetCommunicationsState(SafeFileHandle fileHandle)
     {
         DeviceControlBlock dcb = new()
         {
@@ -20,42 +19,51 @@ public static partial class Communications
         };
 
         Error.ThrowLastErrorIfFalse(
-            Imports.GetCommState(fileHandle, ref dcb));
+            TerraFXWindows.GetCommState((HANDLE)fileHandle.DangerousGetHandle(), (DCB*)&dcb));
 
         return dcb;
     }
 
-    public static unsafe void SetCommunicationsState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
+    public static void SetCommunicationsState(SafeFileHandle fileHandle, ref DeviceControlBlock dcb)
     {
         dcb.DCBlength = (uint)sizeof(DeviceControlBlock);
 
-        Error.ThrowLastErrorIfFalse(
-            Imports.GetCommState(fileHandle, ref dcb));
+        fixed (void* d = &dcb)
+        {
+            Error.ThrowLastErrorIfFalse(
+                TerraFXWindows.GetCommState((HANDLE)fileHandle.DangerousGetHandle(), (DCB*)d));
+        }
     }
 
-    public static unsafe DeviceControlBlock BuildDeviceControlBlock(string definition)
+    public static DeviceControlBlock BuildDeviceControlBlock(string definition)
     {
-        Error.ThrowLastErrorIfFalse(
-            Imports.BuildCommDCBW(definition, out DeviceControlBlock dcb));
+        DeviceControlBlock dcb;
+
+        fixed (void* d = definition)
+        {
+            Error.ThrowLastErrorIfFalse(
+                TerraFXWindows.BuildCommDCBW((ushort*)d, (DCB*)&dcb));
+        }
 
         return dcb;
     }
 
     public static CommunicationsProperties GetCommunicationsProperties(SafeFileHandle fileHandle)
     {
+        CommunicationsProperties properties;
         Error.ThrowLastErrorIfFalse(
-            Imports.GetCommProperties(fileHandle, out CommunicationsProperties properties));
+            TerraFXWindows.GetCommProperties((HANDLE)fileHandle.DangerousGetHandle(), (COMMPROP*)&properties));
 
         return properties;
     }
 
-    public static unsafe CommunicationsConfig GetCommunicationsConfig(SafeFileHandle fileHandle)
+    public static CommunicationsConfig GetCommunicationsConfig(SafeFileHandle fileHandle)
     {
         CommunicationsConfig config = default;
         uint size = (uint)sizeof(CommunicationsConfig);
 
         Error.ThrowLastErrorIfFalse(
-            Imports.GetCommConfig(fileHandle, ref config, ref size));
+            TerraFXWindows.GetCommConfig((HANDLE)fileHandle.DangerousGetHandle(), (COMMCONFIG*)&config, &size));
 
         return config;
     }
@@ -64,13 +72,16 @@ public static partial class Communications
     ///  Get the default config values for the given com port.
     /// </summary>
     /// <param name="port">Simple name only (COM1, not \\.\COM1)</param>
-    public static unsafe CommunicationsConfig GetDefaultCommunicationsConfig(string port)
+    public static CommunicationsConfig GetDefaultCommunicationsConfig(string port)
     {
         CommunicationsConfig config = default;
         uint size = (uint)sizeof(CommunicationsConfig);
 
-        Error.ThrowLastErrorIfFalse(
-            Imports.GetDefaultCommConfigW(port, ref config, ref size));
+        fixed (void* p = port)
+        {
+            Error.ThrowLastErrorIfFalse(
+                TerraFXWindows.GetDefaultCommConfigW((ushort*)p, (COMMCONFIG*)&config, &size));
+        }
 
         return config;
     }
@@ -79,12 +90,15 @@ public static partial class Communications
     ///  Pops the COM port configuration dialog and returns the selected settings.
     /// </summary>
     /// <exception cref="OperationCanceledException">Thrown if the dialog is cancelled.</exception>
-    public static unsafe CommunicationsConfig CommunicationsConfigDialog(string port, WindowHandle parent)
+    public static CommunicationsConfig CommunicationsConfigDialog(string port, WindowHandle parent)
     {
         CommunicationsConfig config = GetDefaultCommunicationsConfig(port);
 
-        Error.ThrowLastErrorIfFalse(
-            Imports.CommConfigDialogW(port, parent, ref config));
+        fixed (void* p = port)
+        {
+            Error.ThrowLastErrorIfFalse(
+                TerraFXWindows.CommConfigDialogW((ushort*)p, parent, (COMMCONFIG*)&config));
+        }
 
         return config;
     }

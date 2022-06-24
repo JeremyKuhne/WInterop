@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Runtime.InteropServices;
+
 namespace WInterop.Support;
 
 /// <summary>
@@ -28,16 +30,22 @@ public readonly ref struct StringSpan
         _span = default;
     }
 
+    public StringSpan NullTerminate()
+        => IsNullTerminated ? this : new StringSpan(_span.ToString());
+
     public bool IsEmpty
         => _span.IsEmpty && string.IsNullOrEmpty(_string);
 
     public bool IsNullTerminated
-        => _string != null || (!_span.IsEmpty && _span[^1] == '\0');
+        => _string is not null || (!_span.IsEmpty && _span[^1] == '\0');
 
     public ReadOnlySpan<char> GetSpanWithoutTerminator()
         => _string is not null
             ? _string.AsSpan()
             : IsNullTerminated ? _span[0..^1] : _span;
+
+    public ref char GetPinnableReference()
+        => ref MemoryMarshal.GetReference(_span);
 
     public static implicit operator StringSpan(string value) => new(value);
     public static implicit operator StringSpan(ReadOnlySpan<char> span) => new(span);

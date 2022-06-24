@@ -7,7 +7,7 @@ namespace Tests.Support;
 ///  This will lock until disposed to assist in tests that change the current directory.
 ///  Current directory is process wide- try to avoid changing the directory at all, or use this wrapper.
 /// </summary>
-public class TempCurrentDirectory : IDisposable
+public sealed class TempCurrentDirectory : IDisposable
 {
     private readonly string _priorDirectory;
     private static readonly object s_tempDirectoryLock = new();
@@ -17,16 +17,17 @@ public class TempCurrentDirectory : IDisposable
         Monitor.Enter(s_tempDirectoryLock);
         _priorDirectory = Environment.CurrentDirectory;
 
-        if (directory != null)
+        if (directory is not null)
+        {
             Environment.CurrentDirectory = directory;
+        }
     }
 
     public void Dispose()
     {
-        if (Environment.CurrentDirectory != _priorDirectory)
+        if (Environment.CurrentDirectory != _priorDirectory && Directory.Exists(_priorDirectory))
         {
-            if (Directory.Exists(_priorDirectory))
-                Environment.CurrentDirectory = _priorDirectory;
+            Environment.CurrentDirectory = _priorDirectory;
         }
 
         Monitor.Exit(s_tempDirectoryLock);

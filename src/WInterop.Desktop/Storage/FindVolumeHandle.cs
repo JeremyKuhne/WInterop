@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Handles;
-using WInterop.Storage.Native;
 
 namespace WInterop.Storage;
 
@@ -15,8 +14,11 @@ public class FindVolumeHandle : HandleZeroOrMinusOneIsInvalid
     {
     }
 
-    protected override bool ReleaseHandle()
+    public FindVolumeHandle(HANDLE handle) : base(handle, ownsHandle: true)
     {
-        return StorageImports.FindVolumeClose(handle);
     }
+
+    protected override bool ReleaseHandle() => TerraFXWindows.FindVolumeClose((HANDLE)handle);
+
+    public static implicit operator HANDLE(FindVolumeHandle handle) => (HANDLE)handle.handle;
 }

@@ -11,6 +11,9 @@ namespace WInterop.Compression;
 
 public static partial class Compression
 {
+    // https://interoperability.blob.core.windows.net/files/Archive_Exchange/%5bMS-CAB%5d.pdf
+    // "https://docs.microsoft.com/previous-versions/bb417343(v=msdn.10)"
+
     /// <summary>
     ///  Returns the expanded name of the file. Does not work for paths that are over 128
     ///  characters long.
@@ -36,12 +39,16 @@ public static partial class Compression
     {
         // Need to end with underscore or be at least as long as the header.
         if (string.IsNullOrEmpty(path))
+        {
             return path;
+        }
 
         path = Paths.TrimTrailingSeparators(path);
         if (path[^1] != '_'
             || Storage.Storage.GetFileAttributesExtended(path).FileSize <= (ulong)sizeof(LzxHeader))
+        {
             return filenameOnly ? Paths.GetLastSegment(path) : path;
+        }
 
         char replacement;
         using (var file = Storage.Storage.CreateFile(path, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.Read))
@@ -49,13 +56,17 @@ public static partial class Compression
             LzxHeader header = default;
 
             if (Storage.Storage.ReadFile(file, Structs.AsByteSpan(ref header)) < sizeof(LzxHeader))
+            {
                 return path;
+            }
 
             replacement = char.ToUpperInvariant((char)header.ExtensionChar);
         }
 
         if (filenameOnly)
+        {
             path = Paths.GetLastSegment(path);
+        }
 
         bool noExtension = path.Length == 1 || path[^2] == '.';
 
@@ -123,7 +134,7 @@ public static partial class Compression
 
     public static unsafe int LzRead(LzHandle handle, byte[] buffer, int offset, int count)
     {
-        if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+        if (buffer is null) throw new ArgumentNullException(nameof(buffer));
         if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
         if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
         if (offset + count > buffer.Length) throw new ArgumentOutOfRangeException(nameof(count));
@@ -136,7 +147,7 @@ public static partial class Compression
 
     public static unsafe int LzRead(LzHandle handle, byte* buffer, int offset, int count)
     {
-        if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+        if (buffer is null) throw new ArgumentNullException(nameof(buffer));
         if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
         if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
 
@@ -158,10 +169,7 @@ public static partial class Compression
     {
         if (!Storage.Storage.DirectoryExists(sourceDirectory)) throw new DirectoryNotFoundException(sourceDirectory);
 
-        if (destinationDirectory == null)
-        {
-            destinationDirectory = Path.Join(Paths.TrimLastSegment(sourceDirectory), "Expanded", Paths.GetLastSegment(sourceDirectory));
-        }
+        destinationDirectory ??= Path.Join(Paths.TrimLastSegment(sourceDirectory), "Expanded", Paths.GetLastSegment(sourceDirectory));
 
         foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
         {
@@ -187,16 +195,23 @@ public static partial class Compression
     private static int ValidateLzCopyResult(int result, string source, string destination, bool throwOnBadCompression = false)
     {
         if (result >= 0)
+        {
             return result;
+        }
 
         switch ((LzError)result)
         {
             case LzError.Read:
             case LzError.UnknownAlgorithm:
                 if (throwOnBadCompression)
+                {
                     goto default;
+                }
                 else
+                {
                     return result;
+                }
+
             case LzError.BadOutHandle:
             case LzError.Write:
                 throw new LzException((LzError)result, destination);
