@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
@@ -21,19 +20,22 @@ public readonly ref struct BrushHandle
     {
         Debug.Assert(handle == HBRUSH.NULL
             || handle == HBRUSH.INVALID_VALUE
-            || GdiImports.GetObjectType(handle) == ObjectType.Brush
-            || GdiImports.GetObjectType(handle) == 0);
+            || TerraFXWindows.GetObjectType(handle) == (int)ObjectType.Brush
+            || TerraFXWindows.GetObjectType(handle) == 0);
 
         Handle = handle;
         OwnsHandle = ownsHandle;
     }
 
-    public bool IsInvalid => Handle == HBRUSH.INVALID_VALUE || GdiImports.GetObjectType(Handle) != ObjectType.Brush;
+    public bool IsInvalid
+        => Handle == HBRUSH.INVALID_VALUE || TerraFXWindows.GetObjectType(Handle) != (int)ObjectType.Brush;
 
     public void Dispose()
     {
         if (OwnsHandle)
-            GdiImports.DeleteObject(Handle);
+        {
+            TerraFXWindows.DeleteObject(Handle);
+        }
     }
 
     public static implicit operator HGDIOBJ(in BrushHandle handle) => handle.Handle;

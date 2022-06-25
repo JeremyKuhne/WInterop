@@ -50,7 +50,9 @@ public class GeneralGdi
     public void EnumerateDisplaySettings_FirstDevice_CurrentMode()
     {
         var device = Gdi.EnumerateDisplayDevices(null).First();
-        var settings = Gdi.EnumerateDisplaySettings(device.DeviceName.Buffer.CreateString(), GdiDefines.ENUM_CURRENT_SETTINGS).ToArray();
+        var settings = Gdi.EnumerateDisplaySettings(
+            device.DeviceName.Buffer.CreateString(),
+            GdiDefines.ENUM_CURRENT_SETTINGS).ToArray();
         settings.Length.Should().Be(1);
     }
 

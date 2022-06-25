@@ -20,6 +20,8 @@ public struct DisplayDevice
         return new DisplayDevice { cb = (uint)sizeof(DisplayDevice) };
     }
 
+    internal unsafe void SetSize() => cb = (uint)sizeof(DisplayDevice);
+
     public FixedString.Size32 DeviceName;
     public FixedString.Size128 DeviceString;
     public DeviceState StateFlags;

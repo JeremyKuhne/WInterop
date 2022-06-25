@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
@@ -16,18 +15,21 @@ public readonly struct BitmapHandle : IDisposable
 
     public BitmapHandle(HBITMAP handle, bool ownsHandle = true)
     {
-        Debug.Assert(handle == HBITMAP.NULL || GdiImports.GetObjectType(handle) == ObjectType.Bitmap);
+        Debug.Assert(handle == HBITMAP.NULL || TerraFXWindows.GetObjectType(handle) == (uint)ObjectType.Bitmap);
 
         Handle = handle;
         _ownsHandle = ownsHandle;
     }
 
-    public bool IsInvalid => Handle == HBITMAP.INVALID_VALUE || GdiImports.GetObjectType(Handle) != ObjectType.Bitmap;
+    public bool IsInvalid
+        => Handle == HBITMAP.INVALID_VALUE || TerraFXWindows.GetObjectType(Handle) != (int)ObjectType.Bitmap;
 
     public void Dispose()
     {
         if (_ownsHandle)
-            GdiImports.DeleteObject(Handle);
+        {
+            TerraFXWindows.DeleteObject(Handle);
+        }
     }
 
     public static implicit operator HGDIOBJ(BitmapHandle handle) => handle.Handle;

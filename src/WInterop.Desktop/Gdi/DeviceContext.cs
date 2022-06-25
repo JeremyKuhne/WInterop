@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
@@ -36,16 +35,16 @@ public readonly struct DeviceContext : IDisposable
         Handle = paint.hdc;
     }
 
-    public void Dispose()
+    public unsafe void Dispose()
     {
         switch (_type)
         {
             case CollectionType.Delete:
-                if (!GdiImports.DeleteDC(Handle))
+                if (!TerraFXWindows.DeleteDC(Handle))
                 { } // Debug.Fail("Failed to delete DC");
                 break;
             case CollectionType.Release:
-                if (!GdiImports.ReleaseDC(_window, Handle))
+                if (TerraFXWindows.ReleaseDC(_window, Handle) == 0)
                 { } // Debug.Fail("Failed to release DC");
                 break;
             case CollectionType.EndPaint:
@@ -54,7 +53,7 @@ public readonly struct DeviceContext : IDisposable
                     hdc = Handle
                 };
 
-                if (!GdiImports.EndPaint(_window, in ps))
+                if (!TerraFXWindows.EndPaint(_window, &ps))
                 { } // Debug.Fail("Failed to end paint");
                 break;
             case CollectionType.None:

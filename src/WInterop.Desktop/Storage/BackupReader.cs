@@ -3,8 +3,6 @@
 
 using Microsoft.Win32.SafeHandles;
 using WInterop.Errors;
-using WInterop.Storage.Native;
-using WInterop.Support;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Storage;

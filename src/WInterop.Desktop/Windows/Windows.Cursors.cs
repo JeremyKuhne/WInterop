@@ -4,7 +4,6 @@
 using System.Drawing;
 using WInterop.Errors;
 using WInterop.Gdi;
-using WInterop.Modules;
 using WInterop.Windows.Native;
 
 namespace WInterop.Windows;

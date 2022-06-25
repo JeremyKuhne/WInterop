@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using IBindCtx = System.Runtime.InteropServices.ComTypes.IBindCtx;
 
 namespace WInterop.Shell;

@@ -4,8 +4,6 @@
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Handles.Native;
-using WInterop.SafeString.Native;
 
 namespace WInterop.Storage.Native;
 

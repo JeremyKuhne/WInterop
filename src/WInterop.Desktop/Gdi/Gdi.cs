@@ -4,9 +4,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using WInterop.Errors;
-using WInterop.Gdi.Native;
 using WInterop.Support;
 using WInterop.Windows;
 
@@ -15,13 +13,24 @@ namespace WInterop.Gdi;
 public static partial class Gdi
 {
     public static unsafe DeviceContext CreateDeviceContext(string driver, string device)
-        => new(GdiImports.CreateDCW(driver, device, null, null), ownsHandle: true);
+    {
+        fixed (char* dr = driver)
+        fixed (char* de = device)
+        {
+            return new(TerraFXWindows.CreateDCW((ushort*)dr, (ushort*)de, null, null), ownsHandle: true);
+        }
+    }
 
     /// <summary>
     ///  Creates a <see cref="DeviceContext"/> that covers all displays.
     /// </summary>
     public static unsafe DeviceContext CreateDesktopDeviceContext()
-        => new(GdiImports.CreateDCW("DISPLAY", null, null, null), ownsHandle: true);
+    {
+        fixed (char* c = "DISPLAY")
+        {
+            return new(TerraFXWindows.CreateDCW((ushort*)c, null, null, null), ownsHandle: true);
+        }
+    }
 
     /// <summary>
     ///  Returns an in memory device context that is compatible with the specified device.
@@ -29,13 +38,13 @@ public static partial class Gdi
     /// <param name="deviceContext">An existing device context or default for the application's current screen.</param>
     /// <returns>A 1 by 1 monochrome memory device context.</returns>
     public static DeviceContext CreateCompatibleDeviceContext(this in DeviceContext deviceContext)
-        => new(GdiImports.CreateCompatibleDC(deviceContext), ownsHandle: true);
+        => new(TerraFXWindows.CreateCompatibleDC(deviceContext), ownsHandle: true);
 
     /// <summary>
     ///  Gets a <paramref name="capability"/> for the given <paramref name="deviceContext"/>.
     /// </summary>
     public static int GetDeviceCapability(this in DeviceContext deviceContext, DeviceCapability capability)
-        => GdiImports.GetDeviceCaps(deviceContext, capability);
+        => TerraFXWindows.GetDeviceCaps(deviceContext, (int)capability);
 
     public static Size GetDeviceResolution(this in DeviceContext deviceContext)
         => new(
@@ -48,13 +57,19 @@ public static partial class Gdi
             deviceContext.GetDeviceCapability(DeviceCapability.DesktopVerticalResolution));
 
     public static unsafe DeviceContext CreateInformationContext(string driver, string device)
-        => new(GdiImports.CreateICW(driver, device, null, null), ownsHandle: true);
+    {
+        fixed (char* dr = driver)
+        fixed (char* de = device)
+        {
+            return new(TerraFXWindows.CreateICW((ushort*)dr, (ushort*)de, null, null), ownsHandle: true);
+        }
+    }
 
     /// <summary>
     ///  Get the device context for the client area of the specified window.
     /// </summary>
     public static DeviceContext GetDeviceContext(this in WindowHandle window)
-        => new(GdiImports.GetDC(window), window);
+        => new(TerraFXWindows.GetDC(window), window);
 
     /// <summary>
     ///  Get the device context for the screen.
@@ -67,10 +82,10 @@ public static partial class Gdi
     /// <param name="window">The window handle, or null for the primary display monitor.</param>
     /// <returns>Returns a device context for the entire window, not just the client area.</returns>
     public static DeviceContext GetWindowDeviceContext(this in WindowHandle window)
-        => new(GdiImports.GetWindowDC(window), window);
+        => new(TerraFXWindows.GetWindowDC(window), window);
 
     public static BitmapHandle CreateCompatibleBitmap(this in DeviceContext context, Size size)
-        => new(GdiImports.CreateCompatibleBitmap(context, size.Width, size.Height));
+        => new(TerraFXWindows.CreateCompatibleBitmap(context, size.Width, size.Height));
 
     public static void BitBlit(
         this in DeviceContext source,
@@ -80,7 +95,7 @@ public static partial class Gdi
         RasterOperation operation)
     {
         Error.ThrowLastErrorIfFalse(
-            GdiImports.BitBlt(
+            TerraFXWindows.BitBlt(
                 destination,
                 destinationBounds.X,
                 destinationBounds.Y,
@@ -89,12 +104,12 @@ public static partial class Gdi
                 source,
                 sourceOrigin.X,
                 sourceOrigin.Y,
-                operation));
+                operation.Value));
     }
 
     public static StretchMode SetStretchBlitMode(this DeviceContext context, StretchMode mode)
     {
-        StretchMode oldMode = GdiImports.SetStretchBltMode(context, mode);
+        StretchMode oldMode = (StretchMode)TerraFXWindows.SetStretchBltMode(context, (int)mode);
         if ((WindowsError)oldMode == WindowsError.ERROR_INVALID_PARAMETER)
             WindowsError.ERROR_INVALID_PARAMETER.Throw();
         return oldMode;
@@ -107,7 +122,7 @@ public static partial class Gdi
         Rectangle destinationBounds,
         RasterOperation operation)
     {
-        return GdiImports.StretchBlt(
+        return TerraFXWindows.StretchBlt(
             destination,
             destinationBounds.X,
             destinationBounds.Y,
@@ -118,7 +133,7 @@ public static partial class Gdi
             sourceBounds.Y,
             sourceBounds.Width,
             sourceBounds.Height,
-            operation);
+            operation.Value);
     }
 
     /// <summary>
@@ -126,37 +141,10 @@ public static partial class Gdi
     /// </summary>
     /// <param name="deviceName">The device to enumerate or null for all devices.</param>
     public static IEnumerable<DisplayDevice> EnumerateDisplayDevices(string deviceName)
-    {
-        uint index = 0;
-        DisplayDevice device = DisplayDevice.Create();
-
-        while (GdiImports.EnumDisplayDevicesW(deviceName, index, ref device, 0))
-        {
-            yield return device;
-            index++;
-            device = DisplayDevice.Create();
-        }
-
-        yield break;
-    }
+        => new DisplayDeviceEnumerable(deviceName);
 
     public static IEnumerable<DeviceMode> EnumerateDisplaySettings(string deviceName, uint modeIndex = 0)
-    {
-        DeviceMode mode = DeviceMode.Create();
-
-        while (GdiImports.EnumDisplaySettingsW(deviceName, modeIndex, ref mode))
-        {
-            yield return mode;
-
-            if (modeIndex == GdiDefines.ENUM_CURRENT_SETTINGS || modeIndex == GdiDefines.ENUM_REGISTRY_SETTINGS)
-                break;
-
-            modeIndex++;
-            mode = DeviceMode.Create();
-        }
-
-        yield break;
-    }
+        => new DisplaySettingsEnumerable(deviceName, modeIndex);
 
     /// <summary>
     ///  Selects the given object into the specified device context.
@@ -168,42 +156,42 @@ public static partial class Gdi
         if (handle == HGDIOBJ.INVALID_VALUE)
             return default;
 
-        ObjectType type = GdiImports.GetObjectType(@object);
+        ObjectType type = (ObjectType)TerraFXWindows.GetObjectType(@object);
         return type == ObjectType.Region ? default : new GdiObjectHandle(handle, ownsHandle: false);
     }
 
     public static bool UpdateWindow<T>(this T window) where T : IHandle<WindowHandle>
-        => GdiImports.UpdateWindow(window.Handle);
+        => TerraFXWindows.UpdateWindow(window.Handle);
 
     public static unsafe bool ValidateRectangle(this in WindowHandle window, ref Rectangle rectangle)
     {
         Rect rect = rectangle;
-        return GdiImports.ValidateRect(window, &rect);
+        return TerraFXWindows.ValidateRect(window, (RECT*)&rect);
     }
 
     /// <summary>
     ///  Validates the entire Window.
     /// </summary>
     public static unsafe bool Validate(this in WindowHandle window)
-        => GdiImports.ValidateRect(window, null);
+        => TerraFXWindows.ValidateRect(window, null);
 
     /// <summary>
     ///  Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
     /// </summary>
-    public static DeviceContext BeginPaint(this in WindowHandle window)
+    public static unsafe DeviceContext BeginPaint(this in WindowHandle window)
     {
         PAINTSTRUCT paintStruct = default;
-        GdiImports.BeginPaint(window, ref paintStruct);
+        TerraFXWindows.BeginPaint(window, &paintStruct);
         return new DeviceContext(paintStruct, window);
     }
 
     /// <summary>
     ///  Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
     /// </summary>
-    public static DeviceContext BeginPaint(this in WindowHandle window, out Rectangle paintRectangle)
+    public static unsafe DeviceContext BeginPaint(this in WindowHandle window, out Rectangle paintRectangle)
     {
         PAINTSTRUCT paintStruct = default;
-        GdiImports.BeginPaint(window, ref paintStruct);
+        TerraFXWindows.BeginPaint(window, &paintStruct);
         paintRectangle = paintStruct.rcPaint.ToRectangle();
         return new DeviceContext(paintStruct, window);
     }
@@ -211,10 +199,10 @@ public static partial class Gdi
     /// <summary>
     ///  Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
     /// </summary>
-    public static DeviceContext BeginPaint(this in WindowHandle window, out PaintStruct paintStruct)
+    public static unsafe DeviceContext BeginPaint(this in WindowHandle window, out PaintStruct paintStruct)
     {
         PAINTSTRUCT ps = default;
-        GdiImports.BeginPaint(window, ref ps);
+        TerraFXWindows.BeginPaint(window, &ps);
         paintStruct = ps;
         return new DeviceContext(ps, window);
     }
@@ -222,38 +210,39 @@ public static partial class Gdi
     public static unsafe bool InvalidateRectangle(this in WindowHandle window, Rectangle rectangle, bool erase)
     {
         Rect rect = rectangle;
-        return GdiImports.InvalidateRect(window, &rect, erase);
+        return TerraFXWindows.InvalidateRect(window, (RECT*)&rect, erase);
     }
 
     public static unsafe bool Invalidate(this in WindowHandle window, bool erase = true)
-        => GdiImports.InvalidateRect(window, null, erase);
+        => TerraFXWindows.InvalidateRect(window, null, erase);
 
     public static RegionHandle CreateEllipticRegion(Rectangle bounds)
-        => new(GdiImports.CreateEllipticRgn(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom));
+        => new(TerraFXWindows.CreateEllipticRgn(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom));
 
     public static RegionHandle CreateRectangleRegion(Rectangle rectangle)
-        => new(GdiImports.CreateRectRgn(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom));
+        => new(TerraFXWindows.CreateRectRgn(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom));
 
     public static RegionType CombineRegion(
         this in RegionHandle destination,
         RegionHandle sourceOne,
         RegionHandle sourceTwo,
         CombineRegionMode mode)
-        => GdiImports.CombineRgn(destination, sourceOne, sourceTwo, mode);
+        => (RegionType)TerraFXWindows.CombineRgn(destination, sourceOne, sourceTwo, (int)mode);
 
     public static RegionType SelectClippingRegion(this in DeviceContext context, RegionHandle region)
-        => GdiImports.SelectClipRgn(context, region);
+        => (RegionType)TerraFXWindows.SelectClipRgn(context, region);
 
-    public static Rectangle GetClipBox(this in DeviceContext context, out RegionType regionType)
+    public static unsafe Rectangle GetClipBox(this in DeviceContext context, out RegionType regionType)
     {
-        regionType = GdiImports.GetClipBox(context, out Rect rect);
+        Rect rect;
+        regionType = (RegionType)TerraFXWindows.GetClipBox(context, (RECT*)&rect);
         return rect;
     }
 
     public static RegionHandle GetClippingRegion(this in DeviceContext context, out bool hasRegion)
     {
-        HRGN hrgn = GdiImports.CreateRectRgn(0, 0, 0, 0);
-        int result = GdiImports.GetClipRgn(context, hrgn);
+        HRGN hrgn = TerraFXWindows.CreateRectRgn(0, 0, 0, 0);
+        int result = TerraFXWindows.GetClipRgn(context, hrgn);
         hasRegion = result switch
         {
             0 => false,
@@ -267,32 +256,34 @@ public static partial class Gdi
     public static Point GetViewportOrigin(this in DeviceContext context)
         => GetViewportOrigin(context, out _);
 
-    public static Point GetViewportOrigin(this in DeviceContext context, out bool success)
+    public static unsafe Point GetViewportOrigin(this in DeviceContext context, out bool success)
     {
-        success = GdiImports.GetViewportOrgEx(context, out Point point);
+        Point point;
+        success = TerraFXWindows.GetViewportOrgEx(context, (POINT*)&point);
         return point;
     }
 
     public static unsafe bool SetViewportOrigin(this in DeviceContext context, Point point)
-        => GdiImports.SetViewportOrgEx(context, point.X, point.Y, null);
+        => TerraFXWindows.SetViewportOrgEx(context, point.X, point.Y, null);
 
     public static Point GetWindowOrigin(this in DeviceContext context)
         => GetWindowOrigin(context, out _);
 
-    public static Point GetWindowOrigin(this in DeviceContext context, out bool success)
+    public static unsafe Point GetWindowOrigin(this in DeviceContext context, out bool success)
     {
-        success = GdiImports.GetWindowOrgEx(context, out Point point);
+        Point point;
+        success = TerraFXWindows.GetWindowOrgEx(context, (POINT*)&point);
         return point;
     }
 
     public static unsafe bool SetWindowOrigin(this in DeviceContext context, Point point)
-        => GdiImports.SetWindowOrgEx(context, point.X, point.Y, null);
+        => TerraFXWindows.SetWindowOrgEx(context, point.X, point.Y, null);
 
     /// <summary>
     ///  Shared brush, handle doesn't need disposed.
     /// </summary>
     public static BrushHandle GetSystemColorBrush(SystemColor systemColor)
-        => new(GdiImports.GetSysColorBrush(systemColor), ownsHandle: false);
+        => new(TerraFXWindows.GetSysColorBrush((int)systemColor), ownsHandle: false);
 
     public static Color GetBackgroundColor(this in DeviceContext context)
         => TerraFXWindows.GetBkColor(context).ToColor();
@@ -307,94 +298,134 @@ public static partial class Gdi
         => TerraFXWindows.SetBkColor(context, TerraFXWindows.GetSysColor((int)color)).ToColor();
 
     public static BackgroundMode SetBackgroundMode(this in DeviceContext context, BackgroundMode mode)
-        => GdiImports.SetBkMode(context, mode);
+        => (BackgroundMode)TerraFXWindows.SetBkMode(context, (int)mode);
 
     public static BackgroundMode GetBackgroundMode(this in DeviceContext context)
-        => GdiImports.GetBkMode(context);
+        => (BackgroundMode)TerraFXWindows.GetBkMode(context);
 
     public static PenMixMode SetRasterOperation(this in DeviceContext context, PenMixMode foregroundMixMode)
-        => GdiImports.SetROP2(context, foregroundMixMode);
+        => (PenMixMode)TerraFXWindows.SetROP2(context, (int)foregroundMixMode);
 
     public static PenMixMode GetRasterOperation(this in DeviceContext context)
-        => GdiImports.GetROP2(context);
+        => (PenMixMode)TerraFXWindows.GetROP2(context);
 
-    public static bool ScreenToClient<T>(this T window, ref Point point) where T : IHandle<WindowHandle>
-        => GdiImports.ScreenToClient(window.Handle, ref point);
+    public static unsafe bool ScreenToClient<T>(this T window, ref Point point) where T : IHandle<WindowHandle>
+    {
+        fixed (Point* p = &point)
+        {
+            return TerraFXWindows.ScreenToClient(window.Handle, (POINT*)p);
+        }
+    }
 
-    public static bool ScreenToClient<T>(this T window, ref Rectangle rectangle) where T : IHandle<WindowHandle>
+    public static unsafe bool ScreenToClient<T>(this T window, ref Rectangle rectangle) where T : IHandle<WindowHandle>
     {
         Point location = rectangle.Location;
-        bool result = GdiImports.ScreenToClient(window.Handle, ref location);
+        bool result = TerraFXWindows.ScreenToClient(window.Handle, (POINT*)&location);
         rectangle.Location = location;
         return result;
     }
 
-    public static bool ClientToScreen(this in WindowHandle window, ref Point point)
-        => GdiImports.ClientToScreen(window, ref point);
+    public static unsafe bool ClientToScreen(this in WindowHandle window, ref Point point)
+    {
+        fixed (Point* p = &point)
+        {
+            return TerraFXWindows.ClientToScreen(window, (POINT*)p);
+        }
+    }
 
     public static bool DeviceToLogical(this in DeviceContext context, params Point[] points)
         => DeviceToLogical(context, points.AsSpan());
 
-    public static bool DeviceToLogical(this in DeviceContext context, ReadOnlySpan<Point> points)
-        => GdiImports.DPtoLP(context, ref MemoryMarshal.GetReference(points), points.Length);
+    public static unsafe bool DeviceToLogical(this in DeviceContext context, ReadOnlySpan<Point> points)
+    {
+        fixed (Point* p = points)
+        {
+            return TerraFXWindows.DPtoLP(context, (POINT*)p, points.Length);
+        }
+    }
 
     public static unsafe bool LogicalToDevice(this in DeviceContext context, params Point[] points)
         => LogicalToDevice(context, points);
 
     public static unsafe bool LogicalToDevice(this in DeviceContext context, ReadOnlySpan<Point> points)
-        => GdiImports.LPtoDP(context, ref MemoryMarshal.GetReference(points), points.Length);
+    {
+        fixed (Point* p = points)
+        {
+            return TerraFXWindows.LPtoDP(context, (POINT*)p, points.Length);
+        }
+    }
 
     public static unsafe bool OffsetWindowOrigin(this in DeviceContext context, int x, int y)
-        => GdiImports.OffsetWindowOrgEx(context, x, y, null);
+        => TerraFXWindows.OffsetWindowOrgEx(context, x, y, null);
 
     public static unsafe bool OffsetViewportOrigin(this in DeviceContext context, int x, int y)
-        => GdiImports.OffsetViewportOrgEx(context, x, y, null);
+        => TerraFXWindows.OffsetViewportOrgEx(context, x, y, null);
 
-    public static bool GetWindowExtents(this in DeviceContext context, out Size size)
-        => GdiImports.GetWindowExtEx(context, out size);
+    public static unsafe bool GetWindowExtents(this in DeviceContext context, out Size size)
+    {
+        fixed (Size* s = &size)
+        {
+            return TerraFXWindows.GetWindowExtEx(context, (SIZE*)s);
+        }
+    }
 
     /// <summary>
     ///  Sets the logical ("window") dimensions of the device context.
     /// </summary>
     public static unsafe bool SetWindowExtents(this in DeviceContext context, Size size)
-        => GdiImports.SetWindowExtEx(context, size.Width, size.Height, null);
+        => TerraFXWindows.SetWindowExtEx(context, size.Width, size.Height, null);
 
-    public static bool GetViewportExtents(this in DeviceContext context, out Size size)
-        => GdiImports.GetViewportExtEx(context, out size);
+    public static unsafe bool GetViewportExtents(this in DeviceContext context, out Size size)
+    {
+        fixed (Size* s = &size)
+        {
+            return TerraFXWindows.GetViewportExtEx(context, (SIZE*)s);
+        }
+    }
 
     public static unsafe bool SetViewportExtents(this in DeviceContext context, Size size)
-        => GdiImports.SetViewportExtEx(context, size.Width, size.Height, null);
+        => TerraFXWindows.SetViewportExtEx(context, size.Width, size.Height, null);
 
     public static MappingMode GetMappingMode(this in DeviceContext context)
-        => GdiImports.GetMapMode(context);
+        => (MappingMode)TerraFXWindows.GetMapMode(context);
 
     public static MappingMode SetMappingMode(this in DeviceContext context, MappingMode mapMode)
-        => GdiImports.SetMapMode(context, mapMode);
+        => (MappingMode)TerraFXWindows.SetMapMode(context, (int)mapMode);
 
-    public static Rectangle GetBoundsRect(this in DeviceContext context, bool reset = false)
+    public static unsafe Rectangle GetBoundsRect(this in DeviceContext context, bool reset = false)
     {
-        GdiImports.GetBoundsRect(context, out Rect rect, reset ? BoundsState.Reset : default);
+        Rect rect;
+        TerraFXWindows.GetBoundsRect(context, (RECT*)&rect, reset ? (uint)BoundsState.Reset : default);
         return rect;
     }
 
-    public static Rectangle GetBoundsRect(this in DeviceContext context, out BoundsState state, bool reset = false)
+    public static unsafe Rectangle GetBoundsRect(
+        this in DeviceContext context,
+        out BoundsState state,
+        bool reset = false)
     {
-        state = GdiImports.GetBoundsRect(context, out Rect rect, reset ? BoundsState.Reset : default);
+        Rect rect;
+        state = (BoundsState)TerraFXWindows.GetBoundsRect(
+            context,
+            (RECT*)&rect,
+            reset ? (uint)BoundsState.Reset : default);
         return rect;
     }
 
     public static unsafe Span<PaletteEntry> GetPaletteEntries(this in PaletteHandle palette)
     {
-        uint count = GdiImports.GetPaletteEntries(palette, 0, 0, null);
+        uint count = TerraFXWindows.GetPaletteEntries(palette, 0, 0, null);
 
         if (count == 0)
+        {
             return Span<PaletteEntry>.Empty;
+        }
 
         PaletteEntry[] entries = new PaletteEntry[count];
 
         fixed (PaletteEntry* pe = entries)
         {
-            count = GdiImports.GetPaletteEntries(palette, 0, count, pe);
+            count = TerraFXWindows.GetPaletteEntries(palette, 0, count, (PALETTEENTRY*)pe);
         }
 
         Debug.Assert(count == entries.Length);
@@ -403,7 +434,7 @@ public static partial class Gdi
 
     public static unsafe Span<PaletteEntry> GetSystemPaletteEntries(this in DeviceContext deviceContext)
     {
-        uint count = GdiImports.GetSystemPaletteEntries(deviceContext, 0, 0, null);
+        uint count = TerraFXWindows.GetSystemPaletteEntries(deviceContext, 0, 0, null);
 
         if (count == 0)
             return Span<PaletteEntry>.Empty;
@@ -412,7 +443,7 @@ public static partial class Gdi
 
         fixed (PaletteEntry* pe = entries)
         {
-            count = GdiImports.GetSystemPaletteEntries(deviceContext, 0, count, pe);
+            count = TerraFXWindows.GetSystemPaletteEntries(deviceContext, 0, count, (PALETTEENTRY*)pe);
         }
 
         Debug.Assert(count == entries.Length);
@@ -427,10 +458,10 @@ public static partial class Gdi
     ///  has a non-identity transform.
     /// </remarks>
     public static GraphicsMode SetGraphicsMode(this in DeviceContext deviceContext, GraphicsMode graphicsMode)
-        => GdiImports.SetGraphicsMode(deviceContext, graphicsMode);
+        => (GraphicsMode)TerraFXWindows.SetGraphicsMode(deviceContext, (int)graphicsMode);
 
     public static GraphicsMode GetGraphicsMode(this in DeviceContext deviceContext)
-        => GdiImports.GetGraphicsMode(deviceContext);
+        => (GraphicsMode)TerraFXWindows.GetGraphicsMode(deviceContext);
 
     /// <summary>
     ///  Set the transform for the given device context.
@@ -440,9 +471,19 @@ public static partial class Gdi
     ///  that isn't a device context. The other failure case is that the graphics mode isn't set to
     ///  advanced.
     /// </returns>
-    public static bool SetWorldTransform(this in DeviceContext deviceContext, ref Matrix3x2 transform)
-        => GdiImports.SetWorldTransform(deviceContext, ref transform);
+    public static unsafe bool SetWorldTransform(this in DeviceContext deviceContext, ref Matrix3x2 transform)
+    {
+        fixed (Matrix3x2* t = &transform)
+        {
+            return TerraFXWindows.SetWorldTransform(deviceContext, (XFORM*)t);
+        }
+    }
 
-    public static bool GetWorldTransform(this in DeviceContext deviceContext, out Matrix3x2 transform)
-        => GdiImports.GetWorldTransform(deviceContext, out transform);
+    public static unsafe bool GetWorldTransform(this in DeviceContext deviceContext, out Matrix3x2 transform)
+    {
+        fixed (Matrix3x2* t = &transform)
+        {
+            return TerraFXWindows.GetWorldTransform(deviceContext, (XFORM*)t);
+        }
+    }
 }

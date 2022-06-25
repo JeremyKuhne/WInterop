@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
@@ -30,7 +29,9 @@ public readonly ref struct PaletteHandle
     public void Dispose()
     {
         if (_ownsHandle)
-            GdiImports.DeleteObject(HPALETTE);
+        {
+            TerraFXWindows.DeleteObject(HPALETTE);
+        }
     }
 
     public static implicit operator HGDIOBJ(in PaletteHandle handle) => handle.HPALETTE;

@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi.Native;
-using WInterop.Windows;
+using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi;
 
-public class Metafile : IDisposable
+public sealed class Metafile : IDisposable
 {
     private readonly HENHMETAFILE _hemf;
 
@@ -16,29 +15,33 @@ public class Metafile : IDisposable
 
     public static implicit operator HENHMETAFILE(Metafile metafile) => metafile._hemf;
 
-    public unsafe void Enumerate(
-        EnumerateMetafileCallback callback,
-        nint callbackParameter = default)
+    [UnmanagedCallersOnly]
+    private static unsafe int EnumCallback(HDC hdc, HANDLETABLE* lpht, ENHMETARECORD* lpmr, int nHandles, LPARAM data)
     {
-        GdiImports.EnumEnhMetaFile(
+        GCHandle handle = GCHandle.FromIntPtr(data);
+        var callback = (EnumerateMetafileCallback)handle.Target!;
+        MetafileRecord record = new(lpmr);
+        return (BOOL)callback(ref record);
+    }
+
+    public unsafe void Enumerate(EnumerateMetafileCallback callback)
+    {
+        GCHandle handle = GCHandle.Alloc(callback);
+        TerraFXWindows.EnumEnhMetaFile(
             default,
             _hemf,
-            (
-                HDC hdc,
-                HGDIOBJ* lpht,
-                ENHMETARECORD* lpmr,
-                int nHandles,
-                LParam data) =>
-            {
-                MetafileRecord record = new(lpmr);
-                return callback(ref record, callbackParameter);
-            },
-            callbackParameter,
+            &EnumCallback,
+            (void*)(IntPtr)handle,
             null);
+
+        if (handle.IsAllocated)
+        {
+            handle.Free();
+        }
     }
 
     public void Dispose()
     {
-        GdiImports.DeleteEnhMetaFile(_hemf);
+        TerraFXWindows.DeleteEnhMetaFile(_hemf);
     }
 }

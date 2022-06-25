@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi.Native;
-
 namespace WInterop.Com;
 
 /// <summary>
@@ -39,7 +37,8 @@ public enum MediumType : uint
     ///  Data is an <see cref="HBITMAP"/> [TYMED_GDI]
     /// </summary>
     /// <remarks>
-    ///  If theIUnknown handle is null, the handle should be freed via <see cref="GdiImports.DeleteObject(HGDIOBJ)"/>.
+    ///  If the IUnknown handle is null, the handle should be freed via
+    ///  <see cref="TerraFXWindows.DeleteObject(HGDIOBJ)"/>.
     /// </remarks>
     Gdi = 16,
 

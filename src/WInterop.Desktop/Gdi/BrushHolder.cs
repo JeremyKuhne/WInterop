@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using WInterop.Gdi.Native;
-
 namespace WInterop.Gdi;
 
 public sealed class BrushHolder : IDisposable
@@ -32,7 +30,7 @@ public sealed class BrushHolder : IDisposable
     {
         if (_shouldDispose)
         {
-            GdiImports.DeleteObject(_brush);
+            TerraFXWindows.DeleteObject(_brush);
         }
 
         GC.SuppressFinalize(this);

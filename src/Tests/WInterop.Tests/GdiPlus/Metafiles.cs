@@ -100,7 +100,7 @@ public class Metafiles
             var status = GdiPlusImports.GdipGetHemfFromMetafile(playback, out HENHMETAFILE hemf);
 
             using Metafile metafile = new(hemf);
-            metafile.Enumerate((ref MetafileRecord record, nint callbackParameter) =>
+            metafile.Enumerate((ref MetafileRecord record) =>
             {
                 emfTypes.Add(record.RecordType);
                 return true;
@@ -281,7 +281,7 @@ public class Metafiles
         ENHMETAHEADER emh = default;
 
         // Note that this API never copies back more data than the size of a header
-        _ = GdiImports.GetEnhMetaFileHeader(metafile, (uint)sizeof(ENHMETAHEADER), &emh);
+        _ = TerraFXWindows.GetEnhMetaFileHeader(metafile, (uint)sizeof(ENHMETAHEADER), &emh);
 
         emh.iType.Should().Be((uint)MetafileRecordType.Header);
         emh.nSize.Should().BeGreaterOrEqualTo((uint)sizeof(ENHMETAHEADER));

@@ -3,4 +3,4 @@
 
 namespace WInterop.Gdi;
 
-public delegate bool EnumerateMetafileCallback(ref MetafileRecord record, nint callbackParameter);
+public delegate bool EnumerateMetafileCallback(ref MetafileRecord record);

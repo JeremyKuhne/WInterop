@@ -36,7 +36,7 @@ public static partial class Storage
         }
 
         Error.ThrowLastErrorIfZero(result);
-        return buffer.Span[.. (int)result].ToString();
+        return buffer.Span[..(int)result].ToString();
     }
 
     /// <summary>
@@ -1622,7 +1622,7 @@ public static partial class Storage
         }
 
         Error.ThrowLastErrorIfZero(result);
-        return buffer.Span[.. (int)result].ToString();
+        return buffer.Span[..(int)result].ToString();
     }
 
     /// <summary>

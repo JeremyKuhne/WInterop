@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using WInterop.Gdi.Native;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
@@ -22,13 +21,14 @@ public readonly struct FontHandle : IDisposable
 
     public bool IsNull => HFONT == HFONT.NULL;
 
-    public bool IsInvalid => HFONT == HFONT.INVALID_VALUE || (ObjectType)TerraFXWindows.GetObjectType(HFONT) != ObjectType.Font;
+    public bool IsInvalid
+        => HFONT == HFONT.INVALID_VALUE || (ObjectType)TerraFXWindows.GetObjectType(HFONT) != ObjectType.Font;
 
     public void Dispose()
     {
         if (_ownsHandle && !IsNull)
         {
-            GdiImports.DeleteObject(HFONT);
+            TerraFXWindows.DeleteObject(HFONT);
         }
     }
 

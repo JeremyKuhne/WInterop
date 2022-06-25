@@ -3,7 +3,6 @@
 
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
-using WInterop.Security.Native;
 
 namespace WInterop.Interprocess.Native;
 

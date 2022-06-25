@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Gdi;
-using WInterop.Gdi.Native;
 using WInterop.Modules;
 
 namespace WInterop.Windows.Native;

@@ -3,7 +3,6 @@
 
 using System.Runtime.InteropServices;
 using WInterop.Handles;
-using WInterop.Security.Native;
 
 namespace WInterop.Synchronization.Native;
 
