@@ -1,11 +1,9 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using FluentAssertions;
 using WInterop.SafeString;
 using WInterop.SafeString.Native;
 using WInterop.Support.Buffers;
-using Xunit;
 
 namespace SafeStringTests;
 

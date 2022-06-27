@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using FluentAssertions;
 using System.Drawing;
 using TerraFX.Interop.Windows;
 using WInterop.Gdi;
-using WInterop.Gdi.Native;
 using WInterop.GdiPlus;
 using WInterop.GdiPlus.EmfPlus;
 using WInterop.GdiPlus.Native;
-using Xunit;
 
 namespace WInteropTests.GdiPlusTests;
 

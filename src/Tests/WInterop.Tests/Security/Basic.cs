@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using FluentAssertions;
 using System.Security.Principal;
 using Tests.Shared.Support;
 using WInterop.ProcessAndThreads;
 using WInterop.Security;
 using WInterop.SystemInformation;
-using Xunit;
 using SecurityIdentifier = WInterop.Security.SecurityIdentifier;
 
 namespace SecurityTests;

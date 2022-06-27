@@ -80,10 +80,11 @@ public static partial class Error
 
     public static WindowsError NtStatusToWinError(NTStatus status)
     {
-        return (WindowsError)Imports.RtlNtStatusToDosError(status);
+        // LsaNtStatusToWinError is another entry point to RtlNtStatusToDosError
+        return (WindowsError)TerraFXWindows.LsaNtStatusToWinError((int)status);
     }
 
-    public static void SetLastError(WindowsError error) => Imports.SetLastError(error);
+    public static void SetLastError(WindowsError error) => TerraFXWindows.SetLastError((uint)error);
 
     public static WindowsError GetLastError() => (WindowsError)TerraFXWindows.GetLastError();
 

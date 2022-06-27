@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using FluentAssertions;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.Windows;
 using Tests.Support;
@@ -10,7 +9,6 @@ using WInterop.Com;
 using WInterop.Com.Native;
 using WInterop.Errors;
 using WInterop.Storage;
-using Xunit;
 
 namespace ComTests;
 

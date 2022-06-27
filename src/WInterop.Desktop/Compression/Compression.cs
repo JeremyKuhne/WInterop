@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Text;
 using WInterop.Compression.Native;
 using WInterop.Errors;
 using WInterop.Storage;
@@ -23,8 +24,16 @@ public static partial class Compression
         return BufferHelper.BufferInvoke((HeapBuffer buffer) =>
         {
             buffer.EnsureByteCapacity(Paths.MaxPath);
-            ValidateLzResult(Imports.GetExpandedNameA(Paths.TrimTrailingSeparators(path), buffer), path);
-            return Strings.GetNullTerminatedAsciiString(buffer);
+
+            fixed (byte* p = Strings.ToNullTerminatedAsciiString(Paths.TrimTrailingSeparators(path)))
+            {
+                // Unfortunately GetExpandedNameW doesn't fail properly. It calls the A version
+                // and accidentally ignores the errors returned, copying garbage into the
+                // returned string.
+
+                ValidateLzResult(TerraFXWindows.GetExpandedNameA((sbyte*)p, (sbyte*)buffer.BytePointer), path);
+                return Strings.FromNullTerminatedAsciiString(buffer);
+            }
         });
     }
 
@@ -51,7 +60,11 @@ public static partial class Compression
         }
 
         char replacement;
-        using (var file = Storage.Storage.CreateFile(path, CreationDisposition.OpenExisting, DesiredAccess.GenericRead, ShareModes.Read))
+        using (var file = Storage.Storage.CreateFile(
+            path,
+            CreationDisposition.OpenExisting,
+            DesiredAccess.GenericRead,
+            ShareModes.Read))
         {
             LzxHeader header = default;
 
@@ -112,46 +125,50 @@ public static partial class Compression
         out string uncompressedName,
         OpenFileStyle openStyle = OpenFileStyle.Read | OpenFileStyle.ShareCompat)
     {
-        OpenFileStruct ofs = default;
-        int result = ValidateLzResult(Imports.LZOpenFileW(path, ref ofs, openStyle), path);
-        uncompressedName = ofs.PathName;
-        return new LzHandle(result);
+        OFSTRUCT ofs = default;
+
+        fixed (char* p = path)
+        {
+            int result = ValidateLzResult(
+                TerraFXWindows.LZOpenFileW((ushort*)p, &ofs, (ushort)openStyle),
+                path);
+
+            // Note that DOS error ids match Windows errors
+            const int OFS_MAXPATHNAME = 128;
+            uncompressedName = Strings.FromNullTerminatedAsciiString(new(ofs.szPathName, OFS_MAXPATHNAME));
+            return new LzHandle(result);
+        }
     }
 
     public static unsafe LzHandle LzOpenFile(
         string path,
         OpenFileStyle openStyle = OpenFileStyle.Read | OpenFileStyle.ShareCompat)
     {
-        OpenFileStruct ofs = default;
-        return new LzHandle(ValidateLzResult(Imports.LZOpenFileW(path, ref ofs, openStyle), path));
+        OFSTRUCT ofs = default;
+        fixed (char* p = path)
+        {
+            return new LzHandle(ValidateLzResult(
+                TerraFXWindows.LZOpenFileW((ushort*)p, &ofs, (ushort)openStyle),
+                path));
+        }
     }
 
     private static int ValidateLzResult(int result, string? path = null, bool throwOnError = true)
         => !throwOnError || result >= 0 ? result : throw new LzException((LzError)result, path);
 
     public static int LzSeek(LzHandle handle, int offset, MoveMethod origin)
-        => ValidateLzResult(Imports.LZSeek(handle, offset, origin));
+        => ValidateLzResult(TerraFXWindows.LZSeek(handle, offset, (int)origin));
 
-    public static unsafe int LzRead(LzHandle handle, byte[] buffer, int offset, int count)
+    public static unsafe int LzRead(LzHandle handle, Span<byte> buffer, int offset, int count)
     {
-        if (buffer is null) throw new ArgumentNullException(nameof(buffer));
         if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
         if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
         if (offset + count > buffer.Length) throw new ArgumentOutOfRangeException(nameof(count));
 
         fixed (byte* b = &buffer[offset])
         {
-            return ValidateLzResult(Imports.LZRead(handle, b, count));
+            return ValidateLzResult(TerraFXWindows.LZRead(handle, (sbyte*)b, count));
         }
-    }
-
-    public static unsafe int LzRead(LzHandle handle, byte* buffer, int offset, int count)
-    {
-        if (buffer is null) throw new ArgumentNullException(nameof(buffer));
-        if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
-        if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
-
-        return ValidateLzResult(Imports.LZRead(handle, buffer + offset, count));
     }
 
     /// <summary>
@@ -167,9 +184,13 @@ public static partial class Compression
         bool overwrite = false,
         bool throwOnBadCompression = false)
     {
-        if (!Storage.Storage.DirectoryExists(sourceDirectory)) throw new DirectoryNotFoundException(sourceDirectory);
+        if (!Storage.Storage.DirectoryExists(sourceDirectory))
+            throw new DirectoryNotFoundException(sourceDirectory);
 
-        destinationDirectory ??= Path.Join(Paths.TrimLastSegment(sourceDirectory), "Expanded", Paths.GetLastSegment(sourceDirectory));
+        destinationDirectory ??= Path.Join(
+            Paths.TrimLastSegment(sourceDirectory),
+            "Expanded",
+            Paths.GetLastSegment(sourceDirectory));
 
         foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
         {
@@ -187,7 +208,10 @@ public static partial class Compression
             if (result < 0)
             {
                 // Bad source file perhaps, attempt a normal copy
-                Storage.Storage.CopyFile(file, Path.Join(targetDirectory, Paths.GetLastSegment(file)), overwrite: overwrite);
+                Storage.Storage.CopyFile(
+                    file,
+                    Path.Join(targetDirectory, Paths.GetLastSegment(file)),
+                    overwrite: overwrite);
             }
         }
     }
@@ -263,7 +287,7 @@ public static partial class Compression
         using (destinationHandle)
         {
             return ValidateLzCopyResult(
-                Imports.LZCopy(sourceHandle, destinationHandle),
+                TerraFXWindows.LZCopy(sourceHandle, destinationHandle),
                 source,
                 destination,
                 throwOnBadCompression);

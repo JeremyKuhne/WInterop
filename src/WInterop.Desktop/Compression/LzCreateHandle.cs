@@ -9,8 +9,5 @@ public class LzCreateHandle : LzHandle
 {
     public LzCreateHandle(int handle) : base(handle) { }
 
-    protected override void Dispose(bool disposing)
-    {
-        Imports.LZCloseFile(RawHandle);
-    }
+    protected override void Dispose(bool disposing) => _ = Imports.LZCloseFile(RawHandle);
 }

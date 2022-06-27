@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using FluentAssertions;
 using System.Text;
 using Tests.Support;
 using WInterop.Compression;
 using WInterop.Errors;
-using Xunit;
 
 namespace CompressionTests;
 

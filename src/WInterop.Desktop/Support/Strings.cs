@@ -11,23 +11,30 @@ public static class Strings
     /// <summary>
     ///  Single allocation replacement of a single character in a string.
     /// </summary>
-    /// <exception cref="ArgumentNullException">value is null or empty</exception>
-    /// <exception cref="ArgumentOutOfRangeException">index is not within the bounds of the string.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///  <paramref name="index"/> is not within the bounds of the string.
+    /// </exception>
     /// <returns>A copy of the given string with the specified character replaced.</returns>
     public static unsafe string ReplaceChar(string value, int index, char newChar)
     {
-        if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(value));
-        if (index < 0 || index >= value.Length) throw new ArgumentOutOfRangeException(nameof(index));
+        ArgumentNullException.ThrowIfNull(value);
 
-        fixed (char* v = value)
-        {
-            string newString = new(v, 0, value.Length);
-            fixed (char* n = newString)
-                n[index] = newChar;
-            return newString;
-        }
+        return index < 0 || index >= value.Length
+            ? throw new ArgumentOutOfRangeException(nameof(index))
+            : string.Create(
+                value.Length,
+                (value, index, newChar),
+                (newString, state) =>
+                {
+                    value.CopyTo(newString);
+                    newString[index] = newChar;
+                });
     }
 
+    /// <summary>
+    ///  Gets the first chunk from the given <paramref name="builder"/>.
+    /// </summary>
     public static ReadOnlyMemory<char> GetChunk(this StringBuilder builder)
     {
         var enumerator = builder.GetChunks();
@@ -35,17 +42,39 @@ public static class Strings
         return enumerator.Current;
     }
 
-    public static unsafe string GetNullTerminatedAsciiString(ReadOnlySpan<byte> source)
+    /// <summary>
+    ///  Creates a string from the given <paramref name="source"/>, terminating at the first null if present.
+    /// </summary>
+    public static unsafe string FromNullTerminatedAsciiString(ReadOnlySpan<byte> source)
     {
         if (source.Length == 0)
+        {
             return string.Empty;
+        }
 
         int length = source.IndexOf((byte)0x00);
         if (length == 0)
+        {
             return string.Empty;
+        }
 
         fixed (byte* start = source)
+        {
             return Encoding.ASCII.GetString(start, length == -1 ? source.Length : length);
+        }
+    }
+
+    /// <summary>
+    ///  Converts the given <paramref name="source"/> to a null terminated series of ASCII bytes.
+    /// </summary>
+    public static ReadOnlySpan<byte> ToNullTerminatedAsciiString(string source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        // Need a null at the end.
+        byte[] result = new byte[Encoding.ASCII.GetByteCount(source) + 1];
+        Encoding.ASCII.GetBytes(source, bytes: result);
+        return result;
     }
 
     /// <summary>

@@ -633,7 +633,9 @@ public static partial class Windows
             ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
 
         if (result == 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
@@ -642,7 +644,9 @@ public static partial class Windows
     {
         int result = WindowsImports.GetKeyboardType(0);
         if (result == 0)
+        {
             Error.ThrowLastError();
+        }
 
         return (KeyboardType)result;
     }
@@ -650,11 +654,13 @@ public static partial class Windows
     public static int GetKeyboardSubType()
     {
         // Although not documented this API does not appear to clear last error
-        Errors.Native.Imports.SetLastError(WindowsError.ERROR_SUCCESS);
+        Error.SetLastError(WindowsError.ERROR_SUCCESS);
 
         int result = WindowsImports.GetKeyboardType(1);
         if (result == 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
@@ -663,7 +669,9 @@ public static partial class Windows
     {
         int result = WindowsImports.GetKeyboardType(2);
         if (result == 0)
+        {
             Error.ThrowLastError();
+        }
 
         return result;
     }
