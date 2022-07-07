@@ -11,4 +11,6 @@ namespace WInterop.Interprocess;
 public class SafeMailslotHandle : CloseHandle
 {
     public SafeMailslotHandle() : base() { }
+
+    public SafeMailslotHandle(HANDLE handle) : base(handle, ownsHandle: true) { }
 }

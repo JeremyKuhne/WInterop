@@ -9,6 +9,11 @@ namespace WInterop.Interprocess;
 
 public static partial class Pipes
 {
-    public static unsafe void CreatePipe(out SafeFileHandle readPipe, out SafeFileHandle writePipe, uint bufferSize = 0)
-        => Error.ThrowLastErrorIfFalse(Imports.CreatePipe(out readPipe, out writePipe, null, bufferSize));
+    public static unsafe void CreatePipe(
+        out SafeFileHandle readPipe,
+        out SafeFileHandle writePipe,
+        uint bufferSize = 0)
+    {
+        Error.ThrowLastErrorIfFalse(Imports.CreatePipe(out readPipe, out writePipe, null, bufferSize));
+    }
 }
