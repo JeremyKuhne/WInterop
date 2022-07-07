@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Collections;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Memory;
@@ -13,7 +12,7 @@ namespace WInterop.Security;
 ///  Wrapper for ACLs ([SACL]/[DACL]). Discretionary ACLs (DACLs) are rights to the given object. System ACLs
 ///  (SACLs) are for logging of object access.
 /// </summary>
-public unsafe class SecurityDescriptor : LocalHandle
+public unsafe partial class SecurityDescriptor : LocalHandle
 {
     private readonly SECURITY_DESCRIPTOR_CONTROL _control;
     private readonly SafeHandle? _objectHandle;
@@ -22,7 +21,7 @@ public unsafe class SecurityDescriptor : LocalHandle
     public SecurityDescriptor() : base() { }
 
     public SecurityDescriptor(SafeHandle objectHandle, ObjectType objectType, SECURITY_DESCRIPTOR* descriptor, bool ownsHandle = true)
-        : base((IntPtr)descriptor, ownsHandle)
+        : base((HLOCAL)descriptor, ownsHandle)
     {
         _control = (SECURITY_DESCRIPTOR_CONTROL)descriptor->Control;
         _objectHandle = objectHandle;
@@ -101,44 +100,6 @@ public unsafe class SecurityDescriptor : LocalHandle
                     Memory.Memory.LocalFree((HLOCAL)newAcl);
                 }
             }
-        }
-    }
-
-    private class ExplicitAccessEnumerable : LocalHandle, IEnumerable<ExplicitAccess>, IEnumerator<ExplicitAccess>
-    {
-        private readonly uint _count;
-        private int _current;
-        private readonly EXPLICIT_ACCESS_W* _entries;
-
-        public ExplicitAccessEnumerable() : base() { }
-
-        public unsafe ExplicitAccessEnumerable(EXPLICIT_ACCESS_W* entries, uint count, bool ownsHandle = true)
-            : base((IntPtr)entries, ownsHandle)
-        {
-            _count = count;
-            _entries = entries;
-            Reset();
-        }
-
-        public IEnumerator<ExplicitAccess> GetEnumerator() => this;
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        public void Reset() => _current = -1;
-        object IEnumerator.Current => Current;
-
-        public ExplicitAccess Current
-            => (_current >= 0 && _current < _count)
-                ? new ExplicitAccess(_entries + _current)
-                : throw new InvalidOperationException();
-
-        public bool MoveNext()
-        {
-            if (_current + 1 < _count)
-            {
-                _current++;
-                return true;
-            }
-
-            return false;
         }
     }
 }

@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using WInterop.Handles;
-using WInterop.Memory.Native;
 
 namespace WInterop.Memory;
 
@@ -13,14 +12,14 @@ public class LocalHandle : HandleZeroIsInvalid
 {
     public LocalHandle() : base(ownsHandle: true) { }
 
-    public LocalHandle(IntPtr handle, bool ownsHandle = true) : base(ownsHandle)
+    public LocalHandle(HLOCAL handle, bool ownsHandle = true) : base(ownsHandle)
     {
         SetHandle(handle);
     }
 
     protected override bool ReleaseHandle()
     {
-        MemoryImports.LocalFree(handle);
+        TerraFXWindows.LocalFree((HLOCAL)handle);
         return true;
     }
 }

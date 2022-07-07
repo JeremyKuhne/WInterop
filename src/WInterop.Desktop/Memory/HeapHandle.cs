@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using WInterop.Memory.Native;
 using WInterop.Support.Buffers;
 
 namespace WInterop.Memory;
@@ -43,12 +42,9 @@ public class HeapHandle : SafeBuffer, ISizedBuffer
         }
     }
 
-    public ulong ByteCapacity { get { return ByteLength; } }
+    public ulong ByteCapacity => ByteLength;
 
-    public override bool IsInvalid
-    {
-        get { return handle == IntPtr.Zero; }
-    }
+    public override bool IsInvalid => handle == IntPtr.Zero;
 
     /// <summary>
     ///  Resize the buffer to the given size and zero memory if requested.
@@ -56,26 +52,26 @@ public class HeapHandle : SafeBuffer, ISizedBuffer
     /// <param name="nameof(byteLength)">Required size in bytes. Must be less than UInt32.MaxValue for 32 bit or UInt64.MaxValue for 64 bit.</param>
     /// <exception cref="OutOfMemoryException">Thrown if the requested memory size cannot be allocated.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if size is greater than the maximum memory size.</exception>
-    public void Resize(ulong byteLength, bool zeroMemory = false)
+    public unsafe void Resize(ulong byteLength, bool zeroMemory = false)
     {
         if (IsClosed) throw new ObjectDisposedException("HeapHandle");
 
         if (handle == IntPtr.Zero)
         {
-            handle = MemoryImports.HeapAlloc(
+            handle = (IntPtr)TerraFXWindows.HeapAlloc(
                 hHeap: Memory.ProcessHeap,
                 dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
-                dwBytes: (UIntPtr)byteLength);
+                dwBytes: (nuint)byteLength);
         }
         else
         {
             // This may or may not be the same handle, Windows may realloc in place. If the
             // handle changes Windows will deal with the old handle, trying to free it will
             // cause an error.
-            handle = MemoryImports.HeapReAlloc(
+            handle = (IntPtr)TerraFXWindows.HeapReAlloc(
                 hHeap: Memory.ProcessHeap,
                 dwFlags: zeroMemory ? MemoryDefines.HEAP_ZERO_MEMORY : 0,
-                lpMem: handle,
+                lpMem: (void*)handle,
                 dwBytes: (UIntPtr)byteLength);
         }
 
@@ -88,10 +84,8 @@ public class HeapHandle : SafeBuffer, ISizedBuffer
         Initialize(byteLength);
     }
 
-    protected override bool ReleaseHandle()
-    {
-        return MemoryImports.HeapFree(Memory.ProcessHeap, dwFlags: 0, lpMem: handle);
-    }
+    protected unsafe override bool ReleaseHandle()
+        => TerraFXWindows.HeapFree(Memory.ProcessHeap, dwFlags: 0, lpMem: (void*)handle);
 
     public unsafe void* VoidPointer => (void*)handle;
 }
