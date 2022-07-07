@@ -69,8 +69,7 @@
     <!-- We're generating our own assembly info in our common project -->
     <GenerateAssemblyInfo Condition="'$(GenerateAssemblyInfo)' == ''">false</GenerateAssemblyInfo>
 
-    <!-- Latest and greatest C# please -->
-    <LangVersion>preview</LangVersion>
+    <LangVersion>10.0</LangVersion>
 
   </PropertyGroup>
 
