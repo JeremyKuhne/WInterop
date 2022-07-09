@@ -4,27 +4,31 @@
 using System.Runtime.InteropServices;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Windows.Native;
 
 namespace WInterop.Windows;
 
 // https://docs.microsoft.com/windows/win32/api/winuser/ns-winuser-wndclassexw
-public struct WindowClassInfo
+public partial class WindowClassInfo
 {
     public uint Size;
     public ClassStyle Style;
     public WindowProcedure WindowProcedure;
     public int ClassExtraBytes;
     public int WindowExtraBytes;
-    public ModuleInstance Instance;
+    public ModuleInstance? Instance;
     public IconHandle Icon;
     public CursorHandle Cursor;
-    public string MenuName;
+    public string? MenuName;
     public int MenuId;
-    public string ClassName;
+    public string? ClassName;
     public Atom ClassAtom;
     public IconHandle SmallIcon;
     private HBRUSH _background;
+
+    public WindowClassInfo(WindowProcedure windowProcedure)
+    {
+        WindowProcedure = windowProcedure;
+    }
 
     public BrushHandle Background
     {
@@ -32,90 +36,46 @@ public struct WindowClassInfo
         set => _background = value.Handle;
     }
 
-    public static unsafe implicit operator WindowClassInfo(WNDCLASSEX nativeClass)
+    public static unsafe implicit operator WindowClassInfo(WNDCLASSEXW nativeClass)
     {
-        var windowClass = new WindowClassInfo
+        var windowClass = new WindowClassInfo(
+            Marshal.GetDelegateForFunctionPointer<WindowProcedure>((IntPtr)nativeClass.lpfnWndProc))
         {
             Size = nativeClass.cbSize,
-            Style = nativeClass.style,
-            WindowProcedure = Marshal.GetDelegateForFunctionPointer<WindowProcedure>(nativeClass.lpfnWndProc),
-            ClassExtraBytes = nativeClass.cbClassExtra,
+            Style = (ClassStyle)nativeClass.style,
+            ClassExtraBytes = nativeClass.cbClsExtra,
             WindowExtraBytes = nativeClass.cbWndExtra,
-            Instance = nativeClass.hInstance,
-            Icon = new IconHandle(nativeClass.hIcon, ownsHandle: false),
-            Cursor = new CursorHandle(nativeClass.hCursor, ownsHandle: false),
-            _background = new BrushHandle(nativeClass.hbrBackground, ownsHandle: false),
-            SmallIcon = new IconHandle(nativeClass.hIconSm, ownsHandle: false)
+            Instance = new(nativeClass.hInstance, ownsHandle: false),
+            Icon = new(nativeClass.hIcon, ownsHandle: false),
+            Cursor = new(nativeClass.hCursor, ownsHandle: false),
+            _background = nativeClass.hbrBackground,
+            SmallIcon = new(nativeClass.hIconSm, ownsHandle: false)
         };
 
-        if (nativeClass.lpszMenuName != null)
+        if (nativeClass.lpszMenuName is not null)
         {
             if (Windows.IsIntResource((IntPtr)nativeClass.lpszMenuName))
+            {
                 windowClass.MenuId = (int)nativeClass.lpszMenuName;
+            }
             else
-                windowClass.MenuName = new string(nativeClass.lpszMenuName);
+            {
+                windowClass.MenuName = new string((char*)nativeClass.lpszMenuName);
+            }
         }
 
-        if (nativeClass.lpszClassName != null)
+        if (nativeClass.lpszClassName is not null)
         {
             if (Atom.IsAtom((IntPtr)nativeClass.lpszClassName))
+            {
                 windowClass.ClassAtom = (IntPtr)nativeClass.lpszClassName;
+            }
             else
-                windowClass.ClassName = new string(nativeClass.lpszClassName);
+            {
+                windowClass.ClassName = new string((char*)nativeClass.lpszClassName);
+            }
         }
 
         return windowClass;
-    }
-
-    public struct Marshaller : IDisposable
-    {
-        private GCHandle _menuName;
-        private GCHandle _className;
-
-        public unsafe void FillNative(out WNDCLASSEX native, ref WindowClassInfo managed)
-        {
-            native.cbSize = (uint)sizeof(WNDCLASSEX);
-            native.style = managed.Style;
-            native.lpfnWndProc = Marshal.GetFunctionPointerForDelegate(managed.WindowProcedure);
-            native.cbClassExtra = managed.ClassExtraBytes;
-            native.cbWndExtra = managed.WindowExtraBytes;
-
-            // If the WindowClass struct goes out of scope, this would be bad,
-            // but that would require it coming off the stack- which would be
-            // pretty difficult to accomplish for users of this class.
-            native.hInstance = (IntPtr)managed.Instance;
-            native.hIcon = managed.Icon;
-            native.hCursor = managed.Cursor;
-            native.hbrBackground = managed.Background.Handle;
-            native.hIconSm = managed.SmallIcon;
-
-            if (managed.ClassName != null)
-            {
-                _className = GCHandle.Alloc(managed.ClassName, GCHandleType.Pinned);
-                native.lpszClassName = (char*)_className.AddrOfPinnedObject();
-            }
-            else
-            {
-                native.lpszClassName = (char*)(IntPtr)managed.ClassAtom;
-            }
-
-            if (managed.MenuName != null)
-            {
-                _menuName = GCHandle.Alloc(managed.MenuName, GCHandleType.Pinned);
-                native.lpszMenuName = (char*)_menuName.AddrOfPinnedObject();
-            }
-            else
-            {
-                native.lpszMenuName = (char*)(IntPtr)managed.MenuId;
-            }
-        }
-
-        public void Dispose()
-        {
-            if (_className.IsAllocated)
-                _className.Free();
-            if (_menuName.IsAllocated)
-                _menuName.Free();
-        }
     }
 }

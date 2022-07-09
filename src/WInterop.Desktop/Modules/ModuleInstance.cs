@@ -26,6 +26,8 @@ public class ModuleInstance : HandleZeroIsInvalid
 
     internal unsafe HMODULE Handle => new((void*)handle);
 
+    public static implicit operator HINSTANCE(ModuleInstance value) => value?.Handle ?? HINSTANCE.NULL;
+
     protected override bool ReleaseHandle()
     {
         // Module handles are ref counted with LoadLibrary/FreeLibrary.

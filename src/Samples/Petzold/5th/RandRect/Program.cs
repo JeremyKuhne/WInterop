@@ -24,10 +24,9 @@ internal static class Program
         const string szAppName = "RandRect";
 
         ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-        WindowClassInfo wndclass = new()
+        WindowClassInfo wndclass = new(WindowProcedure)
         {
             Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-            WindowProcedure = WindowProcedure,
             Instance = module,
             Icon = IconId.Application,
             Cursor = CursorId.Arrow,
@@ -35,7 +34,7 @@ internal static class Program
             ClassName = szAppName
         };
 
-        Windows.RegisterClass(ref wndclass);
+        Windows.RegisterClass(wndclass);
 
         WindowHandle window = Windows.CreateWindow(
             szAppName,

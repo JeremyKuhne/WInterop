@@ -79,8 +79,7 @@ public class Window : IDisposable, IHandle<WindowHandle>, ILayoutHandler
         }
 
         _windowProcedure = WindowProcedure;
-        _priorWindowProcedure = (WNDPROC)Handle.GetWindowLong(WindowLong.WindowProcedure);
-        Handle.SetWindowLong(WindowLong.WindowProcedure, Marshal.GetFunctionPointerForDelegate(_windowProcedure));
+        _priorWindowProcedure = Handle.SetWindowProcedure(_windowProcedure);
 
         // Stash our managed pointer so we can find the Window from an HWND
         _gcHandle = GCHandle.Alloc(this, GCHandleType.Weak);
@@ -145,12 +144,11 @@ public class Window : IDisposable, IHandle<WindowHandle>, ILayoutHandler
 
                     window.SetFont(newFont);
                     window.EnumerateChildWindows(
-                        (WindowHandle child, LParam param) =>
+                        (WindowHandle child) =>
                         {
                             child.SetFont(newFont);
                             return true;
-                        },
-                        default);
+                        });
 
                     window.MoveWindow(dpiChanged.SuggestedBounds, repaint: true);
 
@@ -176,9 +174,9 @@ public class Window : IDisposable, IHandle<WindowHandle>, ILayoutHandler
         GC.SuppressFinalize(this);
     }
 
-    protected virtual void Dispose(bool disposing)
+    protected unsafe virtual void Dispose(bool disposing)
     {
-        Handle.SetWindowLong(WindowLong.WindowProcedure, (IntPtr)_priorWindowProcedure);
+        Handle.SetWindowLong(WindowLong.WindowProcedure, (nint)(void*)_priorWindowProcedure.Value);
     }
 
     void ILayoutHandler.Layout(Rectangle bounds) => Handle.MoveWindow(bounds, repaint: true);

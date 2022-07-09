@@ -21,10 +21,9 @@ internal static class Program
         const string szAppName = "OwnDraw";
 
         ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-        WindowClassInfo wndclass = new()
+        WindowClassInfo classInfo = new(WindowProcedure)
         {
             Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-            WindowProcedure = WindowProcedure,
             Instance = module,
             Icon = IconId.Application,
             Cursor = CursorId.Arrow,
@@ -32,7 +31,7 @@ internal static class Program
             ClassName = szAppName
         };
 
-        Windows.RegisterClass(ref wndclass);
+        Windows.RegisterClass(classInfo);
 
         WindowHandle window = Windows.CreateWindow(
             szAppName,

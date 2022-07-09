@@ -7,17 +7,9 @@ namespace WInterop.Windows.Native;
 
 public static partial class WindowsImports
 {
-    // https://msdn.microsoft.com/library/windows/desktop/ms679277.aspx
+    // https://docs.microsoft.com/windows/win32/api/utilapiset/nf-utilapiset-beep
     [DllImport(Libraries.Kernel32, SetLastError = true, ExactSpelling = true)]
     public static extern bool Beep(
         uint dwFreq,
         uint dwDurations);
-
-    // https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-muldiv
-    [SuppressGCTransition]
-    [DllImport(Libraries.Kernel32, ExactSpelling = true)]
-    public static extern int MulDiv(
-        int nNumber,
-        int nNumerator,
-        int nDenominator);
 }

@@ -7,9 +7,9 @@ public readonly struct TimerId
 {
     public static TimerId Null => default;
 
-    public UIntPtr Value { get; }
+    public nuint Value { get; }
 
-    public TimerId(uint id) => Value = (UIntPtr)id;
+    public TimerId(nuint id) => Value = id;
 
     public override bool Equals(object? obj) => obj is TimerId other && other.Value == Value;
 
@@ -21,5 +21,6 @@ public readonly struct TimerId
 
     public static bool operator !=(TimerId a, TimerId b) => a.Value != b.Value;
 
-    public static implicit operator TimerId(uint value) => new(value);
+    public static implicit operator TimerId(nuint value) => new(value);
+    public static implicit operator nuint(TimerId value) => value.Value;
 }

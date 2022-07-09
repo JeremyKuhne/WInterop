@@ -2,11 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Drawing;
-using System.Runtime.InteropServices;
-using WInterop.Errors;
 using WInterop.Gdi;
 using WInterop.Modules;
-using WInterop.Windows.Native;
 
 namespace WInterop.Windows;
 
@@ -14,9 +11,8 @@ public class WindowClass : IDisposable
 {
     // Stash the delegate to keep it from being collected
     private readonly WindowProcedure _windowProcedure;
-    private WNDCLASSEX _wndClass;
-    private readonly string _className;
-    private readonly string _menuName;
+    private string _className;
+    private WindowClassInfo? _windowClass;
     private bool _disposedValue;
 
     public Atom Atom { get; private set; }
@@ -56,28 +52,26 @@ public class WindowClass : IDisposable
 
         moduleInstance ??= Modules.Modules.GetExeModuleHandle();
 
-        if (menuId != 0 && menuName != null)
+        if (menuId != 0 && menuName is not null)
             throw new ArgumentException($"Can't set both {nameof(menuName)} and {nameof(menuId)}.");
 
         _windowProcedure = WindowProcedure;
         ModuleInstance = moduleInstance;
 
         _className = className;
-        _menuName = menuName ?? string.Empty;
-
-        _wndClass = new WNDCLASSEX
+        _windowClass = new WindowClassInfo(_windowProcedure)
         {
-            cbSize = (uint)sizeof(WNDCLASSEX),
-            style = classStyle,
-            lpfnWndProc = Marshal.GetFunctionPointerForDelegate(_windowProcedure),
-            cbClassExtra = classExtraBytes,
-            cbWndExtra = windowExtraBytes,
-            hInstance = (IntPtr)moduleInstance,
-            hIcon = icon,
-            hCursor = cursor,
-            hbrBackground = backgroundBrush,
-            hIconSm = smallIcon,
-            lpszMenuName = (char*)menuId
+            ClassName = className,
+            Style = classStyle,
+            ClassExtraBytes = classExtraBytes,
+            WindowExtraBytes = windowExtraBytes,
+            Instance = moduleInstance,
+            Icon = icon,
+            Cursor = cursor,
+            Background = backgroundBrush,
+            SmallIcon = smallIcon,
+            MenuId = menuId,
+            MenuName = menuName
         };
     }
 
@@ -85,35 +79,22 @@ public class WindowClass : IDisposable
     {
         _windowProcedure = WindowProcedure;
         _className = registeredClassName;
-        _menuName = string.Empty;
         ModuleInstance = ModuleInstance.Null;
     }
 
     public bool IsRegistered => Atom.IsValid || ModuleInstance == ModuleInstance.Null;
-
-    public BrushHandle BackgroundBrush
-        => new(_wndClass.hbrBackground, ownsHandle: false);
 
     /// <summary>
     ///  Registers this <see cref="WindowClass"/> so that instances can be created.
     /// </summary>
     public unsafe WindowClass Register()
     {
-        fixed (char* name = _className)
+        if (_windowClass is not null && !IsRegistered)
         {
-            fixed (char* menuName = _menuName)
-            {
-                _wndClass.lpszClassName = name;
-                if (!string.IsNullOrEmpty(_menuName))
-                    _wndClass.lpszMenuName = menuName;
-
-                Atom atom = WindowsImports.RegisterClassExW(ref _wndClass);
-                if (!atom.IsValid)
-                    Error.ThrowLastError();
-                Atom = atom;
-                return this;
-            }
+            Atom = Windows.RegisterClass(_windowClass);
         }
+
+        return this;
     }
 
     /// <summary>
@@ -170,7 +151,7 @@ public class WindowClass : IDisposable
 
         if (!Atom.IsValid)
         {
-            Atom = window.GetClassLong(ClassLong.Atom);
+            Atom = (ushort)window.GetClassLong(ClassLong.Atom);
         }
 
         if (isMainWindow)

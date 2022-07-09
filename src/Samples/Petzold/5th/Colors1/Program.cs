@@ -193,7 +193,7 @@ internal class Colors1 : WindowClass
 
     private LResult ScrollProcedure(WindowHandle window, MessageType message, WParam wParam, LParam lParam)
     {
-        int id = (int)window.GetWindowLong(WindowLong.Id).ToInt64();
+        int id = (int)window.GetWindowLong(WindowLong.Id);
 
         switch (message)
         {

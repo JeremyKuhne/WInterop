@@ -35,5 +35,7 @@ public struct Atom
 
     public static implicit operator uint(Atom atom) => atom.ATOM;
     public static implicit operator nint(Atom atom) => atom.ATOM;
+    public static implicit operator Atom(ushort atom) => new(atom);
+    public static implicit operator ushort(Atom atom) => atom.ATOM;
     public static implicit operator Atom(nint atom) => new((ushort)atom);
 }

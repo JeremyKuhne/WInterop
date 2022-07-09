@@ -21,6 +21,8 @@ public struct WParam
     public static implicit operator nuint(WParam value) => value.Value;
     public static implicit operator uint(WParam value) => (uint)value.Value;
     public static implicit operator WParam(uint value) => new(value);
+    public static implicit operator WPARAM(WParam value) => new(value);
+    public static implicit operator WParam(WPARAM value) => new(value);
 
     // We make these explicit as we want to encourage keeping signed/unsigned alignment
     public static unsafe explicit operator WParam(nint value) => new((nuint)value);

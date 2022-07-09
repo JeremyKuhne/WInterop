@@ -23,12 +23,6 @@ public class WindowClassTests
     }
 
     [Fact]
-    public unsafe void WindowClassSize()
-    {
-        sizeof(WNDCLASSEX).Should().Be(Environment.Is64BitProcess ? 80 : 48);
-    }
-
-    [Fact]
     public void GetClassInfo_NotRegistered()
     {
         Action action = () => Windows.GetClassInfo(null, Path.GetRandomFileName());
@@ -90,7 +84,7 @@ public class WindowClassTests
         {
             window = Windows.CreateWindow("bUttOn", "GetClassLong_GlobalAtom", WindowStyles.Diabled | WindowStyles.Minimize);
             window.IsInvalid.Should().BeFalse();
-            Atom atom = window.GetClassLong(ClassLong.Atom);
+            Atom atom = (ushort)window.GetClassLong(ClassLong.Atom);
             atom.IsValid.Should().BeTrue();
             window.DestroyWindow();
             window = Windows.CreateWindow(atom, "GetClassLong_GlobalAtom", WindowStyles.Diabled | WindowStyles.Minimize);
@@ -110,14 +104,13 @@ public class WindowClassTests
     [Fact]
     public void RegisterClass_UnregisterClassAtom()
     {
-        WindowClassInfo myClass = new()
+        WindowClassInfo myClass = new(CallDefaultProcedure)
         {
             ClassName = "RegisterClass_UnregisterClassAtom",
             Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-            WindowProcedure = CallDefaultProcedure
         };
 
-        Atom atom = Windows.RegisterClass(ref myClass);
+        Atom atom = Windows.RegisterClass(myClass);
         atom.IsValid.Should().BeTrue();
 
         try
@@ -140,14 +133,13 @@ public class WindowClassTests
     [Fact]
     public void RegisterClass_UnregisterClassName()
     {
-        WindowClassInfo myClass = new()
+        WindowClassInfo myClass = new(CallDefaultProcedure)
         {
             ClassName = "RegisterClass_UnregisterClassName",
             Style = ClassStyle.HorizontalRedraw,
-            WindowProcedure = CallDefaultProcedure
         };
 
-        Atom atom = Windows.RegisterClass(ref myClass);
+        Atom atom = Windows.RegisterClass(myClass);
         atom.IsValid.Should().BeTrue();
 
         try
@@ -170,13 +162,12 @@ public class WindowClassTests
     [Fact]
     public void RegisterClass_UnregisterActiveWindow()
     {
-        WindowClassInfo myClass = new()
+        WindowClassInfo myClass = new(CallDefaultProcedure)
         {
             ClassName = "RegisterClass_UnregisterActiveWindow",
-            WindowProcedure = CallDefaultProcedure,
         };
 
-        Atom atom = Windows.RegisterClass(ref myClass);
+        Atom atom = Windows.RegisterClass(myClass);
         atom.IsValid.Should().BeTrue();
 
         try
@@ -209,16 +200,15 @@ public class WindowClassTests
     public void RegisterClass_GetSetClassLong()
     {
         // Some docs claim that 40 is the max, but that isn't true (at least in recent OSes)
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633574.aspx
-        WindowClassInfo myClass = new()
+        // https://docs.microsoft.com/windows/win32/winmsg/about-window-classes
+        WindowClassInfo myClass = new(CallDefaultProcedure)
         {
             ClassName = "RegisterClass_GetSetClassLong",
             Style = ClassStyle.HorizontalRedraw,
-            WindowProcedure = CallDefaultProcedure,
             ClassExtraBytes = 80
         };
 
-        Atom atom = Windows.RegisterClass(ref myClass);
+        Atom atom = Windows.RegisterClass(myClass);
         atom.IsValid.Should().BeTrue();
 
         try
@@ -235,10 +225,10 @@ public class WindowClassTests
                 var info = Windows.GetClassInfo(Modules.GetModuleHandle(null), atom);
                 info.ClassExtraBytes.Should().Be(80);
 
-                IntPtr result = Windows.SetClassLong(window, (ClassLong)72, (IntPtr)0x0000BEEF);
-                result.Should().Be(IntPtr.Zero);
+                nuint result = Windows.SetClassLong(window, (ClassLong)72, 0x0000BEEF);
+                result.Should().Be(0);
 
-                window.GetClassLong((ClassLong)72).Should().Be((IntPtr)0x0000BEEF);
+                window.GetClassLong((ClassLong)72).Should().Be(0x0000BEEF);
             }
             finally
             {
@@ -256,14 +246,13 @@ public class WindowClassTests
     {
         // Some docs claim that 40 is the max, but that isn't true (at least in recent OSes)
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ms633574.aspx
-        WindowClassInfo myClass = new()
+        WindowClassInfo myClass = new(CallDefaultProcedure)
         {
             ClassName = "RegisterClass_GetSetWindowLong",
-            WindowProcedure = CallDefaultProcedure,
             WindowExtraBytes = 80
         };
 
-        Atom atom = Windows.RegisterClass(ref myClass);
+        Atom atom = Windows.RegisterClass(myClass);
         atom.IsValid.Should().BeTrue();
 
         try

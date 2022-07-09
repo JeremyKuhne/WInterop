@@ -18,16 +18,18 @@ public struct LParam
 
     public bool IsNull => Value == 0;
 
-    public static implicit operator int(LParam lParam) => (int)lParam.Value;
-    public static explicit operator uint(LParam lParam) => (uint)lParam.Value;
+    public static implicit operator int(LParam value) => (int)value.Value;
+    public static explicit operator uint(LParam value) => (uint)value.Value;
     public static implicit operator LParam(int value) => new(value);
     public static implicit operator LParam(nint value) => new(value);
-    public static implicit operator nint(LParam lParam) => lParam.Value;
+    public static implicit operator nint(LParam value) => value.Value;
     public static implicit operator LParam((int High, int Low) value) => new(value.High, value.Low);
+    public static implicit operator LPARAM(LParam value) => new(value);
+    public static implicit operator LParam(LPARAM value) => new(value);
 
-    public static unsafe implicit operator void*(LParam lParam) => (void*)lParam.Value;
+    public static unsafe implicit operator void*(LParam value) => (void*)value.Value;
     public static unsafe implicit operator LParam(void* value) => new((nint)value);
-    public static unsafe explicit operator WindowHandle(LParam lParam) => new HWND((void*)lParam.Value);
+    public static unsafe explicit operator WindowHandle(LParam value) => new HWND((void*)value.Value);
     public static unsafe explicit operator LParam(WindowHandle value) => new((nint)value.HWND.Value);
 
     public override string ToString() => Value.ToString();

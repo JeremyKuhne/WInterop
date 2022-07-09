@@ -75,7 +75,7 @@ public static partial class Windows
         catch
         {
             // Hit the P/Invoke directly as we want to throw the original error.
-            WindowsImports.DestroyWindow(mainWindow);
+            TerraFXWindows.DestroyWindow(mainWindow);
             throw;
         }
     }
@@ -99,7 +99,7 @@ public static partial class Windows
         catch
         {
             // Hit the P/Invoke directly as we want to throw the original error.
-            WindowsImports.DestroyWindow(window);
+            TerraFXWindows.DestroyWindow(window);
             throw;
         }
     }
@@ -115,24 +115,29 @@ public static partial class Windows
         ModuleInstance? instance = null,
         IntPtr parameters = default)
     {
-        WindowHandle window = WindowsImports.CreateWindowExW(
-            extendedStyle,
-            (char*)classAtom.ATOM,
-            windowName,
-            style,
-            bounds.X,
-            bounds.Y,
-            bounds.Width,
-            bounds.Height,
-            parentWindow,
-            menuHandle,
-            instance ?? ModuleInstance.Null,
-            parameters);
+        fixed (char* n = windowName)
+        {
+            WindowHandle window = TerraFXWindows.CreateWindowExW(
+                (uint)extendedStyle,
+                (ushort*)classAtom.ATOM,
+                (ushort*)n,
+                (uint)style,
+                bounds.X,
+                bounds.Y,
+                bounds.Width,
+                bounds.Height,
+                parentWindow,
+                menuHandle,
+                instance ?? HINSTANCE.NULL,
+                (void*)parameters);
 
-        if (window.IsInvalid)
-            Error.ThrowLastError();
+            if (window.IsInvalid)
+            {
+                Error.ThrowLastError();
+            }
 
-        return window;
+            return window;
+        }
     }
 
     public static unsafe WindowHandle CreateWindow(
@@ -147,25 +152,28 @@ public static partial class Windows
         IntPtr parameters = default)
     {
         WindowHandle window;
-        fixed (char* name = className)
+        fixed (char* cn = className)
+        fixed (char* wn = windowName)
         {
-            window = WindowsImports.CreateWindowExW(
-                extendedStyle,
-                name,
-                windowName,
-                style,
+            window = TerraFXWindows.CreateWindowExW(
+                (uint)extendedStyle,
+                (ushort*)cn,
+                (ushort*)wn,
+                (uint)style,
                 bounds.X,
                 bounds.Y,
                 bounds.Width,
                 bounds.Height,
                 parentWindow,
                 menuHandle,
-                instance ?? ModuleInstance.Null,
-                parameters);
+                instance ?? HINSTANCE.NULL,
+                (void*)parameters);
         }
 
         if (window.IsInvalid)
+        {
             Error.ThrowLastError();
+        }
 
         return window;
     }
@@ -182,7 +190,7 @@ public static partial class Windows
     ///  Play the specified sound (as defined in the Sound control panel).
     /// </summary>
     public static void MessageBeep(BeepType type = BeepType.SimpleBeep)
-        => Error.ThrowLastErrorIfFalse(WindowsImports.MessageBeep(type));
+        => Error.ThrowLastErrorIfFalse(TerraFXWindows.MessageBeep((uint)type));
 
     public static SystemParameters SystemParameters => SystemParameters.Instance;
     public static LocaleInfo LocaleInfo => LocaleInfo.Instance;
@@ -192,7 +200,7 @@ public static partial class Windows
     /// </summary>
     public static Size GetDialogBaseUnits()
     {
-        int result = WindowsImports.GetDialogBaseUnits();
+        int result = TerraFXWindows.GetDialogBaseUnits();
         return new Size(Conversion.LowWord(result), Conversion.HighWord(result));
     }
 
@@ -203,23 +211,23 @@ public static partial class Windows
     ///  Wrapper to SetWindowLong for changing the window procedure. Returns the old
     ///  window procedure handle- use CallWindowProcedure to call the old method.
     /// </summary>
-    public static WNDPROC SetWindowProcedure<T>(this T window, WindowProcedure newCallback)
+    public static unsafe WNDPROC SetWindowProcedure<T>(this T window, WindowProcedure newCallback)
         where T : IHandle<WindowHandle>
     {
         // It is possible that the returned window procedure will not be a direct handle.
-        return new WNDPROC(SetWindowLong(
+        return new WNDPROC((delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT>)SetWindowLong(
             window,
             WindowLong.WindowProcedure,
             Marshal.GetFunctionPointerForDelegate(newCallback)));
     }
 
-    public static LResult CallWindowProcedure(
+    public static unsafe LResult CallWindowProcedure(
         WNDPROC previous,
         WindowHandle window,
         MessageType message,
         WParam wParam = default,
         LParam lParam = default)
-        => WindowsImports.CallWindowProcW(previous, window, message, wParam, lParam);
+        => TerraFXWindows.CallWindowProcW(previous, window, (uint)message, wParam, lParam);
 
     public static unsafe string GetClassName<T>(this T window) where T : IHandle<WindowHandle>
     {
@@ -228,7 +236,7 @@ public static partial class Windows
             {
                 fixed (char* b = buffer)
                 {
-                    return (uint)WindowsImports.GetClassNameW(window.Handle, b, (int)buffer.Length);
+                    return (uint)TerraFXWindows.GetClassNameW(window.Handle, (ushort*)b, (int)buffer.Length);
                 }
             },
             ReturnSizeSemantics.BufferTruncates);
@@ -238,47 +246,49 @@ public static partial class Windows
 
     public static WindowHandle SetFocus<T>(this T window) where T : IHandle<WindowHandle>
     {
-        WindowHandle prior = WindowsImports.SetFocus(window.Handle);
+        WindowHandle prior = TerraFXWindows.SetFocus(window.Handle);
         if (prior.IsInvalid)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.NO_ERROR);
+        }
 
         return prior;
     }
 
     public static bool IsWindow<T>(this T window) where T : IHandle<WindowHandle>
-        => WindowsImports.IsWindow(window.Handle);
+        => TerraFXWindows.IsWindow(window.Handle);
 
     public static bool IsWindowVisible<T>(this T window) where T : IHandle<WindowHandle>
-        => WindowsImports.IsWindowVisible(window.Handle);
+        => TerraFXWindows.IsWindowVisible(window.Handle);
 
     public static bool IsWindowUnicode<T>(this T window) where T : IHandle<WindowHandle>
-        => WindowsImports.IsWindowUnicode(window.Handle);
+        => TerraFXWindows.IsWindowUnicode(window.Handle);
 
     public static bool IsChild<TParent, TChild>(this TParent parent, TChild child)
         where TParent : IHandle<WindowHandle>
         where TChild : IHandle<WindowHandle>
-        => WindowsImports.IsChild(parent.Handle, child.Handle);
+        => TerraFXWindows.IsChild(parent.Handle, child.Handle);
 
     /// <summary>
     ///  Get the top child window in the specified window. If passed a null window
     ///  finds the window at the top of the Z order.
     /// </summary>
     public static WindowHandle GetTopWindow<T>(this T window) where T : IHandle<WindowHandle>
-        => WindowsImports.GetTopWindow(window.Handle);
+        => TerraFXWindows.GetTopWindow(window.Handle);
 
-    public static WindowHandle GetForegroundWindow() => WindowsImports.GetForegroundWindow();
+    public static WindowHandle GetForegroundWindow() => TerraFXWindows.GetForegroundWindow();
 
-    public static WindowHandle GetShellWindow() => WindowsImports.GetShellWindow();
+    public static WindowHandle GetShellWindow() => TerraFXWindows.GetShellWindow();
 
-    public static WindowHandle GetActiveWindow() => WindowsImports.GetActiveWindow();
+    public static WindowHandle GetActiveWindow() => TerraFXWindows.GetActiveWindow();
 
     /// <summary>
     ///  Gets the specified related Window to get given Window if it exists. Otherwise returns a null WindowHandle.
     /// </summary>
     public static WindowHandle GetWindow<T>(this T window, GetWindowOption option) where T : IHandle<WindowHandle>
-        => WindowsImports.GetWindow(window.Handle, option);
+        => TerraFXWindows.GetWindow(window.Handle, (uint)option);
 
-    public static WindowHandle GetDesktopWindow() => WindowsImports.GetDesktopWindow();
+    public static WindowHandle GetDesktopWindow() => TerraFXWindows.GetDesktopWindow();
 
     /// <summary>
     ///  Gets the parent window for the given window.
@@ -288,7 +298,7 @@ public static partial class Windows
     /// </returns>
     public static WindowHandle GetParent<T>(this T window) where T : IHandle<WindowHandle>
     {
-        WindowHandle parent = WindowsImports.GetParent(window.Handle);
+        WindowHandle parent = TerraFXWindows.GetParent(window.Handle);
         if (parent.IsNull)
         {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -303,7 +313,7 @@ public static partial class Windows
     /// <param name="convertToGuiIfFalse">Tries to convert the thread to a GUI thread if it isn't already.</param>
     public static bool IsGuiThread(bool convertToGuiIfFalse = false)
     {
-        int result = WindowsImports.IsGUIThread(convertToGuiIfFalse);
+        int result = TerraFXWindows.IsGUIThread(convertToGuiIfFalse);
         return result != 0
             && !convertToGuiIfFalse | result != (int)WindowsError.ERROR_NOT_ENOUGH_MEMORY;
     }
@@ -311,15 +321,17 @@ public static partial class Windows
     /// <summary>
     ///  Registers the given window class.
     /// </summary>
-    public static unsafe Atom RegisterClass(ref WindowClassInfo windowClass)
+    public static unsafe Atom RegisterClass(WindowClassInfo windowClass)
     {
         Atom atom;
         using (WindowClassInfo.Marshaller marshaller = default)
         {
-            marshaller.FillNative(out WNDCLASSEX native, ref windowClass);
-            atom = WindowsImports.RegisterClassExW(ref native);
+            marshaller.FillNative(out WNDCLASSEXW native, ref windowClass);
+            atom = TerraFXWindows.RegisterClassExW(&native);
             if (!atom.IsValid)
+            {
                 Error.ThrowLastError();
+            }
         }
 
         return atom;
@@ -328,10 +340,12 @@ public static partial class Windows
     /// <summary>
     ///  Unregisters the given class Atom.
     /// </summary>
-    public static void UnregisterClass(Atom atom, ModuleInstance? module = null)
+    public static unsafe void UnregisterClass(Atom atom, ModuleInstance? module = null)
     {
-        if (!WindowsImports.UnregisterClassW(atom, module ?? ModuleInstance.Null))
+        if (!TerraFXWindows.UnregisterClassW((ushort*)atom.ATOM, module ?? HINSTANCE.NULL))
+        {
             Error.ThrowLastError();
+        }
     }
 
     /// <summary>
@@ -339,47 +353,53 @@ public static partial class Windows
     /// </summary>
     public static unsafe void UnregisterClass(string className, ModuleInstance? module)
     {
-        if (className == null)
-            throw new ArgumentNullException(nameof(className));
+        ArgumentNullException.ThrowIfNull(className);
 
         fixed (char* name = className)
         {
             Error.ThrowLastErrorIfFalse(
-                WindowsImports.UnregisterClassW((IntPtr)name, module ?? ModuleInstance.Null),
+                TerraFXWindows.UnregisterClassW((ushort*)name, module ?? HINSTANCE.NULL),
                 className);
         }
     }
 
     public static void DestroyWindow<T>(this T window) where T : IHandle<WindowHandle>
-        => Error.ThrowLastErrorIfFalse(WindowsImports.DestroyWindow(window.Handle));
+        => Error.ThrowLastErrorIfFalse(TerraFXWindows.DestroyWindow(window.Handle));
 
-    public static IntPtr GetWindowLong<T>(this T window, WindowLong index) where T : IHandle<WindowHandle>
+    public static unsafe WNDPROC GetWNDPROC<T>(this T window) where T : IHandle<WindowHandle>
+        => (delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT>)window.GetWindowLong(WindowLong.WindowProcedure);
+
+    public static nint GetWindowLong<T>(this T window, WindowLong index) where T : IHandle<WindowHandle>
     {
         // Unfortunate, but this is necessary to tell if there is really an error
         Error.SetLastError(WindowsError.NO_ERROR);
 
-        IntPtr result = Environment.Is64BitProcess
-            ? (IntPtr)WindowsImports.GetWindowLongPtrW(window.Handle, index)
-            : (IntPtr)WindowsImports.GetWindowLongW(window.Handle, index);
+        nint result = Environment.Is64BitProcess
+            ? TerraFXWindows.GetWindowLongPtrW(window.Handle, (int)index)
+            : TerraFXWindows.GetWindowLongW(window.Handle, (int)index);
 
-        if (result == IntPtr.Zero)
+        if (result == 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
 
-    public static IntPtr SetWindowLong<T>(this T window, WindowLong index, IntPtr value)
+    public static nint SetWindowLong<T>(this T window, WindowLong index, nint value)
         where T : IHandle<WindowHandle>
     {
         // Unfortunate, but this is necessary to tell if there is really an error
         Error.SetLastError(WindowsError.NO_ERROR);
 
-        IntPtr result = Environment.Is64BitProcess
-            ? (IntPtr)WindowsImports.SetWindowLongPtrW(window.Handle, index, value.ToInt64())
-            : (IntPtr)WindowsImports.SetWindowLongW(window.Handle, index, value.ToInt32());
+        nint result = Environment.Is64BitProcess
+            ? (IntPtr)TerraFXWindows.SetWindowLongPtrW(window.Handle, (int)index, value)
+            : (IntPtr)TerraFXWindows.SetWindowLongW(window.Handle, (int)index, (int)value);
 
-        if (result == IntPtr.Zero)
+        if (result == 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
@@ -401,7 +421,7 @@ public static partial class Windows
 
             fixed (char* c = buffer)
             {
-                result = WindowsImports.GetWindowTextW(window.Handle, c, buffer.Length);
+                result = TerraFXWindows.GetWindowTextW(window.Handle, (ushort*)c, buffer.Length);
             }
 
             if (result == 0)
@@ -415,37 +435,46 @@ public static partial class Windows
         return text;
     }
 
-    public static void SetWindowText<T>(this T window, string text) where T : IHandle<WindowHandle>
-        => Error.ThrowLastErrorIfFalse(WindowsImports.SetWindowTextW(window.Handle, text));
+    public static unsafe void SetWindowText<T>(this T window, string text) where T : IHandle<WindowHandle>
+    {
+        fixed (char* t = text)
+        {
+            Error.ThrowLastErrorIfFalse(TerraFXWindows.SetWindowTextW(window.Handle, (ushort*)t));
+        }
+    }
 
-    public static IntPtr GetClassLong<T>(this T window, ClassLong index) where T : IHandle<WindowHandle>
+    public static nuint GetClassLong<T>(this T window, ClassLong index) where T : IHandle<WindowHandle>
     {
         // Unfortunate, but this is necessary to tell if there is really an error
         Error.SetLastError(WindowsError.NO_ERROR);
 
-        IntPtr result = Environment.Is64BitProcess
-            ? (IntPtr)WindowsImports.GetClassLongPtrW(window.Handle, index)
-            : (IntPtr)WindowsImports.GetClassLongW(window.Handle, index);
+        nuint result = Environment.Is64BitProcess
+            ? TerraFXWindows.GetClassLongPtrW(window.Handle, (int)index)
+            : TerraFXWindows.GetClassLongW(window.Handle, (int)index);
 
-        if (result == IntPtr.Zero)
+        if (result == 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
 
-    public static IntPtr SetClassLong<T>(this T window, ClassLong index, IntPtr value)
+    public static nuint SetClassLong<T>(this T window, ClassLong index, nuint value)
         where T : IHandle<WindowHandle>
     {
         // Unfortunate, but this is necessary to tell if there is really an error
         // (Even though this is only documented on SetWindowLong, happens here too)
         Error.SetLastError(WindowsError.NO_ERROR);
 
-        IntPtr result = Environment.Is64BitProcess
-            ? (IntPtr)WindowsImports.SetClassLongPtrW(window.Handle, index, value.ToInt64())
-            : (IntPtr)WindowsImports.SetClassLongW(window.Handle, index, value.ToInt32());
+        nuint result = Environment.Is64BitProcess
+            ? TerraFXWindows.SetClassLongPtrW(window.Handle, (int)index, (nint)value)
+            : TerraFXWindows.SetClassLongW(window.Handle, (int)index, (int)value);
 
-        if (result == IntPtr.Zero)
+        if (result == 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
@@ -462,15 +491,13 @@ public static partial class Windows
         BrushHandle value,
         bool ownsHandle = true) where T : IHandle<WindowHandle>
     {
-        IntPtr result = SetClassLong(window, ClassLong.BackgroundBrush, (IntPtr)value.Handle.Value);
+        nuint result = SetClassLong(window, ClassLong.BackgroundBrush, (nuint)value.Handle);
         return new BrushHandle(new HBRUSH((void*)result), ownsHandle);
     }
 
     public static bool ShowWindow<T>(this T window, ShowWindowCommand command)
         where T : IHandle<WindowHandle>
-    {
-        return WindowsImports.ShowWindow(window.Handle, command);
-    }
+        => TerraFXWindows.ShowWindow(window.Handle, (int)command);
 
     /// <summary>
     ///  Moves the window to the requested location. For main windows this is in screen coordinates. For child
@@ -479,7 +506,7 @@ public static partial class Windows
     public static void MoveWindow<T>(this T window, Rectangle position, bool repaint)
         where T : IHandle<WindowHandle>
         => Error.ThrowLastErrorIfFalse(
-            WindowsImports.MoveWindow(window.Handle, position.X, position.Y, position.Width, position.Height, repaint));
+            TerraFXWindows.MoveWindow(window.Handle, position.X, position.Y, position.Width, position.Height, repaint));
 
     /// <summary>
     ///  Dispatches sent messages, waiting for the next message in the calling thread's message queue.
@@ -489,43 +516,63 @@ public static partial class Windows
     ///  If set to -1, will only return thread messages.
     /// </param>
     /// <returns>False when <see cref="MessageType.Quit"/> is returned.</returns>
-    public static bool GetMessage(
+    public static unsafe bool GetMessage(
         out WindowMessage message,
         WindowHandle window = default,
         MessageType minMessage = MessageType.Null,
         MessageType maxMessage = MessageType.Null)
     {
-        IntBoolean result = WindowsImports.GetMessageW(out message, window, (uint)minMessage, (uint)maxMessage);
+        fixed (WindowMessage* m = &message)
+        {
+            BOOL result = TerraFXWindows.GetMessageW((MSG*)m, window, (uint)minMessage, (uint)maxMessage);
 
-        // One special case here is -1 for an error
-        if (result.RawValue == -1)
-            Error.ThrowLastError();
+            // One special case here is -1 for an error
+            if (result == -1)
+            {
+                Error.ThrowLastError();
+            }
 
-        return result;
+            return result;
+        }
     }
 
-    public static bool PeekMessage(
+    public static unsafe bool PeekMessage(
         out WindowMessage message,
         WindowHandle window = default,
         uint minMessage = 0,
         uint maxMessage = 0,
         PeekMessageOptions options = PeekMessageOptions.NoRemove)
     {
-        return WindowsImports.PeekMessageW(out message, window, minMessage, maxMessage, options);
+        fixed (WindowMessage* m = &message)
+        {
+            return TerraFXWindows.PeekMessageW((MSG*)m, window, minMessage, maxMessage, (uint)options);
+        }
     }
 
-    public static bool TranslateMessage(ref WindowMessage message) => WindowsImports.TranslateMessage(ref message);
+    public static unsafe bool TranslateMessage(ref WindowMessage message)
+    {
+        fixed (WindowMessage* m = &message)
+        {
+            return TerraFXWindows.TranslateMessage((MSG*)m);
+        }
+    }
 
-    public static bool DispatchMessage(ref WindowMessage message) => WindowsImports.DispatchMessageW(ref message);
+    public static unsafe LResult DispatchMessage(ref WindowMessage message)
+    {
+        fixed (WindowMessage* m = &message)
+        {
+            return TerraFXWindows.DispatchMessageW((MSG*)m);
+        }
+    }
 
     public static LResult DefaultWindowProcedure<T>(
         this T window,
         MessageType message,
         WParam wParam,
         LParam lParam) where T : IHandle<WindowHandle>
-        => WindowsImports.DefWindowProcW(window.Handle, message, wParam, lParam);
+        => TerraFXWindows.DefWindowProcW(window.Handle, (uint)message, wParam, lParam);
 
-    public static void PostQuitMessage(int exitCode) => WindowsImports.PostQuitMessage(exitCode);
+    public static void PostQuitMessage(int exitCode) => TerraFXWindows.PostQuitMessage(exitCode);
 
     /// <summary>
     ///  Returns the logical client coordinates of the given <paramref name="window"/>.
@@ -534,7 +581,7 @@ public static partial class Windows
         where T : IHandle<WindowHandle>
     {
         Unsafe.SkipInit(out Rect rect);
-        Error.ThrowLastErrorIfFalse(WindowsImports.GetClientRect(window.Handle, &rect));
+        Error.ThrowLastErrorIfFalse(TerraFXWindows.GetClientRect(window.Handle, (RECT*)&rect));
         return rect;
     }
 
@@ -542,10 +589,10 @@ public static partial class Windows
     ///  Dimensions of the bounding rectangle of the specified <paramref name="window"/>
     ///  in screen coordinates relative to the upper-left corner.
     /// </summary>
-    public static Rectangle GetWindowRectangle<T>(this T window) where T : IHandle<WindowHandle>
+    public static unsafe Rectangle GetWindowRectangle<T>(this T window) where T : IHandle<WindowHandle>
     {
-        Rect rect = default;
-        Error.ThrowLastErrorIfFalse(WindowsImports.GetWindowRect(window.Handle, ref rect));
+        Unsafe.SkipInit(out Rect rect);
+        Error.ThrowLastErrorIfFalse(TerraFXWindows.GetWindowRect(window.Handle, (RECT*)&rect));
         return rect;
     }
 
@@ -553,18 +600,20 @@ public static partial class Windows
         where T : IHandle<WindowHandle>
     {
         Error.ThrowLastErrorIfFalse(
-            WindowsImports.SetScrollRange(window.Handle, scrollBar, min, max, redraw));
+            TerraFXWindows.SetScrollRange(window.Handle, (int)scrollBar, min, max, redraw));
     }
 
     public static int SetScrollPosition<T>(this T window, ScrollBar scrollBar, int position, bool redraw)
         where T : IHandle<WindowHandle>
     {
-        int result = WindowsImports.SetScrollPos(window.Handle, scrollBar, position, redraw);
+        int result = TerraFXWindows.SetScrollPos(window.Handle, (int)scrollBar, position, redraw);
 
         // There appears to be a bug in the V6 common controls where they set ERROR_ACCESSDENIED. Clearing
         // LastError doesn't help. Skip error checking if we've set position 0.
         if (result == 0 && position != 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
@@ -576,16 +625,19 @@ public static partial class Windows
         bool redraw) where T : IHandle<WindowHandle>
     {
         scrollInfo.Size = (uint)sizeof(ScrollInfo);
-        int result = WindowsImports.SetScrollInfo(window.Handle, scrollBar, ref scrollInfo, redraw);
-
-        return result;
+        fixed (ScrollInfo* si = &scrollInfo)
+        {
+            return TerraFXWindows.SetScrollInfo(window.Handle, (int)scrollBar, (SCROLLINFO*)si, redraw);
+        }
     }
 
     public static int GetScrollPosition<T>(this T window, ScrollBar scrollBar) where T : IHandle<WindowHandle>
     {
-        int result = WindowsImports.GetScrollPos(window.Handle, scrollBar);
+        int result = TerraFXWindows.GetScrollPos(window.Handle, (int)scrollBar);
         if (result == 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
@@ -594,24 +646,29 @@ public static partial class Windows
         where T : IHandle<WindowHandle>
     {
         scrollInfo.Size = (uint)sizeof(ScrollInfo);
-        Error.ThrowLastErrorIfFalse(WindowsImports.GetScrollInfo(window.Handle, scrollBar, ref scrollInfo));
+        fixed (ScrollInfo* si = &scrollInfo)
+        {
+            Error.ThrowLastErrorIfFalse(TerraFXWindows.GetScrollInfo(window.Handle, (int)scrollBar, (SCROLLINFO*)si));
+        }
     }
 
     public static unsafe int ScrollWindow<T>(this T window, Point delta)
         where T : IHandle<WindowHandle>
     {
-        int result = WindowsImports.ScrollWindowEx(
+        int result = TerraFXWindows.ScrollWindowEx(
             window.Handle,
             delta.X,
             delta.Y,
             null,
             null,
-            IntPtr.Zero,
+            HRGN.NULL,
             null,
-            ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
+            (uint)(ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate));
 
         if (result == 0)
+        {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
+        }
 
         return result;
     }
@@ -622,15 +679,15 @@ public static partial class Windows
         Rect scrollRect = scroll;
         Rect clipRect = clip;
 
-        int result = WindowsImports.ScrollWindowEx(
+        int result = TerraFXWindows.ScrollWindowEx(
             window.Handle,
             delta.X,
             delta.Y,
-            &scrollRect,
-            &clipRect,
-            IntPtr.Zero,
+            (RECT*)&scrollRect,
+            (RECT*)&clipRect,
+            HRGN.NULL,
             null,
-            ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate);
+            (int)(ScrollWindowFlags.Erase | ScrollWindowFlags.Invalidate));
 
         if (result == 0)
         {
@@ -642,7 +699,7 @@ public static partial class Windows
 
     public static KeyboardType GetKeyboardType()
     {
-        int result = WindowsImports.GetKeyboardType(0);
+        int result = TerraFXWindows.GetKeyboardType(0);
         if (result == 0)
         {
             Error.ThrowLastError();
@@ -656,7 +713,7 @@ public static partial class Windows
         // Although not documented this API does not appear to clear last error
         Error.SetLastError(WindowsError.ERROR_SUCCESS);
 
-        int result = WindowsImports.GetKeyboardType(1);
+        int result = TerraFXWindows.GetKeyboardType(1);
         if (result == 0)
         {
             Error.ThrowIfLastErrorNot(WindowsError.ERROR_SUCCESS);
@@ -667,7 +724,7 @@ public static partial class Windows
 
     public static int GetKeyboardFunctionKeyCount()
     {
-        int result = WindowsImports.GetKeyboardType(2);
+        int result = TerraFXWindows.GetKeyboardType(2);
         if (result == 0)
         {
             Error.ThrowLastError();
@@ -676,7 +733,7 @@ public static partial class Windows
         return result;
     }
 
-    public static KeyState GetKeyState(VirtualKey key) => WindowsImports.GetKeyState(key);
+    public static KeyState GetKeyState(VirtualKey key) => (KeyState)TerraFXWindows.GetKeyState((int)key);
 
     public static unsafe string GetKeyNameText(LParam lParam)
     {
@@ -685,7 +742,7 @@ public static partial class Windows
             {
                 fixed (char* b = buffer)
                 {
-                    return checked((uint)WindowsImports.GetKeyNameTextW(lParam, b, (int)buffer.Length));
+                    return checked((uint)TerraFXWindows.GetKeyNameTextW(lParam, (ushort*)b, (int)buffer.Length));
                 }
             },
             ReturnSizeSemantics.BufferTruncates,
@@ -697,9 +754,12 @@ public static partial class Windows
 
     public static WindowHandle GetDialogItem<T>(this T window, int id) where T : IHandle<WindowHandle>
     {
-        WindowHandle control = WindowsImports.GetDlgItem(window.Handle, id);
+        WindowHandle control = TerraFXWindows.GetDlgItem(window.Handle, id);
         if (control.IsInvalid)
+        {
             Error.ThrowLastError();
+        }
+
         return control;
     }
 
@@ -707,24 +767,33 @@ public static partial class Windows
         => WindowsImports.SetCapture(window.Handle);
 
     public static void ReleaseCapture()
-        => Error.ThrowLastErrorIfFalse(WindowsImports.ReleaseCapture());
+        => Error.ThrowLastErrorIfFalse(TerraFXWindows.ReleaseCapture());
 
-    public static TimerId SetTimer<T>(
+    public static unsafe TimerId SetTimer<T>(
         this T window,
         TimerId id,
         uint interval,
         TimerProcedure? callback = null,
         uint delayTolerance = 0) where T : IHandle<WindowHandle>
     {
-        TimerId result = WindowsImports.SetCoalescableTimer(window.Handle, id, interval, callback, delayTolerance);
+        void* cb = callback is null ? null : (void*)Marshal.GetFunctionPointerForDelegate(callback);
+        TimerId result = TerraFXWindows.SetCoalescableTimer(
+            window.Handle,
+            id,
+            interval,
+            (delegate* unmanaged<HWND, uint, nuint, uint, void>)cb,
+            delayTolerance);
+
         if (result == TimerId.Null)
+        {
             Error.ThrowLastError();
+        }
 
         return result;
     }
 
     public static void KillTimer<T>(this T window, TimerId id) where T : IHandle<WindowHandle>
-        => Error.ThrowLastErrorIfFalse(WindowsImports.KillTimer(window.Handle, id));
+        => Error.ThrowLastErrorIfFalse(TerraFXWindows.KillTimer(window.Handle, id));
 
     public static Color GetSystemColor(SystemColor systemColor)
         => new COLORREF(TerraFXWindows.GetSysColor((int)systemColor)).ToColor();
@@ -732,41 +801,62 @@ public static partial class Windows
     /// <summary>
     ///  Gets the value for the given system metric.
     /// </summary>
-    public static int GetSystemMetrics(SystemMetric metric) => WindowsImports.GetSystemMetrics(metric);
+    public static int GetSystemMetrics(SystemMetric metric) => TerraFXWindows.GetSystemMetrics((int)metric);
 
     public static CommandId MessageBox(string text, string caption, MessageBoxType type = MessageBoxType.Ok)
     {
         return MessageBox((WindowHandle)default, text, caption, type);
     }
 
-    public static CommandId MessageBox<T>(
+    public static unsafe CommandId MessageBox<T>(
         this T owner,
         string text,
         string caption,
         MessageBoxType type = MessageBoxType.Ok)
         where T : IHandle<WindowHandle>
     {
-        CommandId result = WindowsImports.MessageBoxExW(owner.Handle, text, caption, type, 0);
-        if (result == CommandId.Error)
-            Error.ThrowLastError();
+        fixed (char* t = text)
+        fixed (char* c = caption)
+        {
+            CommandId result = (CommandId)TerraFXWindows.MessageBoxExW(
+                owner.Handle,
+                (ushort*)t,
+                (ushort*)c,
+                (uint)type,
+                wLanguageId: 0);
 
-        return result;
+            if (result == CommandId.Error)
+            {
+                Error.ThrowLastError();
+            }
+
+            return result;
+        }
     }
 
-    public static WindowClassInfo GetClassInfo(this ModuleInstance instance, Atom atom)
+    public static unsafe WindowClassInfo GetClassInfo(this ModuleInstance instance, Atom atom)
     {
+        WNDCLASSEXW wndClass;
         Error.ThrowLastErrorIfFalse(
-            WindowsImports.GetClassInfoExW(instance ?? ModuleInstance.Null, atom, out WNDCLASSEX wndClass));
+            TerraFXWindows.GetClassInfoExW(
+                instance ?? HINSTANCE.NULL,
+                (ushort*)(nint)atom,
+                &wndClass));
 
         return wndClass;
     }
 
     public static unsafe WindowClassInfo GetClassInfo(this ModuleInstance instance, string className)
     {
-        WNDCLASSEX wndClass;
+        WNDCLASSEXW wndClass;
 
         fixed (char* c = className)
-            Error.ThrowLastErrorIfFalse(WindowsImports.GetClassInfoExW(instance ?? ModuleInstance.Null, (IntPtr)c, out wndClass));
+        {
+            Error.ThrowLastErrorIfFalse(TerraFXWindows.GetClassInfoExW(
+                instance ?? ModuleInstance.Null,
+                (ushort*)c,
+                &wndClass));
+        }
 
         return wndClass;
     }
@@ -796,7 +886,9 @@ public static partial class Windows
         // Passing 0 will give us a read only handle to the string resource
         int result = WindowsImports.LoadStringW(library, identifier, out char* buffer, 0);
         if (result <= 0)
+        {
             Error.ThrowLastError(identifier.ToString());
+        }
 
         // Null is not included in the result
         return new string(buffer, 0, result);
@@ -806,7 +898,9 @@ public static partial class Windows
     {
         HICON handle = TerraFXWindows.LoadIconW(default, (ushort*)(uint)id);
         if (handle == HICON.NULL)
+        {
             Error.ThrowLastError();
+        }
 
         return new IconHandle(handle, ownsHandle: false);
     }
@@ -827,30 +921,33 @@ public static partial class Windows
     public static MonitorHandle MonitorFromWindow<T>(
         this T window,
         MonitorOption option = MonitorOption.DefaultToNull) where T : IHandle<WindowHandle>
-        => WindowsImports.MonitorFromWindow(window.Handle, option);
+        => TerraFXWindows.MonitorFromWindow(window.Handle, (uint)option);
 
-    public static MonitorHandle MonitorFromPoint(Point point, MonitorOption option = MonitorOption.DefaultToNull)
-        => WindowsImports.MonitorFromPoint(point, option);
+    public static unsafe MonitorHandle MonitorFromPoint(Point point, MonitorOption option = MonitorOption.DefaultToNull)
+    {
+        POINT p = *(POINT*)&point;
+        return TerraFXWindows.MonitorFromPoint(p, (uint)option);
+    }
 
-    public static MonitorHandle MonitorFromRectangle(
+    public static unsafe MonitorHandle MonitorFromRectangle(
         Rectangle rectangle,
         MonitorOption option = MonitorOption.DefaultToNull)
     {
         Rect rect = rectangle;
-        return WindowsImports.MonitorFromRect(in rect, option);
+        return TerraFXWindows.MonitorFromRect((RECT*)&rect, (uint)option);
     }
 
     public static unsafe MonitorInfo GetMonitorInfo(this MonitorHandle monitor)
     {
         MonitorInfo info = MonitorInfo.Create();
-        WindowsImports.GetMonitorInfoW(monitor, &info);
+        TerraFXWindows.GetMonitorInfoW(monitor, (MONITORINFO*)&info);
         return info;
     }
 
     public static unsafe ExtendedMonitorInfo GetExtendedMonitorInfo(this MonitorHandle monitor)
     {
         ExtendedMonitorInfo info = ExtendedMonitorInfo.Create();
-        WindowsImports.GetMonitorInfoW(monitor, &info);
+        TerraFXWindows.GetMonitorInfoW(monitor, (MONITORINFO*)&info);
         return info;
     }
 
@@ -861,64 +958,47 @@ public static partial class Windows
         return info;
     }
 
-    public static DpiAwarenessContext GetThreadDpiAwarenessContext() => WindowsImports.GetThreadDpiAwarenessContext();
+    public static unsafe DpiAwarenessContext GetThreadDpiAwarenessContext()
+        => TerraFXWindows.GetThreadDpiAwarenessContext();
 
     public static DpiAwarenessContext SetThreadDpiAwarenessContext(DpiAwarenessContext dpiContext)
-        => WindowsImports.SetThreadDpiAwarenessContext(dpiContext);
+        => TerraFXWindows.SetThreadDpiAwarenessContext(dpiContext);
 
     public static DpiAwareness GetThreadDpiAwareness()
         => GetAwarenessFromDpiAwarenessContext(GetThreadDpiAwarenessContext());
 
     public static DpiAwareness GetAwarenessFromDpiAwarenessContext(DpiAwarenessContext context)
-        => WindowsImports.GetAwarenessFromDpiAwarenessContext(context);
+        => (DpiAwareness)TerraFXWindows.GetAwarenessFromDpiAwarenessContext(context);
 
-    public static uint GetDpiForSystem() => WindowsImports.GetDpiForSystem();
+    public static uint GetDpiForSystem() => TerraFXWindows.GetDpiForSystem();
 
     public static bool SetProcessDpiAwarenessContext(DpiAwarenessContext context)
-        => WindowsImports.SetProcessDpiAwarenessContext(context);
+        => TerraFXWindows.SetProcessDpiAwarenessContext(context);
 
     public static uint GetDpiForWindow<T>(this T window) where T : IHandle<WindowHandle>
-        => WindowsImports.GetDpiForWindow(window.Handle);
+        => TerraFXWindows.GetDpiForWindow(window.Handle);
 
     /// <summary>
     ///  Converts the requested point size to height based on the DPI of the given window.
     /// </summary>
     public static int FontPointSizeToHeight<T>(this T window, int pointSize) where T : IHandle<WindowHandle>
-        => WindowsImports.MulDiv(
+        => TerraFXWindows.MulDiv(
             pointSize,
             (int)window.GetDpiForWindow(),
             72);
 
     /// <summary>
-    ///  Enumerates child windows for the given <paramref name="window"/>.
-    /// </summary>
-    /// <param name="callback">
-    ///  The provided function will be passed child window handles. Return true to continue enumeration.
-    /// </param>
-    /// <param name="parameter">Parameter to pass through to the <paramref name="callback"/>.</param>
-    public static void EnumerateChildWindows<T>(
-        this T window,
-        Func<WindowHandle, LParam, bool> callback,
-        LParam parameter) where T : IHandle<WindowHandle>
-        => WindowsImports.EnumChildWindows(
-            window.Handle,
-            (WindowHandle handle, LParam parameter) => callback(handle, parameter),
-            parameter);
-
-    /// <summary>
-    ///  Enumerates child windows for the given <paramref name="handle"/>.
+    ///  Enumerates child windows for the given <paramref name="parent"/>.
     /// </summary>
     /// <param name="callback">
     ///  The provided function will be passed child window handles. Return true to continue enumeration.
     /// </param>
     public static void EnumerateChildWindows(
-        WindowHandle handle,
-        Func<WindowHandle, bool> callback,
-        LParam parameter)
-        => WindowsImports.EnumChildWindows(
-            handle,
-            (WindowHandle handle, LParam parameter) => callback(handle),
-            parameter);
+        this WindowHandle parent,
+        Func<WindowHandle, bool> callback)
+    {
+        using var enumerator = new ChildWindowEnumerator(parent, callback);
+    }
 
     /// <summary>
     ///  Sets the graphics mode for the window's device context.

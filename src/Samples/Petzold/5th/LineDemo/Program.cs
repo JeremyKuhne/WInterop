@@ -19,10 +19,9 @@ internal static class Program
     private static void Main()
     {
         ModuleInstance module = ModuleInstance.GetModuleForType(typeof(Program));
-        WindowClassInfo wndclass = new()
+        WindowClassInfo wndclass = new(WindowProcedure)
         {
             Style = ClassStyle.HorizontalRedraw | ClassStyle.VerticalRedraw,
-            WindowProcedure = WindowProcedure,
             Instance = module,
             Icon = IconId.Application,
             Cursor = CursorId.Arrow,
@@ -30,7 +29,7 @@ internal static class Program
             ClassName = "LineDemo"
         };
 
-        Windows.RegisterClass(ref wndclass);
+        Windows.RegisterClass(wndclass);
 
         WindowHandle window = Windows.CreateWindow(
             "LineDemo",

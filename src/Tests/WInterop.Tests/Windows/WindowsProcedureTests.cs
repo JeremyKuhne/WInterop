@@ -16,16 +16,15 @@ public class WindowsProcedureTests
     [Fact]
     public void WindowCallback_SendMessage()
     {
-        WindowClassInfo myClass = new()
+        WindowClassInfo myClass = new((window, message, wParam, lParam) =>
+        {
+            return 42;
+        })
         {
             ClassName = "WindowCallback_SendMessage",
-            WindowProcedure = (window, message, wParam, lParam) =>
-            {
-                return 42;
-            }
         };
 
-        Atom atom = Windows.RegisterClass(ref myClass);
+        Atom atom = Windows.RegisterClass(myClass);
         atom.IsValid.Should().BeTrue();
 
         try
@@ -52,16 +51,15 @@ public class WindowsProcedureTests
     public void WindowCallback_Subclass()
     {
         int value = 42;
-        WindowClassInfo myClass = new()
+        WindowClassInfo myClass = new((window, message, wParam, lParam) =>
         {
-            ClassName = "WindowCallback_Subclass",
-            WindowProcedure = (window, message, wParam, lParam) =>
-            {
-                return value;
-            }
+            return value;
+        })
+        {
+            ClassName = "WindowCallback_Subclass"
         };
 
-        Atom atom = Windows.RegisterClass(ref myClass);
+        Atom atom = Windows.RegisterClass(myClass);
         atom.IsValid.Should().BeTrue();
 
         try

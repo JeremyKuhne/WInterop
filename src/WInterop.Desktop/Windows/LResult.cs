@@ -22,4 +22,6 @@ public struct LResult
     public static implicit operator nint(LResult value) => value.Value;
     public static unsafe implicit operator void*(LResult value) => (void*)value.Value;
     public static unsafe implicit operator LResult(void* value) => new((nint)value);
+    public static implicit operator LRESULT(LResult value) => new(value);
+    public static implicit operator LResult(LRESULT value) => new(value);
 }
