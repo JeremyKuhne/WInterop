@@ -15,6 +15,11 @@ namespace WInterop.Com;
 ///  <para>
 ///   This should not be created directly. Instead use <see cref="Lifetime{TVTable, TObject}.Allocate"/>.
 ///  </para>
+///  <para>
+///   A COM object's memory layout is a virtual function table (vtable) pointer followed by instance data. We're
+///   effectively manually creating a COM object here that contains instance data of a GCHandle to the related
+///   managed object and a ref count.
+///  </para>
 /// </remarks>
 public unsafe struct Lifetime<TVTable, TObject> where TVTable : unmanaged
 {
