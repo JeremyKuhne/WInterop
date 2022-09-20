@@ -7,16 +7,16 @@ using WInterop.Errors;
 
 namespace WInterop.Com.Native;
 
-public unsafe partial struct Unknown
+public static class Unknown
 {
-    public static class CCW
+    public unsafe class CCW
     {
-        private static readonly VTable* CCWVTable = AllocateVTable();
+        private static readonly IUnknown.Vtbl<IUnknown>* CCWVTable = AllocateVTable();
 
-        private static unsafe VTable* AllocateVTable()
+        private static unsafe IUnknown.Vtbl<IUnknown>* AllocateVTable()
         {
-            // Allocate and create a singular VTable for this type projection.
-            var vtable = (VTable*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(CCW), sizeof(VTable));
+            // Allocate and create a static VTable for this type projection.
+            var vtable = (IUnknown.Vtbl<IUnknown>*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(CCW), sizeof(IUnknown.Vtbl<IUnknown>));
 
             // IUnknown
             vtable->QueryInterface = &QueryInterface;
@@ -25,30 +25,35 @@ public unsafe partial struct Unknown
             return vtable;
         }
 
-        public static unsafe IntPtr CreateInstance(object @object)
-            => (IntPtr)Lifetime<VTable, object>.Allocate(@object, CCWVTable);
+        public static unsafe IUnknown* CreateInstance(object @object)
+            => (IUnknown*)Lifetime<IUnknown.Vtbl<IUnknown>, object>.Allocate(@object, CCWVTable);
 
         [UnmanagedCallersOnly]
-        private static unsafe HResult QueryInterface(void* @this, Guid* iid, void* ppObject)
+        private static unsafe int QueryInterface(IUnknown* @this, Guid* iid, void** ppObject)
         {
-            if (*iid == IID_IUnknown)
+            if (ppObject is null)
             {
-                ppObject = @this;
+                return (int)HResult.E_POINTER;
+            }
+
+            if (*iid == typeof(IUnknown).GUID)
+            {
+                *ppObject = @this;
             }
             else
             {
-                ppObject = null;
-                return HResult.E_NOINTERFACE;
+                *ppObject = null;
+                return (int)HResult.E_NOINTERFACE;
             }
 
-            Lifetime<VTable, object>.AddRef(@this);
-            return HResult.S_OK;
+            Lifetime<IUnknown.Vtbl<IUnknown>, object>.AddRef(@this);
+            return (int)HResult.S_OK;
         }
 
         [UnmanagedCallersOnly]
-        private static unsafe uint AddRef(void* @this) => Lifetime<VTable, object>.AddRef(@this);
+        private static unsafe uint AddRef(IUnknown* @this) => Lifetime<IUnknown.Vtbl<IUnknown>, object>.AddRef(@this);
 
         [UnmanagedCallersOnly]
-        private static unsafe uint Release(void* @this) => Lifetime<VTable, object>.Release(@this);
+        private static unsafe uint Release(IUnknown* @this) => Lifetime<IUnknown.Vtbl<IUnknown>, object>.Release(@this);
     }
 }

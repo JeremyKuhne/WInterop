@@ -7,16 +7,25 @@ using static WInterop.Memory.Memory;
 
 namespace WInterop.Com;
 
+/// <summary>
+///  Lifetime management helper for a COM callable wrapper. It holds the created <typeparamref name="TObject"/>
+///  wrapper with he given <typeparamref name="TVTable"/>.
+/// </summary>
+/// <remarks>
+///  <para>
+///   This should not be created directly. Instead use <see cref="Lifetime{TVTable, TObject}.Allocate"/>.
+///  </para>
+/// </remarks>
 public unsafe struct Lifetime<TVTable, TObject> where TVTable : unmanaged
 {
     public TVTable* VTable;
-    public void* Handle;
+    public IUnknown* Handle;
     public uint RefCount;
 
-    public static unsafe uint AddRef(void* @this)
+    public static unsafe uint AddRef(IUnknown* @this)
         => Interlocked.Increment(ref ((Lifetime<TVTable, TObject>*)@this)->RefCount);
 
-    public static unsafe uint Release(void* @this)
+    public static unsafe uint Release(IUnknown* @this)
     {
         var lifetime = (Lifetime<TVTable, TObject>*)@this;
         Debug.Assert(lifetime->RefCount > 0);
@@ -46,17 +55,21 @@ public unsafe struct Lifetime<TVTable, TObject> where TVTable : unmanaged
     /// </remarks>
     public static unsafe Lifetime<TVTable, TObject>* Allocate(TObject @object, TVTable* vtable)
     {
+        // Manually allocate a native instance of this struct.
         var wrapper = (Lifetime<TVTable, TObject>*)CoTaskAllocate((nuint)sizeof(Lifetime<TVTable, TObject>));
 
-        // Create the wrapper instance.
+        // Assign a pointer to the vtable, allocate a GCHandle for the related object, and set the initial ref count.
         wrapper->VTable = vtable;
-        wrapper->Handle = (void*)GCHandle.ToIntPtr(GCHandle.Alloc(@object));
+        wrapper->Handle = (IUnknown*)GCHandle.ToIntPtr(GCHandle.Alloc(@object));
         wrapper->RefCount = 1;
 
         return wrapper;
     }
 
-    public static TObject? GetObject(void* @this)
+    /// <summary>
+    ///  Gets the object wrapped by a lifetime wrapper.
+    /// </summary>
+    public static TObject? GetObject(IUnknown* @this)
     {
         var lifetime = (Lifetime<TVTable, TObject>*)@this;
         return (TObject?)GCHandle.FromIntPtr((IntPtr)lifetime->Handle).Target;

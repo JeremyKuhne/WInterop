@@ -18,7 +18,7 @@ public class MarshallingTests
     public unsafe void UnknownBasics()
     {
         using var cleaner = new TestFileCleaner();
-        Unknown* unknown = (Unknown*)CreateStorage(cleaner.GetTestPath(), InterfaceIds.IID_IStorage);
+        IUnknown* unknown = (IUnknown*)CreateStorage(cleaner.GetTestPath(), InterfaceIds.IID_IStorage);
 
         uint refCount = unknown->AddRef();
         refCount.Should().Be(2);
@@ -26,8 +26,8 @@ public class MarshallingTests
         refCount.Should().Be(1);
 
         Guid riid = InterfaceIds.IID_IStorage;
-        Unknown* queried;
-        HResult result = unknown->QueryInterface(&riid, (void**)&queried);
+        IUnknown* queried;
+        HResult result = unknown->QueryInterface(&riid, (void**)&queried).ToHResult();
         result.Should().Be(HResult.S_OK);
 
         refCount = queried->AddRef();
@@ -44,8 +44,7 @@ public class MarshallingTests
     public unsafe void Unknown_RoundTrip()
     {
         object managed = new();
-        var ccw = Unknown.CCW.CreateInstance(managed);
-        Unknown* unknown = (Unknown*)ccw;
+        IUnknown* unknown = Unknown.CCW.CreateInstance(managed);
 
         uint refCount = unknown->AddRef();
         refCount.Should().Be(2);

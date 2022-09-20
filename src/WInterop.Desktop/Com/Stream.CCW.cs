@@ -4,13 +4,12 @@
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using WInterop.Com.Native;
 using WInterop.Errors;
 using IOStream = System.IO.Stream;
 
 namespace WInterop.Com;
 
-public unsafe partial struct Stream
+public readonly unsafe partial struct Stream
 {
     private static unsafe class CCW
     {
@@ -46,35 +45,40 @@ public unsafe partial struct Stream
         public static IStream* CreateInstance(IOStream stream)
             => (IStream*)Lifetime<IStream.Vtbl<IStream>, IOStream>.Allocate(stream, s_vtable);
 
-        private static IOStream? Stream(void* @this)
-            => Lifetime<IStream.Vtbl<IStream>, IOStream>.GetObject(@this);
+        private static IOStream? Stream(IStream* @this)
+            => Lifetime<IStream.Vtbl<IStream>, IOStream>.GetObject((IUnknown*)@this);
 
         [UnmanagedCallersOnly]
-        private static int QueryInterface(void* @this, Guid* iid, void* ppObject)
+        private static int QueryInterface(IStream* @this, Guid* iid, void** ppObject)
         {
-            if (*iid == Unknown.IID_IUnknown
+            if (ppObject is null)
+            {
+                return (int)HResult.E_POINTER;
+            }
+
+            if (*iid == typeof(IUnknown).GUID
                 || *iid == typeof(IStream).GUID)
             {
-                ppObject = @this;
+                *ppObject = @this;
             }
             else
             {
-                ppObject = null;
+                *ppObject = null;
                 return (int)HResult.E_NOINTERFACE;
             }
 
-            Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef(@this);
+            Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef((IUnknown*)@this);
             return (int)HResult.S_OK;
         }
 
         [UnmanagedCallersOnly]
-        private static uint AddRef(void* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef(@this);
+        private static uint AddRef(IStream* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef((IUnknown*)@this);
 
         [UnmanagedCallersOnly]
-        private static uint Release(void* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.Release(@this);
+        private static uint Release(IStream* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.Release((IUnknown*)@this);
 
         [UnmanagedCallersOnly]
-        private static unsafe int Read(void* @this, void* pv, uint cb, uint* pcbRead)
+        private static unsafe int Read(IStream* @this, void* pv, uint cb, uint* pcbRead)
         {
             try
             {
@@ -101,7 +105,7 @@ public unsafe partial struct Stream
         }
 
         [UnmanagedCallersOnly]
-        private static unsafe int Write(void* @this, void* pv, uint cb, uint* pcbWritten)
+        private static unsafe int Write(IStream* @this, void* pv, uint cb, uint* pcbWritten)
         {
             try
             {
@@ -128,7 +132,7 @@ public unsafe partial struct Stream
         }
 
         [UnmanagedCallersOnly]
-        private static unsafe int Seek(void* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition)
+        private static unsafe int Seek(IStream* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition)
         {
             try
             {
@@ -166,7 +170,7 @@ public unsafe partial struct Stream
         }
 
         [UnmanagedCallersOnly]
-        private static unsafe int SetSize(void* @this, ULARGE_INTEGER libNewSize)
+        private static unsafe int SetSize(IStream* @this, ULARGE_INTEGER libNewSize)
         {
             try
             {
@@ -187,7 +191,7 @@ public unsafe partial struct Stream
         }
 
         [UnmanagedCallersOnly]
-        private static unsafe int CopyTo(void* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten)
+        private static unsafe int CopyTo(IStream* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten)
         {
             try
             {
@@ -244,7 +248,7 @@ public unsafe partial struct Stream
         }
 
         [UnmanagedCallersOnly]
-        private static unsafe int Commit(void* @this, uint grfCommitFlags)
+        private static unsafe int Commit(IStream* @this, uint grfCommitFlags)
         {
             try
             {
@@ -285,7 +289,7 @@ public unsafe partial struct Stream
         }
 
         [UnmanagedCallersOnly]
-        private static unsafe int Stat(void* @this, STATSTG* pstatstg, uint grfStatFlag)
+        private static unsafe int Stat(IStream* @this, STATSTG* pstatstg, uint grfStatFlag)
         {
             try
             {
@@ -321,7 +325,7 @@ public unsafe partial struct Stream
         }
 
         [UnmanagedCallersOnly]
-        private static unsafe int Clone(void* @this, IStream** ppstm)
+        private static unsafe int Clone(IStream* @this, IStream** ppstm)
         {
             try
             {
