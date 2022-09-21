@@ -57,7 +57,8 @@ public readonly unsafe partial struct Stream
             }
 
             if (*iid == typeof(IUnknown).GUID
-                || *iid == typeof(IStream).GUID)
+                || *iid == typeof(IStream).GUID
+                || *iid == typeof(ISequentialStream).GUID)
             {
                 *ppObject = @this;
             }

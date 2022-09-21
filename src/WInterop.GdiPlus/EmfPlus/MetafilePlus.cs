@@ -22,7 +22,7 @@ public class MetafilePlus : Image
         EmfType emfType = EmfType.EmfPlusDual,
         string? description = null)
     {
-        _stream = Stream.FromStream(stream);
+        _stream = new(stream);
         _gpImage = CreateRecordMetafile(
             _stream,
             deviceContext,
@@ -36,7 +36,7 @@ public class MetafilePlus : Image
     public MetafilePlus(System.IO.Stream stream)
     {
         stream.Position = 0;
-        _stream = Stream.FromStream(stream);
+        _stream = new(stream);
         GdiPlusImports.GdipCreateMetafileFromStream(_stream, out GpMetafile metafile).ThrowIfFailed();
         _gpImage = (GpImage)metafile;
     }
