@@ -29,7 +29,7 @@ public class WindowsProcedureTests
 
         try
         {
-            WindowHandle window = Windows.CreateWindow(atom, style: WindowStyles.Minimize | WindowStyles.Diabled);
+            WindowHandle window = Windows.CreateWindow(atom, style: WindowStyles.Minimize | WindowStyles.Disabled);
             window.IsInvalid.Should().BeFalse();
 
             try
@@ -64,7 +64,7 @@ public class WindowsProcedureTests
 
         try
         {
-            WindowHandle window = Windows.CreateWindow(atom, style: WindowStyles.Minimize | WindowStyles.Diabled);
+            WindowHandle window = Windows.CreateWindow(atom, style: WindowStyles.Minimize | WindowStyles.Disabled);
             window.IsInvalid.Should().BeFalse();
 
             try
