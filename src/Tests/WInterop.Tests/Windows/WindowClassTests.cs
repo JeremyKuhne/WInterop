@@ -51,7 +51,7 @@ public class WindowClassTests
         WindowHandle window = default;
         try
         {
-            window = Windows.CreateWindow("BUTTON", "CreateWindow_Global", WindowStyles.Diabled | WindowStyles.Minimize);
+            window = Windows.CreateWindow("BUTTON", "CreateWindow_Global", WindowStyles.Disabled | WindowStyles.Minimize);
             window.IsInvalid.Should().BeFalse();
         }
         finally
@@ -66,7 +66,7 @@ public class WindowClassTests
         WindowHandle window = default;
         try
         {
-            window = Windows.CreateWindow("button", "GetClassName_Global", WindowStyles.Diabled | WindowStyles.Minimize);
+            window = Windows.CreateWindow("button", "GetClassName_Global", WindowStyles.Disabled | WindowStyles.Minimize);
             window.IsInvalid.Should().BeFalse();
             window.GetClassName().Should().Be("Button");
         }
@@ -82,12 +82,12 @@ public class WindowClassTests
         WindowHandle window = new();
         try
         {
-            window = Windows.CreateWindow("bUttOn", "GetClassLong_GlobalAtom", WindowStyles.Diabled | WindowStyles.Minimize);
+            window = Windows.CreateWindow("bUttOn", "GetClassLong_GlobalAtom", WindowStyles.Disabled | WindowStyles.Minimize);
             window.IsInvalid.Should().BeFalse();
             Atom atom = (ushort)window.GetClassLong(ClassLong.Atom);
             atom.IsValid.Should().BeTrue();
             window.DestroyWindow();
-            window = Windows.CreateWindow(atom, "GetClassLong_GlobalAtom", WindowStyles.Diabled | WindowStyles.Minimize);
+            window = Windows.CreateWindow(atom, "GetClassLong_GlobalAtom", WindowStyles.Disabled | WindowStyles.Minimize);
             window.GetClassName().Should().Be("Button");
         }
         finally
@@ -175,7 +175,7 @@ public class WindowClassTests
             WindowHandle window = Windows.CreateWindow(
                 atom,
                 "RegisterClass_UnregisterActiveWindow",
-                WindowStyles.Diabled | WindowStyles.Minimize);
+                WindowStyles.Disabled | WindowStyles.Minimize);
 
             window.IsInvalid.Should().BeFalse();
 
@@ -216,7 +216,7 @@ public class WindowClassTests
             WindowHandle window = Windows.CreateWindow(
                 atom,
                 "RegisterClass_GetSetClassLong_Window",
-                WindowStyles.Diabled | WindowStyles.Minimize);
+                WindowStyles.Disabled | WindowStyles.Minimize);
 
             window.IsInvalid.Should().BeFalse();
 
@@ -260,7 +260,7 @@ public class WindowClassTests
             WindowHandle window = Windows.CreateWindow(
                 atom,
                 "RegisterClass_GetSetWindowLong_Window",
-                WindowStyles.Diabled | WindowStyles.Minimize);
+                WindowStyles.Disabled | WindowStyles.Minimize);
 
             window.IsInvalid.Should().BeFalse();
 

@@ -35,7 +35,7 @@ public enum WindowStyles : uint
     /// <summary>
     ///  Initially disabled. (WS_DISABLED)
     /// </summary>
-    Diabled = 0x08000000,
+    Disabled = 0x08000000,
 
     /// <summary>
     ///  Clips child windows relative to each other, preventing drawing in each-other
