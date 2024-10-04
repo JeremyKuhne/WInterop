@@ -52,8 +52,7 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
         {
             if (_lastEntryFound) return false;
 
-            if (_buffer == null)
-                throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+            ObjectDisposedException.ThrowIf(_buffer == null, typeof(VolumeMountPointsEnumerable));
 
             Current = _findHandle is null
                 ? FindFirstVolume()
@@ -64,18 +63,17 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
 
         private unsafe string FindFirstVolume()
         {
-            if (_buffer is null)
-                throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+            ObjectDisposedException.ThrowIf(_buffer is null, typeof(VolumeMountPointsEnumerable));
 
             // Need at least some length on initial call or we'll get ERROR_INVALID_PARAMETER
             _buffer.EnsureCharCapacity(400);
 
             HANDLE handle;
-            fixed (void* n = _volumeName)
+            fixed (char* n = _volumeName)
             {
                 handle = TerraFXWindows.FindFirstVolumeMountPointW(
-                    (ushort*)n,
-                    _buffer.UShortPointer,
+                    n,
+                    _buffer.CharPointer,
                     _buffer.CharCapacity);
             }
 
@@ -106,10 +104,9 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
         {
             Debug.Assert(_findHandle is not null);
 
-            if (_buffer is null)
-                throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+            ObjectDisposedException.ThrowIf(_buffer is null, typeof(VolumeMountPointsEnumerable));
 
-            if (!TerraFXWindows.FindNextVolumeMountPointW(_findHandle, _buffer.UShortPointer, _buffer.CharCapacity))
+            if (!TerraFXWindows.FindNextVolumeMountPointW(_findHandle, _buffer.CharPointer, _buffer.CharCapacity))
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)

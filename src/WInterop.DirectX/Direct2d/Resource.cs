@@ -47,7 +47,7 @@ public readonly unsafe struct Resource : Resource.Interface
 
     internal static ref Brush From<TFrom>(in TFrom from)
         where TFrom : unmanaged, Interface
-        => ref Unsafe.AsRef<Brush>(Unsafe.AsPointer(ref Unsafe.AsRef(from)));
+        => ref Unsafe.AsRef<Brush>(Unsafe.AsPointer(ref Unsafe.AsRef(in from)));
 
     public void Dispose() => _resource->Release();
 

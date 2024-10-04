@@ -46,7 +46,7 @@ public readonly unsafe struct Geometry : Geometry.Interface, IDisposable
 
     internal static ref Geometry From<TFrom>(in TFrom from)
         where TFrom : unmanaged, Interface
-        => ref Unsafe.AsRef<Geometry>(Unsafe.AsPointer(ref Unsafe.AsRef(from)));
+        => ref Unsafe.AsRef<Geometry>(Unsafe.AsPointer(ref Unsafe.AsRef(in from)));
 
     public void Dispose() => _handle->Release();
 

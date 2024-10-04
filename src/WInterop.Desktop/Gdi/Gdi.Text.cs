@@ -35,9 +35,9 @@ public static unsafe partial class Gdi
     /// </summary>
     public static bool TextOut(this in DeviceContext context, Point position, ReadOnlySpan<char> text)
     {
-        fixed (void* t = text)
+        fixed (char* t = text)
         {
-            return TerraFXWindows.TextOutW(context, position.X, position.Y, (ushort*)t, text.Length);
+            return TerraFXWindows.TextOutW(context, position.X, position.Y, t, text.Length);
         }
     }
 
@@ -96,7 +96,7 @@ public static unsafe partial class Gdi
             // The string won't be changed, we can just pin
             fixed (char* c = text)
             {
-                int result = TerraFXWindows.DrawTextExW(context, (ushort*)c, text.Length, (RECT*)bounds, 0, dtp);
+                int result = TerraFXWindows.DrawTextExW(context, c, text.Length, (RECT*)bounds, 0, dtp);
                 if (result == 0)
                 {
                     Error.ThrowLastError();
@@ -110,7 +110,7 @@ public static unsafe partial class Gdi
         text.CopyTo(buffer.AsSpan());
         fixed (char* c = buffer)
         {
-            int result = TerraFXWindows.DrawTextExW(context, (ushort*)c, text.Length, (RECT*)bounds, 0, dtp);
+            int result = TerraFXWindows.DrawTextExW(context, c, text.Length, (RECT*)bounds, 0, dtp);
             if (result == 0)
             {
                 Error.ThrowLastError();
@@ -179,7 +179,7 @@ public static unsafe partial class Gdi
                 (uint)clippingPrecision,
                 (uint)quality,
                 (uint)((byte)pitch | (byte)family),
-                (ushort*)t));
+                (char*)t));
         }
     }
 
@@ -218,7 +218,7 @@ public static unsafe partial class Gdi
 
         logFont.FaceName.CopyFrom(faceName);
 
-        List<FontInformation> info = new();
+        List<FontInformation> info = [];
         GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);
         try
         {

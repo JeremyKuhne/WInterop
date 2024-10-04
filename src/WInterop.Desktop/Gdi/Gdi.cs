@@ -17,7 +17,7 @@ public static partial class Gdi
         fixed (char* dr = driver)
         fixed (char* de = device)
         {
-            return new(TerraFXWindows.CreateDCW((ushort*)dr, (ushort*)de, null, null), ownsHandle: true);
+            return new(TerraFXWindows.CreateDCW(dr, de, null, null), ownsHandle: true);
         }
     }
 
@@ -28,7 +28,7 @@ public static partial class Gdi
     {
         fixed (char* c = "DISPLAY")
         {
-            return new(TerraFXWindows.CreateDCW((ushort*)c, null, null, null), ownsHandle: true);
+            return new(TerraFXWindows.CreateDCW(c, null, null, null), ownsHandle: true);
         }
     }
 
@@ -61,7 +61,7 @@ public static partial class Gdi
         fixed (char* dr = driver)
         fixed (char* de = device)
         {
-            return new(TerraFXWindows.CreateICW((ushort*)dr, (ushort*)de, null, null), ownsHandle: true);
+            return new(TerraFXWindows.CreateICW(dr, de, null, null), ownsHandle: true);
         }
     }
 
@@ -203,7 +203,9 @@ public static partial class Gdi
     {
         PAINTSTRUCT ps = default;
         TerraFXWindows.BeginPaint(window, &ps);
+#pragma warning disable CS9091 // This returns local by reference but it is not a ref local
         paintStruct = ps;
+#pragma warning restore CS9091
         return new DeviceContext(ps, window);
     }
 
@@ -395,7 +397,7 @@ public static partial class Gdi
     public static unsafe Rectangle GetBoundsRect(this in DeviceContext context, bool reset = false)
     {
         Rect rect;
-        TerraFXWindows.GetBoundsRect(context, (RECT*)&rect, reset ? (uint)BoundsState.Reset : default);
+        _ = TerraFXWindows.GetBoundsRect(context, (RECT*)&rect, reset ? (uint)BoundsState.Reset : default);
         return rect;
     }
 
@@ -418,7 +420,7 @@ public static partial class Gdi
 
         if (count == 0)
         {
-            return Span<PaletteEntry>.Empty;
+            return [];
         }
 
         PaletteEntry[] entries = new PaletteEntry[count];
@@ -437,7 +439,7 @@ public static partial class Gdi
         uint count = TerraFXWindows.GetSystemPaletteEntries(deviceContext, 0, 0, null);
 
         if (count == 0)
-            return Span<PaletteEntry>.Empty;
+            return [];
 
         PaletteEntry[] entries = new PaletteEntry[count];
 

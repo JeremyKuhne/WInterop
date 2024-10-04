@@ -29,13 +29,13 @@ public struct OwnedMemoryEnumerable<T> : IEnumerable<T>, IEnumerator<T>
         _index = -1;
     }
 
-    public T Current => _index < 0 ? throw new InvalidOperationException() : _memory.Span[_index];
+    public readonly T Current => _index < 0 ? throw new InvalidOperationException() : _memory.Span[_index];
 
-    object? IEnumerator.Current => Current;
+    readonly object? IEnumerator.Current => Current;
 
-    public IEnumerator<T> GetEnumerator() => this;
+    public readonly IEnumerator<T> GetEnumerator() => this;
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public bool MoveNext()
     {
@@ -54,5 +54,5 @@ public struct OwnedMemoryEnumerable<T> : IEnumerable<T>, IEnumerator<T>
 
     public void Reset() => _index = -1;
 
-    public void Dispose() => _owner.Dispose();
+    public readonly void Dispose() => _owner.Dispose();
 }

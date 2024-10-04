@@ -25,5 +25,5 @@ public readonly struct PixelFormat
         AlphaMode = (AlphaMode)format.alphaMode;
     }
 
-    internal D2D1_PIXEL_FORMAT ToD2D() => Unsafe.As<PixelFormat, D2D1_PIXEL_FORMAT>(ref Unsafe.AsRef(this));
+    internal D2D1_PIXEL_FORMAT ToD2D() => Unsafe.As<PixelFormat, D2D1_PIXEL_FORMAT>(ref Unsafe.AsRef(in this));
 }

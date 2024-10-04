@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace WInterop.Storage.Native;
 
 /// <summary>
@@ -12,11 +14,12 @@ public struct FILE_PROCESS_IDS_USING_FILE_INFORMATION
 
     public uint NumberOfProcessIdsInList;
 
-    private UIntPtr _ProcessIdList;
+    private readonly UIntPtr _ProcessIdList;
 
     /// <summary>
     ///  While internal process ids are always the size of an native int they're always returned as
     ///  a uint in Win32 APIs.
     /// </summary>
-    public ReadOnlySpan<UIntPtr> ProcessIdList => TrailingArray<UIntPtr>.GetBuffer(in _ProcessIdList, NumberOfProcessIdsInList);
+    [UnscopedRef]
+    public readonly ReadOnlySpan<UIntPtr> ProcessIdList => TrailingArray<UIntPtr>.GetBuffer(in _ProcessIdList, NumberOfProcessIdsInList);
 }

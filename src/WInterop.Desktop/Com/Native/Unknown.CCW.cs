@@ -28,7 +28,7 @@ public static class Unknown
         public static unsafe IUnknown* CreateInstance(object @object)
             => (IUnknown*)Lifetime<IUnknown.Vtbl<IUnknown>, object>.Allocate(@object, CCWVTable);
 
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static unsafe int QueryInterface(IUnknown* @this, Guid* iid, void** ppObject)
         {
             if (ppObject is null)
@@ -50,10 +50,10 @@ public static class Unknown
             return (int)HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static unsafe uint AddRef(IUnknown* @this) => Lifetime<IUnknown.Vtbl<IUnknown>, object>.AddRef(@this);
 
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static unsafe uint Release(IUnknown* @this) => Lifetime<IUnknown.Vtbl<IUnknown>, object>.Release(@this);
     }
 }

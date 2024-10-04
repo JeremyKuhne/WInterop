@@ -43,7 +43,7 @@ public class Basic
     [Fact]
     public void BasicEnumerateLocations()
     {
-        string[] knownLocations = { "CurrentUser", "LocalMachine", "CurrentService", "Services", "Users", "CurrentUserGroupPolicy", "LocalMachineGroupPolicy", "LocalMachineEnterprise" };
+        string[] knownLocations = ["CurrentUser", "LocalMachine", "CurrentService", "Services", "Users", "CurrentUserGroupPolicy", "LocalMachineGroupPolicy", "LocalMachineEnterprise"];
         var locations = WInterop.Cryptography.Cryptography.EnumerateSystemStoreLocations();
         knownLocations.Should().BeSubsetOf(locations);
     }
@@ -51,7 +51,7 @@ public class Basic
     [Fact]
     public void BasicEnumeratePhysical()
     {
-        string[] knownPhysical = { ".Default", ".AuthRoot", ".GroupPolicy", ".Enterprise" };
+        string[] knownPhysical = [".Default", ".AuthRoot", ".GroupPolicy", ".Enterprise"];
         var physical = WInterop.Cryptography.Cryptography.EnumeratePhysicalStores(SystemStoreLocation.LocalMachine, "Root");
         knownPhysical.Should().BeSubsetOf(physical.Select(p => p.PhysicalStoreName));
     }

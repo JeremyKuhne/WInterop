@@ -31,7 +31,7 @@ public static partial class Gdi
             {
                 d->Size = (ushort)sizeof(DeviceMode);
 
-                bool result = TerraFXWindows.EnumDisplaySettingsW((ushort*)n, _modeIndex, (DEVMODEW*)d);
+                bool result = TerraFXWindows.EnumDisplaySettingsW(n, _modeIndex, (DEVMODEW*)d);
 
                 if (!result
                     || _modeIndex == GdiDefines.ENUM_CURRENT_SETTINGS

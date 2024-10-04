@@ -49,7 +49,7 @@ public static unsafe class TerraFxExtensions
 
     public static Span<uint> SubAuthorities(this ref SID sid)
     {
-        fixed (uint* sa = sid.SubAuthority)
+        fixed (uint* sa = &sid.SubAuthority.e0)
         {
             return new(sa, sid.SubAuthorityCount);
         }

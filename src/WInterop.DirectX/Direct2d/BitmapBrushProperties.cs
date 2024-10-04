@@ -26,8 +26,8 @@ public struct BitmapBrushProperties
     }
 
     public static implicit operator BitmapBrushProperties(in D2D1_BITMAP_BRUSH_PROPERTIES properties)
-        => Unsafe.As<D2D1_BITMAP_BRUSH_PROPERTIES, BitmapBrushProperties>(ref Unsafe.AsRef(properties));
+        => Unsafe.As<D2D1_BITMAP_BRUSH_PROPERTIES, BitmapBrushProperties>(ref Unsafe.AsRef(in properties));
 
     public static implicit operator D2D1_BITMAP_BRUSH_PROPERTIES(in BitmapBrushProperties properties)
-        => Unsafe.As<BitmapBrushProperties, D2D1_BITMAP_BRUSH_PROPERTIES>(ref Unsafe.AsRef(properties));
+        => Unsafe.As<BitmapBrushProperties, D2D1_BITMAP_BRUSH_PROPERTIES>(ref Unsafe.AsRef(in properties));
 }

@@ -107,7 +107,7 @@ public readonly unsafe struct TextLayout : TextLayout.Interface, IDisposable
 
         if (count == 0)
         {
-            return Array.Empty<ClusterMetrics>();
+            return [];
         }
 
         ClusterMetrics[] metrics = new ClusterMetrics[(int)count];
@@ -139,9 +139,9 @@ public readonly unsafe struct TextLayout : TextLayout.Interface, IDisposable
         uint length;
         Handle->GetFontFamilyNameLength(currentPosition, &length).ThrowIfFailed();
         Span<char> name = stackalloc char[(int)length + 1];
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
-            Handle->GetFontFamilyName(currentPosition, (ushort*)n, length + 1).ThrowIfFailed();
+            Handle->GetFontFamilyName(currentPosition, n, length + 1).ThrowIfFailed();
         }
         return name[..(int)length].ToString();
     }
@@ -189,7 +189,7 @@ public readonly unsafe struct TextLayout : TextLayout.Interface, IDisposable
         var result = Handle->GetLineMetrics(null, 0, &count);
         if (count == 0)
         {
-            return Array.Empty<LineMetrics>();
+            return [];
         }
 
         LineMetrics[] metrics = new LineMetrics[count];
@@ -209,9 +209,9 @@ public readonly unsafe struct TextLayout : TextLayout.Interface, IDisposable
         uint length;
         Handle->GetLocaleNameLength(currentPosition, &length).ThrowIfFailed();
         Span<char> name = stackalloc char[(int)length + 1];
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
-            Handle->GetLocaleName(currentPosition, (ushort*)n, length + 1).ThrowIfFailed();
+            Handle->GetLocaleName(currentPosition, n, length + 1).ThrowIfFailed();
         }
         return name[..(int)length].ToString();
     }
@@ -286,9 +286,9 @@ public readonly unsafe struct TextLayout : TextLayout.Interface, IDisposable
 
     public void SetFontFamilyName(string fontFamilyName, TextRange textRange)
     {
-        fixed (void* n = fontFamilyName)
+        fixed (char* n = fontFamilyName)
         {
-            Handle->SetFontFamilyName((ushort*)n, textRange.ToD2D()).ThrowIfFailed(); ;
+            Handle->SetFontFamilyName(n, textRange.ToD2D()).ThrowIfFailed(); ;
         }
     }
 
@@ -312,9 +312,9 @@ public readonly unsafe struct TextLayout : TextLayout.Interface, IDisposable
 
     public void SetLocaleName(string localeName, TextRange textRange)
     {
-        fixed (void* n = localeName)
+        fixed (char* n = localeName)
         {
-            Handle->SetLocaleName((ushort*)n, textRange.ToD2D()).ThrowIfFailed();
+            Handle->SetLocaleName(n, textRange.ToD2D()).ThrowIfFailed();
         }
     }
 

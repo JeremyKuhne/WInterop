@@ -9,14 +9,14 @@ public struct LParam
 {
     public nint Value;
 
-    public ushort LowWord => Conversion.LowWord(Value);
-    public ushort HighWord => Conversion.HighWord(Value);
+    public readonly ushort LowWord => Conversion.LowWord(Value);
+    public readonly ushort HighWord => Conversion.HighWord(Value);
 
     public LParam(nint value) => Value = value;
     public LParam(short high, short low) => Value = Conversion.HighLowToInt(high, low);
     public LParam(int high, int low) => Value = Conversion.HighLowToInt(checked((short)high), checked((short)low));
 
-    public bool IsNull => Value == 0;
+    public readonly bool IsNull => Value == 0;
 
     public static implicit operator int(LParam value) => (int)value.Value;
     public static explicit operator uint(LParam value) => (uint)value.Value;
@@ -32,5 +32,5 @@ public struct LParam
     public static unsafe explicit operator WindowHandle(LParam value) => new HWND((void*)value.Value);
     public static unsafe explicit operator LParam(WindowHandle value) => new((nint)value.HWND.Value);
 
-    public override string ToString() => Value.ToString();
+    public override readonly string ToString() => Value.ToString();
 }

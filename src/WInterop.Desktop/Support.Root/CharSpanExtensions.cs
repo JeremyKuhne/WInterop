@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Text;
+using WInterop.Support.Buffers;
+
 namespace WInterop;
 
 public static class CharSpanExtensions
@@ -85,5 +88,22 @@ public static class CharSpanExtensions
         // If we've maxed out the buffer or reached the
         // null terminator, we're equal.
         return i == buffer.Length || buffer[i] == '\0';
+    }
+
+    public static string FormatJoin<T>(this ReadOnlySpan<T> span, char separator) where T : ISpanFormattable
+    {
+        // TODO: This could be made much more efficient by using ISpanFormattable directly.
+        StringBuilder builder = new();
+        for (int i = 0; i < span.Length; i++)
+        {
+            if (i != 0)
+            {
+                builder.Append(separator);
+            }
+
+            builder.Append(span[i].ToString());
+        }
+
+        return builder.ToString();
     }
 }

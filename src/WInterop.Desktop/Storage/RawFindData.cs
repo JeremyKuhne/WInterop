@@ -18,12 +18,12 @@ public unsafe ref struct RawFindData
         Directory = directory;
     }
 
-    public ReadOnlySpan<char> FileName => _info->FileName;
+    public readonly ReadOnlySpan<char> FileName => _info->FileName;
     public string Directory { get; private set; }
-    public AllFileAttributes FileAttributes => _info->FileAttributes;
-    public ulong FileSize => (ulong)_info->AllocationSize;
+    public readonly AllFileAttributes FileAttributes => _info->FileAttributes;
+    public readonly ulong FileSize => (ulong)_info->AllocationSize;
 
-    public DateTimeOffset CreationTimeUtc => _info->CreationTime.ToDateTimeUtc();
-    public DateTimeOffset LastAccessTimeUtc => _info->LastAccessTime.ToDateTimeUtc();
-    public DateTimeOffset LastWriteTimeUtc => _info->LastWriteTime.ToDateTimeUtc();
+    public readonly DateTimeOffset CreationTimeUtc => _info->CreationTime.ToDateTimeUtc();
+    public readonly DateTimeOffset LastAccessTimeUtc => _info->LastAccessTime.ToDateTimeUtc();
+    public readonly DateTimeOffset LastWriteTimeUtc => _info->LastWriteTime.ToDateTimeUtc();
 }

@@ -68,7 +68,7 @@ public class SymbolicLinks
         {
             action();
             var attributes = Storage.GetFileAttributes(symbolicLink);
-            attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
+            attributes.Should().HaveFlag((AllFileAttributes)FileAttributes.ReparsePoint);
 
             using var handle = Storage.CreateFile(symbolicLink, CreationDisposition.OpenExisting, DesiredAccess.ReadExtendedAttributes,
                 ShareModes.All, fileFlags: FileFlags.OpenReparsePoint);
@@ -98,7 +98,7 @@ public class SymbolicLinks
         {
             action();
             var attributes = Storage.GetFileAttributes(symbolicLink);
-            attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
+            attributes.Should().HaveFlag((AllFileAttributes)FileAttributes.ReparsePoint);
 
             using var handle = Storage.CreateFile(symbolicLink, CreationDisposition.OpenExisting, DesiredAccess.ReadExtendedAttributes,
                 ShareModes.All, fileFlags: FileFlags.OpenReparsePoint);
@@ -130,7 +130,7 @@ public class SymbolicLinks
         {
             action();
             var attributes = Storage.GetFileAttributes(symbolicLink);
-            attributes.Should().HaveFlag(FileAttributes.ReparsePoint);
+            attributes.Should().HaveFlag((AllFileAttributes)FileAttributes.ReparsePoint);
         }
         else
         {

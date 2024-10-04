@@ -23,7 +23,7 @@ public ref struct DoubleBufferPaint
         DeviceContext.SelectObject(_bitmap);
     }
 
-    public void Dispose()
+    public readonly void Dispose()
     {
         try
         {

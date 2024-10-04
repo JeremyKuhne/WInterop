@@ -9,13 +9,13 @@ public struct WParam
 {
     public nuint Value;
 
-    public ushort LowWord => Conversion.LowWord(Value);
-    public ushort HighWord => Conversion.HighWord(Value);
+    public readonly ushort LowWord => Conversion.LowWord(Value);
+    public readonly ushort HighWord => Conversion.HighWord(Value);
 
     public WParam(nuint value) => Value = value;
     public WParam(ushort high, ushort low) => Value = Conversion.HighLowToInt(high, low);
 
-    public bool IsNull => Value == 0;
+    public readonly bool IsNull => Value == 0;
 
     public static implicit operator WParam(UIntPtr value) => new(value);
     public static implicit operator nuint(WParam value) => value.Value;
@@ -40,5 +40,5 @@ public struct WParam
     public static explicit operator MouseKey(WParam value) => (MouseKey)value.Value;
     public static explicit operator WParam(MouseKey value) => (uint)value;
 
-    public override string ToString() => Value.ToString();
+    public override readonly string ToString() => Value.ToString();
 }

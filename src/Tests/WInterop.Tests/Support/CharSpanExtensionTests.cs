@@ -45,7 +45,7 @@ public class CharSpanExtensionTests
     [Fact]
     public void NoSpaceForNullThrows()
     {
-        Action action = () => { new Span<char>(new char[0]).CopyFrom(""); };
+        Action action = () => { new Span<char>([]).CopyFrom(""); };
         action.Should().Throw<ArgumentException>().And.ParamName.Should().Be("nullTerminate");
     }
 

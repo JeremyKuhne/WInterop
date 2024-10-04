@@ -186,7 +186,7 @@ public class Basic
     [Fact]
     public unsafe void AsIntArrayInvoke()
     {
-        int[] values = { 3, 4 };
+        int[] values = [3, 4];
 
         fixed (int* v = values)
         {
@@ -205,7 +205,7 @@ public class Basic
     [Fact]
     public unsafe void AsRefIntInvoke()
     {
-        int[] values = { 5, 6 };
+        int[] values = [5, 6];
 
         fixed (int* v = values)
         {
@@ -227,7 +227,7 @@ public class Basic
     [Fact]
     public unsafe void EmptyArrayBehavior()
     {
-        int[] values = new int[0];
+        int[] values = [];
 
         fixed (int* v = values)
         {
@@ -251,7 +251,7 @@ public class Basic
     [Fact]
     public unsafe void AsArrayInvoke()
     {
-        Point[] points = { new Point(1, 2), new Point(3, 4) };
+        Point[] points = [new Point(1, 2), new Point(3, 4)];
 
         fixed (void* p = &points[0])
         {
@@ -271,7 +271,7 @@ public class Basic
     [Fact]
     public unsafe void AsInOutArrayInvoke()
     {
-        Point[] points = { new Point(1, 2), new Point(3, 4) };
+        Point[] points = [new Point(1, 2), new Point(3, 4)];
 
         fixed (void* p = &points[0])
         {
@@ -291,7 +291,7 @@ public class Basic
     [Fact]
     public unsafe void AsPointerArrayInvoke()
     {
-        Point[] points = { new Point(1, 2), new Point(3, 4) };
+        Point[] points = [new Point(1, 2), new Point(3, 4)];
 
         fixed (Point* p = &points[0])
         {

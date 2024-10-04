@@ -3,7 +3,7 @@
 
 namespace WInterop.Memory;
 
-public struct GlobalHandle : IDisposable
+public readonly struct GlobalHandle : IDisposable
 {
     public HGLOBAL HGLOBAL { get; }
     public ulong Size { get; }
@@ -14,9 +14,9 @@ public struct GlobalHandle : IDisposable
         Size = size;
     }
 
-    public GlobalLock Lock => new(this);
+    public readonly GlobalLock Lock => new(this);
 
-    public void Dispose()
+    public readonly void Dispose()
     {
         Memory.GlobalFree(HGLOBAL);
     }

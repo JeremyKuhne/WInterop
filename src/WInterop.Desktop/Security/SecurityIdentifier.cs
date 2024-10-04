@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -79,8 +80,10 @@ public unsafe struct SecurityIdentifier : IEquatable<SecurityIdentifier>
         Unsafe.AsRef<SID>(sid).SubAuthorities().CopyTo(_sid.SubAuthorities());
     }
 
-    public byte Revision => _sid.Revision;
-    public IdentifierAuthority Authority => new(_sid.IdentifierAuthority);
+    public readonly byte Revision => _sid.Revision;
+    public readonly IdentifierAuthority Authority => new(_sid.IdentifierAuthority);
+
+    [UnscopedRef]
     public ReadOnlySpan<uint> SubAuthorities => _sid.SubAuthorities();
 
     public bool Equals(SecurityIdentifier other) => _sid.Revision == other._sid.Revision
@@ -98,5 +101,7 @@ public unsafe struct SecurityIdentifier : IEquatable<SecurityIdentifier>
 
     public static bool operator !=(SecurityIdentifier left, SecurityIdentifier right) => !(left == right);
 
-    public override int GetHashCode() => base.GetHashCode();
+    public override readonly int GetHashCode() => base.GetHashCode();
+
+    public override string ToString() => $"S-{Revision}-{Authority}-{SubAuthorities.FormatJoin('-')}";
 }

@@ -108,7 +108,7 @@ public static partial class Handles
 
     public static unsafe IEnumerable<ObjectInformation> GetDirectoryEntries(DirectoryObjectHandle directoryHandle)
     {
-        List<ObjectInformation> infos = new();
+        List<ObjectInformation> infos = [];
 
         BufferHelper.BufferInvoke((StringBuffer buffer) =>
         {

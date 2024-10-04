@@ -7,7 +7,7 @@ namespace WInterop.DirectWrite;
 ///  Properties describing the geometric measurement of an
 ///  application-defined inline object.
 /// </summary>
-public struct InlineObjectMetrics
+public readonly struct InlineObjectMetrics
 {
     /// <summary>
     ///  Width of the inline object.

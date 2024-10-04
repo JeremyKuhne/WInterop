@@ -21,7 +21,7 @@ public readonly unsafe struct FontList : FontList.Interface, IDisposable
 
     internal static ref FontList From<TFrom>(in TFrom from)
         where TFrom : unmanaged, Interface
-        => ref Unsafe.AsRef<FontList>(Unsafe.AsPointer(ref Unsafe.AsRef(from)));
+        => ref Unsafe.AsRef<FontList>(Unsafe.AsPointer(ref Unsafe.AsRef(in from)));
 
     public void Dispose() => _handle->Release();
 

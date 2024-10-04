@@ -20,16 +20,16 @@ internal static class InteropExtensions
         => checked(new((uint)rect.Left, (uint)rect.Top, (uint)rect.Right, (uint)rect.Bottom));
 
     internal static PointF ToPointF(this in D2D_POINT_2F point)
-        => Unsafe.As<D2D_POINT_2F, PointF>(ref Unsafe.AsRef(point));
+        => Unsafe.As<D2D_POINT_2F, PointF>(ref Unsafe.AsRef(in point));
 
     internal static D2D_POINT_2F ToD2D(this in PointF point)
-        => Unsafe.As<PointF, D2D_POINT_2F>(ref Unsafe.AsRef(point));
+        => Unsafe.As<PointF, D2D_POINT_2F>(ref Unsafe.AsRef(in point));
 
     internal static SizeF ToSizeF(this in D2D_SIZE_F size)
-        => Unsafe.As<D2D_SIZE_F, SizeF>(ref Unsafe.AsRef(size));
+        => Unsafe.As<D2D_SIZE_F, SizeF>(ref Unsafe.AsRef(in size));
 
     internal static D2D_SIZE_F ToD2D(this in SizeF size)
-        => Unsafe.As<SizeF, D2D_SIZE_F>(ref Unsafe.AsRef(size));
+        => Unsafe.As<SizeF, D2D_SIZE_F>(ref Unsafe.AsRef(in size));
 
     internal static HResult ToHResult(this in HRESULT result)
         => (HResult)(int)result;

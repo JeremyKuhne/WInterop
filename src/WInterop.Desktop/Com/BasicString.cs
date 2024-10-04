@@ -20,19 +20,19 @@ public ref struct BasicString
     /// <summary>
     ///  True if the BSTR is null.
     /// </summary>
-    public bool IsNull => _bstr == IntPtr.Zero;
+    public readonly bool IsNull => _bstr == IntPtr.Zero;
 
     /// <summary>
     ///  Returns the length of the native BSTR.
     /// </summary>
-    public unsafe uint Length => _bstr == IntPtr.Zero ? 0 : *(((uint*)_bstr) - 1) / 2;
+    public readonly unsafe uint Length => _bstr == IntPtr.Zero ? 0 : *(((uint*)_bstr) - 1) / 2;
 
     /// <summary>
     ///  Returns a span on the native BSTR data.
     /// </summary>
-    public unsafe ReadOnlySpan<char> String
+    public readonly unsafe ReadOnlySpan<char> String
         => _bstr == IntPtr.Zero
-            ? ReadOnlySpan<char>.Empty
+            ? []
             : new ReadOnlySpan<char>((void*)_bstr, checked((int)Length));
 
     /// <summary>

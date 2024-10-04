@@ -21,7 +21,7 @@ public static class OwnedMemoryPool
 
         public ArrayPoolOwner(int minimumLength) => _array = ArrayPool<T>.Shared.Rent(minimumLength);
 
-        public Memory<T> Memory
+        public readonly Memory<T> Memory
         {
             get
             {

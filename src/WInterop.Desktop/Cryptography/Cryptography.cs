@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WInterop.Errors;
 using WInterop.Handles;
@@ -50,14 +51,14 @@ public static unsafe partial class Cryptography
 
     [UnmanagedCallersOnly]
     private static BOOL SystemStoreLocationCallback(
-        ushort* pvszStoreLocations,
+        char* pvszStoreLocations,
         uint dwFlags,
         void* pvReserved,
         void* pvArg)
     {
         GCHandle handle = GCHandle.FromIntPtr((IntPtr)pvArg);
         var infos = (List<string>)handle.Target!;
-        string? result = new((char*)pvszStoreLocations);
+        string? result = new(pvszStoreLocations);
         if (!string.IsNullOrEmpty(result))
         {
             infos.Add(result);
@@ -129,7 +130,7 @@ public static unsafe partial class Cryptography
     private static unsafe BOOL CertEnumPhysicalStore(
         void* pvSystemStore,
         uint dwFlags,
-        ushort* pwszStoreName,
+        char* pwszStoreName,
         CERT_PHYSICAL_STORE_INFO* pStoreInfo,
         void* pvReserved,
         void* pvArg)
@@ -140,10 +141,10 @@ public static unsafe partial class Cryptography
         PhysicalStoreInformation info = new()
         {
             SystemStoreInformation = GetSystemNameAndKey(dwFlags, pvSystemStore),
-            PhysicalStoreName = new string((char*)pwszStoreName)
+            PhysicalStoreName = new string(pwszStoreName),
+            ProviderType = new string((char*)pStoreInfo->pszOpenStoreProvider)
         };
 
-        info.ProviderType = new string((char*)pStoreInfo->pszOpenStoreProvider);
         infos.Add(info);
 
         return true;

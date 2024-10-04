@@ -39,7 +39,7 @@ public class AssociationTests
     {
         string value = ShellMethods.AssocQueryString(AssociationFlags.None, AssociationString.Executable, ".txt", "open");
         // Example: C:\Program Files (x86)\Notepad++\notepad++.exe
-        value.Should().EndWithEquivalent(".exe");
+        value.Should().EndWithEquivalentOf(".exe");
     }
 
     [Fact]

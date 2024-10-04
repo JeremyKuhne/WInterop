@@ -27,7 +27,7 @@ public static partial class Mailslots
 
         fixed (char* n = name)
         {
-            handle = new(TerraFXWindows.CreateMailslotW((ushort*)n, maxMessageSize, readTimeout, null));
+            handle = new(TerraFXWindows.CreateMailslotW(n, maxMessageSize, readTimeout, null));
         }
 
         if (handle.IsInvalid)

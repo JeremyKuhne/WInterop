@@ -13,19 +13,17 @@ public struct PitchAndFamily
     ///  Only has meaning when creating a font.
     /// </summary>
     public FontPitch Pitch
-    {
-        get => (FontPitch)(RawValue & 0x0F);
+    { readonly get => (FontPitch)(RawValue & 0x0F);
         set => RawValue = (byte)((byte)Family | (byte)value);
     }
 
     /// <summary>
     ///  Only has meaning when enumerating a font.
     /// </summary>
-    public FontPitchTypes PitchTypes => (FontPitchTypes)(RawValue & 0x0F);
+    public readonly FontPitchTypes PitchTypes => (FontPitchTypes)(RawValue & 0x0F);
 
     public FontFamilyType Family
-    {
-        get => (FontFamilyType)(RawValue & 0xF0);
+    { readonly get => (FontFamilyType)(RawValue & 0xF0);
         set => RawValue = (byte)((byte)value | (byte)Pitch);
     }
 }

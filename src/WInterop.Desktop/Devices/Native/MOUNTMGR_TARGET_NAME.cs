@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace WInterop.Devices.Native;
@@ -10,6 +11,8 @@ namespace WInterop.Devices.Native;
 public struct MOUNTMGR_TARGET_NAME
 {
     public ushort DeviceNameLength;
-    private char _DeviceName;
-    public ReadOnlySpan<char> DeviceName => TrailingArray<char>.GetBufferInBytes(in _DeviceName, DeviceNameLength);
+    private readonly char _DeviceName;
+
+    [UnscopedRef]
+    public readonly ReadOnlySpan<char> DeviceName => TrailingArray<char>.GetBufferInBytes(in _DeviceName, DeviceNameLength);
 }

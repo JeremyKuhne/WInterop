@@ -28,10 +28,10 @@ public readonly unsafe struct LocalizedStrings : LocalizedStrings.Interface, IDi
     public bool FindLocaleName(string localeName, out uint index)
     {
         TerraFX.Interop.Windows.BOOL exists;
-        fixed (void* l = localeName)
+        fixed (char* l = localeName)
         fixed (uint* i = &index)
         {
-            _handle->FindLocaleName((ushort*)l, i, &exists).ThrowIfFailed();
+            _handle->FindLocaleName(l, i, &exists).ThrowIfFailed();
         }
 
         return exists;
@@ -42,9 +42,9 @@ public readonly unsafe struct LocalizedStrings : LocalizedStrings.Interface, IDi
         uint length;
         _handle->GetLocaleNameLength(index, &length).ThrowIfFailed();
         Span<char> name = stackalloc char[(int)length + 1];
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
-            _handle->GetLocaleName(index, (ushort*)n, length + 1);
+            _handle->GetLocaleName(index, n, length + 1);
         }
 
         return name[..(int)length].ToString();
@@ -55,9 +55,9 @@ public readonly unsafe struct LocalizedStrings : LocalizedStrings.Interface, IDi
         uint length;
         _handle->GetStringLength(index, &length).ThrowIfFailed();
         Span<char> name = stackalloc char[(int)length + 1];
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
-            _handle->GetString(index, (ushort*)n, length + 1);
+            _handle->GetString(index, n, length + 1);
         }
 
         return name[..(int)length].ToString();

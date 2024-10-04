@@ -28,7 +28,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
 
     // By using a platform specific data type we can be assured of atomic reads/writes.
     // Anything more than a uint isn't addressable on 32bit as well.
-    private unsafe void* _byteCapacity;
+    private unsafe nuint _byteCapacity;
 
     protected ReaderWriterLockSlim _handleLock = new(LockRecursionPolicy.SupportsRecursion);
 
@@ -39,7 +39,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
     public unsafe HeapBuffer(ulong initialMinCapacity = 0)
     {
         _handle = HeapHandleCache.Instance.Acquire(initialMinCapacity);
-        _byteCapacity = (void*)initialMinCapacity;
+        _byteCapacity = (nuint)initialMinCapacity;
     }
 
     public unsafe void* VoidPointer
@@ -96,13 +96,12 @@ public class HeapBuffer : ISizedBuffer, IDisposable
 
     protected unsafe void UnlockedEnsureByteCapacity(ulong minCapacity)
     {
-        if (_handle is null)
-            throw new ObjectDisposedException(nameof(HeapBuffer));
+        ObjectDisposedException.ThrowIf(_handle is null, typeof(HeapBuffer));
 
         if (ByteCapacity < minCapacity)
         {
             if (_handle.ByteLength < minCapacity) _handle.Resize(minCapacity);
-            _byteCapacity = (void*)minCapacity;
+            _byteCapacity = (nuint)minCapacity;
         }
     }
 
@@ -118,16 +117,14 @@ public class HeapBuffer : ISizedBuffer, IDisposable
         // The actual read/write is atomic.
         get
         {
-            if (index >= ByteCapacity)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, ByteCapacity);
 
             using var readLock = _handleLock.Lock(Locks.Type.Read);
             return BytePointer[index];
         }
         set
         {
-            if (index >= ByteCapacity)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, ByteCapacity);
 
             using var readLock = _handleLock.Lock(Locks.Type.Read);
             BytePointer[index] = value;
@@ -140,7 +137,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
         using (_handleLock.Lock(Locks.Type.Write))
         {
             handle = _handle;
-            _byteCapacity = null;
+            _byteCapacity = 0;
             _handle = null;
         }
 
@@ -150,7 +147,11 @@ public class HeapBuffer : ISizedBuffer, IDisposable
         }
     }
 
-    public void Dispose() => Dispose(disposing: true);
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 
     protected virtual void Dispose(bool disposing)
     {

@@ -389,15 +389,15 @@ public static unsafe partial class Security
             uint nameCharCapacity = nameBuffer.CharCapacity;
             uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
 
-            fixed (void* n = _systemName)
+            fixed (char* n = _systemName)
             fixed (void* s = &_sid)
             {
                 while (!TerraFXWindows.LookupAccountSidW(
-                    (ushort*)n,
+                    n,
                     s,
-                    (ushort*)nameBuffer.CharPointer,
+                    nameBuffer.CharPointer,
                     &nameCharCapacity,
-                    (ushort*)domainNameBuffer.CharPointer,
+                    domainNameBuffer.CharPointer,
                     &domainNameCharCapacity,
                     (SID_NAME_USE*)&usage))
                 {
@@ -624,14 +624,10 @@ public static unsafe partial class Security
 
     private struct GetDomainNameWrapper : ITwoBufferFunc<StringBuffer, string>
     {
-        unsafe string ITwoBufferFunc<StringBuffer, string>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
+        readonly unsafe string ITwoBufferFunc<StringBuffer, string>.Func(StringBuffer nameBuffer, StringBuffer domainNameBuffer)
         {
-            string? name = SystemInformation.SystemInformation.GetUserName(ExtendedNameFormat.SamCompatible);
-
-            if (name is null)
-            {
-                throw new InvalidOperationException($"Could not get the {nameof(ExtendedNameFormat.SamCompatible)} user name.");
-            }
+            string? name = SystemInformation.SystemInformation.GetUserName(ExtendedNameFormat.SamCompatible)
+                ?? throw new InvalidOperationException($"Could not get the {nameof(ExtendedNameFormat.SamCompatible)} user name.");
 
             SecurityIdentifier sid = default;
             uint sidLength = (uint)sizeof(SecurityIdentifier);
@@ -642,10 +638,10 @@ public static unsafe partial class Security
             {
                 while (!TerraFXWindows.LookupAccountNameW(
                     lpSystemName: null,
-                    lpAccountName: (ushort*)n,
+                    lpAccountName: n,
                     Sid: (SID*)&sid,
                     cbSid: &sidLength,
-                    ReferencedDomainName: domainNameBuffer.UShortPointer,
+                    ReferencedDomainName: domainNameBuffer.CharPointer,
                     cchReferencedDomainName: &domainNameLength,
                     peUse: &nameUse))
                 {
@@ -734,14 +730,14 @@ public static unsafe partial class Security
                 switch (status)
                 {
                     case NTStatus.STATUS_OBJECT_NAME_NOT_FOUND:
-                        return Enumerable.Empty<string>();
+                        return [];
                     case NTStatus.STATUS_SUCCESS:
                         break;
                     default:
                         throw status.GetException();
                 }
 
-                List<string> rights = new();
+                List<string> rights = [];
                 Reader reader = new(rightsBuffer);
                 for (int i = 0; i < rightsCount; i++)
                     rights.Add(reader.ReadUNICODE_STRING());

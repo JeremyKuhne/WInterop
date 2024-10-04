@@ -20,16 +20,16 @@ public struct LanguageId
         RawValue = id;
     }
 
-    public override bool Equals(object? obj)
+    public override readonly bool Equals(object? obj)
     {
         return obj is LanguageId other
             ? other.RawValue == RawValue
             : false;
     }
 
-    public bool Equals(LanguageId other) => other.RawValue == RawValue;
+    public readonly bool Equals(LanguageId other) => other.RawValue == RawValue;
 
-    public override int GetHashCode() => RawValue.GetHashCode();
+    public override readonly int GetHashCode() => RawValue.GetHashCode();
 
     public static bool operator ==(LanguageId a, LanguageId b) => a.RawValue == b.RawValue;
 

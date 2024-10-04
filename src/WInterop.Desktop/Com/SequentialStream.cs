@@ -5,13 +5,13 @@ using WInterop.Errors;
 
 namespace WInterop.Com;
 
-public unsafe struct SequentialStream : IDisposable
+public readonly unsafe struct SequentialStream : IDisposable
 {
     public ISequentialStream* ISequentialStream { get; }
 
     public SequentialStream(ISequentialStream* stream) => ISequentialStream = stream;
 
-    public uint Read(Span<byte> buffer)
+    public readonly uint Read(Span<byte> buffer)
     {
         fixed (byte* b = buffer)
         {
@@ -21,7 +21,7 @@ public unsafe struct SequentialStream : IDisposable
         }
     }
 
-    public uint Write(ReadOnlySpan<byte> buffer)
+    public readonly uint Write(ReadOnlySpan<byte> buffer)
     {
         fixed (byte* b = buffer)
         {
@@ -31,7 +31,7 @@ public unsafe struct SequentialStream : IDisposable
         }
     }
 
-    public void Dispose() => ISequentialStream->Release();
+    public readonly void Dispose() => ISequentialStream->Release();
 
     public static implicit operator SequentialStream(Stream stream) => new((ISequentialStream*)stream.IStream);
 }

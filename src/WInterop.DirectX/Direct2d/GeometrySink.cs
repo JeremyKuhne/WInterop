@@ -68,7 +68,7 @@ public readonly unsafe struct GeometrySink : GeometrySink.Interface, IDisposable
 
     internal static ref GeometrySink From<TFrom>(in TFrom from)
         where TFrom : unmanaged, Interface
-        => ref Unsafe.AsRef<GeometrySink>(Unsafe.AsPointer(ref Unsafe.AsRef(from)));
+        => ref Unsafe.AsRef<GeometrySink>(Unsafe.AsPointer(ref Unsafe.AsRef(in from)));
 
     public void Dispose()
     {

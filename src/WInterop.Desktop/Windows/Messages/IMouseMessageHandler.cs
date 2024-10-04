@@ -28,7 +28,7 @@ public enum Button
 
 public class MouseHandler : IMouseMessageHandler
 {
-    private Window _attachedWindow;
+    private readonly Window _attachedWindow;
     public event MouseMessageEvent? MouseUp;
 
     public MouseHandler(Window window)

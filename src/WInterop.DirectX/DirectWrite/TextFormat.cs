@@ -21,7 +21,7 @@ public readonly unsafe struct TextFormat : TextFormat.Interface, IDisposable
 
     internal static ref TextFormat From<TFrom>(in TFrom from)
         where TFrom : unmanaged, Interface
-        => ref Unsafe.AsRef<TextFormat>(Unsafe.AsPointer(ref Unsafe.AsRef(from)));
+        => ref Unsafe.AsRef<TextFormat>(Unsafe.AsPointer(ref Unsafe.AsRef(in from)));
 
     public TextAlignment TextAlignment
     {
@@ -91,9 +91,9 @@ public readonly unsafe struct TextFormat : TextFormat.Interface, IDisposable
     {
         uint length = Handle->GetFontFamilyNameLength();
         Span<char> name = stackalloc char[(int)length + 1];
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
-            Handle->GetFontFamilyName((ushort*)n, length + 1).ThrowIfFailed();
+            Handle->GetFontFamilyName(n, length + 1).ThrowIfFailed();
         }
         return name[..(int)length].ToString();
     }
@@ -112,9 +112,9 @@ public readonly unsafe struct TextFormat : TextFormat.Interface, IDisposable
     {
         uint length = Handle->GetLocaleNameLength();
         Span<char> name = stackalloc char[(int)length + 1];
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
-            Handle->GetLocaleName((ushort*)n, length + 1).ThrowIfFailed();
+            Handle->GetLocaleName(n, length + 1).ThrowIfFailed();
         }
         return name[..(int)length].ToString();
     }

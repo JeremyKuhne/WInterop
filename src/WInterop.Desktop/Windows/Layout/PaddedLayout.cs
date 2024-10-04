@@ -8,7 +8,7 @@ namespace WInterop.Windows;
 public class PaddedLayout : ILayoutHandler
 {
     private readonly ILayoutHandler _handler;
-    private Padding _margin;
+    private readonly Padding _margin;
 
     public PaddedLayout(
         Padding margin,

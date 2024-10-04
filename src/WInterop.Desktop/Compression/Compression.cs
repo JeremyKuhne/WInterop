@@ -130,12 +130,12 @@ public static partial class Compression
         fixed (char* p = path)
         {
             int result = ValidateLzResult(
-                TerraFXWindows.LZOpenFileW((ushort*)p, &ofs, (ushort)openStyle),
+                TerraFXWindows.LZOpenFileW((char*)p, &ofs, (ushort)openStyle),
                 path);
 
             // Note that DOS error ids match Windows errors
             const int OFS_MAXPATHNAME = 128;
-            uncompressedName = Strings.FromNullTerminatedAsciiString(new(ofs.szPathName, OFS_MAXPATHNAME));
+            uncompressedName = Strings.FromNullTerminatedAsciiString(new(&ofs.szPathName.e0, OFS_MAXPATHNAME));
             return new LzHandle(result);
         }
     }
@@ -148,7 +148,7 @@ public static partial class Compression
         fixed (char* p = path)
         {
             return new LzHandle(ValidateLzResult(
-                TerraFXWindows.LZOpenFileW((ushort*)p, &ofs, (ushort)openStyle),
+                TerraFXWindows.LZOpenFileW(p, &ofs, (ushort)openStyle),
                 path));
         }
     }
@@ -161,8 +161,9 @@ public static partial class Compression
 
     public static unsafe int LzRead(LzHandle handle, Span<byte> buffer, int offset, int count)
     {
-        if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
-        if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
+        ArgumentOutOfRangeException.ThrowIfNegative(offset);
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+
         if (offset + count > buffer.Length) throw new ArgumentOutOfRangeException(nameof(count));
 
         fixed (byte* b = &buffer[offset])

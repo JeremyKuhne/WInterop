@@ -39,7 +39,7 @@ public static unsafe partial class Com
         fixed (void* p = path)
         {
             TerraFXWindows.StgCreateStorageEx(
-                (ushort*)p,
+                (char*)p,
                 (uint)mode,
                 (uint)format,
                 0,
@@ -80,7 +80,7 @@ public static unsafe partial class Com
         fixed (void* p = path)
         {
             TerraFXWindows.StgOpenStorageEx(
-                (ushort*)p,
+                (char*)p,
                 (uint)mode,
                 (uint)format,
                 0,
@@ -97,7 +97,7 @@ public static unsafe partial class Com
     {
         fixed (void* p = path)
         {
-            return TerraFXWindows.StgIsStorageFile((ushort*)p).ToHResult() == HResult.S_OK;
+            return TerraFXWindows.StgIsStorageFile((char*)p).ToHResult() == HResult.S_OK;
         }
     }
 

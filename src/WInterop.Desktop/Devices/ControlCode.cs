@@ -30,10 +30,10 @@ public struct ControlCode
         Value = ((uint)deviceType << 16) | ((uint)access << 14) | (function << 2) | (uint)method;
     }
 
-    public ControlCodeDeviceType DeviceType => (ControlCodeDeviceType)((Value & DeviceTypeMask) >> 16);
-    public ControlCodeAccess RequiredAccess => (ControlCodeAccess)((Value & RequiredAccessMask) >> 14);
-    public ushort FunctionCode => (ushort)((Value & FunctionCodeMask) >> 2);
-    public ControlCodeMethod TransferType => (ControlCodeMethod)(Value & TransferTypeMask);
+    public readonly ControlCodeDeviceType DeviceType => (ControlCodeDeviceType)((Value & DeviceTypeMask) >> 16);
+    public readonly ControlCodeAccess RequiredAccess => (ControlCodeAccess)((Value & RequiredAccessMask) >> 14);
+    public readonly ushort FunctionCode => (ushort)((Value & FunctionCodeMask) >> 2);
+    public readonly ControlCodeMethod TransferType => (ControlCodeMethod)(Value & TransferTypeMask);
 
     public static implicit operator ControlCode(ControlCodes.MountManager code) => new((uint)code);
     public static implicit operator ControlCode(ControlCodes.MountDevice code) => new((uint)code);
@@ -41,5 +41,5 @@ public struct ControlCode
 
     public static explicit operator uint(ControlCode code) => code.Value;
 
-    public override string ToString() => $"{DeviceType}, Function Code 0x{FunctionCode:X4}, {RequiredAccess}, {TransferType}";
+    public override readonly string ToString() => $"{DeviceType}, Function Code 0x{FunctionCode:X4}, {RequiredAccess}, {TransferType}";
 }

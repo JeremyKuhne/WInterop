@@ -11,8 +11,8 @@ public class WindowClass : IDisposable
 {
     // Stash the delegate to keep it from being collected
     private readonly WindowProcedure _windowProcedure;
-    private string _className;
-    private WindowClassInfo? _windowClass;
+    private readonly string _className;
+    private readonly WindowClassInfo? _windowClass;
     private bool _disposedValue;
 
     public Atom Atom { get; private set; }

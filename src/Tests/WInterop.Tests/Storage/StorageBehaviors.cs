@@ -177,7 +177,7 @@ public partial class FileManagementBehaviors
             WIN32_FIND_DATAW findData;
             fixed (char* p = cleaner.TempFolder)
             {
-                handle = TerraFXWindows.FindFirstFileW((ushort*)p, &findData);
+                handle = TerraFXWindows.FindFirstFileW(p, &findData);
             }
 
             try
@@ -194,7 +194,7 @@ public partial class FileManagementBehaviors
 
             fixed (char* p = cleaner.GetTestPath())
             {
-                handle = TerraFXWindows.FindFirstFileW((ushort*)p, &findData);
+                handle = TerraFXWindows.FindFirstFileW(p, &findData);
             }
             WindowsError error = Error.GetLastError();
 
@@ -212,7 +212,7 @@ public partial class FileManagementBehaviors
             }
 
             fixed (char* p = Path.Join(cleaner.GetTestPath(), "NotHere"))
-            handle = TerraFXWindows.FindFirstFileW((ushort*)p, &findData);
+            handle = TerraFXWindows.FindFirstFileW(p, &findData);
             error = Error.GetLastError();
 
             try
@@ -245,7 +245,7 @@ public partial class FileManagementBehaviors
         {
 
             bool success = TerraFXWindows.GetFileAttributesExW(
-                (ushort*)p,
+                p,
                 GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
                 &attributeData);
             success.Should().BeTrue("root location exists");
@@ -254,7 +254,7 @@ public partial class FileManagementBehaviors
         fixed (char* p = cleaner.GetTestPath())
         {
             bool success = TerraFXWindows.GetFileAttributesExW(
-                (ushort*)p,
+                p,
                 GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
                 &attributeData);
             WindowsError error = Error.GetLastError();
@@ -265,7 +265,7 @@ public partial class FileManagementBehaviors
         fixed (char* p = Path.Join(cleaner.GetTestPath(), "NotHere"))
         {
             bool success = TerraFXWindows.GetFileAttributesExW(
-                (ushort*)p,
+                p,
                 GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
                 &attributeData);
 
@@ -285,7 +285,7 @@ public partial class FileManagementBehaviors
         fixed (char* p = tempPath)
         {
             success = TerraFXWindows.GetFileAttributesExW(
-                (ushort*)p,
+                p,
                 GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
                 &attributeData);
         }
@@ -296,7 +296,7 @@ public partial class FileManagementBehaviors
         fixed (char* p = Path.Join(tempPath, @"""*"""))
         {
             success = TerraFXWindows.GetFileAttributesExW(
-                (ushort*)p,
+                p,
                 GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
                 &attributeData);
         }
@@ -309,7 +309,7 @@ public partial class FileManagementBehaviors
         fixed (char* p = Path.Join(tempPath, Path.GetRandomFileName(), @"""*"""))
         {
             success = TerraFXWindows.GetFileAttributesExW(
-                (ushort*)p,
+                p,
                 GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
                 &attributeData);
         }
@@ -344,7 +344,7 @@ public partial class FileManagementBehaviors
         fixed (char* p = path)
         {
             // Find file will work at this point.
-            findHandle = TerraFXWindows.FindFirstFileW((ushort*)p, (WIN32_FIND_DATAW*)&findData);
+            findHandle = TerraFXWindows.FindFirstFileW(p, (WIN32_FIND_DATAW*)&findData);
             findHandle.Should().NotBe(HANDLE.NULL);
         }
 

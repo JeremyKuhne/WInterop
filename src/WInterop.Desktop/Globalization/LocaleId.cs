@@ -15,11 +15,11 @@ public struct LocaleId
 
     public LocaleId(uint id) => RawValue = id;
 
-    public override bool Equals(object? obj) => obj is LocaleId other && other.RawValue == RawValue;
+    public override readonly bool Equals(object? obj) => obj is LocaleId other && other.RawValue == RawValue;
 
-    public bool Equals(LocaleId other) => other.RawValue == RawValue;
+    public readonly bool Equals(LocaleId other) => other.RawValue == RawValue;
 
-    public override int GetHashCode() => RawValue.GetHashCode();
+    public override readonly int GetHashCode() => RawValue.GetHashCode();
 
     public static bool operator ==(LocaleId a, LocaleId b) => a.RawValue == b.RawValue;
 

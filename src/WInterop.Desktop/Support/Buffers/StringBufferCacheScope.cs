@@ -14,7 +14,7 @@ public ref struct StringBufferCacheScope
         _buffer = buffer;
     }
 
-    public StringBuffer Buffer => _buffer;
+    public readonly StringBuffer Buffer => _buffer;
 
     public unsafe void Dispose()
     {

@@ -29,5 +29,5 @@ public readonly struct SizeU
     public static implicit operator Size(SizeU size) => checked(new((int)size.Width, (int)size.Height));
     public static implicit operator SizeU(Size size) => checked(new((uint)size.Width, (uint)size.Height));
 
-    internal D2D_SIZE_U ToD2D() => Unsafe.As<SizeU, D2D_SIZE_U>(ref Unsafe.AsRef(this));
+    internal D2D_SIZE_U ToD2D() => Unsafe.As<SizeU, D2D_SIZE_U>(ref Unsafe.AsRef(in this));
 }

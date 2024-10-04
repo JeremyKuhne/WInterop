@@ -12,30 +12,30 @@ namespace WInterop.Direct2d;
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 [Guid(InterfaceIds.IID_ID2D1RoundedRectangleGeometry)]
-public unsafe struct RoundedRectangleGeometry : RoundedRectangleGeometry.Interface
+public readonly unsafe struct RoundedRectangleGeometry : RoundedRectangleGeometry.Interface
 {
     private readonly ID2D1RoundedRectangleGeometry* _handle;
 
     internal RoundedRectangleGeometry(ID2D1RoundedRectangleGeometry* handle) => _handle = handle;
 
-    public RectangleF GetBounds() => Geometry.From(this).GetBounds();
+    public readonly RectangleF GetBounds() => Geometry.From(this).GetBounds();
 
-    public RectangleF GetBounds(Matrix3x2 worldTransform)
+    public readonly RectangleF GetBounds(Matrix3x2 worldTransform)
         => Geometry.From(this).GetBounds(worldTransform);
 
-    public void CombineWithGeometry(Geometry inputGeometry, CombineMode combineMode, SimplifiedGeometrySink geometrySink)
+    public readonly void CombineWithGeometry(Geometry inputGeometry, CombineMode combineMode, SimplifiedGeometrySink geometrySink)
         => Geometry.From(this).CombineWithGeometry(inputGeometry, combineMode, geometrySink);
 
-    public Factory GetFactory() => Resource.From(this).GetFactory();
+    public readonly Factory GetFactory() => Resource.From(this).GetFactory();
 
-    public RoundedRectangle GetRoundedRect(RoundedRectangle roundedRect)
+    public readonly RoundedRectangle GetRoundedRect(RoundedRectangle roundedRect)
     {
         RoundedRectangle rect;
         _handle->GetRoundedRect((D2D1_ROUNDED_RECT*)&rect);
         return rect;
     }
 
-    public void Dispose() => _handle->Release();
+    public readonly void Dispose() => _handle->Release();
 
     public static implicit operator Geometry(RoundedRectangleGeometry geometry) => new((ID2D1Geometry*)geometry._handle);
 

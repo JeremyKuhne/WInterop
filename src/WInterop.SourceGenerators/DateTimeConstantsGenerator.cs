@@ -28,6 +28,7 @@ internal class DateTimeConstantsAttribute : Attribute
 
     public void Execute(GeneratorExecutionContext context)
     {
+#pragma warning disable RS1035 // Do not use APIs banned for analyzers
         var receiver = (SyntaxReceiver)context.SyntaxContextReceiver!;
         foreach (string @namespace in receiver.Namespaces)
         {
@@ -35,6 +36,7 @@ internal class DateTimeConstantsAttribute : Attribute
                 $"__DateTimeConstants.{@namespace}.generated",
                 SourceText.From(GenerateConstantsSoruce(@namespace), Encoding.UTF8));
         }
+#pragma warning restore RS1035 // Do not use APIs banned for analyzers
 
         static string GenerateConstantsSoruce(string @namespace)
         {
@@ -104,6 +106,7 @@ internal class DateTimeConstantsAttribute : Attribute
 
     public void Initialize(GeneratorInitializationContext context)
     {
+#pragma warning disable RS1035 // Do not use APIs banned for analyzers
         context.RegisterForPostInitialization((pi) => pi.AddSource("__DateTimeConstants._Attribute.generated", AttributeSource));
 
 #if DEBUG
@@ -114,11 +117,12 @@ internal class DateTimeConstantsAttribute : Attribute
 #endif
 
         context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
+#pragma warning restore RS1035 // Do not use APIs banned for analyzers
     }
 
     private class SyntaxReceiver : ISyntaxContextReceiver
     {
-        public HashSet<string> Namespaces = new();
+        public HashSet<string> Namespaces = [];
 
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using WInterop;
 
@@ -34,7 +35,9 @@ public class TrailingArrayTests
     public struct MutableA
     {
         public char A;
-        public ReadOnlySpan<char> GetBuffer() => TrailingArray<char>.GetBuffer(in A, 3);
+
+        [UnscopedRef]
+        public readonly ReadOnlySpan<char> GetBuffer() => TrailingArray<char>.GetBuffer(in A, 3);
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

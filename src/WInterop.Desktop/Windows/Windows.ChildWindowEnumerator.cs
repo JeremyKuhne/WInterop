@@ -7,7 +7,7 @@ namespace WInterop.Windows;
 
 public static partial class Windows
 {
-    private ref struct ChildWindowEnumerator
+    private readonly ref struct ChildWindowEnumerator
     {
         private readonly GCHandle _callback;
 
@@ -24,7 +24,7 @@ public static partial class Windows
             return callback(hwnd);
         }
 
-        public void Dispose()
+        public readonly void Dispose()
         {
             if (_callback.IsAllocated)
             {

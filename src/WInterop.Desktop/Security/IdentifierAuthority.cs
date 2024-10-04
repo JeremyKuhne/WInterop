@@ -86,7 +86,7 @@ public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
     {
         get
         {
-            fixed (byte* b = _authority.Value)
+            fixed (void* b = &_authority)
             {
                 return new(b, 6);
             }
@@ -114,4 +114,6 @@ public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
 
     public static bool operator !=(IdentifierAuthority left, IdentifierAuthority right)
         => !(left == right);
+
+    public override string ToString() => string.Join('-', Value.ToArray());
 }

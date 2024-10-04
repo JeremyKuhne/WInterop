@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using WInterop.Windows;
 
 namespace WInterop.Gdi;
@@ -42,8 +43,8 @@ public readonly ref struct BrushHandle
     public static implicit operator HBRUSH(in BrushHandle handle) => handle.Handle;
     public static unsafe implicit operator LResult(in BrushHandle handle) => (nint)handle.Handle.Value;
     public static implicit operator GdiObjectHandle(in BrushHandle handle) => new(handle.Handle, ownsHandle: false);
-    public static implicit operator BrushHandle(in StockBrush brush) => Gdi.GetStockBrush(brush);
-    public static implicit operator BrushHandle(in SystemColor color) => Gdi.GetSystemColorBrush(color);
+    public static implicit operator BrushHandle(StockBrush brush) => Gdi.GetStockBrush(brush);
+    public static implicit operator BrushHandle(SystemColor color) => Gdi.GetSystemColorBrush(color);
 
     // You can't box a ref struct, therefore it will never be object
     public override bool Equals(object? obj) => false;

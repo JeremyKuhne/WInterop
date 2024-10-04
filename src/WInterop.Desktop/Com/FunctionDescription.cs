@@ -14,16 +14,16 @@ public unsafe struct FunctionDescription : IDisposable
         _owner = owner;
     }
 
-    public MemberId MemberId => FUNCDESC->memid;
-    public FunctionKind FunctionKind => (FunctionKind)FUNCDESC->funckind;
-    public InvokeKind InvokeKind => (InvokeKind)FUNCDESC->invkind;
-    public CallConvention CallConvention => (CallConvention)FUNCDESC->callconv;
-    public short ParameterCount => FUNCDESC->cParams;
-    public short OptionalParameterCount => FUNCDESC->cParamsOpt;
-    public short VTableOffset => FUNCDESC->oVft;
-    public short ReturnCodeCount => FUNCDESC->cScodes;
-    public VariantType ReturnType => (VariantType)FUNCDESC->elemdescFunc.tdesc.vt;
-    public FunctionFlags Flags => (FunctionFlags)FUNCDESC->wFuncFlags;
+    public readonly MemberId MemberId => FUNCDESC->memid;
+    public readonly FunctionKind FunctionKind => (FunctionKind)FUNCDESC->funckind;
+    public readonly InvokeKind InvokeKind => (InvokeKind)FUNCDESC->invkind;
+    public readonly CallConvention CallConvention => (CallConvention)FUNCDESC->callconv;
+    public readonly short ParameterCount => FUNCDESC->cParams;
+    public readonly short OptionalParameterCount => FUNCDESC->cParamsOpt;
+    public readonly short VTableOffset => FUNCDESC->oVft;
+    public readonly short ReturnCodeCount => FUNCDESC->cScodes;
+    public readonly VariantType ReturnType => (VariantType)FUNCDESC->elemdescFunc.tdesc.vt;
+    public readonly FunctionFlags Flags => (FunctionFlags)FUNCDESC->wFuncFlags;
 
     /// <summary>
     ///  Parameter descriptions.
@@ -31,7 +31,7 @@ public unsafe struct FunctionDescription : IDisposable
     /// <remarks>
     ///  Not valid after <see cref="FunctionDescription"/> is disposed.
     /// </remarks>
-    public ReadOnlySpan<ParameterDescription> Parameters => new(FUNCDESC->lprgelemdescParam, ParameterCount);
+    public readonly ReadOnlySpan<ParameterDescription> Parameters => new(FUNCDESC->lprgelemdescParam, ParameterCount);
 
     public void Dispose()
     {

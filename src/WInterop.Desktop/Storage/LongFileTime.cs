@@ -18,5 +18,5 @@ public struct LongFileTime
     /// </summary>
     public long TicksSince1601;
 
-    public DateTimeOffset ToDateTimeUtc() => DateTimeOffset.FromFileTime(TicksSince1601);
+    public readonly DateTimeOffset ToDateTimeUtc() => DateTimeOffset.FromFileTime(TicksSince1601);
 }
