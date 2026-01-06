@@ -6,5 +6,5 @@ namespace WInterop.Windows;
 public struct DeferWindowPositionHandle
 {
     public IntPtr HDWP;
-    public bool IsValid => HDWP != IntPtr.Zero && HDWP != -1;
+    public readonly bool IsValid => HDWP != IntPtr.Zero && HDWP != (IntPtr)(-1);
 }

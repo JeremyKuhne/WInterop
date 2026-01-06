@@ -5,7 +5,7 @@ using WInterop.Network.Native;
 
 namespace WInterop.Network;
 
-public struct UserInfo2
+public readonly struct UserInfo2
 {
     public string Name { get; }
     public string FullName { get; }

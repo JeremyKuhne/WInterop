@@ -27,14 +27,14 @@ public unsafe struct ExtendedMonitorInfo
     /// <summary>
     ///  The monitor bounds.
     /// </summary>
-    public Rectangle Monitor => _info.Monitor;
+    public readonly Rectangle Monitor => _info.Monitor;
 
     /// <summary>
     ///  The work area bounds.
     /// </summary>
-    public Rectangle Work => _info.Work;
+    public readonly Rectangle Work => _info.Work;
 
-    public bool IsPrimary => _info.IsPrimary;
+    public readonly bool IsPrimary => _info.IsPrimary;
 
     public ReadOnlySpan<char> DeviceName => _szDevice.Buffer.SliceAtNull();
 }

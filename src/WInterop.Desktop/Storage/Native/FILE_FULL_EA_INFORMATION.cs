@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace WInterop.Storage.Native;
@@ -13,6 +14,8 @@ public struct FILE_FULL_EA_INFORMATION
     public byte Flags;
     public byte EaNameLength;
     public ushort EaValueLength;
-    private char _EaName;
-    public ReadOnlySpan<char> EaName => TrailingArray<char>.GetBufferInBytes(in _EaName, EaNameLength);
+    private readonly char _EaName;
+
+    [UnscopedRef]
+    public readonly ReadOnlySpan<char> EaName => TrailingArray<char>.GetBufferInBytes(in _EaName, EaNameLength);
 }

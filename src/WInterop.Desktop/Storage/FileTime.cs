@@ -16,7 +16,7 @@ namespace WInterop.Storage;
 ///  Converting from a UTC-based SYSTEMTIME directly to a local-time-based SYSTEMTIME
 ///  https://devblogs.microsoft.com/oldnewthing/20140307-00/?p=1573
 /// </docs>
-public struct FileTime
+public readonly struct FileTime
 {
     private readonly FILETIME _fileTime;
 
@@ -39,7 +39,7 @@ public struct FileTime
         };
     }
 
-    public ulong FileDateTime => Conversion.HighLowToLong(_fileTime.dwHighDateTime, _fileTime.dwLowDateTime);
+    public readonly ulong FileDateTime => Conversion.HighLowToLong(_fileTime.dwHighDateTime, _fileTime.dwLowDateTime);
 
-    public DateTime ToDateTimeUtc() => DateTime.FromFileTimeUtc((long)FileDateTime);
+    public readonly DateTime ToDateTimeUtc() => DateTime.FromFileTimeUtc((long)FileDateTime);
 }

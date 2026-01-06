@@ -102,7 +102,7 @@ public struct COPYFILE2_MESSAGE
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct PollContinue
+    public readonly struct PollContinue
     {
         private readonly uint dwReserved;
     }

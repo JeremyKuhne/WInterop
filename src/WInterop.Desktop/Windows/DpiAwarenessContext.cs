@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 namespace WInterop.Windows;
 
 [StructLayout(LayoutKind.Sequential)]
-public struct DpiAwarenessContext
+public readonly struct DpiAwarenessContext
 {
     private readonly nint _value;
 
@@ -14,7 +14,7 @@ public struct DpiAwarenessContext
 
     public DpiAwarenessContext(nint value) => _value = value;
 
-    public bool IsNull => _value == 0;
+    public readonly bool IsNull => _value == 0;
 
     // These only have meaning for setting the value
     public static DpiAwarenessContext Unaware { get; } = new(-1);

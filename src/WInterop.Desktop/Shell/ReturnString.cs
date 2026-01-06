@@ -10,7 +10,7 @@ public struct ReturnString : IDisposable
 {
     private IntPtr _pointer;
 
-    public override unsafe string ToString()
+    public override readonly unsafe string ToString()
     {
         if (_pointer == IntPtr.Zero)
             throw new ObjectDisposedException(nameof(ReturnString));

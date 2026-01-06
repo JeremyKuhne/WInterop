@@ -11,6 +11,10 @@ public unsafe partial struct Stream : IDisposable
 
     public Stream(IStream* stream) => IStream = stream;
 
+    public Stream(System.IO.Stream stream) : this(CCW.CreateInstance(stream))
+    {
+    }
+
     public bool IsNull => IStream is null;
 
     public uint Read(Span<byte> buffer) => ((SequentialStream)this).Read(buffer);
@@ -37,6 +41,4 @@ public unsafe partial struct Stream : IDisposable
     public void SetSize(ulong size) => IStream->SetSize(size.ToULARGE_INTEGER()).ThrowIfFailed();
 
     public void Dispose() => IStream->Release();
-
-    public static Stream FromStream(System.IO.Stream stream) => new(CCW.CreateInstance(stream));
 }

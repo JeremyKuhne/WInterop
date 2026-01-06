@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace WInterop.Security;
 
 /// <summary>
@@ -78,22 +80,12 @@ public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
     /// </summary>
     public static readonly IdentifierAuthority ProcessTrust = new(19);
 
-    private IdentifierAuthority(byte knownAuthority) => InternalValue[5] = knownAuthority;
+    private IdentifierAuthority(byte knownAuthority) => _authority.Value[5] = knownAuthority;
 
     internal IdentifierAuthority(SID_IDENTIFIER_AUTHORITY authority) => _authority = authority;
 
-    private unsafe Span<byte> InternalValue
-    {
-        get
-        {
-            fixed (byte* b = &_authority.Value.e0)
-            {
-                return new(b, 6);
-            }
-        }
-    }
-
-    public ReadOnlySpan<byte> Value => InternalValue;
+    [UnscopedRef]
+    public ReadOnlySpan<byte> Value => _authority.Value[..];
 
     public override bool Equals(object? obj)
     {
@@ -114,4 +106,6 @@ public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
 
     public static bool operator !=(IdentifierAuthority left, IdentifierAuthority right)
         => !(left == right);
+
+    public override string ToString() => string.Join('-', Value.ToArray());
 }

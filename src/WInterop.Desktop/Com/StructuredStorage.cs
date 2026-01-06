@@ -24,7 +24,7 @@ public unsafe readonly struct StructuredStorage : IDisposable
         }
     }
 
-    public Stream OpenStream(string name, StorageMode mode = StorageMode.Default)
+    public readonly Stream OpenStream(string name, StorageMode mode = StorageMode.Default)
     {
         fixed (char* n = name)
         {
@@ -34,7 +34,7 @@ public unsafe readonly struct StructuredStorage : IDisposable
         }
     }
 
-    public StructuredStorage CreateStorage(string name, StorageMode mode = StorageMode.Default)
+    public readonly StructuredStorage CreateStorage(string name, StorageMode mode = StorageMode.Default)
     {
         fixed (char* n = name)
         {
@@ -44,7 +44,7 @@ public unsafe readonly struct StructuredStorage : IDisposable
         }
     }
 
-    public StructuredStorage OpenStorage(string name, StorageMode mode = StorageMode.Default)
+    public readonly StructuredStorage OpenStorage(string name, StorageMode mode = StorageMode.Default)
     {
         fixed (char* n = name)
         {
@@ -54,13 +54,13 @@ public unsafe readonly struct StructuredStorage : IDisposable
         }
     }
 
-    public void CopyTo(StructuredStorage destination)
+    public readonly void CopyTo(StructuredStorage destination)
     {
         // TODO: Create overrides for exclusions (Guids, string names)
         IStorage->CopyTo(0, null, null, destination.IStorage).ThrowIfFailed();
     }
 
-    public void MoveElementTo(string name, StructuredStorage destination, string newName, StorageMove move = StorageMove.Copy)
+    public readonly void MoveElementTo(string name, StructuredStorage destination, string newName, StorageMove move = StorageMove.Copy)
     {
         fixed (char* s = name)
         fixed (char* d = newName)
@@ -69,21 +69,21 @@ public unsafe readonly struct StructuredStorage : IDisposable
         }
     }
 
-    public void Commit(StorageCommit commit = StorageCommit.Default)
+    public readonly void Commit(StorageCommit commit = StorageCommit.Default)
     {
         IStorage->Commit((uint)commit).ThrowIfFailed();
     }
 
-    public void Revert() => IStorage->Revert().ThrowIfFailed();
+    public readonly void Revert() => IStorage->Revert().ThrowIfFailed();
 
-    public StorageEnumerator Enumerate()
+    public readonly StorageEnumerator Enumerate()
     {
         IEnumSTATSTG* enumerator;
         IStorage->EnumElements(0, null, 0, &enumerator).ThrowIfFailed();
         return new(enumerator);
     }
 
-    public void DestroyElement(string name)
+    public readonly void DestroyElement(string name)
     {
         fixed (char* n = name)
         {
@@ -91,7 +91,7 @@ public unsafe readonly struct StructuredStorage : IDisposable
         }
     }
 
-    public void RenameElement(string oldName, string newName)
+    public readonly void RenameElement(string oldName, string newName)
     {
         fixed (char* o = oldName)
         fixed (char* n = newName)
@@ -100,7 +100,7 @@ public unsafe readonly struct StructuredStorage : IDisposable
         }
     }
 
-    public void SetElementTimes(string name, DateTime? creation, DateTime? access, DateTime? modified)
+    public readonly void SetElementTimes(string name, DateTime? creation, DateTime? access, DateTime? modified)
     {
         FileTime c = new(creation ?? default);
         FileTime a = new(access ?? default);
@@ -116,17 +116,17 @@ public unsafe readonly struct StructuredStorage : IDisposable
         }
     }
 
-    public void SetClass(Guid clsid) => IStorage->SetClass(&clsid).ThrowIfFailed();
+    public readonly void SetClass(Guid clsid) => IStorage->SetClass(&clsid).ThrowIfFailed();
 
-    public void SetStateBits(uint stateBits, uint mask)
+    public readonly void SetStateBits(uint stateBits, uint mask)
         => IStorage->SetStateBits(stateBits, mask).ThrowIfFailed();
 
-    public StorageStats Stat(StatFlag flag = StatFlag.Default)
+    public readonly StorageStats Stat(StatFlag flag = StatFlag.Default)
     {
         StorageStats stats;
         IStorage->Stat((STATSTG*)&stats, (uint)flag).ThrowIfFailed();
         return stats;
     }
 
-    public void Dispose() => IStorage->Release();
+    public readonly void Dispose() => IStorage->Release();
 }

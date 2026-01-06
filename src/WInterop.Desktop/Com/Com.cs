@@ -109,5 +109,5 @@ public static unsafe partial class Com
     }
 
     public static unsafe uint Release(IntPtr pUnk)
-        => pUnk == IntPtr.Zero ? throw new ArgumentNullException(nameof(pUnk)) : ((Unknown*)pUnk)->Release();
+        => pUnk == IntPtr.Zero ? throw new ArgumentNullException(nameof(pUnk)) : ((IUnknown*)pUnk)->Release();
 }

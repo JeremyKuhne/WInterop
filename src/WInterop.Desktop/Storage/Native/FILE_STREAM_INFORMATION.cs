@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace WInterop.Storage.Native;
 
 /// <summary>
@@ -17,5 +19,7 @@ public readonly struct FILE_STREAM_INFORMATION
     public readonly ulong StreamSize;
     public readonly ulong StreamAllocationSize;
     private readonly char _StreamName;
+
+    [UnscopedRef]
     public ReadOnlySpan<char> StreamName => TrailingArray<char>.GetBufferInBytes(in _StreamName, StreamNameLength);
 }

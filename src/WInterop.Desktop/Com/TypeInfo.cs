@@ -14,9 +14,9 @@ public unsafe readonly struct TypeInfo : IDisposable
 
     public TypeInfo(ITypeInfo* handle) => ITypeInfo = handle;
 
-    public bool IsNull => ITypeInfo is null;
+    public readonly bool IsNull => ITypeInfo is null;
 
-    public void* AddressOfMember(MemberId memberId, InvokeKind invokeKind)
+    public readonly void* AddressOfMember(MemberId memberId, InvokeKind invokeKind)
     {
         void* address;
         ITypeInfo->AddressOfMember(memberId, (INVOKEKIND)invokeKind, &address).ThrowIfFailed();
@@ -26,14 +26,14 @@ public unsafe readonly struct TypeInfo : IDisposable
     /// <summary>
     ///  Create a new instance of a type that describes a component object class (coclass).
     /// </summary>
-    public void* CreateInstance(void* outerUnknown, Guid riid)
+    public readonly void* CreateInstance(void* outerUnknown, Guid riid)
     {
         void* instance;
         ITypeInfo->CreateInstance((IUnknown*)outerUnknown, &riid, &instance).ThrowIfFailed();
         return instance;
     }
 
-    public (TypeLibrary Library, uint Index) GetContainingTypeLibrary()
+    public readonly (TypeLibrary Library, uint Index) GetContainingTypeLibrary()
     {
         ITypeLib* library;
         uint index;
@@ -42,7 +42,7 @@ public unsafe readonly struct TypeInfo : IDisposable
         return (new(library), index);
     }
 
-    public void GetDocumentation(
+    public readonly void GetDocumentation(
         MemberId memberId,
         out string name)
     {
@@ -51,7 +51,7 @@ public unsafe readonly struct TypeInfo : IDisposable
         name = Strings.FromBSTRAndFree(namep);
     }
 
-    public void GetDocumentation(
+    public readonly void GetDocumentation(
         MemberId memberId,
         out string name,
         out string documentation)
@@ -63,7 +63,7 @@ public unsafe readonly struct TypeInfo : IDisposable
         documentation = Strings.FromBSTRAndFree(docs);
     }
 
-    public void GetDocumentation(
+    public readonly void GetDocumentation(
         MemberId memberId,
         out string name,
         out string documentation,
@@ -81,7 +81,7 @@ public unsafe readonly struct TypeInfo : IDisposable
         helpFile = Strings.FromBSTRAndFree(file);
     }
 
-    public VariableDescription GetVariableDescription(uint variableIndex)
+    public readonly VariableDescription GetVariableDescription(uint variableIndex)
     {
         VARDESC* description;
         ITypeInfo->GetVarDesc(variableIndex, &description)
@@ -90,14 +90,14 @@ public unsafe readonly struct TypeInfo : IDisposable
         return new(description, ITypeInfo);
     }
 
-    public FunctionDescription GetFunctionDescription(uint index)
+    public readonly FunctionDescription GetFunctionDescription(uint index)
     {
         FUNCDESC* description;
         ITypeInfo->GetFuncDesc(index, &description).ThrowIfFailed();
         return new(description, ITypeInfo);
     }
 
-    public string? GetMemberName(MemberId memberId)
+    public readonly string? GetMemberName(MemberId memberId)
     {
         char* buffer;
         uint count = 1;
@@ -105,7 +105,7 @@ public unsafe readonly struct TypeInfo : IDisposable
         return Strings.FromBSTRAndFree(buffer);
     }
 
-    public IReadOnlyList<string> GetMemberNames(MemberId memberId, uint maxNames)
+    public readonly IReadOnlyList<string> GetMemberNames(MemberId memberId, uint maxNames)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(maxNames, 1u);
 
@@ -131,7 +131,7 @@ public unsafe readonly struct TypeInfo : IDisposable
     ///  Get the names for the given <paramref name="functionIndex"/>. The first name is the
     ///  name of the function, the rest (if any) are parameter names.
     /// </summary>
-    public IReadOnlyList<string> GetFunctionNames(uint functionIndex)
+    public readonly IReadOnlyList<string> GetFunctionNames(uint functionIndex)
     {
         FUNCDESC* description;
         ITypeInfo->GetFuncDesc(functionIndex, &description)
@@ -143,14 +143,14 @@ public unsafe readonly struct TypeInfo : IDisposable
         return GetMemberNames(id, count);
     }
 
-    public TypeAttributes GetTypeAttributes()
+    public readonly TypeAttributes GetTypeAttributes()
     {
         TYPEATTR* attr;
         ITypeInfo->GetTypeAttr(&attr).ThrowIfFailed();
         return new(attr, ITypeInfo);
     }
 
-    public TypeInfo GetRefTypeInfo(RefTypeHandle handle)
+    public readonly TypeInfo GetRefTypeInfo(RefTypeHandle handle)
     {
         ITypeInfo* info;
         ITypeInfo->GetRefTypeInfo(handle, &info).ThrowIfFailed();

@@ -42,7 +42,7 @@ public readonly struct TrailingArray<T> where T : unmanaged
     private unsafe ReadOnlySpan<T> GetBuffer(uint count, uint offset = 0)
     {
         if (count == 0)
-            return ReadOnlySpan<T>.Empty;
+            return [];
 
         fixed (T* t = &_firstItem)
             return new ReadOnlySpan<T>(t + offset, (int)count);

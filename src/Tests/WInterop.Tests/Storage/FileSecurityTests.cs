@@ -31,7 +31,7 @@ public class FileSecurityTests
         using var handle = Storage.CreateFile(cleaner.GetTestPath(), CreationDisposition.CreateNew);
         handle.IsInvalid.Should().BeFalse();
         SecurityIdentifier sid = Storage.GetPrimaryGroup(handle);
-        sid.Authority.Should().Be(IdentifierAuthority.NT);
+        sid.Authority.Should().BeEquivalentTo(IdentifierAuthority.NT);
         string sidString = sid.ConvertSidToString();
         AccountSidInformation info = sid.LookupAccountSid();
         info.Usage.Should().Be(SidNameUse.User);

@@ -218,7 +218,7 @@ public static unsafe partial class Gdi
 
         logFont.FaceName.CopyFrom(faceName);
 
-        List<FontInformation> info = new();
+        List<FontInformation> info = [];
         GCHandle gch = GCHandle.Alloc(info, GCHandleType.Normal);
         try
         {

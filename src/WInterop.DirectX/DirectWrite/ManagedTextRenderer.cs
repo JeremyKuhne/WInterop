@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.Windows;
 using WInterop.Com;
-using WInterop.Com.Native;
 
 namespace WInterop.DirectWrite;
 
@@ -93,15 +92,16 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
         }
 
         public static IDWriteTextRenderer* CreateInstance(ManagedTextRenderer renderer)
-            => (IDWriteTextRenderer*)Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.Allocate(renderer, s_vtable);
+            => (IDWriteTextRenderer*)Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>
+                .Allocate(renderer, s_vtable);
 
         private static ManagedTextRenderer? Renderer(IDWriteTextRenderer* @this)
-            => Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.GetObject(@this);
+            => Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.GetObject((IUnknown*)@this);
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int QueryInterface(IDWriteTextRenderer* @this, Guid* iid, void* ppObject)
         {
-            if (*iid == Unknown.IID_IUnknown
+            if (*iid == typeof(IUnknown).GUID
                 || *iid == typeof(PixelSnapping).GUID
                 || *iid == typeof(TextRenderer).GUID)
             {
@@ -113,17 +113,17 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
                 return (int)Errors.HResult.E_NOINTERFACE;
             }
 
-            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.AddRef(@this);
+            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.AddRef((IUnknown*)@this);
             return (int)Errors.HResult.S_OK;
         }
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static uint AddRef(IDWriteTextRenderer* @this) =>
-            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.AddRef(@this);
+            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.AddRef((IUnknown*)@this);
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static uint Release(IDWriteTextRenderer* @this) =>
-            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.Release(@this);
+            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.Release((IUnknown*)@this);
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int IsPixelSnappingDisabled(IDWriteTextRenderer* @this, void* clientDrawingContext, TerraFX.Interop.Windows.BOOL* isDisabled)

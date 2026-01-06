@@ -11,32 +11,32 @@ public unsafe readonly struct TypeLibrary : IDisposable
 
     public TypeLibrary(ITypeLib* handle) => ITypeLib = handle;
 
-    public bool IsNull => ITypeLib is null;
+    public readonly bool IsNull => ITypeLib is null;
 
-    public uint GetTypeInfoCount() => ITypeLib->GetTypeInfoCount();
+    public readonly uint GetTypeInfoCount() => ITypeLib->GetTypeInfoCount();
 
-    public TypeInfo GetTypeInfo(uint index)
+    public readonly TypeInfo GetTypeInfo(uint index)
     {
         ITypeInfo* info;
         ITypeLib->GetTypeInfo(index, &info).ThrowIfFailed();
         return new(info);
     }
 
-    public TypeKind GetTypeInfoType(uint index)
+    public readonly TypeKind GetTypeInfoType(uint index)
     {
         TypeKind kind;
         ITypeLib->GetTypeInfoType(index, (TYPEKIND*)&kind).ThrowIfFailed();
         return kind;
     }
 
-    public TypeInfo GetTypeInfoOfGuid(Guid guid)
+    public readonly TypeInfo GetTypeInfoOfGuid(Guid guid)
     {
         ITypeInfo* info;
         ITypeLib->GetTypeInfoOfGuid(&guid, &info).ThrowIfFailed();
         return new(info);
     }
 
-    public TypeLibraryAttributes GetLibraryAttributes()
+    public readonly TypeLibraryAttributes GetLibraryAttributes()
     {
         TLIBATTR* attr;
         ITypeLib->GetLibAttr(&attr).ThrowIfFailed();
@@ -45,14 +45,14 @@ public unsafe readonly struct TypeLibrary : IDisposable
         return attributes;
     }
 
-    public TypeCompilation GetTypeCompilation()
+    public readonly TypeCompilation GetTypeCompilation()
     {
         ITypeComp* comp;
         ITypeLib->GetTypeComp(&comp).ThrowIfFailed();
         return new(comp);
     }
 
-    public void GetDocumentation(
+    public readonly void GetDocumentation(
         int index,
         out string name)
     {
@@ -61,7 +61,7 @@ public unsafe readonly struct TypeLibrary : IDisposable
         name = Strings.FromBSTRAndFree(namep);
     }
 
-    public void GetDocumentation(
+    public readonly void GetDocumentation(
         int index,
         out string name,
         out string documentation)
@@ -73,7 +73,7 @@ public unsafe readonly struct TypeLibrary : IDisposable
         documentation = Strings.FromBSTRAndFree(docs);
     }
 
-    public void GetDocumentation(
+    public readonly void GetDocumentation(
         int index,
         out string name,
         out string documentation,
@@ -91,7 +91,7 @@ public unsafe readonly struct TypeLibrary : IDisposable
         helpFile = Strings.FromBSTRAndFree(file);
     }
 
-    public bool IsName(string name, out string foundName)
+    public readonly bool IsName(string name, out string foundName)
     {
         ArgumentNullException.ThrowIfNull(name);
 
@@ -115,7 +115,7 @@ public unsafe readonly struct TypeLibrary : IDisposable
     /// </summary>
     /// <param name="name">The name to search for.</param>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> was null.</exception>
-    public (MemberId Id, TypeInfo Info) FindName(string name)
+    public readonly (MemberId Id, TypeInfo Info) FindName(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
 
@@ -142,7 +142,7 @@ public unsafe readonly struct TypeLibrary : IDisposable
     /// <param name="name">The name to search for.</param>
     /// <param name="foundName">The actual casing for the found name, if any.</param>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> was null.</exception>
-    public (MemberId Id, TypeInfo Info) FindName(string name, out string foundName)
+    public readonly (MemberId Id, TypeInfo Info) FindName(string name, out string foundName)
     {
         ArgumentNullException.ThrowIfNull(name);
 
@@ -172,7 +172,7 @@ public unsafe readonly struct TypeLibrary : IDisposable
     /// <param name="foundName">The actual casing for the found name, if any.</param>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> was null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxHits"/> was zero.</exception>
-    public IReadOnlyList<(MemberId Id, TypeInfo Info)> FindName(string name, ushort maxHits, out string foundName)
+    public readonly IReadOnlyList<(MemberId Id, TypeInfo Info)> FindName(string name, ushort maxHits, out string foundName)
     {
         ArgumentNullException.ThrowIfNull(name);
         if (maxHits < 1)

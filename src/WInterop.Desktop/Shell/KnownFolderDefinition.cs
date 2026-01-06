@@ -16,7 +16,7 @@ public class KnownFolderDefinition : IDisposable
     private readonly KnownFolderCategory _category;
     private IntPtr _pszName;
     private IntPtr _pszDescription;
-    private Guid _fidParent;
+    private readonly Guid _fidParent;
     private IntPtr _pszRelativePath;
     private IntPtr _pszParsingName;
     private IntPtr _pszTooltip;
@@ -25,7 +25,7 @@ public class KnownFolderDefinition : IDisposable
     private IntPtr _pszSecurity;
     private readonly AllFileAttributes _dwAttributes;
     private readonly KnownFolderDefinitionFlags _kfdFlags;
-    private Guid _ftidType;
+    private readonly Guid _ftidType;
 
     // Can't use a bool here as the class will no longer be blittable
     private int _disposed;

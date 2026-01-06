@@ -10,13 +10,13 @@ namespace WInterop.Direct2d;
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 [Guid(InterfaceIds.IID_ID2D1Image)]
-public unsafe struct Image : Resource.Interface, IDisposable
+public readonly unsafe struct Image : Resource.Interface, IDisposable
 {
     internal readonly ID2D1Image* _handle;
 
     internal Image(ID2D1Image* handle) => _handle = handle;
 
-    public unsafe Factory GetFactory() => Resource.From(this).GetFactory();
+    public readonly unsafe Factory GetFactory() => Resource.From(this).GetFactory();
 
-    public void Dispose() => _handle->Release();
+    public readonly void Dispose() => _handle->Release();
 }

@@ -107,7 +107,7 @@ public readonly unsafe struct TextLayout : TextLayout.Interface, IDisposable
 
         if (count == 0)
         {
-            return Array.Empty<ClusterMetrics>();
+            return [];
         }
 
         ClusterMetrics[] metrics = new ClusterMetrics[(int)count];
@@ -189,7 +189,7 @@ public readonly unsafe struct TextLayout : TextLayout.Interface, IDisposable
         var result = Handle->GetLineMetrics(null, 0, &count);
         if (count == 0)
         {
-            return Array.Empty<LineMetrics>();
+            return [];
         }
 
         LineMetrics[] metrics = new LineMetrics[count];

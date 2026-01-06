@@ -103,7 +103,10 @@ public class StringBufferTests
             using StringBuffer buffer = new();
             var length = typeof(HeapBuffer).GetField("_byteCapacity", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            nuint setValue = (nuint)((ulong)uint.MaxValue * 2 + plusValue);
+            nuint setValue = uint.MaxValue;
+            setValue *= 2;
+            setValue += plusValue;
+
             length.SetValue(buffer, setValue);
 
             buffer.CharCapacity.Should().Be(uint.MaxValue);
@@ -526,7 +529,7 @@ buffer.Append(sourceBuffer);
     {
         // We want equivalence with built-in string behavior
         using var buffer = new StringBuffer(content);
-        buffer.Split(splitChar).Should().BeEquivalentTo(content?.Split(splitChar) ?? new string[] { "" });
+        buffer.Split(splitChar).Should().BeEquivalentTo(content?.Split(splitChar) ?? [""]);
     }
 
     [Fact(Skip = "Slow test (intentional). Run when making StringBuffer changes.")]
@@ -548,8 +551,8 @@ buffer.Append(sourceBuffer);
         {
             Parallel.For(0, 25, i =>
             {
-                    // Sleep breifly to allow the content to change
-                    Task.Delay(2).Wait();
+                // Sleep breifly to allow the content to change
+                Task.Delay(2).Wait();
                 splitStrings.Add(buffer.Split());
             });
         });
@@ -608,7 +611,7 @@ buffer.Append(sourceBuffer);
     {
         // We want equivalence with built-in string behavior
         using var buffer = new StringBuffer(content);
-        buffer.Split(splitChars).Should().BeEquivalentTo(content?.Split(splitChars) ?? new string[] { "" });
+        buffer.Split(splitChars).Should().BeEquivalentTo(content?.Split(splitChars) ?? [""]);
     }
 
     [Theory,
@@ -791,7 +794,7 @@ buffer.Append(sourceBuffer);
         buffer.ToString().Should().Be(expected);
     }
 
-    private void AppendMultithreadedValidator(StringBuffer buffer)
+    private static void AppendMultithreadedValidator(StringBuffer buffer)
     {
         buffer.Length.Should().Be(26 * 3);
 

@@ -7,7 +7,7 @@ public struct ActionWrapper<TBuffer> : IBufferAction<TBuffer>
 {
     public Action<TBuffer> Action;
 
-    void IBufferAction<TBuffer>.Action(TBuffer buffer)
+    readonly void IBufferAction<TBuffer>.Action(TBuffer buffer)
     {
         Action(buffer);
     }

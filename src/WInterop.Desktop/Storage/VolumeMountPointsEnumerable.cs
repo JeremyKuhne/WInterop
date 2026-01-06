@@ -52,8 +52,7 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
         {
             if (_lastEntryFound) return false;
 
-            if (_buffer == null)
-                throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+            ObjectDisposedException.ThrowIf(_buffer == null, typeof(VolumeMountPointsEnumerable));
 
             Current = _findHandle is null
                 ? FindFirstVolume()
@@ -64,8 +63,7 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
 
         private unsafe string FindFirstVolume()
         {
-            if (_buffer is null)
-                throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+            ObjectDisposedException.ThrowIf(_buffer is null, typeof(VolumeMountPointsEnumerable));
 
             // Need at least some length on initial call or we'll get ERROR_INVALID_PARAMETER
             _buffer.EnsureCharCapacity(400);
@@ -106,8 +104,7 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
         {
             Debug.Assert(_findHandle is not null);
 
-            if (_buffer is null)
-                throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
+            ObjectDisposedException.ThrowIf(_buffer is null, typeof(VolumeMountPointsEnumerable));
 
             if (!TerraFXWindows.FindNextVolumeMountPointW(_findHandle, _buffer.CharPointer, _buffer.CharCapacity))
             {

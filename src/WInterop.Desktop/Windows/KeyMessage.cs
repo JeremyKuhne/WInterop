@@ -28,41 +28,41 @@ public struct KeyMessage
     /// <summary>
     ///  The character for a Char message.
     /// </summary>
-    public char CharacterCode => (char)_wParam;
+    public readonly char CharacterCode => (char)_wParam;
 
     /// <summary>
     ///  Key code for a Key message.
     /// </summary>
-    public VirtualKey KeyCode => (VirtualKey)_wParam;
+    public readonly VirtualKey KeyCode => (VirtualKey)_wParam;
 
     /// <summary>
     ///  Repeat count of the current message.
     /// </summary>
-    public ushort RepeatCount => (ushort)(_lParam & RepeatMask);
+    public readonly ushort RepeatCount => (ushort)(_lParam & RepeatMask);
 
     /// <summary>
     ///  Scan code. For Char messages, this is the most recent KeyDown value.
     /// </summary>
-    public byte ScanCode => (byte)((_lParam & ScanCodeMask) >> 16);
+    public readonly byte ScanCode => (byte)((_lParam & ScanCodeMask) >> 16);
 
     /// <summary>
     ///  Right ALT, CTRL, numeric keypad INS, DEL, HOME, END, PAGE UP, PAGE DOWN, arrow key cluster.
     ///  Possibly others. For Char messages, this is the most recent KeyDown value.
     /// </summary>
-    public bool ExtendedKey => (_lParam & ExtendedKeyMask) != 0;
+    public readonly bool ExtendedKey => (_lParam & ExtendedKeyMask) != 0;
 
     /// <summary>
     ///  ALT key was down. For Char messages, this is the most recent KeyDown value.
     /// </summary>
-    public bool AltKeyDown => (_lParam & ContextCodeMask) != 0;
+    public readonly bool AltKeyDown => (_lParam & ContextCodeMask) != 0;
 
     /// <summary>
     ///  Previous key state when the message was sent. For Char messages, this is the most recent KeyDown value.
     /// </summary>
-    public bool KeyDown => (_lParam & PreviousStateMask) != 0;
+    public readonly bool KeyDown => (_lParam & PreviousStateMask) != 0;
 
     /// <summary>
     ///  Transition state. For Char messages, this is the most recent KeyDown value.
     /// </summary>
-    public bool KeyReleased => (_lParam & TransitionState) != 0;
+    public readonly bool KeyReleased => (_lParam & TransitionState) != 0;
 }

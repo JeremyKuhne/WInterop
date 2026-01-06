@@ -19,7 +19,7 @@ public struct AccessMask
 
     public StandardAccessRights StandardRights
     {
-        get => (StandardAccessRights)(Value & (uint)StandardAccessRights.All);
+        readonly get => (StandardAccessRights)(Value & (uint)StandardAccessRights.All);
         set
         {
             Value &= ~(uint)StandardAccessRights.All;
@@ -29,7 +29,7 @@ public struct AccessMask
 
     public GenericAccessRights GenericRights
     {
-        get => (GenericAccessRights)(Value & GenericRightsMask);
+        readonly get => (GenericAccessRights)(Value & GenericRightsMask);
         set
         {
             Value &= ~GenericRightsMask;
@@ -39,7 +39,7 @@ public struct AccessMask
 
     public bool AccessSystemSecurity
     {
-        get => (Value & (uint)StandardAccessRights.AccessSystemSecurity) != 0;
+        readonly get => (Value & (uint)StandardAccessRights.AccessSystemSecurity) != 0;
         set
         {
             if (value)

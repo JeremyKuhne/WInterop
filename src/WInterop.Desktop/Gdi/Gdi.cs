@@ -384,7 +384,7 @@ public static partial class Gdi
     public static unsafe Rectangle GetBoundsRect(this in DeviceContext context, bool reset = false)
     {
         Rect rect;
-        TerraFXWindows.GetBoundsRect(context, (RECT*)&rect, reset ? (uint)BoundsState.Reset : default);
+        _ = TerraFXWindows.GetBoundsRect(context, (RECT*)&rect, reset ? (uint)BoundsState.Reset : default);
         return rect;
     }
 
@@ -407,7 +407,7 @@ public static partial class Gdi
 
         if (count == 0)
         {
-            return Span<PaletteEntry>.Empty;
+            return [];
         }
 
         PaletteEntry[] entries = new PaletteEntry[count];
@@ -426,7 +426,7 @@ public static partial class Gdi
         uint count = TerraFXWindows.GetSystemPaletteEntries(deviceContext, 0, 0, null);
 
         if (count == 0)
-            return Span<PaletteEntry>.Empty;
+            return [];
 
         PaletteEntry[] entries = new PaletteEntry[count];
 

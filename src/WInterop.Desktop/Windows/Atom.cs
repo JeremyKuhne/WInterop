@@ -21,7 +21,7 @@ public struct Atom
 
     public static Atom Null = new(0);
 
-    public bool IsValid => ATOM != 0;
+    public readonly bool IsValid => ATOM != 0;
 
     public static bool IsAtom(nint pointer)
     {

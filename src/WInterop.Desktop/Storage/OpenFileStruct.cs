@@ -24,5 +24,5 @@ public unsafe struct OpenFileStruct
     public string PathName => Strings.FromNullTerminatedAsciiString(_szPathName.Buffer);
 
     // The nErrCode is a DOS error, which maps directly to Windows errors.
-    public WindowsError ErrorCode => (WindowsError)_nErrCode;
+    public readonly WindowsError ErrorCode => (WindowsError)_nErrCode;
 }

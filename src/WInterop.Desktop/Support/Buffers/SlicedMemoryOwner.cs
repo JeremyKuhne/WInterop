@@ -8,7 +8,7 @@ namespace WInterop.Support.Buffers;
 /// <summary>
 ///  Wrapper to slice an <see cref="IMemoryOwner{T}"/>
 /// </summary>
-public struct SlicedMemoryOwner<T> : IMemoryOwner<T>
+public readonly struct SlicedMemoryOwner<T> : IMemoryOwner<T>
 {
     private readonly IMemoryOwner<T> _owner;
     private readonly int _start;
@@ -17,8 +17,7 @@ public struct SlicedMemoryOwner<T> : IMemoryOwner<T>
     public SlicedMemoryOwner(IMemoryOwner<T> owner, int start, int length)
     {
         int originalLength = owner.Memory.Length;
-        if (start >= originalLength)
-            throw new ArgumentOutOfRangeException(nameof(start));
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(start, originalLength);
         if (start + length >= originalLength)
             throw new ArgumentOutOfRangeException(nameof(length));
 
@@ -27,7 +26,7 @@ public struct SlicedMemoryOwner<T> : IMemoryOwner<T>
         _length = length;
     }
 
-    public Memory<T> Memory => _owner.Memory.Slice(_start, _length);
+    public readonly Memory<T> Memory => _owner.Memory.Slice(_start, _length);
 
-    public void Dispose() => _owner.Dispose();
+    public readonly void Dispose() => _owner.Dispose();
 }

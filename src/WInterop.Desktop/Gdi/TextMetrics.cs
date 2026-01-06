@@ -32,24 +32,21 @@ public struct TextMetrics
     private ByteBoolean _italic;
 
     public bool Italic
-    {
-        get => _italic;
+    { readonly get => _italic;
         set => _italic = value;
     }
 
     private ByteBoolean _underlined;
 
     public bool Underlined
-    {
-        get => _underlined;
+    { readonly get => _underlined;
         set => _underlined = value;
     }
 
     private ByteBoolean _struckOut;
 
     public bool StruckOut
-    {
-        get => _struckOut;
+    { readonly get => _struckOut;
         set => _struckOut = value;
     }
 

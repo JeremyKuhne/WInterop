@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace WInterop.Storage.Native;
 
 /// <summary>
@@ -12,6 +14,8 @@ public struct FILE_NAMES_INFORMATION
     public uint NextEntryOffset;
     public uint FileIndex;
     public uint FileNameLength;
-    private char _FileName;
-    public ReadOnlySpan<char> FileName => TrailingArray<char>.GetBufferInBytes(in _FileName, FileNameLength);
+    private readonly char _FileName;
+
+    [UnscopedRef]
+    public readonly ReadOnlySpan<char> FileName => TrailingArray<char>.GetBufferInBytes(in _FileName, FileNameLength);
 }

@@ -38,7 +38,7 @@ public class CheckedReader : Reader
     {
         set
         {
-            if (value > _byteCapacity) throw new ArgumentOutOfRangeException(nameof(ByteOffset));
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, _byteCapacity);
             base.ByteOffset = value;
         }
     }

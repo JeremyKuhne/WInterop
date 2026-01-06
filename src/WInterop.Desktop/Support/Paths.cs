@@ -111,7 +111,7 @@ public static class Paths
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="path1"/> is null.</exception>
     public static void Join(StringBuilder path1, ReadOnlySpan<char> path2)
     {
-        if (path1 is null) throw new ArgumentNullException(nameof(path1));
+        ArgumentNullException.ThrowIfNull(path1);
 
         // Add nothing to something is something
         if (path2.Length == 0) return;

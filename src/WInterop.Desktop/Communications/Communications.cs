@@ -77,10 +77,10 @@ public static unsafe partial class Communications
         CommunicationsConfig config = default;
         uint size = (uint)sizeof(CommunicationsConfig);
 
-        fixed (void* p = port)
+        fixed (char* p = port)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.GetDefaultCommConfigW((char*)p, (COMMCONFIG*)&config, &size));
+                TerraFXWindows.GetDefaultCommConfigW(p, (COMMCONFIG*)&config, &size));
         }
 
         return config;

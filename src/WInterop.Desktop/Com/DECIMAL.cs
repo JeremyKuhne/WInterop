@@ -19,7 +19,7 @@ public struct DECIMAL
     public uint Lo32;
     public uint Mid32;
 
-    public decimal ToDecimal()
+    public readonly decimal ToDecimal()
     {
         return new decimal(
             lo: (int)Lo32,

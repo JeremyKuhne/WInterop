@@ -4,13 +4,12 @@
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using WInterop.Com.Native;
 using WInterop.Errors;
 using IOStream = System.IO.Stream;
 
 namespace WInterop.Com;
 
-public unsafe partial struct Stream
+public readonly unsafe partial struct Stream
 {
     private static unsafe class CCW
     {
@@ -46,31 +45,38 @@ public unsafe partial struct Stream
         public static IStream* CreateInstance(IOStream stream)
             => (IStream*)Lifetime<IStream.Vtbl<IStream>, IOStream>.Allocate(stream, s_vtable);
 
-        private static IOStream? Stream(void* @this)
-            => Lifetime<IStream.Vtbl<IStream>, IOStream>.GetObject(@this);
+        private static IOStream? Stream(IStream* @this)
+            => Lifetime<IStream.Vtbl<IStream>, IOStream>.GetObject((IUnknown*)@this);
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int QueryInterface(IStream* @this, Guid* iid, void** ppObject)
         {
-            if (*iid == Unknown.IID_IUnknown || *iid == typeof(IStream).GUID)
+            if (ppObject is null)
+            {
+                return (int)HResult.E_POINTER;
+            }
+
+            if (*iid == typeof(IUnknown).GUID
+                || *iid == typeof(IStream).GUID
+                || *iid == typeof(ISequentialStream).GUID)
             {
                 *ppObject = @this;
             }
             else
             {
-                ppObject = null;
+                *ppObject = null;
                 return (int)HResult.E_NOINTERFACE;
             }
 
-            Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef(@this);
+            Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef((IUnknown*)@this);
             return (int)HResult.S_OK;
         }
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
-        private static uint AddRef(IStream* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef(@this);
+        private static uint AddRef(IStream* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef((IUnknown*)@this);
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
-        private static uint Release(IStream* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.Release(@this);
+        private static uint Release(IStream* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.Release((IUnknown*)@this);
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static unsafe int Read(IStream* @this, void* pv, uint cb, uint* pcbRead)

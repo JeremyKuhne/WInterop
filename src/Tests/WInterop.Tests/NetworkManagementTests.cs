@@ -10,7 +10,7 @@ public partial class Basic
     [Fact]
     public void BasicGetLocalGroupNames()
     {
-        string[] knownLocalGroups = { "Administrators", "Guests", "Users" };
+        string[] knownLocalGroups = ["Administrators", "Guests", "Users"];
         var localGroups = Network.EnumerateLocalGroups();
         localGroups.Should().Contain(knownLocalGroups);
         knownLocalGroups.Should().BeSubsetOf(localGroups);
@@ -19,7 +19,7 @@ public partial class Basic
     [Fact]
     public void BasicGetLocalGroupMembers()
     {
-        string[] knownMembers = { "Authenticated Users", "INTERACTIVE" };
+        string[] knownMembers = ["Authenticated Users", "INTERACTIVE"];
         var members = Network.EnumerateGroupUsers("Users");
         members.Select(m => m.Name).Should().Contain(knownMembers);
         knownMembers.Should().BeSubsetOf(members.Select(m => m.Name));

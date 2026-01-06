@@ -7,7 +7,7 @@ public struct FuncWrapper<TBuffer, T> : IBufferFunc<TBuffer, T>
 {
     public Func<TBuffer, T> Func;
 
-    T IBufferFunc<TBuffer, T>.Func(TBuffer buffer)
+    readonly T IBufferFunc<TBuffer, T>.Func(TBuffer buffer)
     {
         return Func(buffer);
     }

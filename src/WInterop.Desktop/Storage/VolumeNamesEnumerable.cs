@@ -47,8 +47,7 @@ public sealed class VolumeNamesEnumerable : IEnumerable<string>
 
         private unsafe string FindFirstVolume()
         {
-            if (_buffer is null)
-                throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
+            ObjectDisposedException.ThrowIf(_buffer is null, typeof(VolumeNamesEnumerator));
 
             HANDLE handle = TerraFXWindows.FindFirstVolumeW(
                 _buffer.CharPointer,
@@ -75,8 +74,7 @@ public sealed class VolumeNamesEnumerable : IEnumerable<string>
         {
             Debug.Assert(_findHandle is not null);
 
-            if (_buffer is null)
-                throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
+            ObjectDisposedException.ThrowIf(_buffer is null, typeof(VolumeNamesEnumerator));
 
             if (!TerraFXWindows.FindNextVolumeW(_findHandle, _buffer.CharPointer, _buffer.CharCapacity))
             {

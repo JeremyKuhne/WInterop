@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace WInterop.Gdi.Native;
@@ -22,8 +23,9 @@ public struct METARECORD
     /// <summary>
     ///  Parameters, in reverse order.
     /// </summary>
-    private ushort _rdParm;
+    private readonly ushort _rdParm;
 
-    public ReadOnlySpan<ushort> rdParam
-        => TrailingArray<ushort>.GetBuffer(in _rdParm, rdSize - sizeof(uint) - sizeof(ushort));
+    [UnscopedRef]
+    public readonly ReadOnlySpan<ushort> rdParam =>
+        TrailingArray<ushort>.GetBuffer(in _rdParm, rdSize - sizeof(uint) - sizeof(ushort));
 }

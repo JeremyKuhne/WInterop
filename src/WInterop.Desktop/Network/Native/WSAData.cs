@@ -21,8 +21,8 @@ public unsafe struct WSAData
     public UnionType Union;
 
     // It doesn't really matter which union arm we hit for the versions.
-    public ushort wVersion => Union.WSAData64.wVersion;
-    public ushort wHighVersion => Union.WSAData32.wHighVersion;
+    public readonly ushort wVersion => Union.WSAData64.wVersion;
+    public readonly ushort wHighVersion => Union.WSAData32.wHighVersion;
 
     public ReadOnlySpan<char> szDescription
     {

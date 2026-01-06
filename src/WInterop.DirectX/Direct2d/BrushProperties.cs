@@ -9,7 +9,7 @@ namespace WInterop.Direct2d;
 /// <summary>
 ///  Describes the opacity and transformation of a brush. [D2D1_BRUSH_PROPERTIES]
 /// </summary>
-public struct BrushProperties
+public readonly struct BrushProperties
 {
     public readonly float Opacity;
     public readonly Matrix3x2 Transform;

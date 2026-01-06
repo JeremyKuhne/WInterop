@@ -19,7 +19,7 @@ public static partial class Processes
     /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
     public static void SetEnvironmentVariable(string name, string value)
     {
-        if (name is null) throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
 
         Error.ThrowLastErrorIfFalse(
             ProcessAndThreadImports.SetEnvironmentVariableW(name, value),
@@ -83,7 +83,7 @@ public static partial class Processes
     {
         using var buffer = ProcessAndThreadImports.GetEnvironmentStringsW();
         return buffer.IsInvalid
-            ? Enumerable.Empty<string>()
+            ? []
             : Strings.SplitNullTerminatedStringList(buffer.DangerousGetHandle());
     }
 

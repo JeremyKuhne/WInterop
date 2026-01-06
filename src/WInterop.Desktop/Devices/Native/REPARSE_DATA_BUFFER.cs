@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using WInterop.Storage;
 
@@ -36,21 +37,29 @@ public struct REPARSE_DATA_BUFFER
         private readonly ushort PrintNameOffset;
         private readonly ushort PrintNameLength;
         public uint Flags;
-        private char _PathBuffer;
-        public ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
-        public ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, PrintNameLength, PrintNameOffset);
+        private readonly char _PathBuffer;
+
+        [UnscopedRef]
+        public readonly ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
+
+        [UnscopedRef]
+        public readonly ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, PrintNameLength, PrintNameOffset);
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct MountPointReparseBuffer
+    public readonly struct MountPointReparseBuffer
     {
         private readonly ushort SubstituteNameOffset;
         private readonly ushort SubstituteNameLength;
         private readonly ushort PrintNameOffset;
         private readonly ushort PrintNameLength;
-        private char _PathBuffer;
-        public ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
-        public ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, PrintNameLength, PrintNameOffset);
+        private readonly char _PathBuffer;
+
+        [UnscopedRef]
+        public readonly ReadOnlySpan<char> SubstituteName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, SubstituteNameLength, SubstituteNameOffset);
+
+        [UnscopedRef]
+        public readonly ReadOnlySpan<char> PrintName => TrailingArray<char>.GetBufferInBytes(in _PathBuffer, PrintNameLength, PrintNameOffset);
     }
 
     public struct GenericReparseBuffer

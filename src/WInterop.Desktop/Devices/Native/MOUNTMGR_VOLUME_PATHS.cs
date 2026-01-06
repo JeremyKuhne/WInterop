@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jeremy W. Kuhne. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace WInterop.Devices.Native;
@@ -10,6 +11,8 @@ namespace WInterop.Devices.Native;
 public struct MOUNTMGR_VOLUME_PATHS
 {
     public uint MultiSzLength;
-    private char _MultiSz;
-    public ReadOnlySpan<char> MultiSz => TrailingArray<char>.GetBufferInBytes(in _MultiSz, MultiSzLength);
+    private readonly char _MultiSz;
+
+    [UnscopedRef]
+    public readonly ReadOnlySpan<char> MultiSz => TrailingArray<char>.GetBufferInBytes(in _MultiSz, MultiSzLength);
 }

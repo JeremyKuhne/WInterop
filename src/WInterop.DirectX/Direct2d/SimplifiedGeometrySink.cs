@@ -13,13 +13,13 @@ namespace WInterop.Direct2d;
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 [Guid(InterfaceIds.IID_ID2D1SimplifiedGeometrySink)]
-public unsafe struct SimplifiedGeometrySink : SimplifiedGeometrySink.Interface, IDisposable
+public readonly unsafe struct SimplifiedGeometrySink : SimplifiedGeometrySink.Interface, IDisposable
 {
     internal ID2D1SimplifiedGeometrySink* Handle { get; }
 
     internal SimplifiedGeometrySink(ID2D1SimplifiedGeometrySink* handle) => Handle = handle;
 
-    public void AddBeziers(ReadOnlySpan<BezierSegment> beziers)
+    public readonly void AddBeziers(ReadOnlySpan<BezierSegment> beziers)
     {
         fixed (BezierSegment* b = beziers)
         {
@@ -27,7 +27,7 @@ public unsafe struct SimplifiedGeometrySink : SimplifiedGeometrySink.Interface, 
         }
     }
 
-    public void AddLines(ReadOnlySpan<PointF> points)
+    public readonly void AddLines(ReadOnlySpan<PointF> points)
     {
         fixed (PointF* p = points)
         {
@@ -35,25 +35,25 @@ public unsafe struct SimplifiedGeometrySink : SimplifiedGeometrySink.Interface, 
         }
     }
 
-    public void BeginFigure(PointF startPoint, FigureBegin figureBegin)
+    public readonly void BeginFigure(PointF startPoint, FigureBegin figureBegin)
         => Handle->BeginFigure(startPoint.ToD2D(), (D2D1_FIGURE_BEGIN)figureBegin);
 
-    public void BeginFigure((float X, float Y) startPoint, FigureBegin figureBegin)
+    public readonly void BeginFigure((float X, float Y) startPoint, FigureBegin figureBegin)
         => Handle->BeginFigure(new D2D_POINT_2F(startPoint.X, startPoint.Y), (D2D1_FIGURE_BEGIN)figureBegin);
 
-    public void Close() => Handle->Close().ThrowIfFailed();
+    public readonly void Close() => Handle->Close().ThrowIfFailed();
 
-    public void EndFigure(FigureEnd figureEnd) => Handle->EndFigure((D2D1_FIGURE_END)figureEnd);
+    public readonly void EndFigure(FigureEnd figureEnd) => Handle->EndFigure((D2D1_FIGURE_END)figureEnd);
 
-    public void SetFillMode(FillMode fillMode) => Handle->SetFillMode((D2D1_FILL_MODE)fillMode);
+    public readonly void SetFillMode(FillMode fillMode) => Handle->SetFillMode((D2D1_FILL_MODE)fillMode);
 
-    public void SetSegmentFlags(PathSegment vertexFlags) => Handle->SetSegmentFlags((D2D1_PATH_SEGMENT)vertexFlags);
+    public readonly void SetSegmentFlags(PathSegment vertexFlags) => Handle->SetSegmentFlags((D2D1_PATH_SEGMENT)vertexFlags);
 
     internal static ref SimplifiedGeometrySink From<TFrom>(in TFrom from)
         where TFrom : unmanaged, Interface
         => ref Unsafe.AsRef<SimplifiedGeometrySink>(Unsafe.AsPointer(ref Unsafe.AsRef(in from)));
 
-    public void Dispose()
+    public readonly void Dispose()
     {
         Handle->Close();
         Handle->Release();

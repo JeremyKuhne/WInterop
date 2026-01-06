@@ -12,7 +12,7 @@ public class Basic
     public void GetKnownFolderPath_Basic()
     {
         string windowsFolder = ShellMethods.GetKnownFolderPath(KnownFolderIds.Windows);
-        windowsFolder.Should().EndWithEquivalent("Windows");
+        windowsFolder.Should().EndWithEquivalentOf("Windows");
     }
 
     [Fact]

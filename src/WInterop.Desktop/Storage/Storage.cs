@@ -604,7 +604,7 @@ public static partial class Storage
 
             // If the return length is 1 there were no mount points. The buffer should be '\0'.
             if (returnLength < 3)
-            return Enumerable.Empty<string>();
+            return [];
 
             // The return length will be the entire length of the buffer, including the final string's
             // null and the string list's second null. Example: "Foo\0Bar\0\0" would be 9.
@@ -700,7 +700,7 @@ public static partial class Storage
         if (hashList->nCert_Hash == 0)
         {
             StorageImports.FreeEncryptionCertificateHashList(hashList);
-            return Enumerable.Empty<SecurityIdentifier>();
+            return [];
         }
 
         ENCRYPTION_CERTIFICATE_HASH* users = *hashList->pUsers;
@@ -1281,8 +1281,8 @@ public static partial class Storage
                 switch (error)
                 {
                     case WindowsError.ERROR_HANDLE_EOF:
-                            // No streams
-                            return Enumerable.Empty<StreamInformation>();
+                        // No streams
+                        return [];
                     case WindowsError.ERROR_MORE_DATA:
                         buffer.EnsureByteCapacity(buffer.ByteCapacity * 2);
                         break;
@@ -1305,7 +1305,7 @@ public static partial class Storage
     /// <returns>The number of bytes read.</returns>
     public static unsafe uint ReadFile(SafeFileHandle fileHandle, Span<byte> buffer, ulong? fileOffset = null)
     {
-        if (fileHandle is null) throw new ArgumentNullException(nameof(fileHandle));
+        ArgumentNullException.ThrowIfNull(fileHandle);
         if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException(message: null, nameof(fileHandle));
 
         uint numberOfBytesRead;
@@ -1351,7 +1351,7 @@ public static partial class Storage
     /// <returns>The number of bytes written.</returns>
     public static unsafe uint WriteFile(SafeFileHandle fileHandle, Span<byte> data, ulong? fileOffset = null)
     {
-        if (fileHandle is null) throw new ArgumentNullException(nameof(fileHandle));
+        ArgumentNullException.ThrowIfNull(fileHandle);
         if (fileHandle.IsClosed | fileHandle.IsInvalid) throw new ArgumentException(null, nameof(fileHandle));
 
         uint numberOfBytesWritten;
@@ -1445,7 +1445,7 @@ public static partial class Storage
     /// </summary>
     public static unsafe IEnumerable<string> GetDirectoryFilenames(SafeFileHandle directoryHandle)
     {
-        List<string> filenames = new();
+        List<string> filenames = [];
         GetFullDirectoryInfoHelper(directoryHandle, buffer =>
         {
             FILE_FULL_DIR_INFORMATION* info = (FILE_FULL_DIR_INFORMATION*)buffer.BytePointer;
@@ -1463,7 +1463,7 @@ public static partial class Storage
     /// </summary>
     public static unsafe IEnumerable<FullFileInformation> GetDirectoryInformation(SafeFileHandle directoryHandle)
     {
-        List<FullFileInformation> infos = new();
+        List<FullFileInformation> infos = [];
         GetFullDirectoryInfoHelper(directoryHandle, buffer =>
         {
             FILE_FULL_DIR_INFORMATION* info = (FILE_FULL_DIR_INFORMATION*)buffer.BytePointer;

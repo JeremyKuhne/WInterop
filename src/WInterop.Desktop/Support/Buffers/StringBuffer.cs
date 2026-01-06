@@ -84,10 +84,7 @@ public class StringBuffer : HeapBuffer
         set
         {
             using var readLock = _handleLock.Lock(Locks.Type.Read);
-            if (index >= _length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, _length);
 
             CharPointer[index] = value;
         }
@@ -210,7 +207,7 @@ public class StringBuffer : HeapBuffer
     public unsafe bool SubStringEquals(string value, uint startIndex = 0, int count = -1)
     {
         if (value is null) return false;
-        if (count < -1) throw new ArgumentOutOfRangeException(nameof(count));
+        ArgumentOutOfRangeException.ThrowIfLessThan(count, -1);
 
         using var readLock = _handleLock.Lock(Locks.Type.Read);
         uint realCount = count == -1 ? _length - startIndex : (uint)count;
@@ -263,7 +260,7 @@ public class StringBuffer : HeapBuffer
         using var readLock = _handleLock.Lock(Locks.Type.UpgradableRead);
 
         uint oldLength = _length;
-        if (count >= uint.MaxValue - oldLength) throw new ArgumentOutOfRangeException(nameof(count));
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(count, uint.MaxValue - oldLength);
 
         using var writeLock = _handleLock.Lock(Locks.Type.Write);
 
@@ -328,7 +325,7 @@ public class StringBuffer : HeapBuffer
     /// </exception>
     public void Append(StringBuffer value, uint startIndex = 0)
     {
-        if (value is null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
 
         // We don't want the length of the source to change so we need to read lock
         using var readLock = value._handleLock.Lock(Locks.Type.Read);
@@ -348,7 +345,7 @@ public class StringBuffer : HeapBuffer
     /// </exception>
     public void Append(StringBuffer value, uint startIndex, uint count)
     {
-        if (value is null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
         if (count == 0) return;
 
         using var readLock = _handleLock.Lock(Locks.Type.UpgradableRead);
@@ -367,12 +364,12 @@ public class StringBuffer : HeapBuffer
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="destination"/> is null</exception>
     public unsafe void CopyTo(uint bufferIndex, StringBuffer destination, uint destinationIndex, uint count)
     {
-        if (destination is null) throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(destination);
 
         using var readLock = _handleLock.Lock(Locks.Type.Read);
         using var writeLock = destination._handleLock.Lock(Locks.Type.Write);
 
-        if (destinationIndex > destination._length) throw new ArgumentOutOfRangeException(nameof(destinationIndex));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(destinationIndex, destination._length);
         if (_length < bufferIndex + count) throw new ArgumentOutOfRangeException(nameof(count));
 
         if (count == 0) return;
@@ -392,7 +389,7 @@ public class StringBuffer : HeapBuffer
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is null</exception>
     public unsafe void CopyFrom(uint bufferIndex, string source, int sourceIndex = 0, int count = -1)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
         if (sourceIndex < 0 || sourceIndex > source.Length) throw new ArgumentOutOfRangeException(nameof(sourceIndex));
         if (count < 0) count = source.Length - sourceIndex;
         if (count == 0) return;
@@ -401,7 +398,7 @@ public class StringBuffer : HeapBuffer
 
         using var writeLock = _handleLock.Lock(Locks.Type.Write);
 
-        if (bufferIndex > _length) throw new ArgumentOutOfRangeException(nameof(bufferIndex));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(bufferIndex, _length);
 
         uint lastIndex = bufferIndex + (uint)count;
         if (_length < lastIndex) UnlockedSetLength(lastIndex);
@@ -590,8 +587,8 @@ public class StringBuffer : HeapBuffer
     {
         using var readLock = _handleLock.Lock(Locks.Type.Read);
 
-        if (startIndex > (_length == 0 ? 0 : _length - 1)) throw new ArgumentOutOfRangeException(nameof(startIndex));
-        if (count < -1) throw new ArgumentOutOfRangeException(nameof(count));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(startIndex, _length == 0 ? 0 : _length - 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(count, -1);
 
         uint realCount = count == -1 ? _length - startIndex : (uint)count;
 

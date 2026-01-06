@@ -57,14 +57,14 @@ public unsafe readonly struct StorageEnumerator : IDisposable
     /// <summary>
     ///  Resets back to the beginning.
     /// </summary>
-    public void Reset() => _enumerator->Reset().ThrowIfFailed();
+    public readonly void Reset() => _enumerator->Reset().ThrowIfFailed();
 
     /// <summary>
     ///  Skip the specified number of entries.
     /// </summary>
-    public void Skip(uint count) => _enumerator->Skip(count).ThrowIfFailed();
+    public readonly void Skip(uint count) => _enumerator->Skip(count).ThrowIfFailed();
 
-    public void Dispose() => _enumerator->Release();
+    public readonly void Dispose() => _enumerator->Release();
 
     public sealed class StatsCollection : ReadOnlyCollection<StorageStats>, IDisposable
     {

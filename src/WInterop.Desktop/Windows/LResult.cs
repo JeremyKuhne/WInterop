@@ -9,8 +9,8 @@ public struct LResult
 {
     public nint Value;
 
-    public ushort LowWord => Conversion.LowWord(Value);
-    public ushort HighWord => Conversion.HighWord(Value);
+    public readonly ushort LowWord => Conversion.LowWord(Value);
+    public readonly ushort HighWord => Conversion.HighWord(Value);
 
     public LResult(nint value) => Value = value;
 

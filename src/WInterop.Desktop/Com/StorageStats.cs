@@ -15,10 +15,10 @@ public unsafe struct StorageStats : IDisposable
     public DateTime Modified => _stats.mtime.ToDateTimeUTC();
     public DateTime Created => _stats.ctime.ToDateTimeUTC();
     public DateTime Accessed => _stats.atime.ToDateTimeUTC();
-    public StorageMode Mode => (StorageMode)_stats.grfMode;
-    public LockType LocksSupported => (LockType)_stats.grfLocksSupported;
-    public Guid ClassId => _stats.clsid;
-    public uint StateBits => _stats.grfStateBits;
+    public readonly StorageMode Mode => (StorageMode)_stats.grfMode;
+    public readonly LockType LocksSupported => (LockType)_stats.grfLocksSupported;
+    public readonly Guid ClassId => _stats.clsid;
+    public readonly uint StateBits => _stats.grfStateBits;
 
     public void Dispose()
     {

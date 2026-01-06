@@ -41,98 +41,85 @@ public struct DeviceControlBlock
 
     // DWORD fBinary  :1;
     public bool Binary
-    {
-        get => this[BinaryMask];
+    { readonly get => this[BinaryMask];
         set => this[BinaryMask] = value;
     }
 
     // DWORD fParity  :1;
     public bool ParityFlag
-    {
-        get => this[ParityMask];
+    { readonly get => this[ParityMask];
         set => this[ParityMask] = value;
     }
 
     // DWORD fOutxCtsFlow  :1;
     public bool OutxCtsFlow
-    {
-        get => this[CtsFlowMask];
+    { readonly get => this[CtsFlowMask];
         set => this[CtsFlowMask] = value;
     }
 
     // DWORD fOutxDsrFlow  :1;
     public bool OutxDsrFlow
-    {
-        get => this[DsrFlowMask];
+    { readonly get => this[DsrFlowMask];
         set => this[DsrFlowMask] = value;
     }
 
     // DWORD fDtrControl  :2;
     public DtrControl DtrControl
-    {
-        get => (DtrControl)this[DtrControlMask, 4];
+    { readonly get => (DtrControl)this[DtrControlMask, 4];
         set => this[DtrControlMask, 4] = (uint)value;
     }
 
     // DWORD fDsrSensitivity  :1;
     public bool DsrSensitivity
-    {
-        get => this[DsrSensitivityMask];
+    { readonly get => this[DsrSensitivityMask];
         set => this[DsrSensitivityMask] = value;
     }
 
     // DWORD fTXContinueOnXoff  :1;
     public bool TXContinueOnXoff
-    {
-        get => this[TXContinueMask];
+    { readonly get => this[TXContinueMask];
         set => this[TXContinueMask] = value;
     }
 
     // DWORD fOutX  :1;
     public bool OutX
-    {
-        get => this[OutMask];
+    { readonly get => this[OutMask];
         set => this[OutMask] = value;
     }
 
     // DWORD fInX  :1;
     public bool InX
-    {
-        get => this[InMask];
+    { readonly get => this[InMask];
         set => this[InMask] = value;
     }
 
     // DWORD fErrorChar  :1;
     public bool ErrorCharFlag
-    {
-        get => this[ErrorCharMask];
+    { readonly get => this[ErrorCharMask];
         set => this[ErrorCharMask] = value;
     }
 
     // DWORD fNull  :1;
     public bool Null
-    {
-        get => this[NullMask];
+    { readonly get => this[NullMask];
         set => this[NullMask] = value;
     }
 
     // DWORD fRtsControl  :2;
     public RtsControl RtsControl
-    {
-        get => (RtsControl)this[RtsControlMask, 12];
+    { readonly get => (RtsControl)this[RtsControlMask, 12];
         set => this[DtrControlMask, 12] = (uint)value;
     }
 
     // DWORD fAbortOnError  :1;
     public bool AbortOnError
-    {
-        get => this[AbortOnErrorMask];
+    { readonly get => this[AbortOnErrorMask];
         set => this[AbortOnErrorMask] = value;
     }
 
     private bool this[uint bitMask]
     {
-        get => (_bitFields & bitMask) != 0;
+        readonly get => (_bitFields & bitMask) != 0;
         set
         {
             if (value)
@@ -147,8 +134,7 @@ public struct DeviceControlBlock
     }
 
     private uint this[uint bitMask, int offset]
-    {
-        get => (_bitFields & bitMask) >> offset;
+    { readonly get => (_bitFields & bitMask) >> offset;
         set => _bitFields = (_bitFields & ~bitMask) | (value << offset & bitMask);
     }
 }

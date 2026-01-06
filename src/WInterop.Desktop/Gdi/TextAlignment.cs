@@ -43,24 +43,21 @@ public struct TextAlignment
     }
 
     public bool UpdatePosition
-    {
-        get => (Value & TA.TA_UPDATECP) != 0;
+    { readonly get => (Value & TA.TA_UPDATECP) != 0;
         set => Value = value
             ? (Value | TA.TA_UPDATECP)
             : (uint)(Value & ~TA.TA_UPDATECP);
     }
 
-    public bool Valid => Value != TerraFXWindows.GDI_ERROR;
+    public readonly bool Valid => Value != TerraFXWindows.GDI_ERROR;
 
     public Horizontal HorizontalAlignment
-    {
-        get => (Horizontal)(Value & (TA.TA_RIGHT | TA.TA_CENTER));
+    { readonly get => (Horizontal)(Value & (TA.TA_RIGHT | TA.TA_CENTER));
         set => Value = (Value & ~(uint)HorizontalAlignment) | (uint)value;
     }
 
     public Vertical VerticalAlignment
-    {
-        get => (Vertical)(Value & (TA.TA_BOTTOM | TA.TA_BASELINE));
+    { readonly get => (Vertical)(Value & (TA.TA_BOTTOM | TA.TA_BASELINE));
         set => Value = (Value & ~(uint)VerticalAlignment) | (uint)value;
     }
 

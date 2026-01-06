@@ -119,7 +119,7 @@ public static class Strings
     {
         if (buffer is null)
         {
-            return Span<char>.Empty;
+            return [];
         }
 
         Span<char> span = new(buffer, int.MaxValue);
@@ -130,14 +130,14 @@ public static class Strings
     /// <summary>
     ///  Converts a BSTR to string.
     /// </summary>
-    [return: NotNullIfNotNull("bstr")]
+    [return: NotNullIfNotNull(nameof(bstr))]
     public static unsafe string? FromBSTR(char* bstr)
         => bstr is null ? null! : new(bstr, 0, (int)BSTRLength(bstr) / 2);
 
     /// <summary>
     ///  Converts a BSTR to string and frees the BSTR.
     /// </summary>
-    [return: NotNullIfNotNull("bstr")]
+    [return: NotNullIfNotNull(nameof(bstr))]
     public static unsafe string? FromBSTRAndFree(char* bstr)
     {
         string? result = FromBSTR(bstr);

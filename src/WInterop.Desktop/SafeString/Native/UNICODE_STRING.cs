@@ -58,6 +58,6 @@ public unsafe struct UNICODE_STRING
     /// <summary>
     ///  Returns the current buffer as a string.
     /// </summary>
-    public override unsafe string ToString()
+    public override readonly unsafe string ToString()
         => Length == 0 ? string.Empty : new string(Buffer, 0, Length / sizeof(char));
 }

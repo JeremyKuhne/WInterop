@@ -28,5 +28,5 @@ public struct PaletteEntry
     /// </summary>
     public PaletteEntryType Flags;
 
-    public override string ToString() => $"RGB: 0x{Red:X2}, 0x{Green:X2}, 0x{Blue:X2} {Flags}";
+    public override readonly string ToString() => $"RGB: 0x{Red:X2}, 0x{Green:X2}, 0x{Blue:X2} {Flags}";
 }

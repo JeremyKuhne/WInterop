@@ -96,7 +96,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
 
     protected unsafe void UnlockedEnsureByteCapacity(ulong minCapacity)
     {
-        ObjectDisposedException.ThrowIf(_handle is null, nameof(HeapBuffer));
+        ObjectDisposedException.ThrowIf(_handle is null, typeof(HeapBuffer));
 
         if (ByteCapacity < minCapacity)
         {
@@ -147,7 +147,11 @@ public class HeapBuffer : ISizedBuffer, IDisposable
         }
     }
 
-    public void Dispose() => Dispose(disposing: true);
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 
     protected virtual void Dispose(bool disposing)
     {
