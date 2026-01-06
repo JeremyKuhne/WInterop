@@ -14,7 +14,7 @@ public struct LResult
 
     public LResult(nint value) => Value = value;
 
-    public static implicit operator LResult(int value) => new((IntPtr)value);
+    public static implicit operator LResult(int value) => new(value);
     public static implicit operator int(LResult value) => (int)value.Value;
     public static implicit operator LResult(uint value) => new((IntPtr)value);
     public static implicit operator uint(LResult value) => (uint)value.Value;

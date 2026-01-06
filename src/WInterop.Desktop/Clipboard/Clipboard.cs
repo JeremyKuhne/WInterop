@@ -21,7 +21,7 @@ public static unsafe partial class Clipboard
         return BufferHelper.BufferInvoke((StringBuffer buffer) =>
         {
             uint count;
-            while ((count = (uint)TerraFXWindows.GetClipboardFormatNameW(format, buffer.UShortPointer, (int)buffer.CharCapacity)) == 0u)
+            while ((count = (uint)TerraFXWindows.GetClipboardFormatNameW(format, buffer.CharPointer, (int)buffer.CharCapacity)) == 0u)
             {
                 Error.ThrowIfLastErrorNot(WindowsError.ERROR_INSUFFICIENT_BUFFER);
                 buffer.EnsureCharCapacity(buffer.CharCapacity + 50);
@@ -186,7 +186,7 @@ public static unsafe partial class Clipboard
     {
         fixed (void* f = format)
         {
-            uint id = TerraFXWindows.RegisterClipboardFormatW((ushort*)f);
+            uint id = TerraFXWindows.RegisterClipboardFormatW((char*)f);
             if (id == 0)
                 Error.ThrowLastError(format);
             return id;

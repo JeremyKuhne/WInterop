@@ -9,7 +9,7 @@ public unsafe struct StorageStats : IDisposable
 {
     private STATSTG _stats;
 
-    public ReadOnlySpan<char> Name => Strings.GetSpanFromNullTerminatedBuffer((char*)_stats.pwcsName);
+    public ReadOnlySpan<char> Name => Strings.GetSpanFromNullTerminatedBuffer(_stats.pwcsName);
     public StorageType StorageType => (StorageType)_stats.type;
     public ulong Size => _stats.cbSize.QuadPart;
     public DateTime Modified => _stats.mtime.ToDateTimeUTC();

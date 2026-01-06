@@ -41,7 +41,7 @@ public readonly unsafe struct PixelSnapping : PixelSnapping.Interface, IDisposab
 
     internal static ref PixelSnapping From<TFrom>(in TFrom from)
         where TFrom : unmanaged, Interface
-        => ref Unsafe.AsRef<PixelSnapping>(Unsafe.AsPointer(ref Unsafe.AsRef(from)));
+        => ref Unsafe.AsRef<PixelSnapping>(Unsafe.AsPointer(ref Unsafe.AsRef(in from)));
 
     public void Dispose() => _handle->Release();
 

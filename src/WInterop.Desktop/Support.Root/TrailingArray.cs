@@ -21,7 +21,7 @@ public readonly struct TrailingArray<T> where T : unmanaged
     private readonly T _firstItem;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ReadOnlySpan<T> GetBuffer(in T first, uint count, uint offset = 0)
+    public static unsafe ReadOnlySpan<T> GetBuffer(scoped in T first, uint count, uint offset = 0)
     {
         fixed (void* p = &first)
         {
@@ -30,7 +30,7 @@ public readonly struct TrailingArray<T> where T : unmanaged
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ReadOnlySpan<T> GetBufferInBytes(in T first, uint countInBytes, uint offsetInBytes = 0)
+    public static unsafe ReadOnlySpan<T> GetBufferInBytes(scoped in T first, uint countInBytes, uint offsetInBytes = 0)
     {
         fixed (void* p = &first)
         {

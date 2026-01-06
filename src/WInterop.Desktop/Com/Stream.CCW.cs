@@ -49,13 +49,12 @@ public unsafe partial struct Stream
         private static IOStream? Stream(void* @this)
             => Lifetime<IStream.Vtbl<IStream>, IOStream>.GetObject(@this);
 
-        [UnmanagedCallersOnly]
-        private static int QueryInterface(void* @this, Guid* iid, void* ppObject)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static int QueryInterface(IStream* @this, Guid* iid, void** ppObject)
         {
-            if (*iid == Unknown.IID_IUnknown
-                || *iid == typeof(IStream).GUID)
+            if (*iid == Unknown.IID_IUnknown || *iid == typeof(IStream).GUID)
             {
-                ppObject = @this;
+                *ppObject = @this;
             }
             else
             {
@@ -67,14 +66,14 @@ public unsafe partial struct Stream
             return (int)HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
-        private static uint AddRef(void* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef(@this);
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static uint AddRef(IStream* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.AddRef(@this);
 
-        [UnmanagedCallersOnly]
-        private static uint Release(void* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.Release(@this);
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static uint Release(IStream* @this) => Lifetime<IStream.Vtbl<IStream>, Stream>.Release(@this);
 
-        [UnmanagedCallersOnly]
-        private static unsafe int Read(void* @this, void* pv, uint cb, uint* pcbRead)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int Read(IStream* @this, void* pv, uint cb, uint* pcbRead)
         {
             try
             {
@@ -100,8 +99,8 @@ public unsafe partial struct Stream
             }
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int Write(void* @this, void* pv, uint cb, uint* pcbWritten)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int Write(IStream* @this, void* pv, uint cb, uint* pcbWritten)
         {
             try
             {
@@ -127,8 +126,8 @@ public unsafe partial struct Stream
             }
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int Seek(void* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int Seek(IStream* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition)
         {
             try
             {
@@ -165,8 +164,8 @@ public unsafe partial struct Stream
             }
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int SetSize(void* @this, ULARGE_INTEGER libNewSize)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int SetSize(IStream* @this, ULARGE_INTEGER libNewSize)
         {
             try
             {
@@ -186,8 +185,8 @@ public unsafe partial struct Stream
             }
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int CopyTo(void* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int CopyTo(IStream* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten)
         {
             try
             {
@@ -243,8 +242,8 @@ public unsafe partial struct Stream
             }
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int Commit(void* @this, uint grfCommitFlags)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int Commit(IStream* @this, uint grfCommitFlags)
         {
             try
             {
@@ -263,29 +262,29 @@ public unsafe partial struct Stream
             }
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int Revert(void* @this)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int Revert(IStream* @this)
         {
             // We never report ourselves as Transacted, so we can just ignore this.
             return (int)HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int LockRegion(void* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int LockRegion(IStream* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType)
         {
             // Documented way to say we don't support locking
             return (int)HResult.STG_E_INVALIDFUNCTION;
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int UnlockRegion(void* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int UnlockRegion(IStream* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType)
         {
             // Documented way to say we don't support locking
             return (int)HResult.STG_E_INVALIDFUNCTION;
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int Stat(void* @this, STATSTG* pstatstg, uint grfStatFlag)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int Stat(IStream* @this, STATSTG* pstatstg, uint grfStatFlag)
         {
             try
             {
@@ -309,7 +308,7 @@ public unsafe partial struct Stream
                 {
                     // Caller wants a name
                     string name = stream is FileStream fs ? fs.Name : stream.ToString() ?? "IO.Stream";
-                    pstatstg->pwcsName = (ushort*)Marshal.StringToCoTaskMemUni(name);
+                    pstatstg->pwcsName = (char*)Marshal.StringToCoTaskMemUni(name);
                 }
 
                 return (int)HResult.S_OK;
@@ -320,8 +319,8 @@ public unsafe partial struct Stream
             }
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int Clone(void* @this, IStream** ppstm)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int Clone(IStream* @this, IStream** ppstm)
         {
             try
             {

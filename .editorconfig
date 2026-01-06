@@ -4,21 +4,6 @@ root = true
 # Native .cs files
 [**Native/*.cs]
 
-# SA1015: Closing generic bracket should be followed by a space.
-dotnet_diagnostic.SA1015.severity = none
-
-# SA1300: Element should begin with upper-case letter
-dotnet_diagnostic.SA1300.severity = none
-
-# SA1306: Field names should begin with lower-case letter
-dotnet_diagnostic.SA1306.severity = none
-
-# SA1307: Accessible fields should begin with upper-case letter
-dotnet_diagnostic.SA1307.severity = none
-
-# SA1313: Parameter names should begin with lower-case letter
-dotnet_diagnostic.SA1313.severity = none
-
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = none
 
@@ -97,12 +82,12 @@ csharp_style_var_when_type_is_apparent = false:silent
 
 # Expression-bodied members
 csharp_style_expression_bodied_accessors = true:silent
-csharp_style_expression_bodied_constructors =when_on_single_line:silent
+csharp_style_expression_bodied_constructors = when_on_single_line:silent
 csharp_style_expression_bodied_indexers = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
-csharp_style_expression_bodied_local_functions =true:silent
-csharp_style_expression_bodied_methods =when_on_single_line:silent
-csharp_style_expression_bodied_operators =when_on_single_line:silent
+csharp_style_expression_bodied_local_functions = true:silent
+csharp_style_expression_bodied_methods = when_on_single_line:silent
+csharp_style_expression_bodied_operators = when_on_single_line:silent
 csharp_style_expression_bodied_properties = true:suggestion
 
 # Pattern matching preferences
@@ -210,7 +195,7 @@ dotnet_naming_style.static_prefix_style.capitalization = camel_case
 # internal and private fields should be _camelCase
 dotnet_naming_rule.camel_case_for_private_internal_fields.severity = warning
 dotnet_naming_rule.camel_case_for_private_internal_fields.symbols  = private_internal_fields
-dotnet_naming_rule.camel_case_for_private_internal_fields.style    = camel_case_underscore_style
+dotnet_naming_rule.camel_case_for_private_internal_fields.style = camel_case_underscore_style
 dotnet_naming_symbols.private_internal_fields.applicable_kinds = field
 dotnet_naming_symbols.private_internal_fields.applicable_accessibilities = private, internal
 dotnet_naming_style.camel_case_underscore_style.required_prefix = _
@@ -220,137 +205,24 @@ dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
 # and complains about using "windows" specific APIs
 dotnet_diagnostic.CA1416.severity = none
 
-# SA1503: Braces should not be omitted
-dotnet_diagnostic.SA1503.severity = none
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_prefer_top_level_statements = true:silent
 
-# SA1101: Prefix local calls with this
-dotnet_diagnostic.SA1101.severity = none
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
 
-# SA1611: Element parameters should be documented
-dotnet_diagnostic.SA1611.severity = none
-
-# SA1309: Field names should not begin with underscore
-dotnet_diagnostic.SA1309.severity = none
-
-# SA1214: Readonly fields should appear before non-readonly fields
-dotnet_diagnostic.SA1214.severity = none
-
-# SA1600: Elements should be documented
-dotnet_diagnostic.SA1600.severity = none
-
-# SA1516: Elements should be separated by blank line
-dotnet_diagnostic.SA1516.severity = none
-
-# SA1201: Elements should appear in the correct order
-dotnet_diagnostic.SA1201.severity = none
-
-# SA1413: Use trailing comma in multi-line initializers
-dotnet_diagnostic.SA1413.severity = none
-
-# SA1615: Element return value should be documented
-dotnet_diagnostic.SA1615.severity = none
-
-# SA1612: Element parameter documentation should match element parameters
-dotnet_diagnostic.SA1612.severity = none
-
-# SA1601: Partial elements should be documented
-dotnet_diagnostic.SA1601.severity = none
-
-# SA1629: Documentation text should end with a period
-dotnet_diagnostic.SA1629.severity = none
-
-# SA1115: Parameter should follow comma
-dotnet_diagnostic.SA1115.severity = none
-
-# SA1512: Single-line comments should not be followed by blank line
-dotnet_diagnostic.SA1512.severity = none
-
-# SA1602: Enumeration items should be documented
-dotnet_diagnostic.SA1602.severity = silent
-
-# SA1202: Elements should be ordered by access
-dotnet_diagnostic.SA1202.severity = none
-
-# SA1502: Element should not be on a single line
-dotnet_diagnostic.SA1502.severity = none
-
-# SA1308: Variable names should not be prefixed
-dotnet_diagnostic.SA1308.severity = none
-
-# SA1401: Fields should be private
-dotnet_diagnostic.SA1401.severity = none
-
-# SA1128: Put constructor initializers on their own line
-dotnet_diagnostic.SA1128.severity = silent
-
-# SA1405: Debug.Assert should provide message text
-dotnet_diagnostic.SA1405.severity = none
-
-# SA1025: Code should not contain multiple whitespace in a row
-dotnet_diagnostic.SA1025.severity = none
-
-# SA1515: Single-line comment should be preceded by blank line
-dotnet_diagnostic.SA1515.severity = none
-
-# SA1625: Element documentation should not be copied and pasted
-dotnet_diagnostic.SA1625.severity = none
-
-# SA1204: Static elements should appear before instance elements
-dotnet_diagnostic.SA1204.severity = none
-
-# SA1623: Property summary documentation should match accessors
-dotnet_diagnostic.SA1623.severity = none
-
-# SA1642: Constructor summary documentation should begin with standard text
-dotnet_diagnostic.SA1642.severity = none
-
-# SA1310: Field names should not contain underscore
-dotnet_diagnostic.SA1310.severity = silent
-
-# SA1133: Do not combine attributes
-dotnet_diagnostic.SA1133.severity = none
-
-# SA1604: Element documentation should have summary
-dotnet_diagnostic.SA1604.severity = silent
-
-# SA1500: Braces for multi-line statements should not share line
-dotnet_diagnostic.SA1500.severity = silent
-
-# SA1203: Constants should appear before fields
-dotnet_diagnostic.SA1203.severity = none
-
-# SA1137: Elements should have the same indentation
-dotnet_diagnostic.SA1137.severity = silent
-
-# SA1011: Closing square brackets should be spaced correctly
-dotnet_diagnostic.SA1011.severity = silent
-
-# SA1618: Generic type parameters should be documented
-dotnet_diagnostic.SA1618.severity = silent
-
-# SA1127: Generic type constraints should be on their own line
-dotnet_diagnostic.SA1127.severity = none
-
-# SA1009: Closing parenthesis should be spaced correctly
-dotnet_diagnostic.SA1009.severity = none
-
-# SA1501: Statement should not be on a single line
-dotnet_diagnostic.SA1501.severity = silent
-
-# SA1311: Static readonly fields should begin with upper-case letter
-dotnet_diagnostic.SA1311.severity = none
-
-# SA1134: Each attribute should be placed on its own line of code.
-dotnet_diagnostic.SA1134.severity = none
-
-# SA1605: Partial element documentation should have summary.
-dotnet_diagnostic.SA1605.severity = none
-
-# SA1118: The parameter spans multiple lines.
-dotnet_diagnostic.SA1118.severity = silent
-
-# SA1023: Dereference symbol '*' should be followed by a space.
-dotnet_diagnostic.SA1023.severity = silent
-
-# SA1519: Braces should not be omitted from multi-line child statement
-dotnet_diagnostic.SA1519.severity = silent
+[*.{cs,vb}]
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+indent_size = 4
+end_of_line = crlf
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+dotnet_style_prefer_auto_properties = true:silent
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:silent
+dotnet_style_prefer_conditional_expression_over_return = true:suggestion
+dotnet_style_explicit_tuple_names = true:suggestion

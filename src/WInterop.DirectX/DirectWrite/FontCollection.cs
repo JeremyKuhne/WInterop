@@ -22,10 +22,10 @@ public readonly unsafe struct FontCollection : FontCollection.Interface, IDispos
     public bool FindFamilyName(string familyName, out uint index)
     {
         TerraFX.Interop.Windows.BOOL exists;
-        fixed (void* n = familyName)
+        fixed (char* n = familyName)
         fixed (uint* i = &index)
         {
-            Handle->FindFamilyName((ushort*)n, i, &exists).ThrowIfFailed();
+            Handle->FindFamilyName(n, i, &exists).ThrowIfFailed();
         }
 
         return exists;

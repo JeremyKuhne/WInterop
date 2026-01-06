@@ -10,12 +10,12 @@ namespace WInterop.Storage.Native;
 ///  Equivalent to <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa364406.aspx">FILE_STREAM_INFO</a> structure.
 /// <see cref="https://msdn.microsoft.com/en-us/library/windows/hardware/ff540364.aspx"/>
 /// </remarks>
-public struct FILE_STREAM_INFORMATION
+public readonly struct FILE_STREAM_INFORMATION
 {
-    public uint NextEntryOffset;
-    public uint StreamNameLength;
-    public ulong StreamSize;
-    public ulong StreamAllocationSize;
-    private char _StreamName;
+    public readonly uint NextEntryOffset;
+    public readonly uint StreamNameLength;
+    public readonly ulong StreamSize;
+    public readonly ulong StreamAllocationSize;
+    private readonly char _StreamName;
     public ReadOnlySpan<char> StreamName => TrailingArray<char>.GetBufferInBytes(in _StreamName, StreamNameLength);
 }

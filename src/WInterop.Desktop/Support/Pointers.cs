@@ -10,7 +10,7 @@ public static class Pointers
     /// </summary>
     public static unsafe void* Offset(void* pointer, int offset)
     {
-        return (void*)(((byte*)pointer) + offset);
+        return ((byte*)pointer) + offset;
     }
 
     /// <summary>
@@ -18,7 +18,7 @@ public static class Pointers
     /// </summary>
     public static unsafe void* Offset(void* pointer, uint offset)
     {
-        return (void*)(((byte*)pointer) + offset);
+        return ((byte*)pointer) + offset;
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public static class Pointers
     /// </summary>
     public static unsafe void* Offset(this IntPtr pointer, uint offset)
     {
-        return (void*)(((byte*)pointer) + offset);
+        return ((byte*)pointer) + offset;
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public static class Pointers
     /// </summary>
     public static unsafe void* Offset(this IntPtr pointer, ulong offset)
     {
-        return (void*)(((byte*)pointer) + offset);
+        return ((byte*)pointer) + offset;
     }
 
     /// <summary>
@@ -42,6 +42,6 @@ public static class Pointers
     /// </summary>
     public static unsafe void* Offset<T>(void* pointer) where T : unmanaged
     {
-        return (void*)(((byte*)pointer) + sizeof(T));
+        return ((byte*)pointer) + sizeof(T);
     }
 }

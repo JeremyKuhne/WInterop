@@ -79,16 +79,16 @@ public unsafe struct SecurityIdentifier : IEquatable<SecurityIdentifier>
         Unsafe.AsRef<SID>(sid).SubAuthorities().CopyTo(_sid.SubAuthorities());
     }
 
-    public byte Revision => _sid.Revision;
-    public IdentifierAuthority Authority => new(_sid.IdentifierAuthority);
+    public readonly byte Revision => _sid.Revision;
+    public readonly IdentifierAuthority Authority => new(_sid.IdentifierAuthority);
     public ReadOnlySpan<uint> SubAuthorities => _sid.SubAuthorities();
 
     public bool Equals(SecurityIdentifier other) => _sid.Revision == other._sid.Revision
-        && _sid.IdentifierAuthority.Equals(other._sid.IdentifierAuthority)
+        && _sid.IdentifierAuthority.Value[..].SequenceEqual(other._sid.IdentifierAuthority.Value[..])
         && SubAuthorities.SequenceEqual(other.SubAuthorities);
 
     public bool Equals(SID* other) => _sid.Revision == other->Revision
-        && _sid.IdentifierAuthority.Equals(other->IdentifierAuthority)
+        && _sid.IdentifierAuthority.Value[..].SequenceEqual(other->IdentifierAuthority.Value[..])
         && SubAuthorities.SequenceEqual(Unsafe.AsRef<SID>(other).SubAuthorities());
 
     public override bool Equals(object? obj)

@@ -8,9 +8,9 @@ namespace WInterop.Com;
 /// <summary>
 ///  Wrapper for easy access to <see cref="TerraFX.Interop.Windows.ITypeInfo"/>.
 /// </summary>
-public unsafe struct TypeInfo : IDisposable
+public unsafe readonly struct TypeInfo : IDisposable
 {
-    public ITypeInfo* ITypeInfo { get; private set; }
+    public ITypeInfo* ITypeInfo { get; init; }
 
     public TypeInfo(ITypeInfo* handle) => ITypeInfo = handle;
 
@@ -46,7 +46,7 @@ public unsafe struct TypeInfo : IDisposable
         MemberId memberId,
         out string name)
     {
-        ushort* namep;
+        char* namep;
         ITypeInfo->GetDocumentation(memberId, &namep, null, null, null).ThrowIfFailed();
         name = Strings.FromBSTRAndFree(namep);
     }
@@ -56,8 +56,8 @@ public unsafe struct TypeInfo : IDisposable
         out string name,
         out string documentation)
     {
-        ushort* namep;
-        ushort* docs;
+        char* namep;
+        char* docs;
         ITypeInfo->GetDocumentation(memberId, &namep, &docs, null, null).ThrowIfFailed();
         name = Strings.FromBSTRAndFree(namep);
         documentation = Strings.FromBSTRAndFree(docs);
@@ -70,10 +70,10 @@ public unsafe struct TypeInfo : IDisposable
         out uint helpContext,
         out string helpFile)
     {
-        ushort* namep;
-        ushort* docs;
+        char* namep;
+        char* docs;
         uint context;
-        ushort* file;
+        char* file;
         ITypeInfo->GetDocumentation(memberId, &namep, &docs, &context, &file).ThrowIfFailed();
         name = Strings.FromBSTRAndFree(namep);
         documentation = Strings.FromBSTRAndFree(docs);
@@ -99,7 +99,7 @@ public unsafe struct TypeInfo : IDisposable
 
     public string? GetMemberName(MemberId memberId)
     {
-        ushort* buffer;
+        char* buffer;
         uint count = 1;
         ITypeInfo->GetNames(memberId, &buffer, count, &count).ThrowIfFailed();
         return Strings.FromBSTRAndFree(buffer);
@@ -107,13 +107,12 @@ public unsafe struct TypeInfo : IDisposable
 
     public IReadOnlyList<string> GetMemberNames(MemberId memberId, uint maxNames)
     {
-        if (maxNames < 1)
-            throw new ArgumentOutOfRangeException(nameof(maxNames));
+        ArgumentOutOfRangeException.ThrowIfLessThan(maxNames, 1u);
 
-        ushort*[] buffer = new ushort*[maxNames];
+        char*[] buffer = new char*[maxNames];
         uint count = maxNames;
 
-        fixed (ushort** b = buffer)
+        fixed (char** b = buffer)
         {
             ITypeInfo->GetNames(memberId, b, count, &count)
                 .ThrowIfFailed($"Failed to get names for member id: {memberId}");
@@ -166,7 +165,5 @@ public unsafe struct TypeInfo : IDisposable
         {
             ITypeInfo->Release();
         }
-
-        ITypeInfo = null;
     }
 }

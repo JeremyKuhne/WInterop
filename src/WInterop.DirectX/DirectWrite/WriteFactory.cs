@@ -58,10 +58,10 @@ public readonly unsafe struct WriteFactory : WriteFactory.Interface, IDisposable
         bool useGdiNatural)
     {
         IDWriteTextLayout* layout;
-        fixed (void* s = @string)
+        fixed (char* s = @string)
         {
             _handle->CreateGdiCompatibleTextLayout(
-                (ushort*)s,
+                s,
                 (uint)@string.Length,
                 textFormat.Handle,
                 layoutWidth,
@@ -101,17 +101,17 @@ public readonly unsafe struct WriteFactory : WriteFactory.Interface, IDisposable
         IDWriteTextFormat* format;
         localeName ??= CultureInfo.CurrentCulture.Name;
 
-        fixed (void* n = fontFamilyName)
-        fixed (void* l = localeName)
+        fixed (char* n = fontFamilyName)
+        fixed (char* l = localeName)
         {
             _handle->CreateTextFormat(
-                (ushort*)n,
+                n,
                 fontCollection.Handle,
                 (DWRITE_FONT_WEIGHT)fontWeight,
                 (DWRITE_FONT_STYLE)fontStyle,
                 (DWRITE_FONT_STRETCH)fontStretch,
                 fontSize,
-                (ushort*)l,
+                l,
                 &format).ThrowIfFailed();
         }
 
@@ -122,10 +122,10 @@ public readonly unsafe struct WriteFactory : WriteFactory.Interface, IDisposable
     {
         IDWriteTextLayout* layout;
 
-        fixed (void* s = @string)
+        fixed (char* s = @string)
         {
             _handle->CreateTextLayout(
-                (ushort*)s,
+                s,
                 (uint)@string.Length,
                 textFormat.Handle,
                 maxSize.Width,

@@ -47,9 +47,9 @@ public static unsafe class TerraFxExtensions
             && sid.SubAuthorityCount == other->SubAuthorityCount
             && sid.SubAuthorities().SequenceEqual(other->SubAuthorities());
 
-    public static Span<uint> SubAuthorities(this ref SID sid)
+    public static Span<uint> SubAuthorities(this scoped ref SID sid)
     {
-        fixed (uint* sa = sid.SubAuthority)
+        fixed (uint* sa = &sid.SubAuthority.e0)
         {
             return new(sa, sid.SubAuthorityCount);
         }
@@ -68,10 +68,10 @@ public static unsafe class TerraFxExtensions
         switch (trustee.TrusteeForm)
         {
             case TRUSTEE_FORM.TRUSTEE_IS_NAME:
-                name = (char*)trustee.ptstrName;
+                name = trustee.ptstrName;
                 break;
             case TRUSTEE_FORM.TRUSTEE_IS_OBJECTS_AND_NAME:
-                name = (char*)((OBJECTS_AND_NAME_W*)trustee.ptstrName)->ptstrName;
+                name = ((OBJECTS_AND_NAME_W*)trustee.ptstrName)->ptstrName;
                 break;
         }
 

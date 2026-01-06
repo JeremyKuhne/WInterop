@@ -3,7 +3,9 @@
 
 namespace WInterop.CRT.Types;
 
+#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
 public enum pmode : int
+#pragma warning restore
 {
     _S_IFMT = 0xF000,   // File type mask
     _S_IFDIR = 0x4000,  // Directory

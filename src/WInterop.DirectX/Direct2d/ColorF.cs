@@ -33,10 +33,10 @@ public readonly struct ColorF
     }
 
     public static implicit operator ColorF(in DXGI_RGBA color)
-        => Unsafe.As<DXGI_RGBA, ColorF>(ref Unsafe.AsRef(color));
+        => Unsafe.As<DXGI_RGBA, ColorF>(ref Unsafe.AsRef(in color));
 
     public static implicit operator DXGI_RGBA(in ColorF color)
-        => Unsafe.As<ColorF, DXGI_RGBA>(ref Unsafe.AsRef(color));
+        => Unsafe.As<ColorF, DXGI_RGBA>(ref Unsafe.AsRef(in color));
 
     public static implicit operator Color(ColorF color)
         => Color.FromArgb((int)(color.A * 255), (int)(color.R * 255), (int)(color.G * 255), (int)(color.B * 255));

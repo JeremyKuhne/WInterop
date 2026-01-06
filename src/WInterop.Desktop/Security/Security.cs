@@ -389,15 +389,15 @@ public static unsafe partial class Security
             uint nameCharCapacity = nameBuffer.CharCapacity;
             uint domainNameCharCapacity = domainNameBuffer.CharCapacity;
 
-            fixed (void* n = _systemName)
+            fixed (char* n = _systemName)
             fixed (void* s = &_sid)
             {
                 while (!TerraFXWindows.LookupAccountSidW(
-                    (ushort*)n,
+                    n,
                     s,
-                    (ushort*)nameBuffer.CharPointer,
+                    nameBuffer.CharPointer,
                     &nameCharCapacity,
-                    (ushort*)domainNameBuffer.CharPointer,
+                    domainNameBuffer.CharPointer,
                     &domainNameCharCapacity,
                     (SID_NAME_USE*)&usage))
                 {
@@ -642,10 +642,10 @@ public static unsafe partial class Security
             {
                 while (!TerraFXWindows.LookupAccountNameW(
                     lpSystemName: null,
-                    lpAccountName: (ushort*)n,
+                    lpAccountName: n,
                     Sid: (SID*)&sid,
                     cbSid: &sidLength,
-                    ReferencedDomainName: domainNameBuffer.UShortPointer,
+                    ReferencedDomainName: domainNameBuffer.CharPointer,
                     cchReferencedDomainName: &domainNameLength,
                     peUse: &nameUse))
                 {

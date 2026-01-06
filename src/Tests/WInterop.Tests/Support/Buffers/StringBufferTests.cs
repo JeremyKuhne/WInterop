@@ -100,10 +100,10 @@ public class StringBufferTests
     {
         if (Environment.Is64BitProcess)
         {
-            using var buffer = new StringBuffer();
+            using StringBuffer buffer = new();
             var length = typeof(HeapBuffer).GetField("_byteCapacity", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            ulong setValue = (ulong)uint.MaxValue * 2 + plusValue;
+            nuint setValue = (nuint)((ulong)uint.MaxValue * 2 + plusValue);
             length.SetValue(buffer, setValue);
 
             buffer.CharCapacity.Should().Be(uint.MaxValue);
@@ -556,7 +556,9 @@ buffer.Append(sourceBuffer);
 
         writeTask.Start();
         splitTask.Start();
+#pragma warning disable xUnit1031 // Do not use blocking task operations in test method
         Task.WaitAll(writeTask, splitTask);
+#pragma warning restore xUnit1031 // Do not use blocking task operations in test method
 
         foreach (var split in splitStrings)
         {

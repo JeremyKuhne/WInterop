@@ -42,7 +42,7 @@ public static unsafe partial class Communications
         fixed (void* d = definition)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.BuildCommDCBW((ushort*)d, (DCB*)&dcb));
+                TerraFXWindows.BuildCommDCBW((char*)d, (DCB*)&dcb));
         }
 
         return dcb;
@@ -80,7 +80,7 @@ public static unsafe partial class Communications
         fixed (void* p = port)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.GetDefaultCommConfigW((ushort*)p, (COMMCONFIG*)&config, &size));
+                TerraFXWindows.GetDefaultCommConfigW((char*)p, (COMMCONFIG*)&config, &size));
         }
 
         return config;
@@ -97,7 +97,7 @@ public static unsafe partial class Communications
         fixed (void* p = port)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.CommConfigDialogW((ushort*)p, parent, (COMMCONFIG*)&config));
+                TerraFXWindows.CommConfigDialogW((char*)p, parent, (COMMCONFIG*)&config));
         }
 
         return config;

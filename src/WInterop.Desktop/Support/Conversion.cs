@@ -33,8 +33,8 @@ public static class Conversion
     public static DesiredAccess FileAccessToDesiredAccess(System.IO.FileAccess fileAccess)
         => fileAccess switch
         {
-                // See FileStream.Init to see how the mapping is done in .NET
-                System.IO.FileAccess.Read => DesiredAccess.GenericRead,
+            // See FileStream.Init to see how the mapping is done in .NET
+            System.IO.FileAccess.Read => DesiredAccess.GenericRead,
             System.IO.FileAccess.Write => DesiredAccess.GenericWrite,
             System.IO.FileAccess.ReadWrite => DesiredAccess.GenericRead | DesiredAccess.GenericWrite,
             _ => 0,

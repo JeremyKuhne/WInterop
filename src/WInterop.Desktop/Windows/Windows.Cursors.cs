@@ -12,7 +12,7 @@ public static partial class Windows
 {
     public static unsafe CursorHandle LoadCursor(CursorId id)
     {
-        HCURSOR handle = TerraFXWindows.LoadCursorW(default, (ushort*)(uint)id);
+        HCURSOR handle = TerraFXWindows.LoadCursorW(default, (char*)(uint)id);
         if (handle == HCURSOR.NULL)
             Error.ThrowLastError(id.ToString());
 
@@ -23,7 +23,7 @@ public static partial class Windows
     {
         fixed (char* p = path)
         {
-            HCURSOR handle = TerraFXWindows.LoadCursorFromFileW((ushort*)p);
+            HCURSOR handle = TerraFXWindows.LoadCursorFromFileW(p);
             if (handle == HCURSOR.NULL)
                 Error.ThrowLastError(path);
 

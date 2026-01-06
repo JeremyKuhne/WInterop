@@ -131,7 +131,7 @@ internal class SysMets3 : SysMets2
                 return 0;
 
             case MessageType.Paint:
-                using (DeviceContext dc = window.BeginPaint(out PaintStruct ps))
+                using (DeviceContext dc = window.BeginPaint(out Rectangle paintRectangle))
                 {
                     // Get vertical scroll bar position
                     si = new ScrollInfo
@@ -146,8 +146,8 @@ internal class SysMets3 : SysMets2
                     iHorzPos = si.Position;
 
                     // Find painting limits
-                    int iPaintBeg = Math.Max(0, iVertPos + ps.Paint.Top / cyChar);
-                    int iPaintEnd = Math.Min(Metrics.SystemMetrics.Count - 1, iVertPos + ps.Paint.Bottom / cyChar);
+                    int iPaintBeg = Math.Max(0, iVertPos + paintRectangle.Top / cyChar);
+                    int iPaintEnd = Math.Min(Metrics.SystemMetrics.Count - 1, iVertPos + paintRectangle.Bottom / cyChar);
 
                     var keys = Metrics.SystemMetrics.Keys.ToArray();
                     for (int i = iPaintBeg; i <= iPaintEnd; i++)

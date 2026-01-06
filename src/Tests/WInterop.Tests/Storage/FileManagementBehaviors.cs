@@ -60,11 +60,10 @@ public class Behaviors
                 Storage.GetFullPathName(value).Should().Be(expected);
             }
         }
-        catch (IOException e)
+        catch (IOException e) when ((HResult)e.HResult == WindowsError.ERROR_NOT_READY.ToHResult()
+            // FVE_E_LOCKED_VOLUME (Bitlocker)
+            || e.HResult == -2144272384)
         {
-            // This test could be updated to try and find the first ready drive, but for now
-            // just acknowledge this is expected.
-            Assert.Equal(WindowsError.ERROR_NOT_READY.ToHResult(), (HResult)e.HResult);
         }
     }
 

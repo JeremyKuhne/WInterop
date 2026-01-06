@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <TransformOnBuild>true</TransformOnBuild>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Update="WInteropStrings.resx">

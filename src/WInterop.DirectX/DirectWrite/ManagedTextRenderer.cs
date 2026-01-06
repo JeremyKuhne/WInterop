@@ -95,11 +95,11 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
         public static IDWriteTextRenderer* CreateInstance(ManagedTextRenderer renderer)
             => (IDWriteTextRenderer*)Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.Allocate(renderer, s_vtable);
 
-        private static ManagedTextRenderer? Renderer(void* @this)
+        private static ManagedTextRenderer? Renderer(IDWriteTextRenderer* @this)
             => Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.GetObject(@this);
 
-        [UnmanagedCallersOnly]
-        private static int QueryInterface(void* @this, Guid* iid, void* ppObject)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static int QueryInterface(IDWriteTextRenderer* @this, Guid* iid, void* ppObject)
         {
             if (*iid == Unknown.IID_IUnknown
                 || *iid == typeof(PixelSnapping).GUID
@@ -117,37 +117,39 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
             return (int)Errors.HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
-        private static uint AddRef(void* @this) => Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.AddRef(@this);
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static uint AddRef(IDWriteTextRenderer* @this) =>
+            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.AddRef(@this);
 
-        [UnmanagedCallersOnly]
-        private static uint Release(void* @this) => Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.Release(@this);
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static uint Release(IDWriteTextRenderer* @this) =>
+            Lifetime<IDWriteTextRenderer.Vtbl<IDWriteTextRenderer>, ManagedTextRenderer>.Release(@this);
 
-        [UnmanagedCallersOnly]
-        private static int IsPixelSnappingDisabled(void* @this, void* clientDrawingContext, TerraFX.Interop.Windows.BOOL* isDisabled)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static int IsPixelSnappingDisabled(IDWriteTextRenderer* @this, void* clientDrawingContext, TerraFX.Interop.Windows.BOOL* isDisabled)
         {
             *isDisabled = Renderer(@this)?.IsPixelSnappingDisabled((IntPtr)clientDrawingContext) ?? false;
             return (int)Errors.HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
-        private static int GetCurrentTransform(void* @this, void* clientDrawingContext, DWRITE_MATRIX* transform)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static int GetCurrentTransform(IDWriteTextRenderer* @this, void* clientDrawingContext, DWRITE_MATRIX* transform)
         {
             Matrix3x2 matrix = Renderer(@this)?.GetCurrentTransform((IntPtr)clientDrawingContext) ?? Matrix3x2.Identity;
             *transform = *(DWRITE_MATRIX*)&matrix;
             return (int)Errors.HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
-        private static unsafe int GetPixelsPerDip(void* @this, void* clientDrawingContext, float* pixelsPerDip)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+        private static unsafe int GetPixelsPerDip(IDWriteTextRenderer* @this, void* clientDrawingContext, float* pixelsPerDip)
         {
             *pixelsPerDip = Renderer(@this)?.GetPixelsPerDip((IntPtr)clientDrawingContext) ?? 1;
             return (int)Errors.HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static unsafe int DrawGlyphRun(
-            void* @this,
+            IDWriteTextRenderer* @this,
             void* clientDrawingContext,
             float baselineOriginX,
             float baselineOriginY,
@@ -167,9 +169,9 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
             return (int)Errors.HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static unsafe int DrawUnderline(
-            void* @this,
+            IDWriteTextRenderer* @this,
             void* clientDrawingContext,
             float baselineOriginX,
             float baselineOriginY,
@@ -185,9 +187,9 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
             return (int)Errors.HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static unsafe int DrawStrikethrough(
-            void* @this,
+            IDWriteTextRenderer* @this,
             void* clientDrawingContext,
             float baselineOriginX,
             float baselineOriginY,
@@ -203,9 +205,9 @@ public abstract unsafe class ManagedTextRenderer : IDisposable
             return (int)Errors.HResult.S_OK;
         }
 
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static unsafe int DrawInlineObject(
-            void* @this,
+            IDWriteTextRenderer* @this,
             void* clientDrawingContext,
             float originX,
             float originY,

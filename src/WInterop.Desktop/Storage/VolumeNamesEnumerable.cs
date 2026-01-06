@@ -51,7 +51,7 @@ public sealed class VolumeNamesEnumerable : IEnumerable<string>
                 throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
 
             HANDLE handle = TerraFXWindows.FindFirstVolumeW(
-                _buffer.UShortPointer,
+                _buffer.CharPointer,
                 _buffer.CharCapacity);
 
             if (handle == HANDLE.INVALID_VALUE)
@@ -78,7 +78,7 @@ public sealed class VolumeNamesEnumerable : IEnumerable<string>
             if (_buffer is null)
                 throw new ObjectDisposedException(nameof(VolumeNamesEnumerator));
 
-            if (!TerraFXWindows.FindNextVolumeW(_findHandle, _buffer.UShortPointer, _buffer.CharCapacity))
+            if (!TerraFXWindows.FindNextVolumeW(_findHandle, _buffer.CharPointer, _buffer.CharCapacity))
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)

@@ -10,7 +10,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22000-rc1" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WInterop.Desktop\WInterop.Desktop.csproj" />

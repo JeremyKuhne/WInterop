@@ -28,7 +28,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
 
     // By using a platform specific data type we can be assured of atomic reads/writes.
     // Anything more than a uint isn't addressable on 32bit as well.
-    private unsafe void* _byteCapacity;
+    private unsafe nuint _byteCapacity;
 
     protected ReaderWriterLockSlim _handleLock = new(LockRecursionPolicy.SupportsRecursion);
 
@@ -39,7 +39,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
     public unsafe HeapBuffer(ulong initialMinCapacity = 0)
     {
         _handle = HeapHandleCache.Instance.Acquire(initialMinCapacity);
-        _byteCapacity = (void*)initialMinCapacity;
+        _byteCapacity = checked((nuint)initialMinCapacity);
     }
 
     public unsafe void* VoidPointer
@@ -76,7 +76,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
     {
         // Capacity will never decrease, except after disposal. In addition, using the void* allows reads/writes
         // to capacity to be atomic. As such we shouldn't have to worry about returning a size that is too small.
-        get => (ulong)_byteCapacity;
+        get => _byteCapacity;
     }
 
     /// <summary>
@@ -96,13 +96,12 @@ public class HeapBuffer : ISizedBuffer, IDisposable
 
     protected unsafe void UnlockedEnsureByteCapacity(ulong minCapacity)
     {
-        if (_handle is null)
-            throw new ObjectDisposedException(nameof(HeapBuffer));
+        ObjectDisposedException.ThrowIf(_handle is null, nameof(HeapBuffer));
 
         if (ByteCapacity < minCapacity)
         {
             if (_handle.ByteLength < minCapacity) _handle.Resize(minCapacity);
-            _byteCapacity = (void*)minCapacity;
+            _byteCapacity = checked((nuint)minCapacity);
         }
     }
 
@@ -118,16 +117,14 @@ public class HeapBuffer : ISizedBuffer, IDisposable
         // The actual read/write is atomic.
         get
         {
-            if (index >= ByteCapacity)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, ByteCapacity);
 
             using var readLock = _handleLock.Lock(Locks.Type.Read);
             return BytePointer[index];
         }
         set
         {
-            if (index >= ByteCapacity)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, ByteCapacity);
 
             using var readLock = _handleLock.Lock(Locks.Type.Read);
             BytePointer[index] = value;
@@ -140,7 +137,7 @@ public class HeapBuffer : ISizedBuffer, IDisposable
         using (_handleLock.Lock(Locks.Type.Write))
         {
             handle = _handle;
-            _byteCapacity = null;
+            _byteCapacity = 0;
             _handle = null;
         }
 

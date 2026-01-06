@@ -5,9 +5,9 @@ using WInterop.Support;
 
 namespace WInterop.Com;
 
-public unsafe struct TypeLibrary : IDisposable
+public unsafe readonly struct TypeLibrary : IDisposable
 {
-    public ITypeLib* ITypeLib { get; private set; }
+    public ITypeLib* ITypeLib { get; init; }
 
     public TypeLibrary(ITypeLib* handle) => ITypeLib = handle;
 
@@ -56,7 +56,7 @@ public unsafe struct TypeLibrary : IDisposable
         int index,
         out string name)
     {
-        ushort* namep;
+        char* namep;
         ITypeLib->GetDocumentation(index, &namep, null, null, null).ThrowIfFailed();
         name = Strings.FromBSTRAndFree(namep);
     }
@@ -66,8 +66,8 @@ public unsafe struct TypeLibrary : IDisposable
         out string name,
         out string documentation)
     {
-        ushort* namep;
-        ushort* docs;
+        char* namep;
+        char* docs;
         ITypeLib->GetDocumentation(index, &namep, &docs, null, null).ThrowIfFailed();
         name = Strings.FromBSTRAndFree(namep);
         documentation = Strings.FromBSTRAndFree(docs);
@@ -80,10 +80,10 @@ public unsafe struct TypeLibrary : IDisposable
         out uint helpContext,
         out string helpFile)
     {
-        ushort* namep;
-        ushort* docs;
+        char* namep;
+        char* docs;
         uint context;
-        ushort* file;
+        char* file;
         ITypeLib->GetDocumentation(index, &namep, &docs, &context, &file).ThrowIfFailed();
         name = Strings.FromBSTRAndFree(namep);
         documentation = Strings.FromBSTRAndFree(docs);
@@ -93,16 +93,15 @@ public unsafe struct TypeLibrary : IDisposable
 
     public bool IsName(string name, out string foundName)
     {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
 
         Span<char> copy = stackalloc char[name.Length + 1];
         name.AsSpan().CopyTo(copy);
         BOOL isName;
 
-        fixed (void* c = copy)
+        fixed (char* c = copy)
         {
-            ITypeLib->IsName((ushort*)c, 0, &isName).ThrowIfFailed();
+            ITypeLib->IsName(c, 0, &isName).ThrowIfFailed();
         }
 
         foundName = copy.SequenceEqual(name) ? name : copy[0..^1].ToString();
@@ -118,8 +117,7 @@ public unsafe struct TypeLibrary : IDisposable
     /// <exception cref="ArgumentNullException"><paramref name="name"/> was null.</exception>
     public (MemberId Id, TypeInfo Info) FindName(string name)
     {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
 
         // The incoming string is recased so we need a copy.
         Span<char> copy = stackalloc char[name.Length + 1];
@@ -129,9 +127,9 @@ public unsafe struct TypeLibrary : IDisposable
         MemberId id;
         ushort found = 1;
 
-        fixed (void* c = copy)
+        fixed (char* c = copy)
         {
-            ITypeLib->FindName((ushort*)c, 0, &info, (int*)&id, &found).ThrowIfFailed();
+            ITypeLib->FindName(c, 0, &info, (int*)&id, &found).ThrowIfFailed();
         }
 
         return (id, new(info));
@@ -146,8 +144,7 @@ public unsafe struct TypeLibrary : IDisposable
     /// <exception cref="ArgumentNullException"><paramref name="name"/> was null.</exception>
     public (MemberId Id, TypeInfo Info) FindName(string name, out string foundName)
     {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
 
         // The incoming string is recased so we need a copy.
         Span<char> copy = stackalloc char[name.Length + 1];
@@ -157,9 +154,9 @@ public unsafe struct TypeLibrary : IDisposable
         MemberId id;
         ushort found = 1;
 
-        fixed (void* c = copy)
+        fixed (char* c = copy)
         {
-            ITypeLib->FindName((ushort*)c, 0, &info, (int*)&id, &found).ThrowIfFailed();
+            ITypeLib->FindName(c, 0, &info, (int*)&id, &found).ThrowIfFailed();
         }
 
         foundName = copy.SequenceEqual(name) ? name : copy[0..^1].ToString();
@@ -177,8 +174,7 @@ public unsafe struct TypeLibrary : IDisposable
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxHits"/> was zero.</exception>
     public IReadOnlyList<(MemberId Id, TypeInfo Info)> FindName(string name, ushort maxHits, out string foundName)
     {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
         if (maxHits < 1)
             throw new ArgumentOutOfRangeException(nameof(maxHits));
 
@@ -190,11 +186,11 @@ public unsafe struct TypeLibrary : IDisposable
         MemberId[] ids = new MemberId[maxHits];
         ushort found = maxHits;
 
-        fixed (void* c = copy)
+        fixed (char* c = copy)
         fixed (ITypeInfo** i = infos)
         fixed (void* m = ids)
         {
-            ITypeLib->FindName((ushort*)c, 0, i, (int*)m, &found).ThrowIfFailed();
+            ITypeLib->FindName(c, 0, i, (int*)m, &found).ThrowIfFailed();
         }
 
         (MemberId, TypeInfo)[] results = new (MemberId, TypeInfo)[found];
@@ -210,6 +206,5 @@ public unsafe struct TypeLibrary : IDisposable
     public void Dispose()
     {
         ITypeLib->Release();
-        ITypeLib = null;
     }
 }

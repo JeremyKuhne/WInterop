@@ -20,7 +20,7 @@ public static partial class Gdi
             fixed (DisplayDevice* d = &_current)
             {
                 d->SetSize();
-                return TerraFXWindows.EnumDisplayDevicesW((ushort*)n, _index++, (DISPLAY_DEVICEW*)d, 0);
+                return TerraFXWindows.EnumDisplayDevicesW(n, _index++, (DISPLAY_DEVICEW*)d, 0);
             }
         }
     }

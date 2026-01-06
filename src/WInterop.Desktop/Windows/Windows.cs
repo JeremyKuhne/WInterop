@@ -119,8 +119,8 @@ public static partial class Windows
         {
             WindowHandle window = TerraFXWindows.CreateWindowExW(
                 (uint)extendedStyle,
-                (ushort*)classAtom.ATOM,
-                (ushort*)n,
+                (char*)classAtom.ATOM,
+                n,
                 (uint)style,
                 bounds.X,
                 bounds.Y,
@@ -157,8 +157,8 @@ public static partial class Windows
         {
             window = TerraFXWindows.CreateWindowExW(
                 (uint)extendedStyle,
-                (ushort*)cn,
-                (ushort*)wn,
+                cn,
+                wn,
                 (uint)style,
                 bounds.X,
                 bounds.Y,
@@ -232,11 +232,11 @@ public static partial class Windows
     public static unsafe string GetClassName<T>(this T window) where T : IHandle<WindowHandle>
     {
         return PlatformInvoke.GrowableBufferInvoke(
-            (ref ValueBuffer<char> buffer) =>
+            (ref buffer) =>
             {
                 fixed (char* b = buffer)
                 {
-                    return (uint)TerraFXWindows.GetClassNameW(window.Handle, (ushort*)b, (int)buffer.Length);
+                    return (uint)TerraFXWindows.GetClassNameW(window.Handle, b, (int)buffer.Length);
                 }
             },
             ReturnSizeSemantics.BufferTruncates);
@@ -342,7 +342,7 @@ public static partial class Windows
     /// </summary>
     public static unsafe void UnregisterClass(Atom atom, ModuleInstance? module = null)
     {
-        if (!TerraFXWindows.UnregisterClassW((ushort*)atom.ATOM, module ?? HINSTANCE.NULL))
+        if (!TerraFXWindows.UnregisterClassW((char*)atom.ATOM, module ?? HINSTANCE.NULL))
         {
             Error.ThrowLastError();
         }
@@ -358,7 +358,7 @@ public static partial class Windows
         fixed (char* name = className)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.UnregisterClassW((ushort*)name, module ?? HINSTANCE.NULL),
+                TerraFXWindows.UnregisterClassW(name, module ?? HINSTANCE.NULL),
                 className);
         }
     }
@@ -393,8 +393,8 @@ public static partial class Windows
         Error.SetLastError(WindowsError.NO_ERROR);
 
         nint result = Environment.Is64BitProcess
-            ? (IntPtr)TerraFXWindows.SetWindowLongPtrW(window.Handle, (int)index, value)
-            : (IntPtr)TerraFXWindows.SetWindowLongW(window.Handle, (int)index, (int)value);
+            ? TerraFXWindows.SetWindowLongPtrW(window.Handle, (int)index, value)
+            : TerraFXWindows.SetWindowLongW(window.Handle, (int)index, (int)value);
 
         if (result == 0)
         {
@@ -421,7 +421,7 @@ public static partial class Windows
 
             fixed (char* c = buffer)
             {
-                result = TerraFXWindows.GetWindowTextW(window.Handle, (ushort*)c, buffer.Length);
+                result = TerraFXWindows.GetWindowTextW(window.Handle, c, buffer.Length);
             }
 
             if (result == 0)
@@ -439,7 +439,7 @@ public static partial class Windows
     {
         fixed (char* t = text)
         {
-            Error.ThrowLastErrorIfFalse(TerraFXWindows.SetWindowTextW(window.Handle, (ushort*)t));
+            Error.ThrowLastErrorIfFalse(TerraFXWindows.SetWindowTextW(window.Handle, t));
         }
     }
 
@@ -738,11 +738,11 @@ public static partial class Windows
     public static unsafe string GetKeyNameText(LParam lParam)
     {
         return PlatformInvoke.GrowableBufferInvoke(
-            (ref ValueBuffer<char> buffer) =>
+            (ref buffer) =>
             {
                 fixed (char* b = buffer)
                 {
-                    return checked((uint)TerraFXWindows.GetKeyNameTextW(lParam, (ushort*)b, (int)buffer.Length));
+                    return checked((uint)TerraFXWindows.GetKeyNameTextW(lParam, b, (int)buffer.Length));
                 }
             },
             ReturnSizeSemantics.BufferTruncates,
@@ -820,8 +820,8 @@ public static partial class Windows
         {
             CommandId result = (CommandId)TerraFXWindows.MessageBoxExW(
                 owner.Handle,
-                (ushort*)t,
-                (ushort*)c,
+                t,
+                c,
                 (uint)type,
                 wLanguageId: 0);
 
@@ -840,7 +840,7 @@ public static partial class Windows
         Error.ThrowLastErrorIfFalse(
             TerraFXWindows.GetClassInfoExW(
                 instance ?? HINSTANCE.NULL,
-                (ushort*)(nint)atom,
+                (char*)(nint)atom,
                 &wndClass));
 
         return wndClass;
@@ -854,7 +854,7 @@ public static partial class Windows
         {
             Error.ThrowLastErrorIfFalse(TerraFXWindows.GetClassInfoExW(
                 instance ?? ModuleInstance.Null,
-                (ushort*)c,
+                c,
                 &wndClass));
         }
 
@@ -868,7 +868,7 @@ public static partial class Windows
     /// <summary>
     ///  Makes a resource pointer for the given value. [MAKEINTRESOURCE]
     /// </summary>
-    public static IntPtr MakeIntResource(ushort integer) => (IntPtr)integer;
+    public static IntPtr MakeIntResource(ushort integer) => integer;
 
     /// <summary>
     ///  Returns true if the given pointer is an int resource. [IS_INTRESOURCE]
@@ -896,7 +896,7 @@ public static partial class Windows
 
     public static unsafe IconHandle LoadIcon(IconId id)
     {
-        HICON handle = TerraFXWindows.LoadIconW(default, (ushort*)(uint)id);
+        HICON handle = TerraFXWindows.LoadIconW(default, (char*)(uint)id);
         if (handle == HICON.NULL)
         {
             Error.ThrowLastError();
@@ -907,9 +907,9 @@ public static partial class Windows
 
     public static unsafe IconHandle LoadIcon(string name, ModuleInstance module)
     {
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
-            HICON handle = TerraFXWindows.LoadIconW(module.Handle, (ushort*)n);
+            HICON handle = TerraFXWindows.LoadIconW(module.Handle, n);
 
             if (handle == HICON.NULL)
                 Error.ThrowLastError();

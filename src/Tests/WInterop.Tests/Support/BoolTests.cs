@@ -43,11 +43,12 @@ public class BoolTests
     }
 
     [Fact]
-    public void EmbeddedBoolIsNotBlittable()
+    public void EmbeddedBoolIsBlittable()
     {
+        // Bool is now considered blittable, sometime after .NET 6 and by .NET 10.
         // Demonstrating that an embedded bool isn't pinnable, and validating the behavior doesn't change
         Action action = () => GCHandle.Alloc(new BoolTest(), GCHandleType.Pinned);
-        action.Should().Throw<ArgumentException>();
+        action.Should().NotThrow<ArgumentException>();
     }
 
     [Fact]

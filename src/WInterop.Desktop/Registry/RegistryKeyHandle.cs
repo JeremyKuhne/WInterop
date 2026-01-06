@@ -35,7 +35,7 @@ public class RegistryKeyHandle : HandleZeroOrMinusOneIsInvalid
     {
         // Need to cast to int first to avoid Overflow when
         // casting to IntPtr when running on 32 bit.
-        handle = (IntPtr)(int)predefined;
+        handle = (int)predefined;
         IsPerfKey = isPerfKey;
     }
 

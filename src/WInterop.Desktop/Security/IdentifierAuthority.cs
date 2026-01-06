@@ -86,7 +86,7 @@ public readonly struct IdentifierAuthority : IEquatable<IdentifierAuthority>
     {
         get
         {
-            fixed (byte* b = _authority.Value)
+            fixed (byte* b = &_authority.Value.e0)
             {
                 return new(b, 6);
             }

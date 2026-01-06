@@ -131,14 +131,14 @@ public static class Strings
     ///  Converts a BSTR to string.
     /// </summary>
     [return: NotNullIfNotNull("bstr")]
-    public static unsafe string? FromBSTR(ushort* bstr)
-        => bstr is null ? null! : new((char*)bstr, 0, (int)BSTRLength(bstr) / 2);
+    public static unsafe string? FromBSTR(char* bstr)
+        => bstr is null ? null! : new(bstr, 0, (int)BSTRLength(bstr) / 2);
 
     /// <summary>
     ///  Converts a BSTR to string and frees the BSTR.
     /// </summary>
     [return: NotNullIfNotNull("bstr")]
-    public static unsafe string? FromBSTRAndFree(ushort* bstr)
+    public static unsafe string? FromBSTRAndFree(char* bstr)
     {
         string? result = FromBSTR(bstr);
         if (bstr is not null)
@@ -152,7 +152,7 @@ public static class Strings
     /// <summary>
     ///  Get the length of a BSTR in bytes.
     /// </summary>
-    public static unsafe uint BSTRLength(ushort* bstr)
+    public static unsafe uint BSTRLength(char* bstr)
         // BSTRs have the length before the string pointer
         // https://docs.microsoft.com/previous-versions/windows/desktop/automat/bstr
         => bstr is null ? 0 : *(((uint*)bstr) - 1);

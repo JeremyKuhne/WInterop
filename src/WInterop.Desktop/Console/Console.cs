@@ -69,7 +69,7 @@ public static unsafe partial class Console
             yield return record;
         }
 
-        bool ReadNextLine(out InputRecord record)
+        unsafe bool ReadNextLine(out InputRecord record)
         {
             uint read;
             fixed (void* r = &record)
@@ -111,7 +111,7 @@ public static unsafe partial class Console
         {
             uint charsWritten;
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.WriteConsoleW(outputHandle.ToHANDLE(), (void*)c, (uint)text.Length, &charsWritten, null));
+                TerraFXWindows.WriteConsoleW(outputHandle.ToHANDLE(), c, (uint)text.Length, &charsWritten, null));
 
             return charsWritten;
         }

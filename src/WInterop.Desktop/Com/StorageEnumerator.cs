@@ -6,9 +6,10 @@ using WInterop.Errors;
 
 namespace WInterop.Com;
 
-public unsafe struct StorageEnumerator : IDisposable
+public unsafe readonly struct StorageEnumerator : IDisposable
 {
     private readonly IEnumSTATSTG* _enumerator;
+
     public StorageEnumerator(IEnumSTATSTG* enumerator) => _enumerator = enumerator;
 
     /// <summary>
@@ -67,7 +68,7 @@ public unsafe struct StorageEnumerator : IDisposable
 
     public sealed class StatsCollection : ReadOnlyCollection<StorageStats>, IDisposable
     {
-        public static StatsCollection Empty { get; } = new(Array.Empty<StorageStats>());
+        public static new StatsCollection Empty { get; } = new(Array.Empty<StorageStats>());
 
         public StatsCollection(IList<StorageStats> list)
             : base(list)

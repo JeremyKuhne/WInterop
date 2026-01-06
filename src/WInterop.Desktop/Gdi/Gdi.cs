@@ -17,7 +17,7 @@ public static partial class Gdi
         fixed (char* dr = driver)
         fixed (char* de = device)
         {
-            return new(TerraFXWindows.CreateDCW((ushort*)dr, (ushort*)de, null, null), ownsHandle: true);
+            return new(TerraFXWindows.CreateDCW(dr, de, null, null), ownsHandle: true);
         }
     }
 
@@ -28,7 +28,7 @@ public static partial class Gdi
     {
         fixed (char* c = "DISPLAY")
         {
-            return new(TerraFXWindows.CreateDCW((ushort*)c, null, null, null), ownsHandle: true);
+            return new(TerraFXWindows.CreateDCW(c, null, null, null), ownsHandle: true);
         }
     }
 
@@ -61,7 +61,7 @@ public static partial class Gdi
         fixed (char* dr = driver)
         fixed (char* de = device)
         {
-            return new(TerraFXWindows.CreateICW((ushort*)dr, (ushort*)de, null, null), ownsHandle: true);
+            return new(TerraFXWindows.CreateICW(dr, de, null, null), ownsHandle: true);
         }
     }
 
@@ -194,17 +194,6 @@ public static partial class Gdi
         TerraFXWindows.BeginPaint(window, &paintStruct);
         paintRectangle = paintStruct.rcPaint.ToRectangle();
         return new DeviceContext(paintStruct, window);
-    }
-
-    /// <summary>
-    ///  Calls BeginPaint and returns the created DeviceContext. Disposing the returned DeviceContext will call EndPaint.
-    /// </summary>
-    public static unsafe DeviceContext BeginPaint(this in WindowHandle window, out PaintStruct paintStruct)
-    {
-        PAINTSTRUCT ps = default;
-        TerraFXWindows.BeginPaint(window, &ps);
-        paintStruct = ps;
-        return new DeviceContext(ps, window);
     }
 
     public static unsafe bool InvalidateRectangle(this in WindowHandle window, Rectangle rectangle, bool erase)

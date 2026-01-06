@@ -107,7 +107,9 @@ public readonly unsafe struct Factory : Factory.Interface, IDisposable
     {
         float x;
         float y;
+#pragma warning disable CS0618 // Type or member is obsolete
         _handle->GetDesktopDpi(&x, &y);
+#pragma warning restore CS0618
         return new(x, y);
     }
 

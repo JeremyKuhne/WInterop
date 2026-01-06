@@ -24,7 +24,7 @@ public static partial class Storage
             fixed (char* p = path)
             fixed (char* c = buffer)
             {
-                return TerraFXWindows.GetShortPathNameW((ushort*)p, (ushort*)c, buffer.Length);
+                return TerraFXWindows.GetShortPathNameW(p, c, buffer.Length);
             }
         }
 
@@ -62,8 +62,8 @@ public static partial class Storage
         fixed (char* tp = targetPath)
         {
             Error.ThrowLastErrorIfFalse((ByteBoolean)TerraFXWindows.CreateSymbolicLinkW(
-                (ushort*)slp,
-                (ushort*)tp,
+                slp,
+                tp,
                 targetIsDirectory ? (uint)SymbolicLinkFlag.Directory : (uint)SymbolicLinkFlag.File));
         }
     }
@@ -87,7 +87,7 @@ public static partial class Storage
         fixed (char* p = path)
         {
             handle = TerraFXWindows.CreateFileW(
-                (ushort*)p,
+                p,
                 (uint)desiredAccess,
                 (uint)shareMode,
                 lpSecurityAttributes: null,
@@ -287,8 +287,8 @@ public static partial class Storage
         {
             Error.ThrowLastErrorIfFalse(
                 TerraFXWindows.CopyFileExW(
-                    lpExistingFileName: (ushort*)s,
-                    lpNewFileName: (ushort*)d,
+                    lpExistingFileName: s,
+                    lpNewFileName: d,
                     lpProgressRoutine: null,
                     lpData: null,
                     pbCancel: &cancel,
@@ -500,7 +500,7 @@ public static partial class Storage
         fixed (char* n = deviceName)
         {
             // QueryDosDevicePrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-            while ((result = TerraFXWindows.QueryDosDeviceW((ushort*)n, buffer.UShortPointer, buffer.CharCapacity)) == 0)
+            while ((result = TerraFXWindows.QueryDosDeviceW(n, buffer.CharPointer, buffer.CharCapacity)) == 0)
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)
@@ -529,7 +529,7 @@ public static partial class Storage
             uint result = 0;
 
             // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-            while ((result = TerraFXWindows.GetLogicalDriveStringsW(buffer.CharCapacity, buffer.UShortPointer))
+            while ((result = TerraFXWindows.GetLogicalDriveStringsW(buffer.CharCapacity, buffer.CharPointer))
                 > buffer.CharCapacity)
             {
                 buffer.EnsureCharCapacity(result);
@@ -554,7 +554,7 @@ public static partial class Storage
         {
             fixed (char* p = path)
             {
-                while (!TerraFXWindows.GetVolumePathNameW((ushort*)p, buffer.UShortPointer, buffer.CharCapacity))
+                while (!TerraFXWindows.GetVolumePathNameW(p, buffer.CharPointer, buffer.CharCapacity))
                 {
                     WindowsError error = Error.GetLastError();
                     switch (error)
@@ -587,7 +587,7 @@ public static partial class Storage
 
             fixed (char* v = volumeName)
             // GetLogicalDriveStringsPrivate takes the buffer count in TCHARs, which is 2 bytes for Unicode (WCHAR)
-            while (!TerraFXWindows.GetVolumePathNamesForVolumeNameW((ushort*)v, buffer.UShortPointer, buffer.CharCapacity, &returnLength))
+            while (!TerraFXWindows.GetVolumePathNamesForVolumeNameW(v, buffer.CharPointer, buffer.CharCapacity, &returnLength))
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)
@@ -627,8 +627,8 @@ public static partial class Storage
         {
             Error.ThrowLastErrorIfFalse(
                 TerraFXWindows.GetVolumeNameForVolumeMountPointW(
-                    (ushort*)v,
-                    (ushort*)b,
+                    v,
+                    b,
                     (uint)buffer.Length));
         }
 
@@ -653,7 +653,7 @@ public static partial class Storage
 
     public static IEnumerable<BackupStreamInformation> GetAlternateStreamInformation(string path)
     {
-        List<BackupStreamInformation> streams = new();
+        List<BackupStreamInformation> streams = [];
         using (var fileHandle = CreateFile(
             path: path.AsSpan(),
             // To look at metadata we don't need read or write access
@@ -681,7 +681,7 @@ public static partial class Storage
     {
         fixed (char* p = path)
         {
-            Error.ThrowLastErrorIfFalse(TerraFXWindows.EncryptFileW((ushort*)p), path);
+            Error.ThrowLastErrorIfFalse(TerraFXWindows.EncryptFileW(p), path);
         }
     }
 
@@ -689,7 +689,7 @@ public static partial class Storage
     {
         fixed (char* p = path)
         {
-            Error.ThrowLastErrorIfFalse(TerraFXWindows.DecryptFileW((ushort*)p, 0), path);
+            Error.ThrowLastErrorIfFalse(TerraFXWindows.DecryptFileW(p, 0), path);
         }
     }
 
@@ -760,11 +760,11 @@ public static partial class Storage
     public static unsafe string GetTempPath()
     {
         return PlatformInvoke.GrowableBufferInvoke(
-            (ref ValueBuffer<char> buffer) =>
+            (ref buffer) =>
             {
                 fixed (char* b = buffer)
                 {
-                    return TerraFXWindows.GetTempPathW(buffer.Length, (ushort*)b);
+                    return TerraFXWindows.GetTempPathW(buffer.Length, b);
                 }
             });
     }
@@ -775,12 +775,12 @@ public static partial class Storage
     public static unsafe string GetFullPathName(string path)
     {
         return PlatformInvoke.GrowableBufferInvoke(
-            (ref ValueBuffer<char> buffer) =>
+            (ref buffer) =>
             {
                 fixed (char* p = path)
                 fixed (char* b = buffer)
                 {
-                    return TerraFXWindows.GetFullPathNameW((ushort*)p, buffer.Length, (ushort*)b, null);
+                    return TerraFXWindows.GetFullPathNameW(p, buffer.Length, b, null);
                 }
             },
             detail: path);
@@ -794,13 +794,13 @@ public static partial class Storage
         GetFinalPathNameByHandleFlags flags = GetFinalPathNameByHandleFlags.FileNameNormalized | GetFinalPathNameByHandleFlags.VolumeNameDos)
     {
         return PlatformInvoke.GrowableBufferInvoke(
-            (ref ValueBuffer<char> buffer) =>
+            (ref buffer) =>
             {
                 fixed (char* b = buffer)
                 {
                     return TerraFXWindows.GetFinalPathNameByHandleW(
                         fileHandle.ToHANDLE(),
-                        (ushort*)b,
+                        b,
                         buffer.Length,
                         (uint)flags);
                 }
@@ -837,12 +837,12 @@ public static partial class Storage
     public static unsafe string GetLongPathName(string path)
     {
         return PlatformInvoke.GrowableBufferInvoke(
-            (ref ValueBuffer<char> buffer) =>
+            (ref buffer) =>
             {
                 fixed (char* p = path)
                 fixed (char* b = buffer)
                 {
-                    return TerraFXWindows.GetLongPathNameW((ushort*)p, (ushort*)b, buffer.Length);
+                    return TerraFXWindows.GetLongPathNameW(p, b, buffer.Length);
                 }
             },
             detail: path);
@@ -863,10 +863,10 @@ public static partial class Storage
                 buffer.EnsureCharCapacity(Paths.MaxPath);
                 Error.ThrowLastErrorIfZero(
                     TerraFXWindows.GetTempFileNameW(
-                        lpPathName: (ushort*)p,
-                        lpPrefixString: (ushort*)pre,
+                        lpPathName: p,
+                        lpPrefixString: pre,
                         uUnique: 0,
-                        lpTempFileName: buffer.UShortPointer),
+                        lpTempFileName: buffer.CharPointer),
                     path);
             }
 
@@ -882,7 +882,7 @@ public static partial class Storage
     {
         fixed (char* p = path)
         {
-            Error.ThrowLastErrorIfFalse(TerraFXWindows.DeleteFileW((ushort*)p), path);
+            Error.ThrowLastErrorIfFalse(TerraFXWindows.DeleteFileW(p), path);
         }
     }
 
@@ -1020,7 +1020,7 @@ public static partial class Storage
         fixed (char* p = path)
         {
             handle = TerraFXWindows.CreateFile2(
-                lpFileName: (ushort*)p,
+                lpFileName: p,
                 dwDesiredAccess: (uint)desiredAccess,
                 dwShareMode: (uint)shareMode,
                 dwCreationDisposition: (uint)creationDisposition,
@@ -1083,7 +1083,7 @@ public static partial class Storage
         fixed (char* s = source)
         fixed (char* d = destination)
         {
-            TerraFXWindows.CopyFile2((ushort*)s, (ushort*)d, &parameters).ThrowIfFailed();
+            TerraFXWindows.CopyFile2(s, d, &parameters).ThrowIfFailed();
         }
     }
 
@@ -1096,7 +1096,7 @@ public static partial class Storage
 
         fixed (char* p = path)
         {
-            attributes = (AllFileAttributes)TerraFXWindows.GetFileAttributesW((ushort*)p);
+            attributes = (AllFileAttributes)TerraFXWindows.GetFileAttributesW(p);
         }
 
         if (attributes == AllFileAttributes.Invalid)
@@ -1118,7 +1118,7 @@ public static partial class Storage
         {
             Error.ThrowLastErrorIfFalse(
                 TerraFXWindows.GetFileAttributesExW(
-                    (ushort*)p,
+                    p,
                     GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
                     &data),
                 path);
@@ -1172,7 +1172,7 @@ public static partial class Storage
         fixed (char* p = path)
         {
             if (TerraFXWindows.GetFileAttributesExW(
-                (ushort*)p,
+                p,
                 GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
                 &data))
             {
@@ -1197,7 +1197,7 @@ public static partial class Storage
         fixed (char* p = path)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.SetFileAttributesW((ushort*)p, (uint)attributes),
+                TerraFXWindows.SetFileAttributesW(p, (uint)attributes),
                 path);
         }
     }
@@ -1569,7 +1569,7 @@ public static partial class Storage
         fixed (char* p = path)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.RemoveDirectoryW((ushort*)p),
+                TerraFXWindows.RemoveDirectoryW(p),
                 path);
         }
     }
@@ -1582,7 +1582,7 @@ public static partial class Storage
         fixed (char* p = path)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.CreateDirectoryW((ushort*)p, null),
+                TerraFXWindows.CreateDirectoryW(p, null),
                 path);
         }
     }
@@ -1610,7 +1610,7 @@ public static partial class Storage
         {
             fixed (char* b = buffer)
             {
-                return TerraFXWindows.GetCurrentDirectoryW(buffer.Length, (ushort*)b);
+                return TerraFXWindows.GetCurrentDirectoryW(buffer.Length, b);
             }
         }
 
@@ -1635,7 +1635,7 @@ public static partial class Storage
         fixed (char* p = path)
         {
             Error.ThrowLastErrorIfFalse(
-                TerraFXWindows.SetCurrentDirectoryW((ushort*)p),
+                TerraFXWindows.SetCurrentDirectoryW(p),
                 path.ToString());
         }
     }
@@ -1648,7 +1648,7 @@ public static partial class Storage
         rootPath = Paths.AddTrailingSeparator(rootPath);
         fixed (char* r = rootPath)
         {
-            return (DriveType)TerraFXWindows.GetDriveTypeW((ushort*)r);
+            return (DriveType)TerraFXWindows.GetDriveTypeW(r);
         }
     }
 
@@ -1674,13 +1674,13 @@ public static partial class Storage
 
             Error.ThrowLastErrorIfFalse(
                 TerraFXWindows.GetVolumeInformationW(
-                    (ushort*)r,
-                    (ushort*)v,
+                    r,
+                    v,
                     (uint)volumeName.Length,
                     &serialNumber,
                     &maxComponentLength,
                     (uint*)&flags,
-                    (ushort*)f,
+                    f,
                     (uint)fileSystemName.Length),
                 rootPath);
 
@@ -1709,7 +1709,7 @@ public static partial class Storage
         {
             Error.ThrowLastErrorIfFalse(
                 TerraFXWindows.GetDiskFreeSpaceW(
-                    lpRootPathName: (ushort*)r,
+                    lpRootPathName: r,
                     lpSectorsPerCluster: &freeSpace.SectorsPerCluster,
                     lpBytesPerSector: &freeSpace.BytesPerSector,
                     lpNumberOfFreeClusters: &freeSpace.NumberOfFreeClusters,
@@ -1728,7 +1728,7 @@ public static partial class Storage
         {
             Error.ThrowLastErrorIfFalse(
                 TerraFXWindows.GetDiskFreeSpaceExW(
-                    lpDirectoryName: (ushort*)d,
+                    lpDirectoryName: d,
                     lpFreeBytesAvailableToCaller: (ULARGE_INTEGER*)&freeSpace.FreeBytesAvailable,
                     lpTotalNumberOfBytes: (ULARGE_INTEGER*)&freeSpace.TotalNumberOfBytes,
                     lpTotalNumberOfFreeBytes: (ULARGE_INTEGER*)&freeSpace.TotalNumberOfFreeBytes),

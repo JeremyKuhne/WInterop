@@ -20,8 +20,8 @@ public readonly struct RenderTargetProperties
     public readonly FeatureLevel MinLevel;
 
     public static implicit operator RenderTargetProperties(in D2D1_RENDER_TARGET_PROPERTIES properties)
-        => Unsafe.As<D2D1_RENDER_TARGET_PROPERTIES, RenderTargetProperties>(ref Unsafe.AsRef(properties));
+        => Unsafe.As<D2D1_RENDER_TARGET_PROPERTIES, RenderTargetProperties>(ref Unsafe.AsRef(in properties));
 
     public static implicit operator D2D1_RENDER_TARGET_PROPERTIES(in RenderTargetProperties properties)
-        => Unsafe.As<RenderTargetProperties, D2D1_RENDER_TARGET_PROPERTIES>(ref Unsafe.AsRef(properties));
+        => Unsafe.As<RenderTargetProperties, D2D1_RENDER_TARGET_PROPERTIES>(ref Unsafe.AsRef(in properties));
 }

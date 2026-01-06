@@ -6,50 +6,50 @@ using WInterop.Storage;
 
 namespace WInterop.Com;
 
-public unsafe struct StructuredStorage : IDisposable
+public unsafe readonly struct StructuredStorage : IDisposable
 {
     public IStorage* IStorage { get; }
 
     public StructuredStorage(IStorage* storage) => IStorage = storage;
 
-    public bool IsNull => IStorage is null;
+    public readonly bool IsNull => IStorage is null;
 
-    public Stream CreateStream(string name, StorageMode mode = StorageMode.Default)
+    public readonly Stream CreateStream(string name, StorageMode mode = StorageMode.Default)
     {
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
             IStream* stream;
-            IStorage->CreateStream((ushort*)n, (uint)mode, 0, 0, &stream).ThrowIfFailed();
+            IStorage->CreateStream(n, (uint)mode, 0, 0, &stream).ThrowIfFailed();
             return new(stream);
         }
     }
 
     public Stream OpenStream(string name, StorageMode mode = StorageMode.Default)
     {
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
             IStream* stream;
-            IStorage->OpenStream((ushort*)n, null, (uint)mode, 0, &stream).ThrowIfFailed();
+            IStorage->OpenStream(n, null, (uint)mode, 0, &stream).ThrowIfFailed();
             return new(stream);
         }
     }
 
     public StructuredStorage CreateStorage(string name, StorageMode mode = StorageMode.Default)
     {
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
             IStorage* storage;
-            IStorage->CreateStorage((ushort*)n, (uint)mode, 0, 0, &storage).ThrowIfFailed();
+            IStorage->CreateStorage(n, (uint)mode, 0, 0, &storage).ThrowIfFailed();
             return new(storage);
         }
     }
 
     public StructuredStorage OpenStorage(string name, StorageMode mode = StorageMode.Default)
     {
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
             IStorage* storage;
-            IStorage->OpenStorage((ushort*)n, null, (uint)mode, null, 0, &storage).ThrowIfFailed();
+            IStorage->OpenStorage(n, null, (uint)mode, null, 0, &storage).ThrowIfFailed();
             return new(storage);
         }
     }
@@ -62,10 +62,10 @@ public unsafe struct StructuredStorage : IDisposable
 
     public void MoveElementTo(string name, StructuredStorage destination, string newName, StorageMove move = StorageMove.Copy)
     {
-        fixed (void* s = name)
-        fixed (void* d = newName)
+        fixed (char* s = name)
+        fixed (char* d = newName)
         {
-            IStorage->MoveElementTo((ushort*)s, destination.IStorage, (ushort*)d, (uint)move).ThrowIfFailed();
+            IStorage->MoveElementTo(s, destination.IStorage, d, (uint)move).ThrowIfFailed();
         }
     }
 
@@ -85,18 +85,18 @@ public unsafe struct StructuredStorage : IDisposable
 
     public void DestroyElement(string name)
     {
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
-            IStorage->DestroyElement((ushort*)n).ThrowIfFailed();
+            IStorage->DestroyElement(n).ThrowIfFailed();
         }
     }
 
     public void RenameElement(string oldName, string newName)
     {
-        fixed (void* o = oldName)
-        fixed (void* n = newName)
+        fixed (char* o = oldName)
+        fixed (char* n = newName)
         {
-            IStorage->RenameElement((ushort*)o, (ushort*)n).ThrowIfFailed();
+            IStorage->RenameElement(o, n).ThrowIfFailed();
         }
     }
 
@@ -106,10 +106,10 @@ public unsafe struct StructuredStorage : IDisposable
         FileTime a = new(access ?? default);
         FileTime m = new(modified ?? default);
 
-        fixed (void* n = name)
+        fixed (char* n = name)
         {
             IStorage->SetElementTimes(
-                (ushort*)n,
+                n,
                 creation.HasValue ? (FILETIME*)&c : null,
                 access.HasValue ? (FILETIME*)&a : null,
                 modified.HasValue ? (FILETIME*)&m : null).ThrowIfFailed();

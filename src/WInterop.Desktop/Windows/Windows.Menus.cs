@@ -25,7 +25,7 @@ public static partial class Windows
         fixed (char* c = text)
         {
             Error.ThrowLastErrorIfFalse(
-                WindowsImports.AppendMenuW(menu, flags, (IntPtr)id, (IntPtr)c));
+                WindowsImports.AppendMenuW(menu, flags, id, (IntPtr)c));
         }
     }
 }

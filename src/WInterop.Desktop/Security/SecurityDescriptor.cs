@@ -74,7 +74,7 @@ public unsafe partial class SecurityDescriptor : LocalHandle
                 Trustee = new TRUSTEE_W()
                 {
                     TrusteeForm = TRUSTEE_FORM.TRUSTEE_IS_SID,
-                    ptstrName = (ushort*)sidp
+                    ptstrName = (char*)sidp
                 }
             };
 

@@ -51,7 +51,7 @@ public unsafe struct SimplifiedGeometrySink : SimplifiedGeometrySink.Interface, 
 
     internal static ref SimplifiedGeometrySink From<TFrom>(in TFrom from)
         where TFrom : unmanaged, Interface
-        => ref Unsafe.AsRef<SimplifiedGeometrySink>(Unsafe.AsPointer(ref Unsafe.AsRef(from)));
+        => ref Unsafe.AsRef<SimplifiedGeometrySink>(Unsafe.AsPointer(ref Unsafe.AsRef(in from)));
 
     public void Dispose()
     {

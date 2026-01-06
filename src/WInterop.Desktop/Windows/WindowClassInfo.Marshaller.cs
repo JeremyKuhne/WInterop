@@ -34,21 +34,21 @@ public partial class WindowClassInfo
             if (managed.ClassName is not null)
             {
                 _className = GCHandle.Alloc(managed.ClassName, GCHandleType.Pinned);
-                native.lpszClassName = (ushort*)_className.AddrOfPinnedObject();
+                native.lpszClassName = (char*)_className.AddrOfPinnedObject();
             }
             else
             {
-                native.lpszClassName = (ushort*)(nint)managed.ClassAtom;
+                native.lpszClassName = (char*)(nint)managed.ClassAtom;
             }
 
             if (managed.MenuName is not null)
             {
                 _menuName = GCHandle.Alloc(managed.MenuName, GCHandleType.Pinned);
-                native.lpszMenuName = (ushort*)_menuName.AddrOfPinnedObject();
+                native.lpszMenuName = (char*)_menuName.AddrOfPinnedObject();
             }
             else
             {
-                native.lpszMenuName = (ushort*)(IntPtr)managed.MenuId;
+                native.lpszMenuName = (char*)(nint)managed.MenuId;
             }
         }
 

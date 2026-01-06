@@ -21,7 +21,7 @@ public unsafe struct TypeAttributes : IDisposable
     public LocaleId Locale => (LocaleId)_attr->lcid;
     public MemberId Constructor => _attr->memidConstructor;
     public MemberId Destructor => _attr->memidDestructor;
-    public string Schema => new((char*)_attr->lpstrSchema);
+    public string Schema => new(_attr->lpstrSchema);
     public TypeKind TypeKind => (TypeKind)_attr->typekind;
     public ushort FunctionCount => _attr->cFuncs;
     public ushort VariableCount => _attr->cVars;

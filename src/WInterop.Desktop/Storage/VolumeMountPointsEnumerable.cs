@@ -71,11 +71,11 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
             _buffer.EnsureCharCapacity(400);
 
             HANDLE handle;
-            fixed (void* n = _volumeName)
+            fixed (char* n = _volumeName)
             {
                 handle = TerraFXWindows.FindFirstVolumeMountPointW(
-                    (ushort*)n,
-                    _buffer.UShortPointer,
+                    n,
+                    _buffer.CharPointer,
                     _buffer.CharCapacity);
             }
 
@@ -109,7 +109,7 @@ public class VolumeMountPointsEnumerable : IEnumerable<string>
             if (_buffer is null)
                 throw new ObjectDisposedException(nameof(VolumeMountPointsEnumerable));
 
-            if (!TerraFXWindows.FindNextVolumeMountPointW(_findHandle, _buffer.UShortPointer, _buffer.CharCapacity))
+            if (!TerraFXWindows.FindNextVolumeMountPointW(_findHandle, _buffer.CharPointer, _buffer.CharCapacity))
             {
                 WindowsError error = Error.GetLastError();
                 switch (error)

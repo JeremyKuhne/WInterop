@@ -60,7 +60,7 @@ public partial class WindowClassInfo
             }
             else
             {
-                windowClass.MenuName = new string((char*)nativeClass.lpszMenuName);
+                windowClass.MenuName = new string(nativeClass.lpszMenuName);
             }
         }
 
@@ -72,7 +72,7 @@ public partial class WindowClassInfo
             }
             else
             {
-                windowClass.ClassName = new string((char*)nativeClass.lpszClassName);
+                windowClass.ClassName = new string(nativeClass.lpszClassName);
             }
         }
 

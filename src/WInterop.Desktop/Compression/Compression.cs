@@ -130,12 +130,12 @@ public static partial class Compression
         fixed (char* p = path)
         {
             int result = ValidateLzResult(
-                TerraFXWindows.LZOpenFileW((ushort*)p, &ofs, (ushort)openStyle),
+                TerraFXWindows.LZOpenFileW(p, &ofs, (ushort)openStyle),
                 path);
 
             // Note that DOS error ids match Windows errors
             const int OFS_MAXPATHNAME = 128;
-            uncompressedName = Strings.FromNullTerminatedAsciiString(new(ofs.szPathName, OFS_MAXPATHNAME));
+            uncompressedName = Strings.FromNullTerminatedAsciiString(new ReadOnlySpan<byte>(&ofs.szPathName.e0, OFS_MAXPATHNAME));
             return new LzHandle(result);
         }
     }
@@ -148,7 +148,7 @@ public static partial class Compression
         fixed (char* p = path)
         {
             return new LzHandle(ValidateLzResult(
-                TerraFXWindows.LZOpenFileW((ushort*)p, &ofs, (ushort)openStyle),
+                TerraFXWindows.LZOpenFileW(p, &ofs, (ushort)openStyle),
                 path));
         }
     }
